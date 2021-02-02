@@ -27,10 +27,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="app.py" />
+    <Compile Include="*.py" />
+    <Compile Include="**\*.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="requirements.txt" />
+    <Content Include="*.txt" />
+    <Content Include="app\static\loading.gif" />
+    <Content Include="*.html" />
+    <Content Include="**\*.html" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="venv\">
@@ -42,6 +46,139 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="app\" />
+    <Folder Include="app\api\" />
+    <Folder Include="app\errors\" />
+    <Folder Include="app\main\" />
+    <Folder Include="app\static\" />
+    <Folder Include="app\templates\" />
+    <Folder Include="app\templates\errors\" />
+    <Folder Include="venv\Lib\" />
+    <Folder Include="venv\Lib\site-packages\" />
+    <Folder Include="venv\Lib\site-packages\alembic\" />
+    <Folder Include="venv\Lib\site-packages\alembic\autogenerate\" />
+    <Folder Include="venv\Lib\site-packages\alembic\ddl\" />
+    <Folder Include="venv\Lib\site-packages\alembic\operations\" />
+    <Folder Include="venv\Lib\site-packages\alembic\runtime\" />
+    <Folder Include="venv\Lib\site-packages\alembic\script\" />
+    <Folder Include="venv\Lib\site-packages\alembic\templates\" />
+    <Folder Include="venv\Lib\site-packages\alembic\templates\generic\" />
+    <Folder Include="venv\Lib\site-packages\alembic\templates\multidb\" />
+    <Folder Include="venv\Lib\site-packages\alembic\templates\pylons\" />
+    <Folder Include="venv\Lib\site-packages\alembic\testing\" />
+    <Folder Include="venv\Lib\site-packages\alembic\testing\plugin\" />
+    <Folder Include="venv\Lib\site-packages\alembic\util\" />
+    <Folder Include="venv\Lib\site-packages\blinker\" />
+    <Folder Include="venv\Lib\site-packages\click\" />
+    <Folder Include="venv\Lib\site-packages\dateutil\" />
+    <Folder Include="venv\Lib\site-packages\dateutil\parser\" />
+    <Folder Include="venv\Lib\site-packages\dateutil\tz\" />
+    <Folder Include="venv\Lib\site-packages\dateutil\zoneinfo\" />
+    <Folder Include="venv\Lib\site-packages\dominate\" />
+    <Folder Include="venv\Lib\site-packages\dotenv\" />
+    <Folder Include="venv\Lib\site-packages\flask\" />
+    <Folder Include="venv\Lib\site-packages\flask\json\" />
+    <Folder Include="venv\Lib\site-packages\flask_bootstrap\" />
+    <Folder Include="venv\Lib\site-packages\flask_bootstrap\templates\" />
+    <Folder Include="venv\Lib\site-packages\flask_bootstrap\templates\bootstrap\" />
+    <Folder Include="venv\Lib\site-packages\flask_migrate\" />
+    <Folder Include="venv\Lib\site-packages\flask_migrate\templates\" />
+    <Folder Include="venv\Lib\site-packages\flask_migrate\templates\flask-multidb\" />
+    <Folder Include="venv\Lib\site-packages\flask_migrate\templates\flask\" />
+    <Folder Include="venv\Lib\site-packages\flask_sqlalchemy\" />
+    <Folder Include="venv\Lib\site-packages\itsdangerous\" />
+    <Folder Include="venv\Lib\site-packages\jinja2\" />
+    <Folder Include="venv\Lib\site-packages\mako\" />
+    <Folder Include="venv\Lib\site-packages\mako\ext\" />
+    <Folder Include="venv\Lib\site-packages\markupsafe\" />
+    <Folder Include="venv\Lib\site-packages\pip\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\cli\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\commands\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\distributions\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\index\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\models\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\network\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\operations\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\operations\build\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\operations\install\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\req\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\resolution\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\resolution\legacy\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\resolution\resolvelib\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\utils\" />
+    <Folder Include="venv\Lib\site-packages\pip\_internal\vcs\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\cachecontrol\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\cachecontrol\caches\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\certifi\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\chardet\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\chardet\cli\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\colorama\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\distlib\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\distlib\_backport\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\html5lib\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\html5lib\filters\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\html5lib\treeadapters\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\html5lib\treebuilders\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\html5lib\treewalkers\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\html5lib\_trie\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\idna\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\msgpack\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\packaging\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\pep517\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\pkg_resources\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\progress\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\requests\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\resolvelib\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\toml\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\urllib3\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\urllib3\contrib\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\urllib3\contrib\_securetransport\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\urllib3\packages\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\urllib3\packages\backports\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\urllib3\packages\ssl_match_hostname\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\urllib3\util\" />
+    <Folder Include="venv\Lib\site-packages\pip\_vendor\webencodings\" />
+    <Folder Include="venv\Lib\site-packages\pkg_resources\" />
+    <Folder Include="venv\Lib\site-packages\pkg_resources\extern\" />
+    <Folder Include="venv\Lib\site-packages\pkg_resources\_vendor\" />
+    <Folder Include="venv\Lib\site-packages\pkg_resources\_vendor\packaging\" />
+    <Folder Include="venv\Lib\site-packages\setuptools\" />
+    <Folder Include="venv\Lib\site-packages\setuptools\command\" />
+    <Folder Include="venv\Lib\site-packages\setuptools\extern\" />
+    <Folder Include="venv\Lib\site-packages\setuptools\_vendor\" />
+    <Folder Include="venv\Lib\site-packages\setuptools\_vendor\packaging\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\connectors\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\databases\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\dialects\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\dialects\firebird\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\dialects\mssql\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\dialects\mysql\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\dialects\oracle\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\dialects\postgresql\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\dialects\sqlite\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\dialects\sybase\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\engine\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\event\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\ext\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\ext\declarative\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\orm\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\pool\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\sql\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\testing\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\testing\plugin\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\testing\suite\" />
+    <Folder Include="venv\Lib\site-packages\sqlalchemy\util\" />
+    <Folder Include="venv\Lib\site-packages\visitor\" />
+    <Folder Include="venv\Lib\site-packages\werkzeug\" />
+    <Folder Include="venv\Lib\site-packages\werkzeug\debug\" />
+    <Folder Include="venv\Lib\site-packages\werkzeug\middleware\" />
+    <Folder Include="venv\Lib\site-packages\werkzeug\wrappers\" />
+    <Folder Include="venv\Scripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 
