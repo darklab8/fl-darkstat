@@ -12,6 +12,7 @@ from flask_moment import Moment
 # from redis import Redis
 # import rq
 from config import Config
+import flint as fl
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -34,6 +35,12 @@ def create_app(config_class=Config):
     mail.init_app(app)
     bootstrap.init_app(app)
     moment.init_app(app)
+
+    fl.paths.set_install_path(app.config["FREELANCER_PATH"])
+    
+    #fl.get_bases()
+    #fl.get_commodities()
+    #fl.get_commidities()
     #babel.init_app(app)
     # app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
         # if app.config['ELASTICSEARCH_URL'] else None

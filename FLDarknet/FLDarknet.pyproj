@@ -72,10 +72,12 @@
     <Folder Include="venv\Lib\site-packages\alembic\util\" />
     <Folder Include="venv\Lib\site-packages\blinker\" />
     <Folder Include="venv\Lib\site-packages\click\" />
+    <Folder Include="venv\Lib\site-packages\dataclassy\" />
     <Folder Include="venv\Lib\site-packages\dateutil\" />
     <Folder Include="venv\Lib\site-packages\dateutil\parser\" />
     <Folder Include="venv\Lib\site-packages\dateutil\tz\" />
     <Folder Include="venv\Lib\site-packages\dateutil\zoneinfo\" />
+    <Folder Include="venv\Lib\site-packages\deconstruct\" />
     <Folder Include="venv\Lib\site-packages\dominate\" />
     <Folder Include="venv\Lib\site-packages\dotenv\" />
     <Folder Include="venv\Lib\site-packages\flask\" />
@@ -88,6 +90,9 @@
     <Folder Include="venv\Lib\site-packages\flask_migrate\templates\flask-multidb\" />
     <Folder Include="venv\Lib\site-packages\flask_migrate\templates\flask\" />
     <Folder Include="venv\Lib\site-packages\flask_sqlalchemy\" />
+    <Folder Include="venv\Lib\site-packages\flint\" />
+    <Folder Include="venv\Lib\site-packages\flint\entities\" />
+    <Folder Include="venv\Lib\site-packages\flint\formats\" />
     <Folder Include="venv\Lib\site-packages\itsdangerous\" />
     <Folder Include="venv\Lib\site-packages\jinja2\" />
     <Folder Include="venv\Lib\site-packages\mako\" />
