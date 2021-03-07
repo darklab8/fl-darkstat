@@ -1,5 +1,0 @@
-#just do next thing
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-python start.py runserver

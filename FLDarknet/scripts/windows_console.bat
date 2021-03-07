@@ -1,1 +1,1 @@
-start cmd /k "..\venv\Scripts\activate"
+start cmd /k "..\venv\Scripts\activate && cd .."
