@@ -1,2 +1,2 @@
-cd ..
-cmd /k "cd /d venv\Scripts & activate & cd /d    ..\.. & python start.py runserver"
+
+cmd /k "cd /d ..\venv\Scripts & activate & cd /d    ..\.. & python start.py runserver"
