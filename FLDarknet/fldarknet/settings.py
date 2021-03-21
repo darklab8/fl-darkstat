@@ -19,8 +19,21 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-print("BASEDIR = ", BASE_DIR)
+ROOT_DIR = Path(__file__).resolve().parent.parent
+
+FREELANCER_FOLDER = os.environ.get('FREELANCER_FOLDER') or 'Freelancer'
+FREELANCER_DIR = os.environ.get('FREELANCER_DIR') or os.path.join(ROOT_DIR,FREELANCER_FOLDER)
+
+DATA_DIR = os.path.join(FREELANCER_DIR,'DATA')
+
+EQUIPMENT_DIR = os.path.join(DATA_DIR,'EQUIPMENT')
+SERVICE_DIR = os.path.join(FREELANCER_DIR,'SERVICE')
+INFOCARDS_PATH = os.path.join(SERVICE_DIR,'infocards.txt')
+
+# GOODS_DIR = os.path.join(EQUIPMENT_DIR,'goods.ini')
+# MARKET_DIR = os.path.join(EQUIPMENT_DIR,'market_commodities.ini')
+# SEL_EQUIP_DIR = os.path.join(EQUIPMENT_DIR,'select_equip.ini')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -62,7 +75,7 @@ ROOT_URLCONF = 'fldarknet.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(ROOT_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,7 +97,7 @@ WSGI_APPLICATION = 'fldarknet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': ROOT_DIR / 'db.sqlite3',
     }
 }
 
