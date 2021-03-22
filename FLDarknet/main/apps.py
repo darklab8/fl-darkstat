@@ -80,6 +80,41 @@ def parse_file(filename):
         i+=1
     return output
 
+def view_wrapper(obj, cl, name):
+    if name in obj.keys():
+        obj[name] = cl(obj[name][0])
+
+def view_wrapper_with_infocard(obj, cl, name, infoname):
+    if name in obj.keys():
+        obj[name] = cl(obj[name][0])
+        if obj[name] in infocards:
+            obj[infoname] = (infocards[obj[name]][1])
+
+def fill_commodity_table(Commodity):
+    #COMMODITY TABLE
+    Commodity.objects.all().delete()
+
+    goods = data['select_equip.ini']
+    arr = goods['[commodity]'].copy()
+    for obj in arr:
+        try:
+            view_wrapper_with_infocard(obj, int, 'ids_name', 'name')
+            view_wrapper_with_infocard(obj, int, 'ids_info', 'infocard')
+            view_wrapper(obj, int, 'units_per_container')
+            view_wrapper(obj, int, 'decay_per_second')
+            view_wrapper(obj, int, 'hit_pts')
+            view_wrapper(obj, str, 'pod_appearance')
+            view_wrapper(obj, str, 'loot_appearance')
+            view_wrapper(obj, str, 'nickname')
+            view_wrapper(obj, float, 'volume')
+
+            c = Commodity(
+                **obj
+            )
+            c.save()
+        except:
+            print("ERR in filling commodities", obj)
+
 class MainConfig(AppConfig):
     name = 'main'
     def ready(self):
@@ -87,8 +122,7 @@ class MainConfig(AppConfig):
         #flint.paths.set_install_path('Freelancer')
         #comms= flint.get_commodities()
         from commodities.models import Commodity
-        Commodity.objects.all().delete()
-        
+
         global data
         #breakpoint()
         from os import walk
@@ -104,47 +138,7 @@ class MainConfig(AppConfig):
         global infocards
         infocards = parse_infocards(settings.INFOCARDS_PATH)
 
-        goods = data['select_equip.ini']
-        arr = goods['[commodity]'].copy()
-        for obj in arr:
-            try:
-                if 'ids_name' in obj.keys():
-                    obj['ids_name'] = int(obj['ids_name'][0])
-                    if obj['ids_name'] in infocards:
-                        obj['name'] = (infocards[obj['ids_name']][1])
-
-                if 'ids_info' in obj.keys():
-                    obj['ids_info'] = int(obj['ids_info'][0])
-                    if obj['ids_info'] in infocards:
-                        obj['infocard'] = (infocards[obj['ids_info']][1])
-
-                if 'units_per_container' in obj.keys():
-                    obj['units_per_container'] = int(obj['units_per_container'][0])
-
-                if 'decay_per_second' in obj.keys():
-                    obj['decay_per_second'] = int(obj['decay_per_second'][0])
-
-                if 'hit_pts' in obj.keys():
-                    obj['hit_pts'] = int(obj['hit_pts'][0])
-
-                if 'pod_appearance' in obj.keys():
-                    obj['pod_appearance'] = str(obj['pod_appearance'][0])
-
-                if 'loot_appearance' in obj.keys():
-                    obj['loot_appearance'] = str(obj['loot_appearance'][0])
-
-                if 'nickname' in obj.keys():
-                    obj['nickname'] = str(obj['nickname'][0])
-
-                if 'volume' in obj.keys():
-                    obj['volume'] = float(obj['volume'][0])
-
-                c = Commodity(
-                    **obj
-                )
-                c.save()
-            except:
-                print("ERR in filling commodities", obj)
+        fill_commodity_table(Commodity)
 
         # for filename in data.keys():
         #     for header in data[filename].keys():
