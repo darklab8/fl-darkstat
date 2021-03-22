@@ -29,6 +29,8 @@ DATA_DIR = os.path.join(FREELANCER_DIR,'DATA')
 EQUIPMENT_DIR = os.path.join(DATA_DIR,'EQUIPMENT')
 SERVICE_DIR = os.path.join(FREELANCER_DIR,'SERVICE')
 INFOCARDS_PATH = os.path.join(SERVICE_DIR,'infocards.txt')
+UNIVERSE_DIR = os.path.join(DATA_DIR,'UNIVERSE')
+SHIPS_DIR = os.path.join(DATA_DIR,'SHIPS')
 
 # GOODS_DIR = os.path.join(EQUIPMENT_DIR,'goods.ini')
 # MARKET_DIR = os.path.join(EQUIPMENT_DIR,'market_commodities.ini')
@@ -51,6 +53,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'main.apps.MainConfig',
+    'ship.apps.ShipConfig',
     'commodities.apps.CommoditiesConfig',
     'django.contrib.admin',
     'django.contrib.auth',

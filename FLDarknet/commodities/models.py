@@ -5,7 +5,6 @@ class Commodity(models.Model):
     class Meta:
         verbose_name_plural = "commodities"
     
-    
     nickname = models.CharField(max_length=50, db_index=True, blank=True, null=True)
 
     ids_name = models.IntegerField(db_index=True, blank=True, null=True)

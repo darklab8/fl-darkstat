@@ -1,9 +1,13 @@
 from django.apps import AppConfig
 from django.conf import settings
 import re
+from os import walk
+import os
 
-data = {}
+equipment = {}
+universe = {}
 infocards = {}
+ships = {}
 
 def strip_from_rn(a):
     return a.replace("\r","").replace("\n","")
@@ -92,9 +96,12 @@ def view_wrapper_with_infocard(obj, cl, name, infoname):
 
 def fill_commodity_table(Commodity):
     #COMMODITY TABLE
-    Commodity.objects.all().delete()
+    try:
+        Commodity.objects.all().delete()
+    except:
+        print('ERR cant delete Commodity')
 
-    goods = data['select_equip.ini']
+    goods = equipment['select_equip.ini']
     arr = goods['[commodity]'].copy()
     for obj in arr:
         try:
@@ -115,34 +122,64 @@ def fill_commodity_table(Commodity):
         except:
             print("ERR in filling commodities", obj)
 
+def RecursiveReading(folderpath):
+    
+    dictpath = {}
+    for (dirpath, dirnames, filenames) in walk(folderpath):
+        #1 Level
+        for filename in filenames:
+            try:
+                #dictpath[filename] = 1
+                dictpath[filename] = parse_file(os.path.join(dirpath,filename))
+            except:
+                print('ERROR in ', filename)
+
+        for dirname in dirnames:
+            dictpath[dirname] = RecursiveReading(os.path.join(dirpath,dirname))
+
+        break
+    
+    return dictpath
+
+def folder_reading(folderpath):
+    dictpath = {}
+    for (dirpath, dirnames, filenames) in walk(folderpath):
+        for filename in filenames:
+            try:
+                dictpath[filename] = parse_file(os.path.join(folderpath,filename))
+            except:
+                print('ERROR in ', filename)
+        break
+    return dictpath
+
 class MainConfig(AppConfig):
     name = 'main'
     def ready(self):
+        import sys
+        if 'shell' not in sys.argv[-1]: return
         #import flint
         #flint.paths.set_install_path('Freelancer')
         #comms= flint.get_commodities()
         from commodities.models import Commodity
 
-        global data
-        #breakpoint()
-        from os import walk
-        import os
-        for (dirpath, dirnames, filenames) in walk(settings.EQUIPMENT_DIR):
-            for filename in filenames:
-                try:
-                    data[filename] = parse_file(os.path.join(settings.EQUIPMENT_DIR,filename))
-                except:
-                    print('ERROR in ', filename)
-            break
+        global equipment
+        equipment = folder_reading(settings.EQUIPMENT_DIR)
 
         global infocards
         infocards = parse_infocards(settings.INFOCARDS_PATH)
 
         fill_commodity_table(Commodity)
 
-        # for filename in data.keys():
-        #     for header in data[filename].keys():
-        #         for obj in data[filename][header]:
+        global universe
+        universe = RecursiveReading(settings.UNIVERSE_DIR)
+
+        global ships
+        ships = folder_reading(settings.SHIPS_DIR)
+        #breakpoint()
+
+        # for filename in equipment.keys():
+        #     for header in equipment[filename].keys():
+        #         for obj in equipment[filename][header]:
         #             #print(obj)
         #             #breakpoint()
         #             break
@@ -152,16 +189,18 @@ class MainConfig(AppConfig):
         # select_equip = parse_file(settings.SEL_EQUIP_DIR)
         # market_commodities = parse_file(settings.MARKET_DIR)
 
+# from main.apps import *
 # test = set()
-# goods = data['select_equip.ini']
-# arr = goods['[commodity]']
+# goods = ships['shiparch.ini']
+# arr = goods['[ship]']
 # for obj in arr:
 #     for key in obj.keys():
 #         if key not in test:
-#             print(key, " = ", obj[key])
+#             if len(obj[key]) == 1 and not isinstance(obj[key][0],list):
+#                 print(key, " = ", obj[key])
 #             test.add(key)
 
-# goods = data['select_equip.ini']
+# goods = equipment['select_equip.ini']
 # arr = goods['[commodity]']
 # for obj in arr:
 #     if 'ids_name' in obj.keys():
