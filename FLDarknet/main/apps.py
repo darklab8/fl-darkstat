@@ -3,6 +3,7 @@ from django.conf import settings
 import re
 from os import walk
 import os
+from django.core import management
 
 equipment = {}
 universe = {}
@@ -97,11 +98,6 @@ def view_wrapper_with_infocard(kwg, obj, cl, name, infoname):
 
 def fill_commodity_table(Commodity):
     #COMMODITY TABLE
-    try:
-        Commodity.objects.all().delete()
-    except:
-        print('ERR cant delete Commodity')
-
     goods = equipment['select_equip.ini']
     arr = goods['[commodity]'].copy()
     for obj in arr:
@@ -129,11 +125,6 @@ def fill_commodity_table(Commodity):
 
 def fill_ship_table(Ship):
     #COMMODITY TABLE
-    try:
-        Ship.objects.all().delete()
-    except:
-        print('ERR cant delete ship')
-
     goods = ships['shiparch.ini']
     arr = goods['[ship]'].copy()
     for obj in arr:
@@ -213,8 +204,9 @@ class MainConfig(AppConfig):
         if os.environ.get('RUN_MAIN', None) == 'true':
             return
 
-        import sys
-        if 'shell' not in sys.argv[-1]: return
+        management.call_command('flush', '--noinput')
+        management.call_command('migrate')
+
         #import flint
         #flint.paths.set_install_path('Freelancer')
         #comms= flint.get_commodities()
@@ -236,7 +228,7 @@ class MainConfig(AppConfig):
         ships = folder_reading(settings.SHIPS_DIR)
 
         fill_ship_table(Ship)
-        #breakpoint()
+        #breakpoint()123
 
         # for filename in equipment.keys():
         #     for header in equipment[filename].keys():

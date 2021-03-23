@@ -20,6 +20,9 @@ def check_perm(user, Obj):
 
 # Create your views here.
 def login(request):
+    from django.core import management
+    management.call_command('migrate')
+
     username = 'guest'
     try:
         user = User.objects.get(username=username)
