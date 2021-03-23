@@ -155,6 +155,9 @@ def folder_reading(folderpath):
 class MainConfig(AppConfig):
     name = 'main'
     def ready(self):
+        if os.environ.get('RUN_MAIN', None) == 'true':
+            return
+
         import sys
         if 'shell' not in sys.argv[-1]: return
         #import flint
