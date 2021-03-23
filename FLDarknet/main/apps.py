@@ -8,6 +8,7 @@ equipment = {}
 universe = {}
 infocards = {}
 ships = {}
+hp_type = {}
 
 def strip_from_rn(a):
     return a.replace("\r","").replace("\n","")
@@ -84,15 +85,15 @@ def parse_file(filename):
         i+=1
     return output
 
-def view_wrapper(obj, cl, name):
+def view_wrapper(kwg, obj, cl, name):
     if name in obj.keys():
-        obj[name] = cl(obj[name][0])
+        kwg[name] = cl(obj[name][0])
 
-def view_wrapper_with_infocard(obj, cl, name, infoname):
+def view_wrapper_with_infocard(kwg, obj, cl, name, infoname):
     if name in obj.keys():
-        obj[name] = cl(obj[name][0])
-        if obj[name] in infocards:
-            obj[infoname] = (infocards[obj[name]][1])
+        kwg[name] = cl(obj[name][0])
+        if kwg[name] in infocards:
+            kwg[infoname] = (infocards[kwg[name]][1])
 
 def fill_commodity_table(Commodity):
     #COMMODITY TABLE
@@ -105,22 +106,76 @@ def fill_commodity_table(Commodity):
     arr = goods['[commodity]'].copy()
     for obj in arr:
         try:
-            view_wrapper_with_infocard(obj, int, 'ids_name', 'name')
-            view_wrapper_with_infocard(obj, int, 'ids_info', 'infocard')
-            view_wrapper(obj, int, 'units_per_container')
-            view_wrapper(obj, int, 'decay_per_second')
-            view_wrapper(obj, int, 'hit_pts')
-            view_wrapper(obj, str, 'pod_appearance')
-            view_wrapper(obj, str, 'loot_appearance')
-            view_wrapper(obj, str, 'nickname')
-            view_wrapper(obj, float, 'volume')
+            kwg = {}
+            view_wrapper_with_infocard(kwg, obj, int, 'ids_name', 'name')
+            view_wrapper(kwg, obj, int, 'ids_info')
+
+            view_wrapper(kwg, obj, int, 'units_per_container')
+            view_wrapper(kwg, obj, int, 'decay_per_second')
+            view_wrapper(kwg, obj, int, 'hit_pts')
+
+            view_wrapper(kwg, obj, str, 'pod_appearance')
+            view_wrapper(kwg, obj, str, 'loot_appearance')
+            view_wrapper(kwg, obj, str, 'nickname')
+
+            view_wrapper(kwg, obj, float, 'volume')
 
             c = Commodity(
-                **obj
+                **kwg
             )
             c.save()
         except:
             print("ERR in filling commodities", obj)
+
+def fill_ship_table(Ship):
+    #COMMODITY TABLE
+    try:
+        Ship.objects.all().delete()
+    except:
+        print('ERR cant delete ship')
+
+    goods = ships['shiparch.ini']
+    arr = goods['[ship]'].copy()
+    for obj in arr:
+        try:
+            kwg = {}
+            view_wrapper(kwg, obj, str, 'nickname')
+            view_wrapper_with_infocard(kwg, obj, int, 'ids_name', 'name')
+            view_wrapper(kwg, obj, int, 'ids_info')
+            view_wrapper(kwg, obj, float, 'mass')
+            view_wrapper(kwg, obj, int, 'hold_size')
+            view_wrapper(kwg, obj, float, 'linear_drag')
+            view_wrapper(kwg, obj, int, 'max_bank_angle')
+            view_wrapper(kwg, obj, float, 'camera_angular_acceleration')
+            view_wrapper(kwg, obj, int, 'camera_horizontal_turn_angle')
+            view_wrapper(kwg, obj, int, 'camera_vertical_turn_up_angle')
+            view_wrapper(kwg, obj, int, 'camera_vertical_turn_down_angle')
+            view_wrapper(kwg, obj, float, 'camera_turn_look_ahead_slerp_amount')
+            view_wrapper(kwg, obj, int, 'hit_pts')
+            view_wrapper(kwg, obj, float, 'nudge_force')
+            view_wrapper(kwg, obj, int, 'strafe_force')
+            view_wrapper(kwg, obj, int, 'strafe_power_usage')
+            view_wrapper(kwg, obj, float, 'explosion_resistance')
+            view_wrapper(kwg, obj, int, 'ids_info1')
+            view_wrapper(kwg, obj, int, 'ids_info2')
+            view_wrapper(kwg, obj, int, 'ids_info3')
+            view_wrapper(kwg, obj, int, 'ship_class')
+            view_wrapper(kwg, obj, int, 'nanobot_limit')
+            view_wrapper(kwg, obj, int, 'shield_battery_limit')
+            
+            if 'type' in obj.keys():
+                kwg['typeof'] = str(obj['type'][0])
+
+            global hp_type
+            if 'nickname' in obj.keys() and 'hp_type' in obj.keys():
+                hp_type[obj['nickname'][0]] = obj['hp_type']
+
+            c = Ship(
+                **kwg
+            )
+            c.save()
+        except:
+            print("ERR in filling ships", obj)
 
 def RecursiveReading(folderpath):
     
@@ -164,6 +219,7 @@ class MainConfig(AppConfig):
         #flint.paths.set_install_path('Freelancer')
         #comms= flint.get_commodities()
         from commodities.models import Commodity
+        from ship.models import Ship
 
         global equipment
         equipment = folder_reading(settings.EQUIPMENT_DIR)
@@ -178,6 +234,8 @@ class MainConfig(AppConfig):
 
         global ships
         ships = folder_reading(settings.SHIPS_DIR)
+
+        fill_ship_table(Ship)
         #breakpoint()
 
         # for filename in equipment.keys():
@@ -199,7 +257,7 @@ class MainConfig(AppConfig):
 # for obj in arr:
 #     for key in obj.keys():
 #         if key not in test:
-#             if len(obj[key]) == 1 and not isinstance(obj[key][0],list):
+#             if len(obj[key]) > 1:# and not isinstance(obj[key][0],list):
 #                 print(key, " = ", obj[key])
 #             test.add(key)
 
