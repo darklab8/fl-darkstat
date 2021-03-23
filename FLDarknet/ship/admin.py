@@ -15,14 +15,19 @@ class ShipAdmin(admin.ModelAdmin):
     # 'volume', 
     # 'loot_appearance', 
     # 'pod_appearance')
-    'nickname',
+    
+    'ship_class',
     'typeof',
+    'hit_pts',
+    'nanobot_limit',
+    'shield_battery_limit',
+    'hold_size',
+    'mass',
+    'nickname',
+    
     'ids_name',
 
     'ids_info',
-
-    'mass',
-    'hold_size',
     'linear_drag',
     'max_bank_angle',
     'camera_angular_acceleration',
@@ -30,7 +35,7 @@ class ShipAdmin(admin.ModelAdmin):
     'camera_vertical_turn_up_angle',
     'camera_vertical_turn_down_angle',
     'camera_turn_look_ahead_slerp_amount',
-    'hit_pts',
+    
     'nudge_force',
     'strafe_force',
     'strafe_power_usage',
@@ -38,9 +43,6 @@ class ShipAdmin(admin.ModelAdmin):
     'ids_info1',
     'ids_info2',
     'ids_info3',
-    'ship_class',
-    'nanobot_limit',
-    'shield_battery_limit'
     )
 
     #different original name: type
