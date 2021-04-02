@@ -6,6 +6,7 @@ from .models import Ship
 class ShipAdmin(admin.ModelAdmin):
     #print(tuple([f.name for f in Commodity._meta.get_fields()]))
     list_display = ('name', 
+    'info_name',
     # 'nickname', 
     # 'ids_name', 
     # 'ids_info', 

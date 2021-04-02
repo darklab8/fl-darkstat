@@ -12,6 +12,8 @@ class Ship(models.Model):
 
     ids_info = models.IntegerField(db_index=True, blank=True, null=True)
 
+    info_name = models.CharField(max_length=100, db_index=True, blank=True, null=True)
+
     mass = models.FloatField(blank=True, null=True)
     hold_size = models.IntegerField(blank=True, null=True)
     linear_drag = models.FloatField(blank=True, null=True)

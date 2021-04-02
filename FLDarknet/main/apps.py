@@ -4,12 +4,18 @@ import re
 from os import walk
 import os
 from django.core import management
+import xmltodict
+import pprint
+import json
 
-equipment = {}
-universe = {}
-infocards = {}
-ships = {}
-hp_type = {}
+class Universe:
+    equipment = {}
+    universe = {}
+    infocards = {}
+    ships = {}
+    hp_type = {}
+
+u = Universe()
 
 def strip_from_rn(a):
     return a.replace("\r","").replace("\n","")
@@ -93,14 +99,14 @@ def view_wrapper(kwg, obj, cl, name):
 def view_wrapper_with_infocard(kwg, obj, cl, name, infoname):
     if name in obj.keys():
         kwg[name] = cl(obj[name][0])
-        if kwg[name] in infocards:
-            kwg[infoname] = (infocards[kwg[name]][1])
+        if kwg[name] in u.infocards:
+            kwg[infoname] = (u.infocards[kwg[name]][1])
 
 def fill_commodity_table(Commodity):
     #COMMODITY TABLE
-    goods = equipment['select_equip.ini']
+    goods = u.equipment['select_equip.ini']
     arr = goods['[commodity]'].copy()
-    for obj in arr:
+    for i, obj in enumerate(arr):
         try:
             kwg = {}
             view_wrapper_with_infocard(kwg, obj, int, 'ids_name', 'name')
@@ -121,13 +127,13 @@ def fill_commodity_table(Commodity):
             )
             c.save()
         except:
-            print("ERR in filling commodities", obj)
+            print("ERR in filling commodity #", i)
 
 def fill_ship_table(Ship):
     #COMMODITY TABLE
-    goods = ships['shiparch.ini']
+    goods = u.ships['shiparch.ini']
     arr = goods['[ship]'].copy()
-    for obj in arr:
+    for i, obj in enumerate(arr):
         try:
             kwg = {}
             view_wrapper(kwg, obj, str, 'nickname')
@@ -157,16 +163,23 @@ def fill_ship_table(Ship):
             if 'type' in obj.keys():
                 kwg['typeof'] = str(obj['type'][0])
 
-            global hp_type
             if 'nickname' in obj.keys() and 'hp_type' in obj.keys():
-                hp_type[obj['nickname'][0]] = obj['hp_type']
+                u.hp_type[obj['nickname'][0]] = obj['hp_type']
+
+            try:
+                dic = xmltodict.parse(u.infocards[kwg['ids_info']][1])['RDL']['TEXT']
+                if not dic[0]:
+                    dic = xmltodict.parse(u.infocards[kwg['ids_info1']][1])['RDL']['TEXT']
+                kwg['info_name'] = dic[0]
+            except:
+                print("ERR Failed to add info_name to ship object #", i)
 
             c = Ship(
                 **kwg
             )
             c.save()
         except:
-            print("ERR in filling ships", obj)
+            print("ERR in filling ship #", i)
 
 def RecursiveReading(folderpath):
     
@@ -207,27 +220,17 @@ class MainConfig(AppConfig):
         management.call_command('flush', '--noinput')
         management.call_command('migrate')
 
-        #import flint
-        #flint.paths.set_install_path('Freelancer')
-        #comms= flint.get_commodities()
         from commodities.models import Commodity
         from ship.models import Ship
 
-        global equipment
-        equipment = folder_reading(settings.EQUIPMENT_DIR)
-
-        global infocards
-        infocards = parse_infocards(settings.INFOCARDS_PATH)
+        u.equipment = folder_reading(settings.EQUIPMENT_DIR)
+        u.infocards = parse_infocards(settings.INFOCARDS_PATH)
+        u.universe = RecursiveReading(settings.UNIVERSE_DIR)
+        u.ships = folder_reading(settings.SHIPS_DIR)
 
         fill_commodity_table(Commodity)
-
-        global universe
-        universe = RecursiveReading(settings.UNIVERSE_DIR)
-
-        global ships
-        ships = folder_reading(settings.SHIPS_DIR)
-
         fill_ship_table(Ship)
+
         #breakpoint()123
 
         # for filename in equipment.keys():
