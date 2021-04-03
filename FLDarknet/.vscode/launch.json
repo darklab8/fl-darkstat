@@ -12,7 +12,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: Django",
+            "name": "Django Parse",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}\\manage.py",
@@ -24,6 +24,62 @@
                 "DARK_PARSE": "true",
                 "DARK_COPY": "true",
                 "DARK_SAVE": "true"
+            }
+        },
+        {
+            "name": "Django Run",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\manage.py",
+            "args": [
+                "runserver"
+            ],
+            "django": true,
+            "env": {
+                "DARK_LOAD": "true"
+            }
+        },
+        {
+            "name": "Django Test",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\manage.py",
+            "args": [
+                "test"
+            ],
+            "django": true,
+            "env": {
+                "DARK_PARSE": "true",
+                "DARK_COPY": "true",
+                "DARK_SAVE": "true"
+            }
+        },
+        {
+            "name": "Django Copy_Test",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\manage.py",
+            "args": [
+                "test"
+            ],
+            "django": true,
+            "env": {
+                "DARK_PARSE": "true",
+                "DARK_SAVE": "true",
+                "FREELANCER_FOLDER": "dark_copy"
+            }
+        },
+        {
+            "name": "Django Unit",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\manage.py",
+            "args": [
+                "test"
+            ],
+            "django": true,
+            "env": {
+                "DARK_LOAD": "true",
             }
         }
     ]
