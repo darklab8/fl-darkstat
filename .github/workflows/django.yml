@@ -29,4 +29,7 @@ jobs:
     - name: Run Tests
       run: |
         cd FLDarknet
+        export FREELANCER_FOLDER=dark_copy
+        export DARK_PARSE=true
+        export DARK_SAVE=true
         python manage.py test
