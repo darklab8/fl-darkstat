@@ -7,6 +7,11 @@ from django.core import management
 import xmltodict
 import pprint
 import json
+from .files import (
+    read_regular_file, 
+    read_utf8_file,
+    clean_folder_from_files,
+    )
 
 class Universe:
     equipment = {}
@@ -21,11 +26,7 @@ def strip_from_rn(a):
     return a.replace("\r","").replace("\n","")
 
 def parse_infocards(filename):
-    import codecs
-    f = codecs.open( filename, "r", "utf-8" )
-    #f = open(filename)
-
-    content = f.readlines()
+    content = read_utf8_file(filename)
     
     regex_numbers = "^\d+\r|^\d+\n"
     output = {}
@@ -42,8 +43,7 @@ def parse_infocards(filename):
     return output
 
 def parse_file(filename):
-    f = open(filename)
-    content = f.readlines()
+    content = read_regular_file(filename)
     
     output = {}
     regex_for_headers = "(\[)\w+(\])"
@@ -249,6 +249,17 @@ class MainConfig(AppConfig):
     def ready(self):
         if os.environ.get('RUN_MAIN', None) == 'true':
             return
+
+        if settings.DARK_COPY:
+            clean_folder_from_files(settings.DARK_COPY_DIR)
+        #     import stat
+        #     if not os.access(settings.DARK_COPY_DIR, os.W_OK):
+        #         # Is the error an access error ?
+        #         os.chmod(settings.DARK_COPY_DIR, stat.S_IWUSR)
+        #     else:
+        #         pass
+        #     os.remove(settings.DARK_COPY_DIR)
+            
 
         if settings.DARK_LOAD:
             management.call_command('flush', '--noinput')

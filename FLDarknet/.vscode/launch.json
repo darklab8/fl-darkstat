@@ -19,7 +19,12 @@
             "args": [
                 "runserver"
             ],
-            "django": true
+            "django": true,
+            "env": {
+                "DARK_PARSE": "true",
+                "DARK_COPY": "true",
+                "DARK_SAVE": "true"
+            }
         }
     ]
 }

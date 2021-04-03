@@ -21,7 +21,10 @@ load_dotenv(os.path.join(basedir, '.env'))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
-FREELANCER_FOLDER = os.environ.get('FREELANCER_FOLDER') or 'Freelancer'
+if os.environ.get('FREELANCER_FOLDER'):
+    FREELANCER_FOLDER = os.environ.get('FREELANCER_FOLDER').replace(" ","")
+else:
+    FREELANCER_FOLDER = 'Freelancer'
 FREELANCER_DIR = os.environ.get('FREELANCER_DIR') or os.path.join(ROOT_DIR,FREELANCER_FOLDER)
 
 DATA_DIR = os.path.join(FREELANCER_DIR,'DATA')
@@ -35,6 +38,10 @@ SHIPS_DIR = os.path.join(DATA_DIR,'SHIPS')
 DARK_PARSE = (os.environ.get('DARK_PARSE') and 'true' in os.environ.get('DARK_PARSE'))
 DARK_SAVE = (os.environ.get('DARK_SAVE') and 'true' in os.environ.get('DARK_SAVE'))
 DARK_LOAD = (os.environ.get('DARK_LOAD') and 'true' in os.environ.get('DARK_LOAD'))
+DARK_COPY = (os.environ.get('DARK_COPY') and 'true' in os.environ.get('DARK_COPY'))
+
+DARK_COPY_NAME = 'dark_copy' or os.environ.get('DARK_COPY_NAME')
+DARK_COPY_DIR = os.environ.get('DARK_COPY_DIR') or os.path.join(ROOT_DIR,DARK_COPY_NAME)
 
 # GOODS_DIR = os.path.join(EQUIPMENT_DIR,'goods.ini')
 # MARKET_DIR = os.path.join(EQUIPMENT_DIR,'market_commodities.ini')
