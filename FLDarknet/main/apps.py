@@ -46,11 +46,8 @@ def parse_infocards(filename):
     line_count = len(content)
     for i in range(line_count):
         if re.search(regex_numbers, content[i]) is not None:
-            try:
-                output[int(strip_from_rn(content[i]))] = [
-                    strip_from_rn(content[i+1]), strip_from_rn(content[i+2])]
-            except:
-                print('ERR in infocards parser')
+            output[int(strip_from_rn(content[i]))] = [
+                strip_from_rn(content[i+1]), strip_from_rn(content[i+2])]
 
     i += 1
     return output
@@ -112,7 +109,7 @@ def view_wrapper(kwg, obj, data_type, name):
     if name in obj.keys():
         try:
             kwg[name] = data_type(obj[name][0])
-        except ValueError:
+        except ValueError as value_error_1:
             if data_type is int:
                 if ";" in obj[name][0]:
                     splitted = obj[name][0].split(";")[0]
@@ -120,9 +117,9 @@ def view_wrapper(kwg, obj, data_type, name):
                 elif '.' in obj[name][0]:
                     kwg[name] = int(float(obj[name][0]))
                 else:
-                    ValueError
+                    raise ValueError from value_error_1
             else:
-                raise ValueError
+                raise ValueError from value_error_1
 
 
 def view_wrapper_with_infocard(kwg, obj, data_type, name, infoname):
@@ -131,46 +128,42 @@ def view_wrapper_with_infocard(kwg, obj, data_type, name, infoname):
     if name in obj.keys():
         try:
             kwg[name] = data_type(obj[name][0])
-        except ValueError:
+        except ValueError as value_error_1:
             if data_type is int and ";" in obj[name][0]:
                 splitted = obj[name][0].split(";")[0]
                 kwg[name] = data_type(splitted)
             else:
-                raise ValueError
+                raise ValueError from value_error_1
         if kwg[name] in u.infocards:
             kwg[infoname] = (u.infocards[kwg[name]][1])
-        
+
 
 
 def fill_commodity_table(model_obj):
     """Filling our commodity database section with data"""
     goods = u.equipment['select_equip.ini']
     arr = goods['[commodity]'].copy()
-    for i, obj in enumerate(arr):
-        try:
-            kwg = {}
-            view_wrapper_with_infocard(kwg, obj, int, 'ids_name', 'name')
-            view_wrapper(kwg, obj, int, 'ids_info')
+    for obj in arr:
+        kwg = {}
+        view_wrapper_with_infocard(kwg, obj, int, 'ids_name', 'name')
+        view_wrapper(kwg, obj, int, 'ids_info')
 
-            view_wrapper(kwg, obj, int, 'units_per_container')
-            view_wrapper(kwg, obj, int, 'decay_per_second')
-            view_wrapper(kwg, obj, int, 'hit_pts')
+        view_wrapper(kwg, obj, int, 'units_per_container')
+        view_wrapper(kwg, obj, int, 'decay_per_second')
+        view_wrapper(kwg, obj, int, 'hit_pts')
 
-            view_wrapper(kwg, obj, str, 'pod_appearance')
-            view_wrapper(kwg, obj, str, 'loot_appearance')
-            view_wrapper(kwg, obj, str, 'nickname')
+        view_wrapper(kwg, obj, str, 'pod_appearance')
+        view_wrapper(kwg, obj, str, 'loot_appearance')
+        view_wrapper(kwg, obj, str, 'nickname')
 
-            view_wrapper(kwg, obj, float, 'volume')
+        view_wrapper(kwg, obj, float, 'volume')
 
-            c = model_obj(
-                **kwg
-            )
-            c.save()
-        except Exception as error:
-            print("ERR in filling commodity #", i)
+        db_data = model_obj(
+            **kwg
+        )
+        db_data.save()
 
-
-def fill_ship_table(mode_obj):
+def fill_ship_table(model_obj):
     """Filling ship database with data from universe"""
     goods = u.ships['shiparch.ini']
     arr = goods['[ship]'].copy()
@@ -216,9 +209,15 @@ def fill_ship_table(mode_obj):
                     'RDL']['TEXT']
             kwg['info_name'] = dic[0]
         except KeyError:
-            print("ERR not able to find infocard for ship object #", i, " ship nickname", kwg.get('nickname', 'no nickname'), "ids_info", kwg.get('ids_info', 'no ids_info'))
+            print("ERR not able to find infocard for ship object #", i,
+            " ship nickname", kwg.get('nickname', 'no nickname'),
+            "ids_info", kwg.get('ids_info', 'no ids_info')
+            )
         except xmltodict.expat.ExpatError:
-            print("ERR xmltodict.expat.ExpatError, can't parse infocard xml #", i, " ship nickname", kwg.get('nickname', 'no nickname'), "ids_info", kwg.get('ids_info', 'no ids_info'))
+            print("ERR xmltodict.expat.ExpatError, can't parse infocard xml #", i,
+            " ship nickname", kwg.get('nickname', 'no nickname'),
+            "ids_info", kwg.get('ids_info', 'no ids_info')
+            )
 
         if kwg['nickname'] in u.goods_by_ship['shiphull']:
             hull = u.goods_by_ship['shiphull'][kwg['nickname']
@@ -233,10 +232,10 @@ def fill_ship_table(mode_obj):
             # TODO find in addons powercore st_equip
             # and perhaps engine in engine_equip
 
-        c = mode_obj(
+        db_data = model_obj(
             **kwg
         )
-        c.save()
+        db_data.save()
         #except Exception as error:
             #print("ERR in filling ship #", i)
 
@@ -251,8 +250,10 @@ def recursive_reading(folderpath):
                 # dictpath[filename] = 1
                 dictpath[filename] = parse_file(
                     os.path.join(dirpath, filename))
-            except:
-                print('ERROR in ', filename)
+            except IndexError:
+                print('ERR IndexError in ', filename)
+            except UnicodeDecodeError:
+                print("ERR UnicodeDecodeError in ", filename)
 
         for dirname in dirnames:
             dictpath[dirname] = recursive_reading(
@@ -271,8 +272,10 @@ def folder_reading(folderpath):
             try:
                 dictpath[filename] = parse_file(
                     os.path.join(folderpath, filename))
-            except:
-                print('ERROR in ', filename)
+            except IndexError:
+                print('ERR IndexError in ', filename)
+            except UnicodeDecodeError:
+                print("ERR UnicodeDecodeError in ", filename)
         break
     return dictpath
 
