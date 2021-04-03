@@ -172,6 +172,16 @@ def fill_ship_table(Ship):
             except:
                 print("ERR Failed to add info_name to ship object #", i)
 
+            
+            if kwg['nickname'] in u.goods_by_ship['shiphull']:
+                hull = u.goods_by_ship['shiphull'][kwg['nickname']]['nickname'][0]
+                ship = u.goods_by_hull['ship'][hull]
+                #print('123')
+                #for add in ship['addon']
+                    #if add[0] in u.equipment['misc_equip.ini']['[power]'].keys()
+                #TODO find in addons powercore st_equip
+                #and perhaps engine in engine_equip
+
             c = Ship(
                 **kwg
             )
@@ -209,6 +219,31 @@ def folder_reading(folderpath):
         break
     return dictpath
 
+def split_goods(dic, key):
+    
+    goods = u.equipment['goods.ini']['[good]']
+    for i, o in enumerate(goods):
+        try:
+            if o['category'][0] not in dic:
+                dic[o['category'][0]] = {}
+
+            # if key == 'shiphull':
+            #     if key == o['category'][0]:
+            #         print('123')
+            #         pass
+
+            if key == 'shiphull':
+                if key == o['category'][0] and 'ship' in o.keys():
+                    dic[o['category'][0]][o['ship'][0]] = o
+            elif key == 'ship':
+                if key == o['category'][0] and 'hull' in o.keys():
+                    dic[o['category'][0]][o['hull'][0]] = o
+            else:
+                if key in o:
+                    dic[o['category'][0]][o[key][0]] = o
+        except Exception as e:
+            print(f"ERR in goods_by_{key} #", i)
+
 class MainConfig(AppConfig):
     name = 'main'
     def ready(self):
@@ -223,6 +258,11 @@ class MainConfig(AppConfig):
 
         if not settings.DARK_PARSE:
             return
+
+        #import flint
+        #flint.paths.set_install_path('Freelancer')
+        #comms = flint.get_commodities()
+
         management.call_command('flush', '--noinput')
         management.call_command('migrate')
 
@@ -233,6 +273,15 @@ class MainConfig(AppConfig):
         u.infocards = parse_infocards(settings.INFOCARDS_PATH)
         u.universe = RecursiveReading(settings.UNIVERSE_DIR)
         u.ships = folder_reading(settings.SHIPS_DIR)
+
+        u.goods_by_nickname = {}; 
+        split_goods(u.goods_by_nickname, 'nickname')
+
+        u.goods_by_ship = {}; 
+        split_goods(u.goods_by_ship, 'shiphull')
+
+        u.goods_by_hull = {}; 
+        split_goods(u.goods_by_hull, 'ship')
 
         fill_commodity_table(Commodity)
         fill_ship_table(Ship)
