@@ -1,1 +1,9 @@
-fl-flint==0.7.2
+asgiref==3.3.1
+dataclassy==0.7.2
+deconstruct==0.6
+Django==3.1.7
+fl-flint==0.8.1
+python-dotenv==0.15.0
+pytz==2021.1
+sqlparse==0.4.1
+xmltodict==0.12.0
