@@ -20,4 +20,5 @@ jobs:
         pip install pylint-django
     - name: Analysing the code with pylint
       run: |
+        export DJANGO_SETTINGS_MODULE=FLDarknet/FLDarknet/fldarknet
         pylint --load-plugins pylint_django `ls -R|grep .py$|xargs`
