@@ -1,15 +1,15 @@
-from django.contrib import messages
+"some universally used decorators will be here"
 from django.core import management
-from django.conf import settings
+from ship.models import Ship
 
 
-def loaded_db(f):
+def loaded_db(func):
+    "useful decorator to preload stuff for unit tests"
     def decorator_function(*args, **kwargs):
-        #print('executing '+f.__name__)
+        # print('executing '+func.__name__)
 
-        from ship.models import Ship
         if len(Ship.objects.all()) == 0:
             management.call_command('loaddata', 'dump.json')
 
-        return f(*args, **kwargs)
+        return func(*args, **kwargs)
     return decorator_function

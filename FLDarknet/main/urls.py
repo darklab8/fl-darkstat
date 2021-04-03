@@ -1,3 +1,4 @@
+"""Sneaky autologin for all incoming users"""
 from django.urls import path
 
 from . import views

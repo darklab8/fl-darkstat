@@ -1,12 +1,10 @@
+import os
+import re
+import xmltodict
+from os import walk
 from django.apps import AppConfig
 from django.conf import settings
-import re
-from os import walk
-import os
 from django.core import management
-import xmltodict
-import pprint
-import json
 from .files import (
     read_regular_file,
     read_utf8_file,
@@ -40,7 +38,7 @@ def parse_infocards(filename):
     output = {}
     line_count = len(content)
     for i in range(line_count):
-        if (re.search(regex_numbers, content[i]) is not None):
+        if re.search(regex_numbers, content[i]) is not None:
             try:
                 output[int(strip_from_rn(content[i]))] = [
                     strip_from_rn(content[i+1]), strip_from_rn(content[i+2])]
@@ -60,7 +58,7 @@ def parse_file(filename):
 
     line_count = len(content)
     for i in range(line_count):
-        if (re.search(regex_for_headers, content[i]) is not None):
+        if re.search(regex_for_headers, content[i]) is not None:
             header = content[i].lower().replace("\n", "")
 
             if header not in output.keys():
@@ -73,11 +71,11 @@ def parse_file(filename):
                 (i < (line_count - 2))
             ):
 
-                if (content[i] == '\n'):
+                if content[i] == '\n':
                     i += 1
                     continue
 
-                if (re.search("^(;)", content[i]) is not None):
+                if re.search("^(;)", content[i]) is not None:
                     i += 1
                     continue
 
@@ -380,7 +378,7 @@ class MainConfig(AppConfig):
 # for key in goods.keys():
 #     for subkey in goods[key].keys():
 #         if isinstance(goods[key][subkey], list):
-#             if ('addon' not in subkey):
+#             if 'addon' not in subkey:
 #                 print('ERR not addon')
 #
 #

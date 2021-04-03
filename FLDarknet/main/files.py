@@ -1,11 +1,13 @@
-from django.conf import settings
-from shutil import copy2 as copy
+"module to work with files and folders, consisting modified module os operations"
 import functools
 import os
-import pathlib
+import codecs
+from shutil import copy2 as copy
+from django.conf import settings
 
 
 def clean_folder_from_files(dir_to_search):
+    "delete all files in folde recursively"
     for dirpath, dirnames, filenames in os.walk(dir_to_search):
 
         for filename in filenames:
@@ -16,6 +18,7 @@ def clean_folder_from_files(dir_to_search):
 
 
 def create_nested_folder(folderpath):
+    "if our folder path is missing any folders, create them"
     try:
         os.makedirs(folderpath)
     except FileExistsError:
@@ -24,6 +27,7 @@ def create_nested_folder(folderpath):
 
 
 def save_to_dark_copy(func):
+    "sneaky file copy to dark_copy folder for workflow unit tests"
     @functools.wraps(func)
     def wrapper_do_twice(*args, **kwargs):
 
@@ -45,14 +49,13 @@ def save_to_dark_copy(func):
 
 @save_to_dark_copy
 def read_regular_file(filename):
-    f = open(filename)
-    content = f.readlines()
-    return content
+    "get content of regular file"
+    with open(filename) as filelink:
+        return filelink.readlines()
 
 
 @save_to_dark_copy
 def read_utf8_file(filename):
-    import codecs
-    f = codecs.open(filename, "r", "utf-8")
-    content = f.readlines()
-    return content
+    "get content of utf8 encoded file"
+    with codecs.open(filename, "r", "utf-8") as filelink:
+        return filelink.readlines()
