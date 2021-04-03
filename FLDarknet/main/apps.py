@@ -14,6 +14,8 @@ from .files import (
     )
 
 class Universe:
+    """"This class will have parsed data from files
+    stored in preparation to be sent to database"""
     equipment = {}
     universe = {}
     infocards = {}
@@ -24,8 +26,12 @@ u = Universe()
 
 def strip_from_rn(a):
     return a.replace("\r","").replace("\n","")
+    """Strips string from \r or \n trash"""
+    return a.replace("\r", "").replace("\n", "")
+
 
 def parse_infocards(filename):
+    """"Parses infocard file into dictionary"""
     content = read_utf8_file(filename)
     
     regex_numbers = "^\d+\r|^\d+\n"
@@ -43,6 +49,7 @@ def parse_infocards(filename):
     return output
 
 def parse_file(filename):
+    """Parses file into dictionary"""
     content = read_regular_file(filename)
     
     output = {}
@@ -91,10 +98,13 @@ def parse_file(filename):
     return output
 
 def view_wrapper(kwg, obj, cl, name):
+    """"Function which prepares one value to be inserted into database"""
     if name in obj.keys():
         kwg[name] = cl(obj[name][0])
 
 def view_wrapper_with_infocard(kwg, obj, cl, name, infoname):
+    """Function that prepares two values to be inserted into database
+    with getting extra one in infocard"""
     if name in obj.keys():
         kwg[name] = cl(obj[name][0])
         if kwg[name] in u.infocards:
@@ -102,6 +112,7 @@ def view_wrapper_with_infocard(kwg, obj, cl, name, infoname):
 
 def fill_commodity_table(Commodity):
     #COMMODITY TABLE
+    """Filling our commodity database section with data"""
     goods = u.equipment['select_equip.ini']
     arr = goods['[commodity]'].copy()
     for i, obj in enumerate(arr):
@@ -129,6 +140,7 @@ def fill_commodity_table(Commodity):
 
 def fill_ship_table(Ship):
     #COMMODITY TABLE
+    """Filling ship database with data from universe"""
     goods = u.ships['shiparch.ini']
     arr = goods['[ship]'].copy()
     for i, obj in enumerate(arr):
@@ -191,6 +203,7 @@ def fill_ship_table(Ship):
 
 def RecursiveReading(folderpath):
     
+    """"Function to read all files from Universe folder resursively"""
     dictpath = {}
     for (dirpath, dirnames, filenames) in walk(folderpath):
         #1 Level
@@ -221,6 +234,7 @@ def folder_reading(folderpath):
 
 def split_goods(dic, key):
     
+    """"Converts parsed data from list into being accessable by chosen hash key"""
     goods = u.equipment['goods.ini']['[good]']
     for i, o in enumerate(goods):
         try:
