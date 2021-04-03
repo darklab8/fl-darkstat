@@ -1,10 +1,12 @@
+""""Module to show model commodity in admin interface"""
 from django.contrib import admin
-
 from .models import Commodity
 
 
 class CommodityAdmin(admin.ModelAdmin):
-    print(tuple([f.name for f in Commodity._meta.get_fields()]))
+    """Rewriting standard model viewer with custom one to show all necessary commodity colums"""
+
+    # print(tuple([f.name for f in Commodity._meta.get_fields()]))
     list_display = ('name', 'nickname', 'ids_name', 'ids_info', 'units_per_container',
                     'decay_per_second', 'hit_pts', 'volume', 'loot_appearance', 'pod_appearance')
 

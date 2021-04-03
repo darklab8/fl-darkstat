@@ -1,9 +1,12 @@
+""""Section for regular shop commodities"""
 from django.db import models
 
 # Create your models here.
 
 
 class Commodity(models.Model):
+    """"Model for freelancer ingame regular commodities in the shop"""
+
     class Meta:
         verbose_name_plural = "commodities"
 

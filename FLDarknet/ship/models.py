@@ -1,9 +1,11 @@
+"model for table about space ships"
 from django.db import models
 
 # Create your models here.
 
 
 class Ship(models.Model):
+    "Any related stats about space ship information"
     class Meta:
         verbose_name_plural = "ships"
 

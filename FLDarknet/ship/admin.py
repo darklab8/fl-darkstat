@@ -1,10 +1,10 @@
+"module to render ships in admin interface"
 from django.contrib import admin
-
-# Register your models here.
 from .models import Ship
 
 
 class ShipAdmin(admin.ModelAdmin):
+    "class to rewrite standard model view to what we need showing in admin interface"
     #print(tuple([f.name for f in Commodity._meta.get_fields()]))
     list_display = ('name',
                     'info_name',
