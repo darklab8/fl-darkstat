@@ -32,6 +32,10 @@ INFOCARDS_PATH = os.path.join(SERVICE_DIR,'infocards.txt')
 UNIVERSE_DIR = os.path.join(DATA_DIR,'UNIVERSE')
 SHIPS_DIR = os.path.join(DATA_DIR,'SHIPS')
 
+DARK_PARSE = (os.environ.get('DARK_PARSE') and 'true' in os.environ.get('DARK_PARSE'))
+DARK_SAVE = (os.environ.get('DARK_SAVE') and 'true' in os.environ.get('DARK_SAVE'))
+DARK_LOAD = (os.environ.get('DARK_LOAD') and 'true' in os.environ.get('DARK_LOAD'))
+
 # GOODS_DIR = os.path.join(EQUIPMENT_DIR,'goods.ini')
 # MARKET_DIR = os.path.join(EQUIPMENT_DIR,'market_commodities.ini')
 # SEL_EQUIP_DIR = os.path.join(EQUIPMENT_DIR,'select_equip.ini')

@@ -30,7 +30,6 @@ def parse_infocards(filename):
     regex_numbers = "^\d+\r|^\d+\n"
     output = {}
     line_count = len(content)
-    #breakpoint()
     for i in range(line_count):
         #print(content[i])
         if (re.search(regex_numbers, content[i]) is not None):
@@ -43,7 +42,6 @@ def parse_infocards(filename):
     return output
 
 def parse_file(filename):
-    #breakpoint()
     f = open(filename)
     content = f.readlines()
     
@@ -217,6 +215,14 @@ class MainConfig(AppConfig):
         if os.environ.get('RUN_MAIN', None) == 'true':
             return
 
+        if settings.DARK_LOAD:
+            management.call_command('flush', '--noinput')
+            management.call_command('migrate')
+            management.call_command('loaddata', 'dump.json')
+            return
+
+        if not settings.DARK_PARSE:
+            return
         management.call_command('flush', '--noinput')
         management.call_command('migrate')
 
@@ -231,7 +237,9 @@ class MainConfig(AppConfig):
         fill_commodity_table(Commodity)
         fill_ship_table(Ship)
 
-        #breakpoint()123
+        if settings.DARK_SAVE:
+            management.call_command('dumpdata',natural_foreign=True, natural_primary=True,indent=2, output="dump.json")
+            #python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission -e apps --indent 2 > dump.json
 
         # for filename in equipment.keys():
         #     for header in equipment[filename].keys():

@@ -232,3 +232,4 @@ app.db
 microblog.log*
 
 Freelancer/
+dump.json
