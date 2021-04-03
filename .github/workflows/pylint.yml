@@ -23,4 +23,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         cd FLDarknet
-        pylint --load-plugins pylint_django --django-settings-module="fldarknet.settings" --disable=django-not-configured `ls -d */`
+        pylint --load-plugins pylint_django --django-settings-module="fldarknet.settings" --disable=django-not-configured --exit-zero `ls -d */`
