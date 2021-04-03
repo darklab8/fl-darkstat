@@ -19,7 +19,7 @@ jobs:
         pip install pylint
         pip install pylint-django
         cd FLDarknet
-        pip install -r requirements
+        pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
         cd FLDarknet
