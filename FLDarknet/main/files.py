@@ -8,7 +8,7 @@ from django.conf import settings
 
 def clean_folder_from_files(dir_to_search):
     "delete all files in folde recursively"
-    for dirpath, dirnames, filenames in os.walk(dir_to_search):
+    for dirpath, __, filenames in os.walk(dir_to_search):
 
         for filename in filenames:
             try:

@@ -1,7 +1,8 @@
+"module to parse data"
 import os
 import re
-import xmltodict
 from os import walk
+import xmltodict
 from django.apps import AppConfig
 from django.conf import settings
 from django.core import management
@@ -21,20 +22,26 @@ class Universe:
     ships = {}
     hp_type = {}
 
+    goods_by_nickname = {}
+    goods_by_ship = {}
+    goods_by_hull = {}
+
+
+
 
 u = Universe()
 
 
-def strip_from_rn(a):
+def strip_from_rn(line):
     """Strips string from \r or \n trash"""
-    return a.replace("\r", "").replace("\n", "")
+    return line.replace("\r", "").replace("\n", "")
 
 
 def parse_infocards(filename):
     """"Parses infocard file into dictionary"""
     content = read_utf8_file(filename)
 
-    regex_numbers = "^\d+\r|^\d+\n"
+    regex_numbers = r"^\d+\r|^\d+\n"
     output = {}
     line_count = len(content)
     for i in range(line_count):
@@ -54,7 +61,7 @@ def parse_file(filename):
     content = read_regular_file(filename)
 
     output = {}
-    regex_for_headers = "(\[)\w+(\])"
+    regex_for_headers = r"(\[)\w+(\])"
 
     line_count = len(content)
     for i in range(line_count):
@@ -100,22 +107,42 @@ def parse_file(filename):
     return output
 
 
-def view_wrapper(kwg, obj, cl, name):
+def view_wrapper(kwg, obj, data_type, name):
     """"Function which prepares one value to be inserted into database"""
     if name in obj.keys():
-        kwg[name] = cl(obj[name][0])
+        try:
+            kwg[name] = data_type(obj[name][0])
+        except ValueError:
+            if data_type is int:
+                if ";" in obj[name][0]:
+                    splitted = obj[name][0].split(";")[0]
+                    kwg[name] = data_type(splitted)
+                elif '.' in obj[name][0]:
+                    kwg[name] = int(float(obj[name][0]))
+                else:
+                    ValueError
+            else:
+                raise ValueError
 
 
-def view_wrapper_with_infocard(kwg, obj, cl, name, infoname):
+def view_wrapper_with_infocard(kwg, obj, data_type, name, infoname):
     """Function that prepares two values to be inserted into database
     with getting extra one in infocard"""
     if name in obj.keys():
-        kwg[name] = cl(obj[name][0])
+        try:
+            kwg[name] = data_type(obj[name][0])
+        except ValueError:
+            if data_type is int and ";" in obj[name][0]:
+                splitted = obj[name][0].split(";")[0]
+                kwg[name] = data_type(splitted)
+            else:
+                raise ValueError
         if kwg[name] in u.infocards:
             kwg[infoname] = (u.infocards[kwg[name]][1])
+        
 
 
-def fill_commodity_table(Commodity):
+def fill_commodity_table(model_obj):
     """Filling our commodity database section with data"""
     goods = u.equipment['select_equip.ini']
     arr = goods['[commodity]'].copy()
@@ -135,81 +162,86 @@ def fill_commodity_table(Commodity):
 
             view_wrapper(kwg, obj, float, 'volume')
 
-            c = Commodity(
+            c = model_obj(
                 **kwg
             )
             c.save()
-        except:
+        except Exception as error:
             print("ERR in filling commodity #", i)
 
 
-def fill_ship_table(Ship):
+def fill_ship_table(mode_obj):
     """Filling ship database with data from universe"""
     goods = u.ships['shiparch.ini']
     arr = goods['[ship]'].copy()
     for i, obj in enumerate(arr):
+
+        kwg = {}
+        view_wrapper(kwg, obj, str, 'nickname')
+        view_wrapper_with_infocard(kwg, obj, int, 'ids_name', 'name')
+        view_wrapper(kwg, obj, int, 'ids_info')
+        view_wrapper(kwg, obj, float, 'mass')
+        view_wrapper(kwg, obj, int, 'hold_size')
+        view_wrapper(kwg, obj, float, 'linear_drag')
+        view_wrapper(kwg, obj, int, 'max_bank_angle')
+        view_wrapper(kwg, obj, float, 'camera_angular_acceleration')
+        view_wrapper(kwg, obj, int, 'camera_horizontal_turn_angle')
+        view_wrapper(kwg, obj, int, 'camera_vertical_turn_up_angle')
+        view_wrapper(kwg, obj, int, 'camera_vertical_turn_down_angle')
+        view_wrapper(kwg, obj, float,
+                        'camera_turn_look_ahead_slerp_amount')
+        view_wrapper(kwg, obj, int, 'hit_pts')
+        view_wrapper(kwg, obj, float, 'nudge_force')
+        view_wrapper(kwg, obj, int, 'strafe_force')
+        view_wrapper(kwg, obj, int, 'strafe_power_usage')
+        view_wrapper(kwg, obj, float, 'explosion_resistance')
+        view_wrapper(kwg, obj, int, 'ids_info1')
+        view_wrapper(kwg, obj, int, 'ids_info2')
+        view_wrapper(kwg, obj, int, 'ids_info3')
+        view_wrapper(kwg, obj, int, 'ship_class')
+        view_wrapper(kwg, obj, int, 'nanobot_limit')
+        view_wrapper(kwg, obj, int, 'shield_battery_limit')
+
+        if 'type' in obj.keys():
+            kwg['typeof'] = str(obj['type'][0])
+
+        if 'nickname' in obj.keys() and 'hp_type' in obj.keys():
+            u.hp_type[obj['nickname'][0]] = obj['hp_type']
+
         try:
-            kwg = {}
-            view_wrapper(kwg, obj, str, 'nickname')
-            view_wrapper_with_infocard(kwg, obj, int, 'ids_name', 'name')
-            view_wrapper(kwg, obj, int, 'ids_info')
-            view_wrapper(kwg, obj, float, 'mass')
-            view_wrapper(kwg, obj, int, 'hold_size')
-            view_wrapper(kwg, obj, float, 'linear_drag')
-            view_wrapper(kwg, obj, int, 'max_bank_angle')
-            view_wrapper(kwg, obj, float, 'camera_angular_acceleration')
-            view_wrapper(kwg, obj, int, 'camera_horizontal_turn_angle')
-            view_wrapper(kwg, obj, int, 'camera_vertical_turn_up_angle')
-            view_wrapper(kwg, obj, int, 'camera_vertical_turn_down_angle')
-            view_wrapper(kwg, obj, float,
-                         'camera_turn_look_ahead_slerp_amount')
-            view_wrapper(kwg, obj, int, 'hit_pts')
-            view_wrapper(kwg, obj, float, 'nudge_force')
-            view_wrapper(kwg, obj, int, 'strafe_force')
-            view_wrapper(kwg, obj, int, 'strafe_power_usage')
-            view_wrapper(kwg, obj, float, 'explosion_resistance')
-            view_wrapper(kwg, obj, int, 'ids_info1')
-            view_wrapper(kwg, obj, int, 'ids_info2')
-            view_wrapper(kwg, obj, int, 'ids_info3')
-            view_wrapper(kwg, obj, int, 'ship_class')
-            view_wrapper(kwg, obj, int, 'nanobot_limit')
-            view_wrapper(kwg, obj, int, 'shield_battery_limit')
-
-            if 'type' in obj.keys():
-                kwg['typeof'] = str(obj['type'][0])
-
-            if 'nickname' in obj.keys() and 'hp_type' in obj.keys():
-                u.hp_type[obj['nickname'][0]] = obj['hp_type']
-
-            try:
-                dic = xmltodict.parse(u.infocards[kwg['ids_info']][1])[
+            dic = xmltodict.parse(u.infocards[kwg['ids_info']][1])[
+                'RDL']['TEXT']
+            if not dic[0]:
+                dic = xmltodict.parse(u.infocards[kwg['ids_info1']][1])[
                     'RDL']['TEXT']
-                if not dic[0]:
-                    dic = xmltodict.parse(u.infocards[kwg['ids_info1']][1])[
-                        'RDL']['TEXT']
-                kwg['info_name'] = dic[0]
-            except:
-                print("ERR Failed to add info_name to ship object #", i)
+            kwg['info_name'] = dic[0]
+        except KeyError:
+            print("ERR not able to find infocard for ship object #", i, " ship nickname", kwg.get('nickname', 'no nickname'), "ids_info", kwg.get('ids_info', 'no ids_info'))
+        except xmltodict.expat.ExpatError:
+            print("ERR xmltodict.expat.ExpatError, can't parse infocard xml #", i, " ship nickname", kwg.get('nickname', 'no nickname'), "ids_info", kwg.get('ids_info', 'no ids_info'))
 
-            if kwg['nickname'] in u.goods_by_ship['shiphull']:
-                hull = u.goods_by_ship['shiphull'][kwg['nickname']
-                                                   ]['nickname'][0]
+        if kwg['nickname'] in u.goods_by_ship['shiphull']:
+            hull = u.goods_by_ship['shiphull'][kwg['nickname']
+                                                ]['nickname'][0]
+            try:
                 ship = u.goods_by_hull['ship'][hull]
-                # print('123')
-                # for add in ship['addon']
-                # i f add[0] in u.equipment['misc_equip.ini']['[power]'].keys()
-                # TODO find in addons powercore st_equip
-                # and perhaps engine in engine_equip
+            except KeyError:
+                print("ERR no package in goods.ini for ship hull =", hull)
+            # print('123')
+            # for add in ship['addon']
+            # i f add[0] in u.equipment['misc_equip.ini']['[power]'].keys()
+            # TODO find in addons powercore st_equip
+            # and perhaps engine in engine_equip
 
-            c = Ship(
-                **kwg
-            )
-            c.save()
-        except:
-            print("ERR in filling ship #", i)
+        c = mode_obj(
+            **kwg
+        )
+        c.save()
+        #except Exception as error:
+            #print("ERR in filling ship #", i)
 
 
-def RecursiveReading(folderpath):
+def recursive_reading(folderpath):
     """"Function to read all files from Universe folder resursively"""
     dictpath = {}
     for (dirpath, dirnames, filenames) in walk(folderpath):
@@ -223,7 +255,7 @@ def RecursiveReading(folderpath):
                 print('ERROR in ', filename)
 
         for dirname in dirnames:
-            dictpath[dirname] = RecursiveReading(
+            dictpath[dirname] = recursive_reading(
                 os.path.join(dirpath, dirname))
 
         break
@@ -234,7 +266,7 @@ def RecursiveReading(folderpath):
 def folder_reading(folderpath):
     """Fuction to parse all files in one folder"""
     dictpath = {}
-    for (dirpath, dirnames, filenames) in walk(folderpath):
+    for (__, __, filenames) in walk(folderpath):
         for filename in filenames:
             try:
                 dictpath[filename] = parse_file(
@@ -248,30 +280,25 @@ def folder_reading(folderpath):
 def split_goods(dic, key):
     """"Converts parsed data from list into being accessable by chosen hash key"""
     goods = u.equipment['goods.ini']['[good]']
-    for i, o in enumerate(goods):
-        try:
-            if o['category'][0] not in dic:
-                dic[o['category'][0]] = {}
+    for obj in goods:
+        if obj['category'][0] not in dic:
+            dic[obj['category'][0]] = {}
 
-            # if key == 'shiphull':
-            #     if key == o['category'][0]:
-            #         print('123')
-            #         pass
-
-            if key == 'shiphull':
-                if key == o['category'][0] and 'ship' in o.keys():
-                    dic[o['category'][0]][o['ship'][0]] = o
-            elif key == 'ship':
-                if key == o['category'][0] and 'hull' in o.keys():
-                    dic[o['category'][0]][o['hull'][0]] = o
-            else:
-                if key in o:
-                    dic[o['category'][0]][o[key][0]] = o
-        except Exception as e:
-            print(f"ERR in goods_by_{key} #", i)
+        if key == 'shiphull':
+            if key == obj['category'][0] and 'ship' in obj.keys():
+                dic[obj['category'][0]][obj['ship'][0]] = obj
+        elif key == 'ship':
+            if key == obj['category'][0] and 'hull' in obj.keys():
+                dic[obj['category'][0]][obj['hull'][0]] = obj
+        else:
+            if key in obj:
+                dic[obj['category'][0]][obj[key][0]] = obj
+        # print(f"ERR in goods_by_{key} #", i)
 
 
 class MainConfig(AppConfig):
+    "main class to launch server in a different configuration to parse/save/load data"
+
     name = 'main'
 
     def ready(self):
@@ -309,16 +336,11 @@ class MainConfig(AppConfig):
 
         u.equipment = folder_reading(settings.EQUIPMENT_DIR)
         u.infocards = parse_infocards(settings.INFOCARDS_PATH)
-        u.universe = RecursiveReading(settings.UNIVERSE_DIR)
+        u.universe = recursive_reading(settings.UNIVERSE_DIR)
         u.ships = folder_reading(settings.SHIPS_DIR)
 
-        u.goods_by_nickname = {}
         split_goods(u.goods_by_nickname, 'nickname')
-
-        u.goods_by_ship = {}
         split_goods(u.goods_by_ship, 'shiphull')
-
-        u.goods_by_hull = {}
         split_goods(u.goods_by_hull, 'ship')
 
         fill_commodity_table(Commodity)
@@ -326,8 +348,12 @@ class MainConfig(AppConfig):
 
         if settings.DARK_SAVE:
             management.call_command(
-                'dumpdata', natural_foreign=True, natural_primary=True, indent=2, output="dump.json")
-            # python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission -e apps --indent 2 > dump.json
+                'dumpdata',
+                natural_foreign=True,
+                natural_primary=True,
+                indent=2,
+                output="dump.json"
+                )
 
         # for filename in equipment.keys():
         #     for header in equipment[filename].keys():
