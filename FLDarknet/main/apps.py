@@ -8,10 +8,11 @@ import xmltodict
 import pprint
 import json
 from .files import (
-    read_regular_file, 
+    read_regular_file,
     read_utf8_file,
     clean_folder_from_files,
     )
+
 
 class Universe:
     """"This class will have parsed data from files
@@ -22,10 +23,11 @@ class Universe:
     ships = {}
     hp_type = {}
 
+
 u = Universe()
 
+
 def strip_from_rn(a):
-    return a.replace("\r","").replace("\n","")
     """Strips string from \r or \n trash"""
     return a.replace("\r", "").replace("\n", "")
 
@@ -33,12 +35,11 @@ def strip_from_rn(a):
 def parse_infocards(filename):
     """"Parses infocard file into dictionary"""
     content = read_utf8_file(filename)
-    
+
     regex_numbers = "^\d+\r|^\d+\n"
     output = {}
     line_count = len(content)
     for i in range(line_count):
-        #print(content[i])
         if (re.search(regex_numbers, content[i]) is not None):
             try:
                 output[int(strip_from_rn(content[i]))] = [strip_from_rn(content[i+1]), strip_from_rn(content[i+2])]
@@ -47,6 +48,7 @@ def parse_infocards(filename):
         
     i+=1
     return output
+
 
 def parse_file(filename):
     """Parses file into dictionary"""
@@ -97,10 +99,12 @@ def parse_file(filename):
         i+=1
     return output
 
+
 def view_wrapper(kwg, obj, cl, name):
     """"Function which prepares one value to be inserted into database"""
     if name in obj.keys():
         kwg[name] = cl(obj[name][0])
+
 
 def view_wrapper_with_infocard(kwg, obj, cl, name, infoname):
     """Function that prepares two values to be inserted into database
@@ -110,8 +114,8 @@ def view_wrapper_with_infocard(kwg, obj, cl, name, infoname):
         if kwg[name] in u.infocards:
             kwg[infoname] = (u.infocards[kwg[name]][1])
 
+
 def fill_commodity_table(Commodity):
-    #COMMODITY TABLE
     """Filling our commodity database section with data"""
     goods = u.equipment['select_equip.ini']
     arr = goods['[commodity]'].copy()
@@ -138,8 +142,8 @@ def fill_commodity_table(Commodity):
         except:
             print("ERR in filling commodity #", i)
 
+
 def fill_ship_table(Ship):
-    #COMMODITY TABLE
     """Filling ship database with data from universe"""
     goods = u.ships['shiparch.ini']
     arr = goods['[ship]'].copy()
@@ -188,11 +192,11 @@ def fill_ship_table(Ship):
             if kwg['nickname'] in u.goods_by_ship['shiphull']:
                 hull = u.goods_by_ship['shiphull'][kwg['nickname']]['nickname'][0]
                 ship = u.goods_by_hull['ship'][hull]
-                #print('123')
-                #for add in ship['addon']
-                    #if add[0] in u.equipment['misc_equip.ini']['[power]'].keys()
-                #TODO find in addons powercore st_equip
-                #and perhaps engine in engine_equip
+                # print('123')
+                # for add in ship['addon']
+                    # i f add[0] in u.equipment['misc_equip.ini']['[power]'].keys()
+                # TODO find in addons powercore st_equip
+                # and perhaps engine in engine_equip
 
             c = Ship(
                 **kwg
@@ -201,15 +205,15 @@ def fill_ship_table(Ship):
         except:
             print("ERR in filling ship #", i)
 
+
 def RecursiveReading(folderpath):
-    
     """"Function to read all files from Universe folder resursively"""
     dictpath = {}
     for (dirpath, dirnames, filenames) in walk(folderpath):
-        #1 Level
+        # 1 Level
         for filename in filenames:
             try:
-                #dictpath[filename] = 1
+                # dictpath[filename] = 1
                 dictpath[filename] = parse_file(os.path.join(dirpath,filename))
             except:
                 print('ERROR in ', filename)
@@ -221,7 +225,9 @@ def RecursiveReading(folderpath):
     
     return dictpath
 
+
 def folder_reading(folderpath):
+    """Fuction to parse all files in one folder"""
     dictpath = {}
     for (dirpath, dirnames, filenames) in walk(folderpath):
         for filename in filenames:
@@ -232,8 +238,8 @@ def folder_reading(folderpath):
         break
     return dictpath
 
+
 def split_goods(dic, key):
-    
     """"Converts parsed data from list into being accessable by chosen hash key"""
     goods = u.equipment['goods.ini']['[good]']
     for i, o in enumerate(goods):
@@ -257,6 +263,7 @@ def split_goods(dic, key):
                     dic[o['category'][0]][o[key][0]] = o
         except Exception as e:
             print(f"ERR in goods_by_{key} #", i)
+
 
 class MainConfig(AppConfig):
     name = 'main'
@@ -284,9 +291,9 @@ class MainConfig(AppConfig):
         if not settings.DARK_PARSE:
             return
 
-        #import flint
-        #flint.paths.set_install_path('Freelancer')
-        #comms = flint.get_commodities()
+        # import flint
+        # flint.paths.set_install_path('Freelancer')
+        # comms = flint.get_commodities()
 
         management.call_command('flush', '--noinput')
         management.call_command('migrate')
@@ -313,13 +320,13 @@ class MainConfig(AppConfig):
 
         if settings.DARK_SAVE:
             management.call_command('dumpdata',natural_foreign=True, natural_primary=True,indent=2, output="dump.json")
-            #python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission -e apps --indent 2 > dump.json
+            # python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission -e apps --indent 2 > dump.json
 
         # for filename in equipment.keys():
         #     for header in equipment[filename].keys():
         #         for obj in equipment[filename][header]:
-        #             #print(obj)
-        #             #breakpoint()
+        #             # print(obj)
+        #             # breakpoint()
         #             break
             
         
@@ -352,7 +359,7 @@ class MainConfig(AppConfig):
 
 # possible_keys = set()
 # for key in goods.keys():
-#     #if 'category' in goods[key].keys() and goods[key]['category'] == 'equipment':
+#     # if 'category' in goods[key].keys() and goods[key]['category'] == 'equipment':
 #     for subkey in goods[key].keys():   
 #         if 'category' in subkey:
 #             possible_keys.add(goods[key][subkey]) 
@@ -367,9 +374,8 @@ class MainConfig(AppConfig):
 #         if isinstance(goods[key][subkey], list):
 #             if ('addon' not in subkey):
 #                 print('ERR not addon')
-
-                    
-
+#
+#
         # for i in range(10):
         #     c = Commodity(
         #         name = str(i)
