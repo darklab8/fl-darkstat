@@ -11,7 +11,7 @@ from .files import (
     read_regular_file,
     read_utf8_file,
     clean_folder_from_files,
-    )
+)
 
 
 class Universe:
@@ -42,45 +42,47 @@ def parse_infocards(filename):
     for i in range(line_count):
         if (re.search(regex_numbers, content[i]) is not None):
             try:
-                output[int(strip_from_rn(content[i]))] = [strip_from_rn(content[i+1]), strip_from_rn(content[i+2])]
+                output[int(strip_from_rn(content[i]))] = [
+                    strip_from_rn(content[i+1]), strip_from_rn(content[i+2])]
             except:
                 print('ERR in infocards parser')
-        
-    i+=1
+
+    i += 1
     return output
 
 
 def parse_file(filename):
     """Parses file into dictionary"""
     content = read_regular_file(filename)
-    
+
     output = {}
     regex_for_headers = "(\[)\w+(\])"
 
     line_count = len(content)
     for i in range(line_count):
         if (re.search(regex_for_headers, content[i]) is not None):
-            header = content[i].lower().replace("\n","")
+            header = content[i].lower().replace("\n", "")
 
             if header not in output.keys():
                 output[header] = []
 
-            i+=1
+            i += 1
             obj = {}
             while (
-                (re.search(regex_for_headers, content[i+1]) is None) and 
+                (re.search(regex_for_headers, content[i+1]) is None) and
                 (i < (line_count - 2))
-                ):
+            ):
 
                 if (content[i] == '\n'):
-                    i+=1
-                    continue
-                
-                if (re.search("^(;)", content[i]) is not None):
-                    i+=1
+                    i += 1
                     continue
 
-                splitted = content[i].replace(" ","").replace("\n","").split('=')
+                if (re.search("^(;)", content[i]) is not None):
+                    i += 1
+                    continue
+
+                splitted = content[i].replace(
+                    " ", "").replace("\n", "").split('=')
 
                 if len(splitted) == 2:
                     if splitted[0] not in obj.keys():
@@ -96,7 +98,7 @@ def parse_file(filename):
 
             output[header].append(obj)
 
-        i+=1
+        i += 1
     return output
 
 
@@ -161,7 +163,8 @@ def fill_ship_table(Ship):
             view_wrapper(kwg, obj, int, 'camera_horizontal_turn_angle')
             view_wrapper(kwg, obj, int, 'camera_vertical_turn_up_angle')
             view_wrapper(kwg, obj, int, 'camera_vertical_turn_down_angle')
-            view_wrapper(kwg, obj, float, 'camera_turn_look_ahead_slerp_amount')
+            view_wrapper(kwg, obj, float,
+                         'camera_turn_look_ahead_slerp_amount')
             view_wrapper(kwg, obj, int, 'hit_pts')
             view_wrapper(kwg, obj, float, 'nudge_force')
             view_wrapper(kwg, obj, int, 'strafe_force')
@@ -173,7 +176,7 @@ def fill_ship_table(Ship):
             view_wrapper(kwg, obj, int, 'ship_class')
             view_wrapper(kwg, obj, int, 'nanobot_limit')
             view_wrapper(kwg, obj, int, 'shield_battery_limit')
-            
+
             if 'type' in obj.keys():
                 kwg['typeof'] = str(obj['type'][0])
 
@@ -181,20 +184,22 @@ def fill_ship_table(Ship):
                 u.hp_type[obj['nickname'][0]] = obj['hp_type']
 
             try:
-                dic = xmltodict.parse(u.infocards[kwg['ids_info']][1])['RDL']['TEXT']
+                dic = xmltodict.parse(u.infocards[kwg['ids_info']][1])[
+                    'RDL']['TEXT']
                 if not dic[0]:
-                    dic = xmltodict.parse(u.infocards[kwg['ids_info1']][1])['RDL']['TEXT']
+                    dic = xmltodict.parse(u.infocards[kwg['ids_info1']][1])[
+                        'RDL']['TEXT']
                 kwg['info_name'] = dic[0]
             except:
                 print("ERR Failed to add info_name to ship object #", i)
 
-            
             if kwg['nickname'] in u.goods_by_ship['shiphull']:
-                hull = u.goods_by_ship['shiphull'][kwg['nickname']]['nickname'][0]
+                hull = u.goods_by_ship['shiphull'][kwg['nickname']
+                                                   ]['nickname'][0]
                 ship = u.goods_by_hull['ship'][hull]
                 # print('123')
                 # for add in ship['addon']
-                    # i f add[0] in u.equipment['misc_equip.ini']['[power]'].keys()
+                # i f add[0] in u.equipment['misc_equip.ini']['[power]'].keys()
                 # TODO find in addons powercore st_equip
                 # and perhaps engine in engine_equip
 
@@ -214,15 +219,17 @@ def RecursiveReading(folderpath):
         for filename in filenames:
             try:
                 # dictpath[filename] = 1
-                dictpath[filename] = parse_file(os.path.join(dirpath,filename))
+                dictpath[filename] = parse_file(
+                    os.path.join(dirpath, filename))
             except:
                 print('ERROR in ', filename)
 
         for dirname in dirnames:
-            dictpath[dirname] = RecursiveReading(os.path.join(dirpath,dirname))
+            dictpath[dirname] = RecursiveReading(
+                os.path.join(dirpath, dirname))
 
         break
-    
+
     return dictpath
 
 
@@ -232,7 +239,8 @@ def folder_reading(folderpath):
     for (dirpath, dirnames, filenames) in walk(folderpath):
         for filename in filenames:
             try:
-                dictpath[filename] = parse_file(os.path.join(folderpath,filename))
+                dictpath[filename] = parse_file(
+                    os.path.join(folderpath, filename))
             except:
                 print('ERROR in ', filename)
         break
@@ -267,6 +275,7 @@ def split_goods(dic, key):
 
 class MainConfig(AppConfig):
     name = 'main'
+
     def ready(self):
         if os.environ.get('RUN_MAIN', None) == 'true':
             return
@@ -280,7 +289,6 @@ class MainConfig(AppConfig):
         #     else:
         #         pass
         #     os.remove(settings.DARK_COPY_DIR)
-            
 
         if settings.DARK_LOAD:
             management.call_command('flush', '--noinput')
@@ -306,20 +314,21 @@ class MainConfig(AppConfig):
         u.universe = RecursiveReading(settings.UNIVERSE_DIR)
         u.ships = folder_reading(settings.SHIPS_DIR)
 
-        u.goods_by_nickname = {}; 
+        u.goods_by_nickname = {}
         split_goods(u.goods_by_nickname, 'nickname')
 
-        u.goods_by_ship = {}; 
+        u.goods_by_ship = {}
         split_goods(u.goods_by_ship, 'shiphull')
 
-        u.goods_by_hull = {}; 
+        u.goods_by_hull = {}
         split_goods(u.goods_by_hull, 'ship')
 
         fill_commodity_table(Commodity)
         fill_ship_table(Ship)
 
         if settings.DARK_SAVE:
-            management.call_command('dumpdata',natural_foreign=True, natural_primary=True,indent=2, output="dump.json")
+            management.call_command(
+                'dumpdata', natural_foreign=True, natural_primary=True, indent=2, output="dump.json")
             # python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission -e apps --indent 2 > dump.json
 
         # for filename in equipment.keys():
@@ -328,8 +337,7 @@ class MainConfig(AppConfig):
         #             # print(obj)
         #             # breakpoint()
         #             break
-            
-        
+
         # goods = parse_file(settings.GOODS_DIR)
         # select_equip = parse_file(settings.SEL_EQUIP_DIR)
         # market_commodities = parse_file(settings.MARKET_DIR)
@@ -360,9 +368,9 @@ class MainConfig(AppConfig):
 # possible_keys = set()
 # for key in goods.keys():
 #     # if 'category' in goods[key].keys() and goods[key]['category'] == 'equipment':
-#     for subkey in goods[key].keys():   
+#     for subkey in goods[key].keys():
 #         if 'category' in subkey:
-#             possible_keys.add(goods[key][subkey]) 
+#             possible_keys.add(goods[key][subkey])
 # print(possible_keys)
 
 # for key in goods.keys():

@@ -1,5 +1,6 @@
 asgiref==3.3.1
 astroid==2.5.2
+autopep8==1.5.6
 colorama==0.4.4
 dataclassy==0.7.2
 deconstruct==0.6

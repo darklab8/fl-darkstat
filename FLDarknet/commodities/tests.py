@@ -6,8 +6,9 @@ from django.test import Client
 
 # Create your tests here.
 
+
 class Test_CommodityModel(TestCase):
-    
+
     @loaded_db
     def setUp(self):
         pass

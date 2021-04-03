@@ -6,8 +6,9 @@ from django.test import Client
 
 # Create your tests here.
 
+
 class Test_ShipModel(TestCase):
-    
+
     @loaded_db
     def setUp(self):
         pass
@@ -44,5 +45,3 @@ class Test_ShipModel(TestCase):
         self.client = Client()
         resp = self.client.get('/admin/ship/ship/1/change/', follow=True)
         self.assertEqual(resp.status_code, 200)
-
-

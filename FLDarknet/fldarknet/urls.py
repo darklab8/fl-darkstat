@@ -26,8 +26,8 @@ urlpatterns = [
     path('', include('main.urls')),
 
     path('admin/login/', include('main.urls')),
-    path('admin/logout/', include('main.urls')),   
-    path('admin/password_change/', include('main.urls')),  
+    path('admin/logout/', include('main.urls')),
+    path('admin/password_change/', include('main.urls')),
 
     path('admin/', admin.site.urls),
     path('admin_2/', admin.site.urls),

@@ -5,10 +5,12 @@ from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
+
 def check_perm(user, Obj):
     from django.contrib.auth.models import Permission
     from django.contrib.contenttypes.models import ContentType
-    content_type = ContentType.objects.get_for_model(Obj, for_concrete_model=False)
+    content_type = ContentType.objects.get_for_model(
+        Obj, for_concrete_model=False)
     s1 = Permission.objects.filter(content_type=content_type)
     #s2 = [p.codename for p in s1]
     for perm in s1:
@@ -19,6 +21,8 @@ def check_perm(user, Obj):
                 user.save()
 
 # Create your views here.
+
+
 def login(request):
     from django.core import management
     management.call_command('migrate')

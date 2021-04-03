@@ -22,26 +22,32 @@ load_dotenv(os.path.join(basedir, '.env'))
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
 if os.environ.get('FREELANCER_FOLDER'):
-    FREELANCER_FOLDER = os.environ.get('FREELANCER_FOLDER').replace(" ","")
+    FREELANCER_FOLDER = os.environ.get('FREELANCER_FOLDER').replace(" ", "")
 else:
     FREELANCER_FOLDER = 'Freelancer'
-FREELANCER_DIR = os.environ.get('FREELANCER_DIR') or os.path.join(ROOT_DIR,FREELANCER_FOLDER)
+FREELANCER_DIR = os.environ.get(
+    'FREELANCER_DIR') or os.path.join(ROOT_DIR, FREELANCER_FOLDER)
 
-DATA_DIR = os.path.join(FREELANCER_DIR,'DATA')
+DATA_DIR = os.path.join(FREELANCER_DIR, 'DATA')
 
-EQUIPMENT_DIR = os.path.join(DATA_DIR,'EQUIPMENT')
-SERVICE_DIR = os.path.join(FREELANCER_DIR,'SERVICE')
-INFOCARDS_PATH = os.path.join(SERVICE_DIR,'infocards.txt')
-UNIVERSE_DIR = os.path.join(DATA_DIR,'UNIVERSE')
-SHIPS_DIR = os.path.join(DATA_DIR,'SHIPS')
+EQUIPMENT_DIR = os.path.join(DATA_DIR, 'EQUIPMENT')
+SERVICE_DIR = os.path.join(FREELANCER_DIR, 'SERVICE')
+INFOCARDS_PATH = os.path.join(SERVICE_DIR, 'infocards.txt')
+UNIVERSE_DIR = os.path.join(DATA_DIR, 'UNIVERSE')
+SHIPS_DIR = os.path.join(DATA_DIR, 'SHIPS')
 
-DARK_PARSE = (os.environ.get('DARK_PARSE') and 'true' in os.environ.get('DARK_PARSE'))
-DARK_SAVE = (os.environ.get('DARK_SAVE') and 'true' in os.environ.get('DARK_SAVE'))
-DARK_LOAD = (os.environ.get('DARK_LOAD') and 'true' in os.environ.get('DARK_LOAD'))
-DARK_COPY = (os.environ.get('DARK_COPY') and 'true' in os.environ.get('DARK_COPY'))
+DARK_PARSE = (os.environ.get('DARK_PARSE')
+              and 'true' in os.environ.get('DARK_PARSE'))
+DARK_SAVE = (os.environ.get('DARK_SAVE')
+             and 'true' in os.environ.get('DARK_SAVE'))
+DARK_LOAD = (os.environ.get('DARK_LOAD')
+             and 'true' in os.environ.get('DARK_LOAD'))
+DARK_COPY = (os.environ.get('DARK_COPY')
+             and 'true' in os.environ.get('DARK_COPY'))
 
 DARK_COPY_NAME = 'dark_copy' or os.environ.get('DARK_COPY_NAME')
-DARK_COPY_DIR = os.environ.get('DARK_COPY_DIR') or os.path.join(ROOT_DIR,DARK_COPY_NAME)
+DARK_COPY_DIR = os.environ.get(
+    'DARK_COPY_DIR') or os.path.join(ROOT_DIR, DARK_COPY_NAME)
 
 # GOODS_DIR = os.path.join(EQUIPMENT_DIR,'goods.ini')
 # MARKET_DIR = os.path.join(EQUIPMENT_DIR,'market_commodities.ini')
@@ -52,7 +58,8 @@ DARK_COPY_DIR = os.environ.get('DARK_COPY_DIR') or os.path.join(ROOT_DIR,DARK_CO
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY') or secrets.token_hex(32) #'6*i&e67x=p9ley%1+f8nm1^4cz@g+8*1_)gmbft(t47me&u+$9'
+SECRET_KEY = os.environ.get('SECRET_KEY') or secrets.token_hex(
+    32)  # '6*i&e67x=p9ley%1+f8nm1^4cz@g+8*1_)gmbft(t47me&u+$9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -115,10 +122,10 @@ WSGI_APPLICATION = 'fldarknet.wsgi.application'
 #     }
 # }
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': 'file:memdb1?mode=memory&cache=shared',
-  }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'file:memdb1?mode=memory&cache=shared',
+    }
 }
 
 # Password validation
