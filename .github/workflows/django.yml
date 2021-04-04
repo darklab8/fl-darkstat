@@ -23,12 +23,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Dependencies
       run: |
-        cd FLDarknet
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        cd FLDarknet
         export FREELANCER_FOLDER=dark_copy
         export DARK_PARSE=true
         export DARK_SAVE=true

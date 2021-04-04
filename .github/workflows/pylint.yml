@@ -18,9 +18,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
         pip install pylint-django
-        cd FLDarknet
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        cd FLDarknet
         pylint --load-plugins pylint_django --django-settings-module="fldarknet.settings" --disable=django-not-configured `ls -d */`
