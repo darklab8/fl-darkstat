@@ -47,12 +47,7 @@
             "args": [
                 "test"
             ],
-            "django": true,
-            "env": {
-                "DARK_PARSE": "true",
-                "DARK_COPY": "true",
-                "DARK_SAVE": "true"
-            }
+            "django": true
         },
         {
             "name": "Django Copy_Test",
@@ -66,7 +61,7 @@
             "env": {
                 "DARK_PARSE": "true",
                 "DARK_SAVE": "true",
-                "FREELANCER_FOLDER": "dark_copy"
+                "freelancer_folder": "dark_copy"
             }
         },
         {

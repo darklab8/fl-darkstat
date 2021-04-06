@@ -305,14 +305,14 @@ def on_server_start():
         return
 
     if settings.DARK_COPY:
-        clean_folder_from_files(settings.DARK_COPY_DIR)
+        clean_folder_from_files(settings.PATHS.dark_copy_dir)
     #     import stat
-    #     if not os.access(settings.DARK_COPY_DIR, os.W_OK):
+    #     if not os.access(settings.dark_copy_dir, os.W_OK):
     #         # Is the error an access error ?
-    #         os.chmod(settings.DARK_COPY_DIR, stat.S_IWUSR)
+    #         os.chmod(settings.dark_copy_dir, stat.S_IWUSR)
     #     else:
     #         pass
-    #     os.remove(settings.DARK_COPY_DIR)
+    #     os.remove(settings.dark_copy_dir)
 
     if settings.DARK_LOAD:
         management.call_command('flush', '--noinput')
@@ -333,10 +333,10 @@ def on_server_start():
     from commodities.models import Commodity
     from ship.models import Ship
 
-    u.equipment = folder_reading(settings.EQUIPMENT_DIR)
-    u.infocards = parse_infocards(settings.INFOCARDS_PATH)
-    u.universe = recursive_reading(settings.UNIVERSE_DIR)
-    u.ships = folder_reading(settings.SHIPS_DIR)
+    u.equipment = folder_reading(settings.PATHS.equipment_dir)
+    u.infocards = parse_infocards(settings.PATHS.infocards_path)
+    u.universe = recursive_reading(settings.PATHS.universe_dir)
+    u.ships = folder_reading(settings.PATHS.ships_dir)
 
     split_goods(u.goods_by_nickname, 'nickname')
     split_goods(u.goods_by_ship, 'shiphull')

@@ -7,10 +7,8 @@ from .apps import on_server_start
 class TestParsers(TestCase):
     "tests to check main program work, I guess that admin interface just logs for now"
 
-    def setUp(self):
-        settings.DARK_PARSE=True
-        settings.FREELANCER_FOLDER="dark_copy"
-
     def test_main_url(self):
         "check parser work"
+        settings.DARK_PARSE=True
+        settings.PATHS.redefine_folder("dark_copy")
         on_server_start()

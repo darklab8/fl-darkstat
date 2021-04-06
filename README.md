@@ -28,7 +28,7 @@ python -m venv venv          #to create virtual venv folder
 venv\Scripts\active
 pip install -r requirements.txt
 
-set FREELANCER_FOLDER=dark_copy        #Freelancer files folder in this reposity, but you can set path to real freelancer Folder
+set freelancer_folder=dark_copy        #Freelancer files folder in this reposity, but you can set path to real freelancer Folder
 set DARK_PARSE=true                    #Flag to parse files
 set DARK_SAVE=true                     #flag to save as db dump
 python manage.py runserver
@@ -45,7 +45,7 @@ source venv/bin/activate
 
 
 pip install -r requirements.txt
-export FREELANCER_FOLDER=dark_copy        #Freelancer files folder in this reposity, but you can set path to real freelancer Folder
+export freelancer_folder=dark_copy        #Freelancer files folder in this reposity, but you can set path to real freelancer Folder
 export DARK_PARSE=true                    #Flag to parse files
 export DARK_SAVE=true                     #flag to save as db dump
 python manage.py runserver
@@ -73,8 +73,8 @@ pylint --load-plugins pylint_django --django-settings-module="fldarknet.settings
 # Available flags
 
 ```
-FREELANCER_FOLDER=Freelancer    #set path to freelancer folder, default 'Freelancer'
-DARK_PARSE=false                #set true to data by parsing freelancer folder (FREELANCER_FOLDER flag should be active)
+freelancer_folder=Freelancer    #set path to freelancer folder, default 'Freelancer'
+DARK_PARSE=false                #set true to data by parsing freelancer folder (freelancer_folder flag should be active)
 DARK_SAVE=false                 #set true to save parsed data to database dump after parsing finish (requires active DARK_PARSE flag)
 DARL_LOAD=false                 #set true to load data from database dump (dump.json file in root) (other flags should be not active)
 DARK_COPY=false                 #set true to refresh data in dark_copy folder, if extracted data from another Freelancer folder (DARK_PARSE should be active)

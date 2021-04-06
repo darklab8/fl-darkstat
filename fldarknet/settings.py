@@ -21,20 +21,42 @@ load_dotenv(os.path.join(basedir, '.env'))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
-if os.environ.get('FREELANCER_FOLDER'):
-    FREELANCER_FOLDER = os.environ.get('FREELANCER_FOLDER').replace(" ", "")
-else:
-    FREELANCER_FOLDER = 'Freelancer'
-FREELANCER_DIR = os.environ.get(
-    'FREELANCER_DIR') or os.path.join(ROOT_DIR, FREELANCER_FOLDER)
+class ConfigPaths():
+    "file paths"
 
-DATA_DIR = os.path.join(FREELANCER_DIR, 'DATA')
+    def __init__(self):
 
-EQUIPMENT_DIR = os.path.join(DATA_DIR, 'EQUIPMENT')
-SERVICE_DIR = os.path.join(FREELANCER_DIR, 'SERVICE')
-INFOCARDS_PATH = os.path.join(SERVICE_DIR, 'infocards.txt')
-UNIVERSE_DIR = os.path.join(DATA_DIR, 'UNIVERSE')
-SHIPS_DIR = os.path.join(DATA_DIR, 'SHIPS')
+        if os.environ.get('freelancer_folder'):
+            self.freelancer_folder = os.environ.get('freelancer_folder').replace(" ", "")
+        else:
+            self.freelancer_folder = 'Freelancer'
+
+        self.dark_copy_name = 'dark_copy' or os.environ.get('dark_copy_name')
+        self.dark_copy_dir = os.environ.get(
+            'dark_copy_dir') or os.path.join(ROOT_DIR, self.dark_copy_name)
+
+        self.post_initialization()
+
+    def post_initialization(self):
+        "reactivate to new paths"
+
+        self.freelancer_dir = os.path.join(ROOT_DIR, self.freelancer_folder)
+
+        self.data_dir = os.path.join(self.freelancer_dir, 'DATA')
+
+        self.equipment_dir = os.path.join(self.data_dir, 'EQUIPMENT')
+        self.service_dir = os.path.join(self.freelancer_dir, 'SERVICE')
+        self.infocards_path = os.path.join(self.service_dir, 'infocards.txt')
+        self.universe_dir = os.path.join(self.data_dir, 'UNIVERSE')
+        self.ships_dir = os.path.join(self.data_dir, 'SHIPS')
+
+    def redefine_folder(self,folder):
+        "at least during unit tests we wish to set path always to dark_copy"
+
+        self.freelancer_folder = folder
+        self.post_initialization()
+
+PATHS = ConfigPaths()
 
 DARK_PARSE = (os.environ.get('DARK_PARSE')
               and 'true' in os.environ.get('DARK_PARSE'))
@@ -45,13 +67,9 @@ DARK_LOAD = (os.environ.get('DARK_LOAD')
 DARK_COPY = (os.environ.get('DARK_COPY')
              and 'true' in os.environ.get('DARK_COPY'))
 
-DARK_COPY_NAME = 'dark_copy' or os.environ.get('DARK_COPY_NAME')
-DARK_COPY_DIR = os.environ.get(
-    'DARK_COPY_DIR') or os.path.join(ROOT_DIR, DARK_COPY_NAME)
-
-# GOODS_DIR = os.path.join(EQUIPMENT_DIR,'goods.ini')
-# MARKET_DIR = os.path.join(EQUIPMENT_DIR,'market_commodities.ini')
-# SEL_EQUIP_DIR = os.path.join(EQUIPMENT_DIR,'select_equip.ini')
+# GOODS_DIR = os.path.join(equipment_dir,'goods.ini')
+# MARKET_DIR = os.path.join(equipment_dir,'market_commodities.ini')
+# SEL_EQUIP_DIR = os.path.join(equipment_dir,'select_equip.ini')
 
 
 # Quick-start development settings - unsuitable for production

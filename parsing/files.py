@@ -34,7 +34,7 @@ def save_to_dark_copy(func):
         if settings.DARK_COPY:
             filename = args[0]
             targetname = filename.replace(
-                settings.FREELANCER_FOLDER, settings.DARK_COPY_NAME)
+                settings.PATHS.freelancer_folder, settings.PATHS.dark_copy_name)
 
             create_nested_folder(os.path.dirname(targetname))
 
