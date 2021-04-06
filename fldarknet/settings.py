@@ -70,6 +70,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'parsing.apps.ParsingConfig',
     'main.apps.MainConfig',
     'ship.apps.ShipConfig',
     'commodities.apps.CommoditiesConfig',

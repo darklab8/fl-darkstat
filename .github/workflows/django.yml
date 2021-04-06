@@ -23,7 +23,4 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        export FREELANCER_FOLDER=dark_copy
-        export DARK_PARSE=true
-        export DARK_SAVE=true
         python manage.py test

@@ -52,18 +52,9 @@ python manage.py runserver
 ```
 
 # Unit testing
-### light unit test testing from db dump without parsing
+### just launch this when started doing work and before making commit
 ```
-export DARK_PARSE=true
 python manage.py test
-```
-
-### full unit testing with parsing from Freelancer saved copy
-```
-export FREELANCER_FOLDER=dark_copy
-export DARK_PARSE=true //flag to parse
-export DARK_SAVE=true //flag to save as db dump
-python manage.py runserver
 ```
 
 # Static code checkers

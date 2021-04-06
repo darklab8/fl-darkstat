@@ -2,8 +2,7 @@
 from django.test import TestCase
 from django.test import Client
 
-
-class TestMain(TestCase):
+class TestUrls(TestCase):
     "tests to check main program work, I guess that admin interface just logs for now"
 
     def setUp(self):
