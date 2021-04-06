@@ -4,6 +4,13 @@ The main purpose to provide info about in game stuff, and game server side infor
 
 ![image](https://user-images.githubusercontent.com/20555918/113764510-402a8c80-9745-11eb-9365-25a3b67b8212.png)
 
+# Tech stack
+* Python 3.8.6
+* Django 3.1.7
+* Docker
+* Jinja2
+* Bootstrap
+* Javascript
 
 # Contributing
 ## Installing instruction
