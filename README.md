@@ -88,8 +88,8 @@ All types of modes to launch the server can be quickly launched from its "run" i
 # Code organizations
 * Prefer English over your native language in comments and commit messages.
 * If your code can be unit-tested, add unit tests.
-* Run light and full unit testing when you start working and before making any commit
-* Run pylint checker and fix all new errors, [which were not there before](https://github.com/dd84ai/fldarknet/runs/2263439228?check_suite_focus=true)
+* Run unit testing when you start working and before making any commit
+* Run pylint checker and fix all new errors, which were not in the last not your commit
 * fix errors appeared in workflow if they appeared (after commit or opened pull request) \
 ![image](https://user-images.githubusercontent.com/20555918/113766107-43267c80-9747-11eb-8945-9d6bed920ad6.png)
 * Name your commits according to [Convetional Commits 1.0 style](https://www.conventionalcommits.org/en/v1.0.0/)
