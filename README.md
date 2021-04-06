@@ -125,5 +125,5 @@ For example: which player bases have available ores for sale (or equipment).
 
 # Contacts
 * Email: dd84ai+fldarknet@gmail.com
-* Discord: Darkwind#7896
+* Discord: Darkwind#7896 at [fldarknet server](https://discord.gg/KTUcZyv98q)
 * Discovery: [Private messages](https://discoverygc.com/forums/member.php?action=profile)
