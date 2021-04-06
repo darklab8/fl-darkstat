@@ -98,6 +98,7 @@ All types of modes to launch the server can be quickly launched from its "run" i
 ![image](https://user-images.githubusercontent.com/20555918/113766107-43267c80-9747-11eb-8945-9d6bed920ad6.png)
 * Name your commits according to [Convetional Commits 1.0 style](https://www.conventionalcommits.org/en/v1.0.0/)
 * The cardinal rule for creating good commits is to ensure there is only one logical change per commit / read [Structural split of changes](https://wiki.openstack.org/wiki/GitCommitMessages#Structural_split_of_changes)
+* (Optonally, but highly preffered) [Issues](https://github.com/dd84ai/fldarknet/issues) are created in order to gather information before you can submit Pull Request of your work
 * For further inspirations in syle and code organizations, author looks [here](https://github.com/f213/education-backend) and [here](https://searx.github.io/searx/dev/contribution_guide.html#documentation)
 
 # Submitting pull requests
