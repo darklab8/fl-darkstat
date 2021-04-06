@@ -9,7 +9,6 @@ class TestParsers(TestCase):
 
     def setUp(self):
         settings.DARK_PARSE=True
-        settings.DARK_SAVE=True
         settings.FREELANCER_FOLDER="dark_copy"
 
     def test_main_url(self):
