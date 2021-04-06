@@ -54,7 +54,7 @@ export DARK_SAVE=true //flag to save as db dump
 python manage.py runserver
 ```
 
-# Stastic code checkers
+# Static code checkers
 We use pylint with its plugin for django \
 instructions to run in different OS below 
 ### Windows 
