@@ -112,5 +112,5 @@ For example: which player bases have available ores for sale (or equipment).
 
 # Philosophy
 * Easy installation and deployments: The project is highly probably going to be dockerized for easiest effort to be used by any Linux Server administrator. Preferably we are going to make some sort of automated deploying system.
-* Full automatization: Everything extracted data should be fully automated, the app should parse the data and launch in its working state without any changable settings to maintain it.
+* Full automatization: Every extracted data should be fully automated, the app should parse the data and launch in its working state without any changable settings to maintain it.
 * Speed: We can make relatively long operations during server start, but during client usage everything should be as fast as possible. Minimalistic GUI interface will be prefered. SQL queries should be as fast as possible too.
