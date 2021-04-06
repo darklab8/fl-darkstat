@@ -124,5 +124,5 @@ For example: which player bases have available ores for sale (or equipment).
 * Speed: We can make relatively long operations during server start, but during client usage everything should be as fast as possible. Minimalistic GUI interface will be prefered. SQL queries should be as fast as possible too.
 
 # Contacts
-Email: dd84ai@gmail.com
-Discord: Darkwind#7896
+* Email: dd84ai@gmail.com
+* Discord: Darkwind#7896
