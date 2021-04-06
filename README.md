@@ -102,4 +102,5 @@ Explain:
 # Future plans
 * Parsing data for more tables from Universe folder
 * Parsing data from FLhook configs
-* Making custom front interface to render main tables, and its sub table based on chosen row in main one
+* Adding dynamic data from [FLHook](https://github.com/DiscoveryGC/FLHook) by json'ifications. For exampple: which player bases sell ores. [My flhook fork](https://github.com/dd84ai/FLHook)
+* Making custom front interface to render main tables, and its sub table based on chosen row in main one (inspired by [FLstat](https://discoverygc.com/forums/showthread.php?tid=115254&pid=1524529#pid1524529))
