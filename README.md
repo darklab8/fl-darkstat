@@ -96,6 +96,7 @@ All types of modes to launch the server can be quickly launched from its "run" i
 * The cardinal rule for creating good commits is to ensure there is only one logical change per commit / read [Structural split of changes](https://wiki.openstack.org/wiki/GitCommitMessages#Structural_split_of_changes)
 * (Optonally, but highly preffered) [Issues](https://github.com/dd84ai/fldarknet/issues) are created in order to gather information before you can submit Pull Request of your work
 * For further inspirations in syle and code organizations, author looks [here](https://github.com/f213/education-backend) and [here](https://searx.github.io/searx/dev/contribution_guide.html#documentation)
+* Add yourself to [AUTHORS.rst](https://github.com/dd84ai/fldarknet/blob/main/AUTHORS.rst)
 
 # Submitting pull requests
 Explain:
