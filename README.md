@@ -1,5 +1,5 @@
 # FLDarkNet
-Website for Freeancer Discovery community located at https://discoverygc.com/forums
+Website for [Freeancer Discovery community](https://discoverygc.com/forums)
 The main purpose to provide info about in game stuff, and game server side information
 
 ![image](https://user-images.githubusercontent.com/20555918/113764510-402a8c80-9745-11eb-9365-25a3b67b8212.png)
@@ -106,3 +106,8 @@ Explain:
 * Parsing data from FLhook configs
 * Adding dynamic data from [FLHook](https://github.com/DiscoveryGC/FLHook) by json'ifications. For exampple: which player bases sell ores. [My flhook fork](https://github.com/dd84ai/FLHook)
 * Making custom front interface to render main tables, and its sub table based on chosen row in main one (inspired by [FLstat](https://discoverygc.com/forums/showthread.php?tid=115254&pid=1524529#pid1524529))
+
+# Philosophy
+* Easy installation and deployments: The project is highly probably going to be dockerized for easiest effort to be used by any Linux Server administrator. Preferably we are going to make some sort of automated deploying system.
+* Full automatization: Everything extracted data should be fully automated, the app should parse the data and launch in its working state without any changable settings to maintain it.
+* Speed: We can make relatively long operations during server start, but during client usage everything should be as fast as possible. Minimalistic GUI interface will be prefered. SQL queries should be as fast as possible too.
