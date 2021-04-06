@@ -1,6 +1,11 @@
 # FLDarkNet
-Website for [Freeancer Discovery community](https://discoverygc.com/forums)
-The main purpose to provide info about in game stuff, and game server side information
+Website for [Freeancer Discovery community](https://discoverygc.com/forums) \
+The main purpose to provide info about in game stuff, and game server side information \
+ \
+we can describe it in short words as \
+Online flstat \
+but with server side info (static and dynamic) \
+for more info look for Future plans section below
 
 ![image](https://user-images.githubusercontent.com/20555918/113764510-402a8c80-9745-11eb-9365-25a3b67b8212.png)
 
