@@ -67,7 +67,7 @@ scripts\fldarknet_pylint.bat
 
 ### Linux
 ```
-pylint --load-plugins pylint_django --django-settings-module="fldarknet.settings" --disable=django-not-configured fldarknet main ship commodities
+pylint --load-plugins pylint_django --django-settings-module="fldarknet.settings" --disable=django-not-configured --exit-zero `ls -d */`
 ```
 
 # Available flags
