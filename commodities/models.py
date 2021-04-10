@@ -1,7 +1,6 @@
 """"Section for regular shop commodities"""
 from django.db import models
-
-# Create your models here.
+from parsing.extracting import view_wrapper, view_wrapper_with_infocard
 
 
 class Commodity(models.Model):
@@ -30,3 +29,26 @@ class Commodity(models.Model):
 
     nickname = models.CharField(
         max_length=50, db_index=True, blank=True, null=True)
+
+
+def fill_commodity_table(dicty, database):
+    """Filling our commodity database section with data"""
+    goods = dicty.equipment["select_equip.ini"]
+    arr = goods["[commodity]"].copy()
+    for obj in arr:
+        kwg = {}
+        view_wrapper_with_infocard(dicty, kwg, obj, int, "ids_name", "name")
+        view_wrapper(kwg, obj, int, "ids_info")
+
+        view_wrapper(kwg, obj, int, "units_per_container")
+        view_wrapper(kwg, obj, int, "decay_per_second")
+        view_wrapper(kwg, obj, int, "hit_pts")
+
+        view_wrapper(kwg, obj, str, "pod_appearance")
+        view_wrapper(kwg, obj, str, "loot_appearance")
+        view_wrapper(kwg, obj, str, "nickname")
+
+        view_wrapper(kwg, obj, float, "volume")
+
+        db_data = Commodity(**kwg)
+        db_data.save(using=database)

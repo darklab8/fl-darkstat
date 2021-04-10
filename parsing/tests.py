@@ -1,6 +1,6 @@
 "checking parsers work"
 from django.test import TestCase
-from .apps import DbHandler
+from .database import DbHandler
 
 # Create your tests here.
 class TestParsers(TestCase):
