@@ -24,6 +24,8 @@ class ShipAdmin(admin.ModelAdmin):
                     'nanobot_limit',
                     'shield_battery_limit',
                     'hold_size',
+                    'capacity',
+                    'charge_rate',
                     'mass',
                     'nickname',
 

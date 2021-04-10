@@ -24,6 +24,11 @@ class Ship(models.Model):
 
     mass = models.FloatField(blank=True, null=True)
     hold_size = models.IntegerField(blank=True, null=True)
+
+    capacity = models.IntegerField(blank=True, null=True, default=-1)
+    charge_rate = models.IntegerField(blank=True, null=True, default=-1)
+
+
     linear_drag = models.FloatField(blank=True, null=True)
     max_bank_angle = models.IntegerField(db_index=True, blank=True, null=True)
     camera_angular_acceleration = models.FloatField(
@@ -130,6 +135,15 @@ def fill_ship_table(dicty, database):
                 ship = dicty.goods_by_hull["ship"][hull]
             except KeyError:
                 print("ERR no package in goods.ini for ship hull =", hull)
+            for addon in ship['addon']:
+                power_nickname = addon[0]
+                if power_nickname in dicty.misc_equip_power_by_nickname:
+
+                    powercore = dicty.misc_equip_power_by_nickname[power_nickname]
+
+                    kwg["capacity"] = int(powercore['capacity'][0])
+                    kwg["charge_rate"]= int(powercore['charge_rate'][0])
+            
             # print('123')
             # for add in ship['addon']
             # i f add[0] in dicty.equipment['misc_equip.ini']['[power]'].keys()

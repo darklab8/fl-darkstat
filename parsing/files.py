@@ -191,6 +191,14 @@ def split_goods(goods, dic, key):
         # print(f"ERR in goods_by_{key} #", i)
 
 
+def rearrange_array_to_dict_by_keys(arr, key):
+    """"Converts parsed data from list into being accessable by chosen hash key"""
+    dic = {}
+    for elem in arr:
+        if key in elem:
+            dic[elem[key][0]] = elem
+    return dic
+
 class Dicts:
     """ "This class will have parsed data from files
     stored in preparation to be sent to database"""
@@ -205,6 +213,8 @@ class Dicts:
     goods_by_ship = {}
     goods_by_hull = {}
 
+    misc_equip_power_by_nickname = {}
+
 
 def main_parse():
     dicty = Dicts()
@@ -217,4 +227,7 @@ def main_parse():
     split_goods(goods, dicty.goods_by_nickname, "nickname")
     split_goods(goods, dicty.goods_by_ship, "shiphull")
     split_goods(goods, dicty.goods_by_hull, "ship")
+
+    dicty.misc_equip_power_by_nickname = rearrange_array_to_dict_by_keys \
+        (dicty.equipment['misc_equip.ini']['[power]'], "nickname")
     return dicty

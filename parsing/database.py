@@ -57,7 +57,12 @@ class DbHandler:
     def daemon_database_update(self):
         "background forever process for auto updates"
 
-        self.load_from_dump("default")
+        self.make_empty("default")
+        # try:
+        #     self.load_from_dump("default")
+        # except Exception as error:
+        #     print(error)
+        #     breakpoint()
 
         sleeping_seconds = int(settings.TIMEOUT_BETWEEN_PARSE)
         while True:
