@@ -2,20 +2,23 @@
 import os
 import re
 from os import walk
+import sys
+import time
 import xmltodict
+from threading import Thread
 from django.apps import AppConfig
 from django.conf import settings
 from django.core import management
 from .files import (
     read_regular_file,
     read_utf8_file,
-    clean_folder_from_files,
 )
 
 
 class Universe:
-    """"This class will have parsed data from files
+    """ "This class will have parsed data from files
     stored in preparation to be sent to database"""
+
     equipment = {}
     universe = {}
     infocards = {}
@@ -25,8 +28,6 @@ class Universe:
     goods_by_nickname = {}
     goods_by_ship = {}
     goods_by_hull = {}
-
-
 
 
 u = Universe()
@@ -47,7 +48,9 @@ def parse_infocards(filename):
     for i in range(line_count):
         if re.search(regex_numbers, content[i]) is not None:
             output[int(strip_from_rn(content[i]))] = [
-                strip_from_rn(content[i+1]), strip_from_rn(content[i+2])]
+                strip_from_rn(content[i + 1]),
+                strip_from_rn(content[i + 2]),
+            ]
 
     i += 1
     return output
@@ -70,12 +73,11 @@ def parse_file(filename):
 
             i += 1
             obj = {}
-            while (
-                (re.search(regex_for_headers, content[i+1]) is None) and
-                (i < (line_count - 2))
+            while (re.search(regex_for_headers, content[i + 1]) is None) and (
+                i < (line_count - 2)
             ):
 
-                if content[i] == '\n':
+                if content[i] == "\n":
                     i += 1
                     continue
 
@@ -83,19 +85,18 @@ def parse_file(filename):
                     i += 1
                     continue
 
-                splitted = content[i].replace(
-                    " ", "").replace("\n", "").split('=')
+                splitted = content[i].replace(" ", "").replace("\n", "").split("=")
 
                 if len(splitted) == 2:
                     if splitted[0] not in obj.keys():
                         obj[splitted[0]] = []
 
-                    if ',' not in splitted[1]:
+                    if "," not in splitted[1]:
                         obj[splitted[0]].append(splitted[1])
                     else:
-                        obj[splitted[0]].append(splitted[1].split(','))
+                        obj[splitted[0]].append(splitted[1].split(","))
                 else:
-                    print('ERR splitted')
+                    print("ERR splitted")
                 i += 1
 
             output[header].append(obj)
@@ -114,7 +115,7 @@ def view_wrapper(kwg, obj, data_type, name):
                 if ";" in obj[name][0]:
                     splitted = obj[name][0].split(";")[0]
                     kwg[name] = data_type(splitted)
-                elif '.' in obj[name][0]:
+                elif "." in obj[name][0]:
                     kwg[name] = int(float(obj[name][0]))
                 else:
                     raise ValueError from value_error_1
@@ -135,95 +136,97 @@ def view_wrapper_with_infocard(kwg, obj, data_type, name, infoname):
             else:
                 raise ValueError from value_error_1
         if kwg[name] in u.infocards:
-            kwg[infoname] = (u.infocards[kwg[name]][1])
+            kwg[infoname] = u.infocards[kwg[name]][1]
 
 
-
-def fill_commodity_table(model_obj):
+def fill_commodity_table(model_obj, database):
     """Filling our commodity database section with data"""
-    goods = u.equipment['select_equip.ini']
-    arr = goods['[commodity]'].copy()
+    goods = u.equipment["select_equip.ini"]
+    arr = goods["[commodity]"].copy()
     for obj in arr:
         kwg = {}
-        view_wrapper_with_infocard(kwg, obj, int, 'ids_name', 'name')
-        view_wrapper(kwg, obj, int, 'ids_info')
+        view_wrapper_with_infocard(kwg, obj, int, "ids_name", "name")
+        view_wrapper(kwg, obj, int, "ids_info")
 
-        view_wrapper(kwg, obj, int, 'units_per_container')
-        view_wrapper(kwg, obj, int, 'decay_per_second')
-        view_wrapper(kwg, obj, int, 'hit_pts')
+        view_wrapper(kwg, obj, int, "units_per_container")
+        view_wrapper(kwg, obj, int, "decay_per_second")
+        view_wrapper(kwg, obj, int, "hit_pts")
 
-        view_wrapper(kwg, obj, str, 'pod_appearance')
-        view_wrapper(kwg, obj, str, 'loot_appearance')
-        view_wrapper(kwg, obj, str, 'nickname')
+        view_wrapper(kwg, obj, str, "pod_appearance")
+        view_wrapper(kwg, obj, str, "loot_appearance")
+        view_wrapper(kwg, obj, str, "nickname")
 
-        view_wrapper(kwg, obj, float, 'volume')
+        view_wrapper(kwg, obj, float, "volume")
 
-        db_data = model_obj(
-            **kwg
-        )
-        db_data.save()
+        db_data = model_obj(**kwg)
+        db_data.save(using=database)
 
-def fill_ship_table(model_obj):
+
+def fill_ship_table(model_obj, database):
     """Filling ship database with data from universe"""
-    goods = u.ships['shiparch.ini']
-    arr = goods['[ship]'].copy()
+    goods = u.ships["shiparch.ini"]
+    arr = goods["[ship]"].copy()
     for i, obj in enumerate(arr):
 
         kwg = {}
-        view_wrapper(kwg, obj, str, 'nickname')
-        view_wrapper_with_infocard(kwg, obj, int, 'ids_name', 'name')
-        view_wrapper(kwg, obj, int, 'ids_info')
-        view_wrapper(kwg, obj, float, 'mass')
-        view_wrapper(kwg, obj, int, 'hold_size')
-        view_wrapper(kwg, obj, float, 'linear_drag')
-        view_wrapper(kwg, obj, int, 'max_bank_angle')
-        view_wrapper(kwg, obj, float, 'camera_angular_acceleration')
-        view_wrapper(kwg, obj, int, 'camera_horizontal_turn_angle')
-        view_wrapper(kwg, obj, int, 'camera_vertical_turn_up_angle')
-        view_wrapper(kwg, obj, int, 'camera_vertical_turn_down_angle')
-        view_wrapper(kwg, obj, float,
-                        'camera_turn_look_ahead_slerp_amount')
-        view_wrapper(kwg, obj, int, 'hit_pts')
-        view_wrapper(kwg, obj, float, 'nudge_force')
-        view_wrapper(kwg, obj, int, 'strafe_force')
-        view_wrapper(kwg, obj, int, 'strafe_power_usage')
-        view_wrapper(kwg, obj, float, 'explosion_resistance')
-        view_wrapper(kwg, obj, int, 'ids_info1')
-        view_wrapper(kwg, obj, int, 'ids_info2')
-        view_wrapper(kwg, obj, int, 'ids_info3')
-        view_wrapper(kwg, obj, int, 'ship_class')
-        view_wrapper(kwg, obj, int, 'nanobot_limit')
-        view_wrapper(kwg, obj, int, 'shield_battery_limit')
+        view_wrapper(kwg, obj, str, "nickname")
+        view_wrapper_with_infocard(kwg, obj, int, "ids_name", "name")
+        view_wrapper(kwg, obj, int, "ids_info")
+        view_wrapper(kwg, obj, float, "mass")
+        view_wrapper(kwg, obj, int, "hold_size")
+        view_wrapper(kwg, obj, float, "linear_drag")
+        view_wrapper(kwg, obj, int, "max_bank_angle")
+        view_wrapper(kwg, obj, float, "camera_angular_acceleration")
+        view_wrapper(kwg, obj, int, "camera_horizontal_turn_angle")
+        view_wrapper(kwg, obj, int, "camera_vertical_turn_up_angle")
+        view_wrapper(kwg, obj, int, "camera_vertical_turn_down_angle")
+        view_wrapper(kwg, obj, float, "camera_turn_look_ahead_slerp_amount")
+        view_wrapper(kwg, obj, int, "hit_pts")
+        view_wrapper(kwg, obj, float, "nudge_force")
+        view_wrapper(kwg, obj, int, "strafe_force")
+        view_wrapper(kwg, obj, int, "strafe_power_usage")
+        view_wrapper(kwg, obj, float, "explosion_resistance")
+        view_wrapper(kwg, obj, int, "ids_info1")
+        view_wrapper(kwg, obj, int, "ids_info2")
+        view_wrapper(kwg, obj, int, "ids_info3")
+        view_wrapper(kwg, obj, int, "ship_class")
+        view_wrapper(kwg, obj, int, "nanobot_limit")
+        view_wrapper(kwg, obj, int, "shield_battery_limit")
 
-        if 'type' in obj.keys():
-            kwg['typeof'] = str(obj['type'][0])
+        if "type" in obj.keys():
+            kwg["typeof"] = str(obj["type"][0])
 
-        if 'nickname' in obj.keys() and 'hp_type' in obj.keys():
-            u.hp_type[obj['nickname'][0]] = obj['hp_type']
+        if "nickname" in obj.keys() and "hp_type" in obj.keys():
+            u.hp_type[obj["nickname"][0]] = obj["hp_type"]
 
         try:
-            dic = xmltodict.parse(u.infocards[kwg['ids_info']][1])[
-                'RDL']['TEXT']
+            dic = xmltodict.parse(u.infocards[kwg["ids_info"]][1])["RDL"]["TEXT"]
             if not dic[0]:
-                dic = xmltodict.parse(u.infocards[kwg['ids_info1']][1])[
-                    'RDL']['TEXT']
-            kwg['info_name'] = dic[0]
+                dic = xmltodict.parse(u.infocards[kwg["ids_info1"]][1])["RDL"]["TEXT"]
+            kwg["info_name"] = dic[0]
         except KeyError:
-            print("ERR not able to find infocard for ship object #", i,
-            " ship nickname", kwg.get('nickname', 'no nickname'),
-            "ids_info", kwg.get('ids_info', 'no ids_info')
+            print(
+                "ERR not able to find infocard for ship object #",
+                i,
+                " ship nickname",
+                kwg.get("nickname", "no nickname"),
+                "ids_info",
+                kwg.get("ids_info", "no ids_info"),
             )
         except xmltodict.expat.ExpatError:
-            print("ERR xmltodict.expat.ExpatError, can't parse infocard xml #", i,
-            " ship nickname", kwg.get('nickname', 'no nickname'),
-            "ids_info", kwg.get('ids_info', 'no ids_info')
+            print(
+                "ERR xmltodict.expat.ExpatError, can't parse infocard xml #",
+                i,
+                " ship nickname",
+                kwg.get("nickname", "no nickname"),
+                "ids_info",
+                kwg.get("ids_info", "no ids_info"),
             )
 
-        if kwg['nickname'] in u.goods_by_ship['shiphull']:
-            hull = u.goods_by_ship['shiphull'][kwg['nickname']
-                                                ]['nickname'][0]
+        if kwg["nickname"] in u.goods_by_ship["shiphull"]:
+            hull = u.goods_by_ship["shiphull"][kwg["nickname"]]["nickname"][0]
             try:
-                ship = u.goods_by_hull['ship'][hull]
+                ship = u.goods_by_hull["ship"][hull]
             except KeyError:
                 print("ERR no package in goods.ini for ship hull =", hull)
             # print('123')
@@ -232,12 +235,10 @@ def fill_ship_table(model_obj):
             # TODO find in addons powercore st_equip
             # and perhaps engine in engine_equip
 
-        db_data = model_obj(
-            **kwg
-        )
-        db_data.save()
-        #except Exception as error:
-            #print("ERR in filling ship #", i)
+        db_data = model_obj(**kwg)
+        db_data.save(using=database)
+        # except Exception as error:
+        # print("ERR in filling ship #", i)
 
 
 def recursive_reading(folderpath):
@@ -248,16 +249,14 @@ def recursive_reading(folderpath):
         for filename in filenames:
             try:
                 # dictpath[filename] = 1
-                dictpath[filename] = parse_file(
-                    os.path.join(dirpath, filename))
+                dictpath[filename] = parse_file(os.path.join(dirpath, filename))
             except IndexError:
-                print('ERR IndexError in ', filename)
+                print("ERR IndexError in ", filename)
             except UnicodeDecodeError:
                 print("ERR UnicodeDecodeError in ", filename)
 
         for dirname in dirnames:
-            dictpath[dirname] = recursive_reading(
-                os.path.join(dirpath, dirname))
+            dictpath[dirname] = recursive_reading(os.path.join(dirpath, dirname))
 
         break
 
@@ -270,10 +269,9 @@ def folder_reading(folderpath):
     for (__, __, filenames) in walk(folderpath):
         for filename in filenames:
             try:
-                dictpath[filename] = parse_file(
-                    os.path.join(folderpath, filename))
+                dictpath[filename] = parse_file(os.path.join(folderpath, filename))
             except IndexError:
-                print('ERR IndexError in ', filename)
+                print("ERR IndexError in ", filename)
             except UnicodeDecodeError:
                 print("ERR UnicodeDecodeError in ", filename)
         break
@@ -282,87 +280,107 @@ def folder_reading(folderpath):
 
 def split_goods(dic, key):
     """"Converts parsed data from list into being accessable by chosen hash key"""
-    goods = u.equipment['goods.ini']['[good]']
+    goods = u.equipment["goods.ini"]["[good]"]
     for obj in goods:
-        if obj['category'][0] not in dic:
-            dic[obj['category'][0]] = {}
+        if obj["category"][0] not in dic:
+            dic[obj["category"][0]] = {}
 
-        if key == 'shiphull':
-            if key == obj['category'][0] and 'ship' in obj.keys():
-                dic[obj['category'][0]][obj['ship'][0]] = obj
-        elif key == 'ship':
-            if key == obj['category'][0] and 'hull' in obj.keys():
-                dic[obj['category'][0]][obj['hull'][0]] = obj
+        if key == "shiphull":
+            if key == obj["category"][0] and "ship" in obj.keys():
+                dic[obj["category"][0]][obj["ship"][0]] = obj
+        elif key == "ship":
+            if key == obj["category"][0] and "hull" in obj.keys():
+                dic[obj["category"][0]][obj["hull"][0]] = obj
         else:
             if key in obj:
-                dic[obj['category'][0]][obj[key][0]] = obj
+                dic[obj["category"][0]][obj[key][0]] = obj
         # print(f"ERR in goods_by_{key} #", i)
 
 
-def on_server_start():
-    "main function to load database on a server run"
-    if os.environ.get('RUN_MAIN', None) == 'true':
-        return
+class DbHandler:
+    "class for everything related to databases"
+    def __init__(self):
+        pass
 
-    if settings.DARK_COPY:
-        clean_folder_from_files(settings.PATHS.dark_copy_dir)
-    #     import stat
-    #     if not os.access(settings.dark_copy_dir, os.W_OK):
-    #         # Is the error an access error ?
-    #         os.chmod(settings.dark_copy_dir, stat.S_IWUSR)
-    #     else:
-    #         pass
-    #     os.remove(settings.dark_copy_dir)
+    def load_from_dump(self, database):
+        "load database from dump file"
+        self.make_empty(database)
 
-    if settings.DARK_LOAD:
-        management.call_command('flush', '--noinput')
-        management.call_command('migrate')
-        management.call_command('loaddata', 'dump.json')
-        return
+        management.call_command("loaddata", "dump.json", f"--database={database}")
 
-    if not settings.DARK_PARSE:
-        return
-
-    # import flint
-    # flint.paths.set_install_path('Freelancer')
-    # comms = flint.get_commodities()
-
-    management.call_command('flush', '--noinput')
-    management.call_command('migrate')
-
-    from commodities.models import Commodity
-    from ship.models import Ship
-
-    u.equipment = folder_reading(settings.PATHS.equipment_dir)
-    u.infocards = parse_infocards(settings.PATHS.infocards_path)
-    u.universe = recursive_reading(settings.PATHS.universe_dir)
-    u.ships = folder_reading(settings.PATHS.ships_dir)
-
-    split_goods(u.goods_by_nickname, 'nickname')
-    split_goods(u.goods_by_ship, 'shiphull')
-    split_goods(u.goods_by_hull, 'ship')
-
-    fill_commodity_table(Commodity)
-    fill_ship_table(Ship)
-
-    if settings.DARK_SAVE:
+    def make_empty(self, database):
+        "clean database from data and apply migrations"
         management.call_command(
-            'dumpdata',
+            "flush",
+            "--noinput",
+            f"--database={database}",
+        )
+        management.call_command("migrate", f"--database={database}")
+
+    def save_to_dump(self, database):
+        "save database to dump file"
+        management.call_command(
+            "dumpdata",
+            f"--database={database}",
             natural_foreign=True,
             natural_primary=True,
             indent=2,
-            output="dump.json"
-            )
+            output="dump.json",
+        )
+
+    def parse_to(self, database):
+        "parser freelancer into db"
+        self.make_empty(database)
+
+        from commodities.models import Commodity
+        from ship.models import Ship
+
+        u.equipment = folder_reading(settings.PATHS.equipment_dir)
+        u.infocards = parse_infocards(settings.PATHS.infocards_path)
+        u.universe = recursive_reading(settings.PATHS.universe_dir)
+        u.ships = folder_reading(settings.PATHS.ships_dir)
+
+        split_goods(u.goods_by_nickname, "nickname")
+        split_goods(u.goods_by_ship, "shiphull")
+        split_goods(u.goods_by_hull, "ship")
+
+        fill_commodity_table(Commodity, database)
+        fill_ship_table(Ship, database)
+
+    def parser_and_transfer(self):
+        "parse to RAM memory and transfer to default database"
+        self.parse_to("memory")
+        self.save_to_dump("memory")
+        self.load_from_dump("default")
+
+
+def daemon_parser(db_handler):
+    "background forever process for auto updates"
+
+    db_handler.load_from_dump("default")
+
+    sleeping_seconds = int(settings.TIMEOUT_BETWEEN_PARSE)
+    while True:
+        db_handler.parser_and_transfer()
+        print(f"sleeping for {sleeping_seconds} seconds")
+        time.sleep(sleeping_seconds)
 
 
 class ParsingConfig(AppConfig):
     "main class to launch server in a different configuration to parse/save/load data"
 
-    name = 'parsing'
+    name = "parsing"
 
     def ready(self):
-        on_server_start()
+        db_handler = DbHandler()
+        if os.environ.get("RUN_MAIN", None) != "true":
+            if "runserver" in sys.argv:
+                thread_name = "django_1UGbackground_worker3"
 
+                thread = Thread(
+                    name=thread_name, target=daemon_parser, daemon=True, args=(db_handler,)
+                )
+                thread.start()
 
         # for filename in equipment.keys():
         #     for header in equipment[filename].keys():
@@ -374,6 +392,7 @@ class ParsingConfig(AppConfig):
         # goods = parse_file(settings.GOODS_DIR)
         # select_equip = parse_file(settings.SEL_EQUIP_DIR)
         # market_commodities = parse_file(settings.MARKET_DIR)
+
 
 # from main.apps import *
 # test = set()
@@ -417,20 +436,20 @@ class ParsingConfig(AppConfig):
 #                 print('ERR not addon')
 #
 #
-        # for i in range(10):
-        #     c = Commodity(
-        #         name = str(i)
-        #     )
-        #     c.save()
+# for i in range(10):
+#     c = Commodity(
+#         name = str(i)
+#     )
+#     c.save()
 
-            # for obj in comms:
-            #     c = Commodity(
-            #         name = obj.name(),
-            #         nickname = obj.nickname,
-            #         ids_name = obj.ids_name,
-            #         ids_info = obj.ids_info,
-            #         lootable = obj.lootable,
-            #         decay_per_second = obj.decay_per_second,
-            #         volume = obj.volume,
-            #     )
-            #     c.save()
+# for obj in comms:
+#     c = Commodity(
+#         name = obj.name(),
+#         nickname = obj.nickname,
+#         ids_name = obj.ids_name,
+#         ids_info = obj.ids_info,
+#         lootable = obj.lootable,
+#         decay_per_second = obj.decay_per_second,
+#         volume = obj.volume,
+#     )
+#     c.save()

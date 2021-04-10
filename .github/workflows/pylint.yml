@@ -21,4 +21,4 @@ jobs:
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint --load-plugins pylint_django --django-settings-module="fldarknet.settings" --disable=django-not-configured --exit-zero `ls -d */`
+        pylint --load-plugins pylint_django --django-settings-module="core.settings" --disable=django-not-configured --exit-zero `ls -d */`

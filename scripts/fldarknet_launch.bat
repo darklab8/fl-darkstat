@@ -1,2 +1,2 @@
 
-cmd /k "cd /d ..\venv\Scripts & activate & cd /d    ..\.. & set DARK_LOAD=true & python manage.py runserver --noreload --insecure"
+cmd /k "cd /d ..\venv\Scripts & activate & cd /d    ..\.. & python manage.py runserver --noreload --insecure"

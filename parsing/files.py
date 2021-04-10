@@ -31,30 +31,30 @@ def save_to_dark_copy(func):
     @functools.wraps(func)
     def wrapper_do_twice(*args, **kwargs):
 
-        if settings.DARK_COPY:
-            filename = args[0]
-            targetname = filename.replace(
-                settings.PATHS.freelancer_folder, settings.PATHS.dark_copy_name)
+        # active = args[1]
+        # if active:
+        filename = args[0]
+        targetname = filename.replace(
+            settings.PATHS.freelancer_folder, settings.PATHS.dark_copy_name)
 
-            create_nested_folder(os.path.dirname(targetname))
+        create_nested_folder(os.path.dirname(targetname))
 
-            copy(
-                filename,
-                targetname
-            )
+        copy(
+            filename,
+            targetname
+        )
 
         return func(*args, **kwargs)
     return wrapper_do_twice
 
-
-@save_to_dark_copy
+#@save_to_dark_copy
 def read_regular_file(filename):
     "get content of regular file"
     with open(filename) as filelink:
         return filelink.readlines()
 
 
-@save_to_dark_copy
+#@save_to_dark_copy
 def read_utf8_file(filename):
     "get content of utf8 encoded file"
     with codecs.open(filename, "r", "utf-8") as filelink:

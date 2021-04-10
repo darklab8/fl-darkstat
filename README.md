@@ -27,10 +27,6 @@ install python 3.8 or higher #author prefers 3.8.6 because uses Windows 7
 python -m venv venv          #to create virtual venv folder
 venv\Scripts\active
 pip install -r requirements.txt
-
-set freelancer_folder=dark_copy        #Freelancer files folder in this reposity, but you can set path to real freelancer Folder
-set DARK_PARSE=true                    #Flag to parse files
-set DARK_SAVE=true                     #flag to save as db dump
 python manage.py runserver
 ```
 
@@ -45,9 +41,6 @@ source venv/bin/activate
 
 
 pip install -r requirements.txt
-export freelancer_folder=dark_copy        #Freelancer files folder in this reposity, but you can set path to real freelancer Folder
-export DARK_PARSE=true                    #Flag to parse files
-export DARK_SAVE=true                     #flag to save as db dump
 python manage.py runserver
 ```
 
@@ -67,17 +60,14 @@ scripts\fldarknet_pylint.bat
 
 ### Linux
 ```
-pylint --load-plugins pylint_django --django-settings-module="fldarknet.settings" --disable=django-not-configured --exit-zero `ls -d */`
+pylint --load-plugins pylint_django --django-settings-module="core.settings" --disable=django-not-configured --exit-zero `ls -d */`
 ```
 
 # Available flags
 
 ```
-freelancer_folder=Freelancer    #set path to freelancer folder, default 'Freelancer'
-DARK_PARSE=false                #set true to data by parsing freelancer folder (freelancer_folder flag should be active)
-DARK_SAVE=false                 #set true to save parsed data to database dump after parsing finish (requires active DARK_PARSE flag)
-DARL_LOAD=false                 #set true to load data from database dump (dump.json file in root) (other flags should be not active)
-DARK_COPY=false                 #set true to refresh data in dark_copy folder, if extracted data from another Freelancer folder (DARK_PARSE should be active)
+freelancer_folder=dark_copy    #set path to freelancer folder, default 'dark_copy'
+timeout=30                      #set timeout between parsings in background
 ```
 
 # Notes
