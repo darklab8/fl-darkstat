@@ -24,6 +24,8 @@ class Ship(models.Model):
 
     mass = models.FloatField(blank=True, null=True)
     hold_size = models.IntegerField(blank=True, null=True)
+    cruise_speed = models.IntegerField(blank=True, null=True, default=None)
+    impulse_speed = models.IntegerField(blank=True, null=True, default=None)
 
     capacity = models.IntegerField(blank=True, null=True, default=None)
     charge_rate = models.IntegerField(blank=True, null=True, default=None)
@@ -80,6 +82,8 @@ def fill_ship_table(dicty, database):
         view_wrapper(kwg, obj, int, "ids_info")
         view_wrapper(kwg, obj, float, "mass")
         view_wrapper(kwg, obj, int, "hold_size")
+        view_wrapper(kwg, obj, int, "cruise_speed")
+        view_wrapper(kwg, obj, int, "impulse_speed")
         view_wrapper(kwg, obj, float, "linear_drag")
         view_wrapper(kwg, obj, int, "max_bank_angle")
         view_wrapper(kwg, obj, float, "camera_angular_acceleration")
@@ -136,13 +140,26 @@ def fill_ship_table(dicty, database):
             except KeyError:
                 print("ERR no package in goods.ini for ship hull =", hull)
             for addon in ship['addon']:
-                power_nickname = addon[0]
-                if power_nickname in dicty.misc_equip_power_by_nickname:
+                addon_nickname = addon[0]
+                if addon_nickname in dicty.misc_equip_power_by_nickname:
 
-                    powercore = dicty.misc_equip_power_by_nickname[power_nickname]
+                    powercore = dicty.misc_equip_power_by_nickname[addon_nickname]
 
                     kwg["capacity"] = int(powercore['capacity'][0])
                     kwg["charge_rate"]= int(powercore['charge_rate'][0])
+
+                elif addon_nickname in dicty.engine_equip_by_nickname:
+
+                    engine = dicty.engine_equip_by_nickname[addon_nickname]
+
+                    try:
+                        kwg["cruise_speed"] = int(engine['cruise_speed'][0])
+                    except KeyError:
+                        kwg["cruise_speed"] = 350
+
+                    kwg["impulse_speed"] = int(float(engine['max_force'][0])/float(engine['linear_drag'][0]))
+                        #breakpoint()
+                        #print("ERR no cruise_speed for ship hull = ", hull, " ", kwg['nickname'])
             
             # print('123')
             # for add in ship['addon']

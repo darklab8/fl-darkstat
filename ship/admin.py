@@ -27,6 +27,8 @@ class ShipAdmin(admin.ModelAdmin):
                     'hold_size',
                     'capacity',
                     'charge_rate',
+                    'cruise_speed',
+                    'impulse_speed',
                     'mass',
                     'nickname',
 

@@ -230,4 +230,7 @@ def main_parse():
 
     dicty.misc_equip_power_by_nickname = rearrange_array_to_dict_by_keys \
         (dicty.equipment['misc_equip.ini']['[power]'], "nickname")
+    dicty.engine_equip_by_nickname = rearrange_array_to_dict_by_keys \
+        (dicty.equipment['engine_equip.ini']['[engine]'], "nickname")
+    
     return dicty
