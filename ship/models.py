@@ -25,8 +25,8 @@ class Ship(models.Model):
     mass = models.FloatField(blank=True, null=True)
     hold_size = models.IntegerField(blank=True, null=True)
 
-    capacity = models.IntegerField(blank=True, null=True, default=-1)
-    charge_rate = models.IntegerField(blank=True, null=True, default=-1)
+    capacity = models.IntegerField(blank=True, null=True, default=None)
+    charge_rate = models.IntegerField(blank=True, null=True, default=None)
 
 
     linear_drag = models.FloatField(blank=True, null=True)
