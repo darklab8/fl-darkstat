@@ -16592,7 +16592,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 1,
   "fields": {
     "ids_name": 217200,
@@ -16608,7 +16608,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 2,
   "fields": {
     "ids_name": 216207,
@@ -16624,7 +16624,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 3,
   "fields": {
     "ids_name": 216207,
@@ -16640,7 +16640,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 4,
   "fields": {
     "ids_name": 261647,
@@ -16656,7 +16656,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 5,
   "fields": {
     "ids_name": 527014,
@@ -16672,7 +16672,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 6,
   "fields": {
     "ids_name": 527020,
@@ -16688,7 +16688,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 7,
   "fields": {
     "ids_name": 527016,
@@ -16704,7 +16704,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 8,
   "fields": {
     "ids_name": 527018,
@@ -16720,7 +16720,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 9,
   "fields": {
     "ids_name": 527022,
@@ -16736,7 +16736,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 10,
   "fields": {
     "ids_name": 527026,
@@ -16752,7 +16752,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 11,
   "fields": {
     "ids_name": 527046,
@@ -16768,7 +16768,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 12,
   "fields": {
     "ids_name": 527028,
@@ -16784,7 +16784,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 13,
   "fields": {
     "ids_name": 527030,
@@ -16800,7 +16800,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 14,
   "fields": {
     "ids_name": 527032,
@@ -16816,7 +16816,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 15,
   "fields": {
     "ids_name": 527034,
@@ -16832,7 +16832,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 16,
   "fields": {
     "ids_name": 527036,
@@ -16848,7 +16848,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 17,
   "fields": {
     "ids_name": 527038,
@@ -16864,7 +16864,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 18,
   "fields": {
     "ids_name": 527040,
@@ -16880,7 +16880,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 19,
   "fields": {
     "ids_name": 527042,
@@ -16896,7 +16896,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 20,
   "fields": {
     "ids_name": 527044,
@@ -16912,7 +16912,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 21,
   "fields": {
     "ids_name": 505992,
@@ -16928,7 +16928,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 22,
   "fields": {
     "ids_name": 261646,
@@ -16944,7 +16944,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 23,
   "fields": {
     "ids_name": 261646,
@@ -16960,7 +16960,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 24,
   "fields": {
     "ids_name": 527012,
@@ -16976,7 +16976,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 25,
   "fields": {
     "ids_name": 527004,
@@ -16992,7 +16992,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 26,
   "fields": {
     "ids_name": 527006,
@@ -17008,7 +17008,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 27,
   "fields": {
     "ids_name": 527008,
@@ -17024,7 +17024,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 28,
   "fields": {
     "ids_name": 500410,
@@ -17040,7 +17040,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 29,
   "fields": {
     "ids_name": 500411,
@@ -17056,7 +17056,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 30,
   "fields": {
     "ids_name": 500412,
@@ -17072,7 +17072,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 31,
   "fields": {
     "ids_name": 503892,
@@ -17088,7 +17088,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 32,
   "fields": {
     "ids_name": 503894,
@@ -17104,7 +17104,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 33,
   "fields": {
     "ids_name": 503896,
@@ -17120,7 +17120,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 34,
   "fields": {
     "ids_name": 503898,
@@ -17136,7 +17136,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 35,
   "fields": {
     "ids_name": 503900,
@@ -17152,7 +17152,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 36,
   "fields": {
     "ids_name": 503902,
@@ -17168,7 +17168,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 37,
   "fields": {
     "ids_name": 503904,
@@ -17184,7 +17184,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 38,
   "fields": {
     "ids_name": 503906,
@@ -17200,7 +17200,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 39,
   "fields": {
     "ids_name": 503908,
@@ -17216,7 +17216,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 40,
   "fields": {
     "ids_name": 503910,
@@ -17232,7 +17232,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 41,
   "fields": {
     "ids_name": 503912,
@@ -17248,7 +17248,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 42,
   "fields": {
     "ids_name": 503914,
@@ -17264,7 +17264,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 43,
   "fields": {
     "ids_name": 500403,
@@ -17280,7 +17280,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 44,
   "fields": {
     "ids_name": 500404,
@@ -17296,7 +17296,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 45,
   "fields": {
     "ids_name": 500405,
@@ -17312,7 +17312,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 46,
   "fields": {
     "ids_name": 505988,
@@ -17328,7 +17328,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 47,
   "fields": {
     "ids_name": 500406,
@@ -17344,7 +17344,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 48,
   "fields": {
     "ids_name": 500413,
@@ -17360,7 +17360,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 49,
   "fields": {
     "ids_name": 500414,
@@ -17376,7 +17376,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 50,
   "fields": {
     "ids_name": 500400,
@@ -17392,7 +17392,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 51,
   "fields": {
     "ids_name": 500401,
@@ -17408,7 +17408,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 52,
   "fields": {
     "ids_name": 527062,
@@ -17424,7 +17424,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 53,
   "fields": {
     "ids_name": 527084,
@@ -17440,7 +17440,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 54,
   "fields": {
     "ids_name": 527086,
@@ -17456,7 +17456,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 55,
   "fields": {
     "ids_name": 527096,
@@ -17472,7 +17472,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 56,
   "fields": {
     "ids_name": 527088,
@@ -17488,7 +17488,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 57,
   "fields": {
     "ids_name": 527100,
@@ -17504,7 +17504,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 58,
   "fields": {
     "ids_name": 501483,
@@ -17520,7 +17520,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 59,
   "fields": {
     "ids_name": 500408,
@@ -17536,7 +17536,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 60,
   "fields": {
     "ids_name": 500650,
@@ -17552,7 +17552,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 61,
   "fields": {
     "ids_name": 500651,
@@ -17568,7 +17568,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 62,
   "fields": {
     "ids_name": 500652,
@@ -17584,7 +17584,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 63,
   "fields": {
     "ids_name": 500402,
@@ -17600,7 +17600,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 64,
   "fields": {
     "ids_name": 500653,
@@ -17616,7 +17616,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 65,
   "fields": {
     "ids_name": 500654,
@@ -17632,7 +17632,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 66,
   "fields": {
     "ids_name": 500655,
@@ -17648,7 +17648,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 67,
   "fields": {
     "ids_name": 500656,
@@ -17664,7 +17664,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 68,
   "fields": {
     "ids_name": 500657,
@@ -17680,7 +17680,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 69,
   "fields": {
     "ids_name": 500658,
@@ -17696,7 +17696,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 70,
   "fields": {
     "ids_name": 500659,
@@ -17712,7 +17712,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 71,
   "fields": {
     "ids_name": 500670,
@@ -17728,7 +17728,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 72,
   "fields": {
     "ids_name": 500671,
@@ -17744,7 +17744,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 73,
   "fields": {
     "ids_name": 500672,
@@ -17760,7 +17760,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 74,
   "fields": {
     "ids_name": 500673,
@@ -17776,7 +17776,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 75,
   "fields": {
     "ids_name": 500674,
@@ -17792,7 +17792,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 76,
   "fields": {
     "ids_name": 500675,
@@ -17808,7 +17808,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 77,
   "fields": {
     "ids_name": 500676,
@@ -17824,7 +17824,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 78,
   "fields": {
     "ids_name": 500677,
@@ -17840,7 +17840,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 79,
   "fields": {
     "ids_name": 500678,
@@ -17856,7 +17856,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 80,
   "fields": {
     "ids_name": 500679,
@@ -17872,7 +17872,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 81,
   "fields": {
     "ids_name": 500681,
@@ -17888,7 +17888,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 82,
   "fields": {
     "ids_name": 500682,
@@ -17904,7 +17904,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 83,
   "fields": {
     "ids_name": 500683,
@@ -17920,7 +17920,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 84,
   "fields": {
     "ids_name": 500684,
@@ -17936,7 +17936,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 85,
   "fields": {
     "ids_name": 500800,
@@ -17952,7 +17952,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 86,
   "fields": {
     "ids_name": 503890,
@@ -17968,7 +17968,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 87,
   "fields": {
     "ids_name": 501414,
@@ -17984,7 +17984,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 88,
   "fields": {
     "ids_name": 503888,
@@ -18000,7 +18000,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 89,
   "fields": {
     "ids_name": 501416,
@@ -18016,7 +18016,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 90,
   "fields": {
     "ids_name": 501417,
@@ -18032,7 +18032,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 91,
   "fields": {
     "ids_name": 501418,
@@ -18048,7 +18048,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 92,
   "fields": {
     "ids_name": 501471,
@@ -18064,7 +18064,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 93,
   "fields": {
     "ids_name": 503504,
@@ -18080,7 +18080,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 94,
   "fields": {
     "ids_name": 527094,
@@ -18096,7 +18096,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 95,
   "fields": {
     "ids_name": 527090,
@@ -18112,7 +18112,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 96,
   "fields": {
     "ids_name": 527092,
@@ -18128,7 +18128,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 97,
   "fields": {
     "ids_name": 503916,
@@ -18144,7 +18144,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 98,
   "fields": {
     "ids_name": 503918,
@@ -18160,7 +18160,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 99,
   "fields": {
     "ids_name": 503920,
@@ -18176,7 +18176,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 100,
   "fields": {
     "ids_name": 503922,
@@ -18192,7 +18192,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 101,
   "fields": {
     "ids_name": 503924,
@@ -18208,7 +18208,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 102,
   "fields": {
     "ids_name": 503926,
@@ -18224,7 +18224,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 103,
   "fields": {
     "ids_name": 500407,
@@ -18240,7 +18240,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 104,
   "fields": {
     "ids_name": 500407,
@@ -18256,7 +18256,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 105,
   "fields": {
     "ids_name": 500409,
@@ -18272,7 +18272,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 106,
   "fields": {
     "ids_name": 500415,
@@ -18288,7 +18288,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 107,
   "fields": {
     "ids_name": 500416,
@@ -18304,7 +18304,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 108,
   "fields": {
     "ids_name": 500417,
@@ -18320,7 +18320,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 109,
   "fields": {
     "ids_name": 500418,
@@ -18336,7 +18336,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 110,
   "fields": {
     "ids_name": 500419,
@@ -18352,7 +18352,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 111,
   "fields": {
     "ids_name": 500420,
@@ -18368,7 +18368,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 112,
   "fields": {
     "ids_name": 500689,
@@ -18384,7 +18384,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 113,
   "fields": {
     "ids_name": 500727,
@@ -18400,7 +18400,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 114,
   "fields": {
     "ids_name": 500945,
@@ -18416,7 +18416,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 115,
   "fields": {
     "ids_name": 500947,
@@ -18432,7 +18432,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 116,
   "fields": {
     "ids_name": 501638,
@@ -18448,7 +18448,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 117,
   "fields": {
     "ids_name": 501640,
@@ -18464,7 +18464,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 118,
   "fields": {
     "ids_name": 501642,
@@ -18480,7 +18480,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 119,
   "fields": {
     "ids_name": 501644,
@@ -18496,7 +18496,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 120,
   "fields": {
     "ids_name": 501646,
@@ -18512,7 +18512,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 121,
   "fields": {
     "ids_name": 501648,
@@ -18528,7 +18528,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 122,
   "fields": {
     "ids_name": 501650,
@@ -18544,7 +18544,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 123,
   "fields": {
     "ids_name": 501652,
@@ -18560,7 +18560,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 124,
   "fields": {
     "ids_name": 501654,
@@ -18576,7 +18576,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 125,
   "fields": {
     "ids_name": 501656,
@@ -18592,7 +18592,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 126,
   "fields": {
     "ids_name": 501786,
@@ -18608,7 +18608,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 127,
   "fields": {
     "ids_name": 500708,
@@ -18624,7 +18624,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 128,
   "fields": {
     "ids_name": 501658,
@@ -18640,7 +18640,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 129,
   "fields": {
     "ids_name": 501445,
@@ -18656,7 +18656,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 130,
   "fields": {
     "ids_name": 501519,
@@ -18672,7 +18672,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 131,
   "fields": {
     "ids_name": 531310,
@@ -18688,7 +18688,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 132,
   "fields": {
     "ids_name": 527078,
@@ -18704,7 +18704,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 133,
   "fields": {
     "ids_name": 531290,
@@ -18720,7 +18720,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 134,
   "fields": {
     "ids_name": 531290,
@@ -18736,7 +18736,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 135,
   "fields": {
     "ids_name": 531290,
@@ -18752,7 +18752,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 136,
   "fields": {
     "ids_name": 531290,
@@ -18768,7 +18768,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 137,
   "fields": {
     "ids_name": 531292,
@@ -18784,7 +18784,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 138,
   "fields": {
     "ids_name": 531294,
@@ -18800,7 +18800,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 139,
   "fields": {
     "ids_name": 531296,
@@ -18816,7 +18816,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 140,
   "fields": {
     "ids_name": 531298,
@@ -18832,7 +18832,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 141,
   "fields": {
     "ids_name": 531300,
@@ -18848,7 +18848,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 142,
   "fields": {
     "ids_name": 531302,
@@ -18864,7 +18864,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 143,
   "fields": {
     "ids_name": 531304,
@@ -18880,7 +18880,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 144,
   "fields": {
     "ids_name": 531306,
@@ -18896,7 +18896,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 145,
   "fields": {
     "ids_name": 531308,
@@ -18912,7 +18912,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 146,
   "fields": {
     "ids_name": 531497,
@@ -18928,7 +18928,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 147,
   "fields": {
     "ids_name": 531499,
@@ -18944,7 +18944,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 148,
   "fields": {
     "ids_name": 531501,
@@ -18960,7 +18960,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 149,
   "fields": {
     "ids_name": 531503,
@@ -18976,7 +18976,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 150,
   "fields": {
     "ids_name": 531505,
@@ -18992,7 +18992,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 151,
   "fields": {
     "ids_name": 531507,
@@ -19008,7 +19008,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 152,
   "fields": {
     "ids_name": 531509,
@@ -19024,7 +19024,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 153,
   "fields": {
     "ids_name": 531511,
@@ -19040,7 +19040,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 154,
   "fields": {
     "ids_name": 531513,
@@ -19056,7 +19056,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 155,
   "fields": {
     "ids_name": 531515,
@@ -19072,7 +19072,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 156,
   "fields": {
     "ids_name": 531517,
@@ -19088,7 +19088,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 157,
   "fields": {
     "ids_name": 531519,
@@ -19104,7 +19104,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 158,
   "fields": {
     "ids_name": 531521,
@@ -19120,7 +19120,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 159,
   "fields": {
     "ids_name": 531523,
@@ -19136,7 +19136,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 160,
   "fields": {
     "ids_name": 531525,
@@ -19152,7 +19152,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 161,
   "fields": {
     "ids_name": 531567,
@@ -19168,7 +19168,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 162,
   "fields": {
     "ids_name": 531569,
@@ -19184,7 +19184,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 163,
   "fields": {
     "ids_name": 531571,
@@ -19200,7 +19200,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 164,
   "fields": {
     "ids_name": 531573,
@@ -19216,7 +19216,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 165,
   "fields": {
     "ids_name": 531575,
@@ -19232,7 +19232,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 166,
   "fields": {
     "ids_name": 531577,
@@ -19248,7 +19248,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 167,
   "fields": {
     "ids_name": 531581,
@@ -19264,7 +19264,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 168,
   "fields": {
     "ids_name": 531583,
@@ -19280,7 +19280,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 169,
   "fields": {
     "ids_name": 531585,
@@ -19296,7 +19296,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 170,
   "fields": {
     "ids_name": 531587,
@@ -19312,7 +19312,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 171,
   "fields": {
     "ids_name": 531589,
@@ -19328,7 +19328,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 172,
   "fields": {
     "ids_name": 531591,
@@ -19344,7 +19344,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 173,
   "fields": {
     "ids_name": 531593,
@@ -19360,7 +19360,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 174,
   "fields": {
     "ids_name": 531595,
@@ -19376,7 +19376,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 175,
   "fields": {
     "ids_name": 531597,
@@ -19392,7 +19392,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 176,
   "fields": {
     "ids_name": 505038,
@@ -19408,7 +19408,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 177,
   "fields": {
     "ids_name": 500421,
@@ -19424,7 +19424,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 178,
   "fields": {
     "ids_name": 501566,
@@ -19440,7 +19440,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 179,
   "fields": {
     "ids_name": 501568,
@@ -19456,7 +19456,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 180,
   "fields": {
     "ids_name": 501570,
@@ -19472,7 +19472,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 181,
   "fields": {
     "ids_name": 501846,
@@ -19488,7 +19488,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 182,
   "fields": {
     "ids_name": 505114,
@@ -19504,7 +19504,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 183,
   "fields": {
     "ids_name": 527064,
@@ -19520,7 +19520,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 184,
   "fields": {
     "ids_name": 520024,
@@ -19536,7 +19536,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 185,
   "fields": {
     "ids_name": 520026,
@@ -19552,7 +19552,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 186,
   "fields": {
     "ids_name": 520040,
@@ -19568,7 +19568,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 187,
   "fields": {
     "ids_name": 520486,
@@ -19584,7 +19584,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 188,
   "fields": {
     "ids_name": 531903,
@@ -19600,7 +19600,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 189,
   "fields": {
     "ids_name": 531905,
@@ -19616,7 +19616,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 190,
   "fields": {
     "ids_name": 531907,
@@ -19632,7 +19632,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 191,
   "fields": {
     "ids_name": 531909,
@@ -19648,7 +19648,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 192,
   "fields": {
     "ids_name": 261608,
@@ -19664,7 +19664,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 193,
   "fields": {
     "ids_name": 261609,
@@ -19680,7 +19680,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 194,
   "fields": {
     "ids_name": 261610,
@@ -19696,7 +19696,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 195,
   "fields": {
     "ids_name": 261611,
@@ -19712,7 +19712,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 196,
   "fields": {
     "ids_name": 261612,
@@ -19728,7 +19728,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 197,
   "fields": {
     "ids_name": 261613,
@@ -19744,7 +19744,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 198,
   "fields": {
     "ids_name": 261614,
@@ -19760,7 +19760,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 199,
   "fields": {
     "ids_name": 505846,
@@ -19776,7 +19776,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 200,
   "fields": {
     "ids_name": 261615,
@@ -19792,7 +19792,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 201,
   "fields": {
     "ids_name": 261616,
@@ -19808,7 +19808,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 202,
   "fields": {
     "ids_name": 261617,
@@ -19824,7 +19824,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 203,
   "fields": {
     "ids_name": 261618,
@@ -19840,7 +19840,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 204,
   "fields": {
     "ids_name": 261619,
@@ -19856,7 +19856,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 205,
   "fields": {
     "ids_name": 261620,
@@ -19872,7 +19872,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 206,
   "fields": {
     "ids_name": 261621,
@@ -19888,7 +19888,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 207,
   "fields": {
     "ids_name": 261622,
@@ -19904,7 +19904,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 208,
   "fields": {
     "ids_name": 261622,
@@ -19920,7 +19920,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 209,
   "fields": {
     "ids_name": 261622,
@@ -19936,7 +19936,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 210,
   "fields": {
     "ids_name": 261623,
@@ -19952,7 +19952,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 211,
   "fields": {
     "ids_name": 505848,
@@ -19968,7 +19968,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 212,
   "fields": {
     "ids_name": 261624,
@@ -19984,7 +19984,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 213,
   "fields": {
     "ids_name": 261625,
@@ -20000,7 +20000,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 214,
   "fields": {
     "ids_name": 261626,
@@ -20016,7 +20016,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 215,
   "fields": {
     "ids_name": 527024,
@@ -20032,7 +20032,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 216,
   "fields": {
     "ids_name": 527054,
@@ -20048,7 +20048,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 217,
   "fields": {
     "ids_name": 261627,
@@ -20064,7 +20064,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 218,
   "fields": {
     "ids_name": 261628,
@@ -20080,7 +20080,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 219,
   "fields": {
     "ids_name": 261629,
@@ -20096,7 +20096,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 220,
   "fields": {
     "ids_name": 261630,
@@ -20112,7 +20112,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 221,
   "fields": {
     "ids_name": 261631,
@@ -20128,7 +20128,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 222,
   "fields": {
     "ids_name": 261632,
@@ -20144,7 +20144,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 223,
   "fields": {
     "ids_name": 503861,
@@ -20160,7 +20160,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 224,
   "fields": {
     "ids_name": 505996,
@@ -20176,7 +20176,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 225,
   "fields": {
     "ids_name": 261634,
@@ -20192,7 +20192,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 226,
   "fields": {
     "ids_name": 261635,
@@ -20208,7 +20208,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 227,
   "fields": {
     "ids_name": 261636,
@@ -20224,7 +20224,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 228,
   "fields": {
     "ids_name": 261637,
@@ -20240,7 +20240,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 229,
   "fields": {
     "ids_name": 261638,
@@ -20256,7 +20256,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 230,
   "fields": {
     "ids_name": 261638,
@@ -20272,7 +20272,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 231,
   "fields": {
     "ids_name": 261638,
@@ -20288,7 +20288,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 232,
   "fields": {
     "ids_name": 261638,
@@ -20304,7 +20304,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 233,
   "fields": {
     "ids_name": 261638,
@@ -20320,7 +20320,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 234,
   "fields": {
     "ids_name": 261639,
@@ -20336,7 +20336,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 235,
   "fields": {
     "ids_name": 261640,
@@ -20352,7 +20352,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 236,
   "fields": {
     "ids_name": 261641,
@@ -20368,7 +20368,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 237,
   "fields": {
     "ids_name": 261642,
@@ -20384,7 +20384,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 238,
   "fields": {
     "ids_name": 261642,
@@ -20400,7 +20400,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 239,
   "fields": {
     "ids_name": 261643,
@@ -20416,7 +20416,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 240,
   "fields": {
     "ids_name": 505916,
@@ -20432,7 +20432,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 241,
   "fields": {
     "ids_name": 261645,
@@ -20448,7 +20448,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 242,
   "fields": {
     "ids_name": 503819,
@@ -20464,7 +20464,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 243,
   "fields": {
     "ids_name": 527060,
@@ -20480,7 +20480,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 244,
   "fields": {
     "ids_name": 505994,
@@ -20496,7 +20496,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 245,
   "fields": {
     "ids_name": 527048,
@@ -20512,7 +20512,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 246,
   "fields": {
     "ids_name": 527050,
@@ -20528,7 +20528,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 247,
   "fields": {
     "ids_name": 527052,
@@ -20544,7 +20544,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 248,
   "fields": {
     "ids_name": 527056,
@@ -20560,7 +20560,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 249,
   "fields": {
     "ids_name": 527074,
@@ -20576,7 +20576,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 250,
   "fields": {
     "ids_name": 527080,
@@ -20592,7 +20592,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 251,
   "fields": {
     "ids_name": 527082,
@@ -20608,7 +20608,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 252,
   "fields": {
     "ids_name": 527010,
@@ -20624,7 +20624,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 253,
   "fields": {
     "ids_name": 505998,
@@ -20640,7 +20640,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 254,
   "fields": {
     "ids_name": 503821,
@@ -20656,7 +20656,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 255,
   "fields": {
     "ids_name": 503817,
@@ -20672,7 +20672,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 256,
   "fields": {
     "ids_name": 503825,
@@ -20688,7 +20688,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 257,
   "fields": {
     "ids_name": 503827,
@@ -20704,7 +20704,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 258,
   "fields": {
     "ids_name": 503829,
@@ -20720,7 +20720,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 259,
   "fields": {
     "ids_name": 503831,
@@ -20736,7 +20736,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 260,
   "fields": {
     "ids_name": 503833,
@@ -20752,7 +20752,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 261,
   "fields": {
     "ids_name": 503835,
@@ -20768,7 +20768,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 262,
   "fields": {
     "ids_name": 503837,
@@ -20784,7 +20784,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 263,
   "fields": {
     "ids_name": 503839,
@@ -20800,7 +20800,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 264,
   "fields": {
     "ids_name": 503841,
@@ -20816,7 +20816,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 265,
   "fields": {
     "ids_name": 503843,
@@ -20832,7 +20832,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 266,
   "fields": {
     "ids_name": 503845,
@@ -20848,7 +20848,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 267,
   "fields": {
     "ids_name": 503847,
@@ -20864,7 +20864,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 268,
   "fields": {
     "ids_name": 503849,
@@ -20880,7 +20880,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 269,
   "fields": {
     "ids_name": 503851,
@@ -20896,7 +20896,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 270,
   "fields": {
     "ids_name": 503853,
@@ -20912,7 +20912,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 271,
   "fields": {
     "ids_name": 503855,
@@ -20928,7 +20928,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 272,
   "fields": {
     "ids_name": 503857,
@@ -20944,7 +20944,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 273,
   "fields": {
     "ids_name": 503859,
@@ -20960,7 +20960,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 274,
   "fields": {
     "ids_name": 503883,
@@ -20976,7 +20976,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 275,
   "fields": {
     "ids_name": 504110,
@@ -20992,7 +20992,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 276,
   "fields": {
     "ids_name": 504329,
@@ -21008,7 +21008,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 277,
   "fields": {
     "ids_name": 505800,
@@ -21024,7 +21024,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 278,
   "fields": {
     "ids_name": 505802,
@@ -21040,7 +21040,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 279,
   "fields": {
     "ids_name": 505804,
@@ -21056,7 +21056,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 280,
   "fields": {
     "ids_name": 505806,
@@ -21072,7 +21072,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 281,
   "fields": {
     "ids_name": 505808,
@@ -21088,7 +21088,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 282,
   "fields": {
     "ids_name": 527058,
@@ -21104,7 +21104,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 283,
   "fields": {
     "ids_name": 505810,
@@ -21120,7 +21120,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 284,
   "fields": {
     "ids_name": 505812,
@@ -21136,7 +21136,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 285,
   "fields": {
     "ids_name": 505814,
@@ -21152,7 +21152,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 286,
   "fields": {
     "ids_name": 505816,
@@ -21168,7 +21168,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 287,
   "fields": {
     "ids_name": 505818,
@@ -21184,7 +21184,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 288,
   "fields": {
     "ids_name": 505820,
@@ -21200,7 +21200,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 289,
   "fields": {
     "ids_name": 505822,
@@ -21216,7 +21216,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 290,
   "fields": {
     "ids_name": 505824,
@@ -21232,7 +21232,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 291,
   "fields": {
     "ids_name": 505826,
@@ -21248,7 +21248,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 292,
   "fields": {
     "ids_name": 505828,
@@ -21264,7 +21264,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 293,
   "fields": {
     "ids_name": 505830,
@@ -21280,7 +21280,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 294,
   "fields": {
     "ids_name": 505832,
@@ -21296,7 +21296,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 295,
   "fields": {
     "ids_name": 505990,
@@ -21312,7 +21312,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 296,
   "fields": {
     "ids_name": 505834,
@@ -21328,7 +21328,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 297,
   "fields": {
     "ids_name": 505836,
@@ -21344,7 +21344,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 298,
   "fields": {
     "ids_name": 505838,
@@ -21360,7 +21360,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 299,
   "fields": {
     "ids_name": 505840,
@@ -21376,7 +21376,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 300,
   "fields": {
     "ids_name": 500415,
@@ -21392,7 +21392,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 301,
   "fields": {
     "ids_name": 500415,
@@ -21408,7 +21408,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 302,
   "fields": {
     "ids_name": 500415,
@@ -21424,7 +21424,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 303,
   "fields": {
     "ids_name": 500415,
@@ -21440,7 +21440,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 304,
   "fields": {
     "ids_name": 500415,
@@ -21456,7 +21456,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 305,
   "fields": {
     "ids_name": 500415,
@@ -21472,7 +21472,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 306,
   "fields": {
     "ids_name": 505980,
@@ -21488,7 +21488,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 307,
   "fields": {
     "ids_name": 505982,
@@ -21504,7 +21504,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 308,
   "fields": {
     "ids_name": 505984,
@@ -21520,7 +21520,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 309,
   "fields": {
     "ids_name": 505948,
@@ -21536,7 +21536,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 310,
   "fields": {
     "ids_name": 505950,
@@ -21552,7 +21552,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 311,
   "fields": {
     "ids_name": 505952,
@@ -21568,7 +21568,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 312,
   "fields": {
     "ids_name": 505954,
@@ -21584,7 +21584,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 313,
   "fields": {
     "ids_name": 505956,
@@ -21600,7 +21600,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 314,
   "fields": {
     "ids_name": 505958,
@@ -21616,7 +21616,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 315,
   "fields": {
     "ids_name": 505960,
@@ -21632,7 +21632,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 316,
   "fields": {
     "ids_name": 505962,
@@ -21648,7 +21648,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 317,
   "fields": {
     "ids_name": 505964,
@@ -21664,7 +21664,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 318,
   "fields": {
     "ids_name": 505966,
@@ -21680,7 +21680,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 319,
   "fields": {
     "ids_name": 505968,
@@ -21696,7 +21696,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 320,
   "fields": {
     "ids_name": 505970,
@@ -21712,7 +21712,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 321,
   "fields": {
     "ids_name": 505972,
@@ -21728,7 +21728,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 322,
   "fields": {
     "ids_name": 505974,
@@ -21744,7 +21744,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 323,
   "fields": {
     "ids_name": 505976,
@@ -21760,7 +21760,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 324,
   "fields": {
     "ids_name": 505978,
@@ -21776,7 +21776,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 325,
   "fields": {
     "ids_name": 505850,
@@ -21792,7 +21792,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 326,
   "fields": {
     "ids_name": 261609,
@@ -21808,7 +21808,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 327,
   "fields": {
     "ids_name": 505852,
@@ -21824,7 +21824,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 328,
   "fields": {
     "ids_name": 503823,
@@ -21840,7 +21840,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 329,
   "fields": {
     "ids_name": 505854,
@@ -21856,7 +21856,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 330,
   "fields": {
     "ids_name": 505930,
@@ -21872,7 +21872,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 331,
   "fields": {
     "ids_name": 505856,
@@ -21888,7 +21888,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 332,
   "fields": {
     "ids_name": 505858,
@@ -21904,7 +21904,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 333,
   "fields": {
     "ids_name": 505860,
@@ -21920,7 +21920,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 334,
   "fields": {
     "ids_name": 505860,
@@ -21936,7 +21936,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 335,
   "fields": {
     "ids_name": 505860,
@@ -21952,7 +21952,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 336,
   "fields": {
     "ids_name": 505862,
@@ -21968,7 +21968,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 337,
   "fields": {
     "ids_name": 505864,
@@ -21984,7 +21984,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 338,
   "fields": {
     "ids_name": 505866,
@@ -22000,7 +22000,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 339,
   "fields": {
     "ids_name": 505868,
@@ -22016,7 +22016,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 340,
   "fields": {
     "ids_name": 505870,
@@ -22032,7 +22032,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 341,
   "fields": {
     "ids_name": 505872,
@@ -22048,7 +22048,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 342,
   "fields": {
     "ids_name": 505874,
@@ -22064,7 +22064,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 343,
   "fields": {
     "ids_name": 505876,
@@ -22080,7 +22080,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 344,
   "fields": {
     "ids_name": 505878,
@@ -22096,7 +22096,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 345,
   "fields": {
     "ids_name": 505946,
@@ -22112,7 +22112,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 346,
   "fields": {
     "ids_name": 505880,
@@ -22128,7 +22128,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 347,
   "fields": {
     "ids_name": 505882,
@@ -22144,7 +22144,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 348,
   "fields": {
     "ids_name": 505884,
@@ -22160,7 +22160,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 349,
   "fields": {
     "ids_name": 505886,
@@ -22176,7 +22176,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 350,
   "fields": {
     "ids_name": 505888,
@@ -22192,7 +22192,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 351,
   "fields": {
     "ids_name": 505890,
@@ -22208,7 +22208,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 352,
   "fields": {
     "ids_name": 505892,
@@ -22224,7 +22224,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 353,
   "fields": {
     "ids_name": 505894,
@@ -22240,7 +22240,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 354,
   "fields": {
     "ids_name": 505896,
@@ -22256,7 +22256,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 355,
   "fields": {
     "ids_name": 505898,
@@ -22272,7 +22272,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 356,
   "fields": {
     "ids_name": 505900,
@@ -22288,7 +22288,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 357,
   "fields": {
     "ids_name": 261646,
@@ -22304,7 +22304,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 358,
   "fields": {
     "ids_name": 505902,
@@ -22320,7 +22320,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 359,
   "fields": {
     "ids_name": 505904,
@@ -22336,7 +22336,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 360,
   "fields": {
     "ids_name": 505906,
@@ -22352,7 +22352,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 361,
   "fields": {
     "ids_name": 505908,
@@ -22368,7 +22368,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 362,
   "fields": {
     "ids_name": 505910,
@@ -22384,7 +22384,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 363,
   "fields": {
     "ids_name": 505912,
@@ -22400,7 +22400,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 364,
   "fields": {
     "ids_name": 505914,
@@ -22416,7 +22416,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 365,
   "fields": {
     "ids_name": 261635,
@@ -22432,7 +22432,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 366,
   "fields": {
     "ids_name": 261644,
@@ -22448,7 +22448,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 367,
   "fields": {
     "ids_name": 505918,
@@ -22464,7 +22464,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 368,
   "fields": {
     "ids_name": 505920,
@@ -22480,7 +22480,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 369,
   "fields": {
     "ids_name": 505922,
@@ -22496,7 +22496,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 370,
   "fields": {
     "ids_name": 505924,
@@ -22512,7 +22512,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 371,
   "fields": {
     "ids_name": 505926,
@@ -22528,7 +22528,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 372,
   "fields": {
     "ids_name": 505928,
@@ -22544,7 +22544,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 373,
   "fields": {
     "ids_name": 505932,
@@ -22560,7 +22560,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 374,
   "fields": {
     "ids_name": 505934,
@@ -22576,7 +22576,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 375,
   "fields": {
     "ids_name": 505936,
@@ -22592,7 +22592,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 376,
   "fields": {
     "ids_name": 505938,
@@ -22608,7 +22608,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 377,
   "fields": {
     "ids_name": 505940,
@@ -22624,7 +22624,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 378,
   "fields": {
     "ids_name": 505942,
@@ -22640,7 +22640,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 379,
   "fields": {
     "ids_name": 505944,
@@ -22656,7 +22656,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 380,
   "fields": {
     "ids_name": 330680,
@@ -22672,7 +22672,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 381,
   "fields": {
     "ids_name": 330681,
@@ -22688,7 +22688,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 382,
   "fields": {
     "ids_name": 330682,
@@ -22704,7 +22704,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 383,
   "fields": {
     "ids_name": 330683,
@@ -22720,7 +22720,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 384,
   "fields": {
     "ids_name": 330684,
@@ -22736,7 +22736,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 385,
   "fields": {
     "ids_name": 330685,
@@ -22752,7 +22752,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 386,
   "fields": {
     "ids_name": 330686,
@@ -22768,7 +22768,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 387,
   "fields": {
     "ids_name": 330687,
@@ -22784,7 +22784,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 388,
   "fields": {
     "ids_name": 330688,
@@ -22800,7 +22800,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 389,
   "fields": {
     "ids_name": 330689,
@@ -22816,7 +22816,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 390,
   "fields": {
     "ids_name": 330690,
@@ -22832,7 +22832,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 391,
   "fields": {
     "ids_name": 330691,
@@ -22848,7 +22848,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 392,
   "fields": {
     "ids_name": 330692,
@@ -22864,7 +22864,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 393,
   "fields": {
     "ids_name": 330693,
@@ -22880,7 +22880,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 394,
   "fields": {
     "ids_name": 330694,
@@ -22896,7 +22896,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 395,
   "fields": {
     "ids_name": 330695,
@@ -22912,7 +22912,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 396,
   "fields": {
     "ids_name": 330696,
@@ -22928,7 +22928,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 397,
   "fields": {
     "ids_name": 330697,
@@ -22944,7 +22944,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 398,
   "fields": {
     "ids_name": 330698,
@@ -22960,7 +22960,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 399,
   "fields": {
     "ids_name": 330699,
@@ -22976,7 +22976,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 400,
   "fields": {
     "ids_name": 330700,
@@ -22992,7 +22992,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 401,
   "fields": {
     "ids_name": 330701,
@@ -23008,7 +23008,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 402,
   "fields": {
     "ids_name": 330702,
@@ -23024,7 +23024,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 403,
   "fields": {
     "ids_name": 330703,
@@ -23040,7 +23040,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 404,
   "fields": {
     "ids_name": 330704,
@@ -23056,7 +23056,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 405,
   "fields": {
     "ids_name": 330705,
@@ -23072,7 +23072,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 406,
   "fields": {
     "ids_name": 330706,
@@ -23088,7 +23088,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 407,
   "fields": {
     "ids_name": 330707,
@@ -23104,7 +23104,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 408,
   "fields": {
     "ids_name": 330708,
@@ -23120,7 +23120,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 409,
   "fields": {
     "ids_name": 330709,
@@ -23136,7 +23136,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 410,
   "fields": {
     "ids_name": 330710,
@@ -23152,7 +23152,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 411,
   "fields": {
     "ids_name": 330711,
@@ -23168,7 +23168,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 412,
   "fields": {
     "ids_name": 330712,
@@ -23184,7 +23184,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 413,
   "fields": {
     "ids_name": 330713,
@@ -23200,7 +23200,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 414,
   "fields": {
     "ids_name": 330714,
@@ -23216,7 +23216,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 415,
   "fields": {
     "ids_name": 330715,
@@ -23232,7 +23232,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 416,
   "fields": {
     "ids_name": 330716,
@@ -23248,7 +23248,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 417,
   "fields": {
     "ids_name": 330717,
@@ -23264,7 +23264,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 418,
   "fields": {
     "ids_name": 330718,
@@ -23280,7 +23280,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 419,
   "fields": {
     "ids_name": 330719,
@@ -23296,7 +23296,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 420,
   "fields": {
     "ids_name": 330720,
@@ -23312,7 +23312,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 421,
   "fields": {
     "ids_name": 330721,
@@ -23328,7 +23328,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 422,
   "fields": {
     "ids_name": 330722,
@@ -23344,7 +23344,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 423,
   "fields": {
     "ids_name": 330723,
@@ -23360,7 +23360,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 424,
   "fields": {
     "ids_name": 330724,
@@ -23376,7 +23376,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 425,
   "fields": {
     "ids_name": 330725,
@@ -23392,7 +23392,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 426,
   "fields": {
     "ids_name": 330726,
@@ -23408,7 +23408,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 427,
   "fields": {
     "ids_name": 330727,
@@ -23424,7 +23424,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 428,
   "fields": {
     "ids_name": 330728,
@@ -23440,7 +23440,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 429,
   "fields": {
     "ids_name": 330729,
@@ -23456,7 +23456,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 430,
   "fields": {
     "ids_name": 330730,
@@ -23472,7 +23472,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 431,
   "fields": {
     "ids_name": 330731,
@@ -23488,7 +23488,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 432,
   "fields": {
     "ids_name": 330732,
@@ -23504,7 +23504,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 433,
   "fields": {
     "ids_name": 330733,
@@ -23520,7 +23520,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 434,
   "fields": {
     "ids_name": 330734,
@@ -23536,7 +23536,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 435,
   "fields": {
     "ids_name": 330735,
@@ -23552,7 +23552,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 436,
   "fields": {
     "ids_name": 330736,
@@ -23568,7 +23568,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 437,
   "fields": {
     "ids_name": 330737,
@@ -23584,7 +23584,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 438,
   "fields": {
     "ids_name": 330738,
@@ -23600,7 +23600,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 439,
   "fields": {
     "ids_name": 330739,
@@ -23616,7 +23616,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 440,
   "fields": {
     "ids_name": 330740,
@@ -23632,7 +23632,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 441,
   "fields": {
     "ids_name": 330741,
@@ -23648,7 +23648,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 442,
   "fields": {
     "ids_name": 505084,
@@ -23664,7 +23664,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 443,
   "fields": {
     "ids_name": 505086,
@@ -23680,7 +23680,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 444,
   "fields": {
     "ids_name": 505088,
@@ -23696,7 +23696,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 445,
   "fields": {
     "ids_name": 505090,
@@ -23712,7 +23712,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 446,
   "fields": {
     "ids_name": 505092,
@@ -23728,7 +23728,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 447,
   "fields": {
     "ids_name": 505094,
@@ -23744,7 +23744,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 448,
   "fields": {
     "ids_name": 505842,
@@ -23760,7 +23760,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 449,
   "fields": {
     "ids_name": 505844,
@@ -23776,7 +23776,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 450,
   "fields": {
     "ids_name": 505098,
@@ -23792,7 +23792,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 451,
   "fields": {
     "ids_name": 505096,
@@ -23808,7 +23808,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 452,
   "fields": {
     "ids_name": 527068,
@@ -23824,7 +23824,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 453,
   "fields": {
     "ids_name": 505986,
@@ -23840,7 +23840,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 454,
   "fields": {
     "ids_name": 527066,
@@ -23856,7 +23856,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 455,
   "fields": {
     "ids_name": 527070,
@@ -23872,7 +23872,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 456,
   "fields": {
     "ids_name": 527072,
@@ -23888,7 +23888,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 457,
   "fields": {
     "ids_name": 527002,
@@ -23904,7 +23904,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 458,
   "fields": {
     "ids_name": 525841,
@@ -23920,7 +23920,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 459,
   "fields": {
     "ids_name": 525845,
@@ -23936,7 +23936,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 460,
   "fields": {
     "ids_name": 525847,
@@ -23952,7 +23952,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 461,
   "fields": {
     "ids_name": 520386,
@@ -23968,7 +23968,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 462,
   "fields": {
     "ids_name": 520388,
@@ -23984,7 +23984,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 463,
   "fields": {
     "ids_name": 520390,
@@ -24000,7 +24000,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 464,
   "fields": {
     "ids_name": 520392,
@@ -24016,7 +24016,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 465,
   "fields": {
     "ids_name": 520394,
@@ -24032,7 +24032,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 466,
   "fields": {
     "ids_name": 520396,
@@ -24048,7 +24048,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 467,
   "fields": {
     "ids_name": 520398,
@@ -24064,7 +24064,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 468,
   "fields": {
     "ids_name": 520400,
@@ -24080,7 +24080,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 469,
   "fields": {
     "ids_name": 520402,
@@ -24096,7 +24096,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 470,
   "fields": {
     "ids_name": 520404,
@@ -24112,7 +24112,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 471,
   "fields": {
     "ids_name": 520658,
@@ -24128,7 +24128,7 @@
   }
 },
 {
-  "model": "commodities.commodity",
+  "model": "commodity.commodity",
   "pk": 472,
   "fields": {
     "ids_name": 527098,
@@ -24153,7 +24153,7 @@
 {
   "model": "contenttypes.contenttype",
   "fields": {
-    "app_label": "commodities",
+    "app_label": "commodity",
     "model": "commodity"
   }
 },
@@ -24248,7 +24248,7 @@
   "fields": {
     "name": "Can add commodity",
     "content_type": [
-      "commodities",
+      "commodity",
       "commodity"
     ],
     "codename": "add_commodity"
@@ -24259,7 +24259,7 @@
   "fields": {
     "name": "Can change commodity",
     "content_type": [
-      "commodities",
+      "commodity",
       "commodity"
     ],
     "codename": "change_commodity"
@@ -24270,7 +24270,7 @@
   "fields": {
     "name": "Can delete commodity",
     "content_type": [
-      "commodities",
+      "commodity",
       "commodity"
     ],
     "codename": "delete_commodity"
@@ -24281,7 +24281,7 @@
   "fields": {
     "name": "Can view commodity",
     "content_type": [
-      "commodities",
+      "commodity",
       "commodity"
     ],
     "codename": "view_commodity"

@@ -1,7 +1,7 @@
 """Setting up commodity section"""
 from django.apps import AppConfig
 
-class CommoditiesConfig(AppConfig):
+class CommodityConfig(AppConfig):
     """Config for commodity object"""
 
-    name = 'commodities'
+    name = 'commodity'

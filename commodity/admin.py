@@ -1,5 +1,6 @@
 """"Module to show model commodity in admin interface"""
 from django.contrib import admin
+from rest_framework import serializers, viewsets
 from .models import Commodity
 
 
@@ -19,6 +20,18 @@ class CommodityAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Commodity, CommodityAdmin)
+
+# Serializers define the API representation.
+class CommoditySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Commodity
+        fields = list(CommodityAdmin.list_display)
+
+# ViewSets define the view behavior.
+class CommodityViewSet(viewsets.ModelViewSet):
+    queryset = Commodity.objects.all()
+    serializer_class = CommoditySerializer
+
 # Register your models here.
 
 # nickname = models.CharField(max_length=50, db_index=True, blank=True, null=True)

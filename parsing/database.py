@@ -39,7 +39,7 @@ class DbHandler:
         "parser freelancer into db"
         self.make_empty(database)
 
-        from commodities.models import fill_commodity_table
+        from commodity.models import fill_commodity_table
         from ship.models import fill_ship_table
 
         dicty = main_parse()

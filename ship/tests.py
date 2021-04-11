@@ -32,3 +32,15 @@ class TestShipModel(TestCase):
         """Test to check rendering of inline admin interface"""
         resp = self.client.get('/admin/ship/ship/1/change/', follow=True)
         self.assertEqual(resp.status_code, 200)
+
+class TestShipAPI(TestCase):
+    """Tests to check db model commodity"""
+
+    @loaded_db
+    def setUp(self):
+        pass
+
+    def test_check_json_response_is_not_empty(self):
+        self.client = Client()
+        resp = self.client.get('/api/ship/?format=json', follow=True)
+        assert (len(resp.json())) > 0

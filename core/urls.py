@@ -16,8 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from django.contrib import admin
-from django.urls import include, path
+from django.contrib.auth.models import User
+from rest_framework import routers
+
+from ship.admin import ShipViewSet
+from commodity.admin import CommodityViewSet
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'ship', ShipViewSet)
+router.register(r'commodity', CommodityViewSet)
 
 urlpatterns = [
     path('', include('main.urls')),
@@ -28,4 +36,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('admin_2/', admin.site.urls),
+
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

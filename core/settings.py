@@ -91,13 +91,14 @@ INSTALLED_APPS = [
     "parsing.apps.ParsingConfig",
     "main.apps.MainConfig",
     "ship.apps.ShipConfig",
-    "commodities.apps.CommoditiesConfig",
+    "commodity.apps.CommodityConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -169,6 +170,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
