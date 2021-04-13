@@ -10,32 +10,26 @@ class Ship(models.Model):
     class Meta:
         verbose_name_plural = "ships"
 
+    # str
     nickname = models.CharField(
         max_length=50, db_index=True, blank=True, null=True)
 
-    ids_name = models.IntegerField(db_index=True, blank=True, null=True)
-    name = models.CharField(
-        max_length=50, db_index=True, blank=True, null=True)
-
-    ids_info = models.IntegerField(db_index=True, blank=True, null=True)
-
-    info_name = models.CharField(
-        max_length=100, db_index=True, blank=True, null=True)
-
+    # floats
     mass = models.FloatField(blank=True, null=True)
-    hold_size = models.IntegerField(blank=True, null=True)
-    cruise_speed = models.IntegerField(blank=True, null=True, default=None)
-    impulse_speed = models.IntegerField(blank=True, null=True, default=None)
-
-    capacity = models.IntegerField(blank=True, null=True, default=None)
-    charge_rate = models.IntegerField(blank=True, null=True, default=None)
-
-
     linear_drag = models.FloatField(blank=True, null=True)
-    max_bank_angle = models.IntegerField(db_index=True, blank=True, null=True)
     camera_angular_acceleration = models.FloatField(
         blank=True, null=True, verbose_name='ang speed')
+    camera_turn_look_ahead_slerp_amount = models.FloatField(
+        blank=True, null=True, verbose_name='look ahead')
+    nudge_force = models.FloatField(blank=True, null=True)
+    explosion_resistance = models.FloatField(
+        blank=True, null=True, verbose_name='exp res')
 
+
+    # int
+    ids_info = models.IntegerField(db_index=True, blank=True, null=True)
+    hold_size = models.IntegerField(blank=True, null=True)
+    max_bank_angle = models.IntegerField(db_index=True, blank=True, null=True)
     camera_horizontal_turn_angle = models.IntegerField(
         blank=True, null=True, verbose_name='hor ang')
 
@@ -44,18 +38,10 @@ class Ship(models.Model):
 
     camera_vertical_turn_down_angle = models.IntegerField(
         blank=True, null=True, verbose_name='turn down')
-
-    camera_turn_look_ahead_slerp_amount = models.FloatField(
-        blank=True, null=True, verbose_name='look ahead')
-
     hit_pts = models.IntegerField(blank=True, null=True)
-    nudge_force = models.FloatField(blank=True, null=True)
     strafe_force = models.IntegerField(blank=True, null=True)
     strafe_power_usage = models.IntegerField(
         blank=True, null=True, verbose_name='strafe usage')
-    explosion_resistance = models.FloatField(
-        blank=True, null=True, verbose_name='exp res')
-
     ids_info1 = models.IntegerField(blank=True, null=True)
     ids_info2 = models.IntegerField(blank=True, null=True)
     ids_info3 = models.IntegerField(blank=True, null=True)
@@ -65,10 +51,29 @@ class Ship(models.Model):
     shield_battery_limit = models.IntegerField(
         blank=True, null=True, verbose_name='batteries')
 
+    # SPECIAL
+    ids_name = models.IntegerField(db_index=True, blank=True, null=True)
+    name = models.CharField(
+        max_length=50, db_index=True, blank=True, null=True)
+    
     # different original name: type
     typeof = models.CharField(
         max_length=50, db_index=True, blank=True, null=True)
 
+    info_name = models.CharField(
+        max_length=100, db_index=True, blank=True, null=True)
+
+    # powercore
+    capacity = models.IntegerField(blank=True, null=True, default=None)
+    charge_rate = models.IntegerField(blank=True, null=True, default=None)
+
+    #engine
+    cruise_speed = models.IntegerField(blank=True, null=True, default=None)
+    impulse_speed = models.IntegerField(blank=True, null=True, default=None)
+
+def add_to_model(to_obj,from_obj, typeof, nicknames):
+    for nickname in nicknames:
+        view_wrapper(to_obj, from_obj, typeof, nickname)
 
 def fill_ship_table(dicty, database):
     """Filling ship database with data from universe"""
@@ -77,38 +82,51 @@ def fill_ship_table(dicty, database):
     for i, obj in enumerate(arr):
 
         kwg = {}
-        view_wrapper(kwg, obj, str, "nickname")
+        
+        add_to_model(kwg, obj, str, (
+            "nickname",
+        ))
+
+        add_to_model(kwg, obj, float, (
+            "mass",
+            "linear_drag",
+            "camera_angular_acceleration",
+            "camera_turn_look_ahead_slerp_amount",
+            "nudge_force",
+            "explosion_resistance",
+        ))
+
+        add_to_model(kwg, obj, int, (
+            "ids_info",
+            "hold_size",
+            "max_bank_angle",
+            "camera_horizontal_turn_angle",
+            "camera_vertical_turn_up_angle",
+            "camera_vertical_turn_down_angle",
+            "cruise_speed",
+            "impulse_speed",
+            "hit_pts",
+            "strafe_force",
+            "strafe_power_usage",
+            "ids_info1",
+            "ids_info2",
+            "ids_info3",
+            "ship_class",
+            "nanobot_limit",
+            "shield_battery_limit",
+        ))
+
+        #ids_name + name from infocards
         view_wrapper_with_infocard(dicty, kwg, obj, int, "ids_name", "name")
-        view_wrapper(kwg, obj, int, "ids_info")
-        view_wrapper(kwg, obj, float, "mass")
-        view_wrapper(kwg, obj, int, "hold_size")
-        view_wrapper(kwg, obj, int, "cruise_speed")
-        view_wrapper(kwg, obj, int, "impulse_speed")
-        view_wrapper(kwg, obj, float, "linear_drag")
-        view_wrapper(kwg, obj, int, "max_bank_angle")
-        view_wrapper(kwg, obj, float, "camera_angular_acceleration")
-        view_wrapper(kwg, obj, int, "camera_horizontal_turn_angle")
-        view_wrapper(kwg, obj, int, "camera_vertical_turn_up_angle")
-        view_wrapper(kwg, obj, int, "camera_vertical_turn_down_angle")
-        view_wrapper(kwg, obj, float, "camera_turn_look_ahead_slerp_amount")
-        view_wrapper(kwg, obj, int, "hit_pts")
-        view_wrapper(kwg, obj, float, "nudge_force")
-        view_wrapper(kwg, obj, int, "strafe_force")
-        view_wrapper(kwg, obj, int, "strafe_power_usage")
-        view_wrapper(kwg, obj, float, "explosion_resistance")
-        view_wrapper(kwg, obj, int, "ids_info1")
-        view_wrapper(kwg, obj, int, "ids_info2")
-        view_wrapper(kwg, obj, int, "ids_info3")
-        view_wrapper(kwg, obj, int, "ship_class")
-        view_wrapper(kwg, obj, int, "nanobot_limit")
-        view_wrapper(kwg, obj, int, "shield_battery_limit")
 
-        if "type" in obj.keys():
-            kwg["typeof"] = str(obj["type"][0])
+        #add typeoff
+        if "type" in obj: kwg["typeof"] = str(obj["type"][0])
 
-        if "nickname" in obj.keys() and "hp_type" in obj.keys():
+        #what is this?
+        if "nickname" in obj and "hp_type" in obj:
             dicty.hp_type[obj["nickname"][0]] = obj["hp_type"]
 
+        #add name of the ship from infocard's beginning
         try:
             dic = xmltodict.parse(dicty.infocards[kwg["ids_info"]][1])["RDL"]["TEXT"]
             if not dic[0]:
@@ -133,6 +151,7 @@ def fill_ship_table(dicty, database):
                 kwg.get("ids_info", "no ids_info"),
             )
 
+        #add powercore parameters and engine parameters
         if kwg["nickname"] in dicty.goods_by_ship["shiphull"]:
             hull = dicty.goods_by_ship["shiphull"][kwg["nickname"]]["nickname"][0]
             try:
@@ -163,7 +182,7 @@ def fill_ship_table(dicty, database):
             
             # print('123')
             # for add in ship['addon']
-            # i f add[0] in dicty.equipment['misc_equip.ini']['[power]'].keys()
+            # i f add[0] in dicty.equipment['misc_equip.ini']['[power]']
             # TODO find in addons powercore st_equip
             # and perhaps engine in engine_equip
 
