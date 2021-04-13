@@ -18,6 +18,9 @@ def view_wrapper(kwg, obj, data_type, name):
             else:
                 raise ValueError from value_error_1
 
+def add_to_model(to_obj,from_obj, typeof, nicknames):
+    for nickname in nicknames:
+        view_wrapper(to_obj, from_obj, typeof, nickname)
 
 def view_wrapper_with_infocard(dicty, kwg, obj, data_type, name, infoname):
     """Function that prepares two values to be inserted into database

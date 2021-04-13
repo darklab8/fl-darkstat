@@ -20,18 +20,19 @@ class TestShipModel(TestCase):
 
     def test_ship_url(self):
         """test to check rendering of ship section"""
-        resp = self.client.get('/admin/ship/', follow=True)
+        resp = self.client.get("/admin/ship/", follow=True)
         self.assertEqual(resp.status_code, 200)
 
     def test_ship_ship_url(self):
         """Test to check rendering of main ship table"""
-        resp = self.client.get('/admin/ship/ship/', follow=True)
+        resp = self.client.get("/admin/ship/ship/", follow=True)
         self.assertEqual(resp.status_code, 200)
 
     def test_ship_ship_change_url(self):
         """Test to check rendering of inline admin interface"""
-        resp = self.client.get('/admin/ship/ship/1/change/', follow=True)
+        resp = self.client.get("/admin/ship/ship/1/change/", follow=True)
         self.assertEqual(resp.status_code, 200)
+
 
 class TestShipAPI(TestCase):
     """Tests to check db model commodity"""
@@ -42,5 +43,5 @@ class TestShipAPI(TestCase):
 
     def test_check_json_response_is_not_empty(self):
         self.client = Client()
-        resp = self.client.get('/api/ship/?format=json', follow=True)
+        resp = self.client.get("/api/ship/?format=json", follow=True)
         assert (len(resp.json())) > 0
