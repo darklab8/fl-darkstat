@@ -10,6 +10,20 @@ class ShipAdmin(admin.ModelAdmin):
     list_display = (
         # str
         "nickname",
+        # infocardish real name
+        "info_name",
+        # SPECIAL
+        "ids_name",
+        "name",
+        "ship_class",
+        "hold_size",
+        
+        # powercore
+        "capacity",
+        "charge_rate",
+        # engine
+        "cruise_speed",
+        "impulse_speed",
         # float
         "mass",
         "linear_drag",
@@ -33,19 +47,11 @@ class ShipAdmin(admin.ModelAdmin):
         # "ids_info3",
         "strafe_force",
         "strafe_power_usage",
-        # SPECIAL
-        "ids_name",
-        "name",
+        
         # type
         "typeof",
-        # infocardish real name
-        "info_name",
-        # powercore
-        "capacity",
-        "charge_rate",
-        # engine
-        "cruise_speed",
-        "impulse_speed",
+        
+        
     )
 
     # different original name: type

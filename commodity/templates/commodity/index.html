@@ -1,40 +1,49 @@
 <!DOCTYPE html>
 <html>
-    <head>
 
-    </head>
-    <style>
-        td, th {
+<head>
+<a href="/commodity/">Commodity</a>
+<style>
+    table, th, td {
+        border: 1px solid black;
+        
+    }
+    td, th {
         font-family: Arial, Helvetica, sans-serif;
         text-align: left;
-        }
-    </style>
+        padding: 5px;
+        font-size: 16px;
+    }
+    table {
+        border-collapse: collapse;
+    }
+</style>
 
 <body>
-<table style="widtd:100%" cellspacing="2" border="1" cellpadding="5">
-    <tr>
-        <th>name </th>
-        <th>nickname </th>
-        <th>volume </th>
-        <th>loot_appearance </th>
-        <th>pod_appearance </th>
-        <th>units_per_container </th>
-        <th>decay_per_second </th>
-        <th>hit_pts </th>
-    </tr>
-{% for commodity in data %}
-    <tr>
-        {# <td><a href="/commodity/{{ commodity.id }}/">{{ commodity.nickname }}</a></td> #}
-        <td>{{ commodity.name }}</td>
-        <td>{{ commodity.nickname }}</td>
-        <td>{{ commodity.volume }}</td>
-        <td>{{ commodity.loot_appearance }}</td>
-        <td>{{ commodity.pod_appearance }}</td>
-        <td>{{ commodity.units_per_container }}</td>
-        <td>{{ commodity.decay_per_second }}</td>
-        <td>{{ commodity.hit_pts }}</td>
-    </tr>
-{% endfor %}
-</table>
+    <table class="linkespalte">
+        <tr>
+            <th>name </th>
+            <th>nickname </th>
+            <th>volume </th>
+            <th>loot_appearance </th>
+            <th>pod_appearance </th>
+            <th>units_per_container </th>
+            <th>decay_per_second </th>
+            <th>hit_pts </th>
+        </tr>
+        {% for commodity in data %}
+        <tr>
+            <td>{{ commodity.name }}</td>
+            <td>{{ commodity.nickname }}</td>
+            <td>{{ commodity.volume }}</td>
+            <td>{{ commodity.loot_appearance }}</td>
+            <td>{{ commodity.pod_appearance }}</td>
+            <td>{{ commodity.units_per_container }}</td>
+            <td>{{ commodity.decay_per_second }}</td>
+            <td>{{ commodity.hit_pts }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
+
 </html>
