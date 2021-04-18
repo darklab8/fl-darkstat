@@ -29,6 +29,8 @@ class DbHandler:
         management.call_command(
             "dumpdata",
             f"--database={database}",
+            '--exclude=contenttypes',
+            '--exclude=auth',
             natural_foreign=True,
             natural_primary=True,
             indent=2,
