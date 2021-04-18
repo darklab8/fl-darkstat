@@ -12,18 +12,17 @@ from commodity.models import Commodity
 from ship.models import Ship
 
 
-def check_perm(user, model_obj):
+def check_perm(user):
     "checks and adds view permissions for model_obj to user"
-    content_type = ContentType.objects.get_for_model(
-        model_obj, for_concrete_model=False)
-    permissions = Permission.objects.filter(content_type=content_type)
+    permissions = Permission.objects.all()
     # s2 = [p.codename for p in s1]
     for perm in permissions:
-        if 'view' in perm.codename:
-            permis = content_type.name + '.' + perm.codename
-            if not user.has_perm(permis):
-                user.user_permissions.add(perm)
-                user.save()
+        if 'view' not in perm.codename:
+            continue
+        permis = perm.name + '.' + perm.codename
+        if not user.has_perm(permis):
+            user.user_permissions.add(perm)
+            user.save()
 
 # Create your views here.
 
@@ -43,8 +42,7 @@ def login(request):
         user.is_staff = True
         user.save()
 
-    check_perm(user, Commodity)
-    check_perm(user, Ship)
+    check_perm(user)
 
     user = authenticate(username='guest', password='guest')
     request.user = user
