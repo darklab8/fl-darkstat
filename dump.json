@@ -25176,6 +25176,48 @@
   }
 },
 {
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "django_celery_beat",
+    "model": "crontabschedule"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "django_celery_beat",
+    "model": "intervalschedule"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "django_celery_beat",
+    "model": "periodictask"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "django_celery_beat",
+    "model": "periodictasks"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "django_celery_beat",
+    "model": "solarschedule"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "django_celery_beat",
+    "model": "clockedschedule"
+  }
+},
+{
   "model": "auth.permission",
   "fields": {
     "name": "Can add ship",
@@ -25525,6 +25567,270 @@
       "session"
     ],
     "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add crontab",
+    "content_type": [
+      "django_celery_beat",
+      "crontabschedule"
+    ],
+    "codename": "add_crontabschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change crontab",
+    "content_type": [
+      "django_celery_beat",
+      "crontabschedule"
+    ],
+    "codename": "change_crontabschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete crontab",
+    "content_type": [
+      "django_celery_beat",
+      "crontabschedule"
+    ],
+    "codename": "delete_crontabschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view crontab",
+    "content_type": [
+      "django_celery_beat",
+      "crontabschedule"
+    ],
+    "codename": "view_crontabschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add interval",
+    "content_type": [
+      "django_celery_beat",
+      "intervalschedule"
+    ],
+    "codename": "add_intervalschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change interval",
+    "content_type": [
+      "django_celery_beat",
+      "intervalschedule"
+    ],
+    "codename": "change_intervalschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete interval",
+    "content_type": [
+      "django_celery_beat",
+      "intervalschedule"
+    ],
+    "codename": "delete_intervalschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view interval",
+    "content_type": [
+      "django_celery_beat",
+      "intervalschedule"
+    ],
+    "codename": "view_intervalschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add periodic task",
+    "content_type": [
+      "django_celery_beat",
+      "periodictask"
+    ],
+    "codename": "add_periodictask"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change periodic task",
+    "content_type": [
+      "django_celery_beat",
+      "periodictask"
+    ],
+    "codename": "change_periodictask"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete periodic task",
+    "content_type": [
+      "django_celery_beat",
+      "periodictask"
+    ],
+    "codename": "delete_periodictask"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view periodic task",
+    "content_type": [
+      "django_celery_beat",
+      "periodictask"
+    ],
+    "codename": "view_periodictask"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add periodic tasks",
+    "content_type": [
+      "django_celery_beat",
+      "periodictasks"
+    ],
+    "codename": "add_periodictasks"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change periodic tasks",
+    "content_type": [
+      "django_celery_beat",
+      "periodictasks"
+    ],
+    "codename": "change_periodictasks"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete periodic tasks",
+    "content_type": [
+      "django_celery_beat",
+      "periodictasks"
+    ],
+    "codename": "delete_periodictasks"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view periodic tasks",
+    "content_type": [
+      "django_celery_beat",
+      "periodictasks"
+    ],
+    "codename": "view_periodictasks"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add solar event",
+    "content_type": [
+      "django_celery_beat",
+      "solarschedule"
+    ],
+    "codename": "add_solarschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change solar event",
+    "content_type": [
+      "django_celery_beat",
+      "solarschedule"
+    ],
+    "codename": "change_solarschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete solar event",
+    "content_type": [
+      "django_celery_beat",
+      "solarschedule"
+    ],
+    "codename": "delete_solarschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view solar event",
+    "content_type": [
+      "django_celery_beat",
+      "solarschedule"
+    ],
+    "codename": "view_solarschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add clocked",
+    "content_type": [
+      "django_celery_beat",
+      "clockedschedule"
+    ],
+    "codename": "add_clockedschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change clocked",
+    "content_type": [
+      "django_celery_beat",
+      "clockedschedule"
+    ],
+    "codename": "change_clockedschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete clocked",
+    "content_type": [
+      "django_celery_beat",
+      "clockedschedule"
+    ],
+    "codename": "delete_clockedschedule"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view clocked",
+    "content_type": [
+      "django_celery_beat",
+      "clockedschedule"
+    ],
+    "codename": "view_clockedschedule"
   }
 }
 ]

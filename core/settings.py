@@ -64,7 +64,7 @@ class ConfigPaths:
 PATHS = ConfigPaths()
 
 #in seconds
-TIMEOUT_BETWEEN_PARSE = os.environ.get("timeout") or '10'
+TIMEOUT_BETWEEN_PARSE = os.environ.get("timeout") or '1000'
 
 # GOODS_DIR = os.path.join(equipment_dir,'goods.ini')
 # MARKET_DIR = os.path.join(equipment_dir,'market_commodities.ini')
@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -196,3 +197,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "Australia/Tasmania"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+DJANGO_CELERY_BEAT_TZ_AWARE=False
