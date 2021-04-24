@@ -25,7 +25,7 @@ jobs:
         pylint --load-plugins pylint_django --django-settings-module="core.settings" --disable=django-not-configured --exit-zero `ls -d */`
     - name: Analysing the code with flake8
       run: |
-	flake8 --exclude .git,venv .
+        flake8 --exclude .git,venv .
     - name: Running Unit Tests
       run: |
         coverage run --omit 'venv/*' --source='.' manage.py test
