@@ -3,8 +3,11 @@ from django.test import TestCase
 from .database import DbHandler
 
 # Create your tests here.
+
+
 class TestParsers(TestCase):
-    "tests to check main program work, I guess that admin interface just logs for now"
+    """tests to check main program work,
+    I guess that admin interface just logs for now"""
 
     def test_main_url(self):
         "check parser work"

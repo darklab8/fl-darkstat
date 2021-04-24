@@ -6,6 +6,7 @@ from .files import main_parse
 
 class DbHandler:
     "class for everything related to databases"
+
     def __init__(self):
         pass
 
@@ -13,7 +14,8 @@ class DbHandler:
         "load database from dump file"
         self.make_empty(database)
 
-        management.call_command("loaddata", "dump.json", f"--database={database}")
+        management.call_command("loaddata", "dump.json",
+                                f"--database={database}")
 
     def make_empty(self, database):
         "clean database from data and apply migrations"
@@ -54,7 +56,6 @@ class DbHandler:
         self.parse_to("memory")
         self.save_to_dump("memory")
         self.load_from_dump("default")
-
 
     def daemon_database_update(self):
         "background forever process for auto updates"

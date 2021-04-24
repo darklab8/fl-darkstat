@@ -33,9 +33,10 @@ class ConfigPaths:
         )
 
         if os.environ.get("freelancer_folder"):
-            self.freelancer_folder = os.environ.get("freelancer_folder").replace(
-                " ", ""
-            )
+            self.freelancer_folder = \
+                os.environ.get("freelancer_folder").replace(
+                    " ", ""
+                )
         else:
             self.freelancer_folder = self.dark_copy_name
 
@@ -63,7 +64,7 @@ class ConfigPaths:
 
 PATHS = ConfigPaths()
 
-#in seconds
+# in seconds
 TIMEOUT_BETWEEN_PARSE = os.environ.get("timeout") or '1000'
 
 # GOODS_DIR = os.path.join(equipment_dir,'goods.ini')
@@ -146,8 +147,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": ROOT_DIR / 'db.sqlite3',
-    }
-    ,"memory": {
+    }, "memory": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": "file:memdb1?mode=memory&cache=shared",
     }
@@ -156,18 +156,19 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
+DJANGO_PASSWORD_VALIDAION = "django.contrib.auth.password_validation."
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": DJANGO_PASSWORD_VALIDAION + "UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": DJANGO_PASSWORD_VALIDAION + "MinimumLengthValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": DJANGO_PASSWORD_VALIDAION + "CommonPasswordValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": DJANGO_PASSWORD_VALIDAION + "NumericPasswordValidator",
     },
 ]
 
@@ -204,4 +205,4 @@ CELERY_TIMEZONE = "Australia/Tasmania"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
-DJANGO_CELERY_BEAT_TZ_AWARE=False
+DJANGO_CELERY_BEAT_TZ_AWARE = False

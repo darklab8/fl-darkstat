@@ -5,7 +5,8 @@ from .models import Commodity
 
 
 class CommodityAdmin(admin.ModelAdmin):
-    """Rewriting standard model viewer with custom one to show all necessary commodity colums"""
+    """Rewriting standard model viewer with
+    custom one to show all necessary commodity colums"""
 
     # print(tuple([f.name for f in Commodity._meta.get_fields()]))
     list_display = (
@@ -31,6 +32,8 @@ class CommodityAdmin(admin.ModelAdmin):
 admin.site.register(Commodity, CommodityAdmin)
 
 # Serializers define the API representation.
+
+
 class CommoditySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Commodity

@@ -2,6 +2,7 @@
 
 from django.apps import AppConfig
 
+
 class MainConfig(AppConfig):
     "init django section"
 

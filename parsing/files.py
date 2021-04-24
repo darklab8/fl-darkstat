@@ -1,10 +1,10 @@
-"module to work with files and folders, consisting modified module os operations"
+"""module to work with files and folders,
+consisting modified module os operations"""
 import functools
 import os
 import re
 from os import walk
 import codecs
-import xmltodict
 from shutil import copy2 as copy
 from django.conf import settings
 
@@ -50,14 +50,16 @@ def save_to_dark_copy(func):
         return func(*args, **kwargs)
     return wrapper_do_twice
 
-#@save_to_dark_copy
+# @save_to_dark_copy
+
+
 def read_regular_file(filename):
     "get content of regular file"
     with open(filename) as filelink:
         return filelink.readlines()
 
 
-#@save_to_dark_copy
+# @save_to_dark_copy
 def read_utf8_file(filename):
     "get content of utf8 encoded file"
     with codecs.open(filename, "r", "utf-8") as filelink:
@@ -72,14 +74,16 @@ def recursive_reading(folderpath):
         for filename in filenames:
             try:
                 # dictpath[filename] = 1
-                dictpath[filename] = parse_file(os.path.join(dirpath, filename))
+                dictpath[filename] = parse_file(
+                    os.path.join(dirpath, filename))
             except IndexError:
                 print("ERR IndexError in ", filename)
             except UnicodeDecodeError:
                 print("ERR UnicodeDecodeError in ", filename)
 
         for dirname in dirnames:
-            dictpath[dirname] = recursive_reading(os.path.join(dirpath, dirname))
+            dictpath[dirname] = recursive_reading(
+                os.path.join(dirpath, dirname))
 
         break
 
@@ -92,7 +96,8 @@ def folder_reading(folderpath):
     for (__, __, filenames) in walk(folderpath):
         for filename in filenames:
             try:
-                dictpath[filename] = parse_file(os.path.join(folderpath, filename))
+                dictpath[filename] = parse_file(
+                    os.path.join(folderpath, filename))
             except IndexError:
                 print("ERR IndexError in ", filename)
             except UnicodeDecodeError:
@@ -153,7 +158,8 @@ def parse_file(filename):
                     i += 1
                     continue
 
-                splitted = content[i].replace(" ", "").replace("\n", "").split("=")
+                splitted = content[i].replace(
+                    " ", "").replace("\n", "").split("=")
 
                 if len(splitted) == 2:
                     if splitted[0] not in obj.keys():
@@ -174,7 +180,8 @@ def parse_file(filename):
 
 
 def split_goods(goods, dic, key):
-    """"Converts parsed data from list into being accessable by chosen hash key"""
+    """"Converts parsed data from list into
+    being accessable by chosen hash key"""
     for obj in goods:
         if obj["category"][0] not in dic:
             dic[obj["category"][0]] = {}
@@ -192,12 +199,14 @@ def split_goods(goods, dic, key):
 
 
 def rearrange_array_to_dict_by_keys(arr, key):
-    """"Converts parsed data from list into being accessable by chosen hash key"""
+    """"Converts parsed data from list
+    into being accessable by chosen hash key"""
     dic = {}
     for elem in arr:
         if key in elem:
             dic[elem[key][0]] = elem
     return dic
+
 
 class Dicts:
     """ "This class will have parsed data from files
@@ -228,9 +237,9 @@ def main_parse():
     split_goods(goods, dicty.goods_by_ship, "shiphull")
     split_goods(goods, dicty.goods_by_hull, "ship")
 
-    dicty.misc_equip_power_by_nickname = rearrange_array_to_dict_by_keys \
-        (dicty.equipment['misc_equip.ini']['[power]'], "nickname")
-    dicty.engine_equip_by_nickname = rearrange_array_to_dict_by_keys \
-        (dicty.equipment['engine_equip.ini']['[engine]'], "nickname")
-    
+    dicty.misc_equip_power_by_nickname = rearrange_array_to_dict_by_keys(
+        dicty.equipment['misc_equip.ini']['[power]'], "nickname")
+    dicty.engine_equip_by_nickname = rearrange_array_to_dict_by_keys(
+        dicty.equipment['engine_equip.ini']['[engine]'], "nickname")
+
     return dicty

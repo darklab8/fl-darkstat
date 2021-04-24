@@ -1,5 +1,4 @@
 """Module to test model commodity"""
-import json
 from django.test import (
     TestCase,
     Client,
@@ -35,7 +34,8 @@ class TestCommodityUrls(TestCase):
 
     def test_ship_ship_change_url(self):
         """"Checking if inline data is loading correctly"""
-        resp = self.client.get("/admin/commodity/commodity/1/change/", follow=True)
+        resp = self.client.get(
+            "/admin/commodity/commodity/1/change/", follow=True)
         self.assertEqual(resp.status_code, 200)
 
 

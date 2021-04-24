@@ -5,7 +5,8 @@ from .models import Ship
 
 
 class ShipAdmin(admin.ModelAdmin):
-    "class to rewrite standard model view to what we need showing in admin interface"
+    """class to rewrite standard model view to
+    what we need showing in admin interface"""
     # print(tuple([f.name for f in Commodity._meta.get_fields()]))
     list_display = (
         # str
@@ -17,7 +18,7 @@ class ShipAdmin(admin.ModelAdmin):
         "name",
         "ship_class",
         "hold_size",
-        
+
         # powercore
         "capacity",
         "charge_rate",
@@ -47,11 +48,11 @@ class ShipAdmin(admin.ModelAdmin):
         # "ids_info3",
         "strafe_force",
         "strafe_power_usage",
-        
+
         # type
         "typeof",
-        
-        
+
+
     )
 
     # different original name: type

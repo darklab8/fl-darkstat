@@ -6,10 +6,7 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.models import Permission
 from django.shortcuts import redirect
-from django.contrib.contenttypes.models import ContentType
 from django.core import management
-from commodity.models import Commodity
-from ship.models import Ship
 
 
 def check_perm(user):

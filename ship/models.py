@@ -13,7 +13,8 @@ class Ship(models.Model):
         verbose_name_plural = "ships"
 
     # str
-    nickname = models.CharField(max_length=50, db_index=True, blank=True, null=True)
+    nickname = models.CharField(
+        max_length=50, db_index=True, blank=True, null=True)
 
     # floats
     mass = models.FloatField(blank=True, null=True)
@@ -53,19 +54,23 @@ class Ship(models.Model):
     ids_info2 = models.IntegerField(blank=True, null=True)
     ids_info3 = models.IntegerField(blank=True, null=True)
     ship_class = models.IntegerField(blank=True, null=True)
-    nanobot_limit = models.IntegerField(blank=True, null=True, verbose_name="nanobots")
+    nanobot_limit = models.IntegerField(
+        blank=True, null=True, verbose_name="nanobots")
     shield_battery_limit = models.IntegerField(
         blank=True, null=True, verbose_name="batteries"
     )
 
     # SPECIAL
     ids_name = models.IntegerField(db_index=True, blank=True, null=True)
-    name = models.CharField(max_length=50, db_index=True, blank=True, null=True)
+    name = models.CharField(
+        max_length=50, db_index=True, blank=True, null=True)
 
     # different original name: type
-    typeof = models.CharField(max_length=50, db_index=True, blank=True, null=True)
+    typeof = models.CharField(
+        max_length=50, db_index=True, blank=True, null=True)
 
-    info_name = models.CharField(max_length=100, db_index=True, blank=True, null=True)
+    info_name = models.CharField(
+        max_length=100, db_index=True, blank=True, null=True)
 
     # powercore
     capacity = models.IntegerField(blank=True, null=True, default=None)
@@ -136,9 +141,11 @@ def fill_ship_table(dicty, database):
 
         # add name of the ship from infocard's beginning
         try:
-            dic = xmltodict.parse(dicty.infocards[kwg["ids_info"]][1])["RDL"]["TEXT"]
+            dic = xmltodict.parse(dicty.infocards[kwg["ids_info"]][1])[
+                "RDL"]["TEXT"]
             if not dic[0]:
-                dic = xmltodict.parse(dicty.infocards[kwg["ids_info1"]][1])["RDL"][
+                dic = xmltodict.parse(
+                    dicty.infocards[kwg["ids_info1"]][1])["RDL"][
                     "TEXT"
                 ]
             kwg["info_name"] = dic[0]
@@ -163,7 +170,8 @@ def fill_ship_table(dicty, database):
 
         # add powercore parameters and engine parameters
         if kwg["nickname"] in dicty.goods_by_ship["shiphull"]:
-            hull = dicty.goods_by_ship["shiphull"][kwg["nickname"]]["nickname"][0]
+            hull = dicty.goods_by_ship["shiphull"][kwg["nickname"]
+                                                   ]["nickname"][0]
             try:
                 ship = dicty.goods_by_hull["ship"][hull]
             except KeyError:
@@ -172,7 +180,8 @@ def fill_ship_table(dicty, database):
                 addon_nickname = addon[0]
                 if addon_nickname in dicty.misc_equip_power_by_nickname:
 
-                    powercore = dicty.misc_equip_power_by_nickname[addon_nickname]
+                    powercore = \
+                        dicty.misc_equip_power_by_nickname[addon_nickname]
 
                     kwg["capacity"] = int(powercore["capacity"][0])
                     kwg["charge_rate"] = int(powercore["charge_rate"][0])
@@ -187,10 +196,12 @@ def fill_ship_table(dicty, database):
                         kwg["cruise_speed"] = 350
 
                     kwg["impulse_speed"] = int(
-                        float(engine["max_force"][0]) / float(engine["linear_drag"][0])
+                        float(engine["max_force"][0]) /
+                        float(engine["linear_drag"][0])
                     )
                     # breakpoint()
-                    # print("ERR no cruise_speed for ship hull = ", hull, " ", kwg['nickname'])
+                    # print("ERR no cruise_speed for \
+                    #   ship hull = ", hull, " ", kwg['nickname'])
 
             # print('123')
             # for add in ship['addon']

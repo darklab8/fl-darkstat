@@ -26,12 +26,13 @@ app.autodiscover_tasks()
 
 @app.task(bind=True)
 def debug_task(self):
-    #print(f'Request: {self.request!r}')
+    # print(f'Request: {self.request!r}')
     print('debug task is running!')
 
+
 app.conf.beat_schedule = {
- 'run-me-every-ten-seconds': {
- 'task': 'parsing.tasks.check',
- 'schedule': 10.0
- }
+    'run-me-every-ten-seconds': {
+        'task': 'parsing.tasks.check',
+        'schedule': 10.0
+    }
 }

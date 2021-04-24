@@ -7,7 +7,8 @@ from .database import DbHandler
 
 
 class ParsingConfig(AppConfig):
-    "main class to launch server in a different configuration to parse/save/load data"
+    """main class to launch server in a
+    different configuration to parse/save/load data"""
 
     name = "parsing"
 
@@ -18,7 +19,10 @@ class ParsingConfig(AppConfig):
                 thread_name = "django_1UGbackground_worker3"
 
                 thread = Thread(
-                    name=thread_name, target=db_handler.daemon_database_update, daemon=True, args=()
+                    name=thread_name,
+                    target=db_handler.daemon_database_update,
+                    daemon=True,
+                    args=(),
                 )
                 thread.start()
 
@@ -56,14 +60,6 @@ class ParsingConfig(AppConfig):
 #             break
 #             breakpoint()
 #             print('ERR in test 1')
-
-# possible_keys = set()
-# for key in goods.keys():
-#     # if 'category' in goods[key].keys() and goods[key]['category'] == 'equipment':
-#     for subkey in goods[key].keys():
-#         if 'category' in subkey:
-#             possible_keys.add(goods[key][subkey])
-# print(possible_keys)
 
 # for key in goods.keys():
 #     if 'commodity' in key:
