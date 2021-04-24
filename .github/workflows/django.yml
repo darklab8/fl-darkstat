@@ -8,7 +8,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -23,6 +23,9 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint --load-plugins pylint_django --django-settings-module="core.settings" --disable=django-not-configured --exit-zero `ls -d */`
+    - name: Analysing the code with flake8
+      run: |
+	flake8 --exclude .git,venv .
     - name: Running Unit Tests
       run: |
         coverage run --omit 'venv/*' --source='.' manage.py test
