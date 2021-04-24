@@ -11,6 +11,7 @@ click-didyoumean==0.0.3
 click-plugins==1.1.1
 click-repl==0.1.6
 colorama==0.4.4
+coverage==5.5
 dataclassy==0.7.2
 deconstruct==0.6
 Django==3.1.7

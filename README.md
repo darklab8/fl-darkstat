@@ -50,13 +50,14 @@ python manage.py runserver
 - docker build -t fldarknet:latest .
 - docker run --name fldarknet -t -d -p 80:8000 --rm fldarknet:latest
 
-# Unit testing
+# Tests
+## Unit testing
 ### just launch this when started doing work and before making commit
 ```
 python manage.py test
 ```
 
-# Static code checkers
+## Static code checkers
 We use pylint with its plugin for django \
 instructions to run in different OS below 
 ### Windows 
@@ -68,6 +69,10 @@ scripts\fldarknet_pylint.bat
 ```
 pylint --load-plugins pylint_django --django-settings-module="core.settings" --disable=django-not-configured --exit-zero `ls -d */`
 ```
+
+## Coverage
+ - coverage run --omit 'venv/*' --source='.' manage.py test
+ - coverage report
 
 # Available flags
 
