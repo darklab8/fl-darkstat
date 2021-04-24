@@ -44,6 +44,12 @@ pip install -r requirements.txt
 python manage.py runserver
 ```
 
+# Deployment
+
+- install docker
+- docker build -t fldarknet:latest .
+- docker run --name fldarknet -t -d -p 80:8000 --rm fldarknet:latest
+
 # Unit testing
 ### just launch this when started doing work and before making commit
 ```
