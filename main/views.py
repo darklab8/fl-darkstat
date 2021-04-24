@@ -17,8 +17,8 @@ def check_perm(user):
     permissions = Permission.objects.all()
     # s2 = [p.codename for p in s1]
     for perm in permissions:
-        # if 'view' not in perm.codename:
-        #     continue
+        if 'view' not in perm.codename:
+            continue
         permis = perm.name + '.' + perm.codename
         if not user.has_perm(permis):
             user.user_permissions.add(perm)
