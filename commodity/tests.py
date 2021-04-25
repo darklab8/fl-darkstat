@@ -19,7 +19,6 @@ class TestCommodityUrls(TestCase):
     def test_validator_not_empty(self):
         """Checking if objects were able to load into db"""
         count = len(Commodity.objects.all())
-        print("Commodity =", count)
         self.assertIs(count != 0, True)
 
     def test_commodity_url(self):

@@ -15,7 +15,6 @@ class TestShipModel(TestCase):
     def test_validator_not_empty(self):
         "test to check, if objects were loaded to db"
         count = len(Ship.objects.all())
-        print("Ships =", count)
         self.assertIs(count != 0, True)
 
     def test_ship_url(self):

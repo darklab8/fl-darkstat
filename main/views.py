@@ -6,7 +6,6 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.models import Permission
 from django.shortcuts import redirect
-from django.core import management
 
 
 def check_perm(user):
@@ -26,8 +25,6 @@ def check_perm(user):
 
 def login(request):
     "login to admin interface"
-
-    management.call_command('migrate')
 
     username = 'guest'
     user_model = get_user_model()
