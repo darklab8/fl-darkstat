@@ -3,6 +3,7 @@ import click
 from scripts.dock import dock
 from scripts.test import test
 from scripts.celery import celery
+from scripts.git import git
 from scripts.universal import say, PROJECT_MANAGE
 
 
@@ -35,6 +36,7 @@ def check():
 root.add_command(dock)
 root.add_command(celery)
 root.add_command(test)
+root.add_command(git)
 
 if __name__ == '__main__':
     root()

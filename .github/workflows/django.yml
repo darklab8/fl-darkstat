@@ -22,13 +22,13 @@ jobs:
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint --load-plugins pylint_django --django-settings-module="core.settings" --disable=django-not-configured --exit-zero `ls -d */`
+        python scripts.py test pylint
     - name: Analysing the code with flake8
       run: |
-        flake8 --exclude .git,venv,migrations .
+        python scripts.py test flake
     - name: Running Unit Tests
       run: |
-        coverage run --omit 'venv/*' --source='.' manage.py test
+        python scripts.py test unit
     - name: Coverage Report
       run: |
-        coverage report
+        python scripts.py test cover

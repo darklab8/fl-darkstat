@@ -13,7 +13,7 @@ def pylint():
     "link with pylint"
     say("pylint --load-plugins pylint_django --django-settings-module="
         '"' + f"{PROJECT_CORE}" + '.settings"'
-        " --disable=django-not-configured `ls -d */`"
+        " --disable=django-not-configured --exit-zero `ls -d */`"
         )
 
 
