@@ -8,19 +8,26 @@ def dock():
     pass
 
 
-@dock.command()
-def build():
+def builder():
     say(f"git pull && docker build -t {PROJECT_NAME}:latest .")
 
 
 @dock.command()
-def run():
+def build():
+    builder()
+
+
+def runner():
     say(f"docker run --name {PROJECT_NAME} -t "
         f"-d -p 80:8000 --rm {PROJECT_NAME}:latest")
 
 
 @dock.command()
-def stop():
+def run():
+    runner()
+
+
+def stopper():
     say('docker stop $(docker ps -a -q --filter="'
         f"name={PROJECT_NAME}"
         '")'
@@ -28,8 +35,27 @@ def stop():
 
 
 @dock.command()
-def clean():
+def stop():
+    stopper()
+
+
+def cleaner():
+    "getting rid of already built docker layers"
     say('docker rmi $(docker images -a -q)')
+
+
+@dock.command()
+def clean():
+    cleaner()
+
+
+@dock.command()
+def deploy():
+    "command to deploy/or redeploy from zero"
+    cleaner()
+    stopper()
+    builder()
+    runner()
 
 
 @dock.command()

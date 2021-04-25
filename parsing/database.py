@@ -67,7 +67,7 @@ class DbHandler:
         #     print(error)
         #     breakpoint()
 
-        sleeping_seconds = int(settings.TIMEOUT_BETWEEN_PARSE)
+        sleeping_seconds = settings.TIMEOUT_BETWEEN_PARSE
         while True:
             self.parser_and_transfer()
             print(f"sleeping for {sleeping_seconds} seconds")

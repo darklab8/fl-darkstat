@@ -14,13 +14,33 @@ def root():
 
 
 @root.command()
-@click.option('--debug/--no-debug', default=True)
-def run(debug):
+@click.option('--debug', '-d',
+              is_flag=True,
+              help="enables debug",
+              default=False)
+@click.option('--folder', '-f', 'freelancer_folder',
+              default="dark_copy",
+              help="sets path to freelancer folder for parsing in background, "
+              "default='dark_copy'")
+@click.option('--timeout', '-t',
+              type=int,
+              default=1000,
+              help="sets timeout between parsing loops")
+def run(debug, freelancer_folder, timeout):
     "launch server"
-    if debug:
-        say(f"export DEBUG=true; {PROJECT_MANAGE} runserver")
-    else:
-        say(f"{PROJECT_MANAGE} runserver --noreload --insecure")
+    launcher = []
+
+    launcher.append(f"export debug={debug}; ")
+    launcher.append(f"export freelancer_folder={freelancer_folder}; ")
+    launcher.append(f"export timeout={timeout}; ")
+
+    launcher.append(f"{PROJECT_MANAGE} runserver")
+
+    if not debug:
+        launcher.append(" --noreload --insecure")
+
+    full_command = "".join(launcher)
+    say(full_command)
 
 
 @root.command()

@@ -30,8 +30,8 @@ def unit():
 
 
 @test.command()
-def build():
-    "run tox to check build on different python versions 37, 38, 39"
+def full():
+    "full test run to be done between commits"
     say("tox -r")
 
 

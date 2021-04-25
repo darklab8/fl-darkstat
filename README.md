@@ -20,15 +20,6 @@ for more info look for [Future plans](https://github.com/dd84ai/fldarknet/blob/m
 # Contributing
 ## Installing instruction
 
-### Windows:
-
-```
-install python 3.8 or higher
-python -m venv venv 
-venv\Scripts\active
-pip install -r requirements.txt
-```
-
 ### Linux Ubuntu
 
 ```
@@ -44,23 +35,31 @@ pip install -r requirements.txt
 # Deployment
 
 - install docker
-- python scripts.py dock build
-- python scripts.py dock run
+- python scripts.py dock deploy
 
 # Testing
-just launch this when started doing work and before making commit
-```
-python scripts.py test pylint # launching linting with pylint for static code check
-python scripts.py test flake # launching linting with flake8 for static code check
-python scripts.py test unit # launching unittest
-python scripts.py test cover # launching coverage
-```
+make sure to run this before submitting your work
 
-# Available flags
+- python scripts.py test full # makes sure nothing falls apart
 
+for a more detailed information you can run next sequence:
+
+- python scripts.py test pylint
+- python scripts.py test flake
+- python scripts.py test unit
+- python scripts.py test cover
+
+# Running
+
+- python scripts.py run
 ```
-freelancer_folder=dark_copy    #set path to freelancer folder, default 'dark_copy'
-timeout=30                      #set timeout between parsings in background
+Options:
+  -d, --debug            enables debug
+  -f, --folder TEXT      sets path to freelancer folder for parsing in
+                         background, default='dark_copy'
+
+  -t, --timeout INTEGER  sets timeout between parsing loops
+  --help                 Show this message and exit.
 ```
 
 # Notes
