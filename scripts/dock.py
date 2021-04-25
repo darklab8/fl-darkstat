@@ -41,7 +41,7 @@ def stop():
 
 def cleaner():
     "getting rid of already built docker layers"
-    say('docker rmi $(docker images -a -q)')
+    say(f"docker rmi $(docker images '{PROJECT_NAME}' -a -q)")
 
 
 @dock.command()

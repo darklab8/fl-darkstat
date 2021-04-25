@@ -1,7 +1,8 @@
 import click
 import os
 
-PROJECT_NAME = "fldarknet"
+PROJECT_NAME = os.path.basename(os.getcwd())
+print(f"project_name = {PROJECT_NAME}")
 PROJECT_CORE = "core"
 PROJECT_MANAGE = "python manage.py"
 
