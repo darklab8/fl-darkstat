@@ -32,3 +32,6 @@ jobs:
     - name: Coverage Report
       run: |
         python scripts.py test cover
+    - name: Sphinx build
+      run: |
+        python scripts.py sphinx build
