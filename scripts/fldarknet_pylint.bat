@@ -1,2 +1,0 @@
-
-cmd /k "cd /d ..\venv\Scripts & activate & cd /d    ..\.. & pylint --load-plugins pylint_django --django-settings-module="core.settings" --disable=django-not-configured core main ship commodity parsing"

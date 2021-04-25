@@ -81,7 +81,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY") or secrets.token_hex(
 )  # '6*i&e67x=p9ley%1+f8nm1^4cz@g+8*1_)gmbft(t47me&u+$9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 

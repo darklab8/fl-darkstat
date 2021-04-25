@@ -23,11 +23,10 @@ for more info look for [Future plans](https://github.com/dd84ai/fldarknet/blob/m
 ### Windows:
 
 ```
-install python 3.8 or higher #author prefers 3.8.6 because uses Windows 7
-python -m venv venv          #to create virtual venv folder
+install python 3.8 or higher
+python -m venv venv 
 venv\Scripts\active
 pip install -r requirements.txt
-python manage.py runserver
 ```
 
 ### Linux Ubuntu
@@ -39,40 +38,23 @@ apt-get -y install git
 python3 -m venv venv
 source venv/bin/activate
 
-
 pip install -r requirements.txt
-python manage.py runserver
 ```
 
 # Deployment
 
 - install docker
-- docker build -t fldarknet:latest .
-- docker run --name fldarknet -t -d -p 80:8000 --rm fldarknet:latest
+- python scripts.py dock build
+- python scripts.py dock run
 
-# Tests
-## Unit testing
-### just launch this when started doing work and before making commit
+# Testing
+just launch this when started doing work and before making commit
 ```
-python manage.py test
+python scripts.py test pylint # launching linting with pylint for static code check
+python scripts.py test flake # launching linting with flake8 for static code check
+python scripts.py test unit # launching unittest
+python scripts.py test cover # launching coverage
 ```
-
-## Static code checkers
-We use pylint with its plugin for django \
-instructions to run in different OS below 
-### Windows 
-```
-scripts\fldarknet_pylint.bat
-```
-
-### Linux
-```
-pylint --load-plugins pylint_django --django-settings-module="core.settings" --disable=django-not-configured --exit-zero `ls -d */`
-```
-
-## Coverage
- - coverage run --omit 'venv/*' --source='.' manage.py test
- - coverage report
 
 # Available flags
 
