@@ -31,7 +31,7 @@ class ConfigPaths:
 
     def __init__(self):
         self.freelancer_path = os.environ.get(
-            "freelancer_folder")
+            "freelancer_folder") or "dark_copy"
 
         self.data_dir = os.path.join(self.freelancer_path, "DATA")
 

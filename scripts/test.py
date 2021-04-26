@@ -30,7 +30,7 @@ def unit():
 
 
 @test.command()
-def full():
+def matrix():
     "full test run to be done between commits"
     say("tox -r")
 
