@@ -20,7 +20,7 @@ def pylint():
 @test.command()
 def flake():
     "lint with flake8"
-    say("flake8 --exclude .git,venv,migrations,.tox .")
+    say("flake8 --exclude .git,venv,*/migrations/*,.tox .")
 
 
 @test.command()

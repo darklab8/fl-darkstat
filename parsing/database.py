@@ -43,13 +43,13 @@ class DbHandler:
         "parser freelancer into db"
         self.make_empty(database)
 
-        from commodity.models import fill_commodity_table
-        from ship.models import fill_ship_table
+        from commodity.models import Commodity
+        from ship.models import Ship
 
         dicty = main_parse()
 
-        fill_commodity_table(dicty, database)
-        fill_ship_table(dicty, database)
+        Commodity.fill_table(dicty, database)
+        Ship.fill_table(dicty, database)
 
     def parser_and_transfer(self):
         "parse to RAM memory and transfer to default database"

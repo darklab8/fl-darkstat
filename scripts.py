@@ -10,7 +10,7 @@ from scripts.universal import say, PROJECT_MANAGE
 
 @click.group()
 def root():
-    "fldarknet commands"
+    "root commands"
     pass
 
 

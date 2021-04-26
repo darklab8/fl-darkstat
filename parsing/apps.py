@@ -15,7 +15,7 @@ class ParsingConfig(AppConfig):
     def ready(self):
         db_handler = DbHandler()
         if os.environ.get("RUN_MAIN", None) != "true":
-            if "runserver" in sys.argv:
+            if "runserver" in sys.argv or "shell" in sys.argv:
                 thread_name = "django_1UGbackground_worker3"
 
                 thread = Thread(

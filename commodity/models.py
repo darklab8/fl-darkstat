@@ -35,40 +35,41 @@ class Commodity(models.Model):
     name = models.CharField(
         max_length=50, db_index=True, blank=True, null=True)
 
+    @classmethod
+    def fill_table(cls, dicty, database):
+        """Filling our commodity database section with data"""
+        goods = dicty.equipment["select_equip.ini"]
+        arr = goods["[commodity]"].copy()
+        for obj in arr:
+            kwg = {}
 
-def fill_commodity_table(dicty, database):
-    """Filling our commodity database section with data"""
-    goods = dicty.equipment["select_equip.ini"]
-    arr = goods["[commodity]"].copy()
-    for obj in arr:
-        kwg = {}
+            add_to_model(
+                kwg,
+                obj,
+                str,
+                (
+                    "nickname",
+                    "loot_appearance",
+                    "pod_appearance",
+                ),
+            )
 
-        add_to_model(
-            kwg,
-            obj,
-            str,
-            (
-                "nickname",
-                "loot_appearance",
-                "pod_appearance",
-            ),
-        )
+            add_to_model(kwg, obj, float, ("volume",))
 
-        add_to_model(kwg, obj, float, ("volume",))
+            add_to_model(
+                kwg,
+                obj,
+                int,
+                (
+                    "ids_info",
+                    "units_per_container",
+                    "decay_per_second",
+                    "hit_pts",
+                ),
+            )
 
-        add_to_model(
-            kwg,
-            obj,
-            int,
-            (
-                "ids_info",
-                "units_per_container",
-                "decay_per_second",
-                "hit_pts",
-            ),
-        )
+            view_wrapper_with_infocard(
+                dicty, kwg, obj, int, "ids_name", "name")
 
-        view_wrapper_with_infocard(dicty, kwg, obj, int, "ids_name", "name")
-
-        db_data = Commodity(**kwg)
-        db_data.save(using=database)
+            db_data = cls(**kwg)
+            db_data.save(using=database)
