@@ -30,40 +30,16 @@ class ConfigPaths:
     "file paths"
 
     def __init__(self):
+        self.freelancer_path = os.environ.get(
+            "freelancer_folder")
 
-        self.dark_copy_name = "dark_copy" or os.environ.get("dark_copy_name")
-        self.dark_copy_dir = os.environ.get("dark_copy_dir") or os.path.join(
-            ROOT_DIR, self.dark_copy_name
-        )
-
-        if os.environ.get("freelancer_folder"):
-            self.freelancer_folder = \
-                os.environ.get("freelancer_folder").replace(
-                    " ", ""
-                )
-        else:
-            self.freelancer_folder = self.dark_copy_name
-
-        self.post_initialization()
-
-    def post_initialization(self):
-        "reactivate to new paths"
-
-        self.freelancer_dir = os.path.join(ROOT_DIR, self.freelancer_folder)
-
-        self.data_dir = os.path.join(self.freelancer_dir, "DATA")
+        self.data_dir = os.path.join(self.freelancer_path, "DATA")
 
         self.equipment_dir = os.path.join(self.data_dir, "EQUIPMENT")
-        self.service_dir = os.path.join(self.freelancer_dir, "SERVICE")
+        self.service_dir = os.path.join(self.freelancer_path, "SERVICE")
         self.infocards_path = os.path.join(self.service_dir, "infocards.txt")
         self.universe_dir = os.path.join(self.data_dir, "UNIVERSE")
         self.ships_dir = os.path.join(self.data_dir, "SHIPS")
-
-    def redefine_folder(self, folder):
-        "at least during unit tests we wish to set path always to dark_copy"
-
-        self.freelancer_folder = folder
-        self.post_initialization()
 
 
 PATHS = ConfigPaths()
@@ -71,18 +47,12 @@ PATHS = ConfigPaths()
 # in seconds
 TIMEOUT_BETWEEN_PARSE = int(os.environ.get("timeout") or '1000')
 
-# GOODS_DIR = os.path.join(equipment_dir,'goods.ini')
-# MARKET_DIR = os.path.join(equipment_dir,'market_commodities.ini')
-# SEL_EQUIP_DIR = os.path.join(equipment_dir,'select_equip.ini')
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY") or secrets.token_hex(
-    32
-)  # '6*i&e67x=p9ley%1+f8nm1^4cz@g+8*1_)gmbft(t47me&u+$9'
+SECRET_KEY = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -138,12 +108,6 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': ROOT_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
