@@ -20,8 +20,8 @@ from .universal import say, PROJECT_MANAGE
               default=1000,
               help="sets timeout between parsing loops")
 @click.pass_context
-def django(context, debug, background, freelancer_folder, timeout):
-    "django commands"
+def manage(context, debug, background, freelancer_folder, timeout):
+    "manage commands"
     launcher = []
     launcher.append(f"export debug={debug}; ")
     launcher.append(f"export background={background}; ")
@@ -32,7 +32,7 @@ def django(context, debug, background, freelancer_folder, timeout):
     pass
 
 
-@django.command()
+@manage.command()
 @click.pass_context
 def run(context):
     "launch server"
@@ -44,14 +44,14 @@ def run(context):
     say("".join(context.obj['launcher']))
 
 
-@django.command()
+@manage.command()
 @click.pass_context
 def shell(context):
     context.obj['launcher'].append(f"{PROJECT_MANAGE} shell")
     say("".join(context.obj['launcher']))
 
 
-@django.command()
+@manage.command()
 @click.pass_context
 def check(context):
     context.obj['launcher'].append(f"{PROJECT_MANAGE} check --deploy")
