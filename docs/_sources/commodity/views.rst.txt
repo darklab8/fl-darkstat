@@ -1,4 +1,4 @@
 views
 =============
 
-.. autoclass:: commodity.views.CommodityList
+.. autoclass:: commodity.views.ViewList

@@ -11,6 +11,7 @@ Welcome to fldarknet's documentation!
    :caption: Contents:
 
    commodity/index
+   ship/index
 
 Indices and tables
 ==================

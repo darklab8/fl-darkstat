@@ -39,6 +39,11 @@ def api_root(request, format=None):
             'commodity-root',
             request=request,
             format=format
+        ),
+        'ship root': reverse(
+            'ship-root',
+            request=request,
+            format=format
         )
     })
 
@@ -60,4 +65,5 @@ urlpatterns = [
          ),
 
     path('commodity/', include('commodity.urls')),
+    path('ship/', include('ship.urls')),
 ]

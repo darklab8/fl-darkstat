@@ -16,7 +16,7 @@ class ViewList(mixins.RetrieveModelMixin,
 
     | lists commodities
 
-        [GET]: http://server:port/commodity/list/
+        [GET]: http://server:port/commodity/list
 
     Returns:
         JSON: status_code: 200

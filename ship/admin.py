@@ -1,6 +1,5 @@
 "module to render ships in admin interface"
 from django.contrib import admin
-from rest_framework import serializers, viewsets
 from .models import Ship
 
 
@@ -35,16 +34,3 @@ class ShipAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Ship, ShipAdmin)
-
-
-# Serializers define the API representation.
-class ShipSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Ship
-        fields = list(ShipAdmin.list_display)
-
-
-# ViewSets define the view behavior.
-class ShipViewSet(viewsets.ModelViewSet):
-    queryset = Ship.objects.all()
-    serializer_class = ShipSerializer

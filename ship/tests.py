@@ -1,7 +1,10 @@
 "Tests to cover anything related to ship table"
+import os
+import json
 from django.test import TestCase
 from django.test import Client
 from main.decorators import loaded_db
+from rest_framework.test import APIClient
 from .models import Ship
 
 
@@ -38,9 +41,17 @@ class TestShipAPI(TestCase):
 
     @loaded_db
     def setUp(self):
-        pass
+        self.client = APIClient()
 
     def test_check_json_response_is_not_empty(self):
-        self.client = Client()
-        resp = self.client.get("/api/ship/?format=json", follow=True)
+        resp = self.client.get("/ship/list", format='json')
         assert (len(resp.json())) > 0
+
+        with open(os.path.join(
+            'sphinx',
+            'source',
+            'ship',
+            'write',
+            'list.json'
+        ), 'w') as file_:
+            file_.write(json.dumps(resp.json(), indent=2))
