@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parsing &#8212; fldarknet 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Welcome to fldarknet’s documentation!" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-parsing">
+<span id="parsing"></span><h1>Parsing<a class="headerlink" href="#module-parsing" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="module-parsing.files">
+<span id="files"></span><h1>Files<a class="headerlink" href="#module-parsing.files" title="Permalink to this headline">¶</a></h1>
+<p>module to work with files and folders,
+consisting modified module os operations</p>
+<dl class="py class">
+<dt id="parsing.files.Dicts">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">Dicts</span></code><a class="headerlink" href="#parsing.files.Dicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>“This class will have parsed data from files
+stored in preparation to be sent to database</p>
+<dl class="py attribute">
+<dt id="parsing.files.Dicts.equipment">
+<code class="sig-name descname"><span class="pre">equipment</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#parsing.files.Dicts.equipment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="parsing.files.Dicts.goods_by_hull">
+<code class="sig-name descname"><span class="pre">goods_by_hull</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#parsing.files.Dicts.goods_by_hull" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="parsing.files.Dicts.goods_by_nickname">
+<code class="sig-name descname"><span class="pre">goods_by_nickname</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#parsing.files.Dicts.goods_by_nickname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="parsing.files.Dicts.goods_by_ship">
+<code class="sig-name descname"><span class="pre">goods_by_ship</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#parsing.files.Dicts.goods_by_ship" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="parsing.files.Dicts.hp_type">
+<code class="sig-name descname"><span class="pre">hp_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#parsing.files.Dicts.hp_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="parsing.files.Dicts.infocards">
+<code class="sig-name descname"><span class="pre">infocards</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#parsing.files.Dicts.infocards" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="parsing.files.Dicts.misc_equip_power_by_nickname">
+<code class="sig-name descname"><span class="pre">misc_equip_power_by_nickname</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#parsing.files.Dicts.misc_equip_power_by_nickname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="parsing.files.Dicts.ships">
+<code class="sig-name descname"><span class="pre">ships</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#parsing.files.Dicts.ships" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="parsing.files.Dicts.universe">
+<code class="sig-name descname"><span class="pre">universe</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#parsing.files.Dicts.universe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.clean_folder_from_files">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">clean_folder_from_files</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_to_search</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.clean_folder_from_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete all files in folde recursively</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.create_nested_folder">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">create_nested_folder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderpath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.create_nested_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>if our folder path is missing any folders, create them</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.folder_reading">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">folder_reading</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderpath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.folder_reading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fuction to parse all files in one folder</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.main_parse">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">main_parse</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.main_parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.parse_file">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">parse_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.parse_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses file into dictionary</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.parse_infocards">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">parse_infocards</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.parse_infocards" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Parses infocard file into dictionary</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.read_regular_file">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">read_regular_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.read_regular_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>get content of regular file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.read_utf8_file">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">read_utf8_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.read_utf8_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>get content of utf8 encoded file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.rearrange_array_to_dict_by_keys">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">rearrange_array_to_dict_by_keys</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.rearrange_array_to_dict_by_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Converts parsed data from list
+into being accessable by chosen hash key</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.recursive_reading">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">recursive_reading</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderpath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.recursive_reading" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Function to read all files from Universe folder resursively</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.save_to_dark_copy">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">save_to_dark_copy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.save_to_dark_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>sneaky file copy to dark_copy folder for workflow unit tests</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.split_goods">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">split_goods</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goods</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.split_goods" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Converts parsed data from list into
+being accessable by chosen hash key</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.files.strip_from_rn">
+<code class="sig-prename descclassname"><span class="pre">parsing.files.</span></code><code class="sig-name descname"><span class="pre">strip_from_rn</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.files.strip_from_rn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strips string from
+or
+trash</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-parsing.extracting">
+<span id="extracting"></span><h1>Extracting<a class="headerlink" href="#module-parsing.extracting" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="parsing.extracting.add_to_model">
+<code class="sig-prename descclassname"><span class="pre">parsing.extracting.</span></code><code class="sig-name descname"><span class="pre">add_to_model</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nicknames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.extracting.add_to_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="parsing.extracting.view_wrapper">
+<code class="sig-prename descclassname"><span class="pre">parsing.extracting.</span></code><code class="sig-name descname"><span class="pre">view_wrapper</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.extracting.view_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Function which prepares one value to be inserted into database</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="parsing.extracting.view_wrapper_with_infocard">
+<code class="sig-prename descclassname"><span class="pre">parsing.extracting.</span></code><code class="sig-name descname"><span class="pre">view_wrapper_with_infocard</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infoname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.extracting.view_wrapper_with_infocard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that prepares two values to be inserted into database
+with getting extra one in infocard</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-parsing.database">
+<span id="database"></span><h1>Database<a class="headerlink" href="#module-parsing.database" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="parsing.database.DbHandler">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">parsing.database.</span></code><code class="sig-name descname"><span class="pre">DbHandler</span></code><a class="headerlink" href="#parsing.database.DbHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>class for everything related to databases</p>
+<dl class="py method">
+<dt id="parsing.database.DbHandler.daemon_database_update">
+<code class="sig-name descname"><span class="pre">daemon_database_update</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parsing.database.DbHandler.daemon_database_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>background forever process for auto updates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="parsing.database.DbHandler.load_from_dump">
+<code class="sig-name descname"><span class="pre">load_from_dump</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.database.DbHandler.load_from_dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>load database from dump file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="parsing.database.DbHandler.make_empty">
+<code class="sig-name descname"><span class="pre">make_empty</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.database.DbHandler.make_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>clean database from data and apply migrations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="parsing.database.DbHandler.parse_to">
+<code class="sig-name descname"><span class="pre">parse_to</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.database.DbHandler.parse_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>parser freelancer into db</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="parsing.database.DbHandler.parser_and_transfer">
+<code class="sig-name descname"><span class="pre">parser_and_transfer</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parsing.database.DbHandler.parser_and_transfer" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse to RAM memory and transfer to default database</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="parsing.database.DbHandler.save_to_dump">
+<code class="sig-name descname"><span class="pre">save_to_dump</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parsing.database.DbHandler.save_to_dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>save database to dump file</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">fldarknet</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-parsing.files">Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-parsing.extracting">Extracting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-parsing.database">Database</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to fldarknet’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, dd84ai.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/parsing/parsing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

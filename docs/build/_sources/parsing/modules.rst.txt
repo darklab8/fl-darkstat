@@ -1,0 +1,35 @@
+Parsing
+===========
+
+
+.. automodule:: parsing
+   :members:
+   :undoc-members:
+
+
+Files
+===========
+
+
+.. automodule:: parsing.files
+   :members:
+   :undoc-members:
+
+
+Extracting
+===========
+
+
+.. automodule:: parsing.extracting
+    :members:
+    :undoc-members:
+
+
+Database
+===========
+
+
+.. automodule:: parsing.database
+    :members:
+    :undoc-members:
+    
