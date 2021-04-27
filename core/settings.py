@@ -59,6 +59,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
 
 ALLOWED_HOSTS = ["*"]
 
+ADDED_APPS = ['commodity', 'ship']
 
 # Application definition
 

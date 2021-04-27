@@ -8,8 +8,6 @@ from django.contrib.auth.models import Permission
 from django.shortcuts import redirect
 from django.conf import settings
 
-Allowed = ['commodity', 'ship']
-
 
 def check_perm(user):
     "checks and adds view permissions for model_obj to user"
@@ -19,7 +17,7 @@ def check_perm(user):
         if 'view' not in perm.codename:
             continue
 
-        if (perm.content_type.app_label not in Allowed
+        if (perm.content_type.app_label not in settings.ADDED_APPS
                 and not settings.DEBUG):
             continue
 
