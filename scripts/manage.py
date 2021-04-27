@@ -32,14 +32,17 @@ def manage(context, debug, background, freelancer_folder, timeout):
 
 
 @manage.command()
+@click.option('--ip-port', '-p', 'address',
+              default="0.0.0.0:80",
+              help="set ip address and port")
 @click.pass_context
-def run(context):
+def run(context, address):
     "launch server"
     launcher = []
     launcher.append(f"{PROJECT_MANAGE} runserver")
 
     if not context.obj['debug']:
-        launcher.append(" --noreload --insecure")
+        launcher.append(f" --noreload --insecure {address}")
 
     say("".join(launcher))
 

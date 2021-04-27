@@ -17,7 +17,5 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 8000
 RUN dir
-#ENTRYPOINT ["./boot.sh"]
-CMD python3 manage.py runserver --insecure 0.0.0.0:8000
-#CMD python3 manage.py runserver --insecure 0.0.0.0:4646
+CMD python3 scripts.py manage run
 
