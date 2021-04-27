@@ -1,3 +1,4 @@
+import os
 import click
 from .universal import say, PROJECT_MANAGE
 
@@ -22,37 +23,32 @@ from .universal import say, PROJECT_MANAGE
 @click.pass_context
 def manage(context, debug, background, freelancer_folder, timeout):
     "manage commands"
-    launcher = []
-    launcher.append(f"export debug={debug}; ")
-    launcher.append(f"export background={background}; ")
-    launcher.append(f"export freelancer_folder={freelancer_folder}; ")
-    launcher.append(f"export timeout={timeout}; ")
-    context.obj['launcher'] = launcher
     context.obj['debug'] = debug
-    pass
+
+    os.environ['debug'] = str(debug)
+    os.environ['background'] = str(background)
+    os.environ['freelancer_folder'] = str(freelancer_folder)
+    os.environ['timeout'] = str(timeout)
 
 
 @manage.command()
 @click.pass_context
 def run(context):
     "launch server"
-    context.obj['launcher'].append(f"{PROJECT_MANAGE} runserver")
+    launcher = []
+    launcher.append(f"{PROJECT_MANAGE} runserver")
 
     if not context.obj['debug']:
-        context.obj['launcher'].append(" --noreload --insecure")
+        launcher.append(" --noreload --insecure")
 
-    say("".join(context.obj['launcher']))
-
-
-@manage.command()
-@click.pass_context
-def shell(context):
-    context.obj['launcher'].append(f"{PROJECT_MANAGE} shell")
-    say("".join(context.obj['launcher']))
+    say("".join(launcher))
 
 
 @manage.command()
-@click.pass_context
-def check(context):
-    context.obj['launcher'].append(f"{PROJECT_MANAGE} check --deploy")
-    say("".join(context.obj['launcher']))
+def shell():
+    say(f"{PROJECT_MANAGE} shell")
+
+
+@manage.command()
+def check():
+    say(f"{PROJECT_MANAGE} check --deploy")

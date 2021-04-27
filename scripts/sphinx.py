@@ -1,3 +1,4 @@
+import os
 import click
 from .universal import say
 
@@ -10,5 +11,5 @@ def sphinx():
 
 @sphinx.command()
 def build():
-    "link with pylint"
-    say("sphinx-build -b html sphinx/source docs")
+    "build sphinx documentation"
+    say(f"sphinx-build -b html {os.path.join('sphinx','source')} docs")
