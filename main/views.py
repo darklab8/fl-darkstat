@@ -1,4 +1,7 @@
 "module to make auto login into admin interface for guests"
+from django.template.defaulttags import register
+from django.template import loader
+from django.http import HttpResponse
 from django.contrib import auth
 from django.contrib.auth import (
     authenticate,
@@ -50,3 +53,17 @@ def login(request):
     auth.login(request, user)
 
     return redirect('/admin')
+
+
+def index(request):
+    template = loader.get_template('index.html')
+    context = {
+        'data': {},
+        'fields': []
+    }
+    return HttpResponse(template.render(context, request))
+
+
+@register.filter
+def get_item(dictionary, key):
+    return getattr(dictionary, key)

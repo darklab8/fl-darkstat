@@ -24,4 +24,5 @@ urlpatterns = format_suffix_patterns([
     path('list',
          views.ViewList.as_view(),
          name='ship-get'),
+    path('html', views.index, name='index')
 ])

@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from .models import Commodity
 from .serializers import CommoditySerializer
+from .admin import CommodityAdmin
 # ViewSets define the view behavior.
 
 
@@ -39,8 +40,9 @@ class ViewList(mixins.RetrieveModelMixin,
 
 def index(request):
     data = Commodity.objects.all()
-    template = loader.get_template('commodity/index.html')
+    template = loader.get_template('table.html')
     context = {
         'data': data,
+        'fields': list(CommodityAdmin.list_display)
     }
     return HttpResponse(template.render(context, request))
