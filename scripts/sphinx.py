@@ -11,4 +11,4 @@ def sphinx():
 @sphinx.command()
 def build():
     "link with pylint"
-    say("sphinx-build -b html docs/source docs/build")
+    say("sphinx-build -b html sphinx/source docs")
