@@ -7,10 +7,10 @@ Welcome to fldarknet's documentation!
 =====================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
-   parsing/index
+   commodity/index
 
 Indices and tables
 ==================

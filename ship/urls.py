@@ -7,10 +7,10 @@ from . import views
 
 
 @api_view(['GET'])
-def commodity_api_route(request, format=None):
+def api_route(request, format=None):
     return Response({
-        'commodity get': reverse(
-            'commodity-get',
+        'ship get': reverse(
+            'ship-get',
             request=request,
             format=format
         )
@@ -19,15 +19,9 @@ def commodity_api_route(request, format=None):
 
 # API endpoints
 urlpatterns = format_suffix_patterns([
-    path('', commodity_api_route,
-         name='commodity-root'),
+    path('', api_route,
+         name='ship-root'),
     path('list',
          views.ViewList.as_view(),
-         name='commodity-get'),
-    path('html', views.index, name='index')
+         name='ship-get'),
 ])
-
-# urlpatterns = [
-#     # ex: /polls/
-#     path('', views.index, name='index'),
-# ]

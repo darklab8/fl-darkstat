@@ -16,15 +16,32 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from rest_framework import routers
+from rest_framework.reverse import reverse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-from ship.admin import ShipViewSet
-from commodity.admin import CommodityViewSet
+
+# from rest_framework import routers
+
+# from ship.admin import ShipViewSet
+# from commodity.admin import CommodityViewSet
 
 # Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
-router.register(r'ship', ShipViewSet)
-router.register(r'commodity', CommodityViewSet)
+# router = routers.DefaultRouter()
+# router.register(r'ship', ShipViewSet)
+# router.register(r'commodity', CommodityViewSet)
+
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'commodity root': reverse(
+            'commodity-root',
+            request=request,
+            format=format
+        )
+    })
+
 
 urlpatterns = [
     path('', include('main.urls')),
@@ -34,9 +51,9 @@ urlpatterns = [
     path('admin/password_change/', include('main.urls')),
 
     path('admin/', admin.site.urls),
-    path('admin_2/', admin.site.urls),
-
-    path('api/', include(router.urls)),
+    # path('inbuilt_2/', admin.site.urls),
+    path('api/', api_root),
+    # path('api/', include(router.urls)),
     path('api-auth/',
          include('rest_framework.urls',
                  namespace='rest_framework')

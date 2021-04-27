@@ -1,8 +1,11 @@
 """Module to test model commodity"""
+import os
+import json
 from django.test import (
     TestCase,
     Client,
 )
+from rest_framework.test import APIClient
 from main.decorators import loaded_db
 from .models import Commodity
 
@@ -43,9 +46,18 @@ class TestCommodityModel(TestCase):
 
     @loaded_db
     def setUp(self):
-        pass
+        self.client = APIClient()
 
     def test_check_json_response_is_not_empty(self):
-        self.client = Client()
-        resp = self.client.get("/api/commodity/?format=json", follow=True)
+        # self.client = Client()
+        resp = self.client.get("/commodity/list", format='json')
         assert (len(resp.json())) > 0
+
+        with open(os.path.join(
+            'sphinx',
+            'source',
+            'commodity',
+            'write',
+            'list.json'
+        ), 'w') as file_:
+            file_.write(json.dumps(resp.json(), indent=2))

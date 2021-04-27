@@ -25,6 +25,8 @@ TrueValues = ['True', 'true']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("debug") in TrueValues
 
+REFRESH_EXAMPLES = os.environ.get("refresh") in TrueValues
+
 
 class ConfigPaths:
     "file paths"
@@ -141,9 +143,9 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    # ]
 }
 
 # Internationalization

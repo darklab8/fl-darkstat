@@ -1,3 +1,4 @@
+import os
 import click
 from .universal import say, PROJECT_CORE
 
@@ -24,9 +25,19 @@ def flake():
 
 
 @test.command()
-def unit():
+@click.option('--refresh', '-r',
+              is_flag=True,
+              help="enables refresh of data examples",
+              default=False)
+@click.option('--app', '-a', 'app',
+              default="",
+              help="choose to test particular app")
+def unit(refresh, app):
     "get unit tests"
-    say("coverage run --omit 'venv/*,.tox/*' --source='.' manage.py test")
+    os.environ['refresh'] = str(refresh)
+    say(
+        "coverage run --omit 'venv/*,.tox/*'"
+        f" --source='.' manage.py test {app}")
 
 
 @test.command()

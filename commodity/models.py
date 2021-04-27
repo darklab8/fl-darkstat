@@ -12,6 +12,7 @@ class Commodity(models.Model):
     # str
     nickname = models.CharField(
         max_length=50, db_index=True, blank=True, null=True)
+    f"{nickname.__repr__()}"
     loot_appearance = models.CharField(
         max_length=50, db_index=True, blank=True, null=True
     )

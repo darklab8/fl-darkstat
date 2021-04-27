@@ -1,0 +1,7 @@
+models
+=============
+
+.. automodule:: commodity.models
+    :members:
+    :undoc-members:
+    :special-members: __repr__, __name__
