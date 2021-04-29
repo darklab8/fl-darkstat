@@ -31,7 +31,7 @@ def runner(port):
 @dock.command()
 @click.option('--port', '-p', 'port',
               type=int,
-              default=8000,
+              default=80,
               help="sets docker redirect port")
 def run(port):
     runner(port)
