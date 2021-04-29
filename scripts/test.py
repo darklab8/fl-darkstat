@@ -21,7 +21,8 @@ def pylint():
 @test.command()
 def flake():
     "lint with flake8"
-    say("flake8 --exclude .git,venv,*/migrations/*,.tox .")
+    say("".join(("flake8 --exclude .git,venv,*/migrations/*,.tox",
+                " --ignore=A002,W503,W504 .")))
 
 
 @test.command()
