@@ -19,7 +19,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, ".env"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-ROOT_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("debug"))
@@ -49,7 +49,7 @@ PATHS = ConfigPaths()
 TIMEOUT_BETWEEN_PARSE = int(os.environ.get("timeout") or '1000')
 
 DISABLE_BACKGROUND = bool(os.environ.get("disable_background"))
-
+print(os.environ.get("disable_background"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -92,7 +92,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(ROOT_DIR, "templates")],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -114,7 +114,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ROOT_DIR / 'db.sqlite3',
+        "NAME": BASE_DIR / 'db.sqlite3',
     }, "memory": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": "file:memdb1?mode=memory&cache=shared",
@@ -167,6 +167,14 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+# STATIC_ROOT = "static"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+
+# STATICFILES_DIRS = [
+#     # BASE_DIR / "static",
+#     # 'venv/lib/python3.8/site-packages/django/contrib/admin/static',
+# ]
 
 # Celery Configuration Options
 CELERY_TIMEZONE = "Australia/Tasmania"

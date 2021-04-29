@@ -41,7 +41,18 @@ def run(context, address):
     if context.obj['debug']:
         say(f"{PROJECT_MANAGE} runserver {address}")
     else:
+        say("python scripts.py manage -b static")
         say(f"gunicorn core.wsgi -b {address}")
+
+
+def staticer():
+    say("mkdir static")
+    say(f"{PROJECT_MANAGE} collectstatic -c --noinput")
+
+
+@manage.command()
+def static():
+    staticer()
 
 
 @manage.command()

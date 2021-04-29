@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-
+from django.conf.urls.static import static
+from django.conf import settings
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls import url
+import django
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -66,4 +70,6 @@ urlpatterns = [
 
     path('commodity/', include('commodity.urls')),
     path('ship/', include('ship.urls')),
+    url(r'^static/(?P<path>.*)$', django.views.static.serve,
+        {'document_root': settings.STATIC_ROOT}),
 ]

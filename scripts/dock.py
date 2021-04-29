@@ -14,6 +14,7 @@ def logs():
 
 
 def builder():
+    say("python scripts.py manage -b static")
     say(f"git pull && docker build -t {PROJECT_NAME}:latest .")
 
 
