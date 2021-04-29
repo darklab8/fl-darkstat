@@ -1,6 +1,6 @@
 import os
 import click
-from .universal import say, PROJECT_CORE
+from .universal import say, PROJECT_CORE, bool_to_env
 
 
 @click.group()
@@ -34,7 +34,7 @@ def flake():
               help="choose to test particular app")
 def unit(refresh, app):
     "get unit tests"
-    os.environ['refresh'] = str(refresh)
+    os.environ['refresh'] = bool_to_env(refresh)
     say(
         "coverage run --omit 'venv/*,.tox/*'"
         f" --source='.' manage.py test {app}")

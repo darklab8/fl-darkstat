@@ -8,6 +8,11 @@ def dock():
     pass
 
 
+@dock.command()
+def logs():
+    say(f"docker logs -t {PROJECT_NAME}:latest")
+
+
 def builder():
     say(f"git pull && docker build -t {PROJECT_NAME}:latest .")
 
@@ -17,14 +22,18 @@ def build():
     builder()
 
 
-def runner():
+def runner(port):
     say(f"docker run --name {PROJECT_NAME} -t "
-        f"-d -p 80:8000 --rm {PROJECT_NAME}:latest")
+        f"-d -p {port}:8000 --rm {PROJECT_NAME}:latest")
 
 
 @dock.command()
-def run():
-    runner()
+@click.option('--port', '-p', 'port',
+              type=int,
+              default=8000,
+              help="sets docker redirect port")
+def run(port):
+    runner(port)
 
 
 def stopper():
@@ -50,12 +59,16 @@ def clean():
 
 
 @dock.command()
-def deploy():
+@click.option('--port', '-p', 'port',
+              type=int,
+              default=8000,
+              help="sets docker redirect port")
+def deploy(port):
     "command to deploy/or redeploy from zero"
     cleaner()
     stopper()
     builder()
-    runner()
+    runner(port)
 
 
 @dock.command()

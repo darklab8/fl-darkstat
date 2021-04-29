@@ -21,11 +21,10 @@ load_dotenv(os.path.join(basedir, ".env"))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
-TrueValues = ['True', 'true']
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("debug") in TrueValues
+DEBUG = bool(os.environ.get("debug"))
 
-REFRESH_EXAMPLES = os.environ.get("refresh") in TrueValues
+REFRESH_EXAMPLES = bool(os.environ.get("refresh"))
 
 
 class ConfigPaths:
@@ -49,7 +48,7 @@ PATHS = ConfigPaths()
 # in seconds
 TIMEOUT_BETWEEN_PARSE = int(os.environ.get("timeout") or '1000')
 
-BACKGROUND_PROCESS = os.environ.get("background") in TrueValues
+DISABLE_BACKGROUND = bool(os.environ.get("disable_background"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/

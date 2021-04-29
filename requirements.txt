@@ -29,6 +29,7 @@ filelock==3.0.12
 fl-flint==0.8.1
 flake8==3.9.1
 flake8-builtins==1.5.3
+gunicorn==20.1.0
 idna==2.10
 imagesize==1.2.0
 isort==5.8.0
@@ -43,6 +44,7 @@ mypy-extensions==0.4.3
 packaging==20.9
 pathspec==0.8.1
 pep8==1.7.1
+pkg-resources==0.0.0
 pluggy==0.13.1
 prompt-toolkit==3.0.18
 py==1.10.0

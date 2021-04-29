@@ -1,6 +1,6 @@
 import os
 import click
-from .universal import say, PROJECT_MANAGE
+from .universal import say, PROJECT_MANAGE, bool_to_env
 
 
 @click.group()
@@ -8,10 +8,10 @@ from .universal import say, PROJECT_MANAGE
               is_flag=True,
               help="enables debug",
               default=False)
-@click.option('--background', '-b',
+@click.option('--background', '-b', 'disable_background',
               is_flag=True,
               help="disables daemon runing in background for parsing",
-              default=True)
+              default=False)
 @click.option('--folder', '-f', 'freelancer_folder',
               default="dark_copy",
               help="sets path to freelancer folder for parsing in background, "
@@ -21,30 +21,27 @@ from .universal import say, PROJECT_MANAGE
               default=1000,
               help="sets timeout between parsing loops")
 @click.pass_context
-def manage(context, debug, background, freelancer_folder, timeout):
+def manage(context, debug, disable_background, freelancer_folder, timeout):
     "manage commands"
     context.obj['debug'] = debug
 
-    os.environ['debug'] = str(debug)
-    os.environ['background'] = str(background)
+    os.environ['debug'] = bool_to_env(debug)
+    os.environ['disable_background'] = bool_to_env(disable_background)
     os.environ['freelancer_folder'] = str(freelancer_folder)
     os.environ['timeout'] = str(timeout)
 
 
 @manage.command()
 @click.option('--ip-port', '-p', 'address',
-              default="0.0.0.0:80",
+              default="0.0.0.0:8000",
               help="set ip address and port")
 @click.pass_context
 def run(context, address):
     "launch server"
-    launcher = []
-    launcher.append(f"{PROJECT_MANAGE} runserver")
-
-    if not context.obj['debug']:
-        launcher.append(f" --noreload --insecure {address}")
-
-    say("".join(launcher))
+    if context.obj['debug']:
+        say(f"{PROJECT_MANAGE} runserver {address}")
+    else:
+        say(f"gunicorn core.wsgi -b {address}")
 
 
 @manage.command()
