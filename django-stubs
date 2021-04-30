@@ -1,0 +1,9 @@
+# setup.cfg
+[mypy]
+# Appending to `mypy` section:
+plugins =
+  mypy_django_plugin.main
+  mypy_drf_plugin.main
+
+[mypy.plugins.django-stubs]
+django_settings_module = core.settings

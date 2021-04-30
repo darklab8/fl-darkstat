@@ -7,6 +7,7 @@ import os
 from rest_framework.response import Response
 from rest_framework import status
 import functools
+from django.conf import settings
 
 
 @contextmanager
@@ -49,6 +50,32 @@ def required_key(key):
             if key != args[1].GET.get('api'):
                 return Response(data={'error': 'wrong api key'},
                                 status=status.HTTP_400_BAD_REQUEST)
+            return func(*args, **kwargs)
+        return wrapper_repeat
+    return decorator_repeat
+
+
+def assert_variables(*types_):
+    "decorator for fun type checking, but better to use mypy"
+    def decorator_repeat(func):
+        @functools.wraps(func)
+        def wrapper_repeat(*args, **kwargs):
+
+            if settings.DEBUG:
+                zip_obj = zip(types_, args)
+                for type_, arg in zip_obj:
+                    assert isinstance(arg, type_), str(
+                        " ".join(
+                            (
+                                str(arg),
+                                'is not',
+                                str(type_),
+                                'in func',
+                                str(repr(func)),
+                            )
+                        )
+                    )
+
             return func(*args, **kwargs)
         return wrapper_repeat
     return decorator_repeat

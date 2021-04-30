@@ -42,9 +42,15 @@ def unit(refresh, app):
 
 
 @test.command()
-def matrix():
+def tox():
     "full test run to be done between commits"
     say("tox -r")
+
+
+@test.command()
+def mypy():
+    "type hinting checker"
+    say("mypy .")
 
 
 @test.command()
