@@ -7,12 +7,12 @@ PROJECT_CORE = "core"
 PROJECT_MANAGE = "python manage.py"
 
 
-def say(phrase):
+def say(phrase) -> None:
     click.echo(phrase)
     os.system(phrase)
 
 
-def bool_to_env(boolean):
+def bool_to_env(boolean) -> str:
     if boolean:
         return 'true'
 

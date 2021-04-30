@@ -13,7 +13,7 @@ def logs():
     say(f"docker logs -t {PROJECT_NAME}:latest")
 
 
-def builder():
+def builder() -> None:
     say("python scripts.py manage -b static")
     say(f"git pull && docker build -t {PROJECT_NAME}:latest .")
 
@@ -23,7 +23,7 @@ def build():
     builder()
 
 
-def runner(port):
+def runner(port) -> None:
     say(f"docker run --name {PROJECT_NAME} -t "
         f"-d -p {port}:8000 --rm {PROJECT_NAME}:latest")
 
@@ -37,7 +37,7 @@ def run(port):
     runner(port)
 
 
-def stopper():
+def stopper() -> None:
     say('docker stop $(docker ps -a -q --filter="'
         f"name={PROJECT_NAME}"
         '")'
@@ -49,7 +49,7 @@ def stop():
     stopper()
 
 
-def cleaner():
+def cleaner() -> None:
     "getting rid of already built docker layers"
     say(f"docker rmi $(docker images '{PROJECT_NAME}' -a -q)")
 

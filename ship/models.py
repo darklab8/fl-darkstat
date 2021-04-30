@@ -2,7 +2,13 @@
 import xmltodict
 from django.db import models
 from parsing.extracting import view_wrapper_with_infocard, add_to_model
-
+from django.db.models import (
+    CharField,
+    IntegerField,
+    FloatField,
+    OneToOneField,
+    CASCADE,
+)
 # Create your models here.
 
 
@@ -11,87 +17,87 @@ class Piece(models.Model):
 
 
 class ShipStrFloats(Piece):
-    ship_float_piece = models.OneToOneField(
-        Piece, on_delete=models.CASCADE, parent_link=True)
+    ship_float_piece = OneToOneField(
+        Piece, on_delete=CASCADE, parent_link=True)
 
     # str
-    nickname = models.CharField(
+    nickname: IntegerField = CharField(
         max_length=50, db_index=True, blank=True, null=True)
 
     # floats
-    mass = models.FloatField(blank=True, null=True)
-    linear_drag = models.FloatField(blank=True, null=True)
-    camera_angular_acceleration = models.FloatField(
+    mass = FloatField(blank=True, null=True)
+    linear_drag = FloatField(blank=True, null=True)
+    camera_angular_acceleration = FloatField(
         blank=True, null=True, verbose_name="ang speed"
     )
-    camera_turn_look_ahead_slerp_amount = models.FloatField(
+    camera_turn_look_ahead_slerp_amount = FloatField(
         blank=True, null=True, verbose_name="look ahead"
     )
-    nudge_force = models.FloatField(blank=True, null=True)
-    explosion_resistance = models.FloatField(
+    nudge_force = FloatField(blank=True, null=True)
+    explosion_resistance = FloatField(
         blank=True, null=True, verbose_name="exp res"
     )
 
 
 class ShipIntegers(Piece):
-    ship_integer_piece = models.OneToOneField(
-        Piece, on_delete=models.CASCADE, parent_link=True)
+    ship_integer_piece = OneToOneField(
+        Piece, on_delete=CASCADE, parent_link=True)
 
     # int
-    ids_info = models.IntegerField(db_index=True, blank=True, null=True)
-    hold_size = models.IntegerField(blank=True, null=True)
-    max_bank_angle = models.IntegerField(db_index=True, blank=True, null=True)
-    camera_horizontal_turn_angle = models.IntegerField(
+    ids_info = IntegerField(db_index=True, blank=True, null=True)
+    hold_size = IntegerField(blank=True, null=True)
+    max_bank_angle = IntegerField(db_index=True, blank=True, null=True)
+    camera_horizontal_turn_angle = IntegerField(
         blank=True, null=True, verbose_name="hor ang"
     )
 
-    camera_vertical_turn_up_angle = models.IntegerField(
+    camera_vertical_turn_up_angle = IntegerField(
         blank=True, null=True, verbose_name="turn up"
     )
 
-    camera_vertical_turn_down_angle = models.IntegerField(
+    camera_vertical_turn_down_angle = IntegerField(
         blank=True, null=True, verbose_name="turn down"
     )
-    hit_pts = models.IntegerField(blank=True, null=True)
-    strafe_force = models.IntegerField(blank=True, null=True)
-    strafe_power_usage = models.IntegerField(
+    hit_pts = IntegerField(blank=True, null=True)
+    strafe_force = IntegerField(blank=True, null=True)
+    strafe_power_usage = IntegerField(
         blank=True, null=True, verbose_name="strafe usage"
     )
 
-    ids_info1 = models.IntegerField(blank=True, null=True)
-    ids_info2 = models.IntegerField(blank=True, null=True)
-    ids_info3 = models.IntegerField(blank=True, null=True)
-    ship_class = models.IntegerField(blank=True, null=True)
-    nanobot_limit = models.IntegerField(
+    ids_info1 = IntegerField(blank=True, null=True)
+    ids_info2 = IntegerField(blank=True, null=True)
+    ids_info3 = IntegerField(blank=True, null=True)
+    ship_class = IntegerField(blank=True, null=True)
+    nanobot_limit = IntegerField(
         blank=True, null=True, verbose_name="nanobots")
-    shield_battery_limit = models.IntegerField(
+    shield_battery_limit = IntegerField(
         blank=True, null=True, verbose_name="batteries"
     )
 
 
 class ShipSpecial(Piece):
-    ship_special_piece = models.OneToOneField(
-        Piece, on_delete=models.CASCADE, parent_link=True)
+    ship_special_piece = OneToOneField(
+        Piece, on_delete=CASCADE, parent_link=True)
 
     # SPECIAL
-    ids_name = models.IntegerField(db_index=True, blank=True, null=True)
-    name = models.CharField(
+    ids_name = IntegerField(db_index=True, blank=True, null=True)
+    name = CharField(
         max_length=50, db_index=True, blank=True, null=True)
 
     # different original name: type
-    typeof = models.CharField(
+    typeof = CharField(
         max_length=50, db_index=True, blank=True, null=True)
 
-    info_name = models.CharField(
+    info_name = CharField(
         max_length=100, db_index=True, blank=True, null=True)
 
     # powercore
-    capacity = models.IntegerField(blank=True, null=True, default=None)
-    charge_rate = models.IntegerField(blank=True, null=True, default=None)
+    capacity = IntegerField(blank=True, null=True, default=None)
+    charge_rate = IntegerField(blank=True, null=True, default=None)
 
     # engine
-    cruise_speed = models.IntegerField(blank=True, null=True, default=None)
-    impulse_speed = models.IntegerField(blank=True, null=True, default=None)
+    cruise_speed = IntegerField(blank=True, null=True, default=None)
+    impulse_speed = IntegerField(blank=True, null=True, default=None)
 
 
 class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):

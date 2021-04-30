@@ -1,6 +1,13 @@
 """"Section for regular shop commodities"""
 from django.db import models
 from parsing.extracting import view_wrapper_with_infocard, add_to_model
+from django.db.models import (
+    CharField,
+    IntegerField,
+    FloatField,
+    OneToOneField,
+    CASCADE,
+)
 
 
 class Commodity(models.Model):
@@ -10,30 +17,30 @@ class Commodity(models.Model):
         verbose_name_plural = "commodities"
 
     # str
-    nickname = models.CharField(
+    nickname = CharField(
         max_length=50, db_index=True, blank=True, null=True)
     f"{nickname.__repr__()}"
-    loot_appearance = models.CharField(
+    loot_appearance = CharField(
         max_length=50, db_index=True, blank=True, null=True
     )
-    pod_appearance = models.CharField(
+    pod_appearance = CharField(
         max_length=50, db_index=True, blank=True, null=True
     )
 
     # floats
-    volume = models.FloatField(blank=True, null=True)
+    volume = FloatField(blank=True, null=True)
 
     # int
-    ids_info = models.IntegerField(db_index=True, blank=True, null=True)
+    ids_info = IntegerField(db_index=True, blank=True, null=True)
 
-    units_per_container = models.IntegerField(
+    units_per_container = IntegerField(
         db_index=True, blank=True, null=True)
-    decay_per_second = models.IntegerField(blank=True, null=True)
-    hit_pts = models.IntegerField(blank=True, null=True)
+    decay_per_second = IntegerField(blank=True, null=True)
+    hit_pts = IntegerField(blank=True, null=True)
 
     # SPECIAL
-    ids_name = models.IntegerField(db_index=True, blank=True, null=True)
-    name = models.CharField(
+    ids_name = IntegerField(db_index=True, blank=True, null=True)
+    name = CharField(
         max_length=50, db_index=True, blank=True, null=True)
 
     @classmethod
