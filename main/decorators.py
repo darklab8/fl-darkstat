@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import functools
 from django.conf import settings
+import json
 
 
 @contextmanager
@@ -79,3 +80,15 @@ def assert_variables(*types_):
             return func(*args, **kwargs)
         return wrapper_repeat
     return decorator_repeat
+
+
+def record_to_docs(app, filename, dict_):
+    if settings.REFRESH_EXAMPLES:
+        with open(os.path.join(
+            'sphinx',
+            'source',
+            f'{app}',
+            'write',
+            f'{filename}'
+        ), 'w') as file_:
+            file_.write(json.dumps(dict_, indent=2))

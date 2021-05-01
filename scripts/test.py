@@ -30,15 +30,23 @@ def flake():
               is_flag=True,
               help="enables refresh of data examples",
               default=False)
+@click.option('--cover', '-c', 'cover',
+              is_flag=True,
+              help="shows coverage",
+              default=False)
 @click.option('--app', '-a', 'app',
               default="",
               help="choose to test particular app")
-def unit(refresh, app):
+def unit(refresh, cover, app):
     "get unit tests"
     os.environ['refresh'] = bool_to_env(refresh)
-    say(
-        "coverage run --omit 'venv/*,.tox/*'"
-        f" --source='.' manage.py test {app}")
+    launcher = []
+    launcher.append("pytest -n 6")
+    if cover:
+        launcher.append("-cov-config=.coveragerc --cov=.")
+
+    launcher.append(app)
+    say(" ".join(launcher))
 
 
 @test.command()

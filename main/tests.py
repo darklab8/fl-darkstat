@@ -1,99 +1,49 @@
-"Testing user things are going to be here"
-import json
-import os
-from django.test import TestCase
+"Testing is going to be here in order to be DRY"
 from django.test import Client
-from main.decorators import loaded_db
 from django.conf import settings
 from rest_framework.test import APIClient
 from commodity.models import Commodity
 from ship.models import Ship
+import pytest
+from .decorators import record_to_docs
 
 
-class TestAdminUrl(TestCase):
-    """tests to check main program work,
-    I guess that admin interface just logs for now"""
-
-    def setUp(self):
-        self.client = Client()
-
-    def test_main_url(self):
-        "Checking what will happen after index rendering"
-        resp = self.client.get('/', follow=True)
-        self.assertEqual(resp.status_code, 200)
-
-    def test_admin_url(self):
-        "Checking admin interface rendering"
-        resp = self.client.get('/admin/', follow=True)
-        self.assertEqual(resp.status_code, 200)
+@pytest.mark.django_db
+@pytest.mark.parametrize("url", ['/', '/admin/'])
+def test_main_url_render(loaded_dump, url):
+    assert Client().get(url, follow=True).status_code == 200
 
 
-class TestTemplateUrl(TestCase):
-    """Tests to check db model commodity"""
-
-    @loaded_db
-    def setUp(self):
-        pass
-
-    def test_validator_not_empty(self):
-        def check_validator_not_empty(app, class_):
-            """Checking if objects were able to load into db"""
-            count = len(class_.objects.all())
-            assert count != 0, app
-
-        check_validator_not_empty("commodity", Commodity)
-        check_validator_not_empty("ship", Ship)
-
-    def test_app_url(self):
-        def check_app_url(app):
-            """Checking main section url loading"""
-            resp = Client().get(f"/admin/{app}/", follow=True)
-            assert resp.status_code == 200, app
-
-        for app in settings.ADDED_APPS:
-            check_app_url(app)
-
-    def test_app_app_url(self):
-        def check_app_app_url(app):
-            """Checking if table is able to load for view"""
-            resp = Client().get(f"/admin/{app}/{app}/", follow=True)
-            assert resp.status_code == 200, app
-
-        for app in settings.ADDED_APPS:
-            check_app_app_url(app)
-
-    def test_app_app_change_url(self):
-        def check_app_app_change_url(app):
-            """"Checking if inline data is loading correctly"""
-            resp = Client().get(
-                f"/admin/{app}/{app}/1/change/", follow=True)
-            assert resp.status_code == 200, app
-
-        for app in settings.ADDED_APPS:
-            check_app_app_change_url(app)
+@pytest.mark.django_db
+@pytest.mark.parametrize("app", settings.ADDED_APPS)
+def test_admin_section_render(loaded_dump, app):
+    assert Client().get(f"/admin/{app}/", follow=True).status_code == 200
 
 
-class TestTemplateAPI(TestCase):
-    """Tests to check db model"""
+@pytest.mark.django_db
+@pytest.mark.parametrize("app", settings.ADDED_APPS)
+def test_admin_table_render(loaded_dump, app):
+    assert Client().get(f"/admin/{app}/{app}/", follow=True).status_code == 200
 
-    @loaded_db
-    def setUp(self):
-        pass
 
-    def test_json_response_is_not_empty(self):
-        def check_json_response_is_not_empty(app):
-            resp = APIClient().get(f"/{app}/list", format='json')
-            assert (len(resp.json())) > 0, app
+@pytest.mark.django_db
+@pytest.mark.parametrize("app", settings.ADDED_APPS)
+def test_admin_table_change_render(loaded_dump, app):
+    assert Client().get(
+        f"/admin/{app}/{app}/1/change/", follow=True).status_code == 200
 
-            if settings.REFRESH_EXAMPLES:
-                with open(os.path.join(
-                    'sphinx',
-                    'source',
-                    f'{app}',
-                    'write',
-                    'list.json'
-                ), 'w') as file_:
-                    file_.write(json.dumps(resp.json(), indent=2))
 
-        for app in settings.ADDED_APPS:
-            check_json_response_is_not_empty(app)
+@pytest.mark.django_db
+@pytest.mark.parametrize("table", [Commodity, Ship])
+def test_for_not_empty_table(loaded_dump, table):
+    assert len(table.objects.all()) != 0
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("app", settings.ADDED_APPS)
+def test_api_to_retrieve_tables(loaded_dump, app):
+    resp = APIClient().get(f"/{app}/list", format='json')
+
+    assert (len(resp.json())) > 0, app
+
+    record_to_docs(app, "list.json", resp.json())
