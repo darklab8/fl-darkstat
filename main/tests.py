@@ -34,9 +34,9 @@ def test_admin_table_change_render(loaded_dump, app):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("table", [Commodity, Ship])
-def test_for_not_empty_table(loaded_dump, table):
-    assert len(table.objects.all()) != 0
+def test_for_not_empty_table(loaded_dump, tables):
+    for table in tables:
+        assert len(table.objects.all()) != 0
 
 
 @pytest.mark.django_db
