@@ -1,10 +1,9 @@
 "checking parsers work"
 from parsing.database import DbHandler
 import pytest
-# Create your tests here.
+pytestmark = pytest.mark.django_db
 
 
-@pytest.mark.django_db
 def test_to_check_parser(tables):
     DbHandler().parser_and_transfer()
 
