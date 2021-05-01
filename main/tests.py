@@ -2,8 +2,6 @@
 from django.test import Client
 from django.conf import settings
 from rest_framework.test import APIClient
-from commodity.models import Commodity
-from ship.models import Ship
 import pytest
 from .decorators import record_to_docs
 
