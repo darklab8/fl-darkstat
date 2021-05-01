@@ -1,16 +1,16 @@
+from commodity.models import Commodity
+from ship.models import Ship
 import pytest
 
 import os
 import sys
 import django
 from django.core import management
+
+
 sys.path.insert(0, os.path.abspath('..'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'core.settings'
 django.setup()
-
-
-from ship.models import Ship
-from commodity.models import Commodity
 
 
 @pytest.fixture
