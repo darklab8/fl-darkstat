@@ -23,7 +23,7 @@ def add_to_model(to_obj, from_obj, typeof, nicknames):
         view_wrapper(to_obj, from_obj, typeof, nickname)
 
 
-def view_wrapper_with_infocard(dicty, kwg, obj, data_type, name, infoname):
+def view_wrapper_with_infocard(infocards, kwg, obj, data_type, name, infoname):
     """Function that prepares two values to be inserted into database
     with getting extra one in infocard"""
     if name in obj.keys():
@@ -35,5 +35,5 @@ def view_wrapper_with_infocard(dicty, kwg, obj, data_type, name, infoname):
                 kwg[name] = data_type(splitted)
             else:
                 raise ValueError from value_error_1
-        if kwg[name] in dicty.infocards:
-            kwg[infoname] = dicty.infocards[kwg[name]][1]
+        if kwg[name] in infocards:
+            kwg[infoname] = infocards[kwg[name]][1]

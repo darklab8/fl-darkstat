@@ -9,6 +9,7 @@ from rest_framework import status
 import functools
 from django.conf import settings
 import json
+import time
 
 
 @contextmanager
@@ -31,6 +32,7 @@ def suppress_stdout(supress_errors=False):
 
 def loaded_db(func):
     "useful decorator to preload stuff for unit tests"
+    @functools.wraps(func)
     def decorator_function(*args, **kwargs):
         # print('executing '+func.__name__)
 
@@ -39,6 +41,23 @@ def loaded_db(func):
                 management.call_command('loaddata', 'dump.json')
 
         return func(*args, **kwargs)
+    return decorator_function
+
+
+def measure_time(func):
+    "useful decorator to preload stuff for unit tests"
+    @functools.wraps(func)
+    def decorator_function(*args, **kwargs):
+
+        start = time.time()
+
+        return func(*args, **kwargs)
+
+        end = time.time() - start
+        print(str(func.__name__)
+              + ' finished itself in '
+              + str(end) + ' seconds')
+
     return decorator_function
 
 

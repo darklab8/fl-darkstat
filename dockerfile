@@ -13,4 +13,4 @@ RUN venv2/bin/pip install -r requirements.txt
 RUN venv2/bin/python manage.py migrate
 
 EXPOSE 8000
-CMD venv2/bin/gunicorn core.wsgi -b 0.0.0.0:8000
+CMD venv2/bin/python scripts.py manage -b run -v venv2

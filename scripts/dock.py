@@ -23,9 +23,12 @@ def build():
     builder()
 
 
-def runner(port) -> None:
+def runner(port, disable_daemon) -> None:
+    daemon = "-d "
+    if disable_daemon:
+        daemon = ""
     say(f"docker run --name {PROJECT_NAME} -t "
-        f"-d -p {port}:8000 --rm {PROJECT_NAME}:latest")
+        f"{daemon}-p {port}:8000 --rm {PROJECT_NAME}:latest")
 
 
 @dock.command()
@@ -33,8 +36,12 @@ def runner(port) -> None:
               type=int,
               default=80,
               help="sets docker redirect port")
-def run(port):
-    runner(port)
+@click.option('--disable-daemonization', '-d', 'disable_daemon',
+              is_flag=True,
+              help="disables daemon runing in background",
+              default=False)
+def run(port, disable_daemon):
+    runner(port, disable_daemon)
 
 
 def stopper() -> None:

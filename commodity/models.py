@@ -5,8 +5,6 @@ from django.db.models import (
     CharField,
     IntegerField,
     FloatField,
-    OneToOneField,
-    CASCADE,
 )
 
 
@@ -44,11 +42,9 @@ class Commodity(models.Model):
         max_length=50, db_index=True, blank=True, null=True)
 
     @classmethod
-    def fill_table(cls, dicty, database):
+    def fill_table(cls, commodities, infocards, database_name):
         """Filling our commodity database section with data"""
-        goods = dicty.equipment["select_equip.ini"]
-        arr = goods["[commodity]"].copy()
-        for obj in arr:
+        for obj in commodities:
             kwg = {}
 
             add_to_model(
@@ -77,7 +73,7 @@ class Commodity(models.Model):
             )
 
             view_wrapper_with_infocard(
-                dicty, kwg, obj, int, "ids_name", "name")
+                infocards, kwg, obj, int, "ids_name", "name")
 
             db_data = cls(**kwg)
-            db_data.save(using=database)
+            db_data.save(using=database_name)

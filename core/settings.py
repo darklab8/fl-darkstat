@@ -48,8 +48,8 @@ PATHS = ConfigPaths()
 # in seconds
 TIMEOUT_BETWEEN_PARSE = int(os.environ.get("timeout") or '1000')
 
-DISABLE_BACKGROUND = not bool(os.environ.get("disable_background"))
-print(os.environ.get("disable_background"))
+ENABLE_BACKGROUND = bool(os.environ.get("enable_background"))
+print(os.environ.get("enable_background"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 

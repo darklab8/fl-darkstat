@@ -1,7 +1,7 @@
 import time
 from django.core import management
 from django.conf import settings
-from .files import main_parse
+from .parser import main_parse
 
 
 class DbHandler:
@@ -39,17 +39,26 @@ class DbHandler:
             output="dump.json",
         )
 
-    def parse_to(self, database):
+    def parse_to(self, database_name):
         "parser freelancer into db"
-        self.make_empty(database)
+        self.make_empty(database_name)
 
         from commodity.models import Commodity
         from ship.models import Ship
 
-        dicty = main_parse()
+        parsed = main_parse()
 
-        Commodity.fill_table(dicty, database)
-        Ship.fill_table(dicty, database)
+        Commodity.fill_table(
+            parsed.equipment.select_equip.commodity,
+            parsed.infocards,
+            database_name)
+
+        Ship.fill_table(parsed.ships.shiparch.ship,
+                        parsed.infocards,
+                        parsed.equipment.goods.good,
+                        parsed.equipment.misc_equip.power,
+                        parsed.equipment.engine_equip.engine,
+                        database_name)
 
     def parser_and_transfer(self):
         "parse to RAM memory and transfer to default database"
@@ -61,11 +70,6 @@ class DbHandler:
         "background forever process for auto updates"
 
         self.make_empty("default")
-        # try:
-        #     self.load_from_dump("default")
-        # except Exception as error:
-        #     print(error)
-        #     breakpoint()
 
         sleeping_seconds = settings.TIMEOUT_BETWEEN_PARSE
         while True:

@@ -15,7 +15,7 @@ class ParsingConfig(AppConfig):
     def ready(self):
         db_handler = DbHandler()
         if (os.environ.get("RUN_MAIN", None) != "true"
-                and not settings.DISABLE_BACKGROUND):
+                and settings.ENABLE_BACKGROUND):
             thread_name = "django_1UGbackground_worker3"
 
             thread = Thread(

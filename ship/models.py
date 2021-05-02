@@ -107,11 +107,18 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
         verbose_name_plural = "ships"
 
     @classmethod
-    def fill_table(cls, dicty, database):
+    def fill_table(
+        cls,
+        ships,
+        infocards,
+        goods,
+        power,
+        engines,
+        database_name
+    ):
         """Filling ship database with data from universe"""
-        goods = dicty.ships["shiparch.ini"]
-        arr = goods["[ship]"].copy()
-        for i, obj in enumerate(arr):
+
+        for i, obj in enumerate(ships):
 
             kwg = {}
 
@@ -156,23 +163,24 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
 
             # ids_name + name from infocards
             view_wrapper_with_infocard(
-                dicty, kwg, obj, int, "ids_name", "name")
+                infocards, kwg, obj, int, "ids_name", "name")
 
             # add typeoff
             if "type" in obj:
                 kwg["typeof"] = str(obj["type"][0])
 
-            # what is this?
-            if "nickname" in obj and "hp_type" in obj:
-                dicty.hp_type[obj["nickname"][0]] = obj["hp_type"]
+            # This is ship gun/equipment slots! Add them to some database!
+            # if "nickname" in obj and "hp_type" in obj:
+            #     hp_type[obj["nickname"][0]] = obj["hp_type"]
+            # TODO move to parser and parse later for available equip slots
 
             # add name of the ship from infocard's beginning
             try:
-                dic = xmltodict.parse(dicty.infocards[kwg["ids_info"]][1])[
+                dic = xmltodict.parse(infocards[kwg["ids_info"]][1])[
                     "RDL"]["TEXT"]
                 if not dic[0]:
                     dic = xmltodict.parse(
-                        dicty.infocards[kwg["ids_info1"]][1])["RDL"][
+                        infocards[kwg["ids_info1"]][1])["RDL"][
                         "TEXT"
                     ]
                 kwg["info_name"] = dic[0]
@@ -197,26 +205,26 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
                 )
 
             # add powercore parameters and engine parameters
-            if kwg["nickname"] in dicty.goods_by_ship["shiphull"]:
-                hull = dicty.goods_by_ship["shiphull"][kwg["nickname"]
-                                                       ]["nickname"][0]
+            if kwg["nickname"] in goods.by_ship["shiphull"]:
+                hull = goods.by_ship["shiphull"][kwg["nickname"]
+                                                 ]["nickname"][0]
                 try:
-                    ship = dicty.goods_by_hull["ship"][hull]
+                    ship = goods.by_hull["ship"][hull]
                 except KeyError:
                     print("ERR no package in goods.ini for ship hull =", hull)
                 for addon in ship["addon"]:
                     addon_nickname = addon[0]
-                    if addon_nickname in dicty.misc_equip_power_by_nickname:
+                    if addon_nickname in power.by_nickname:
 
                         powercore = \
-                            dicty.misc_equip_power_by_nickname[addon_nickname]
+                            power.by_nickname[addon_nickname]
 
                         kwg["capacity"] = int(powercore["capacity"][0])
                         kwg["charge_rate"] = int(powercore["charge_rate"][0])
 
-                    elif addon_nickname in dicty.engine_equip_by_nickname:
+                    elif addon_nickname in engines.by_nickname:
 
-                        engine = dicty.engine_equip_by_nickname[addon_nickname]
+                        engine = engines.by_nickname[addon_nickname]
 
                         try:
                             kwg["cruise_speed"] = int(
@@ -239,6 +247,6 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
                 # and perhaps engine in engine_equip
 
             db_data = cls(**kwg)
-            db_data.save(using=database)
+            db_data.save(using=database_name)
             # except Exception as error:
             # print("ERR in filling ship #", i)

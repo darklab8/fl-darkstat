@@ -8,7 +8,7 @@ from .universal import say, PROJECT_MANAGE, bool_to_env
               is_flag=True,
               help="enables debug",
               default=False)
-@click.option('--background', '-b', 'disable_background',
+@click.option('--background', '-b', 'enable_background',
               is_flag=True,
               help="disables daemon runing in background for parsing",
               default=False)
@@ -21,12 +21,11 @@ from .universal import say, PROJECT_MANAGE, bool_to_env
               default=1000,
               help="sets timeout between parsing loops")
 @click.pass_context
-def manage(context, debug, disable_background, freelancer_folder, timeout):
+def manage(context, debug, enable_background, freelancer_folder, timeout):
     "manage commands"
     context.obj['debug'] = debug
-
     os.environ['debug'] = bool_to_env(debug)
-    os.environ['disable_background'] = bool_to_env(disable_background)
+    os.environ['enable_background'] = bool_to_env(enable_background)
     os.environ['freelancer_folder'] = str(freelancer_folder)
     os.environ['timeout'] = str(timeout)
 
@@ -35,14 +34,17 @@ def manage(context, debug, disable_background, freelancer_folder, timeout):
 @click.option('--ip-port', '-p', 'address',
               default="0.0.0.0:8000",
               help="set ip address and port")
+@click.option('--venv', '-v', 'venv',
+              default="venv",
+              help="specifies different venv if needed")
 @click.pass_context
-def run(context, address):
+def run(context, address, venv):
     "launch server"
     if context.obj['debug']:
         say(f"{PROJECT_MANAGE} runserver {address}")
     else:
         say("python scripts.py manage -b static")
-        say(f"gunicorn core.wsgi -b {address}")
+        say(f"{venv}/bin/gunicorn core.wsgi -b {address}")
 
 
 def staticer():
