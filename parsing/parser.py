@@ -209,12 +209,17 @@ def main_parse() -> SimpleNamespace:
 
     parsed.equipment.misc_equip.power = SimpleNamespace(
         original=parsed.equipment.misc_equip.power,
-        by_nickname=rearrange_array_to_dict_by_keys(
-            parsed.equipment.misc_equip.power, "nickname"))
+        by_nickname={
+            item['nickname'][0]: item
+            for item in parsed.equipment.misc_equip.power if 'nickname' in item
+        })
 
     parsed.equipment.engine_equip.engine = SimpleNamespace(
         original=parsed.equipment.engine_equip.engine,
-        by_nickname=rearrange_array_to_dict_by_keys(
-            parsed.equipment.engine_equip.engine, "nickname"))
+        by_nickname={
+            item['nickname'][0]: item
+            for item in parsed.equipment.engine_equip.engine
+            if 'nickname' in item
+        })
 
     return parsed
