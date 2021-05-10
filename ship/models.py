@@ -9,8 +9,6 @@ from django.db.models import (
     OneToOneField,
     CASCADE,
 )
-from types import SimpleNamespace
-# Create your models here.
 
 
 class Piece(models.Model):
