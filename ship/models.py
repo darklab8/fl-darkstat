@@ -9,6 +9,7 @@ from django.db.models import (
     OneToOneField,
     CASCADE,
 )
+from types import SimpleNamespace
 # Create your models here.
 
 
@@ -17,79 +18,82 @@ class Piece(models.Model):
 
 
 class ShipStrFloats(Piece):
-    ship_float_piece = OneToOneField(
-        Piece, on_delete=CASCADE, parent_link=True)
+    ship_float_piece = OneToOneField(Piece,
+                                     on_delete=CASCADE,
+                                     parent_link=True)
 
     # str
-    nickname: IntegerField = CharField(
-        max_length=50, db_index=True, blank=True, null=True)
+    nickname: IntegerField = CharField(max_length=50,
+                                       db_index=True,
+                                       blank=True,
+                                       null=True)
 
     # floats
     mass = FloatField(blank=True, null=True)
     linear_drag = FloatField(blank=True, null=True)
-    camera_angular_acceleration = FloatField(
-        blank=True, null=True, verbose_name="ang speed"
-    )
-    camera_turn_look_ahead_slerp_amount = FloatField(
-        blank=True, null=True, verbose_name="look ahead"
-    )
+    camera_angular_acceleration = FloatField(blank=True,
+                                             null=True,
+                                             verbose_name="ang speed")
+    camera_turn_look_ahead_slerp_amount = FloatField(blank=True,
+                                                     null=True,
+                                                     verbose_name="look ahead")
     nudge_force = FloatField(blank=True, null=True)
-    explosion_resistance = FloatField(
-        blank=True, null=True, verbose_name="exp res"
-    )
+    explosion_resistance = FloatField(blank=True,
+                                      null=True,
+                                      verbose_name="exp res")
 
 
 class ShipIntegers(Piece):
-    ship_integer_piece = OneToOneField(
-        Piece, on_delete=CASCADE, parent_link=True)
+    ship_integer_piece = OneToOneField(Piece,
+                                       on_delete=CASCADE,
+                                       parent_link=True)
 
     # int
     ids_info = IntegerField(db_index=True, blank=True, null=True)
     hold_size = IntegerField(blank=True, null=True)
     max_bank_angle = IntegerField(db_index=True, blank=True, null=True)
-    camera_horizontal_turn_angle = IntegerField(
-        blank=True, null=True, verbose_name="hor ang"
-    )
+    camera_horizontal_turn_angle = IntegerField(blank=True,
+                                                null=True,
+                                                verbose_name="hor ang")
 
-    camera_vertical_turn_up_angle = IntegerField(
-        blank=True, null=True, verbose_name="turn up"
-    )
+    camera_vertical_turn_up_angle = IntegerField(blank=True,
+                                                 null=True,
+                                                 verbose_name="turn up")
 
-    camera_vertical_turn_down_angle = IntegerField(
-        blank=True, null=True, verbose_name="turn down"
-    )
+    camera_vertical_turn_down_angle = IntegerField(blank=True,
+                                                   null=True,
+                                                   verbose_name="turn down")
     hit_pts = IntegerField(blank=True, null=True)
     strafe_force = IntegerField(blank=True, null=True)
-    strafe_power_usage = IntegerField(
-        blank=True, null=True, verbose_name="strafe usage"
-    )
+    strafe_power_usage = IntegerField(blank=True,
+                                      null=True,
+                                      verbose_name="strafe usage")
 
     ids_info1 = IntegerField(blank=True, null=True)
     ids_info2 = IntegerField(blank=True, null=True)
     ids_info3 = IntegerField(blank=True, null=True)
     ship_class = IntegerField(blank=True, null=True)
-    nanobot_limit = IntegerField(
-        blank=True, null=True, verbose_name="nanobots")
-    shield_battery_limit = IntegerField(
-        blank=True, null=True, verbose_name="batteries"
-    )
+    nanobot_limit = IntegerField(blank=True,
+                                 null=True,
+                                 verbose_name="nanobots")
+    shield_battery_limit = IntegerField(blank=True,
+                                        null=True,
+                                        verbose_name="batteries")
 
 
 class ShipSpecial(Piece):
-    ship_special_piece = OneToOneField(
-        Piece, on_delete=CASCADE, parent_link=True)
+    ship_special_piece = OneToOneField(Piece,
+                                       on_delete=CASCADE,
+                                       parent_link=True)
 
     # SPECIAL
     ids_name = IntegerField(db_index=True, blank=True, null=True)
-    name = CharField(
-        max_length=50, db_index=True, blank=True, null=True)
+    name = CharField(max_length=50, db_index=True, blank=True, null=True)
 
     # different original name: type
-    typeof = CharField(
-        max_length=50, db_index=True, blank=True, null=True)
+    typeof = CharField(max_length=50, db_index=True, blank=True, null=True)
 
-    info_name = CharField(
-        max_length=100, db_index=True, blank=True, null=True)
+    info_name = CharField(max_length=100, db_index=True, blank=True, null=True)
 
     # powercore
     capacity = IntegerField(blank=True, null=True, default=None)
@@ -107,22 +111,27 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
         verbose_name_plural = "ships"
 
     @classmethod
-    def fill_table(
-        cls,
-        ships,
-        infocards,
-        goods,
-        power,
-        engines,
-        database_name
-    ):
+    def fill_table(cls, ships, infocards, good_original, power, engines,
+                   database_name):
         """Filling ship database with data from universe"""
+        # arranging goods
+        goods = SimpleNamespace(
+            by_ship={
+                item['ship'][0]: item
+                for item in good_original
+                if 'ship' in item and 'shiphull' in item["category"][0]
+            },
+            by_hull={
+                item['hull'][0]: item
+                for item in good_original
+                if 'hull' in item and 'ship' in item["category"][0]
+            })
 
         for i, obj in enumerate(ships):
 
             kwg = {}
 
-            add_to_model(kwg, obj, str, ("nickname",))
+            add_to_model(kwg, obj, str, ("nickname", ))
 
             add_to_model(
                 kwg,
@@ -162,8 +171,8 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
             )
 
             # ids_name + name from infocards
-            view_wrapper_with_infocard(
-                infocards, kwg, obj, int, "ids_name", "name")
+            view_wrapper_with_infocard(infocards, kwg, obj, int, "ids_name",
+                                       "name")
 
             # add typeoff
             if "type" in obj:
@@ -176,13 +185,11 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
 
             # add name of the ship from infocard's beginning
             try:
-                dic = xmltodict.parse(infocards[kwg["ids_info"]][1])[
-                    "RDL"]["TEXT"]
+                dic = xmltodict.parse(
+                    infocards[kwg["ids_info"]][1])["RDL"]["TEXT"]
                 if not dic[0]:
                     dic = xmltodict.parse(
-                        infocards[kwg["ids_info1"]][1])["RDL"][
-                        "TEXT"
-                    ]
+                        infocards[kwg["ids_info1"]][1])["RDL"]["TEXT"]
                 kwg["info_name"] = dic[0]
             except KeyError:
                 print(
@@ -205,11 +212,10 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
                 )
 
             # add powercore parameters and engine parameters
-            if kwg["nickname"] in goods.by_ship["shiphull"]:
-                hull = goods.by_ship["shiphull"][kwg["nickname"]
-                                                 ]["nickname"][0]
+            if kwg["nickname"] in goods.by_ship:
+                hull = goods.by_ship[kwg["nickname"]]["nickname"][0]
                 try:
-                    ship = goods.by_hull["ship"][hull]
+                    ship = goods.by_hull[hull]
                 except KeyError:
                     print("ERR no package in goods.ini for ship hull =", hull)
                 for addon in ship["addon"]:
@@ -234,8 +240,7 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
 
                         kwg["impulse_speed"] = int(
                             float(engine["max_force"][0]) /
-                            float(engine["linear_drag"][0])
-                        )
+                            float(engine["linear_drag"][0]))
                         # breakpoint()
                         # print("ERR no cruise_speed for \
                         #   ship hull = ", hull, " ", kwg['nickname'])

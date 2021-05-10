@@ -34,24 +34,24 @@ def create_nested_folder(folderpath: str) -> None:
 
 def save_to_dark_copy(func: callable) -> callable:
     "sneaky file copy to dark_copy folder for workflow unit tests"
+
     @functools.wraps(func)
     def wrapper_do_twice(*args, **kwargs):
 
         # active = args[1]
         # if active:
         filename = args[0]
-        targetname = filename.replace(
-            settings.PATHS.freelancer_folder, settings.PATHS.dark_copy_name)
+        targetname = filename.replace(settings.PATHS.freelancer_folder,
+                                      settings.PATHS.dark_copy_name)
 
         create_nested_folder(os.path.dirname(targetname))
 
-        copy(
-            filename,
-            targetname
-        )
+        copy(filename, targetname)
 
         return func(*args, **kwargs)
+
     return wrapper_do_twice
+
 
 # @save_to_dark_copy
 
@@ -81,20 +81,16 @@ def recursive_reading(folderpath: str) -> SimpleNamespace:
         for filename in filenames:
             try:
                 # dictpath[filename] = 1
-                setattr(dictpath,
-                        prepapre_simple_name(filename),
-                        parse_file(
-                            os.path.join(dirpath, filename)))
+                setattr(dictpath, prepapre_simple_name(filename),
+                        parse_file(os.path.join(dirpath, filename)))
             except IndexError:
                 print("ERR IndexError in ", filename)
             except UnicodeDecodeError:
                 print("ERR UnicodeDecodeError in ", filename)
 
         for dirname in dirnames:
-            setattr(dictpath,
-                    prepapre_simple_name(dirname),
-                    recursive_reading(
-                        os.path.join(dirpath, dirname)))
+            setattr(dictpath, prepapre_simple_name(dirname),
+                    recursive_reading(os.path.join(dirpath, dirname)))
 
         break
 
@@ -107,10 +103,8 @@ def folder_reading(folderpath: str) -> SimpleNamespace:
     for (__, __, filenames) in walk(folderpath):
         for filename in filenames:
             try:
-                setattr(dictpath,
-                        prepapre_simple_name(filename),
-                        parse_file(
-                            os.path.join(folderpath, filename)))
+                setattr(dictpath, prepapre_simple_name(filename),
+                        parse_file(os.path.join(folderpath, filename)))
             except IndexError:
                 print("ERR IndexError in ", filename)
             except UnicodeDecodeError:
@@ -160,9 +154,8 @@ def parse_file(filename: str) -> SimpleNamespace:
 
             i += 1
             obj = {}
-            while (re.search(regex_for_headers, content[i + 1]) is None) and (
-                i < (line_count - 2)
-            ):
+            while (re.search(regex_for_headers, content[i + 1]) is
+                   None) and (i < (line_count - 2)):
 
                 if content[i] == "\n":
                     i += 1
@@ -172,8 +165,8 @@ def parse_file(filename: str) -> SimpleNamespace:
                     i += 1
                     continue
 
-                splitted = content[i].replace(
-                    " ", "").replace("\n", "").split("=")
+                splitted = content[i].replace(" ", "").replace("\n",
+                                                               "").split("=")
 
                 if len(splitted) == 2:
                     if splitted[0] not in obj.keys():
@@ -191,29 +184,6 @@ def parse_file(filename: str) -> SimpleNamespace:
 
         i += 1
     return output
-
-
-def array_to_dict_by_category(goods, key):
-    """"Converts parsed data from list into
-    being accessable by chosen hash key"""
-    output = {}
-
-    for good in goods:
-        if good["category"][0] not in output:
-            output[good["category"][0]] = {}
-
-        if key == "shiphull":
-            if key == good["category"][0] and "ship" in good.keys():
-                output[good["category"][0]][good["ship"][0]] = good
-        elif key == "ship":
-            if key == good["category"][0] and "hull" in good.keys():
-                output[good["category"][0]][good["hull"][0]] = good
-        else:
-            if key in good:
-                output[good["category"][0]][good[key][0]] = good
-
-    return MappingProxyType(output)
-    # print(f"ERR in goods_by_{key} #", i)
 
 
 def rearrange_array_to_dict_by_keys(arr: list, key: str) -> MappingProxyType:
@@ -237,24 +207,14 @@ def main_parse() -> SimpleNamespace:
     parsed.universe = recursive_reading(settings.PATHS.universe_dir)
     parsed.ships = folder_reading(settings.PATHS.ships_dir)
 
-    original = parsed.equipment.goods.good
-    parsed.equipment.goods.good = SimpleNamespace(
-        original=original,
-        by_nickname=array_to_dict_by_category(original, "nickname"),
-        by_ship=array_to_dict_by_category(original, "shiphull"),
-        by_hull=array_to_dict_by_category(original, "ship")
-    )
-
     parsed.equipment.misc_equip.power = SimpleNamespace(
         original=parsed.equipment.misc_equip.power,
         by_nickname=rearrange_array_to_dict_by_keys(
-            parsed.equipment.misc_equip.power, "nickname")
-    )
+            parsed.equipment.misc_equip.power, "nickname"))
 
     parsed.equipment.engine_equip.engine = SimpleNamespace(
         original=parsed.equipment.engine_equip.engine,
         by_nickname=rearrange_array_to_dict_by_keys(
-            parsed.equipment.engine_equip.engine, "nickname")
-    )
+            parsed.equipment.engine_equip.engine, "nickname"))
 
     return parsed

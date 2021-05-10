@@ -2,9 +2,11 @@
 import os
 from parsing.database import DbHandler
 import pytest
+
 pytestmark = pytest.mark.django_db
 
-@pytest.mark.skipif(not bool(os.environ.get("pipline")), reason="long test")
+
+# @pytest.mark.skipif(not bool(os.environ.get("pipline")), reason="long test")
 def test_to_check_parser(tables):
     DbHandler().parser_and_transfer()
 
