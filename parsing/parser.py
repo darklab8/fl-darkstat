@@ -38,8 +38,6 @@ def save_to_dark_copy(func: callable) -> callable:
     @functools.wraps(func)
     def wrapper_do_twice(*args, **kwargs):
 
-        # active = args[1]
-        # if active:
         filename = args[0]
         targetname = filename.replace(settings.PATHS.freelancer_folder,
                                       settings.PATHS.dark_copy_name)
@@ -53,28 +51,11 @@ def save_to_dark_copy(func: callable) -> callable:
     return wrapper_do_twice
 
 
-# @save_to_dark_copy
-
-
-def read_regular_file(filename: str) -> list:
-    "get content of regular file"
-    with open(filename) as filelink:
-        return filelink.readlines()
-
-
-# @save_to_dark_copy
-def read_utf8_file(filename: str) -> list:
-    "get content of utf8 encoded file"
-    with codecs.open(filename, "r", "utf-8") as filelink:
-        return filelink.readlines()
-
-
-def prepapre_simple_name(filename: str) -> str:
-    return filename.replace(".ini", "").lower()
-
-
 def recursive_reading(folderpath: str) -> SimpleNamespace:
     """"Function to read all files from Universe folder resursively"""
+    def prepapre_simple_name(filename: str) -> str:
+        return filename.replace(".ini", "").lower()
+
     dictpath = SimpleNamespace()
     for (dirpath, dirnames, filenames) in walk(folderpath):
         # 1 Level
@@ -97,29 +78,17 @@ def recursive_reading(folderpath: str) -> SimpleNamespace:
     return dictpath
 
 
-def folder_reading(folderpath: str) -> SimpleNamespace:
-    """Fuction to parse all files in one folder"""
-    dictpath = SimpleNamespace()
-    for (__, __, filenames) in walk(folderpath):
-        for filename in filenames:
-            try:
-                setattr(dictpath, prepapre_simple_name(filename),
-                        parse_file(os.path.join(folderpath, filename)))
-            except IndexError:
-                print("ERR IndexError in ", filename)
-            except UnicodeDecodeError:
-                print("ERR UnicodeDecodeError in ", filename)
-        break
-    return dictpath
-
-
-def strip_from_rn(line: str) -> str:
-    """Strips string from \r or \n trash"""
-    return line.replace("\r", "").replace("\n", "")
-
-
 def parse_infocards(filename: str) -> MappingProxyType:
     """"Parses infocard file into dictionary"""
+    def strip_from_rn(line: str) -> str:
+        """Strips string from \r or \n trash"""
+        return line.replace("\r", "").replace("\n", "")
+
+    def read_utf8_file(filename: str) -> list:
+        "get content of utf8 encoded file"
+        with codecs.open(filename, "r", "utf-8") as filelink:
+            return filelink.readlines()
+
     content = read_utf8_file(filename)
 
     regex_numbers = r"^\d+\r|^\d+\n"
@@ -138,6 +107,11 @@ def parse_infocards(filename: str) -> MappingProxyType:
 
 def parse_file(filename: str) -> SimpleNamespace:
     """Parses file into read only dictionary"""
+    def read_regular_file(filename: str) -> list:
+        "get content of regular file"
+        with open(filename) as filelink:
+            return filelink.readlines()
+
     content = read_regular_file(filename)
 
     output = SimpleNamespace()
@@ -188,9 +162,9 @@ def parse_file(filename: str) -> SimpleNamespace:
 
 def main_parse() -> SimpleNamespace:
     parsed = SimpleNamespace()
-    parsed.equipment = folder_reading(settings.PATHS.equipment_dir)
+    parsed.equipment = recursive_reading(settings.PATHS.equipment_dir)
     parsed.infocards = parse_infocards(settings.PATHS.infocards_path)
     parsed.universe = recursive_reading(settings.PATHS.universe_dir)
-    parsed.ships = folder_reading(settings.PATHS.ships_dir)
+    parsed.ships = recursive_reading(settings.PATHS.ships_dir)
 
     return parsed
