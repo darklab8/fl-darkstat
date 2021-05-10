@@ -28,10 +28,7 @@ jobs:
         python scripts.py test flake
     - name: Running Unit Tests
       run: |
-        python scripts.py test unit
-    - name: Coverage Report
-      run: |
-        python scripts.py test cover
+        python scripts.py test unit -c -p
     - name: Sphinx build
       run: |
         python scripts.py sphinx build

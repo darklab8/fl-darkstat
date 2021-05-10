@@ -34,18 +34,17 @@ def flake():
               is_flag=True,
               help="shows coverage",
               default=False)
-@click.option('--app', '-a', 'app',
-              default="",
-              help="choose to test particular app")
-def unit(refresh, cover, app):
+@click.option('--pipline', '-p', 'pipline',
+              is_flag=True,
+              help="enables long tests",
+              default=False)
+def unit(refresh, cover, pipline):
     "get unit tests"
     os.environ['refresh'] = bool_to_env(refresh)
-    launcher = []
-    launcher.append("pytest -n 6")
+    os.environ['pipline'] = bool_to_env(pipline)
+    launcher = ["pytest -n 6"]
     if cover:
-        launcher.append("-cov-config=.coveragerc --cov=.")
-
-    launcher.append(app)
+        launcher.append("--cov=.")
     say(" ".join(launcher))
 
 
@@ -60,9 +59,3 @@ def mypy():
     "type hinting checker"
     say("mypy .")
 
-
-@test.command()
-def cover():
-    """get coverage of unit tests
-    it should be used only after 'unit' command"""
-    say("coverage report")
