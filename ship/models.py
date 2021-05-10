@@ -111,22 +111,10 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
         verbose_name_plural = "ships"
 
     @classmethod
-    def fill_table(cls, ships, infocards, good_original, power, engines,
-                   database_name):
+    def fill_table(cls, ships, infocards, goods_by_ship, goods_by_hull, power,
+                   engines, database_name):
         """Filling ship database with data from universe"""
         # arranging goods
-        goods = SimpleNamespace(
-            by_ship={
-                item['ship'][0]: item
-                for item in good_original
-                if 'ship' in item and 'shiphull' in item["category"][0]
-            },
-            by_hull={
-                item['hull'][0]: item
-                for item in good_original
-                if 'hull' in item and 'ship' in item["category"][0]
-            })
-
         for i, obj in enumerate(ships):
 
             kwg = {}
@@ -212,25 +200,25 @@ class Ship(ShipStrFloats, ShipIntegers, ShipSpecial):
                 )
 
             # add powercore parameters and engine parameters
-            if kwg["nickname"] in goods.by_ship:
-                hull = goods.by_ship[kwg["nickname"]]["nickname"][0]
+            if kwg["nickname"] in goods_by_ship:
+                hull = goods_by_ship[kwg["nickname"]]["nickname"][0]
                 try:
-                    ship = goods.by_hull[hull]
+                    ship = goods_by_hull[hull]
                 except KeyError:
                     print("ERR no package in goods.ini for ship hull =", hull)
                 for addon in ship["addon"]:
                     addon_nickname = addon[0]
-                    if addon_nickname in power.by_nickname:
+                    if addon_nickname in power:
 
                         powercore = \
-                            power.by_nickname[addon_nickname]
+                            power[addon_nickname]
 
                         kwg["capacity"] = int(powercore["capacity"][0])
                         kwg["charge_rate"] = int(powercore["charge_rate"][0])
 
-                    elif addon_nickname in engines.by_nickname:
+                    elif addon_nickname in engines:
 
-                        engine = engines.by_nickname[addon_nickname]
+                        engine = engines[addon_nickname]
 
                         try:
                             kwg["cruise_speed"] = int(

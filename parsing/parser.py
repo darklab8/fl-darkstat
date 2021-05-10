@@ -186,40 +186,11 @@ def parse_file(filename: str) -> SimpleNamespace:
     return output
 
 
-def rearrange_array_to_dict_by_keys(arr: list, key: str) -> MappingProxyType:
-    """"Converts parsed data from list
-    into being accessable by chosen hash key"""
-    dic = {}
-    errors = 0
-    for elem in arr:
-        if key in elem:
-            dic[elem[key][0]] = elem
-        else:
-            errors += 1
-    print(f"SPLIT: converted = {len(arr)- errors}, not converted = {errors}")
-    return MappingProxyType(dic)
-
-
 def main_parse() -> SimpleNamespace:
     parsed = SimpleNamespace()
     parsed.equipment = folder_reading(settings.PATHS.equipment_dir)
     parsed.infocards = parse_infocards(settings.PATHS.infocards_path)
     parsed.universe = recursive_reading(settings.PATHS.universe_dir)
     parsed.ships = folder_reading(settings.PATHS.ships_dir)
-
-    parsed.equipment.misc_equip.power = SimpleNamespace(
-        original=parsed.equipment.misc_equip.power,
-        by_nickname={
-            item['nickname'][0]: item
-            for item in parsed.equipment.misc_equip.power if 'nickname' in item
-        })
-
-    parsed.equipment.engine_equip.engine = SimpleNamespace(
-        original=parsed.equipment.engine_equip.engine,
-        by_nickname={
-            item['nickname'][0]: item
-            for item in parsed.equipment.engine_equip.engine
-            if 'nickname' in item
-        })
 
     return parsed

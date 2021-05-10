@@ -49,16 +49,34 @@ class DbHandler:
         parsed = main_parse()
 
         Commodity.fill_table(
-            parsed.equipment.select_equip.commodity,
-            parsed.infocards,
-            database_name)
+            commodities=parsed.equipment.select_equip.commodity,
+            infocards=parsed.infocards,
+            database_name=database_name)
 
-        Ship.fill_table(parsed.ships.shiparch.ship,
-                        parsed.infocards,
-                        parsed.equipment.goods.good,
-                        parsed.equipment.misc_equip.power,
-                        parsed.equipment.engine_equip.engine,
-                        database_name)
+        Ship.fill_table(
+            ships=parsed.ships.shiparch.ship,
+            infocards=parsed.infocards,
+            goods_by_ship={
+                item['ship'][0]: item
+                for item in parsed.equipment.goods.good
+                if 'ship' in item and 'shiphull' in item["category"][0]
+            },
+            goods_by_hull={
+                item['hull'][0]: item
+                for item in parsed.equipment.goods.good
+                if 'hull' in item and 'ship' in item["category"][0]
+            },
+            power={
+                item['nickname'][0]: item
+                for item in parsed.equipment.misc_equip.power
+                if 'nickname' in item
+            },
+            engines={
+                item['nickname'][0]: item
+                for item in parsed.equipment.engine_equip.engine
+                if 'nickname' in item
+            },
+            database_name=database_name)
 
     def parser_and_transfer(self):
         "parse to RAM memory and transfer to default database"
