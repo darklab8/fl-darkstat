@@ -23,6 +23,7 @@ class CommodityAdmin(admin.ModelAdmin):
         # SPECIAL
         "ids_name",
         "name",
+        "id",
     )
 
     list_per_page = 1000

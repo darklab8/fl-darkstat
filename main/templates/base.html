@@ -9,10 +9,16 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     {% block style %}
     <style>
+        #para1 {
+            font-family: verdana;
+            font-size: 15px;
+        }
     </style>
     {% endblock style %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">fldarknet</a>
+        <a class="navbar-brand">
+            <element onclick="getMain('/get_index')"></element>fldarknet</element>
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -35,10 +41,14 @@
                     <a class="nav-link" href="/api">Api <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/commodity/html">Commodity</a>
+                    <a class="nav-link">
+                        <element onclick="getMain('/commodity/get_main')">Commodity</element>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ship/html">Ship</a>
+                    <a class="nav-link">
+                        <element onclick="getMain('/ship/get_main')">Ship</element>
+                    </a>
                 </li>
 
 
@@ -60,6 +70,39 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
+    <script>
+        function getMain(path) {
+            //myScript
+            fetch(path).then(function (response) {
+                // The API call was successful!
+                return response.text();
+            }).then(function (html) {
+                // This is the HTML from our response as a text string
+                document.getElementById("main").innerHTML = html;
+                console.log('rendering', path)
+                //console.log(html);
+            }).catch(function (err) {
+                // There was an error
+                console.warn('Something went wrong.', err);
+            });
+        };
+        getMain('/get_index');
+        function getSecondary(number) {
+            //myScript
+            fetch('/commodity/get_one').then(function (response) {
+                // The API call was successful!
+                return response.text();
+            }).then(function (html) {
+                // This is the HTML from our response as a text string
+                document.getElementById("secondary").innerHTML = html;
+                console.log(html);
+            }).catch(function (err) {
+                // There was an error
+                console.warn('Something went wrong.', err);
+            });
+        };
+    </script>
     {% block javascript %}
     {% endblock javascript %}
 </body>

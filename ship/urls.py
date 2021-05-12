@@ -8,21 +8,13 @@ from . import views
 
 @api_view(['GET'])
 def api_route(request, format=None):
-    return Response({
-        'ship get': reverse(
-            'ship-get',
-            request=request,
-            format=format
-        )
-    })
+    return Response(
+        {'ship get': reverse('ship-get', request=request, format=format)})
 
 
 # API endpoints
 urlpatterns = format_suffix_patterns([
-    path('', api_route,
-         name='ship-root'),
-    path('list',
-         views.ViewList.as_view(),
-         name='ship-get'),
-    path('html', views.index, name='index')
+    path('', api_route, name='ship-root'),
+    path('list', views.ViewList.as_view(), name='ship-get'),
+    path('get_main', views.index, name='index')
 ])

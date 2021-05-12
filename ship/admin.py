@@ -10,24 +10,18 @@ class ShipAdmin(admin.ModelAdmin):
     list_display = (
         "nickname",  # str
         "info_name",  # str - infocardish real name
-
         "name",  # str - ini name
-
         "ship_class",  # int
         "typeof",  # str - type
-
         "hold_size",  # int - cargo hold
-
         "nanobot_limit",  # int
         "shield_battery_limit",  # int
-
         "capacity",  # int - powercore capacity
         "charge_rate",  # int - powercore charge
-
         "cruise_speed",  # int - engine
         "impulse_speed",  # int - engine
-
         "hit_pts",  # int - health points
+        "id",
     )
 
     list_per_page = 1000

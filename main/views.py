@@ -10,6 +10,7 @@ from django.contrib.auth import (
 from django.contrib.auth.models import Permission
 from django.shortcuts import redirect
 from django.conf import settings
+from django.http import JsonResponse
 
 
 def check_perm(user):
@@ -29,6 +30,7 @@ def check_perm(user):
         if not user.has_perm(permis):
             user.user_permissions.add(perm)
             user.save()
+
 
 # Create your views here.
 
@@ -55,15 +57,24 @@ def login(request):
     return redirect('/admin')
 
 
-def index(request):
-    template = loader.get_template('index.html')
-    context = {
-        'data': {},
-        'fields': []
-    }
+def get_index(request):
+    template = loader.get_template('get_index.html')
+    context = {'data': {}, 'fields': []}
+    return HttpResponse(template.render(context, request))
+
+
+def table(request):
+    template = loader.get_template('table.html')
+    context = {'data': {}, 'fields': []}
     return HttpResponse(template.render(context, request))
 
 
 @register.filter
 def get_item(dictionary, key):
     return getattr(dictionary, key)
+
+
+def get_server(request):
+
+    return JsonResponse(
+        {"server_address": f'{request.scheme}://{request.get_host()}'})

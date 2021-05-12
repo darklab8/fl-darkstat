@@ -11,8 +11,7 @@ from .admin import ShipAdmin
 # ViewSets define the view behavior.
 
 
-class ViewList(mixins.RetrieveModelMixin,
-               generics.GenericAPIView):
+class ViewList(mixins.RetrieveModelMixin, generics.GenericAPIView):
     """:route: **list commodities**
 
     | lists ships
@@ -38,9 +37,6 @@ class ViewList(mixins.RetrieveModelMixin,
 
 def index(request):
     data = Ship.objects.all()
-    template = loader.get_template('table.html')
-    context = {
-        'data': data,
-        'fields': list(ShipAdmin.list_display)
-    }
+    template = loader.get_template('get_main.html')
+    context = {'data': data, 'fields': list(ShipAdmin.list_display)}
     return HttpResponse(template.render(context, request))

@@ -11,8 +11,7 @@ from .admin import CommodityAdmin
 # ViewSets define the view behavior.
 
 
-class ViewList(mixins.RetrieveModelMixin,
-               generics.GenericAPIView):
+class ViewList(mixins.RetrieveModelMixin, generics.GenericAPIView):
     """:route: **list commodities**
 
     | lists commodities
@@ -40,9 +39,13 @@ class ViewList(mixins.RetrieveModelMixin,
 
 def index(request):
     data = Commodity.objects.all()
-    template = loader.get_template('table.html')
-    context = {
-        'data': data,
-        'fields': list(CommodityAdmin.list_display)
-    }
+    template = loader.get_template('get_main.html')
+    context = {'data': data, 'fields': list(CommodityAdmin.list_display)}
+    return HttpResponse(template.render(context, request))
+
+
+def get_one(request):
+    data = Commodity.objects.all().first()
+    template = loader.get_template('get_one.html')
+    context = {'data': [data], 'fields': list(CommodityAdmin.list_display)}
     return HttpResponse(template.render(context, request))
