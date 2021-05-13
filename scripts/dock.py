@@ -32,11 +32,15 @@ def runner(port, disable_daemon) -> None:
 
 
 @dock.command()
-@click.option('--port', '-p', 'port',
+@click.option('--port',
+              '-p',
+              'port',
               type=int,
               default=80,
               help="sets docker redirect port")
-@click.option('--disable-daemonization', '-d', 'disable_daemon',
+@click.option('--disable-daemonization',
+              '-d',
+              'disable_daemon',
               is_flag=True,
               help="disables daemon runing in background",
               default=False)
@@ -45,10 +49,7 @@ def run(port, disable_daemon):
 
 
 def stopper() -> None:
-    say('docker stop $(docker ps -a -q --filter="'
-        f"name={PROJECT_NAME}"
-        '")'
-        )
+    say('docker stop $(docker ps -a -q --filter="' f"name={PROJECT_NAME}" '")')
 
 
 @dock.command()
@@ -67,7 +68,9 @@ def clean():
 
 
 @dock.command()
-@click.option('--port', '-p', 'port',
+@click.option('--port',
+              '-p',
+              'port',
               type=int,
               default=8000,
               help="sets docker redirect port")
@@ -76,7 +79,7 @@ def deploy(port):
     cleaner()
     stopper()
     builder()
-    runner(port)
+    runner(port, disable_daemon=False)
 
 
 @dock.command()
