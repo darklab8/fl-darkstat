@@ -114,6 +114,7 @@
         function getMain(path) {
             //myScript
             fetch(path).then(function (response) {
+                document.getElementById("main").innerHTML = '...LOADING...';
                 // The API call was successful!
                 return response.text();
             }).then(function (html) {
