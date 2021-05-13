@@ -3,8 +3,26 @@
 {% block content %}
 
 
-<p id="main"></p>
-<p id="secondary"></p>
+
+<div className="flexbox-column">
+    <div className="flexbox-row">
+        <!-- These two items are next to eachother. Specify their relative widths. -->
+        <div className="item-1" style="width: 75%;overflow-y: scroll;height: 500px;">
+            <p id="main"></p>
+
+
+        </div>
+        <div className="item-2" style="width: 20%;height: 500px;overflow-y: scroll;">
+            <p id="main2"></p>
+        </div>
+    </div>
+    <!-- This item is below item 1 and two and takes 100% width -->
+    <div className="item-3" style="height: 500px; overflow-y: scroll;">
+        <p id="main3"></p>
+    </div>
+</div>
+
+
 <!-- <div class="grid-container">
     <div class="item1">
 

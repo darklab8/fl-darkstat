@@ -49,6 +49,17 @@
             padding: 20px 0;
             font-size: 30px;
         }
+
+        .flexbox-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flexbox-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
     </style>
     {% endblock style %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -120,6 +131,8 @@
             }).then(function (html) {
                 // This is the HTML from our response as a text string
                 document.getElementById("main").innerHTML = html;
+                document.getElementById("main2").innerHTML = html;
+                document.getElementById("main3").innerHTML = html;
                 document.getElementById("secondary").innerHTML = '';
                 console.log('rendering', path)
                 //console.log(html);
