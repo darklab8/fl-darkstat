@@ -7,11 +7,47 @@
     <title>{% block title %}{% endblock title %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="static/bootstrap-table/extensions/sticky-header/bootstrap-table-sticky-header.css">
     {% block style %}
     <style>
         #para1 {
             font-family: verdana;
             font-size: 15px;
+        }
+
+        /* #limit {
+            max-width: 500px;
+        } */
+
+        .item1 {
+            grid-area: main;
+        }
+
+        .item2 {
+            grid-area: right;
+        }
+
+        .item3 {
+            grid-area: footer;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-areas:
+                'main main main main right right'
+                'main main main main right right'
+                'footer footer footer footer footer footer';
+            grid-gap: 10px;
+            background-color: #2196F3;
+            padding: 10px;
+        }
+
+        .grid-container>div {
+            background-color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 20px 0;
+            font-size: 30px;
         }
     </style>
     {% endblock style %}
@@ -29,14 +65,14 @@
                             class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="https://github.com/dd84ai/fldarknet">Github <span
+                <!-- <li class="nav-item active">
+                    <a class="nav-link" {# href="https://github.com/dd84ai/fldarknet" #}>Github <span
                             class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="https://dd84ai.github.io/fldarknet">Wiki <span
+                    <a class="nav-link" {# href="https://dd84ai.github.io/fldarknet" #}>Wiki <span
                             class="sr-only">(current)</span></a>
-                </li>
+                </li>  -->
                 <li class="nav-item active">
                     <a class="nav-link" href="/login">Inbuilt <span class="sr-only">(current)</span></a>
                 </li>
