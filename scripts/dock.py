@@ -27,7 +27,7 @@ def runner(port, disable_daemon) -> None:
     daemon = "-d "
     if disable_daemon:
         daemon = ""
-    say(f"docker run --name {PROJECT_NAME} -t "
+    say(f"docker run -i --name {PROJECT_NAME} -t "
         f"{daemon}-p {port}:8000 --rm {PROJECT_NAME}:latest")
 
 
