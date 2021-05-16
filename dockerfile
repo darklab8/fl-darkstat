@@ -1,45 +1,14 @@
-FROM python:3.8-alpine as builder
+FROM python:3.8-slim
 
-WORKDIR /usr/src/app
-
+ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
 
-RUN apk update && apk add gcc python3-dev musl-dev  
-
-# this line changes
 COPY ./requirements.txt ./
+RUN pip install -r requirements.txt
 
-RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements.txt
+COPY . .
+RUN python manage.py migrate
 
-# === FINAL IMAGE ===
-
-FROM python:3.8-alpine
-
-RUN addgroup -S app && adduser -S app -G app
-
-# Create directories app_home and static directories
-ENV HOME=/home/app
-ENV APP_HOME=/home/app/web
-RUN mkdir $APP_HOME
-WORKDIR $APP_HOME
-
-# Copy dependencies from builder image
-RUN apk update && apk add --no-cache libpq 
-
-COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements.txt .
-
-RUN pip install --no-cache --no-deps /wheels/*
-
-ENV PYTHONUNBUFFERED 1
-
-COPY . $APP_HOME
-
-RUN chown -R app:app $APP_HOME
-
-USER app
-
-RUN python manage.py collectstatic --noinput
-
+EXPOSE 8000
+RUN python manage.py collectstatic -c --noinput
 CMD gunicorn core.wsgi -b 0.0.0.0:8000
