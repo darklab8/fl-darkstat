@@ -1,12 +1,45 @@
-from ubuntu:20.04
+FROM python:3.8-alpine as builder
 
-RUN apt-get update
-RUN apt-get -y install python3.8 python3-pip python3-venv
-RUN python3 -m venv venv
+WORKDIR /usr/src/app
 
-COPY . .
-RUN venv/bin/pip install -r requirements.txt
-RUN venv/bin/python manage.py migrate
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-EXPOSE 8000
-CMD venv/bin/python scripts.py manage -b run -v venv
+RUN apk update && apk add gcc python3-dev musl-dev  
+
+# this line changes
+COPY ./requirements.txt ./
+
+RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements.txt
+
+# === FINAL IMAGE ===
+
+FROM python:3.8-alpine
+
+RUN addgroup -S app && adduser -S app -G app
+
+# Create directories app_home and static directories
+ENV HOME=/home/app
+ENV APP_HOME=/home/app/web
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+# Copy dependencies from builder image
+RUN apk update && apk add --no-cache libpq 
+
+COPY --from=builder /usr/src/app/wheels /wheels
+COPY --from=builder /usr/src/app/requirements.txt .
+
+RUN pip install --no-cache --no-deps /wheels/*
+
+ENV PYTHONUNBUFFERED 1
+
+COPY . $APP_HOME
+
+RUN chown -R app:app $APP_HOME
+
+USER app
+
+RUN python manage.py collectstatic --noinput
+
+CMD gunicorn core.wsgi -b 0.0.0.0:8000

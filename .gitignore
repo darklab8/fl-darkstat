@@ -233,6 +233,8 @@ microblog.log*
 
 Freelancer/
 static/
+
+*.dock
 dump.json
 
 docs/build/

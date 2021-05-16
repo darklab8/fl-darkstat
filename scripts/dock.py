@@ -9,6 +9,10 @@ def dock():
 
 
 @dock.command()
+def save():
+    say(f"docker save -o {PROJECT_NAME}.dock {PROJECT_NAME}:latest")
+
+@dock.command()
 def logs():
     say(f"docker logs -t {PROJECT_NAME}:latest")
 
