@@ -1,0 +1,10 @@
+- hosts: all
+  become: yes
+  vars:
+  tasks:
+
+    - name: Syncronizing
+      ansible.builtin.copy:
+        src: fldarknet.dock
+        dest: fldarknet.dock
+        follow: yes
