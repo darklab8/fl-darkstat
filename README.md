@@ -4,5 +4,6 @@
 
 # dev env setup
 - install `go install github.com/vugu/vgrun`
+    - `export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"` needs to be present in your ~/.bashrc
 - and `vgrun -install-tools` install
 - dev server is launched by `vgrun devserver.go`
