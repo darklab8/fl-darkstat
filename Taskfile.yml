@@ -7,3 +7,19 @@ tasks:
     vars:
       PWD:
         sh: echo '$(pwd)'
+
+  build:front:
+    description: >
+      front wasm needs to be built before u will be able
+      to run front even in a dev server!
+    cmds:
+      - rm web/app.wasm | true
+      - GOARCH=wasm GOOS=js go build -o web/app.wasm
+
+  front:debug:
+    description: >
+      for quick frontend development, writing its html/css.
+      data from backend is mocked for always quick right away availability.
+    cmds:
+      - task: build:front
+      - go run .
