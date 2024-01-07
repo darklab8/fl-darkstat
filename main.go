@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fldarkstat/fldarkstat/builder"
 	"fldarkstat/fldarkstat/web"
 	"fmt"
 )
@@ -9,7 +10,7 @@ import (
 type Action string
 
 const (
-	CommandExample Action = "command_example"
+	Build Action = "build"
 )
 
 func main() {
@@ -20,8 +21,9 @@ func main() {
 
 	switch Action(action) {
 
-	case CommandExample:
-		// Other command
+	case Build:
+		build := builder.NewBuilder()
+		build.Build()
 	default:
 		// for Clientside must be run as default web
 		// Client received empty data

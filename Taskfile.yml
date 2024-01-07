@@ -16,10 +16,15 @@ tasks:
       - rm web/app.wasm | true
       - GOARCH=wasm GOOS=js go build -o web/app.wasm
 
+  build:data:
+    cmds:
+      - go run . --act build
+
   front:debug:
     description: >
       for quick frontend development, writing its html/css.
       data from backend is mocked for always quick right away availability.
     cmds:
       - task: build:front
+      - task: build:data
       - go run .
