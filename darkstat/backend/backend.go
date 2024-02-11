@@ -2,10 +2,11 @@ package backend
 
 import (
 	"encoding/json"
-	"fldarkstat/fldarkstat/settings/types"
 	"net/http"
 
-	"github.com/darklab8/darklab_flconfigs/flconfigs/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/types"
+
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
 
 type Backend struct {

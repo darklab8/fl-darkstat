@@ -2,9 +2,10 @@ package main
 
 import (
 	"flag"
-	"fldarkstat/fldarkstat/builder"
-	"fldarkstat/fldarkstat/web"
 	"fmt"
+
+	"github.com/darklab8/fl-darkstat/darkstat/builder"
+	"github.com/darklab8/fl-darkstat/darkstat/web"
 )
 
 type Action string

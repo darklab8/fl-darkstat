@@ -1,10 +1,11 @@
 package backend
 
 import (
-	"fldarkstat/fldarkstat/settings/types"
 	"fmt"
 	"html"
 	"net/http"
+
+	"github.com/darklab8/fl-darkstat/darkstat/settings/types"
 )
 
 const URLPing types.Url = "/ping"

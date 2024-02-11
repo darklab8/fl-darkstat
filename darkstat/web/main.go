@@ -5,11 +5,12 @@ Entrypoint for front and for dev web server?
 */
 
 import (
-	"fldarkstat/fldarkstat/backend"
-	"fldarkstat/fldarkstat/front"
-	"fldarkstat/fldarkstat/front/front_utils"
 	"log"
 	"net/http"
+
+	"github.com/darklab8/fl-darkstat/darkstat/backend"
+	"github.com/darklab8/fl-darkstat/darkstat/front"
+	"github.com/darklab8/fl-darkstat/darkstat/front/front_utils"
 
 	"github.com/maxence-charriere/go-app/v9/pkg/app"
 )

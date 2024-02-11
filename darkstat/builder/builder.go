@@ -2,13 +2,14 @@ package builder
 
 import (
 	"encoding/json"
-	"fldarkstat/fldarkstat/settings"
 	"os"
 
-	"github.com/darklab8/darklab_flconfigs/flconfigs/configs_export"
-	"github.com/darklab8/darklab_flconfigs/flconfigs/configs_mapped"
-	"github.com/darklab8/darklab_flconfigs/flconfigs/settings/logus"
-	"github.com/darklab8/darklab_goutils/goutils/utils/utils_filepath"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
+
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
+	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
 )
 
 /*

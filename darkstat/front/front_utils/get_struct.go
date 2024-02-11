@@ -8,7 +8,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/darklab8/darklab_flconfigs/flconfigs/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
 
 type Request[T any] struct {
