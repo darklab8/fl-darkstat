@@ -8,23 +8,11 @@ tasks:
       PWD:
         sh: echo '$(pwd)'
 
-  build:front:
-    description: >
-      front wasm needs to be built before u will be able
-      to run front even in a dev server!
+  build:
     cmds:
-      - rm web/app.wasm | true
-      - GOARCH=wasm GOOS=js go build -o web/app.wasm
+      - templ generate
+      - go run . --act=build
 
-  build:data:
+  dev:templ:
     cmds:
-      - go run . --act build
-
-  front:debug:
-    description: >
-      for quick frontend development, writing its html/css.
-      data from backend is mocked for always quick right away availability.
-    cmds:
-      - task: build:front
-      - task: build:data
-      - go run .
+      - templ generate -watch --proxy="http://localhost:8080" --cmd="go run . --act=web"

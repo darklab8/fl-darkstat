@@ -18,19 +18,19 @@ import (
 Builds freelancer game data into static files accesable by front.
 */
 type Filesystem struct {
-	files map[utils_types.FilePath]string
+	files map[utils_types.FilePath][]byte
 }
 
 func NewFileystem() *Filesystem {
 	b := &Filesystem{
-		files: make(map[utils_types.FilePath]string),
+		files: make(map[utils_types.FilePath][]byte),
 	}
 	return b
 }
 
 var PermReadWrite os.FileMode = 0666
 
-func (f *Filesystem) ScanToMem() {
+func (f *Filesystem) Build(write func(path utils_types.FilePath, content []byte)) {
 	configs := configs_mapped.NewMappedConfigs()
 
 	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(settings.FreelancerFolder))
@@ -41,12 +41,19 @@ func (f *Filesystem) ScanToMem() {
 	data, err := json.Marshal(bases)
 	logus.Log.CheckFatal(err, "failed to export bases at marshaling")
 
-	f.files[utils_filepath.Join(settings.ProjectFolder, "web", "static", "export", "bases.json")] = string(data)
+	write(utils_filepath.Join(settings.ProjectFolder, "web", "static", "export", "bases.json"), data)
+
+}
+
+func (f *Filesystem) ScanToMem() {
+	f.Build(func(path utils_types.FilePath, content []byte) {
+		f.files[path] = content
+	})
 }
 
 func (f *Filesystem) RenderToLocal() {
-	for filepath, content := range f.files {
-		err := os.WriteFile(filepath.ToString(), []byte(content), PermReadWrite)
+	f.Build(func(path utils_types.FilePath, content []byte) {
+		err := os.WriteFile(path.ToString(), content, PermReadWrite)
 		logus.Log.CheckFatal(err, "failed to export bases to file")
-	}
+	})
 }
