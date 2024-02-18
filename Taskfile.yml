@@ -13,6 +13,11 @@ tasks:
       - templ generate
       - go run . --act=build
 
+  web:
+    cmds:
+      - templ generate
+      - go run . --act=web
+
   dev:templ:
     cmds:
       - templ generate -watch --cmd="go run . --act=web"

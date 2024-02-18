@@ -5,17 +5,13 @@ import (
 	"html"
 	"net/http"
 
-	"github.com/darklab8/fl-darkstat/darkstat/settings/types"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-darkstat/darkstat/web/registry"
 )
 
 const URLPing types.Url = "/ping"
 
-func init() {
-	registry.Registry.Register(NewEndpointPing())
-}
-
-func NewEndpointPing() *registry.Endpoint {
+func (w *Web) NewEndpointPing() *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: URLPing,
 		Handler: func(w http.ResponseWriter, r *http.Request) {

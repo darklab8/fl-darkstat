@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/darklab8/fl-darkstat/darkstat/builder"
+	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/web"
 )
 
@@ -30,11 +30,9 @@ func main() {
 	switch Action(action) {
 
 	case Build:
-		build := builder.NewFileystem()
-		build.ScanToMem()
+		router.Builder.BuildAll().RenderToLocal()
 	case Web:
-		build := builder.NewFileystem()
-		build.ScanToMem()
-		web.NewWeb().Serve()
+		fs := router.Builder.BuildAll()
+		web.NewWeb(fs).Serve()
 	}
 }

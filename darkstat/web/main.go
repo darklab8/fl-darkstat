@@ -9,25 +9,36 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/builder"
 	"github.com/darklab8/fl-darkstat/darkstat/web/registry"
 )
 
 type Web struct {
+	filesystem *builder.Filesystem
+	registry   *registry.Registion
 }
 
-func NewWeb() *Web {
-	w := &Web{}
-	registry.Registry.Foreach(func(e *registry.Endpoint) {
-		http.HandleFunc(string(e.Url), e.Handler)
-	})
+func NewWeb(filesystem *builder.Filesystem) *Web {
+	w := &Web{
+		filesystem: filesystem,
+		registry:   registry.NewRegister(),
+	}
+
+	w.registry.Register(w.NewEndpointStatic())
+
+	w.registry.Register(w.NewEndpointPing())
+
 	return w
 }
 
 func (w *Web) Serve() {
+	w.registry.Foreach(func(e *registry.Endpoint) {
+		http.HandleFunc(string(e.Url), e.Handler)
+	})
+
 	ip := "0.0.0.0"
 	port := 8000
-	logus.Log.Info(fmt.Sprintf("launching web server, visit http://localhost:%d", port))
+	fmt.Printf("launching web server, visit http://localhost:%d to check it!", port)
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%d", ip, port), nil); err != nil {
 		log.Fatal(err)
 	}

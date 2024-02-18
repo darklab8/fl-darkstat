@@ -9,4 +9,8 @@ require (
 	github.com/darklab8/go-utils v0.11.0
 )
 
-require golang.org/x/text v0.14.0 // indirect
+require (
+	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4 // indirect
+	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
+)

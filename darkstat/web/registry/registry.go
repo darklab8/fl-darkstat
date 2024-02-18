@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/darklab8/fl-darkstat/darkstat/settings/types"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
@@ -23,10 +23,6 @@ func NewErrorMsg(err error) string {
 	logus.Log.CheckError(err, "failed to marshal error")
 	return string(result)
 }
-
-var (
-	Registry = NewRegister()
-)
 
 type Registion struct {
 	endpoints []*Endpoint
