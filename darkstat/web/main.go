@@ -11,7 +11,6 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/web/registry"
-	"github.com/darklab8/go-typelog/typelog"
 )
 
 type Web struct {
@@ -26,12 +25,10 @@ func NewWeb() *Web {
 }
 
 func (w *Web) Serve() {
+	ip := "0.0.0.0"
 	port := 8000
-	logus.Log.Info("launching listening port at",
-		typelog.Int("port", port),
-		typelog.String("address", fmt.Sprintf("http://localhost:%d", port)),
-	)
-	if err := http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), nil); err != nil {
+	logus.Log.Info(fmt.Sprintf("launching web server, visit http://localhost:%d", port))
+	if err := http.ListenAndServe(fmt.Sprintf("%s:%d", ip, port), nil); err != nil {
 		log.Fatal(err)
 	}
 }
