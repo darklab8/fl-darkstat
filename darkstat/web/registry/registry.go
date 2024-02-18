@@ -1,4 +1,4 @@
-package backend
+package registry
 
 import (
 	"encoding/json"
@@ -9,14 +9,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
 
-type Backend struct {
-}
-
-func NewBackend() *Backend {
-	return &Backend{}
-}
-
 type ErrorMessage struct {
+	// Refactor to html friendly page.
 	Msg  string `json:"msg"`
 	Type string `json:"type"`
 }
@@ -24,15 +18,33 @@ type ErrorMessage struct {
 func NewErrorMsg(err error) string {
 	result, err := json.Marshal(&ErrorMessage{
 		Msg:  err.Error(),
-		Type: "scrappy_data_serialization_error",
+		Type: "serializing_error",
 	})
 	logus.Log.CheckError(err, "failed to marshal error")
 	return string(result)
 }
 
-func (app *Backend) RegisterBack() {
-	endpoint_ping := NewEndpointPing(app)
-	http.HandleFunc(string(endpoint_ping.Url), endpoint_ping.Handler)
+var (
+	Registry = NewRegister()
+)
+
+type Registion struct {
+	endpoints []*Endpoint
+}
+
+func NewRegister() *Registion {
+	r := &Registion{}
+	return r
+}
+
+func (r *Registion) Register(endpoint *Endpoint) {
+	r.endpoints = append(r.endpoints, endpoint)
+}
+
+func (r *Registion) Foreach(callback func(*Endpoint)) {
+	for _, endpoint := range r.endpoints {
+		callback(endpoint)
+	}
 }
 
 type Endpoint struct {

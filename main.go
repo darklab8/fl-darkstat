@@ -23,8 +23,8 @@ func main() {
 	switch Action(action) {
 
 	case Build:
-		build := builder.NewBuilder()
-		build.Build()
+		build := builder.NewFileystem()
+		build.ScanToMem()
 	default:
 		// for Clientside must be run as default web
 		// Client received empty data
