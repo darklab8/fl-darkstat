@@ -1,15 +1,18 @@
 package front
 
 import (
-		"github.com/darklab8/fl-darkstat/darkstat/common"
+	"github.com/darklab8/fl-darkstat/darkstat/common"
+	"github.com/darklab8/fl-configs/configs/configs_export"
 )
 
 var (
 	Smth = "abc"
 )
 
-templ BasesT() {
+templ BasesT(bases []configs_export.Base) {
 	@common.Html5() {
-		<div>12345 { Smth }</div>
+		for _, base := range bases {
+			<div>{ base.Nickname }</div>
+		}
 	}
 }

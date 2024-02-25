@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/darklab8/fl-darkstat/darkstat/router"
+	"github.com/darklab8/fl-darkstat/darkstat/linker"
 	"github.com/darklab8/fl-darkstat/darkstat/web"
 )
 
@@ -30,9 +30,9 @@ func main() {
 	switch Action(action) {
 
 	case Build:
-		router.Builder.BuildAll().RenderToLocal()
+		linker.NewLinker().Link().BuildAll().RenderToLocal()
 	case Web:
-		fs := router.Builder.BuildAll()
+		fs := linker.NewLinker().Link().BuildAll()
 		web.NewWeb(fs).Serve()
 	}
 }
