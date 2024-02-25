@@ -13,15 +13,13 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
+	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
+	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
 type Linker struct {
-	configs Configs
-}
-
-type Configs interface {
-	Bases() []configs_export.Base
+	configs *configs_export.Exporter
 }
 
 type LinkOption func(l *Linker)
@@ -43,12 +41,24 @@ func NewLinker(opts ...LinkOption) *Linker {
 }
 
 func (l *Linker) Link() *builder.Builder {
+	bases := l.configs.Bases(configs_export.NoNameIncluded(false))
+
 	build := builder.NewBuilder()
 	build.RegComps(
 		builder.NewComponent(
 			urls.Bases,
-			front.BasesT(l.configs.Bases()),
+			front.BasesT(bases),
 		),
 	)
+
+	for _, base := range bases {
+		build.RegComps(
+			builder.NewComponent(
+				utils_filepath.Join(utils_types.FilePath("infocard"), utils_types.FilePath(base.Nickname)),
+				front.BasesInfo(base.Infocard),
+			),
+		)
+	}
+
 	return build
 }

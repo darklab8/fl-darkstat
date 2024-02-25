@@ -80,16 +80,16 @@ func (b *Builder) BuildAll() *Filesystem {
 	}
 	b.build(types.GlobalParams{
 		Buildpath:         "",
-		Theme:             types.ThemeDark,
+		Theme:             types.ThemeLight,
 		SiteRoot:          siteRoot,
 		StaticRoot:        siteRoot + staticPrefix,
-		OppositeThemeRoot: siteRoot + "light/",
+		OppositeThemeRoot: siteRoot + "dark/",
 	}, filesystem)
 	b.build(types.GlobalParams{
-		Buildpath:         utils_filepath.Join("light"),
-		Theme:             types.ThemeLight,
-		SiteRoot:          siteRoot + "light/",
-		StaticRoot:        siteRoot + "light/" + staticPrefix,
+		Buildpath:         utils_filepath.Join("dark"),
+		Theme:             types.ThemeDark,
+		SiteRoot:          siteRoot + "dark/",
+		StaticRoot:        siteRoot + "dark/" + staticPrefix,
 		OppositeThemeRoot: siteRoot,
 	}, filesystem)
 

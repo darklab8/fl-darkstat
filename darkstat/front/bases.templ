@@ -1,7 +1,9 @@
 package front
 
 import (
+	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/common"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 )
 
@@ -9,10 +11,99 @@ var (
 	Smth = "abc"
 )
 
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
 templ BasesT(bases []configs_export.Base) {
 	@common.Html5() {
-		for _, base := range bases {
-			<div>{ base.Nickname }</div>
-		}
+		<style>
+			th, td {
+				padding-left: 5px;
+				padding-bottom: 2px;
+				padding-top: 2px;
+				padding-right: 5px;
+
+				
+			}
+
+			table, tr,th, td, thead {
+				border-width: 1px;
+				border-style: solid;
+			}
+			th {
+				border-color: #8B8B8B;
+
+				cursor: pointer;
+				&:hover {
+					background-color: #DDD;
+				}
+			}
+			td {
+				border-color: #D7D7D7;
+			}
+			tbody {
+				& tr {
+					cursor: pointer;
+					&:hover {
+						background-color: #EEE;
+					}
+				}
+			}
+			.splitter {
+				display: flex;
+				flex-direction: row;
+		
+				& #table-wrapper {
+					overflow: scroll;
+					width: 75%;
+					height: 70vh;
+				}
+				& #description {
+					width: 25%;
+					overflow-y: scroll;
+					height: 100vh;
+				}
+			}
+			
+		</style>
+		<script src={ types.GetCtx(ctx).StaticRoot + "sortable.js" }></script>
+		<script src={ types.GetCtx(ctx).StaticRoot + "html.min.js" }></script>
+		<div class="splitter">
+			<div id="table-wrapper">
+				<table class="sortable">
+					<thead>
+						<tr>
+							<th>Base</th>
+							<th>System</th>
+							<th>Base Nickname</th>
+							<th>System Nickname</th>
+							<th>Base Name ID</th>
+							<th>Infocard ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						for _, base := range bases {
+							<tr
+								hx-get={ types.GetCtx(ctx).SiteRoot + "infocard/" + base.Nickname }
+								hx-trigger="click"
+								hx-target="#description"
+								hx-swap="innerHTML"
+							>
+								<td>{ base.Name }</td>
+								<td>{ base.System }</td>
+								<td>{ base.Nickname }</td>
+								<td>{ base.SystemNickname }</td>
+								<td>{ strconv.Itoa(base.StridName) }</td>
+								<td>{ strconv.Itoa(base.InfocardID) }</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+			<div id="description"></div>
+		</div>
 	}
+}
+
+templ BasesInfo(content string) {
+	{ content }
 }
