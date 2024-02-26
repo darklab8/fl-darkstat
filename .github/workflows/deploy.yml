@@ -18,6 +18,7 @@ jobs:
       - name: Check out source repository
         uses: actions/checkout@v2
 
+      - run: apt-get install -y coreutils
       - run: prinf "{{ secrets.FL_DATA_KEY }}" > ${{ github.workspace }}/id_rsa
       - run: chmod 400 ${{ github.workspace }}/id_rsa
 
