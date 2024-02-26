@@ -37,6 +37,14 @@ jobs:
 
       - name: Install templ
         run: go install github.com/a-h/templ/cmd/templ@v0.2.543
+      
+      - name: Build templ file to go
+        run: templ generate
+
+      - name: Test things
+        run: task test -- -v
+        env:
+          FLDARKDATA_LOG_LEVEL: "DEBUG"
 
       - name: build
         run: task build
