@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v2
 
       - run: echo -e "{{ secrets.FL_DATA_KEY }}" > ${{ github.workspace }}/id_rsa
+      - run: chown $(id -u):$(id -g) ${{ github.workspace }}/id_rsa
       - run: chmod 400 ${{ github.workspace }}/id_rsa
 
       - uses: actions/checkout@v4
