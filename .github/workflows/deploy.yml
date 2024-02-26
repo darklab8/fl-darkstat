@@ -18,14 +18,14 @@ jobs:
       - name: Check out source repository
         uses: actions/checkout@v2
 
-      - run: echo "{{ secrets.FL_DATA_KEY }}" > {{ github.workspace }}/id_rsa
-      - run: chmod 400 {{ github.workspace }}/id_rsa
+      - run: echo "{{ secrets.FL_DATA_KEY }}" > ${{ github.workspace }}/id_rsa
+      - run: chmod 400 ${{ github.workspace }}/id_rsa
 
       - uses: actions/checkout@v4
         with:
           repository: 'darklab8/fl-data'
           path: 'fl-data'
-          ssh-key: '{{ github.workspace }}/id_rsa'
+          ssh-key: '${{ github.workspace }}/id_rsa'
 
       - run: ls ./fl-data
       # - name: Set up Go
