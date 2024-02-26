@@ -3,3 +3,5 @@ go.work*
 *.wasm
 web/static/export/*
 *_templ*
+build/
+id_rsa*

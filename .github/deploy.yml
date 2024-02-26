@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  github-pages:
+    name: Github Pages
+    runs-on: ubuntu-22.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v2
+
+      - run: echo "{{ secrets.FL_DATA_KEY }}" > id_rsa.fl-data
+      - run: chmod 400 id_rsa.fl-data
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'darklab8/fl-data'
+          path: 'fl-data'
+          ssh-key: 'id_rsa.fl-data'
+
+      - run: ls ./fl-data
+      # - name: Set up Go
+      #   uses: actions/setup-go@v3
+      #   with:
+      #       go-version: 1.21
+
+      # - name: Install Task
+      #   run: |
+      #       sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+
+      # - name: Install templ
+      #   run: go install github.com/a-h/templ/cmd/templ@v0.2.543
+
+      # - name: build
+      #   run: task build
+      #   env:
+      #       SITE_ROOT: "/fl-darkstat/"
+
+      # - uses: actions/upload-pages-artifact@v1
+      #   with:
+      #       name: github-pages
+      #       path: ./build
+
+      # - name: Deploy to pages
+      #   uses: actions/deploy-pages@v1
+      #   id: deployment

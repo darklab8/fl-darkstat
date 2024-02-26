@@ -6,6 +6,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
@@ -37,9 +38,10 @@ func (f *Filesystem) RenderToLocal() {
 	os.MkdirAll(f.build_root.ToString(), os.ModePerm)
 
 	for path, content := range f.Files {
-		haveParentFoldersCreated(path)
+		final_path := utils_filepath.Join(f.build_root, path)
+		haveParentFoldersCreated(final_path)
 		// TODO add check for creating all missing folders in the path
-		err := os.WriteFile(path.ToString(), []byte(content), PermReadWrite)
+		err := os.WriteFile(final_path.ToString(), []byte(content), PermReadWrite)
 		logus.Log.CheckFatal(err, "failed to export bases to file")
 	}
 }
