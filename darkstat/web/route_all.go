@@ -6,7 +6,9 @@ import (
 	"net/http"
 
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/web/registry"
+	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
@@ -19,15 +21,23 @@ func (w *Web) NewEndpointStatic() *registry.Endpoint {
 			switch req.Method {
 			case http.MethodGet:
 
-				for path, _ := range w.filesystem.Files {
-					fmt.Println("path=", path.ToString())
-				}
+				// var log_files []typelog.LogType = make([]typelog.LogType, len(w.filesystem.Files))
+
+				// i := 0
+				// for path, _ := range w.filesystem.Files {
+				// 	log_files[i] = typelog.String(strconv.Itoa(i), path.ToString())
+				// 	i++
+				// }
+				// logus.Log.Info("acquired files", log_files...)
 
 				requested := req.URL.Path[1:]
 				if requested == "" {
 					requested = "index.html"
 				}
-				fmt.Println("requested=", requested)
+				logus.Log.Info("having get request",
+					typelog.String("requested_path", requested),
+					typelog.Int("files_count", len(w.filesystem.Files)),
+				)
 
 				content, ok := w.filesystem.Files[utils_types.FilePath(requested)]
 				if ok {

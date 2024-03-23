@@ -38,7 +38,7 @@ func (w *Web) Serve() {
 
 	ip := "0.0.0.0"
 	port := 8000
-	fmt.Printf("launching web server, visit http://localhost:%d to check it!", port)
+	fmt.Printf("launching web server, visit http://localhost:%d to check it!\n", port)
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%d", ip, port), nil); err != nil {
 		log.Fatal(err)
 	}
