@@ -1,0 +1,15 @@
+package front
+
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+
+	"github.com/darklab8/fl-darkstat/darkstat/common"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+)
+
+templ Index() {
+	// For loading https://htmx.org/examples/tabs-hateoas/
+	@common.Html5() {
+		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>
+	}
+}

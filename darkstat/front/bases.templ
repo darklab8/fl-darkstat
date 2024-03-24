@@ -2,7 +2,7 @@ package front
 
 import (
 	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/common"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 )
@@ -11,12 +11,29 @@ var (
 	Smth = "abc"
 )
 
+templ TabContent() {
+	<div id="tab-content" role="tabpanel" class="tab-content">
+		{ children... }
+	</div>
+}
+
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ BasesT(bases []configs_export.Base) {
-	@common.Html5() {
+	<style>
+	.tab-list {
+		.selected {
+			filter: brightness(85%);
+		}
+	}
+	</style>
+	<div class="tab-list" role="tablist">
+		<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } class="selected" role="tab" aria-selected="false" aria-controls="tab-content">Bases</button>
+		<button hx-get="/systems.html" role="tab" aria-selected="false" aria-controls="tab-content">Systems</button>
+	</div>
+	@TabContent() {
 		<style>
-			th, td {
+		th, td {
 				padding-left: 5px;
 				padding-bottom: 2px;
 				padding-top: 2px;
@@ -65,8 +82,6 @@ templ BasesT(bases []configs_export.Base) {
 			}
 			
 		</style>
-		<script src={ types.GetCtx(ctx).StaticRoot + "sortable.js" }></script>
-		<script src={ types.GetCtx(ctx).StaticRoot + "html.min.js" }></script>
 		<div class="splitter">
 			<div id="table-wrapper">
 				<table class="sortable">
@@ -104,7 +119,7 @@ templ BasesT(bases []configs_export.Base) {
 	}
 }
 
-templ BasesInfo(info configs_export.Infocard) {
+templ BasesInfocard(info configs_export.Infocard) {
 	<style>
 		.infocard {
 			margin: 10px;

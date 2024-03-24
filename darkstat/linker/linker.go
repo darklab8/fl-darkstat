@@ -46,8 +46,16 @@ func (l *Linker) Link() *builder.Builder {
 	build := builder.NewBuilder()
 	build.RegComps(
 		builder.NewComponent(
+			urls.Index,
+			front.Index(),
+		),
+		builder.NewComponent(
 			urls.Bases,
 			front.BasesT(bases),
+		),
+		builder.NewComponent(
+			urls.Systems,
+			front.Systems(),
 		),
 	)
 
@@ -55,7 +63,7 @@ func (l *Linker) Link() *builder.Builder {
 		build.RegComps(
 			builder.NewComponent(
 				utils_filepath.Join(utils_types.FilePath("infocard"), utils_types.FilePath(base.Nickname)),
-				front.BasesInfo(base.Infocard),
+				front.BasesInfocard(base.Infocard),
 			),
 		)
 	}

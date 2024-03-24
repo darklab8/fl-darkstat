@@ -1,18 +1,19 @@
 package common
 
 import (
-    "github.com/darklab8/fl-darkstat/darkstat/common/common_static"
-    "github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-darkstat/darkstat/common/common_static"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 )
+
 templ Html5() {
 	<!DOCTYPE html>
 	<html>
-	<head>
-	<link rel="icon" type="image/x-icon" href={ types.GetCtx(ctx).StaticRoot + "common/favicon.ico" }/>
-	<title>{ "darkstat" }</title>
-	switch types.GetCtx(ctx).Theme {
-		case types.ThemeDark:
-			<style>
+		<head>
+			<link rel="icon" type="image/x-icon" href={ types.GetCtx(ctx).StaticRoot + "common/favicon.ico" }/>
+			<title>{ "darkstat" }</title>
+			switch types.GetCtx(ctx).Theme {
+				case types.ThemeDark:
+					<style>
 			:root {
 				--color_hover_link: #4183C4;
 				--color_link: #91C3F5;
@@ -22,21 +23,22 @@ templ Html5() {
 				color: #ddd;
 			}
 			</style>
-		case types.ThemeLight:
-			<style>
+				case types.ThemeLight:
+					<style>
 			:root {
 				--color_hover_link: #4183C4;
 				--color_link: #33618E;
 			}
 			</style>
-	}
-	@common_static.ResetCSS()
-	@common_static.CommonCSS()
-	@common_static.CustomCSS()
-	</head>
-	<body>
-	{ children... }
-	</body>
+			}
+			@common_static.ResetCSS()
+			@common_static.CommonCSS()
+			@common_static.CustomCSS()
+			<script src={ types.GetCtx(ctx).StaticRoot + "sortable.js" }></script>
+			<script src={ types.GetCtx(ctx).StaticRoot + "html.min.js" }></script>
+		</head>
+		<body>
+			{ children... }
+		</body>
 	</html>
-
 }
