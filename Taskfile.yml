@@ -3,10 +3,19 @@ version: '3'
 tasks:
   test:
     cmds:
-      - go test ./... {{.CLI_ARGS}}
+      - go test ./... -coverprofile=cover.out {{.CLI_ARGS}}
     vars:
       PWD:
         sh: echo '$(pwd)'
+
+  test:cover:
+    cmds:
+      - go tool cover -html=cover.out
+
+  test:cover:total:
+    cmds:
+      - task: test
+      - go tool cover -func cover.out
 
   build:
     cmds:
