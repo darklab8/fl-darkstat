@@ -104,6 +104,10 @@ templ BasesT(bases []configs_export.Base) {
 	}
 }
 
-templ BasesInfo(content string) {
-	{ content }
+templ BasesInfo(info configs_export.Infocard) {
+	<div class="info">
+		for _, line := range info.Beginning {
+			<p>{ line }</p>
+		}
+	</div>
 }
