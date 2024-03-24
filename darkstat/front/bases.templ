@@ -105,9 +105,23 @@ templ BasesT(bases []configs_export.Base) {
 }
 
 templ BasesInfo(info configs_export.Infocard) {
-	<div class="info">
-		for _, line := range info.Beginning {
-			<p>{ line }</p>
+	<style>
+		.infocard {
+			margin: 10px;
+
+			.infocard_p {
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+		}
+	</style>
+	<div class="infocard">
+		<h3>infocard</h3>
+		for _, line := range info.Start {
+			<p class="infocard_p">{ line }</p>
+		}
+		for _, line := range info.Middle {
+			<p class="infocard_p">{ line }</p>
 		}
 	</div>
 }

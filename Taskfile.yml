@@ -30,3 +30,13 @@ tasks:
   dev:templ:
     cmds:
       - templ generate -watch --cmd="go run . --act=web"
+
+  dev:watch:
+    cmds:
+      # pip install watchdog[watchmedo]
+      - > 
+        watchmedo auto-restart 
+        --patterns "*.templ;*.go;*.css" 
+        -i "*_templ.go"
+        --recursive
+        -- sh -c "task web; sleep infinity"
