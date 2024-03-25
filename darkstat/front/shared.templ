@@ -1,0 +1,28 @@
+package front
+
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+)
+
+templ TabContent() {
+	<div id="tab-content" role="tabpanel" class="tab-content">
+		{ children... }
+	</div>
+}
+
+templ TabMenu(url utils_types.FilePath) {
+	<style>
+	.tab-list {
+		.selected {
+			filter: brightness(85%);
+		}
+	}
+	</style>
+	<div class="tab-list" role="tablist">
+		<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } class={ templ.KV("selected", urls.Bases == url) } role="tab" aria-selected="false" aria-controls="tab-content">Bases</button>
+		<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Systems.ToString() } class={ templ.KV("selected", urls.Systems == url) } role="tab" aria-selected="false" aria-controls="tab-content">Systems</button>
+	</div>
+	<hr/>
+}

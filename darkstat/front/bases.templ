@@ -7,31 +7,10 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 )
 
-var (
-	Smth = "abc"
-)
-
-templ TabContent() {
-	<div id="tab-content" role="tabpanel" class="tab-content">
-		{ children... }
-	</div>
-}
-
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ BasesT(bases []configs_export.Base) {
-	<style>
-	.tab-list {
-		.selected {
-			filter: brightness(85%);
-		}
-	}
-	</style>
-	<div class="tab-list" role="tablist">
-		<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } class="selected" role="tab" aria-selected="false" aria-controls="tab-content">Bases</button>
-		<button hx-get="/systems.html" role="tab" aria-selected="false" aria-controls="tab-content">Systems</button>
-	</div>
-	<hr/>
+	@TabMenu(urls.Bases)
 	@TabContent() {
 		<style>
 		th, td {

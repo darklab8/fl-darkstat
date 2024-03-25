@@ -2,21 +2,10 @@ package front
 
 import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 )
 
 templ Systems() {
-	<style>
-	.tab-list {
-		.selected {
-			filter: brightness(85%);
-		}
-	}
-	</style>
-	<div class="tab-list" role="tablist">
-		<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Bases</button>
-		<button hx-get="/systems.html" role="tab" class="selected" aria-selected="false" aria-controls="tab-content">Systems</button>
-	</div>
+	@TabMenu(urls.Systems)
 	@TabContent() {
 		Here will be systems
 	}
