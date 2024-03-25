@@ -1,1 +1,0 @@
-192.168.122.142 ansible_user=naa ansible_connection=ssh ansible_ssh_extra_args='-o ForwardAgent=yes' rep=mywar

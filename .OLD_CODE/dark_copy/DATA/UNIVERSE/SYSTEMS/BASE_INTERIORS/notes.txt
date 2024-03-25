@@ -1,9 +1,0 @@
--These are generic templates for bases.
--_sdlr bases have a shipdealer button.
--Bar interiors should be done per system to match the base's exterior.
--Outcast/Corsair/Council bases use Bretonia interiors.
--Gallic Lawful bases use Liberty interiors.
--largestation is usually used by Newark/Fort Bush/Aomori and some Cruiser type bases.
--station is usually used by every other base type.
--battleship_sdlr is used by battleship bases.
--Cruisers don't use _sdlr bases.
