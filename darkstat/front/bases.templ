@@ -31,6 +31,7 @@ templ BasesT(bases []configs_export.Base) {
 		<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } class="selected" role="tab" aria-selected="false" aria-controls="tab-content">Bases</button>
 		<button hx-get="/systems.html" role="tab" aria-selected="false" aria-controls="tab-content">Systems</button>
 	</div>
+	<hr/>
 	@TabContent() {
 		<style>
 		th, td {
@@ -77,7 +78,7 @@ templ BasesT(bases []configs_export.Base) {
 				& #description {
 					width: 25%;
 					overflow-y: scroll;
-					height: 100vh;
+					height: calc(100vh - 50px) !important;
 				}
 			}
 			
