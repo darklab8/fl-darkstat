@@ -35,4 +35,5 @@ func main() {
 		fs := linker.NewLinker().Link().BuildAll()
 		web.NewWeb(fs).Serve()
 	}
+
 }

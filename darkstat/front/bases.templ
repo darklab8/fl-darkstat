@@ -94,12 +94,14 @@ templ BasesT(bases []configs_export.Base) {
 					</tbody>
 				</table>
 			</div>
-			<div id="description"></div>
+			<div id="description">
+				@InfocardT(configs_export.Infocard{})
+			</div>
 		</div>
 	}
 }
 
-templ BasesInfocard(info configs_export.Infocard) {
+templ InfocardT(info configs_export.Infocard) {
 	<style>
 		.infocard {
 			margin: 10px;
