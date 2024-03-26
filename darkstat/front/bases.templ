@@ -9,6 +9,10 @@ import (
 	"strings"
 )
 
+func MarketGoodInfocardUrl(good_nickname string) string {
+	return "market_goods/infocards/info_" + strings.ToLower(good_nickname)
+}
+
 func BaseMarketGoodUrl(base configs_export.Base) string {
 	return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname)
 }
@@ -207,7 +211,12 @@ templ BaseMarketGoodsBase() {
 templ BaseMarketGoods(goods []configs_export.MarketGood) {
 	@BaseMarketGoodsBase() {
 		for _, good := range goods {
-			<tr>
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + MarketGoodInfocardUrl(good.Nickname) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+			>
 				<td>{ good.Name }</td>
 				<td>{ string(good.Type) }</td>
 				<td>{ strconv.Itoa(good.Price) }</td>

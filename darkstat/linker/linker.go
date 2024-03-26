@@ -75,5 +75,15 @@ func (l *Linker) Link() *builder.Builder {
 		)
 	}
 
+	goods := l.configs.GetGoodSelEquip()
+	for _, good := range goods {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.MarketGoodInfocardUrl(good.Nickname)),
+				front.BaseInfocard(good.Infocard),
+			),
+		)
+	}
+
 	return build
 }

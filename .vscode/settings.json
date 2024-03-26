@@ -5,10 +5,12 @@
     "go.testEnvVars": {
         "FLDARKSTAT_FREELANCER_FOLDER": "/home/naa/windows10shared/Discovery/DiscoveryFreelancer",
         "DARKSTAT_LOG_LEVEL": "DEBUG",
+        "UTILS_LOG_LEVEL": "DEBUG",
     },
     "editor.formatOnSave": true,
     "terminal.integrated.env.linux": {
         "FLDARKSTAT_FREELANCER_FOLDER": "/home/naa/windows10shared/Discovery/DiscoveryFreelancer",
         "DARKSTAT_LOG_LEVEL": "DEBUG",
+        "UTILS_LOG_LEVEL": "DEBUG",
     }
 }

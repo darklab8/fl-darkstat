@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/darklab8/fl-darkstat/darkstat/builder"
 	"github.com/darklab8/fl-darkstat/darkstat/linker"
 	"github.com/darklab8/fl-darkstat/darkstat/web"
+	"github.com/darklab8/go-utils/goutils/utils/time_measure"
 )
 
 type Action string
@@ -32,7 +34,10 @@ func main() {
 	case Build:
 		linker.NewLinker().Link().BuildAll().RenderToLocal()
 	case Web:
-		fs := linker.NewLinker().Link().BuildAll()
+		var fs *builder.Filesystem
+		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+			fs = linker.NewLinker().Link().BuildAll()
+		})
 		web.NewWeb(fs).Serve()
 	}
 
