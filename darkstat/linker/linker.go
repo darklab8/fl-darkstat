@@ -7,6 +7,7 @@ into stuff rendered by fl-darkstat
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
@@ -43,6 +44,10 @@ func NewLinker(opts ...LinkOption) *Linker {
 
 func (l *Linker) Link() *builder.Builder {
 	bases := l.configs.Bases(configs_export.NoNameIncluded(false))
+
+	sort.Slice(bases, func(i, j int) bool {
+		return bases[i].Name < bases[j].Name
+	})
 
 	build := builder.NewBuilder()
 	build.RegComps(
