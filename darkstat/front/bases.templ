@@ -186,14 +186,15 @@ templ BaseMarketGoodsBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:300px;">Good</th>
+				<th style="width:200px;">Good</th>
 				<th style="width:100px;">Type</th>
+				<th style="width:50px;">Price</th>
 				<th style="width:50px;">Level Req'd</th>
 				<th style="width:50px;">Reputation Req'd</th>
 				<th style="width:50px;">Base Sells</th>
 				<th style="width:50px;">Price Modifier</th>
-				// <th style="width:50px;">Price Base</th>
-				// <th style="width:50px;">Price</th>
+				<th style="width:50px;">Price Base</th>
+				<th style="width:300px;">Nickname</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -207,12 +208,15 @@ templ BaseMarketGoods(goods []configs_export.MarketGood) {
 	@BaseMarketGoodsBase() {
 		for _, good := range goods {
 			<tr>
-				<td>{ good.Nickname }</td>
+				<td>{ good.Name }</td>
 				<td>{ string(good.Type) }</td>
+				<td>{ strconv.Itoa(good.Price) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
-				<td>{ fmt.Sprintf("%T", !good.IsBuyOnly) }</td>
+				<td>{ strconv.FormatBool(!good.IsBuyOnly) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
+				<td>{ strconv.Itoa(good.PriceBase) }</td>
+				<td>{ good.Nickname }</td>
 				<td></td>
 			</tr>
 		}
