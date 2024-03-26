@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"fmt"
 )
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
@@ -61,7 +62,7 @@ templ BasesT(bases []configs_export.Base) {
 						height: 30vh;
 					}
 				}
-				& #description {
+				& #infocard_view {
 					width: 25%;
 					overflow-y: scroll;
 					height: calc(100vh - 50px) !important;
@@ -96,9 +97,10 @@ templ BasesT(bases []configs_export.Base) {
 						<tbody>
 							for _, base := range bases {
 								<tr
-									hx-get={ types.GetCtx(ctx).SiteRoot + "bases/infocard/" + base.Nickname }
+									id={ "marketgoods_click" + base.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + "bases_market_goods_" + base.Nickname }
 									hx-trigger="click"
-									hx-target="#description"
+									hx-target="#table-bottom"
 									hx-swap="innerHTML"
 								>
 									<td>{ base.Name }</td>
@@ -107,36 +109,40 @@ templ BasesT(bases []configs_export.Base) {
 									<td>{ base.SystemNickname }</td>
 									<td>{ strconv.Itoa(base.StridName) }</td>
 									<td>{ strconv.Itoa(base.InfocardID) }</td>
-									<td></td>
+									<td
+										id={ "infocard_click" + base.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + "bases_infocard_" + base.Nickname }
+										hx-trigger="click"
+										hx-target="#infocard_view"
+										hx-swap="innerHTML"
+									></td>
+									@templ.Raw(RenderHooks(base))
 								</tr>
 							}
 						</tbody>
 					</table>
 				</div>
 				<div id="table-bottom">
-					<table class="sortable">
-						<thead>
-							<tr class="flexed-tr">
-								<th style="width:200px;">Good</th>
-								<th style="width:100px;">Type</th>
-								<th style="width:50px;">Price</th>
-								<th style="width:50px;">Base Sells</th>
-								<th style="width:50px;">Level Req'd</th>
-								<th style="width:50px;">Reputation Req'd</th>
-								<th style="width:50px;">Price Modifier</th>
-								<th style="width:200px;">Nickname</th>
-								<th style="max-width:100%;"></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
+					@BaseMarketGoodsBase()
 				</div>
 			</div>
-			<div id="description">
+			<div id="infocard_view">
 				@Infocard()
 			</div>
 		</div>
 	}
+}
+
+func RenderHooks(base configs_export.Base) string {
+	first_id := "marketgoods_click" + base.Nickname
+	second_id := "infocard_click" + base.Nickname
+	return `
+	<script>
+	document.getElementById('` + first_id + `').addEventListener('click', () => {
+		document.getElementById('` + second_id + `').click();
+	});
+	</script>
+	`
 }
 
 templ Infocard() {
@@ -163,6 +169,43 @@ templ BaseInfocard(info configs_export.Infocard) {
 		}
 		for _, line := range info.Middle {
 			<p class="infocard_p">{ line }</p>
+		}
+	}
+}
+
+templ BaseMarketGoodsBase() {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:300px;">Good</th>
+				<th style="width:100px;">Type</th>
+				<th style="width:50px;">Level Req'd</th>
+				<th style="width:50px;">Reputation Req'd</th>
+				<th style="width:50px;">Base Sells</th>
+				<th style="width:50px;">Price Modifier</th>
+				// <th style="width:50px;">Price Base</th>
+				// <th style="width:50px;">Price</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ BaseMarketGoods(goods []configs_export.MarketGood) {
+	@BaseMarketGoodsBase() {
+		for _, good := range goods {
+			<tr>
+				<td>{ good.GoodNickname }</td>
+				<td>{ string(good.Type) }</td>
+				<td>{ strconv.Itoa(good.LevelRequired) }</td>
+				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
+				<td>{ fmt.Sprintf("%T", !good.IsBuyOnly) }</td>
+				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
+				<td></td>
+			</tr>
 		}
 	}
 }

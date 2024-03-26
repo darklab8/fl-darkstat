@@ -6,6 +6,8 @@ into stuff rendered by fl-darkstat
 */
 
 import (
+	"fmt"
+
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkstat/builder"
@@ -13,7 +15,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
-	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
@@ -60,10 +61,16 @@ func (l *Linker) Link() *builder.Builder {
 	)
 
 	for _, base := range bases {
+		fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname)
 		build.RegComps(
 			builder.NewComponent(
-				utils_filepath.Join("bases", "infocard", utils_types.FilePath(base.Nickname)),
+				utils_types.FilePath("bases_infocard_"+base.Nickname),
 				front.BaseInfocard(base.Infocard),
+			),
+
+			builder.NewComponent(
+				utils_types.FilePath("bases_market_goods_"+base.Nickname),
+				front.BaseMarketGoods(base.MarketGoods),
 			),
 		)
 	}
