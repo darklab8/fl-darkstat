@@ -64,12 +64,12 @@ func (l *Linker) Link() *builder.Builder {
 		fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname)
 		build.RegComps(
 			builder.NewComponent(
-				utils_types.FilePath("bases_infocard_"+base.Nickname),
+				utils_types.FilePath(front.BaseInfocardUrl(base)),
 				front.BaseInfocard(base.Infocard),
 			),
 
 			builder.NewComponent(
-				utils_types.FilePath("bases_market_goods_"+base.Nickname),
+				utils_types.FilePath(front.BaseMarketGoodUrl(base)),
 				front.BaseMarketGoods(base.MarketGoods),
 			),
 		)

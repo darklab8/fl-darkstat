@@ -8,6 +8,14 @@ import (
 	"fmt"
 )
 
+func BaseMarketGoodUrl(base configs_export.Base) string {
+	return "bases/marketgoods/mg_" + base.Nickname
+}
+
+func BaseInfocardUrl(base configs_export.Base) string {
+	return "bases/infocards/info_" + base.Nickname
+}
+
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ BasesT(bases []configs_export.Base) {
@@ -98,7 +106,7 @@ templ BasesT(bases []configs_export.Base) {
 							for _, base := range bases {
 								<tr
 									id={ "marketgoods_click" + base.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + "bases_market_goods_" + base.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + BaseMarketGoodUrl(base) }
 									hx-trigger="click"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
@@ -111,7 +119,7 @@ templ BasesT(bases []configs_export.Base) {
 									<td>{ strconv.Itoa(base.InfocardID) }</td>
 									<td
 										id={ "infocard_click" + base.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + "bases_infocard_" + base.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + BaseInfocardUrl(base) }
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
@@ -198,7 +206,7 @@ templ BaseMarketGoods(goods []configs_export.MarketGood) {
 	@BaseMarketGoodsBase() {
 		for _, good := range goods {
 			<tr>
-				<td>{ good.GoodNickname }</td>
+				<td>{ good.Nickname }</td>
 				<td>{ string(good.Type) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
