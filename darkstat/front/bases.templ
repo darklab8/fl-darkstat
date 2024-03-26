@@ -99,6 +99,7 @@ templ BasesT(bases []configs_export.Base) {
 						<thead>
 							<tr>
 								<th style="width:200px;">Base</th>
+								<th style="width:200px;">Owner - Faction</th>
 								<th style="width:100px;">System</th>
 								<th style="width:200px;">Base Nickname</th>
 								<th style="width:50px;">System Nickname</th>
@@ -117,6 +118,7 @@ templ BasesT(bases []configs_export.Base) {
 									hx-swap="innerHTML"
 								>
 									<td>{ base.Name }</td>
+									<td>{ base.FactionName }</td>
 									<td>{ base.System }</td>
 									<td>{ base.Nickname }</td>
 									<td>{ base.SystemNickname }</td>
@@ -140,7 +142,7 @@ templ BasesT(bases []configs_export.Base) {
 				</div>
 			</div>
 			<div id="infocard_view">
-				@Infocard()
+				@InfocardShared()
 			</div>
 		</div>
 	}
@@ -158,7 +160,7 @@ func RenderHooks(base configs_export.Base) string {
 	`
 }
 
-templ Infocard() {
+templ InfocardShared() {
 	<style>
 		.infocard {
 			margin: 10px;
@@ -175,12 +177,9 @@ templ Infocard() {
 	</div>
 }
 
-templ BaseInfocard(info configs_export.Infocard) {
-	@Infocard() {
-		for _, line := range info.Start {
-			<p class="infocard_p">{ line }</p>
-		}
-		for _, line := range info.Middle {
+templ Infocard(info configs_export.Infocard) {
+	@InfocardShared() {
+		for _, line := range info.Lines {
 			<p class="infocard_p">{ line }</p>
 		}
 	}

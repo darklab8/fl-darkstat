@@ -70,7 +70,7 @@ func (l *Linker) Link() *builder.Builder {
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseInfocardUrl(base)),
-				front.BaseInfocard(base.Infocard),
+				front.Infocard(base.Infocard),
 			),
 
 			builder.NewComponent(
@@ -85,7 +85,7 @@ func (l *Linker) Link() *builder.Builder {
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.MarketGoodInfocardUrl(good.Nickname)),
-				front.BaseInfocard(good.Infocard),
+				front.Infocard(good.Infocard),
 			),
 		)
 	}
