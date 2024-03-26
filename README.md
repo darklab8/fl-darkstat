@@ -1,3 +1,5 @@
+![how it looks](docs/howitlooks.png)
+
 # Description
 
 flstat on online-web version to browse game data for game Freelancer.
