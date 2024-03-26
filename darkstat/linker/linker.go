@@ -62,7 +62,7 @@ func (l *Linker) Link() *builder.Builder {
 	for _, base := range bases {
 		build.RegComps(
 			builder.NewComponent(
-				utils_filepath.Join(utils_types.FilePath("infocard"), utils_types.FilePath(base.Nickname)),
+				utils_filepath.Join("bases", "infocard", utils_types.FilePath(base.Nickname)),
 				front.BaseInfocard(base.Infocard),
 			),
 		)
