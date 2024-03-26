@@ -6,14 +6,15 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
+	"strings"
 )
 
 func BaseMarketGoodUrl(base configs_export.Base) string {
-	return "bases/marketgoods/mg_" + base.Nickname
+	return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname)
 }
 
 func BaseInfocardUrl(base configs_export.Base) string {
-	return "bases/infocards/info_" + base.Nickname
+	return "bases/infocards/info_" + strings.ToLower(base.Nickname)
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
