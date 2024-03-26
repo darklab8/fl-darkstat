@@ -50,58 +50,96 @@ templ BasesT(bases []configs_export.Base) {
 				flex-direction: row;
 		
 				& #table-wrapper {
-					overflow: scroll;
 					width: 75%;
-					height: 70vh;
+					
+					& #table-top {
+						overflow: scroll;
+						height: calc(70vh - 50px) !important;
+					}
+					& #table-bottom {
+						overflow: scroll;
+						height: 30vh;
+					}
 				}
 				& #description {
 					width: 25%;
 					overflow-y: scroll;
 					height: calc(100vh - 50px) !important;
 				}
+
+				.sortable {
+					width: 100%;
+					min-width: 800px;
+
+					& th, td {
+						white-space: nowrap;
+					}
+				}
 			}
 			
 		</style>
 		<div class="splitter">
 			<div id="table-wrapper">
-				<table class="sortable">
-					<thead>
-						<tr>
-							<th>Base</th>
-							<th>System</th>
-							<th>Base Nickname</th>
-							<th>System Nickname</th>
-							<th>Base Name ID</th>
-							<th>Infocard ID</th>
-						</tr>
-					</thead>
-					<tbody>
-						for _, base := range bases {
-							<tr
-								hx-get={ types.GetCtx(ctx).SiteRoot + "infocard/" + base.Nickname }
-								hx-trigger="click"
-								hx-target="#description"
-								hx-swap="innerHTML"
-							>
-								<td>{ base.Name }</td>
-								<td>{ base.System }</td>
-								<td>{ base.Nickname }</td>
-								<td>{ base.SystemNickname }</td>
-								<td>{ strconv.Itoa(base.StridName) }</td>
-								<td>{ strconv.Itoa(base.InfocardID) }</td>
+				<div id="table-top">
+					<table class="sortable">
+						<thead>
+							<tr>
+								<th style="width:200px;">Base</th>
+								<th style="width:100px;">System</th>
+								<th style="width:200px;">Base Nickname</th>
+								<th style="width:50px;">System Nickname</th>
+								<th style="width:100px;">Base Name ID</th>
+								<th style="width:100px;">Infocard ID</th>
+								<th style="max-width:100%;"></th>
 							</tr>
-						}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							for _, base := range bases {
+								<tr
+									hx-get={ types.GetCtx(ctx).SiteRoot + "infocard/" + base.Nickname }
+									hx-trigger="click"
+									hx-target="#description"
+									hx-swap="innerHTML"
+								>
+									<td>{ base.Name }</td>
+									<td>{ base.System }</td>
+									<td>{ base.Nickname }</td>
+									<td>{ base.SystemNickname }</td>
+									<td>{ strconv.Itoa(base.StridName) }</td>
+									<td>{ strconv.Itoa(base.InfocardID) }</td>
+									<td></td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				<div id="table-bottom">
+					<table class="sortable">
+						<thead>
+							<tr class="flexed-tr">
+								<th style="width:200px;">Good</th>
+								<th style="width:100px;">Type</th>
+								<th style="width:50px;">Price</th>
+								<th style="width:50px;">Base Sells</th>
+								<th style="width:50px;">Level Req'd</th>
+								<th style="width:50px;">Reputation Req'd</th>
+								<th style="width:50px;">Price Modifier</th>
+								<th style="width:200px;">Nickname</th>
+								<th style="max-width:100%;"></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
 			</div>
 			<div id="description">
-				@InfocardT(configs_export.Infocard{})
+				@Infocard()
 			</div>
 		</div>
 	}
 }
 
-templ InfocardT(info configs_export.Infocard) {
+templ Infocard() {
 	<style>
 		.infocard {
 			margin: 10px;
@@ -114,11 +152,17 @@ templ InfocardT(info configs_export.Infocard) {
 	</style>
 	<div class="infocard">
 		<h3>infocard</h3>
+		{ children... }
+	</div>
+}
+
+templ BaseInfocard(info configs_export.Infocard) {
+	@Infocard() {
 		for _, line := range info.Start {
 			<p class="infocard_p">{ line }</p>
 		}
 		for _, line := range info.Middle {
 			<p class="infocard_p">{ line }</p>
 		}
-	</div>
+	}
 }
