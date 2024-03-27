@@ -31,6 +31,10 @@ templ FactionsT(factions []configs_export.Faction) {
 								<th style="width:200px;">Name</th>
 								<th style="width:200px;">Short Name</th>
 								<th style="width:100px;">Nickname</th>
+								<th style="width:150px;">Object Destruction Rep.Cng.</th>
+								<th style="width:150px;">Mission Success Rep.Cng.</th>
+								<th style="width:150px;">MIssion Failure Rep.Cng.</th>
+								<th style="width:150px;">Mission Abort Rep.Cng.</th>
 								<th style="width:200px;">InfonameID</th>
 								<th style="width:50px;">InfocardID</th>
 								<th style="max-width:100%;"></th>
@@ -48,6 +52,10 @@ templ FactionsT(factions []configs_export.Faction) {
 									<td>{ faction.Name }</td>
 									<td>{ faction.ShortName }</td>
 									<td>{ faction.Nickname }</td>
+									<td>{ fmt.Sprintf("%.2f", faction.ObjectDestruction) }</td>
+									<td>{ fmt.Sprintf("%.2f", faction.MissionSuccess) }</td>
+									<td>{ fmt.Sprintf("%.2f", faction.MissionFailure) }</td>
+									<td>{ fmt.Sprintf("%.2f", faction.MissionAbort) }</td>
 									<td>{ strconv.Itoa(faction.InfonameID) }</td>
 									<td>{ strconv.Itoa(faction.InfocardID) }</td>
 									<td

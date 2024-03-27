@@ -35,7 +35,7 @@ tasks:
     cmds:
       # pip install watchdog[watchmedo]
       - > 
-        watchmedo auto-restart 
+        ~/venv/bin/watchmedo auto-restart 
         --patterns "*.templ;*.go;*.css" 
         -i "*_templ.go"
         --recursive
