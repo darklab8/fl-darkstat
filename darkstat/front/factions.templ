@@ -1,0 +1,111 @@
+package front
+
+import (
+	"strconv"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"fmt"
+	"strings"
+)
+
+func FactionRepUrl(faction configs_export.Faction) string {
+	return "bases/reps/rep_" + strings.ToLower(faction.Nickname)
+}
+
+func FactionInfocardUrl(faction_nickname string) string {
+	return "factions/infocards/info_" + strings.ToLower(faction_nickname)
+}
+
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
+templ FactionsT(factions []configs_export.Faction) {
+	@TabMenu(urls.Factions)
+	@TabContent() {
+		<div class="splitter">
+			<div id="table-wrapper">
+				<div id="table-top">
+					<table class="sortable">
+						<thead>
+							<tr>
+								<th style="width:200px;">Name</th>
+								<th style="width:200px;">Short Name</th>
+								<th style="width:100px;">Nickname</th>
+								<th style="width:200px;">InfonameID</th>
+								<th style="width:50px;">InfocardID</th>
+								<th style="max-width:100%;"></th>
+							</tr>
+						</thead>
+						<tbody>
+							for _, faction := range factions {
+								<tr
+									id={ "reputations_click" + faction.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + FactionRepUrl(faction) }
+									hx-trigger="click"
+									hx-target="#table-bottom"
+									hx-swap="innerHTML"
+								>
+									<td>{ faction.Name }</td>
+									<td>{ faction.ShortName }</td>
+									<td>{ faction.Nickname }</td>
+									<td>{ strconv.Itoa(faction.InfonameID) }</td>
+									<td>{ strconv.Itoa(faction.InfocardID) }</td>
+									<td
+										id={ "infocard_click" + faction.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + FactionInfocardUrl(faction.Nickname) }
+										hx-trigger="click"
+										hx-target="#infocard_view"
+										hx-swap="innerHTML"
+									></td>
+									@templ.Raw(JoinClickTriggers("reputations_click"+faction.Nickname, "infocard_click"+faction.Nickname))
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				<div id="table-bottom">
+					@FactionRepsBase()
+				</div>
+			</div>
+			<div id="infocard_view">
+				@InfocardShared()
+			</div>
+		</div>
+	}
+}
+
+templ FactionRepsBase() {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:200px;">Name</th>
+				<th style="width:100px;">Reputation</th>
+				<th style="width:50px;">Empathy Rate</th>
+				<th style="width:50px;">Nickname</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ FactionReps(reps []configs_export.Reputation) {
+	@FactionRepsBase() {
+		for _, rep := range reps {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + FactionInfocardUrl(rep.Nickname) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+			>
+				<td>{ rep.Name }</td>
+				<td>{ fmt.Sprintf("%.2f", rep.Rep) }</td>
+				<td>{ fmt.Sprintf("%.2f", rep.Empathy) }</td>
+				<td>{ rep.Nickname }</td>
+				<td></td>
+			</tr>
+		}
+	}
+}

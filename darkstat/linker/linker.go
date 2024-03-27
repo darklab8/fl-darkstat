@@ -6,7 +6,6 @@ into stuff rendered by fl-darkstat
 */
 
 import (
-	"fmt"
 	"sort"
 
 	"github.com/darklab8/fl-configs/configs/configs_export"
@@ -49,6 +48,22 @@ func (l *Linker) Link() *builder.Builder {
 		return data.Bases[i].Name < data.Bases[j].Name
 	})
 
+	for _, base := range data.Bases {
+		sort.Slice(base.MarketGoods, func(i, j int) bool {
+			return base.MarketGoods[i].Name < base.MarketGoods[j].Name
+		})
+	}
+
+	sort.Slice(data.Factions, func(i, j int) bool {
+		return data.Factions[i].Name < data.Factions[j].Name
+	})
+
+	for _, faction := range data.Factions {
+		sort.Slice(faction.Reputations, func(i, j int) bool {
+			return faction.Reputations[i].Name < faction.Reputations[j].Name
+		})
+	}
+
 	build := builder.NewBuilder()
 	build.RegComps(
 		builder.NewComponent(
@@ -60,13 +75,13 @@ func (l *Linker) Link() *builder.Builder {
 			front.BasesT(data.Bases),
 		),
 		builder.NewComponent(
-			urls.Systems,
-			front.Systems(),
+			urls.Factions,
+			front.FactionsT(data.Factions),
 		),
 	)
 
 	for _, base := range data.Bases {
-		fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname, base.Name)
+		// fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname, base.Name)
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseInfocardUrl(base)),
@@ -86,6 +101,20 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.MarketGoodInfocardUrl(good.Nickname)),
 				front.Infocard(good.Infocard),
+			),
+		)
+	}
+
+	for _, faction := range data.Factions {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.FactionInfocardUrl(faction.Nickname)),
+				front.Infocard(faction.Infocard),
+			),
+
+			builder.NewComponent(
+				utils_types.FilePath(front.FactionRepUrl(faction)),
+				front.FactionReps(faction.Reputations),
 			),
 		)
 	}

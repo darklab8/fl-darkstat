@@ -5,7 +5,8 @@ import (
 )
 
 const (
-	Index   utils_types.FilePath = "index.html"
-	Bases   utils_types.FilePath = "bases.html"
-	Systems utils_types.FilePath = "systems.html"
+	Index    utils_types.FilePath = "index.html"
+	Bases    utils_types.FilePath = "bases.html"
+	Factions utils_types.FilePath = "factions.html"
+	Systems  utils_types.FilePath = "systems.html"
 )
