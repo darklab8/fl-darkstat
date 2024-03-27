@@ -6,6 +6,7 @@ into stuff rendered by fl-darkstat
 */
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/darklab8/fl-configs/configs/configs_export"
@@ -65,7 +66,7 @@ func (l *Linker) Link() *builder.Builder {
 	)
 
 	for _, base := range data.Bases {
-		// fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname)
+		fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname, base.Name)
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseInfocardUrl(base)),

@@ -4,12 +4,79 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/fl-configs/configs/configs_export"
 )
 
 templ TabContent() {
 	<div id="tab-content" role="tabpanel" class="tab-content">
 		{ children... }
 	</div>
+	<style>
+	th, td {
+			padding-left: 5px;
+			padding-bottom: 2px;
+			padding-top: 2px;
+			padding-right: 5px;
+
+			
+		}
+
+		table, tr,th, td, thead {
+			border-width: 1px;
+			border-style: solid;
+		}
+		th {
+			border-color: #8B8B8B;
+
+			cursor: pointer;
+			&:hover {
+				background-color: #DDD;
+			}
+		}
+		td {
+			border-color: #D7D7D7;
+		}
+		tbody {
+			& tr {
+				cursor: pointer;
+				&:hover {
+					background-color: #EEE;
+				}
+			}
+		}
+		.splitter {
+			display: flex;
+			flex-direction: row;
+	
+			& #table-wrapper {
+				width: 75%;
+				
+				& #table-top {
+					overflow: scroll;
+					height: calc(70vh - 50px) !important;
+				}
+				& #table-bottom {
+					overflow: scroll;
+					height: 30vh;
+				}
+			}
+			& #infocard_view {
+				width: 25%;
+				overflow-y: scroll;
+				height: calc(100vh - 50px) !important;
+			}
+
+			.sortable {
+				width: 100%;
+				min-width: 800px;
+
+				& th, td {
+					white-space: nowrap;
+				}
+			}
+		}
+		
+	</style>
 }
 
 templ TabMenu(url utils_types.FilePath) {
@@ -25,4 +92,39 @@ templ TabMenu(url utils_types.FilePath) {
 		<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Systems.ToString() } class={ templ.KV("selected", urls.Systems == url) } role="tab" aria-selected="false" aria-controls="tab-content">Systems</button>
 	</div>
 	<hr/>
+}
+
+templ InfocardShared() {
+	<style>
+		.infocard {
+			margin: 10px;
+
+			.infocard_p {
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+		}
+	</style>
+	<div class="infocard">
+		<h3>infocard</h3>
+		{ children... }
+	</div>
+}
+
+templ Infocard(info configs_export.Infocard) {
+	@InfocardShared() {
+		for _, line := range info.Lines {
+			<p class="infocard_p">{ line }</p>
+		}
+	}
+}
+
+func JoinClickTriggers(first_id string, second_id string) string {
+	return `
+	<script>
+	document.getElementById('` + first_id + `').addEventListener('click', () => {
+		document.getElementById('` + second_id + `').click();
+	});
+	</script>
+	`
 }
