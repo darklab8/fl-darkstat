@@ -6,7 +6,6 @@ into stuff rendered by fl-darkstat
 */
 
 import (
-	"fmt"
 	"sort"
 
 	"github.com/darklab8/fl-configs/configs/configs_export"
@@ -43,10 +42,10 @@ func NewLinker(opts ...LinkOption) *Linker {
 }
 
 func (l *Linker) Link() *builder.Builder {
-	bases := l.configs.Bases(configs_export.NoNameIncluded(false))
+	data := l.configs.Export()
 
-	sort.Slice(bases, func(i, j int) bool {
-		return bases[i].Name < bases[j].Name
+	sort.Slice(data.Bases, func(i, j int) bool {
+		return data.Bases[i].Name < data.Bases[j].Name
 	})
 
 	build := builder.NewBuilder()
@@ -57,7 +56,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Bases,
-			front.BasesT(bases),
+			front.BasesT(data.Bases),
 		),
 		builder.NewComponent(
 			urls.Systems,
@@ -65,8 +64,8 @@ func (l *Linker) Link() *builder.Builder {
 		),
 	)
 
-	for _, base := range bases {
-		fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname)
+	for _, base := range data.Bases {
+		// fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname)
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseInfocardUrl(base)),
@@ -80,7 +79,7 @@ func (l *Linker) Link() *builder.Builder {
 		)
 	}
 
-	goods := l.configs.GetGoodSelEquip()
+	goods := l.configs.GoodsSelEquip
 	for _, good := range goods {
 		build.RegComps(
 			builder.NewComponent(

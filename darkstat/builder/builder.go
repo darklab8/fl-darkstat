@@ -85,13 +85,16 @@ func (b *Builder) BuildAll() *Filesystem {
 		StaticRoot:        siteRoot + staticPrefix,
 		OppositeThemeRoot: siteRoot + "dark/",
 	}, filesystem)
-	b.build(types.GlobalParams{
-		Buildpath:         utils_filepath.Join("dark"),
-		Theme:             types.ThemeDark,
-		SiteRoot:          siteRoot + "dark/",
-		StaticRoot:        siteRoot + "dark/" + staticPrefix,
-		OppositeThemeRoot: siteRoot,
-	}, filesystem)
+
+	// Implement dark theme later
+	// u need only Index page rebuilded, not all of them ^_^
+	// b.build(types.GlobalParams{
+	// 	Buildpath:         utils_filepath.Join("dark"),
+	// 	Theme:             types.ThemeDark,
+	// 	SiteRoot:          siteRoot + "dark/",
+	// 	StaticRoot:        siteRoot + "dark/" + staticPrefix,
+	// 	OppositeThemeRoot: siteRoot,
+	// }, filesystem)
 
 	return filesystem
 }
