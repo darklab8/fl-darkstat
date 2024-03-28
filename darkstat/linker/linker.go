@@ -45,21 +45,33 @@ func (l *Linker) Link() *builder.Builder {
 	data := l.configs.Export()
 
 	sort.Slice(data.Bases, func(i, j int) bool {
+		if data.Bases[i].Name != "" && data.Bases[j].Name == "" {
+			return true
+		}
 		return data.Bases[i].Name < data.Bases[j].Name
 	})
 
 	for _, base := range data.Bases {
 		sort.Slice(base.MarketGoods, func(i, j int) bool {
+			if base.MarketGoods[i].Name != "" && base.MarketGoods[j].Name == "" {
+				return true
+			}
 			return base.MarketGoods[i].Name < base.MarketGoods[j].Name
 		})
 	}
 
 	sort.Slice(data.Factions, func(i, j int) bool {
+		if data.Factions[i].Name != "" && data.Factions[j].Name == "" {
+			return true
+		}
 		return data.Factions[i].Name < data.Factions[j].Name
 	})
 
 	for _, faction := range data.Factions {
 		sort.Slice(faction.Reputations, func(i, j int) bool {
+			if faction.Reputations[i].Name != "" && faction.Reputations[j].Name == "" {
+				return true
+			}
 			return faction.Reputations[i].Name < faction.Reputations[j].Name
 		})
 	}
