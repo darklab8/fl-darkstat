@@ -97,6 +97,7 @@ func (b *Builder) BuildAll() *Filesystem {
 		SiteRoot:          siteRoot,
 		StaticRoot:        siteRoot + staticPrefix,
 		OppositeThemeRoot: siteRoot + "dark/",
+		Heading:           os.Getenv("FLDARKSTAT_HEADING"),
 	}, filesystem)
 
 	// Implement dark theme later

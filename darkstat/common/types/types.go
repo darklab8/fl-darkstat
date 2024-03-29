@@ -26,6 +26,7 @@ type GlobalParams struct {
 	StaticRoot        string
 	OppositeThemeRoot string
 	Pagepath          string
+	Heading           string
 }
 
 func GetCtx(ctx context.Context) GlobalParams {
