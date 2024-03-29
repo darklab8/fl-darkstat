@@ -36,8 +36,14 @@ func main() {
 	case Web:
 		var fs *builder.Filesystem
 		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
-			fs = linker.NewLinker().Link().BuildAll()
-		})
+			var linked_build *builder.Builder
+			time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+				linked_build = linker.NewLinker().Link()
+			}, time_measure.WithMsg("linking stuff"))
+			time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+				fs = linked_build.BuildAll()
+			}, time_measure.WithMsg("building stuff"))
+		}, time_measure.WithMsg("total time for web"))
 		web.NewWeb(fs).Serve()
 	}
 
