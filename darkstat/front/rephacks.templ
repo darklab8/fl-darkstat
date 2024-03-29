@@ -9,14 +9,14 @@ import (
 	"strings"
 )
 
-func FactionRepUrl(faction configs_export.Faction) string {
-	return "factions/rep_" + strings.ToLower(faction.Nickname)
+func RephacksURL(faction configs_export.Faction) string {
+	return "rephacks/rep_" + strings.ToLower(faction.Nickname)
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ FactionsT(factions []configs_export.Faction) {
-	@TabMenu(urls.Factions)
+templ RephacksT(factions []configs_export.Faction) {
+	@TabMenu(urls.Rephacks)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
@@ -39,8 +39,8 @@ templ FactionsT(factions []configs_export.Faction) {
 						<tbody>
 							for _, faction := range factions {
 								<tr
-									id={ "reputations_click" + faction.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + FactionRepUrl(faction) }
+									id={ "rephack_click" + faction.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + RephacksURL(faction) }
 									hx-trigger="click"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
@@ -61,14 +61,14 @@ templ FactionsT(factions []configs_export.Faction) {
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
 									></td>
-									@templ.Raw(JoinClickTriggers("reputations_click"+faction.Nickname, "infocard_click"+faction.Nickname))
+									@templ.Raw(JoinClickTriggers("rephack_click"+faction.Nickname, "infocard_click"+faction.Nickname))
 								</tr>
 							}
 						</tbody>
 					</table>
 				</div>
 				<div id="table-bottom">
-					@FactionRepsBase()
+					@RephacksBottomBase()
 				</div>
 			</div>
 			<div id="infocard_view">
@@ -78,14 +78,15 @@ templ FactionsT(factions []configs_export.Faction) {
 	}
 }
 
-templ FactionRepsBase() {
+templ RephacksBottomBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:200px;">Name</th>
-				<th style="width:100px;">Reputation</th>
-				<th style="width:50px;">Empathy Rate</th>
-				<th style="width:50px;">Nickname</th>
+				<th style="width:250px;">Base Name</th>
+				<th style="width:200px;">Owner Faction</th>
+				<th style="width:50px;">Chance</th>
+				<th style="width:100px;">System</th>
+				<th style="width:150px;">Base Nickname</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -95,19 +96,20 @@ templ FactionRepsBase() {
 	</table>
 }
 
-templ FactionReps(reps []configs_export.Reputation) {
-	@FactionRepsBase() {
-		for _, rep := range reps {
+templ RephackBottom(rephacks []configs_export.Rephack) {
+	@RephacksBottomBase() {
+		for _, rep := range rephacks {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(rep.Nickname)) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(rep.BaseNickname)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
 			>
-				<td>{ rep.Name }</td>
-				<td>{ fmt.Sprintf("%.2f", rep.Rep) }</td>
-				<td>{ fmt.Sprintf("%.2f", rep.Empathy) }</td>
-				<td>{ rep.Nickname }</td>
+				<td>{ rep.BaseName }</td>
+				<td>{ rep.BaseOwner }</td>
+				<td>{ fmt.Sprintf("%.2f", rep.Chance * 100) }</td>
+				<td>{ rep.BaseSystem }</td>
+				<td>{ rep.BaseNickname }</td>
 				<td></td>
 			</tr>
 		}

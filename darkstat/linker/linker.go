@@ -90,6 +90,10 @@ func (l *Linker) Link() *builder.Builder {
 			urls.Factions,
 			front.FactionsT(data.Factions),
 		),
+		builder.NewComponent(
+			urls.Rephacks,
+			front.RephacksT(data.Factions),
+		),
 	)
 
 	for _, base := range data.Bases {
@@ -107,6 +111,10 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.FactionRepUrl(faction)),
 				front.FactionReps(faction.Reputations),
+			),
+			builder.NewComponent(
+				utils_types.FilePath(front.RephacksURL(faction)),
+				front.RephackBottom(faction.Rephacks),
 			),
 		)
 	}
