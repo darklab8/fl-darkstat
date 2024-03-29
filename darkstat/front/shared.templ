@@ -109,7 +109,7 @@ templ InfocardShared() {
 	</div>
 }
 
-templ Infocard(info configs_export.Infocard) {
+templ Infocard(info *configs_export.Infocard) {
 	@InfocardShared() {
 		for _, line := range info.Lines {
 			<p class="infocard_p">{ line }</p>

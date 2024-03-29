@@ -92,32 +92,12 @@ func (l *Linker) Link() *builder.Builder {
 		),
 	)
 
-	var infocard_per_good_nickname map[string]configs_export.Infocard = make(map[string]configs_export.Infocard)
-
 	for _, base := range data.Bases {
 		// fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname, base.Name)
 		build.RegComps(
 			builder.NewComponent(
-				utils_types.FilePath(front.BaseInfocardUrl(base)),
-				front.Infocard(base.Infocard),
-			),
-
-			builder.NewComponent(
 				utils_types.FilePath(front.BaseMarketGoodUrl(base)),
 				front.BaseMarketGoods(base.MarketGoods),
-			),
-		)
-
-		for _, good := range base.MarketGoods {
-			infocard_per_good_nickname[good.Nickname] = good.Infocard
-		}
-	}
-
-	for good_nickname, infocard := range infocard_per_good_nickname {
-		build.RegComps(
-			builder.NewComponent(
-				utils_types.FilePath(front.MarketGoodInfocardUrl(good_nickname)),
-				front.Infocard(infocard),
 			),
 		)
 	}
@@ -125,16 +105,20 @@ func (l *Linker) Link() *builder.Builder {
 	for _, faction := range data.Factions {
 		build.RegComps(
 			builder.NewComponent(
-				utils_types.FilePath(front.FactionInfocardUrl(faction.Nickname)),
-				front.Infocard(faction.Infocard),
-			),
-
-			builder.NewComponent(
 				utils_types.FilePath(front.FactionRepUrl(faction)),
 				front.FactionReps(faction.Reputations),
 			),
 		)
 	}
+
+	data.Infocards.Foreach(func(nickname configs_export.InfocardKey, infocard *configs_export.Infocard) {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.InfocardURL(nickname)),
+				front.Infocard(infocard),
+			),
+		)
+	})
 
 	return build
 }

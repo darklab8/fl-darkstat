@@ -9,16 +9,12 @@ import (
 	"strings"
 )
 
-func MarketGoodInfocardUrl(good_nickname string) string {
-	return "market_goods/infocards/info_" + strings.ToLower(good_nickname)
+func InfocardURL(infocard_key configs_export.InfocardKey) string {
+	return "infocards/info_" + strings.ToLower(string(infocard_key))
 }
 
 func BaseMarketGoodUrl(base configs_export.Base) string {
 	return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname)
-}
-
-func BaseInfocardUrl(base configs_export.Base) string {
-	return "bases/infocards/info_" + strings.ToLower(base.Nickname)
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
@@ -60,7 +56,7 @@ templ BasesT(bases []configs_export.Base) {
 									<td>{ strconv.Itoa(base.InfocardID) }</td>
 									<td
 										id={ "infocard_click" + base.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + BaseInfocardUrl(base) }
+										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(base.Infocard) }
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
@@ -108,7 +104,7 @@ templ BaseMarketGoods(goods []configs_export.MarketGood) {
 	@BaseMarketGoodsBase() {
 		for _, good := range goods {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + MarketGoodInfocardUrl(good.Nickname) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(good.Infocard) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"

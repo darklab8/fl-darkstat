@@ -13,10 +13,6 @@ func FactionRepUrl(faction configs_export.Faction) string {
 	return "bases/reps/rep_" + strings.ToLower(faction.Nickname)
 }
 
-func FactionInfocardUrl(faction_nickname string) string {
-	return "factions/infocards/info_" + strings.ToLower(faction_nickname)
-}
-
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ FactionsT(factions []configs_export.Faction) {
@@ -60,7 +56,7 @@ templ FactionsT(factions []configs_export.Faction) {
 									<td>{ strconv.Itoa(faction.InfocardID) }</td>
 									<td
 										id={ "infocard_click" + faction.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + FactionInfocardUrl(faction.Nickname) }
+										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(faction.Infocard) }
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
@@ -103,7 +99,7 @@ templ FactionReps(reps []configs_export.Reputation) {
 	@FactionRepsBase() {
 		for _, rep := range reps {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + FactionInfocardUrl(rep.Nickname) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(rep.Nickname)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
