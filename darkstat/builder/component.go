@@ -27,7 +27,12 @@ func NewComponent(
 	}
 }
 
-func (h *Component) Write(gp types.GlobalParams, filesystem *Filesystem) {
+type WriteResult struct {
+	realpath utils_types.FilePath
+	bytes    []byte
+}
+
+func (h *Component) Write(gp types.GlobalParams) WriteResult {
 	buf := bytes.NewBuffer([]byte{})
 
 	gp.Pagepath = string(h.pagepath)
@@ -37,5 +42,8 @@ func (h *Component) Write(gp types.GlobalParams, filesystem *Filesystem) {
 	h.templ_comp.Render(context.WithValue(context.Background(), types.GlobalParamsCtxKey, gp), buf)
 
 	// Usage of gohtml is not obligatory, but nice touch simplifying debugging view.
-	filesystem.WriteToMem(realpath, gohtml.FormatBytes(buf.Bytes()))
+	return WriteResult{
+		realpath: realpath,
+		bytes:    gohtml.FormatBytes(buf.Bytes()),
+	}
 }
