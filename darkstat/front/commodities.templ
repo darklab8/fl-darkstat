@@ -87,7 +87,8 @@ templ CommoditiesBasesInfoShared() {
 				<th style="width:200px;">Base</th>
 				<th style="width:100px;">Faction</th>
 				<th style="width:50px;">System</th>
-				<th style="width:50px;">Price Per foume</th>
+				<th style="width:50px;">Price</th>
+				<th style="width:50px;">Price Per Volume</th>
 				<th style="width:50px;">Base Sells</th>
 				<th style="width:50px;">Level Req'd</th>
 				<th style="width:50px;">Reputation Req'd</th>
@@ -113,6 +114,7 @@ templ CommoditiesBaseInfo(base_infos []configs_export.CommodityAtBase) {
 				<td>{ base_info.BaseName }</td>
 				<td>{ base_info.Faction }</td>
 				<td>{ base_info.SystemName }</td>
+				<td>{ strconv.Itoa(base_info.Price) }</td>
 				<td>{ strconv.Itoa(base_info.PricePerVolume) }</td>
 				<td>{ strconv.FormatBool(base_info.BaseSells) }</td>
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
