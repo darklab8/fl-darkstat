@@ -12,6 +12,6 @@
         "FLDARKSTAT_FREELANCER_FOLDER": "/home/naa/windows10shared/Discovery/DiscoveryFreelancer",
         "DARKSTAT_LOG_LEVEL": "DEBUG",
         "UTILS_LOG_LEVEL": "DEBUG",
-        "FLDARKSTAT_HEADING": "Dev server for darkstat | <a href=\"https://github.com/darklab8/fl-darkstat\">Github</a>",
+        "FLDARKSTAT_HEADING": "Dev server for fl-darkstat | <a href=\"https://github.com/darklab8/fl-darkstat\">Github</a>",
     }
 }
