@@ -5,8 +5,9 @@ import (
 )
 
 const (
-	Index    utils_types.FilePath = "index.html"
-	Bases    utils_types.FilePath = "bases.html"
-	Factions utils_types.FilePath = "factions.html"
-	Rephacks utils_types.FilePath = "rephacks.html"
+	Index       utils_types.FilePath = "index.html"
+	Bases       utils_types.FilePath = "bases.html"
+	Factions    utils_types.FilePath = "factions.html"
+	Rephacks    utils_types.FilePath = "rephacks.html"
+	Commodities utils_types.FilePath = "commodities.html"
 )

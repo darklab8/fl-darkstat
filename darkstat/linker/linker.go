@@ -76,6 +76,22 @@ func (l *Linker) Link() *builder.Builder {
 		})
 	}
 
+	sort.Slice(data.Commodities, func(i, j int) bool {
+		if data.Commodities[i].Name != "" && data.Commodities[j].Name == "" {
+			return true
+		}
+		return data.Commodities[i].Name < data.Commodities[j].Name
+	})
+
+	for _, base_info := range data.Commodities {
+		sort.Slice(base_info.Bases, func(i, j int) bool {
+			if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
+				return true
+			}
+			return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
+		})
+	}
+
 	build := builder.NewBuilder()
 	build.RegComps(
 		builder.NewComponent(
@@ -93,6 +109,10 @@ func (l *Linker) Link() *builder.Builder {
 		builder.NewComponent(
 			urls.Rephacks,
 			front.RephacksT(data.Factions),
+		),
+		builder.NewComponent(
+			urls.Commodities,
+			front.CommoditiesT(data.Commodities),
 		),
 	)
 
@@ -127,6 +147,15 @@ func (l *Linker) Link() *builder.Builder {
 			),
 		)
 	})
+
+	for _, base_info := range data.Commodities {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.CommoditiesBaseInfoUrl(base_info)),
+				front.CommoditiesBaseInfo(base_info.Bases),
+			),
+		)
+	}
 
 	return build
 }
