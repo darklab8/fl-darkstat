@@ -139,14 +139,14 @@ func (l *Linker) Link() *builder.Builder {
 		)
 	}
 
-	data.Infocards.Foreach(func(nickname configs_export.InfocardKey, infocard *configs_export.Infocard) {
+	for nickname, infocard := range data.Infocards {
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.InfocardURL(nickname)),
 				front.Infocard(infocard),
 			),
 		)
-	})
+	}
 
 	for _, base_info := range data.Commodities {
 		build.RegComps(
