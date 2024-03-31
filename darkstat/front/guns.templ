@@ -9,14 +9,29 @@ import (
 	"strings"
 )
 
-func GunBaseInfoUrl(gun configs_export.Gun) string {
-	return "guns/guns_base_" + strings.ToLower(gun.Nickname)
+func GunDetailedUrl(gun configs_export.Gun, mode GunTabMode) string {
+	if mode == GunsShowBases {
+		return "guns/guns_base_" + strings.ToLower(gun.Nickname)
+	} else {
+		return "guns/guns_bonuses_" + strings.ToLower(gun.Nickname)
+	}
 }
+
+type GunTabMode int64
+
+const (
+	GunsShowBases GunTabMode = iota
+	GunsShowDamageBonuses
+)
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(guns []configs_export.Gun) {
-	@TabMenu(urls.Guns)
+templ GunsT(guns []configs_export.Gun, mode GunTabMode) {
+	if mode == GunsShowBases {
+		@TabMenu(urls.Guns)
+	} else {
+		@TabMenu(urls.GunModifiers)
+	}
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
@@ -53,8 +68,8 @@ templ GunsT(guns []configs_export.Gun) {
 						<tbody>
 							for _, gun := range guns {
 								<tr
-									id={ "baseinfo_click" + gun.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + GunBaseInfoUrl(gun) }
+									id={ "guninfo_click" + gun.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
 									hx-trigger="click"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
@@ -89,19 +104,56 @@ templ GunsT(guns []configs_export.Gun) {
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
 									></td>
-									@templ.Raw(JoinClickTriggers("baseinfo_click"+gun.Nickname, "infocard_click"+gun.Nickname))
+									@templ.Raw(JoinClickTriggers("guninfo_click"+gun.Nickname, "infocard_click"+gun.Nickname))
 								</tr>
 							}
 						</tbody>
 					</table>
 				</div>
 				<div id="table-bottom">
-					@GoodAtBaseSharedT(ShowPricePerVolume(true))
+					if mode == GunsShowBases {
+						@GoodAtBaseSharedT(ShowPricePerVolume(true))
+					} else {
+						@GunShowModifiersShared()
+					}
 				</div>
 			</div>
 			<div id="infocard_view">
 				@InfocardShared()
 			</div>
 		</div>
+	}
+}
+
+templ GunShowModifiersShared() {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:50px;">Technology</th>
+				<th style="width:50px;">Target Type</th>
+				<th style="width:50px;">Damage Modifier</th>
+				<th style="width:50px;">Hull Dmg</th>
+				<th style="width:50px;">Shield Dmg</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ GunShowModifiers(gun configs_export.Gun) {
+	@GunShowModifiersShared() {
+		for _, bonus := range gun.DamangeBonuses {
+			<tr>
+				<td>{ gun.DamageType }</td>
+				<td>{ bonus.Type }</td>
+				<td>{ fmt.Sprintf("%.2f", bonus.Modifier) }</td>
+				<td>{ strconv.Itoa(int(float64(gun.HullDamage)*bonus.Modifier)) }</td>
+				<td>{ strconv.Itoa(int(float64(gun.ShieldDamage)*bonus.Modifier)) }</td>
+				<td></td>
+			</tr>
+		}
 	}
 }
