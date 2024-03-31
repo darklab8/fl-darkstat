@@ -10,4 +10,5 @@ const (
 	Factions    utils_types.FilePath = "factions.html"
 	Rephacks    utils_types.FilePath = "rephacks.html"
 	Commodities utils_types.FilePath = "commodities.html"
+	Guns        utils_types.FilePath = "guns.html"
 )

@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func CommoditiesBaseInfoUrl(commodity configs_export.Commodity) string {
+func GoodAtBaseInfoTUrl(commodity configs_export.Commodity) string {
 	return "commodities/comm_base_" + strings.ToLower(commodity.Nickname)
 }
 
@@ -41,7 +41,7 @@ templ CommoditiesT(commodities []configs_export.Commodity) {
 							for _, commodity := range commodities {
 								<tr
 									id={ "baseinfo_click" + commodity.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + CommoditiesBaseInfoUrl(commodity) }
+									hx-get={ types.GetCtx(ctx).SiteRoot + GoodAtBaseInfoTUrl(commodity) }
 									hx-trigger="click"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
@@ -70,58 +70,12 @@ templ CommoditiesT(commodities []configs_export.Commodity) {
 					</table>
 				</div>
 				<div id="table-bottom">
-					@CommoditiesBasesInfoShared()
+					@GoodAtBaseSharedT(ShowPricePerVolume(true))
 				</div>
 			</div>
 			<div id="infocard_view">
 				@InfocardShared()
 			</div>
 		</div>
-	}
-}
-
-templ CommoditiesBasesInfoShared() {
-	<table class="sortable">
-		<thead>
-			<tr class="flexed-tr">
-				<th style="width:200px;">Base</th>
-				<th style="width:100px;">Faction</th>
-				<th style="width:50px;">System</th>
-				<th style="width:50px;">Price</th>
-				<th style="width:50px;">Price Per Volume</th>
-				<th style="width:50px;">Base Sells</th>
-				<th style="width:50px;">Level Req'd</th>
-				<th style="width:50px;">Reputation Req'd</th>
-				<th style="width:50px;">Base Nickname</th>
-				<th style="max-width:100%;"></th>
-			</tr>
-		</thead>
-		<tbody>
-			{ children... }
-		</tbody>
-	</table>
-}
-
-templ CommoditiesBaseInfo(base_infos []configs_export.CommodityAtBase) {
-	@CommoditiesBasesInfoShared() {
-		for _, base_info := range base_infos {
-			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(base_info.BaseNickname)) }
-				hx-trigger="click"
-				hx-target="#infocard_view"
-				hx-swap="innerHTML"
-			>
-				<td>{ base_info.BaseName }</td>
-				<td>{ base_info.Faction }</td>
-				<td>{ base_info.SystemName }</td>
-				<td>{ strconv.Itoa(base_info.Price) }</td>
-				<td>{ strconv.Itoa(base_info.PricePerVolume) }</td>
-				<td>{ strconv.FormatBool(base_info.BaseSells) }</td>
-				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
-				<td>{ fmt.Sprintf("%.2f", base_info.RepRequired) }</td>
-				<td>{ base_info.BaseNickname }</td>
-				<td></td>
-			</tr>
-		}
 	}
 }

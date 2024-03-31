@@ -92,6 +92,22 @@ func (l *Linker) Link() *builder.Builder {
 		})
 	}
 
+	sort.Slice(data.Guns, func(i, j int) bool {
+		if data.Guns[i].Name != "" && data.Guns[j].Name == "" {
+			return true
+		}
+		return data.Guns[i].Name < data.Guns[j].Name
+	})
+
+	for _, base_info := range data.Guns {
+		sort.Slice(base_info.Bases, func(i, j int) bool {
+			if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
+				return true
+			}
+			return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
+		})
+	}
+
 	build := builder.NewBuilder()
 	build.RegComps(
 		builder.NewComponent(
@@ -113,6 +129,10 @@ func (l *Linker) Link() *builder.Builder {
 		builder.NewComponent(
 			urls.Commodities,
 			front.CommoditiesT(data.Commodities),
+		),
+		builder.NewComponent(
+			urls.Guns,
+			front.GunsT(data.Guns),
 		),
 	)
 
@@ -151,8 +171,17 @@ func (l *Linker) Link() *builder.Builder {
 	for _, base_info := range data.Commodities {
 		build.RegComps(
 			builder.NewComponent(
-				utils_types.FilePath(front.CommoditiesBaseInfoUrl(base_info)),
-				front.CommoditiesBaseInfo(base_info.Bases),
+				utils_types.FilePath(front.GoodAtBaseInfoTUrl(base_info)),
+				front.GoodAtBaseInfoT(base_info.Bases, front.ShowPricePerVolume(true)),
+			),
+		)
+	}
+
+	for _, base_info := range data.Guns {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.GunBaseInfoUrl(base_info)),
+				front.GoodAtBaseInfoT(base_info.Bases, front.ShowPricePerVolume(false)),
 			),
 		)
 	}

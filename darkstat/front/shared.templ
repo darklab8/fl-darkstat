@@ -5,6 +5,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"strconv"
+	"fmt"
 )
 
 templ TabContent() {
@@ -119,6 +121,7 @@ templ TabMenu(url utils_types.FilePath) {
 			<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Factions.ToString() } class={ templ.KV("selected", urls.Factions == url) } role="tab" aria-selected="false" aria-controls="tab-content">Factions</button>
 			<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Rephacks.ToString() } class={ templ.KV("selected", urls.Rephacks == url) } role="tab" aria-selected="false" aria-controls="tab-content">Rephacks</button>
 			<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Commodities.ToString() } class={ templ.KV("selected", urls.Commodities == url) } role="tab" aria-selected="false" aria-controls="tab-content">Commodities</button>
+			<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Guns.ToString() } class={ templ.KV("selected", urls.Guns == url) } role="tab" aria-selected="false" aria-controls="tab-content">Guns</button>
 		</div>
 	}
 	<hr/>
@@ -157,4 +160,56 @@ func JoinClickTriggers(first_id string, second_id string) string {
 	});
 	</script>
 	`
+}
+
+templ GoodAtBaseSharedT(show_price_per_volume ShowPricePerVolume) {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:250px;">Base</th>
+				<th style="width:100px;">Faction</th>
+				<th style="width:50px;">System</th>
+				<th style="width:50px;">Price</th>
+				if show_price_per_volume {
+					<th style="width:50px;">Price Per Volume</th>
+				}
+				<th style="width:50px;">Base Sells</th>
+				<th style="width:50px;">Level Req'd</th>
+				<th style="width:50px;">Reputation Req'd</th>
+				<th style="width:50px;">Base Nickname</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+type ShowPricePerVolume bool
+
+templ GoodAtBaseInfoT(base_infos []configs_export.GoodAtBase, show_price_per_volume ShowPricePerVolume) {
+	@GoodAtBaseSharedT(show_price_per_volume) {
+		for _, base_info := range base_infos {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(base_info.BaseNickname)) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+			>
+				<td>{ base_info.BaseName }</td>
+				<td>{ base_info.Faction }</td>
+				<td>{ base_info.SystemName }</td>
+				<td>{ strconv.Itoa(base_info.Price) }</td>
+				if show_price_per_volume {
+					<td>{ strconv.Itoa(base_info.PricePerVolume) }</td>
+				}
+				<td>{ strconv.FormatBool(base_info.BaseSells) }</td>
+				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
+				<td>{ fmt.Sprintf("%.2f", base_info.RepRequired) }</td>
+				<td>{ base_info.BaseNickname }</td>
+				<td></td>
+			</tr>
+		}
+	}
 }

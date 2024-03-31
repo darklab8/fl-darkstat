@@ -1,0 +1,107 @@
+package front
+
+import (
+	"strconv"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"fmt"
+	"strings"
+)
+
+func GunBaseInfoUrl(gun configs_export.Gun) string {
+	return "guns/guns_base_" + strings.ToLower(gun.Nickname)
+}
+
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
+templ GunsT(guns []configs_export.Gun) {
+	@TabMenu(urls.Guns)
+	@TabContent() {
+		<div class="splitter">
+			<div id="table-wrapper">
+				<div id="table-top">
+					<table class="sortable">
+						<thead>
+							<tr>
+								<th style="width:200px;">Gun</th>
+								<th style="width:50px;">Class</th>
+								<th style="width:50px;">Type</th>
+								<th style="width:50px;">Technology</th>
+								<th style="width:50px;">Price</th>
+								<th style="width:50px;">Hull Dmg</th>
+								<th style="width:50px;">Shield Dmg</th>
+								<th style="width:50px;">Power Usage</th>
+								<th style="width:100px;">Refire</th>
+								<th style="width:100px;">Hull Dmg/s</th>
+								<th style="width:100px;">Sheld Dmg/s</th>
+								<th style="width:100px;">Power/s</th>
+								<th style="width:100px;">Efficiency</th>
+								<th style="width:100px;">Value</th>
+								<th style="width:100px;">Rating</th>
+								<th style="width:100px;">Speed</th>
+								<th style="width:100px;">Range</th>
+								<th style="width:100px;">Toughness</th>
+								<th style="width:100px;">Hit Pts</th>
+								<th style="width:100px;">Lootable</th>
+								<th style="width:100px;">Nickname</th>
+								<th style="width:100px;">Name ID</th>
+								<th style="width:100px;">Info ID</th>
+								<th style="max-width:100%;"></th>
+							</tr>
+						</thead>
+						<tbody>
+							for _, gun := range guns {
+								<tr
+									id={ "baseinfo_click" + gun.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + GunBaseInfoUrl(gun) }
+									hx-trigger="click"
+									hx-target="#table-bottom"
+									hx-swap="innerHTML"
+								>
+									<td>{ gun.Name }</td>
+									<td>{ gun.Class }</td>
+									<td>{ gun.Type }</td>
+									<td>{ gun.DamageType }</td>
+									<td>{ strconv.Itoa(gun.Price) } </td>
+									<td>{ strconv.Itoa(gun.HullDamage) }</td>
+									<td>{ strconv.Itoa(gun.ShieldDamage) }</td>
+									<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>
+									<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
+									<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
+									<td>{ fmt.Sprintf("%.2f",gun.ShieldDamagePerSec) }</td>
+									<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
+									<td>{ fmt.Sprintf("%.2f",gun.Efficiency) }</td>
+									<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
+									<td>{ fmt.Sprintf("%.2f",gun.Rating)  }</td>
+									<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
+									<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
+									<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
+									<td>{ gun.HitPts }</td>
+									<td>{ strconv.FormatBool(gun.Lootable) }</td>
+									<td>{ gun.Nickname } </td>
+									<td>{ strconv.Itoa(gun.IdsName) } </td>
+									<td>{ strconv.Itoa(gun.IdsInfo) } </td>
+									<td
+										id={ "infocard_click" + gun.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(gun.Nickname)) }
+										hx-trigger="click"
+										hx-target="#infocard_view"
+										hx-swap="innerHTML"
+									></td>
+									@templ.Raw(JoinClickTriggers("baseinfo_click"+gun.Nickname, "infocard_click"+gun.Nickname))
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				<div id="table-bottom">
+					@GoodAtBaseSharedT(ShowPricePerVolume(true))
+				</div>
+			</div>
+			<div id="infocard_view">
+				@InfocardShared()
+			</div>
+		</div>
+	}
+}
