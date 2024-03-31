@@ -203,7 +203,7 @@ templ GoodAtBaseInfoT(base_infos []configs_export.GoodAtBase, show_price_per_vol
 				<td>{ base_info.SystemName }</td>
 				<td>{ strconv.Itoa(base_info.Price) }</td>
 				if show_price_per_volume {
-					<td>{ strconv.Itoa(base_info.PricePerVolume) }</td>
+					<td>{ fmt.Sprintf("%.2f", base_info.PricePerVolume) }</td>
 				}
 				<td>{ strconv.FormatBool(base_info.BaseSells) }</td>
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>

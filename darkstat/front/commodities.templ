@@ -48,11 +48,11 @@ templ CommoditiesT(commodities []configs_export.Commodity) {
 								>
 									<td>{ commodity.Name }</td>
 									<td>{ strconv.Itoa(commodity.Price) }</td>
-									<td>{ strconv.Itoa(commodity.PricePerVolume) }</td>
+									<td>{ fmt.Sprintf("%.2f", commodity.PricePerVolume) }</td>
 									<td>{ fmt.Sprintf("%.6f", commodity.Volume) }</td>
-									<td>{ strconv.Itoa(commodity.BestBuyPricePerVol) }</td>
-									<td>{ strconv.Itoa(commodity.BestSellPricePerVol) }</td>
-									<td>{ strconv.Itoa(commodity.ProffitMarginPerVol) }</td>
+									<td>{ fmt.Sprintf("%.2f", commodity.BestBuyPricePerVol) }</td>
+									<td>{ fmt.Sprintf("%.2f", commodity.BestSellPricePerVol) }</td>
+									<td>{ fmt.Sprintf("%.2f", commodity.ProffitMarginPerVol) }</td>
 									<td>{ commodity.Nickname }</td>
 									<td>{ strconv.Itoa(commodity.NameID) }</td>
 									<td>{ strconv.Itoa(commodity.InfocardID) }</td>
