@@ -138,6 +138,10 @@ func (l *Linker) Link() *builder.Builder {
 			urls.GunModifiers,
 			front.GunsT(data.Guns, front.GunsShowDamageBonuses),
 		),
+		builder.NewComponent(
+			urls.Missiles,
+			front.GunsT(data.Missiles, front.GunsMissiles),
+		),
 	)
 
 	for _, base := range data.Bases {
@@ -190,6 +194,15 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsShowDamageBonuses)),
 				front.GunShowModifiers(gun),
+			),
+		)
+	}
+
+	for _, missile := range data.Missiles {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.GunDetailedUrl(missile, front.GunsMissiles)),
+				front.GoodAtBaseInfoT(missile.Bases, front.ShowPricePerVolume(false)),
 			),
 		)
 	}

@@ -12,4 +12,5 @@ const (
 	Commodities  utils_types.FilePath = "commodities.html"
 	Guns         utils_types.FilePath = "guns.html"
 	GunModifiers utils_types.FilePath = "gun_modifiers.html"
+	Missiles     utils_types.FilePath = "missiles.html"
 )

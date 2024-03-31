@@ -12,9 +12,12 @@ import (
 func GunDetailedUrl(gun configs_export.Gun, mode GunTabMode) string {
 	if mode == GunsShowBases {
 		return "guns/guns_base_" + strings.ToLower(gun.Nickname)
-	} else {
+	} else if mode == GunsShowDamageBonuses {
 		return "guns/guns_bonuses_" + strings.ToLower(gun.Nickname)
+	} else if mode == GunsMissiles {
+		return "guns/missiles_" + strings.ToLower(gun.Nickname)
 	}
+	panic("unsupported choice in GunDetailedUrl")
 }
 
 type GunTabMode int64
@@ -22,6 +25,7 @@ type GunTabMode int64
 const (
 	GunsShowBases GunTabMode = iota
 	GunsShowDamageBonuses
+	GunsMissiles
 )
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
@@ -29,8 +33,10 @@ const (
 templ GunsT(guns []configs_export.Gun, mode GunTabMode) {
 	if mode == GunsShowBases {
 		@TabMenu(urls.Guns)
-	} else {
+	} else if mode == GunsShowDamageBonuses {
 		@TabMenu(urls.GunModifiers)
+	} else if mode == GunsMissiles {
+		@TabMenu(urls.Missiles)
 	}
 	@TabContent() {
 		<div class="splitter">
@@ -111,8 +117,8 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode) {
 					</table>
 				</div>
 				<div id="table-bottom">
-					if mode == GunsShowBases {
-						@GoodAtBaseSharedT(ShowPricePerVolume(true))
+					if mode == GunsShowBases || mode == GunsMissiles {
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
 					} else {
 						@GunShowModifiersShared()
 					}
