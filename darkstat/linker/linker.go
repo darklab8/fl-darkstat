@@ -133,6 +133,22 @@ func (l *Linker) Link() *builder.Builder {
 		})
 	}
 
+	sort.Slice(data.Thrusters, func(i, j int) bool {
+		if data.Thrusters[i].Name != "" && data.Thrusters[j].Name == "" {
+			return true
+		}
+		return data.Thrusters[i].Name < data.Thrusters[j].Name
+	})
+
+	for _, base_info := range data.Thrusters {
+		sort.Slice(base_info.Bases, func(i, j int) bool {
+			if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
+				return true
+			}
+			return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
+		})
+	}
+
 	build := builder.NewBuilder()
 	build.RegComps(
 		builder.NewComponent(
@@ -174,6 +190,10 @@ func (l *Linker) Link() *builder.Builder {
 		builder.NewComponent(
 			urls.Shields,
 			front.ShieldT(data.Shields),
+		),
+		builder.NewComponent(
+			urls.Thrusters,
+			front.ThrusterT(data.Thrusters),
 		),
 	)
 
@@ -254,6 +274,15 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.ShieldDetailedUrl(shield)),
 				front.GoodAtBaseInfoT(shield.Bases, front.ShowPricePerVolume(false)),
+			),
+		)
+	}
+
+	for _, thruster := range data.Thrusters {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.ThrusterDetailedUrl(thruster)),
+				front.GoodAtBaseInfoT(thruster.Bases, front.ShowPricePerVolume(false)),
 			),
 		)
 	}
