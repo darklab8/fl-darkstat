@@ -145,11 +145,11 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Factions,
-			front.FactionsT(data.Factions),
+			front.FactionsT(data.Factions, front.FactionShowBases),
 		),
 		builder.NewComponent(
 			urls.Rephacks,
-			front.RephacksT(data.Factions),
+			front.FactionsT(data.Factions, front.FactionShowRephacks),
 		),
 		builder.NewComponent(
 			urls.Commodities,
@@ -190,11 +190,11 @@ func (l *Linker) Link() *builder.Builder {
 	for _, faction := range data.Factions {
 		build.RegComps(
 			builder.NewComponent(
-				utils_types.FilePath(front.FactionRepUrl(faction)),
+				utils_types.FilePath(front.FactionRepUrl(faction, front.FactionShowBases)),
 				front.FactionReps(faction.Reputations),
 			),
 			builder.NewComponent(
-				utils_types.FilePath(front.RephacksURL(faction)),
+				utils_types.FilePath(front.FactionRepUrl(faction, front.FactionShowRephacks)),
 				front.RephackBottom(faction.Rephacks),
 			),
 		)

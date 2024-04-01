@@ -9,14 +9,32 @@ import (
 	"strings"
 )
 
-func FactionRepUrl(faction configs_export.Faction) string {
-	return "factions/rep_" + strings.ToLower(faction.Nickname)
+func FactionRepUrl(faction configs_export.Faction, mode FactionTabMode) string {
+
+	if mode == FactionShowBases {
+		return "factions/rep_" + strings.ToLower(faction.Nickname)
+	} else if mode == FactionShowRephacks {
+		return "rephacks/rep_" + strings.ToLower(faction.Nickname)
+	} else {
+		return ""
+	}
 }
+
+type FactionTabMode int64
+
+const (
+	FactionShowBases FactionTabMode = iota
+	FactionShowRephacks
+)
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ FactionsT(factions []configs_export.Faction) {
-	@TabMenu(urls.Factions)
+templ FactionsT(factions []configs_export.Faction, mode FactionTabMode) {
+	if mode == FactionShowBases {
+		@TabMenu(urls.Factions)
+	} else if mode == FactionShowRephacks {
+		@TabMenu(urls.Rephacks)
+	}
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
@@ -27,9 +45,12 @@ templ FactionsT(factions []configs_export.Faction) {
 								<th style="width:200px;">Name</th>
 								<th style="width:200px;">Short Name</th>
 								<th style="width:100px;">Nickname</th>
-								<th style="width:150px;">Object Destruction Rep.Cng.</th>
-								<th style="width:150px;">Mission Success Rep.Cng.</th>
-								<th style="width:150px;">MIssion Failure Rep.Cng.</th>
+								if mode == FactionShowRephacks {
+									<th style="width:50px;">Has Rephacks</th>
+								}
+								<th style="width:150px;">Obj. Destr. Rep.Cng.</th>
+								<th style="width:150px;">Mission Win Rep.Cng.</th>
+								<th style="width:150px;">MIssion Fail Rep.Cng.</th>
 								<th style="width:150px;">Mission Abort Rep.Cng.</th>
 								<th style="width:200px;">InfonameID</th>
 								<th style="width:50px;">InfocardID</th>
@@ -39,8 +60,8 @@ templ FactionsT(factions []configs_export.Faction) {
 						<tbody>
 							for _, faction := range factions {
 								<tr
-									id={ "reputations_click" + faction.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + FactionRepUrl(faction) }
+									id={ "bottom_click" + faction.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + FactionRepUrl(faction, mode) }
 									hx-trigger="click"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
@@ -48,6 +69,9 @@ templ FactionsT(factions []configs_export.Faction) {
 									<td>{ faction.Name }</td>
 									<td>{ faction.ShortName }</td>
 									<td>{ faction.Nickname }</td>
+									if mode == FactionShowRephacks {
+										<td>{ strconv.FormatBool(len(faction.Rephacks) > 0) }</td>
+									}
 									<td>{ fmt.Sprintf("%.2f", faction.ObjectDestruction) }</td>
 									<td>{ fmt.Sprintf("%.2f", faction.MissionSuccess) }</td>
 									<td>{ fmt.Sprintf("%.2f", faction.MissionFailure) }</td>
@@ -61,14 +85,18 @@ templ FactionsT(factions []configs_export.Faction) {
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
 									></td>
-									@templ.Raw(JoinClickTriggers("reputations_click"+faction.Nickname, "infocard_click"+faction.Nickname))
+									@templ.Raw(JoinClickTriggers("bottom_click"+faction.Nickname, "infocard_click"+faction.Nickname))
 								</tr>
 							}
 						</tbody>
 					</table>
 				</div>
 				<div id="table-bottom">
-					@FactionRepsBase()
+					if mode == FactionShowBases {
+						@FactionRepsBase()
+					} else if mode == FactionShowRephacks {
+						@RephacksBottomBase()
+					}
 				</div>
 			</div>
 			<div id="infocard_view">
