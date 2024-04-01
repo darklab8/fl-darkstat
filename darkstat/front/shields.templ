@@ -1,0 +1,93 @@
+package front
+
+import (
+	"strconv"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"fmt"
+	"strings"
+)
+
+func ShieldDetailedUrl(shield configs_export.Shield) string {
+	return "shields/shields_base_" + strings.ToLower(shield.Nickname)
+}
+
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
+templ ShieldT(shields []configs_export.Shield) {
+	@TabMenu(urls.Shields)
+	@TabContent() {
+		<div class="splitter">
+			<div id="table-wrapper">
+				<div id="table-top">
+					<table class="sortable">
+						<thead>
+							<tr>
+								<th style="width:200px;">Shield</th>
+								<th style="width:50px;">Class</th>
+								<th style="width:50px;">Type</th>
+								<th style="width:50px;">Technology</th>
+								<th style="width:50px;">Price</th>
+								<th style="width:50px;">Capacity</th>
+								<th style="width:50px;">Regen Rate</th>
+								<th style="width:50px;">Const Power Draw</th>
+								<th style="width:100px;">Rebuild Power Draw</th>
+								<th style="width:100px;">Off Power Draw</th>
+								<th style="width:50px;">Toughness</th>
+								<th style="width:50px;">Hit Pts</th>
+								<th style="width:50px;">Lootable</th>
+								<th style="width:50px;">Nickname</th>
+								<th style="width:100px;">Name ID</th>
+								<th style="width:100px;">Info ID</th>
+								<th style="max-width:100%;"></th>
+							</tr>
+						</thead>
+						<tbody>
+							for _, shield := range shields {
+								<tr
+									id={ "bottominfo_click" + shield.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + ShieldDetailedUrl(shield) }
+									hx-trigger="click"
+									hx-target="#table-bottom"
+									hx-swap="innerHTML"
+								>
+									<td>{ shield.Name }</td>
+									<td>{ shield.Class }</td>
+									<td>{ shield.Type }</td>
+									<td>{ shield.Technology }</td>
+									<td>{ strconv.Itoa(shield.Price) } </td>
+									<td>{ strconv.Itoa(shield.Capacity) } </td>
+									<td>{ strconv.Itoa(shield.RegenerationRate) }</td>
+									<td>{ strconv.Itoa(shield.ConstantPowerDraw) }</td>
+									<td>{ strconv.Itoa(shield.RebuildPowerDraw) }</td>
+									<td>{ strconv.Itoa(shield.OffRebuildTime) }</td>
+									<td>{ fmt.Sprintf("%.2f",shield.Toughness) }</td>
+									<td>{ strconv.Itoa(shield.HitPts) }</td>
+									<td>{ strconv.FormatBool(shield.Lootable) }</td>
+									<td>{ shield.Nickname } </td>
+									<td>{ strconv.Itoa(shield.IdsName) } </td>
+									<td>{ strconv.Itoa(shield.IdsInfo) } </td>
+									<td
+										id={ "infocard_click" + shield.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(shield.Nickname)) }
+										hx-trigger="click"
+										hx-target="#infocard_view"
+										hx-swap="innerHTML"
+									></td>
+									@templ.Raw(JoinClickTriggers("bottominfo_click"+shield.Nickname, "infocard_click"+shield.Nickname))
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				<div id="table-bottom">
+					@GoodAtBaseSharedT(ShowPricePerVolume(false))
+				</div>
+			</div>
+			<div id="infocard_view">
+				@InfocardShared()
+			</div>
+		</div>
+	}
+}

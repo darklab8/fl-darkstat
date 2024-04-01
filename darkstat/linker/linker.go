@@ -117,6 +117,22 @@ func (l *Linker) Link() *builder.Builder {
 		})
 	}
 
+	sort.Slice(data.Shields, func(i, j int) bool {
+		if data.Shields[i].Name != "" && data.Shields[j].Name == "" {
+			return true
+		}
+		return data.Shields[i].Name < data.Shields[j].Name
+	})
+
+	for _, base_info := range data.Shields {
+		sort.Slice(base_info.Bases, func(i, j int) bool {
+			if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
+				return true
+			}
+			return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
+		})
+	}
+
 	build := builder.NewBuilder()
 	build.RegComps(
 		builder.NewComponent(
@@ -154,6 +170,10 @@ func (l *Linker) Link() *builder.Builder {
 		builder.NewComponent(
 			urls.Mines,
 			front.MinesT(data.Mines),
+		),
+		builder.NewComponent(
+			urls.Shields,
+			front.ShieldT(data.Shields),
 		),
 	)
 
@@ -225,6 +245,15 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.MineDetailedUrl(mine)),
 				front.GoodAtBaseInfoT(mine.Bases, front.ShowPricePerVolume(false)),
+			),
+		)
+	}
+
+	for _, shield := range data.Shields {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.ShieldDetailedUrl(shield)),
+				front.GoodAtBaseInfoT(shield.Bases, front.ShowPricePerVolume(false)),
 			),
 		)
 	}
