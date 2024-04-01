@@ -29,6 +29,7 @@ templ ShieldT(shields []configs_export.Shield) {
 								<th style="width:50px;">Type</th>
 								<th style="width:50px;">Technology</th>
 								<th style="width:50px;">Price</th>
+								<th style="width:50px;">Buyable</th>
 								<th style="width:50px;">Capacity</th>
 								<th style="width:50px;">Regen Rate</th>
 								<th style="width:50px;">Const Power Draw</th>
@@ -57,6 +58,7 @@ templ ShieldT(shields []configs_export.Shield) {
 									<td>{ shield.Type }</td>
 									<td>{ shield.Technology }</td>
 									<td>{ strconv.Itoa(shield.Price) } </td>
+									<td>{ strconv.FormatBool(len(shield.Bases) > 0) }</td>
 									<td>{ strconv.Itoa(shield.Capacity) } </td>
 									<td>{ strconv.Itoa(shield.RegenerationRate) }</td>
 									<td>{ strconv.Itoa(shield.ConstantPowerDraw) }</td>

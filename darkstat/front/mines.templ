@@ -26,6 +26,7 @@ templ MinesT(mines []configs_export.Mine) {
 							<tr>
 								<th style="width:200px;">Mine</th>
 								<th style="width:50px;">Price</th>
+								<th style="width:50px;">Buyable</th>
 								<th style="width:50px;">Ammo Price</th>
 								<th style="width:50px;">Hull Dmg</th>
 								<th style="width:50px;">Shield Dmg</th>
@@ -59,6 +60,7 @@ templ MinesT(mines []configs_export.Mine) {
 								>
 									<td>{ mine.Name }</td>
 									<td>{ strconv.Itoa(mine.Price) } </td>
+									<td>{ strconv.FormatBool(len(mine.Bases) > 0) }</td>
 									<td>{ strconv.Itoa(mine.AmmoPrice) } </td>
 									<td>{ strconv.Itoa(mine.HullDamage) }</td>
 									<td>{ strconv.Itoa(mine.ShieldDamage) }</td>
