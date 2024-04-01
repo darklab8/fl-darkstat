@@ -50,6 +50,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode) {
 								<th style="width:50px;">Type</th>
 								<th style="width:50px;">Technology</th>
 								<th style="width:50px;">Price</th>
+								<th style="width:50px;">Buyable</th>
 								<th style="width:50px;">Hull Dmg</th>
 								<th style="width:50px;">Shield Dmg</th>
 								<th style="width:50px;">Power Usage</th>
@@ -85,6 +86,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode) {
 									<td>{ gun.Type }</td>
 									<td>{ gun.DamageType }</td>
 									<td>{ strconv.Itoa(gun.Price) } </td>
+									<td>{ strconv.FormatBool(len(gun.Bases) > 0) }</td>
 									<td>{ strconv.Itoa(gun.HullDamage) }</td>
 									<td>{ strconv.Itoa(gun.ShieldDamage) }</td>
 									<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>

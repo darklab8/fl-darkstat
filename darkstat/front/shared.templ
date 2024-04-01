@@ -14,7 +14,11 @@ templ TabContent() {
 		{ children... }
 	</div>
 	<style>
-	th, td {
+		body {
+			background-color: #EFEFEF;
+			font-weight: 500;
+		}
+		th, td {
 			padding-left: 5px;
 			padding-bottom: 2px;
 			padding-top: 2px;
@@ -30,7 +34,7 @@ templ TabContent() {
 
 			cursor: pointer;
 			&:hover {
-				background-color: #DDD;
+				background-color: #CCC;
 			}
 		}
 		td {
@@ -40,7 +44,7 @@ templ TabContent() {
 			& tr {
 				cursor: pointer;
 				&:hover {
-					background-color: #EEE;
+					background-color: #CCC;
 				}
 			}
 		}
