@@ -16,4 +16,5 @@ const (
 	Mines        utils_types.FilePath = "mines.html"
 	Shields      utils_types.FilePath = "shields.html"
 	Thrusters    utils_types.FilePath = "thrusters.html"
+	Ships        utils_types.FilePath = "ships.html"
 )
