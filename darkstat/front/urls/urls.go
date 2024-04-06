@@ -19,4 +19,5 @@ const (
 	Ships        utils_types.FilePath = "ships.html"
 	ShipDetails  utils_types.FilePath = "ship_details.html"
 	Tractors     utils_types.FilePath = "tractors.html"
+	Engines      utils_types.FilePath = "engines.html"
 )
