@@ -165,6 +165,22 @@ func (l *Linker) Link() *builder.Builder {
 		})
 	}
 
+	sort.Slice(data.Tractors, func(i, j int) bool {
+		if data.Tractors[i].Name != "" && data.Tractors[j].Name == "" {
+			return true
+		}
+		return data.Tractors[i].Name < data.Tractors[j].Name
+	})
+
+	for _, base_info := range data.Tractors {
+		sort.Slice(base_info.Bases, func(i, j int) bool {
+			if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
+				return true
+			}
+			return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
+		})
+	}
+
 	build := builder.NewBuilder()
 	build.RegComps(
 		builder.NewComponent(
@@ -218,6 +234,10 @@ func (l *Linker) Link() *builder.Builder {
 		builder.NewComponent(
 			urls.ShipDetails,
 			front.ShipsT(data.Ships, front.ShipShowDetails),
+		),
+		builder.NewComponent(
+			urls.Tractors,
+			front.TractorsT(data.Tractors),
 		),
 	)
 
@@ -320,6 +340,15 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowDetails)),
 				front.ShipDetails(ship),
+			),
+		)
+	}
+
+	for _, tractor := range data.Tractors {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.TractorDetailedUrl(tractor)),
+				front.GoodAtBaseInfoT(tractor.Bases, front.ShowPricePerVolume(false)),
 			),
 		)
 	}

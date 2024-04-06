@@ -1,0 +1,78 @@
+package front
+
+import (
+	"strconv"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"strings"
+)
+
+func TractorDetailedUrl(tractor configs_export.Tractor) string {
+	return "tractor/tractor_base_" + strings.ToLower(tractor.Nickname)
+}
+
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
+templ TractorsT(tractors []configs_export.Tractor) {
+	@TabMenu(urls.Tractors)
+	@TabContent() {
+		<div class="splitter">
+			<div id="table-wrapper">
+				<div id="table-top">
+					<table class="sortable">
+						<thead>
+							<tr>
+								<th style="width:200px;">Tractor</th>
+								<th style="width:50px;">Price</th>
+								<th style="width:50px;">Buyable</th>
+								<th style="width:50px;">Max Length</th>
+								<th style="width:50px;">Reach Speed</th>
+								<th style="width:50px;">Lootable</th>
+								<th style="width:50px;">Nickname</th>
+								<th style="width:100px;">Name ID</th>
+								<th style="width:100px;">Info ID</th>
+								<th style="max-width:100%;"></th>
+							</tr>
+						</thead>
+						<tbody>
+							for _, tractor := range tractors {
+								<tr
+									id={ "bottominfo_click" + tractor.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + TractorDetailedUrl(tractor) }
+									hx-trigger="click"
+									hx-target="#table-bottom"
+									hx-swap="innerHTML"
+								>
+									<td>{ tractor.Name }</td>
+									<td>{ strconv.Itoa(tractor.Price) } </td>
+									<td>{ strconv.FormatBool(len(tractor.Bases) > 0) }</td>
+									<td>{ strconv.Itoa(tractor.MaxLength) } </td>
+									<td>{ strconv.Itoa(tractor.ReachSpeed) }</td>
+									<td>{ strconv.FormatBool(tractor.Lootable) }</td>
+									<td>{ tractor.Nickname } </td>
+									<td>{ strconv.Itoa(tractor.NameID) } </td>
+									<td>{ strconv.Itoa(tractor.InfoID) } </td>
+									<td
+										id={ "infocard_click" + tractor.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(tractor.Nickname)) }
+										hx-trigger="click"
+										hx-target="#infocard_view"
+										hx-swap="innerHTML"
+									></td>
+									@templ.Raw(JoinClickTriggers("bottominfo_click"+tractor.Nickname, "infocard_click"+tractor.Nickname))
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				<div id="table-bottom">
+					@GoodAtBaseSharedT(ShowPricePerVolume(false))
+				</div>
+			</div>
+			<div id="infocard_view">
+				@InfocardShared()
+			</div>
+		</div>
+	}
+}
