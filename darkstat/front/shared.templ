@@ -139,6 +139,7 @@ templ TabMenu(url utils_types.FilePath) {
 			<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Shields.ToString() } class={ templ.KV("selected", urls.Shields == url) } role="tab" aria-selected="false" aria-controls="tab-content">Shields</button>
 			<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Thrusters.ToString() } class={ templ.KV("selected", urls.Thrusters == url) } role="tab" aria-selected="false" aria-controls="tab-content">Thrusters</button>
 			<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Ships.ToString() } class={ templ.KV("selected", urls.Ships == url) } role="tab" aria-selected="false" aria-controls="tab-content">Ships</button>
+			<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.ShipDetails.ToString() } class={ templ.KV("selected", urls.ShipDetails == url) } role="tab" aria-selected="false" aria-controls="tab-content">Ship Details</button>
 		</div>
 	}
 	<hr/>

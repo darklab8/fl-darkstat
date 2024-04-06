@@ -9,14 +9,30 @@ import (
 	"strings"
 )
 
-func ShipDetailedUrl(ship configs_export.Ship) string {
-	return "ships/ships_base_" + strings.ToLower(ship.Nickname)
+func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
+	if mode == ShipShowBases {
+		return "ships/ships_base_" + strings.ToLower(ship.Nickname)
+	} else if mode == ShipShowDetails {
+		return "ships/ships_details_" + strings.ToLower(ship.Nickname)
+	}
+	panic("unsupported ship mode")
 }
+
+type ShipTabMode int64
+
+const (
+	ShipShowBases ShipTabMode = iota
+	ShipShowDetails
+)
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShipsT(ships []configs_export.Ship) {
-	@TabMenu(urls.Ships)
+templ ShipsT(ships []configs_export.Ship, mode ShipTabMode) {
+	if mode == ShipShowBases {
+		@TabMenu(urls.Ships)
+	} else if mode == ShipShowDetails {
+		@TabMenu(urls.ShipDetails)
+	}
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
@@ -54,7 +70,7 @@ templ ShipsT(ships []configs_export.Ship) {
 							for _, ship := range ships {
 								<tr
 									id={ "bottominfo_click" + ship.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship) }
+									hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
 									hx-trigger="click"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
@@ -96,12 +112,50 @@ templ ShipsT(ships []configs_export.Ship) {
 					</table>
 				</div>
 				<div id="table-bottom">
-					@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					if mode == ShipShowBases {
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					} else if mode == ShipShowDetails {
+						@ShipDetailsShared([]string{})
+					}
 				</div>
 			</div>
 			<div id="infocard_view">
 				@InfocardShared()
 			</div>
 		</div>
+	}
+}
+
+templ ShipDetailsShared(columns []string) {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:50px;">Ship Hardpoint</th>
+				for index, _ := range columns {
+					<th style="width:50px;">Equip { strconv.Itoa(index) }</th>
+				}
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ ShipDetails(ship configs_export.Ship) {
+	@ShipDetailsShared(ship.BiggestHardpoint) {
+		for _, slot := range ship.Slots {
+			<tr>
+				<td>{ slot.SlotName }</td>
+				for _, equip := range slot.AllowedEquip {
+					<td>{ equip }</td>
+				}
+				for _, _ = range ship.BiggestHardpoint[len(slot.AllowedEquip):] {
+					<td></td>
+				}
+				<td></td>
+			</tr>
+		}
 	}
 }

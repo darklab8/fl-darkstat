@@ -213,7 +213,11 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Ships,
-			front.ShipsT(data.Ships),
+			front.ShipsT(data.Ships, front.ShipShowBases),
+		),
+		builder.NewComponent(
+			urls.ShipDetails,
+			front.ShipsT(data.Ships, front.ShipShowDetails),
 		),
 	)
 
@@ -310,8 +314,12 @@ func (l *Linker) Link() *builder.Builder {
 	for _, ship := range data.Ships {
 		build.RegComps(
 			builder.NewComponent(
-				utils_types.FilePath(front.ShipDetailedUrl(ship)),
+				utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowBases)),
 				front.GoodAtBaseInfoT(ship.Bases, front.ShowPricePerVolume(false)),
+			),
+			builder.NewComponent(
+				utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowDetails)),
+				front.ShipDetails(ship),
 			),
 		)
 	}
