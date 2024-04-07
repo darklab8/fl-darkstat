@@ -7,7 +7,6 @@ into stuff rendered by fl-darkstat
 
 import (
 	"sort"
-	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
@@ -201,37 +200,8 @@ func (l *Linker) Link() *builder.Builder {
 
 	build := builder.NewBuilder()
 
-	var useful_bases []configs_export.Base = make([]configs_export.Base, 0, len(data.Bases))
-	for _, item := range data.Bases {
-		if item.Name == "" {
-			continue
-		}
-		useful_bases = append(useful_bases, item)
-	}
+	useful_factions := configs_export.FilterToUsefulFactions(data.Factions)
 
-	var useful_factions []configs_export.Faction = make([]configs_export.Faction, 0, len(data.Factions))
-	for _, item := range data.Factions {
-		if front.Empty(item.Name) || strings.Contains(item.Name, "_grp") {
-			continue
-		}
-		useful_factions = append(useful_factions, item)
-	}
-
-	var buyable_tractors []configs_export.Tractor = make([]configs_export.Tractor, 0, len(data.Tractors))
-	for _, item := range data.Tractors {
-		if !front.Buyable(item.Bases) {
-			continue
-		}
-		buyable_tractors = append(buyable_tractors, item)
-	}
-
-	var buyable_engines []configs_export.Engine = make([]configs_export.Engine, 0, len(data.Engines))
-	for _, engine := range data.Engines {
-		if !front.Buyable(engine.Bases) {
-			continue
-		}
-		buyable_engines = append(buyable_engines, engine)
-	}
 	build.RegComps(
 		builder.NewComponent(
 			urls.Index,
@@ -239,7 +209,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Bases,
-			front.BasesT(useful_bases, front.ShowEmpty(false)),
+			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Bases),
@@ -335,7 +305,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Tractors,
-			front.TractorsT(buyable_tractors, front.ShowEmpty(false)),
+			front.TractorsT(configs_export.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Tractors),
@@ -343,7 +313,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Engines,
-			front.Engines(buyable_engines, front.ShowEmpty(false)),
+			front.Engines(configs_export.FilterToUsefulEngines(data.Engines), front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Engines),

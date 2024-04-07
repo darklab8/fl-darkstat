@@ -79,7 +79,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 									<td>{ strconv.Itoa(ship.Class) }</td>
 									<td>{ ship.Type }</td>
 									<td>{ strconv.Itoa(ship.Price) }</td>
-									<td>{ strconv.FormatBool(Buyable(ship.Bases)) }</td>
+									<td>{ strconv.FormatBool(configs_export.Buyable(ship.Bases)) }</td>
 									<td>{ strconv.Itoa(ship.Armor) } </td>
 									<td>{ strconv.Itoa(ship.HoldSize) } </td>
 									<td>{ strconv.Itoa(ship.Nanobots) }</td>

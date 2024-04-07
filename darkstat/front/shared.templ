@@ -281,25 +281,6 @@ templ GoodAtBaseInfoT(base_infos []configs_export.GoodAtBase, show_price_per_vol
 	}
 }
 
-func Buyable(Bases []configs_export.GoodAtBase) bool {
-	for _, base := range Bases {
-		if !strings.Contains(base.SystemName, "Bastille") {
-			return true
-		}
-	}
-
-	return false
-}
-
-func Empty(phrase string) bool {
-	for _, letter := range phrase {
-		if letter != ' ' {
-			return false
-		}
-	}
-	return true
-}
-
 func AllItemsUrl(url utils_types.FilePath) utils_types.FilePath {
 	return "all_" + url
 }
