@@ -39,6 +39,7 @@ templ ShieldT(shields []configs_export.Shield) {
 								<th style="width:50px;">Hit Pts</th>
 								<th style="width:50px;">Lootable</th>
 								<th style="width:50px;">Nickname</th>
+								<th style="width:50px;">HpType</th>
 								<th style="width:100px;">Name ID</th>
 								<th style="width:100px;">Info ID</th>
 								<th style="max-width:100%;"></th>
@@ -68,6 +69,7 @@ templ ShieldT(shields []configs_export.Shield) {
 									<td>{ strconv.Itoa(shield.HitPts) }</td>
 									<td>{ strconv.FormatBool(shield.Lootable) }</td>
 									<td>{ shield.Nickname } </td>
+									<td>{ shield.HpType } </td>
 									<td>{ strconv.Itoa(shield.IdsName) } </td>
 									<td>{ strconv.Itoa(shield.IdsInfo) } </td>
 									<td

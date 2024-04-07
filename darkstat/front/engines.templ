@@ -37,6 +37,7 @@ templ Engines(engines []configs_export.Engine) {
 								<th style="width:50px;">Max Force</th>
 								<th style="width:100px;">Referse Fraction</th>
 								<th style="width:50px;">Nickname</th>
+								<th style="width:50px;">HpType</th>
 								<th style="width:100px;">Name ID</th>
 								<th style="width:100px;">Info ID</th>
 								<th style="max-width:100%;"></th>
@@ -64,6 +65,7 @@ templ Engines(engines []configs_export.Engine) {
 									<td>{ strconv.Itoa(engine.MaxForce) }</td>
 									<td>{ fmt.Sprintf("%.2f", engine.ReverseFraction) }</td>
 									<td>{ engine.Nickname } </td>
+									<td>{ engine.HpType } </td>
 									<td>{ strconv.Itoa(engine.NameID) } </td>
 									<td>{ strconv.Itoa(engine.InfoID) } </td>
 									<td
