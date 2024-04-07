@@ -53,7 +53,7 @@ templ Engines(engines []configs_export.Engine) {
 								>
 									<td>{ engine.Name }</td>
 									<td>{ strconv.Itoa(engine.Price) } </td>
-									<td>{ strconv.FormatBool(len(engine.Bases) > 0) }</td>
+									<td>{ strconv.FormatBool(Buyable(engine.Bases)) }</td>
 									<td>{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
 									<td>{ strconv.Itoa(engine.CruiseSpeed) }</td>
 									<td>{ engine.HpType }</td>

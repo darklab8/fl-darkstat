@@ -51,7 +51,7 @@ templ ThrusterT(thrusters []configs_export.Thruster) {
 								>
 									<td>{ thruster.Name }</td>
 									<td>{ strconv.Itoa(thruster.Price) } </td>
-									<td>{ strconv.FormatBool(len(thruster.Bases) > 0) }</td>
+									<td>{ strconv.FormatBool(Buyable(thruster.Bases)) }</td>
 									<td>{ strconv.Itoa(thruster.MaxForce) } </td>
 									<td>{ strconv.Itoa(thruster.PowerUsage) }</td>
 									<td>{ fmt.Sprintf("%.2f",thruster.Efficiency) }</td>

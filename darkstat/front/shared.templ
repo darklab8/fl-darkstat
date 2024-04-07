@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"strconv"
 	"fmt"
+	"strings"
 )
 
 templ TabContent() {
@@ -246,4 +247,14 @@ templ GoodAtBaseInfoT(base_infos []configs_export.GoodAtBase, show_price_per_vol
 			</tr>
 		}
 	}
+}
+
+func Buyable(Bases []configs_export.GoodAtBase) bool {
+	for _, base := range Bases {
+		if !strings.Contains(base.SystemName, "Bastille") {
+			return true
+		}
+	}
+
+	return false
 }

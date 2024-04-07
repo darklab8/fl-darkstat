@@ -46,7 +46,7 @@ templ TractorsT(tractors []configs_export.Tractor) {
 								>
 									<td>{ tractor.Name }</td>
 									<td>{ strconv.Itoa(tractor.Price) } </td>
-									<td>{ strconv.FormatBool(len(tractor.Bases) > 0) }</td>
+									<td>{ strconv.FormatBool(Buyable(tractor.Bases)) }</td>
 									<td>{ strconv.Itoa(tractor.MaxLength) } </td>
 									<td>{ strconv.Itoa(tractor.ReachSpeed) }</td>
 									<td>{ strconv.FormatBool(tractor.Lootable) }</td>
