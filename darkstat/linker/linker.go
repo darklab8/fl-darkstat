@@ -201,6 +201,8 @@ func (l *Linker) Link() *builder.Builder {
 	build := builder.NewBuilder()
 
 	useful_factions := configs_export.FilterToUsefulFactions(data.Factions)
+	useful_ships := configs_export.FilterToUsefulShips(data.Ships)
+	useful_guns := configs_export.FilterToUsefulGun(data.Guns)
 
 	build.RegComps(
 		builder.NewComponent(
@@ -233,7 +235,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Commodities,
-			front.CommoditiesT(data.Commodities, front.ShowEmpty(false)),
+			front.CommoditiesT(configs_export.FilterToUsefulCommodities(data.Commodities), front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Commodities),
@@ -241,7 +243,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Guns,
-			front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(false)),
+			front.GunsT(useful_guns, front.GunsShowBases, front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Guns),
@@ -249,7 +251,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.GunModifiers,
-			front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(false)),
+			front.GunsT(useful_guns, front.GunsShowDamageBonuses, front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.GunModifiers),
@@ -257,7 +259,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Missiles,
-			front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(false)),
+			front.GunsT(configs_export.FilterToUsefulGun(data.Missiles), front.GunsMissiles, front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Missiles),
@@ -265,7 +267,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Mines,
-			front.MinesT(data.Mines, front.ShowEmpty(false)),
+			front.MinesT(configs_export.FilterToUsefulMines(data.Mines), front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Mines),
@@ -273,7 +275,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Shields,
-			front.ShieldT(data.Shields, front.ShowEmpty(false)),
+			front.ShieldT(configs_export.FilterToUsefulShields(data.Shields), front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Shields),
@@ -281,7 +283,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Thrusters,
-			front.ThrusterT(data.Thrusters, front.ShowEmpty(false)),
+			front.ThrusterT(configs_export.FilterToUsefulThrusters(data.Thrusters), front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Thrusters),
@@ -289,7 +291,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Ships,
-			front.ShipsT(data.Ships, front.ShipShowBases, front.ShowEmpty(false)),
+			front.ShipsT(useful_ships, front.ShipShowBases, front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Ships),
@@ -297,7 +299,7 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.ShipDetails,
-			front.ShipsT(data.Ships, front.ShipShowDetails, front.ShowEmpty(false)),
+			front.ShipsT(useful_ships, front.ShipShowDetails, front.ShowEmpty(false)),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.ShipDetails),
