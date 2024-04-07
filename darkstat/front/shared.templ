@@ -18,6 +18,7 @@ templ TabContent() {
 		body {
 			background-color: #EFEFEF;
 			font-weight: 500;
+			width: calc(100% - 10px);
 		}
 		th, td {
 			padding-left: 5px;
@@ -58,7 +59,7 @@ templ TabContent() {
 				
 				& #table-top {
 					overflow: scroll;
-					height: calc(65vh - 50px) !important;
+					height: calc(65vh - 65px) !important;
 					border-style: solid;
     				border-width: 2px;
 					border-color: #D7D7D7;
@@ -74,7 +75,7 @@ templ TabContent() {
 			& #infocard_view {
 				width: 25%;
 				overflow-y: scroll;
-				height: calc(100vh - 50px) !important;
+				height: calc(100vh - 65px) !important;
 				border-style: solid;
 				border-width: 2px;
 				border-color: #D7D7D7;
