@@ -27,9 +27,14 @@ templ TabContent() {
 			padding-right: 5px;
 		}
 
-		table, tr,th, td, thead {
+		th, td {
 			border-width: 1px;
 			border-style: solid;
+			border-color: #D7D7D7;
+		}
+		table {
+			border-collapse: separate; 
+			position: relative;
 		}
 		th {
 			border-color: #8B8B8B;
@@ -38,6 +43,11 @@ templ TabContent() {
 			&:hover {
 				background-color: #CCC;
 			}
+
+			background: #EFEFEF;
+			position: sticky;
+  			top: 0; /* Don't forget this, required for the stickiness */
+			
 		}
 		td {
 			border-color: #D7D7D7;
