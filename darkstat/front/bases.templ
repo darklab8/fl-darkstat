@@ -2,11 +2,11 @@ package front
 
 import (
 	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
 	"strings"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 )
 
 func InfocardURL(infocard_key configs_export.InfocardKey) string {
@@ -19,8 +19,8 @@ func BaseMarketGoodUrl(base configs_export.Base) string {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []configs_export.Base) {
-	@TabMenu(urls.Bases)
+templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
+	@TabMenu(urls.Bases, mode)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">

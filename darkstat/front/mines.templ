@@ -15,8 +15,8 @@ func MineDetailedUrl(mine configs_export.Mine) string {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ MinesT(mines []configs_export.Mine) {
-	@TabMenu(urls.Mines)
+templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty) {
+	@TabMenu(urls.Mines, mode2)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">

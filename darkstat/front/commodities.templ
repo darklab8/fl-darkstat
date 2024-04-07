@@ -15,8 +15,8 @@ func GoodAtBaseInfoTUrl(commodity configs_export.Commodity) string {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CommoditiesT(commodities []configs_export.Commodity) {
-	@TabMenu(urls.Commodities)
+templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
+	@TabMenu(urls.Commodities, mode)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">

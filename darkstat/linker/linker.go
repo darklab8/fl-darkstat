@@ -15,6 +15,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
+	"github.com/darklab8/go-utils/goutils/utils/time_measure"
 	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
@@ -42,16 +43,16 @@ func NewLinker(opts ...LinkOption) *Linker {
 }
 
 func (l *Linker) Link() *builder.Builder {
-	data := l.configs.Export()
+	var data *configs_export.Exporter
+	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+		data = l.configs.Export()
+	}, time_measure.WithMsg("exporting data"))
 
-	sort.Slice(data.Bases, func(i, j int) bool {
-		if data.Bases[i].Name != "" && data.Bases[j].Name == "" {
-			return true
-		}
-		return data.Bases[i].Name < data.Bases[j].Name
+	sort.Slice(data.Bases.Bases, func(i, j int) bool {
+		return data.Bases.Bases[i].Name < data.Bases.Bases[j].Name
 	})
 
-	for _, base := range data.Bases {
+	for _, base := range data.Bases.Bases {
 		sort.Slice(base.MarketGoods, func(i, j int) bool {
 			if base.MarketGoods[i].Name != "" && base.MarketGoods[j].Name == "" {
 				return true
@@ -198,6 +199,7 @@ func (l *Linker) Link() *builder.Builder {
 	}
 
 	build := builder.NewBuilder()
+
 	build.RegComps(
 		builder.NewComponent(
 			urls.Index,
@@ -205,64 +207,119 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Bases,
-			front.BasesT(data.Bases),
+			front.BasesT(data.Bases.Bases, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Bases),
+			front.BasesT(data.Bases.AllBases, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Factions,
-			front.FactionsT(data.Factions, front.FactionShowBases),
+			front.FactionsT(data.Factions, front.FactionShowBases, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Factions),
+			front.FactionsT(data.Factions, front.FactionShowBases, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Rephacks,
-			front.FactionsT(data.Factions, front.FactionShowRephacks),
+			front.FactionsT(data.Factions, front.FactionShowRephacks, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Rephacks),
+			front.FactionsT(data.Factions, front.FactionShowRephacks, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Commodities,
-			front.CommoditiesT(data.Commodities),
+			front.CommoditiesT(data.Commodities, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Commodities),
+			front.CommoditiesT(data.Commodities, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Guns,
-			front.GunsT(data.Guns, front.GunsShowBases),
+			front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Guns),
+			front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.GunModifiers,
-			front.GunsT(data.Guns, front.GunsShowDamageBonuses),
+			front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.GunModifiers),
+			front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Missiles,
-			front.GunsT(data.Missiles, front.GunsMissiles),
+			front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Missiles),
+			front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Mines,
-			front.MinesT(data.Mines),
+			front.MinesT(data.Mines, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Mines),
+			front.MinesT(data.Mines, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Shields,
-			front.ShieldT(data.Shields),
+			front.ShieldT(data.Shields, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Shields),
+			front.ShieldT(data.Shields, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Thrusters,
-			front.ThrusterT(data.Thrusters),
+			front.ThrusterT(data.Thrusters, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Thrusters),
+			front.ThrusterT(data.Thrusters, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Ships,
-			front.ShipsT(data.Ships, front.ShipShowBases),
+			front.ShipsT(data.Ships, front.ShipShowBases, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Ships),
+			front.ShipsT(data.Ships, front.ShipShowBases, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.ShipDetails,
-			front.ShipsT(data.Ships, front.ShipShowDetails),
+			front.ShipsT(data.Ships, front.ShipShowDetails, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.ShipDetails),
+			front.ShipsT(data.Ships, front.ShipShowDetails, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Tractors,
-			front.TractorsT(data.Tractors),
+			front.TractorsT(data.Tractors, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Tractors),
+			front.TractorsT(data.Tractors, front.ShowEmpty(true)),
 		),
 		builder.NewComponent(
 			urls.Engines,
-			front.Engines(data.Engines),
+			front.Engines(data.Engines, front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Engines),
+			front.Engines(data.Engines, front.ShowEmpty(true)),
 		),
 	)
 
-	for _, base := range data.Bases {
-		// fmt.Println("market_goods, len=", len(base.MarketGoods), " nickname=", base.Nickname, base.Name)
+	for _, base := range data.Bases.AllBases {
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseMarketGoodUrl(base)),

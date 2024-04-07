@@ -14,8 +14,8 @@ func TractorDetailedUrl(tractor configs_export.Tractor) string {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ TractorsT(tractors []configs_export.Tractor) {
-	@TabMenu(urls.Tractors)
+templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
+	@TabMenu(urls.Tractors, mode2)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">

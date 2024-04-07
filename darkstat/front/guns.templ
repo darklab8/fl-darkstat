@@ -30,13 +30,13 @@ const (
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(guns []configs_export.Gun, mode GunTabMode) {
+templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
 	if mode == GunsShowBases {
-		@TabMenu(urls.Guns)
+		@TabMenu(urls.Guns, mode2)
 	} else if mode == GunsShowDamageBonuses {
-		@TabMenu(urls.GunModifiers)
+		@TabMenu(urls.GunModifiers, mode2)
 	} else if mode == GunsMissiles {
-		@TabMenu(urls.Missiles)
+		@TabMenu(urls.Missiles, mode2)
 	}
 	@TabContent() {
 		<div class="splitter">

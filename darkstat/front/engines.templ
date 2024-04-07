@@ -15,8 +15,8 @@ func EngineDetailedUrl(engine configs_export.Engine) string {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ Engines(engines []configs_export.Engine) {
-	@TabMenu(urls.Engines)
+templ Engines(engines []configs_export.Engine, mode ShowEmpty) {
+	@TabMenu(urls.Engines, mode)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">

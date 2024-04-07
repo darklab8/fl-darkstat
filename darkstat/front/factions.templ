@@ -29,11 +29,11 @@ const (
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ FactionsT(factions []configs_export.Faction, mode FactionTabMode) {
+templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ShowEmpty) {
 	if mode == FactionShowBases {
-		@TabMenu(urls.Factions)
+		@TabMenu(urls.Factions, mode2)
 	} else if mode == FactionShowRephacks {
-		@TabMenu(urls.Rephacks)
+		@TabMenu(urls.Rephacks, mode2)
 	}
 	@TabContent() {
 		<div class="splitter">

@@ -15,8 +15,8 @@ func ShieldDetailedUrl(shield configs_export.Shield) string {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShieldT(shields []configs_export.Shield) {
-	@TabMenu(urls.Shields)
+templ ShieldT(shields []configs_export.Shield,mode2 ShowEmpty) {
+	@TabMenu(urls.Shields, mode2)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
