@@ -58,6 +58,8 @@ github.com/darklab8/go-utils v0.12.0 h1:LxsG3yVNf9W4xyV+tHPOaZB2ewItgM/1BzOXyKFv
 github.com/darklab8/go-utils v0.12.0/go.mod h1:zApy0zIFiGCw496OIot7dl8i2cAsQMyPyf3PCMMpS3g=
 github.com/darklab8/go-utils v0.13.0 h1:XZVKNmq64pnpv8H8+gkqOxW81DRU79t4p+H3FW5T6P4=
 github.com/darklab8/go-utils v0.13.0/go.mod h1:zApy0zIFiGCw496OIot7dl8i2cAsQMyPyf3PCMMpS3g=
+github.com/darklab8/go-utils v0.13.1 h1:QvtAi6moVjoPIqZqVb4RZxdE4IbFIqi/0O3v7MACfg0=
+github.com/darklab8/go-utils v0.13.1/go.mod h1:zApy0zIFiGCw496OIot7dl8i2cAsQMyPyf3PCMMpS3g=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
