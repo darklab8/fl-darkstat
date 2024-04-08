@@ -2,7 +2,7 @@
 
 # Description
 
-online version of the [flstat](https://discoverygc.com/forums/showthread.php?tid=115254) to navigate game data of the game Freelancer. You can see data about Bases, Guns, Ships and multiple other stuff.
+online version of the [flstat](https://discoverygc.com/forums/showthread.php?tid=115254) to navigate game data of [the game Freelancer](https://youtu.be/RHlH_qOH5zc). You can see data about Bases, Guns, Ships and multiple other stuff.
 
 See demos:
 - [development version](https://darklab8.github.io/fl-darkstat/)
@@ -10,7 +10,9 @@ See demos:
 
 # Support
 
-It was made in mind with supporting [Freelancer Discovery](https://discoverygc.com/) as first order. Support will be extended to Vanilla. Any other mode will be supported on request, see contacts.
+- It was made in mind with supporting [Freelancer Discovery](https://discoverygc.com/) as first order.
+- Support will be extended to Vanilla version.
+- Any other mode will be supported on request, see contacts to get in touch.
 
 # Development setup
 
