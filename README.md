@@ -28,6 +28,7 @@ It was made in mind with supporting [Freelancer Discovery](https://discoverygc.c
 - Long term maintance support for dozen of years. Minimum dependencies software with Golang and Htmx.
     - for this purpose everything is [go mod vendored in](https://go.dev/ref/mod#go-mod-vendor)
 - full GitOps. On commit push to redeploy it automatically
+    - See example in [fl-data-discovery repo](https://github.com/darklab8/fl-data-discovery). It contains .github/workflows + game data
 - scans Freelancer folder and builds to static assets (html/css/js) deployable to Github pages or any other static assets serving place.
 - Usable locally in Linux
   - (Windows support for local usage is coming soon)
