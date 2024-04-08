@@ -44,13 +44,14 @@ tasks:
 
   build:test:
     cmds:
+      - task: build-version
       - mkdir -p dist
       - rm dist/darkstat-linux-amd64 | true
       - GOOS=linux GOARCH=amd64 go build -v -o dist/darkstat-linux-amd64 main.go
 
   build-version:
     cmds:
-      - autogit semver --publish > settings/version.txt || echo 'not installed autogit' > settings/version.txt
+      - autogit semver --publish > darkstat/settings/version.txt || echo 'v0.0.0' > darkstat/settings/version.txt
 
   build:
     cmds:
