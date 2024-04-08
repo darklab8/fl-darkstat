@@ -39,6 +39,6 @@ It was made in mind with supporting [Freelancer Discovery](https://discoverygc.c
 
 # Contacts
 
-discord DM: darkwind8
-discord server lab: https://discord.gg/aukHmTK82J
-or open [Pull Request here](https://github.com/darklab8/fl-darkstat/issues) and write info there
+- discord DM: darkwind8
+- discord server lab: https://discord.gg/aukHmTK82J
+- or open [Pull Request here](https://github.com/darklab8/fl-darkstat/issues) and write there
