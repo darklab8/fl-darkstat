@@ -25,6 +25,7 @@ It was made in mind with supporting [Freelancer Discovery](https://discoverygc.c
 # Features
 
 - Long term maintance support for dozen of years. Minimum dependencies software with Golang and Htmx.
+    - for this purpose everything is [go mod vendored in](https://go.dev/ref/mod#go-mod-vendor)
 - full GitOps. On commit push to redeploy it automatically
 - scans Freelancer folder and builds to static assets (html/css/js) deployable to Github pages or any other static assets serving place.
 - Usable locally in Linux
