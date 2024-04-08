@@ -3,7 +3,7 @@
 # 
 changelog:
   REPOSITORY_OWNER: darklab8
-  REPOSITORY_NAME: darklab_fldarkstat
+  REPOSITORY_NAME: fl-darkstat
 #   # templating lines used to form changelog. Replace REPOSITORY_OWNER and REPOSITORY_NAME with your own values
 #   commitUrl: "https://github.com/{{.REPOSITORY_OWNER}}/{{.REPOSITORY_NAME}}/commit/{{.CommitHash}}"
 #   commitRangeUrl: "https://github.com/{{.REPOSITORY_OWNER}}/{{.REPOSITORY_NAME}}/compare/{{.From}}...{{.To}}?diff=split"
@@ -114,5 +114,5 @@ changelog:
 # 
 # # expects to find file `id_rsa` in ~/.ssh for `autogit semver --push` command
 # # where ~ your home folder discovered with env var HOME
-# git:
-#   sshPath: id_rsa
+git:
+  sshPath: id_rsa.dd84ai

@@ -3,6 +3,7 @@ version: '3'
 tasks:
   test:
     cmds:
+      - task: build-version
       - go test ./... -coverprofile=cover.out {{.CLI_ARGS}}
     vars:
       PWD:
@@ -10,29 +11,35 @@ tasks:
 
   test:cover:
     cmds:
+      - task: build-version
       - go tool cover -html=cover.out
 
   test:cover:total:
     cmds:
+      - task: build-version
       - task: test
       - go tool cover -func cover.out
 
   build:
     cmds:
+      - task: build-version
       - templ generate
       - go run . --act=build
 
   web:
     cmds:
+      - task: build-version
       - templ generate
       - go run . --act=web
 
   dev:templ:
     cmds:
+      - task: build-version
       - templ generate -watch --cmd="go run . --act=web"
 
   dev:watch:
     cmds:
+      - task: build-version
       # pip install watchdog[watchmedo]
       - > 
         ~/venv/bin/watchmedo auto-restart 
@@ -61,16 +68,16 @@ tasks:
 
       - GOOS=linux GOARCH=amd64 go build -v -o dist/darkstat-linux-amd64 main.go
       - GOOS=linux GOARCH=arm64 go build -v -o dist/darkstat-linux-arm64 main.go
-      - GOOS=linux GOARCH=386 go build -v -o dist/darkstat-linux-386 main.go
-      - GOOS=linux GOARCH=arm go build -v -o dist/darkstat-linux-arm main.go
-
       - GOOS=windows GOARCH=amd64 go build -v -o dist/darkstat-windows-amd64.exe main.go
-      - GOOS=windows GOARCH=386 go build -v -o dist/darkstat-windows-386.exe main.go
       - GOOS=windows GOARCH=arm64 go build -v -o dist/darkstat-windows-arm64.exe main.go
-      - GOOS=windows GOARCH=arm go build -v -o dist/darkstat-windows-arm.exe main.go
-      
-      - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkstat-macos-amd64 main.go
-      - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkstat-macos-arm64 main.go
+
+      # We can build for those too, but i don't think they are needed
+      # - GOOS=linux GOARCH=386 go build -v -o dist/darkstat-linux-386 main.go
+      # - GOOS=linux GOARCH=arm go build -v -o dist/darkstat-linux-arm main.go
+      # - GOOS=windows GOARCH=386 go build -v -o dist/darkstat-windows-386.exe main.go
+      # - GOOS=windows GOARCH=arm go build -v -o dist/darkstat-windows-arm.exe main.go      
+      # - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkstat-macos-amd64 main.go
+      # - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkstat-macos-arm64 main.go
 
   hook:prod:
     cmds:
