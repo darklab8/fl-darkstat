@@ -60,7 +60,7 @@ tasks:
     cmds:
       - autogit semver --publish > darkstat/settings/version.txt || echo 'v0.0.0' > darkstat/settings/version.txt
 
-  build:
+  build:bins:
     cmds:
       - task: build-version
       - mkdir -p dist
