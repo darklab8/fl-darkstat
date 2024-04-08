@@ -29,11 +29,7 @@ func main() {
 	flag.Parse()
 	fmt.Println("act:", action)
 
-	switch Action(action) {
-
-	case Build:
-		linker.NewLinker().Link().BuildAll().RenderToLocal()
-	case Web:
+	web := func() {
 		var fs *builder.Filesystem
 		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 			var linked_build *builder.Builder
@@ -47,4 +43,13 @@ func main() {
 		web.NewWeb(fs).Serve()
 	}
 
+	switch Action(action) {
+
+	case Build:
+		linker.NewLinker().Link().BuildAll().RenderToLocal()
+	case Web:
+		web()
+	default:
+		web()
+	}
 }

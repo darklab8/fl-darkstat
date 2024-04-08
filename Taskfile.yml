@@ -40,3 +40,38 @@ tasks:
         -i "*_templ.go"
         --recursive
         -- sh -c "task web; sleep infinity"
+
+
+  build:test:
+    cmds:
+      - mkdir -p dist
+      - rm dist/darkstat-linux-amd64 | true
+      - GOOS=linux GOARCH=amd64 go build -v -o dist/darkstat-linux-amd64 main.go
+
+  build-version:
+    cmds:
+      - autogit semver --publish > settings/version.txt || echo 'not installed autogit' > settings/version.txt
+
+  build:
+    cmds:
+      - task: build-version
+      - mkdir -p dist
+      - rm dist/* | true
+
+      - GOOS=linux GOARCH=amd64 go build -v -o dist/darkstat-linux-amd64 main.go
+      - GOOS=linux GOARCH=arm64 go build -v -o dist/darkstat-linux-arm64 main.go
+      - GOOS=linux GOARCH=386 go build -v -o dist/darkstat-linux-386 main.go
+      - GOOS=linux GOARCH=arm go build -v -o dist/darkstat-linux-arm main.go
+
+      - GOOS=windows GOARCH=amd64 go build -v -o dist/darkstat-windows-amd64.exe main.go
+      - GOOS=windows GOARCH=386 go build -v -o dist/darkstat-windows-386.exe main.go
+      - GOOS=windows GOARCH=arm64 go build -v -o dist/darkstat-windows-arm64.exe main.go
+      - GOOS=windows GOARCH=arm go build -v -o dist/darkstat-windows-arm.exe main.go
+      
+      - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkstat-macos-amd64 main.go
+      - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkstat-macos-arm64 main.go
+
+  hook:prod:
+    cmds:
+      - sudo rm /usr/local/bin/darkstat | true
+      - sudo ln -s {{.PWD}}/dist/darkstat-linux-amd64 /usr/local/bin/darkstat

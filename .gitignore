@@ -6,3 +6,4 @@ web/static/export/*
 build/
 id_rsa*
 cover.out
+dist/*
