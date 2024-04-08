@@ -1,17 +1,13 @@
 package builder
 
 import (
-	"io/fs"
 	"os"
-	"path/filepath"
-	"strings"
 
+	"github.com/darklab8/fl-darkstat/darkstat/common/static_common"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
-	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/go-utils/goutils/utils/time_measure"
 	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
-	"github.com/darklab8/go-utils/goutils/utils/utils_os"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
@@ -49,34 +45,11 @@ func (b *Builder) build(params types.GlobalParams, filesystem *Filesystem) {
 	}, time_measure.WithMsg("wrote components"))
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
-		folders := utils_os.GetRecursiveDirs(settings.ProjectFolder)
-		for _, folder := range folders {
-			if utils_filepath.Base(folder) == "static" {
-
-				filepath.WalkDir(folder.ToString(), func(path string, d fs.DirEntry, err error) error {
-					if logus.Log.CheckError(err, "err is encountered during filepath.Walkdir") {
-						return nil
-					}
-					if d.IsDir() {
-						return nil
-					}
-
-					target_folder := utils_filepath.Join(utils_types.FilePath(params.Buildpath.ToString()), "static").ToString()
-
-					data, err := os.ReadFile(path)
-					if logus.Log.CheckError(err, "failed to read file at path in WalkDir") {
-						return nil
-					}
-
-					new_path := strings.Replace(path, folder.ToString(), target_folder, 1)
-
-					filesystem.WriteToMem(utils_types.FilePath(new_path), data)
-					return nil
-				})
-			}
-		}
+		target_folder := utils_filepath.Join(utils_types.FilePath(params.Buildpath.ToString()), "static")
+		filesystem.WriteToMem(utils_filepath.Join(target_folder, "html.min.js"), []byte(static_front.HtmxMinJs))
+		filesystem.WriteToMem(utils_filepath.Join(target_folder, "sortable.js"), []byte(static_front.SortableJs))
+		filesystem.WriteToMem(utils_filepath.Join(target_folder, "common", "favicon.ico"), []byte(static_common.FaviconIco))
 	}, time_measure.WithMsg("gathered static assets"))
-
 }
 
 func (b *Builder) BuildAll() *Filesystem {
