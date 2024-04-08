@@ -61,3 +61,5 @@ P.S. currently only Linux is supported for local usage.
 - discord DM: darkwind8
 - discord server lab: https://discord.gg/aukHmTK82J
 - or open [Pull Request here](https://github.com/darklab8/fl-darkstat/issues) and write there
+
+See anouncements at [Discovery Freelancer forum thread](<https://discoverygc.com/forums/showthread.php?tid=187294>)
