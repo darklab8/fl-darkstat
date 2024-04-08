@@ -3,7 +3,7 @@ go.work*
 *.wasm
 web/static/export/*
 *_templ*
-build/
+/build/
 id_rsa*
 cover.out
 dist/*

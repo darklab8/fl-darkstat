@@ -1,0 +1,29 @@
+name: Build darkstat static assets
+description: ""
+inputs:
+  freelancer-folder:
+      description: Path to root of freelancer directory
+      default: ${{ github.workspace }}
+      type: string
+  site-root:
+      description: Site root prefix to static assets
+      type: string
+      default: "/"
+  heading:
+      description: Heading at the site rigit.
+      type: string
+      default: "fl-darkstat powered by <a href=\"https://github.com/darklab8/fl-darkstat\">Github</a>" 
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Darkstat
+      run: |
+        curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/releases\/tag/releases\/download/")/darkstat-linux-amd64 -o /usr/local/bin/darkstat && chmod 777 /usr/local/bin/darkstat
+
+    - name: build
+      run: darkstat --act=build
+      env:
+        SITE_ROOT: ${{ inputs.site-root }}
+        FLDARKSTAT_FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
+        FLDARKSTAT_HEADING: ${{ inputs.heading }}
