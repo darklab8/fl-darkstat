@@ -321,6 +321,14 @@ func (l *Linker) Link() *builder.Builder {
 			front.AllItemsUrl(urls.Engines),
 			front.Engines(data.Engines, front.ShowEmpty(true)),
 		),
+		builder.NewComponent(
+			urls.CounterMeasures,
+			front.CounterMeasureT(configs_export.FilterToUsefulCounterMeasures(data.CMs), front.ShowEmpty(false)),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.CounterMeasures),
+			front.CounterMeasureT(data.CMs, front.ShowEmpty(true)),
+		),
 	)
 
 	for _, base := range data.Bases {

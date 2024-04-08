@@ -171,6 +171,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.ShipDetails.ToString() } class={ templ.KV("selected", urls.ShipDetails == url) } role="tab" aria-selected="false" aria-controls="tab-content">Ship Details</button>
 				<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Tractors.ToString() } class={ templ.KV("selected", urls.Tractors == url) } role="tab" aria-selected="false" aria-controls="tab-content">Tractors</button>
 				<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.Engines.ToString() } class={ templ.KV("selected", urls.Engines == url) } role="tab" aria-selected="false" aria-controls="tab-content">Engines</button>
+				<button hx-get={ types.GetCtx(ctx).SiteRoot + urls.CounterMeasures.ToString() } class={ templ.KV("selected", urls.CounterMeasures == url) } role="tab" aria-selected="false" aria-controls="tab-content">CMs</button>
 				<button style="width:150px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Show All</button>
 			} else {
 				<button hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(urls.Bases).ToString() } class={ templ.KV("selected", urls.Bases == url) } role="tab" aria-selected="false" aria-controls="tab-content">Bases</button>
@@ -187,6 +188,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				<button hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(urls.ShipDetails).ToString() } class={ templ.KV("selected", urls.ShipDetails == url) } role="tab" aria-selected="false" aria-controls="tab-content">Ship Details</button>
 				<button hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(urls.Tractors).ToString() } class={ templ.KV("selected", urls.Tractors == url) } role="tab" aria-selected="false" aria-controls="tab-content">Tractors</button>
 				<button hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(urls.Engines).ToString() } class={ templ.KV("selected", urls.Engines == url) } role="tab" aria-selected="false" aria-controls="tab-content">Engines</button>
+				<button hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(urls.CounterMeasures).ToString() } class={ templ.KV("selected", urls.CounterMeasures == url) } role="tab" aria-selected="false" aria-controls="tab-content">CMs</button>
 				<button style="width:150px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Don't Show All</button>
 			}
 		</div>

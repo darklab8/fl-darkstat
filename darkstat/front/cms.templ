@@ -1,0 +1,86 @@
+package front
+
+import (
+	"strconv"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"strings"
+)
+
+func CounterMeasreDetailedUrl(cm configs_export.CounterMeasure) string {
+	return "cm/cm_base_" + strings.ToLower(cm.Nickname)
+}
+
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
+templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty) {
+	@TabMenu(urls.CounterMeasures, mode2)
+	@TabContent() {
+		<div class="splitter">
+			<div id="table-wrapper">
+				<div id="table-top">
+					<table class="sortable">
+						<thead>
+							<tr>
+								<th style="width:200px;">CM</th>
+								<th style="width:50px;">Price</th>
+								<th style="width:50px;">Buyable</th>
+								<th style="width:50px;">Diversion Chance</th>
+								<th style="width:100px;">Ammo Limit</th>
+								<th style="width:100px;">Lifetime</th>
+								<th style="width:50px;">Range</th>
+								<th style="width:50px;">AI Range</th>
+								<th style="width:50px;">Hit Pts</th>
+								<th style="width:50px;">Lootable</th>
+								<th style="width:50px;">Nickname</th>
+								<th style="width:100px;">Name ID</th>
+								<th style="width:100px;">Info ID</th>
+								<th style="max-width:100%;"></th>
+							</tr>
+						</thead>
+						<tbody>
+							for _, cm := range cms {
+								<tr
+									id={ "bottominfo_click" + cm.Nickname }
+									hx-get={ types.GetCtx(ctx).SiteRoot + CounterMeasreDetailedUrl(cm) }
+									hx-trigger="click"
+									hx-target="#table-bottom"
+									hx-swap="innerHTML"
+								>
+									<td>{ cm.Name }</td>
+									<td>{ strconv.Itoa(cm.Price) } </td>
+									<td>{ strconv.FormatBool(configs_export.Buyable(cm.Bases)) }</td>
+									<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
+									<td>{ strconv.Itoa(cm.AmmoLimit) }</td>
+									<td>{ strconv.Itoa(cm.Lifetime) }</td>
+									<td>{ strconv.Itoa(cm.Range) }</td>
+									<td>{ strconv.Itoa(cm.AIRange) }</td>
+									<td>{ strconv.Itoa(cm.HitPts) }</td>
+									<td>{ strconv.FormatBool(cm.Lootable) }</td>
+									<td>{ cm.Nickname } </td>
+									<td>{ strconv.Itoa(cm.NameID) } </td>
+									<td>{ strconv.Itoa(cm.InfoID) } </td>
+									<td
+										id={ "infocard_click" + cm.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(cm.Nickname)) }
+										hx-trigger="click"
+										hx-target="#infocard_view"
+										hx-swap="innerHTML"
+									></td>
+									@templ.Raw(JoinClickTriggers("bottominfo_click"+cm.Nickname, "infocard_click"+cm.Nickname))
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				<div id="table-bottom">
+					@GoodAtBaseSharedT(ShowPricePerVolume(false))
+				</div>
+			</div>
+			<div id="infocard_view">
+				@InfocardShared()
+			</div>
+		</div>
+	}
+}
