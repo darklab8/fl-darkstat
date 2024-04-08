@@ -16,7 +16,8 @@ It was made in mind with supporting [Freelancer Discovery](https://discoverygc.c
     - go workspaces allow developing libraries code with real time update of usage to another repository
 - install [templ](https://templ.guide/quick-start/installation)
     - go install github.com/a-h/templ/cmd/templ@latest
-    - P.S. can we use vendored version of current repository for install? To check later.
+    - check specific version in [go.mod](./go.mod)
+    - In case of emergency we could use vendored in version perhaps
 - check [environment variables to set](.vscode/settings.json)
     - set your own environment variable to Freelancer Folder
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
