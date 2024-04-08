@@ -34,8 +34,16 @@ It was made in mind with supporting [Freelancer Discovery](https://discoverygc.c
 - full GitOps. On commit push to redeploy it automatically
     - See example in [fl-data-discovery repo](https://github.com/darklab8/fl-data-discovery). It contains .github/workflows + game data
 - scans Freelancer folder and builds to static assets (html/css/js) deployable to Github pages or any other static assets serving place.
-- Usable locally in Linux
-  - (Windows support for local usage is coming soon)
+- Usable locally
+
+# Usage locally
+
+- download latest in [releases](https://github.com/darklab8/fl-darkstat/releases) appropriate for your OS and CPU architecture.
+- put file into root of Freelancer folder and start
+- visit http://localhost:8000/ as printed in console to see web site locally
+
+P.S. currently only Linux is supported for local usage.
+- (Windows support for local usage is coming soon)
 
 # Contacts
 
