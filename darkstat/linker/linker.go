@@ -451,5 +451,14 @@ func (l *Linker) Link() *builder.Builder {
 		)
 	}
 
+	for _, cm := range data.CMs {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.CounterMeasreDetailedUrl(cm)),
+				front.GoodAtBaseInfoT(cm.Bases, front.ShowPricePerVolume(false)),
+			),
+		)
+	}
+
 	return build
 }
