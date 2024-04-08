@@ -38,6 +38,15 @@ See demos:
 - scans Freelancer folder and builds to static assets (html/css/js) deployable to Github pages or any other static assets serving place.
 - Usable locally
 
+# What makes different from regular flstat
+
+- Obviously online
+- i also added at last Commodities view with prices per volume ^_^ better reflecting situation for Freelancer Discovery.
+- It is interesting to see in Ship details exact Hp Types of equipment you can install onto ship. Other tabs like Guns, Shields, Engines show those Hp Type, so u could find equipment exactly supported for your Light Fighter, Heavy Fighter, Gunboat, Cruser or whatever (u can sort by column to find all such equipment)
+- Tractors tab has info regarding Discovery IDs and where to buy them ^_^
+- other extra tabs like Engines, CMs added
+- Tabs for different equipment could be showing more full list of equipment in "Show all" mode.
+
 # Usage locally
 
 - download latest in [releases](https://github.com/darklab8/fl-darkstat/releases) appropriate for your OS and CPU architecture.
