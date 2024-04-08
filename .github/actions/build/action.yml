@@ -18,10 +18,12 @@ runs:
   using: "composite"
   steps:
     - name: Install Darkstat
+      shell: bash
       run: |
         curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/releases\/tag/releases\/download/")/darkstat-linux-amd64 -o /usr/local/bin/darkstat && chmod 777 /usr/local/bin/darkstat
 
     - name: build
+      shell: bash
       run: darkstat --act=build
       env:
         SITE_ROOT: ${{ inputs.site-root }}
