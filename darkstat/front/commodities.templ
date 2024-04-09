@@ -42,7 +42,7 @@ templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
 								<tr
 									id={ "baseinfo_click" + commodity.Nickname }
 									hx-get={ types.GetCtx(ctx).SiteRoot + GoodAtBaseInfoTUrl(commodity) }
-									hx-trigger="click"
+									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
 								>

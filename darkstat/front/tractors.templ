@@ -40,7 +40,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 								<tr
 									id={ "bottominfo_click" + tractor.Nickname }
 									hx-get={ types.GetCtx(ctx).SiteRoot + TractorDetailedUrl(tractor) }
-									hx-trigger="click"
+									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
 								>

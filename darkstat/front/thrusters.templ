@@ -45,7 +45,7 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty) {
 								<tr
 									id={ "bottominfo_click" + thruster.Nickname }
 									hx-get={ types.GetCtx(ctx).SiteRoot + ThrusterDetailedUrl(thruster) }
-									hx-trigger="click"
+									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
 								>

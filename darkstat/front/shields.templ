@@ -50,7 +50,7 @@ templ ShieldT(shields []configs_export.Shield,mode2 ShowEmpty) {
 								<tr
 									id={ "bottominfo_click" + shield.Nickname }
 									hx-get={ types.GetCtx(ctx).SiteRoot + ShieldDetailedUrl(shield) }
-									hx-trigger="click"
+									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
 								>

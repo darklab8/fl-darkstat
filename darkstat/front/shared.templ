@@ -224,7 +224,7 @@ templ Infocard(info *configs_export.Infocard) {
 func JoinClickTriggers(first_id string, second_id string) string {
 	return `
 	<script>
-	document.getElementById('` + first_id + `').addEventListener('click', () => {
+	document.getElementById('` + first_id + `').addEventListener('mousedown', () => {
 		document.getElementById('` + second_id + `').click();
 	});
 	</script>

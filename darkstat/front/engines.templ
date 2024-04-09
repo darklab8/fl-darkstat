@@ -48,7 +48,7 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty) {
 								<tr
 									id={ "bottominfo_click" + engine.Nickname }
 									hx-get={ types.GetCtx(ctx).SiteRoot + EngineDetailedUrl(engine) }
-									hx-trigger="click"
+									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
 								>

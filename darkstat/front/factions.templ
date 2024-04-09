@@ -62,7 +62,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 								<tr
 									id={ "bottom_click" + faction.Nickname }
 									hx-get={ types.GetCtx(ctx).SiteRoot + FactionRepUrl(faction, mode) }
-									hx-trigger="click"
+									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
 								>

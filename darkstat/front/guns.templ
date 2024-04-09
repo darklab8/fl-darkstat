@@ -78,7 +78,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
 								<tr
 									id={ "guninfo_click" + gun.Nickname }
 									hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
-									hx-trigger="click"
+									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
 								>

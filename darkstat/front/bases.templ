@@ -43,7 +43,7 @@ templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
 								<tr
 									id={ "marketgoods_click" + base.Nickname }
 									hx-get={ types.GetCtx(ctx).SiteRoot + BaseMarketGoodUrl(base) }
-									hx-trigger="click"
+									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
 								>
