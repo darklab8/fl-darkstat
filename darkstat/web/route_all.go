@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html"
 	"net/http"
+	"strings"
 
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -34,6 +35,8 @@ func (w *Web) NewEndpointStatic() *registry.Endpoint {
 				if requested == "" {
 					requested = "index.html"
 				}
+
+				requested = strings.ReplaceAll(requested, "/", PATH_SEPARATOR)
 				logus.Log.Info("having get request",
 					typelog.String("requested_path", requested),
 					typelog.Int("files_count", len(w.filesystem.Files)),
