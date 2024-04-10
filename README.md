@@ -60,12 +60,13 @@ P.S. currently only Linux is supported for local usage.
 
 # Acknowledments
 
-- The tool was strongly inspired by [flstat](https://discoverygc.com/forums/showthread.php?tid=115254)
-  - Including checking some things from [its patch](http://adoxa.altervista.org/freelancer/tools.html) by Adoxa
-- [Bribing probabilities](https://the-starport.com/forums/topic/5372/bribe-probabilities/6?topic_id=5565) were inspired by Adoxa conversation at Starport in 2014
-- Formulas for angular stuff were found in [flint](https://github.com/biqqles/flint/blob/master/flint/entities/ship.py#L82)
+- The tool was strongly inspired by [flstat](https://discoverygc.com/forums/showthread.php?tid=115254) originally written by Dan Tascau
+  - regretfully original code was not found
+  - Including checking some things from [patch written in Assembly to it](http://adoxa.altervista.org/freelancer/tools.html) by Adoxa
 - In general a lot of stuff was checked from [Starport wiki](https://the-starport.com/wiki/)
+  - [Bribing probabilities](https://the-starport.com/forums/topic/5372/bribe-probabilities/6?topic_id=5565) were inspired by Adoxa conversation at Starport in 2014
   - Like [market stuff](https://the-starport.com/wiki/ini-editing/typed-inis/markets/)
+- Formulas for angular stuff were found in [flint](https://github.com/biqqles/flint/blob/master/flint/entities/ship.py#L82)
 - [Discord Community in starport](https://discord.gg/freelancer-galactic-community-638984923591737355) also answered multiple questions
   - as well as Freelancer Discovery dev community
 - Also thanks to The Alex (From Freelancer Discovery) for getting me [Python script for reading dlls](https://github.com/darklab8/fl-configs/blob/master/docs/inspiration/dll_reading/alex_py/main.py)
