@@ -74,6 +74,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ ship.Name }</td>
 									<td>{ strconv.Itoa(ship.Class) }</td>
@@ -104,6 +105,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("bottominfo_click"+ship.Nickname, "infocard_click"+ship.Nickname))
 								</tr>

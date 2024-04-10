@@ -46,6 +46,7 @@ templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ base.Name }</td>
 									<td>{ base.FactionName }</td>
@@ -60,6 +61,7 @@ templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("marketgoods_click"+base.Nickname, "infocard_click"+base.Nickname))
 								</tr>
@@ -108,6 +110,7 @@ templ BaseMarketGoods(goods []configs_export.MarketGood) {
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
+				preload="mouseover"
 			>
 				<td>{ good.Name }</td>
 				<td>{ string(good.Type) }</td>

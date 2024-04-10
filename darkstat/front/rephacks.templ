@@ -32,6 +32,7 @@ templ RephackBottom(rephacks []configs_export.Rephack) {
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
+				preload="mouseover"
 			>
 				<td>{ rep.BaseName }</td>
 				<td>{ rep.BaseOwner }</td>

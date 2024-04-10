@@ -51,6 +51,7 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty) {
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ engine.Name }</td>
 									<td>{ strconv.Itoa(engine.Price) } </td>
@@ -74,6 +75,7 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty) {
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("bottominfo_click"+engine.Nickname, "infocard_click"+engine.Nickname))
 								</tr>

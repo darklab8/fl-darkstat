@@ -48,6 +48,7 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty) {
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ thruster.Name }</td>
 									<td>{ strconv.Itoa(thruster.Price) } </td>
@@ -68,6 +69,7 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty) {
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("bottominfo_click"+thruster.Nickname, "infocard_click"+thruster.Nickname))
 								</tr>

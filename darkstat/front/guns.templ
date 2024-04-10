@@ -81,6 +81,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ gun.Name }</td>
 									<td>{ gun.Class }</td>
@@ -113,6 +114,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("guninfo_click"+gun.Nickname, "infocard_click"+gun.Nickname))
 								</tr>

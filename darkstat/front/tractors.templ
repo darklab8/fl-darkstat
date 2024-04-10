@@ -43,6 +43,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ tractor.Name }</td>
 									<td>{ strconv.Itoa(tractor.Price) } </td>
@@ -59,6 +60,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("bottominfo_click"+tractor.Nickname, "infocard_click"+tractor.Nickname))
 								</tr>

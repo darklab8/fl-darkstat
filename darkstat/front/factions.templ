@@ -65,6 +65,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ faction.Name }</td>
 									<td>{ faction.ShortName }</td>
@@ -84,6 +85,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("bottom_click"+faction.Nickname, "infocard_click"+faction.Nickname))
 								</tr>
@@ -131,6 +133,7 @@ templ FactionReps(reps []configs_export.Reputation) {
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
+				preload="mouseover"
 			>
 				<td>{ rep.Name }</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Rep) }</td>

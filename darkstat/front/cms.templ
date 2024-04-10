@@ -47,6 +47,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty) {
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ cm.Name }</td>
 									<td>{ strconv.Itoa(cm.Price) } </td>
@@ -67,6 +68,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty) {
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("bottominfo_click"+cm.Nickname, "infocard_click"+cm.Nickname))
 								</tr>

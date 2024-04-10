@@ -53,6 +53,7 @@ templ ShieldT(shields []configs_export.Shield,mode2 ShowEmpty) {
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ shield.Name }</td>
 									<td>{ shield.Class }</td>
@@ -78,6 +79,7 @@ templ ShieldT(shields []configs_export.Shield,mode2 ShowEmpty) {
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("bottominfo_click"+shield.Nickname, "infocard_click"+shield.Nickname))
 								</tr>

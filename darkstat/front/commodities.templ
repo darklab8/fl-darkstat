@@ -45,6 +45,7 @@ templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
 									hx-trigger="mousedown"
 									hx-target="#table-bottom"
 									hx-swap="innerHTML"
+									preload="mouseover"
 								>
 									<td>{ commodity.Name }</td>
 									<td>{ strconv.Itoa(commodity.Price) }</td>
@@ -62,6 +63,7 @@ templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
 										hx-trigger="click"
 										hx-target="#infocard_view"
 										hx-swap="innerHTML"
+										preload="mouseover"
 									></td>
 									@templ.Raw(JoinClickTriggers("baseinfo_click"+commodity.Nickname, "infocard_click"+commodity.Nickname))
 								</tr>
