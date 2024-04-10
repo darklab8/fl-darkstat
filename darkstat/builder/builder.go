@@ -46,7 +46,8 @@ func (b *Builder) build(params types.GlobalParams, filesystem *Filesystem) {
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 		target_folder := utils_filepath.Join(utils_types.FilePath(params.Buildpath.ToString()), "static")
-		filesystem.WriteToMem(utils_filepath.Join(target_folder, "html.min.js"), []byte(static_front.HtmxMinJs))
+		filesystem.WriteToMem(utils_filepath.Join(target_folder, "htmx.js"), []byte(static_front.HtmxMinJs))
+		filesystem.WriteToMem(utils_filepath.Join(target_folder, "preload.js"), []byte(static_front.PreloadJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "sortable.js"), []byte(static_front.SortableJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "common", "favicon.ico"), []byte(static_common.FaviconIco))
 	}, time_measure.WithMsg("gathered static assets"))

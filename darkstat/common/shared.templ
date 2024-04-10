@@ -35,8 +35,8 @@ templ Html5() {
 			@common_static.CommonCSS()
 			@common_static.CustomCSS()
 			<script src={ types.GetCtx(ctx).StaticRoot + "sortable.js" }></script>
-			<script src={ types.GetCtx(ctx).StaticRoot + "html.min.js" }></script>
-			<script src="https://unpkg.com/htmx.org@1.9.11/dist/ext/preload.js"></script>
+			<script src={ types.GetCtx(ctx).StaticRoot + "htmx.js" }></script>
+			<script src={ types.GetCtx(ctx).StaticRoot + "preload.js" }></script>
 		</head>
 		<body hx-ext="preload">
 			{ children... }

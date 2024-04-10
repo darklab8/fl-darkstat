@@ -4,8 +4,11 @@ import (
 	_ "embed"
 )
 
-//go:embed html.min.js
+//go:embed htmx.1.9.11.min.js
 var HtmxMinJs string
+
+//go:embed htmx.1.9.11.preload.js
+var PreloadJs string
 
 //go:embed sortable.js
 var SortableJs string
