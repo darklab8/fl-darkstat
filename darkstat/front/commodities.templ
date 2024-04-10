@@ -28,9 +28,12 @@ templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
 								<th style="width:50px;">Price</th>
 								<th style="width:50px;">Price Per Volume</th>
 								<th style="width:50px;">Volume</th>
-								<th style="width:50px;">Best Buy Price / V</th>
-								<th style="width:50px;">Best Sell Price / V</th>
-								<th style="width:50px;">Profit Margin / V</th>
+								<th style="width:50px;">Best Buy / V</th>
+								<th style="width:50px;">Best Sell / V</th>
+								<th style="width:50px;">Profit / V</th>
+								<th style="width:50px;">Best Buy</th>
+								<th style="width:50px;">Best Sell</th>
+								<th style="width:50px;">Profit</th>
 								<th style="width:100px;">Nickname</th>
 								<th style="width:100px;">Name ID</th>
 								<th style="width:100px;">Infocard ID</th>
@@ -54,6 +57,9 @@ templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
 									<td>{ fmt.Sprintf("%.2f", commodity.BestBuyPricePerVol) }</td>
 									<td>{ fmt.Sprintf("%.2f", commodity.BestSellPricePerVol) }</td>
 									<td>{ fmt.Sprintf("%.2f", commodity.ProffitMarginPerVol) }</td>
+									<td>{ fmt.Sprintf("%.2f", commodity.BestBuyPricePerVol * commodity.Volume) }</td>
+									<td>{ fmt.Sprintf("%.2f", commodity.BestSellPricePerVol * commodity.Volume) }</td>
+									<td>{ fmt.Sprintf("%.2f", commodity.ProffitMarginPerVol * commodity.Volume) }</td>
 									<td>{ commodity.Nickname }</td>
 									<td>{ strconv.Itoa(commodity.NameID) }</td>
 									<td>{ strconv.Itoa(commodity.InfocardID) }</td>
