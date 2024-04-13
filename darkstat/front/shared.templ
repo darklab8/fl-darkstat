@@ -67,32 +67,39 @@ templ TabContent() {
 		.splitter {
 			display: flex;
 			flex-direction: row;
+			height: calc(100vh - 65px);
+			box-sizing: border-box;
 	
 			& #table-wrapper {
 				width: 75%;
-				
+				height: 100%;
+				box-sizing: border-box;
+
 				& #table-top {
 					overflow: scroll;
-					height: calc(65vh - 65px) !important;
+					height: 65%;
 					border-style: solid;
-    				border-width: 2px;
+    				border-width: 4px;
 					border-color: var(--color_border);
+					box-sizing: border-box;
 				}
 				& #table-bottom {
 					overflow: scroll;
-					height: 35vh;
+					height: 35%;
 					border-style: solid;
-    				border-width: 2px;
+    				border-width: 4px;
 					border-color: var(--color_border);
+					box-sizing: border-box;
 				}
 			}
 			& #infocard_view {
 				width: 25%;
 				overflow-y: scroll;
-				height: calc(100vh - 65px) !important;
+				height: 100%;
 				border-style: solid;
-				border-width: 2px;
+				border-width: 4px;
 				border-color: var(--color_border);
+				box-sizing: border-box;
 			}
 
 			.sortable {
