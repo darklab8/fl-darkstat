@@ -18,6 +18,8 @@ templ Index(theme types.Theme) {
 				--color_border: #474747;
 				--color_th_border: #8B8B8B;
 				--color_hover: #323131;
+				--color_scrollbar_thing: #888;
+				--color_scrollbar_background: #353535;
 				--color_text: #ddd;
 				--selected: #474747;
 				--color_link: #4D8ED0;
@@ -36,6 +38,8 @@ templ Index(theme types.Theme) {
 				--color_border: #D7D7D7;
 				--color_th_border: #D7D7D7;
 				--color_hover: #CCC;
+				--color_scrollbar_thing: #999;
+				--color_scrollbar_background: #E1E1E1;
 				--color_text: #000;
 				--selected: #D7D7D7;
 				--color_link: #2A4E73;
@@ -50,17 +54,17 @@ templ Index(theme types.Theme) {
 	<style>
 	// scrollbars
 	html {
-		scrollbar-color: var(--color_hover) var(--color_background);
+		scrollbar-color: var(--color_scrollbar_thing) var(--color_scrollbar_background);
 	}
 	::-webkit-scrollbar {
-		background-color: var(--color_background);
+		background-color: var(--color_scrollbar_background);
 	}
 	::-webkit-scrollbar-thumb {
-		background: var(--color_hover);
+		background: var(--color_scrollbar_thing);
 		border-radius: 5px;
 	}
 	::-webkit-scrollbar-corner { 
-		background: var(--color_background);
+		background: var(--color_scrollbar_background);
 	}
 	</style>
 	<style>
