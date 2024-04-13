@@ -203,6 +203,7 @@ type Config struct {
 	CommoditiesMap map[string]*Commodity
 
 	Guns        []*Gun
+	GunMap      map[string]*Gun
 	Munitions   []*Munition
 	MunitionMap map[string]*Munition
 
@@ -216,8 +217,10 @@ type Config struct {
 	Items    []*Item
 	ItemsMap map[string]*Item
 
-	ShieldGens []*ShieldGenerator
-	Thrusters  []*Thruster
+	ShieldGens  []*ShieldGenerator
+	ShidGenMap  map[string]*ShieldGenerator
+	Thrusters   []*Thruster
+	ThrusterMap map[string]*Thruster
 
 	Engines    []*Engine
 	EnginesMap map[string]*Engine
@@ -247,6 +250,9 @@ func Read(files []*iniload.IniLoader) *Config {
 		EnginesMap:        make(map[string]*Engine),
 		PowersMap:         make(map[string]*Power),
 		CounterMeasureMap: make(map[string]*CounterMeasure),
+		GunMap:            make(map[string]*Gun),
+		ShidGenMap:        make(map[string]*ShieldGenerator),
+		ThrusterMap:       make(map[string]*Thruster),
 	}
 	frelconfig.Commodities = make([]*Commodity, 0, 100)
 	frelconfig.CommoditiesMap = make(map[string]*Commodity)
@@ -298,6 +304,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				gun.HPGunType = semantic.NewString(section, "hp_gun_type")
 				gun.Lootable = semantic.NewBool(section, "lootable", semantic.StrBool)
 				frelconfig.Guns = append(frelconfig.Guns, gun)
+				frelconfig.GunMap[gun.Nickname.Get()] = gun
 			case "[Munition]":
 				munition := &Munition{}
 				munition.Nickname = semantic.NewString(section, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS())
@@ -372,6 +379,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					ShieldType:         semantic.NewString(section, "shield_type", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 				}
 				frelconfig.ShieldGens = append(frelconfig.ShieldGens, shield)
+				frelconfig.ShidGenMap[shield.Nickname.Get()] = shield
 			case "[Thruster]":
 				thruster := &Thruster{
 					Nickname:   semantic.NewString(section, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -383,6 +391,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					PowerUsage: semantic.NewInt(section, "power_usage"),
 				}
 				frelconfig.Thrusters = append(frelconfig.Thrusters, thruster)
+				frelconfig.ThrusterMap[thruster.Nickname.Get()] = thruster
 			case "[Power]":
 				power := &Power{
 					Nickname:       semantic.NewString(section, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
