@@ -34,16 +34,17 @@ type Commodity struct {
 
 type Munition struct {
 	semantic.Model
-	Nickname      *semantic.String
-	ExplosionArch *semantic.String
-	RequiredAmmo  *semantic.Bool
-	HullDamage    *semantic.Int
-	EnergyDamange *semantic.Int
-	HealintAmount *semantic.Int
-	WeaponType    *semantic.String
-	LifeTime      *semantic.Float
-	Mass          *semantic.Int
-	Motor         *semantic.String
+	Nickname           *semantic.String
+	ExplosionArch      *semantic.String
+	RequiredAmmo       *semantic.Bool
+	HullDamage         *semantic.Int
+	EnergyDamange      *semantic.Int
+	HealintAmount      *semantic.Int
+	WeaponType         *semantic.String
+	LifeTime           *semantic.Float
+	Mass               *semantic.Int
+	Motor              *semantic.String
+	MaxAngularVelocity *semantic.Float
 }
 
 type Explosion struct {
@@ -317,6 +318,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				munition.LifeTime = semantic.NewFloat(section, "lifetime", semantic.Precision(2))
 				munition.Mass = semantic.NewInt(section, "mass")
 				munition.Motor = semantic.NewString(section, "motor", semantic.WithLowercaseS(), semantic.WithoutSpacesS())
+				munition.MaxAngularVelocity = semantic.NewFloat(section, "max_angular_velocity", semantic.Precision(4))
 				frelconfig.Munitions = append(frelconfig.Munitions, munition)
 				frelconfig.MunitionMap[munition.Nickname.Get()] = munition
 			case "[Explosion]":

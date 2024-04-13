@@ -1,6 +1,7 @@
 package configs_export
 
 type Missile struct {
+	MaxAngularVelocity float64
 }
 
 func (e *Exporter) GetMissiles() []Gun {
@@ -18,6 +19,8 @@ func (e *Exporter) GetMissiles() []Gun {
 			// Excluded regular guns
 			continue
 		}
+
+		missile.MaxAngularVelocity, _ = munition.MaxAngularVelocity.GetValue()
 
 		missiles = append(missiles, missile)
 	}
