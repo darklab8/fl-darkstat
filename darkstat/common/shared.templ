@@ -11,26 +11,6 @@ templ Html5() {
 		<head>
 			<link rel="icon" type="image/x-icon" href={ types.GetCtx(ctx).StaticRoot + "common/favicon.ico" }/>
 			<title>{ "darkstat" }</title>
-			switch types.GetCtx(ctx).Theme {
-				case types.ThemeDark:
-					<style>
-			:root {
-				--color_hover_link: #4183C4;
-				--color_link: #91C3F5;
-			}
-			body {
-				background: #1E1E1E;
-				color: #ddd;
-			}
-			</style>
-				case types.ThemeLight:
-					<style>
-			:root {
-				--color_hover_link: #4183C4;
-				--color_link: #33618E;
-			}
-			</style>
-			}
 			@common_static.ResetCSS()
 			@common_static.CommonCSS()
 			@common_static.CustomCSS()

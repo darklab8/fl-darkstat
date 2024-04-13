@@ -11,6 +11,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkstat/builder"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
@@ -207,7 +208,11 @@ func (l *Linker) Link() *builder.Builder {
 	build.RegComps(
 		builder.NewComponent(
 			urls.Index,
-			front.Index(),
+			front.Index(types.ThemeLight),
+		),
+		builder.NewComponent(
+			"dark.html",
+			front.Index(types.ThemeDark),
 		),
 		builder.NewComponent(
 			urls.Bases,

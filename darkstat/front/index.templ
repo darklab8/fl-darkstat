@@ -7,8 +7,52 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 )
 
-templ Index() {
+templ Index(theme types.Theme) {
 	// For loading https://htmx.org/examples/tabs-hateoas/
+	switch theme {
+		case types.ThemeDark:
+			<style>
+			:root {
+				--color_background: #141414;
+				--color_border: #474747;
+				--color_th_border: #8B8B8B;
+				--color_hover: #323131;
+				--color_text: #ddd;
+				--selected: #474747;
+				--color_link: #4D8ED0;
+				--color_hover_link: #57A5F2;
+			}
+			body {
+				scrollbar-color: var(--color_background) !important;
+				background: var(--color_background);
+				color: var(--color_text);
+			}
+			</style>
+		case types.ThemeLight:
+			<style>
+			:root {
+				--color_background: #EFEFEF;
+				--color_border: #D7D7D7;
+				--color_th_border: #D7D7D7;
+				--color_hover: #CCC;
+				--color_text: #000;
+				--selected: #D7D7D7;
+				--color_link: #2A4E73;
+				--color_hover_link: #152B41;
+			}
+			body {
+
+			}
+			</style>
+	}
+	<style>
+		a {
+			color: var(--color_link);
+		}
+		a:hover {
+			color: var(--color_hover_link);
+		}
+	</style>
 	@common.Html5() {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>
 	}

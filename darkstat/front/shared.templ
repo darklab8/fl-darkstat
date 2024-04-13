@@ -16,7 +16,7 @@ templ TabContent() {
 	</div>
 	<style>
 		body {
-			background-color: #EFEFEF;
+			background-color: var(--color_background);
 			font-weight: 500;
 			width: calc(100% - 10px);
 		}
@@ -30,33 +30,33 @@ templ TabContent() {
 		th, td {
 			border-width: 1px;
 			border-style: solid;
-			border-color: #D7D7D7;
+			border-color: var(--color_border);
 		}
 		table {
 			border-collapse: separate; 
 			position: relative;
 		}
 		th {
-			border-color: #8B8B8B;
+			border-color: var(--color_th_border);
 
 			cursor: pointer;
 			&:hover {
-				background-color: #CCC;
+				background-color: var(--color_hover);
 			}
 
-			background: #EFEFEF;
+			background: var(--color_background);
 			position: sticky;
   			top: 0; /* Don't forget this, required for the stickiness */
 			
 		}
 		td {
-			border-color: #D7D7D7;
+			border-color: var(--color_border);
 		}
 		tbody {
 			& tr {
 				cursor: pointer;
 				&:hover {
-					background-color: #CCC;
+					background-color: var(--color_hover);
 				}
 			}
 		}
@@ -72,14 +72,14 @@ templ TabContent() {
 					height: calc(65vh - 65px) !important;
 					border-style: solid;
     				border-width: 2px;
-					border-color: #D7D7D7;
+					border-color: var(--color_border);
 				}
 				& #table-bottom {
 					overflow: scroll;
 					height: 35vh;
 					border-style: solid;
     				border-width: 2px;
-					border-color: #D7D7D7;
+					border-color: var(--color_border);
 				}
 			}
 			& #infocard_view {
@@ -88,7 +88,7 @@ templ TabContent() {
 				height: calc(100vh - 65px) !important;
 				border-style: solid;
 				border-width: 2px;
-				border-color: #D7D7D7;
+				border-color: var(--color_border);
 			}
 
 			.sortable {
@@ -157,10 +157,18 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 		align-content: stretch;
 
 		.selected {
-			filter: brightness(85%);
+			background-color: var(--selected);
 		}
 		& button {
+			background-color: var(--color_background);
+			color: var(--color_text);
+			border-color: var(--color_border);
+
 			min-width: 80px;
+
+			&:hover {
+				background-color: var(--color_hover);
+			}
 		}
 	}
 	</style>
@@ -187,7 +195,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				@Button("Tractors", urls.Tractors, urls.Tractors == url)
 				@Button("Engines", urls.Engines, urls.Engines == url)
 				@Button("CMs", urls.CounterMeasures, urls.CounterMeasures == url)
-				<button preload="mouseover" hx-trigger="mousedown" style="width:150px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Show All</button>
+				<button preload="mouseover" hx-trigger="mousedown" style="width:120px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Show All</button>
 			} else {
 				@Button("Bases", AllItemsUrl(urls.Bases), urls.Bases == url)
 				@Button("Factions", AllItemsUrl(urls.Factions), urls.Factions == url)
@@ -204,11 +212,21 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				@Button("Tractors", AllItemsUrl(urls.Tractors), urls.Tractors == url)
 				@Button("Engines", AllItemsUrl(urls.Engines), urls.Engines == url)
 				@Button("CMs", AllItemsUrl(urls.CounterMeasures), urls.CounterMeasures == url)
-				<button preload="mouseover" hx-trigger="mousedown" style="width:150px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Don't Show All</button>
+				<button preload="mouseover" hx-trigger="mousedown" style="width:120px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Don't Show All</button>
 			}
+			<button style="width:120px; border-radius: 20px;" onClick={ GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).OppositeThemeRoot) } type="button">Light / Dark</button>
 		</div>
 	}
 	<hr/>
+}
+
+script GoToUrl(current string, opposite string) {
+	if (location.pathname == current) {
+		location.href=opposite;
+	} else {
+		location.href=current;
+	}
+	
 }
 
 templ InfocardShared() {

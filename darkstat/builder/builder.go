@@ -13,6 +13,7 @@ import (
 
 type Builder struct {
 	components []*Component
+	dark_pages []*Component
 }
 
 type BuilderOption func(b *Builder)
@@ -29,16 +30,20 @@ func (b *Builder) RegComps(components ...*Component) {
 	b.components = append(b.components, components...)
 }
 
-func (b *Builder) build(params types.GlobalParams, filesystem *Filesystem) {
+func (b *Builder) RegDark(components ...*Component) {
+	b.dark_pages = append(b.dark_pages, components...)
+}
+
+func (b *Builder) build(components []*Component, params types.GlobalParams, filesystem *Filesystem) {
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 		results := make(chan WriteResult)
-		for _, comp := range b.components {
+		for _, comp := range components {
 			go func(comp *Component) {
 				results <- comp.Write(params)
 			}(comp)
 		}
-		for range b.components {
+		for range components {
 			result := <-results
 			filesystem.WriteToMem(result.realpath, result.bytes)
 		}
@@ -65,23 +70,24 @@ func (b *Builder) BuildAll() *Filesystem {
 	} else {
 		siteRoot = "/"
 	}
-	b.build(types.GlobalParams{
+	b.build(b.components, types.GlobalParams{
 		Buildpath:         "",
 		Theme:             types.ThemeLight,
 		SiteRoot:          siteRoot,
 		StaticRoot:        siteRoot + staticPrefix,
-		OppositeThemeRoot: siteRoot + "dark/",
+		OppositeThemeRoot: siteRoot + "dark.html",
 		Heading:           os.Getenv("FLDARKSTAT_HEADING"),
 	}, filesystem)
 
-	// Implement dark theme later
-	// u need only Index page rebuilded, not all of them ^_^
-	// b.build(types.GlobalParams{
-	// 	Buildpath:         utils_filepath.Join("dark"),
+	// // Implement dark theme later
+	// // u need only Index page rebuilded, not all of them ^_^
+	// b.build(b.dark_pages, types.GlobalParams{
+	// 	Buildpath:         "",
 	// 	Theme:             types.ThemeDark,
-	// 	SiteRoot:          siteRoot + "dark/",
-	// 	StaticRoot:        siteRoot + "dark/" + staticPrefix,
+	// 	SiteRoot:          siteRoot,
+	// 	StaticRoot:        siteRoot + staticPrefix,
 	// 	OppositeThemeRoot: siteRoot,
+	// 	Heading:           os.Getenv("FLDARKSTAT_HEADING"),
 	// }, filesystem)
 
 	return filesystem
