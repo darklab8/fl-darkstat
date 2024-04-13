@@ -22,8 +22,27 @@ templ Index(theme types.Theme) {
 				--color_link: #4D8ED0;
 				--color_hover_link: #57A5F2;
 			}
+
+			// Scrollbars
+			/* Firefox */
+			html {
+				scrollbar-color: #ddd #474747;
+				scrollbar-width: thin;
+			}
+
+			/* WebKit and Chromiums */
+			::-webkit-scrollbar {
+				width: 8px;
+				height: 8px;
+				background-color: #474747;
+			}
+
+			::-webkit-scrollbar-thumb {
+				background: #ddd;
+				border-radius: 5px;
+			}
+
 			body {
-				scrollbar-color: var(--color_background) !important;
 				background: var(--color_background);
 				color: var(--color_text);
 			}
