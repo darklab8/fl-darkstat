@@ -93,6 +93,7 @@ templ BaseMarketGoodsBase() {
 				<th style="width:50px;">Price Modifier</th>
 				<th style="width:50px;">Price Base</th>
 				<th style="width:300px;">Nickname</th>
+				<th style="width:300px;">HpType</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -121,6 +122,7 @@ templ BaseMarketGoods(goods []configs_export.MarketGood) {
 				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
 				<td>{ strconv.Itoa(good.PriceBase) }</td>
 				<td>{ good.Nickname }</td>
+				<td>{ good.HpType }</td>
 				<td></td>
 			</tr>
 		}
