@@ -22,26 +22,6 @@ templ Index(theme types.Theme) {
 				--color_link: #4D8ED0;
 				--color_hover_link: #57A5F2;
 			}
-
-			// Scrollbars
-			/* Firefox */
-			html {
-				scrollbar-color: #ddd #474747;
-				scrollbar-width: thin;
-			}
-
-			/* WebKit and Chromiums */
-			::-webkit-scrollbar {
-				width: 8px;
-				height: 8px;
-				background-color: #474747;
-			}
-
-			::-webkit-scrollbar-thumb {
-				background: #ddd;
-				border-radius: 5px;
-			}
-
 			body {
 				background: var(--color_background);
 				color: var(--color_text);
@@ -59,12 +39,30 @@ templ Index(theme types.Theme) {
 				--color_link: #2A4E73;
 				--color_hover_link: #152B41;
 			}
+			
 			body {
 
 			}
 			</style>
 	}
 	<style>
+	// scrollbars
+	html {
+		scrollbar-color: var(--color_hover) var(--color_background);
+	}
+	::-webkit-scrollbar {
+		background-color: var(--color_background);
+	}
+	::-webkit-scrollbar-thumb {
+		background: var(--color_hover);
+		border-radius: 5px;
+	}
+	::-webkit-scrollbar-corner { 
+		background: var(--color_background);
+	}
+	</style>
+	<style>
+	
 		a {
 			color: var(--color_link);
 		}
