@@ -51,7 +51,7 @@ jobs:
         env:
             SITE_ROOT: "/fl-darkstat/"
             FLDARKSTAT_FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
-            FLDARKSTAT_HEADING: dev env for <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> rendering <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
+            FLDARKSTAT_HEADING: DEV ENV for <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> rendering <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
 
       - uses: actions/upload-pages-artifact@v1
         with:
