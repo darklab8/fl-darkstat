@@ -53,15 +53,15 @@ templ TabContent() {
 			border-color: var(--color_border);
 		}
 		tbody {
+			& tr:nth-child(odd) {
+				background-color: var(--color_alternate_row);
+			}
+
 			& tr {
 				cursor: pointer;
 				&:hover {
 					background-color: var(--color_hover);
 				}
-			}
-
-			& tr:nth-child(odd) {
-				background-color: var(--color_alternate_row);
 			}
 		}
 		.splitter {
