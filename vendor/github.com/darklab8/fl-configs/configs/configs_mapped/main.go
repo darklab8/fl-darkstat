@@ -136,11 +136,18 @@ func (p *MappedConfigs) Write(is_dry_run IsDruRun) {
 	// write
 	files := []*file.File{}
 
-	files = append(files,
-		p.Universe_config.Write(),
-	)
+	files = append(files, p.Universe_config.Write())
 	files = append(files, p.Systems.Write()...)
 	files = append(files, p.Market.Write()...)
+	files = append(files, p.Equip.Write()...)
+	files = append(files, p.Goods.Write()...)
+	files = append(files, p.Shiparch.Write()...)
+	files = append(files, p.InfocardmapINI.Write())
+	files = append(files, p.InitialWorld.Write())
+	files = append(files, p.Empathy.Write())
+	files = append(files, p.MBases.Write())
+	files = append(files, p.Consts.Write())
+	files = append(files, p.WeaponMods.Write())
 
 	if is_dry_run {
 		return

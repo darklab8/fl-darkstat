@@ -15,7 +15,7 @@ func (s *Model) Map(section *inireader.Section) {
 	s.section = section
 }
 
-func (s *Model) Render() *inireader.Section {
+func (s *Model) RenderModel() *inireader.Section {
 	return s.section
 }
 

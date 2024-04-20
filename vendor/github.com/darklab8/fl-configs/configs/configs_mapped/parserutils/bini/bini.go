@@ -16,14 +16,15 @@ import (
 	"golang.org/x/text/encoding/charmap"
 )
 
-type SectionName string
-
 type EntryName string
 type EntryValues = []interface{}
 
 type Row map[EntryName]EntryValues
 
-type Section []Row
+type Section struct {
+	section_name string
+	rows         []Row
+}
 
 var bp = new(gbp.BinaryPack)
 
@@ -68,9 +69,9 @@ var VALUE_TYPES map[int]string = map[int]string{
 
 // maps a byte value type to a struct format string
 
-func parse_file(path utils_types.FilePath, FoldValues FoldValues) map[SectionName][]Section {
+func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 	mem := NewBDatas()
-	var result map[SectionName][]Section = make(map[SectionName][]Section)
+	var result []Section = make([]Section, 0, 100)
 
 	var string_table map[int]string = make(map[int]string)
 	data, err := os.ReadFile(path.ToString())
@@ -187,7 +188,10 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) map[SectionNam
 			}
 			section = append(section, row)
 		}
-		result[SectionName(section_name)] = append(result[SectionName(section_name)], section)
+		result = append(result, Section{
+			section_name: section_name,
+			rows:         section,
+		})
 
 	}
 
@@ -201,28 +205,25 @@ func Dump(path utils_types.FilePath) []string {
 
 	var lines []string = make([]string, 0, 100)
 
-	for section_name, sections := range bini {
+	for _, section := range bini {
 
-		for _, section := range sections {
+		// convert the entries in this section to strings and add to output
+		lines = append(lines, fmt.Sprintf("[%s]", section.section_name))
+		for _, row := range section.rows {
+			// form key value pairs for each entry value. Expand tuples to remove quotes and brackets
 
-			// convert the entries in this section to strings and add to output
-			lines = append(lines, fmt.Sprintf("[%s]", section_name))
-			for _, row := range section {
-				// form key value pairs for each entry value. Expand tuples to remove quotes and brackets
-
-				for row_key, row_values := range row {
-					var formatted_values []string
-					for _, value := range row_values {
-						formatted_values = append(formatted_values, fmt.Sprintf("%v", value))
-					}
-					lines = append(lines,
-						fmt.Sprintf("%s = %s", row_key, strings.Join(formatted_values, ", ")),
-					)
+			for row_key, row_values := range row {
+				var formatted_values []string
+				for _, value := range row_values {
+					formatted_values = append(formatted_values, fmt.Sprintf("%v", value))
 				}
-
+				lines = append(lines,
+					fmt.Sprintf("%s = %s", row_key, strings.Join(formatted_values, ", ")),
+				)
 			}
-			lines = append(lines, "") // add a blank line after each section
+
 		}
+		lines = append(lines, "") // add a blank line after each section
 
 	}
 

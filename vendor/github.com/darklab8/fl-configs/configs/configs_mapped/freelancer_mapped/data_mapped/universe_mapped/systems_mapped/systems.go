@@ -29,9 +29,10 @@ type Base struct {
 }
 type System struct {
 	semantic.ConfigModel
-	Nickname    string
-	Bases       []*Base
-	BasesByNick map[string]*Base
+	Nickname     string
+	Bases        []*Base
+	BasesByNick  map[string]*Base
+	BasesByBases map[string][]*Base
 }
 
 type Config struct {
@@ -117,6 +118,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 		system_to_add.Nickname = system_key
 		system_to_add.BasesByNick = make(map[string]*Base)
+		system_to_add.BasesByBases = make(map[string][]*Base)
 		system_to_add.Bases = make([]*Base, 0)
 		frelconfig.SystemsMap[system_key] = system_to_add
 		frelconfig.Systems = append(frelconfig.Systems, system_to_add)
@@ -139,6 +141,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					base_to_add.IdsName = semantic.NewInt(obj, "ids_name", semantic.Optional())
 
 					system_to_add.BasesByNick[base_to_add.Nickname.Get()] = base_to_add
+					system_to_add.BasesByBases[base_to_add.Base.Get()] = append(system_to_add.BasesByBases[base_to_add.Base.Get()], base_to_add)
 					system_to_add.Bases = append(system_to_add.Bases, base_to_add)
 				}
 			}

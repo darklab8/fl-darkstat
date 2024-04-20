@@ -59,3 +59,9 @@ func Optional() ValueOption {
 		i.optional = true
 	}
 }
+
+func Comment() ValueOption {
+	return func(i *Value) {
+		i.value_type = TypeComment
+	}
+}

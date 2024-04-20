@@ -62,6 +62,10 @@ func (f *File) ScheduleToWrite(value ...string) {
 	f.lines = append(f.lines, value...)
 }
 
+func (f *File) GetLines() []string {
+	return f.lines
+}
+
 func (f *File) WriteLines() {
 	f.createToWriteF()
 	defer f.close()

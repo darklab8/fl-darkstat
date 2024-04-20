@@ -68,12 +68,14 @@ type Base struct {
 type Config struct {
 	semantic.ConfigModel
 
+	File    *iniload.IniLoader
 	Bases   []*Base
 	BaseMap map[string]*Base
 }
 
 func Read(input_file *iniload.IniLoader) *Config {
 	frelconfig := &Config{
+		File:    input_file,
 		Bases:   make([]*Base, 0, 100),
 		BaseMap: make(map[string]*Base),
 	}
@@ -163,7 +165,12 @@ func Read(input_file *iniload.IniLoader) *Config {
 }
 
 func (frelconfig *Config) Write() *file.File {
-	inifile := frelconfig.Render()
+	// TODO BEWARE A BUG to fix.
+	// if having here frelconfig.Render()
+	// everything is still correct as typing
+	// but the file is not getting written in darklint
+	// This bug may be is going through my other code
+	inifile := frelconfig.File.Render()
 	inifile.Write(inifile.File)
 	return inifile.File
 }
