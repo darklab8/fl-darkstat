@@ -19,9 +19,6 @@ const (
 func ReadFromTextFile(input_file *file.File) *infocard.Config {
 	frelconfig := infocard.NewConfig()
 
-	input_file = input_file.OpenToReadF()
-
-	defer input_file.Close()
 	lines := input_file.ReadLines()
 
 	for index := 0; index < len(lines); index++ {

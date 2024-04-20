@@ -31,7 +31,11 @@ func (e *Exporter) GetEngines() []Engine {
 		if cruise_speed, ok := engine_info.CruiseSpeed.GetValue(); ok {
 			engine.CruiseSpeed = cruise_speed
 		} else {
-			engine.CruiseSpeed = e.configs.Consts.EngineEquipConsts.CRUISING_SPEED.Get()
+			if cruise_speed, ok := e.configs.Consts.EngineEquipConsts.CRUISING_SPEED.GetValue(); ok {
+				engine.CruiseSpeed = cruise_speed
+			} else {
+				engine.CruiseSpeed = 350
+			}
 		}
 		engine.CruiseChargeTime, _ = engine_info.CruiseChargeTime.GetValue()
 		engine.LinearDrag = engine_info.LinearDrag.Get()

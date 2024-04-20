@@ -1,11 +1,14 @@
 package systems_mapped
 
 import (
+	"fmt"
+
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
+	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
 const (
@@ -47,8 +50,41 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 	var system_files map[string]*file.File = make(map[string]*file.File)
 	for _, base := range universe_config.Bases {
-		filename := universe_config.SystemMap[universe_mapped.SystemNickname(base.System.Get())].File.FileName()
+		base_system := base.System.Get()
+		fmt.Println("base_system=", base_system)
+		if base_system == "ew06" {
+			fmt.Println()
+		}
+		universe_system := universe_config.SystemMap[universe_mapped.SystemNickname(base_system)]
+
+		if universe_system == nil {
+			fmt.Println("base_system==", base_system)
+			for key, _ := range universe_config.SystemMap {
+				fmt.Print("key=", key)
+			}
+			fmt.Println()
+		}
+
+		var filename utils_types.FilePath
+		// func() {
+		// 	defer func() {
+		// 		if r := recover(); r != nil {
+		// 			logus.Log.Error("Recovered from int File.FileName Error:\n",
+		// 				typelog.Any("recover", r),
+		// 				typelog.Any("universe_system", universe_system),
+		// 				typelog.Any("base_system", base_system),
+		// 				// typelog.Any("universe.File", *(universe_system.File)),
+		// 			)
+		// 			panic(r)
+		// 		}
+		// 	}()
+		//
+		// }()
+		filename = universe_system.File.FileName()
 		path := filesystem.GetFile(filename)
+		if path.GetFilepath() == "" {
+			fmt.Println()
+		}
 		system_files[base.System.Get()] = file.NewFile(path.GetFilepath())
 	}
 

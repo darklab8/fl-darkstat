@@ -288,7 +288,7 @@ func init() {
 	initRegexExpression(&regexSection, `^\[.*\]`)
 	initRegexExpression(&regexLetter, `[a-zA-Z]`)
 	// param or commented out param
-	initRegexExpression(&regexParam, `(;%|^)([a-zA-Z_][a-zA-Z_0-9]+)\s=\s([a-zA-Z_, 0-9-.\/\\]+)`)
+	initRegexExpression(&regexParam, `(;%|^)[ 	]*([a-zA-Z_][a-zA-Z_0-9]+)\s=\s([a-zA-Z_, 0-9-.\/\\]+)`)
 }
 
 var CASE_SENSETIVE_KEYS = [...]string{"BGCS_base_run_by", "NavMapScale"}
@@ -307,13 +307,8 @@ func Read(fileref *file.File) *INIFile {
 	config := &INIFile{}
 	config.File = fileref
 
-	logus.Log.Debug("opening file", utils_logus.FilePath(fileref.GetFilepath()))
-	file := fileref.OpenToReadF()
-	logus.Log.Debug("defer file close", utils_logus.FilePath(fileref.GetFilepath()))
-	defer file.Close()
-
 	logus.Log.Debug("reading lines")
-	lines := file.ReadLines()
+	lines := fileref.ReadLines()
 
 	logus.Log.Debug("setting current section")
 	var cur_section *Section

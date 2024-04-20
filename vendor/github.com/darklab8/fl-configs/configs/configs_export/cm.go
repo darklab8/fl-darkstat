@@ -48,7 +48,7 @@ func (e *Exporter) GetCounterMeasures() []CounterMeasure {
 
 		infocards := []int{cm.InfoID}
 		if ammo_info, ok := e.configs.Equip.CounterMeasureMap[cm_info.ProjectileArchetype.Get()]; ok {
-			cm.AmmoLimit = ammo_info.AmmoLimit.Get()
+			cm.AmmoLimit, _ = ammo_info.AmmoLimit.GetValue()
 			cm.Lifetime = ammo_info.Lifetime.Get()
 			cm.Range = ammo_info.Range.Get()
 			cm.DiversionPctg = ammo_info.DiversionPctg.Get()
