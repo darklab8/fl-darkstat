@@ -41,7 +41,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 									id={ "bottominfo_click" + tractor.Nickname }
 									hx-get={ types.GetCtx(ctx).SiteRoot + TractorDetailedUrl(tractor) }
 									hx-trigger="mousedown"
-									hx-target="#table-bottom"
+									hx-target="#table-bottom-main"
 									hx-swap="innerHTML"
 									preload="mouseover"
 								>
@@ -69,7 +69,9 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 					</table>
 				</div>
 				<div id="table-bottom">
-					@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					<div id="table-bottom-main">
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
 				</div>
 			</div>
 			<div id="infocard_view">

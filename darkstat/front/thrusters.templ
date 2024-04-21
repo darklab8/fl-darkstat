@@ -21,64 +21,68 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					<table class="sortable">
-						<thead>
-							<tr>
-								<th style="width:200px;">Thruster</th>
-								<th style="width:50px;">Price</th>
-								<th style="width:50px;">Buyable</th>
-								<th style="width:50px;">Max Force</th>
-								<th style="width:50px;">Power Usage</th>
-								<th style="width:50px;">Efficiency</th>
-								<th style="width:100px;">Value</th>
-								<th style="width:100px;">Rating</th>
-								<th style="width:50px;">Hit Pts</th>
-								<th style="width:50px;">Lootable</th>
-								<th style="width:50px;">Nickname</th>
-								<th style="width:100px;">Name ID</th>
-								<th style="width:100px;">Info ID</th>
-								<th style="max-width:100%;"></th>
-							</tr>
-						</thead>
-						<tbody>
-							for _, thruster := range thrusters {
-								<tr
-									id={ "bottominfo_click" + thruster.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + ThrusterDetailedUrl(thruster) }
-									hx-trigger="mousedown"
-									hx-target="#table-bottom"
-									hx-swap="innerHTML"
-									preload="mouseover"
-								>
-									<td>{ thruster.Name }</td>
-									<td>{ strconv.Itoa(thruster.Price) } </td>
-									<td>{ strconv.FormatBool(configs_export.Buyable(thruster.Bases)) }</td>
-									<td>{ strconv.Itoa(thruster.MaxForce) } </td>
-									<td>{ strconv.Itoa(thruster.PowerUsage) }</td>
-									<td>{ fmt.Sprintf("%.2f",thruster.Efficiency) }</td>
-									<td>{ fmt.Sprintf("%.2f", thruster.Value) }</td>
-									<td>{ fmt.Sprintf("%.2f", thruster.Rating) }</td>
-									<td>{ strconv.Itoa(thruster.HitPts) }</td>
-									<td>{ strconv.FormatBool(thruster.Lootable) }</td>
-									<td>{ thruster.Nickname } </td>
-									<td>{ strconv.Itoa(thruster.NameID) } </td>
-									<td>{ strconv.Itoa(thruster.InfoID) } </td>
-									<td
-										id={ "infocard_click" + thruster.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(thruster.Nickname)) }
-										hx-trigger="click"
-										hx-target="#infocard_view"
+					<div id="table-top-main">
+						<table class="sortable">
+							<thead>
+								<tr>
+									<th style="width:200px;">Thruster</th>
+									<th style="width:50px;">Price</th>
+									<th style="width:50px;">Buyable</th>
+									<th style="width:50px;">Max Force</th>
+									<th style="width:50px;">Power Usage</th>
+									<th style="width:50px;">Efficiency</th>
+									<th style="width:100px;">Value</th>
+									<th style="width:100px;">Rating</th>
+									<th style="width:50px;">Hit Pts</th>
+									<th style="width:50px;">Lootable</th>
+									<th style="width:50px;">Nickname</th>
+									<th style="width:100px;">Name ID</th>
+									<th style="width:100px;">Info ID</th>
+									<th style="max-width:100%;"></th>
+								</tr>
+							</thead>
+							<tbody>
+								for _, thruster := range thrusters {
+									<tr
+										id={ "bottominfo_click" + thruster.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + ThrusterDetailedUrl(thruster) }
+										hx-trigger="mousedown"
+										hx-target="#table-bottom-main"
 										hx-swap="innerHTML"
 										preload="mouseover"
-									></td>
-									@templ.Raw(JoinClickTriggers("bottominfo_click"+thruster.Nickname, "infocard_click"+thruster.Nickname))
-								</tr>
-							}
-						</tbody>
-					</table>
+									>
+										<td>{ thruster.Name }</td>
+										<td>{ strconv.Itoa(thruster.Price) } </td>
+										<td>{ strconv.FormatBool(configs_export.Buyable(thruster.Bases)) }</td>
+										<td>{ strconv.Itoa(thruster.MaxForce) } </td>
+										<td>{ strconv.Itoa(thruster.PowerUsage) }</td>
+										<td>{ fmt.Sprintf("%.2f",thruster.Efficiency) }</td>
+										<td>{ fmt.Sprintf("%.2f", thruster.Value) }</td>
+										<td>{ fmt.Sprintf("%.2f", thruster.Rating) }</td>
+										<td>{ strconv.Itoa(thruster.HitPts) }</td>
+										<td>{ strconv.FormatBool(thruster.Lootable) }</td>
+										<td>{ thruster.Nickname } </td>
+										<td>{ strconv.Itoa(thruster.NameID) } </td>
+										<td>{ strconv.Itoa(thruster.InfoID) } </td>
+										<td
+											id={ "infocard_click" + thruster.Nickname }
+											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(thruster.Nickname)) }
+											hx-trigger="click"
+											hx-target="#infocard_view"
+											hx-swap="innerHTML"
+											preload="mouseover"
+										></td>
+										@templ.Raw(JoinClickTriggers("bottominfo_click"+thruster.Nickname, "infocard_click"+thruster.Nickname))
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div id="table-bottom">
-					@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					<div id="table-bottom-main">
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
 				</div>
 			</div>
 			<div id="infocard_view">

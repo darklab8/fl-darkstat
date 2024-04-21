@@ -39,66 +39,70 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					<table class="sortable">
-						<thead>
-							<tr>
-								<th style="width:200px;">Name</th>
-								<th style="width:200px;">Short Name</th>
-								<th style="width:100px;">Nickname</th>
-								if mode == FactionShowRephacks {
-									<th style="width:50px;">Has Rephacks</th>
-								}
-								<th style="width:150px;">Obj. Destr. Rep.Cng.</th>
-								<th style="width:150px;">Mission Win Rep.Cng.</th>
-								<th style="width:150px;">MIssion Fail Rep.Cng.</th>
-								<th style="width:150px;">Mission Abort Rep.Cng.</th>
-								<th style="width:200px;">InfonameID</th>
-								<th style="width:50px;">InfocardID</th>
-								<th style="max-width:100%;"></th>
-							</tr>
-						</thead>
-						<tbody>
-							for _, faction := range factions {
-								<tr
-									id={ "bottom_click" + faction.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + FactionRepUrl(faction, mode) }
-									hx-trigger="mousedown"
-									hx-target="#table-bottom"
-									hx-swap="innerHTML"
-									preload="mouseover"
-								>
-									<td>{ faction.Name }</td>
-									<td>{ faction.ShortName }</td>
-									<td>{ faction.Nickname }</td>
+					<div id="table-top-main">
+						<table class="sortable">
+							<thead>
+								<tr>
+									<th style="width:200px;">Name</th>
+									<th style="width:200px;">Short Name</th>
+									<th style="width:100px;">Nickname</th>
 									if mode == FactionShowRephacks {
-										<td>{ strconv.FormatBool(len(faction.Rephacks) > 0) }</td>
+										<th style="width:50px;">Has Rephacks</th>
 									}
-									<td>{ fmt.Sprintf("%.2f", faction.ObjectDestruction) }</td>
-									<td>{ fmt.Sprintf("%.2f", faction.MissionSuccess) }</td>
-									<td>{ fmt.Sprintf("%.2f", faction.MissionFailure) }</td>
-									<td>{ fmt.Sprintf("%.2f", faction.MissionAbort) }</td>
-									<td>{ strconv.Itoa(faction.InfonameID) }</td>
-									<td>{ strconv.Itoa(faction.InfocardID) }</td>
-									<td
-										id={ "infocard_click" + faction.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(faction.Infocard) }
-										hx-trigger="click"
-										hx-target="#infocard_view"
+									<th style="width:150px;">Obj. Destr. Rep.Cng.</th>
+									<th style="width:150px;">Mission Win Rep.Cng.</th>
+									<th style="width:150px;">MIssion Fail Rep.Cng.</th>
+									<th style="width:150px;">Mission Abort Rep.Cng.</th>
+									<th style="width:200px;">InfonameID</th>
+									<th style="width:50px;">InfocardID</th>
+									<th style="max-width:100%;"></th>
+								</tr>
+							</thead>
+							<tbody>
+								for _, faction := range factions {
+									<tr
+										id={ "bottom_click" + faction.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + FactionRepUrl(faction, mode) }
+										hx-trigger="mousedown"
+										hx-target="#table-bottom-main"
 										hx-swap="innerHTML"
 										preload="mouseover"
-									></td>
-									@templ.Raw(JoinClickTriggers("bottom_click"+faction.Nickname, "infocard_click"+faction.Nickname))
-								</tr>
-							}
-						</tbody>
-					</table>
+									>
+										<td>{ faction.Name }</td>
+										<td>{ faction.ShortName }</td>
+										<td>{ faction.Nickname }</td>
+										if mode == FactionShowRephacks {
+											<td>{ strconv.FormatBool(len(faction.Rephacks) > 0) }</td>
+										}
+										<td>{ fmt.Sprintf("%.2f", faction.ObjectDestruction) }</td>
+										<td>{ fmt.Sprintf("%.2f", faction.MissionSuccess) }</td>
+										<td>{ fmt.Sprintf("%.2f", faction.MissionFailure) }</td>
+										<td>{ fmt.Sprintf("%.2f", faction.MissionAbort) }</td>
+										<td>{ strconv.Itoa(faction.InfonameID) }</td>
+										<td>{ strconv.Itoa(faction.InfocardID) }</td>
+										<td
+											id={ "infocard_click" + faction.Nickname }
+											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(faction.Infocard) }
+											hx-trigger="click"
+											hx-target="#infocard_view"
+											hx-swap="innerHTML"
+											preload="mouseover"
+										></td>
+										@templ.Raw(JoinClickTriggers("bottom_click"+faction.Nickname, "infocard_click"+faction.Nickname))
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div id="table-bottom">
-					if mode == FactionShowBases {
-						@FactionRepsBase()
-					} else if mode == FactionShowRephacks {
-						@RephacksBottomBase()
-					}
+					<div id="table-bottom-main">
+						if mode == FactionShowBases {
+							@FactionRepsBase()
+						} else if mode == FactionShowRephacks {
+							@RephacksBottomBase()
+						}
+					</div>
 				</div>
 			</div>
 			<div id="infocard_view">
