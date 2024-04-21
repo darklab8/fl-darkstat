@@ -161,16 +161,17 @@ func (e *Exporter) GetShips() []Ship {
 		}
 
 		var infocards []int
-		if id, ok := ship_info.IdsInfo.GetValue(); ok {
-			infocards = append(infocards, id)
-		}
 		if id, ok := ship_info.IdsInfo1.GetValue(); ok {
 			infocards = append(infocards, id)
 		}
-		if id, ok := ship_info.IdsInfo2.GetValue(); ok {
-			infocards = append(infocards, id)
-		}
-		if id, ok := ship_info.IdsInfo3.GetValue(); ok {
+		// if id, ok := ship_info.IdsInfo2.GetValue(); ok {
+		// 	infocards = append(infocards, id)
+		// }
+		// Nobody uses it?
+		// if id, ok := ship_info.IdsInfo3.GetValue(); ok {
+		// 	infocards = append(infocards, id)
+		// }
+		if id, ok := ship_info.IdsInfo.GetValue(); ok {
 			infocards = append(infocards, id)
 		}
 		e.infocards_parser.Set(InfocardKey(ship.Nickname), infocards...)

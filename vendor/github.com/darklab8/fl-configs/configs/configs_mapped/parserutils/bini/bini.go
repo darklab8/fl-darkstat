@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	gbp "github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/exe_mapped/go-binary-pack"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/bin"
 	"github.com/darklab8/fl-configs/configs/settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
@@ -30,39 +31,6 @@ var bp = new(gbp.BinaryPack)
 
 const SEEK_SET = io.SeekStart // python default seek(offset, whence=os.SEEK_SET, /)
 
-type Bdatas struct {
-	bdata1 []byte
-	bdata3 []byte
-	bdata4 []byte
-}
-
-func NewBDatas() *Bdatas {
-	return &Bdatas{
-		bdata1: make([]byte, 1),
-		bdata3: make([]byte, 3),
-		bdata4: make([]byte, 4),
-	}
-}
-
-func (b *Bdatas) GetBData1() []byte {
-	for i := range b.bdata1 {
-		b.bdata1[i] = 0
-	}
-	return b.bdata1
-}
-func (b *Bdatas) GetBData3() []byte {
-	for i := range b.bdata3 {
-		b.bdata3[i] = 0
-	}
-	return b.bdata3
-}
-func (b *Bdatas) GetBData4() []byte {
-	for i := range b.bdata4 {
-		b.bdata4[i] = 0
-	}
-	return b.bdata4
-}
-
 var VALUE_TYPES map[int]string = map[int]string{
 	1: "i", 2: "f", 3: "i",
 }
@@ -70,7 +38,7 @@ var VALUE_TYPES map[int]string = map[int]string{
 // maps a byte value type to a struct format string
 
 func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
-	mem := NewBDatas()
+	mem := bin.NewBDatas()
 	var result []Section = make([]Section, 0, 100)
 
 	var string_table map[int]string = make(map[int]string)
@@ -124,11 +92,8 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 	position = int(pos)
 
 	for position < str_table_offset {
-		bdata := mem.GetBData4()
-		offset, err := fh.Read(bdata)
+		packed_values, offset := bin.Read2(fh, mem.GetBData(4), []string{"h", "h"})
 		position += offset
-		logus.Log.CheckPanic(err, "failed to read", utils_logus.FilePath(path))
-		packed_values, _ := bp.UnPack([]string{"h", "h"}, bdata)
 		section_name_ptr := packed_values[0].(int)
 		entry_count := packed_values[1].(int)
 
@@ -136,11 +101,8 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 
 		var section []Row
 		for e := 0; e < entry_count; e++ {
-			bdata := mem.GetBData3()
-			offset, err := fh.Read(bdata)
+			packed_values, offset := bin.Read2(fh, mem.GetBData(3), []string{"h", "b"})
 			position += offset
-			logus.Log.CheckPanic(err, "failed to read", utils_logus.FilePath(path))
-			packed_values, _ := bp.UnPack([]string{"h", "b"}, bdata)
 			entry_name_ptr := packed_values[0].(int)
 			value_count := packed_values[1].(int)
 			entry_name := string_table[entry_name_ptr]
@@ -149,18 +111,12 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 			row[EntryName(entry_name)] = make([]interface{}, 0, 10)
 
 			for v := 0; v < value_count; v++ {
-				bdata := mem.GetBData1()
-				offset, err := fh.Read(bdata)
+				packed_values, offset := bin.Read2(fh, mem.GetBData(1), []string{"b"})
 				position += offset
-				logus.Log.CheckPanic(err, "failed to read", utils_logus.FilePath(path))
-				packed_values, _ := bp.UnPack([]string{"b"}, bdata)
 				value_type := packed_values[0].(int)
 
-				bdataa := mem.GetBData4()
-				offset, err = fh.Read(bdataa)
+				packed_values, offset = bin.Read2(fh, mem.GetBData(4), []string{VALUE_TYPES[value_type]})
 				position += offset
-				logus.Log.CheckPanic(err, "failed to read", utils_logus.FilePath(path))
-				packed_values, _ = bp.UnPack([]string{VALUE_TYPES[value_type]}, bdataa)
 
 				var value_data interface{}
 				switch len(packed_values) {
@@ -172,12 +128,6 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 					logus.Log.Panic("expected 1 or 0 packed values", typelog.Any("values", packed_values))
 				}
 
-				// value_type, = unpack('b', f.read(1))
-				// value_data, = unpack(VALUE_TYPES[value_type], f.read(4))
-
-				// if value_type == 3:
-				// 	# it is a pointer relative to the string table
-				// 	value_data = string_table[value_data]
 				if value_type == 3 {
 					ptr := value_data.(int)
 					value_data = string_table[ptr]

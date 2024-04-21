@@ -44,7 +44,8 @@ func (f *File) close() {
 
 func (f *File) ReadLines() []string {
 	if bini.IsBini(f.filepath) {
-		return bini.Dump(f.filepath)
+		f.lines = bini.Dump(f.filepath)
+		return f.lines
 	}
 
 	f.openToReadF()

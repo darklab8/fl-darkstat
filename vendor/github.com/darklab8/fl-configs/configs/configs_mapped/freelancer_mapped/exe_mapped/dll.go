@@ -20,71 +20,12 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
 	"golang.org/x/text/encoding/charmap"
 
+	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/bin"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-configs/configs/settings/logus"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
-
-const SEEK_SET = io.SeekStart // python default seek(offset, whence=os.SEEK_SET, /)
-
-var packer = new(gbp.BinaryPack)
-
-func Unpack[returnType any](format []string, byte_data []byte) (returnType, error) {
-
-	unpacked_value, err := packer.UnPack(format, byte_data)
-	if err != nil {
-		var UnpackErrValue returnType
-		return UnpackErrValue, err
-	}
-	value := unpacked_value[0].(returnType)
-	return value, nil
-}
-
-func MakeArray(bytes_amount BytesToRead) []byte {
-	switch int(bytes_amount) {
-	case 1:
-		return make([]byte, 1)
-	case 2:
-		return make([]byte, 2)
-	case 4:
-		return make([]byte, 4)
-	case 8:
-		return make([]byte, 8)
-	default:
-		panic("not implemented")
-	}
-}
-
-func ReadUnpackWithArr[returnType any](
-	fh *bytes.Reader,
-	byte_data []byte,
-	format []string,
-) (returnType, int, error) {
-	returned_n, err := fh.Read(byte_data)
-	value, err := Unpack[returnType](format, byte_data)
-	return value, returned_n, err
-}
-
-func ReadUnpack[returnType any](
-	fh *bytes.Reader,
-	bytes_amount BytesToRead,
-	format []string,
-) (returnType, int, error) {
-	var byte_data []byte = MakeArray(bytes_amount)
-	return ReadUnpackWithArr[returnType](fh, byte_data, format)
-}
-
-type BytesToRead int
-
-func ReadUnpack2[returnType any](
-	fh *bytes.Reader, bytes_amount BytesToRead,
-	format []string) returnType {
-
-	value, _, err := ReadUnpack[returnType](fh, bytes_amount, format)
-	logus.Log.CheckError(err, "failed to read unpack")
-	return value
-}
 
 type DLLSection struct {
 	VirtualSize          int //     DLL_Sections[name]['VirtualSize'], = struct.unpack('=l', fh.read(4))
@@ -203,7 +144,10 @@ func JoinSize(size int, s ...[]byte) []byte {
 	return b
 }
 
+const SEEK_SET = io.SeekStart // python default seek(offset, whence=os.SEEK_SET, /)
+
 func parseDLL(data []byte, out *infocard.Config, global_offset int) {
+	mem := bin.NewBDatas()
 	fh := bytes.NewReader(data)
 
 	logus.Log.Debug("parseDLL for file.Name=")
@@ -213,49 +157,49 @@ func parseDLL(data []byte, out *infocard.Config, global_offset int) {
 	// Header stuff, most of it is just read and ignored but we need a few addresses from it.
 
 	returned_n64, err = fh.Seek(0x3C, SEEK_SET) // fh.seek(0x3C)
-	PE_sig_loc, returned_n, err := ReadUnpack[int](fh, BytesToRead(1), []string{"B"})
+	PE_sig_loc, returned_n, err := bin.Unpack[int](fh, mem.GetBData(1), []string{"B"})
 
-	returned_n64, err = fh.Seek(int64(PE_sig_loc+4), SEEK_SET)                                        // fh.seek(PE_sig_loc + 4) # goto COFF header (after sig)
-	returned_n, err = fh.Read(make([]byte, 2))                                                        // COFF_Head_Machine, = struct.unpack('h', fh.read(2)) # 014c - i386 or compatible
-	COFF_Head_NumberOfSections, returned_n, err := ReadUnpack[int](fh, BytesToRead(2), []string{"h"}) // COFF_Head_NumberOfSections, = struct.unpack('h', fh.read(2))
-	returned_n, err = fh.Read(make([]byte, 4))                                                        // COFF_Head_TimeDateStamp, = struct.unpack('=l', fh.read(4))
-	returned_n, err = fh.Read(make([]byte, 4))                                                        // COFF_Head_PointerToSymbolTable, = struct.unpack('=l', fh.read(4))
-	returned_n, err = fh.Read(make([]byte, 4))                                                        // COFF_Head_NumberOfSymbols, = struct.unpack('=l', fh.read(4))
+	returned_n64, err = fh.Seek(int64(PE_sig_loc+4), SEEK_SET)                                         // fh.seek(PE_sig_loc + 4) # goto COFF header (after sig)
+	returned_n, err = fh.Read(mem.GetBData(2))                                                         // COFF_Head_Machine, = struct.unpack('h', fh.read(2)) # 014c - i386 or compatible
+	COFF_Head_NumberOfSections, returned_n, err := bin.Unpack[int](fh, mem.GetBData(2), []string{"h"}) // COFF_Head_NumberOfSections, = struct.unpack('h', fh.read(2))
+	returned_n, err = fh.Read(mem.GetBData(4))                                                         // COFF_Head_TimeDateStamp, = struct.unpack('=l', fh.read(4))
+	returned_n, err = fh.Read(mem.GetBData(4))                                                         // COFF_Head_PointerToSymbolTable, = struct.unpack('=l', fh.read(4))
+	returned_n, err = fh.Read(mem.GetBData(4))                                                         // COFF_Head_NumberOfSymbols, = struct.unpack('=l', fh.read(4))
 
-	COFF_Head_SizeOfOptionalHeader, returned_n, err := ReadUnpack[int](fh, BytesToRead(2), []string{"h"}) // COFF_Head_SizeOfOptionalHeader, = struct.unpack('h', fh.read(2))
-	COFF_Head_Characteristics, _, err := ReadUnpack[int](fh, BytesToRead(2), []string{"h"})               // COFF_Head_Characteristics, = struct.unpack('h', fh.read(2)) # 210e
+	COFF_Head_SizeOfOptionalHeader, returned_n, err := bin.Unpack[int](fh, mem.GetBData(2), []string{"h"}) // COFF_Head_SizeOfOptionalHeader, = struct.unpack('h', fh.read(2))
+	COFF_Head_Characteristics, _, err := bin.Unpack[int](fh, mem.GetBData(2), []string{"h"})               // COFF_Head_Characteristics, = struct.unpack('h', fh.read(2)) # 210e
 	_ = COFF_Head_Characteristics
 
 	OPT_Head_Start, err := fh.Seek(0, io.SeekCurrent)
 
 	if COFF_Head_SizeOfOptionalHeader != 0 { // if COFF_Head_SizeOfOptionalHeader != 0: # image header exists
-		fh.Read(make([]byte, 2)) //     OPT_Head_Magic, = struct.unpack('h', fh.read(2))
-		fh.Read(make([]byte, 1)) //     OPT_Head_MajorLinkerVers, = struct.unpack('c', fh.read(1))
-		fh.Read(make([]byte, 1)) //     OPT_Head_MinorLinkerVers, = struct.unpack('c', fh.read(1))
-		fh.Read(make([]byte, 4)) //     OPT_Head_SizeOfCode, = struct.unpack('=l', fh.read(4))
-		fh.Read(make([]byte, 4)) //     OPT_Head_SizeOfInitializedData, = struct.unpack('=l', fh.read(4))
-		fh.Read(make([]byte, 4)) //     OPT_Head_SizeOfUninitializedData, = struct.unpack('=l', fh.read(4))
-		fh.Read(make([]byte, 4)) //     OPT_Head_AddressOfEntryPoint, = struct.unpack('=l', fh.read(4))
-		fh.Read(make([]byte, 4)) //     OPT_Head_BaseOfCode, = struct.unpack('=l', fh.read(4))
+		fh.Read(mem.GetBData(2)) //     OPT_Head_Magic, = struct.unpack('h', fh.read(2))
+		fh.Read(mem.GetBData(1)) //     OPT_Head_MajorLinkerVers, = struct.unpack('c', fh.read(1))
+		fh.Read(mem.GetBData(1)) //     OPT_Head_MinorLinkerVers, = struct.unpack('c', fh.read(1))
+		fh.Read(mem.GetBData(4)) //     OPT_Head_SizeOfCode, = struct.unpack('=l', fh.read(4))
+		fh.Read(mem.GetBData(4)) //     OPT_Head_SizeOfInitializedData, = struct.unpack('=l', fh.read(4))
+		fh.Read(mem.GetBData(4)) //     OPT_Head_SizeOfUninitializedData, = struct.unpack('=l', fh.read(4))
+		fh.Read(mem.GetBData(4)) //     OPT_Head_AddressOfEntryPoint, = struct.unpack('=l', fh.read(4))
+		fh.Read(mem.GetBData(4)) //     OPT_Head_BaseOfCode, = struct.unpack('=l', fh.read(4))
 
 		//     if OPT_Head_Magic == 0x20B: # if it's 64-bit
 		//         OPT_Head_ImageBase, = struct.unpack('q', fh.read(8))
 		//     else:
 		//         OPT_Head_BaseOfData, = struct.unpack('=l', fh.read(4))
 		//         OPT_Head_ImageBase, = struct.unpack('=l', fh.read(4))
-		fh.Read(make([]byte, 8))
+		fh.Read(mem.GetBData(8))
 
-		fh.Read(make([]byte, 4)) //     SectionAlignment = fh.read(4)
-		fh.Read(make([]byte, 4)) //     FileAlignment = fh.read(4)
-		fh.Read(make([]byte, 2)) //     MajorOperatingSystemVersion = fh.read(2)
-		fh.Read(make([]byte, 2)) //     MinorOperatingSystemVersion = fh.read(2)
-		fh.Read(make([]byte, 2)) //     MajorImageVersion = fh.read(2)
-		fh.Read(make([]byte, 2)) //     MinorImageVersion = fh.read(2)
-		fh.Read(make([]byte, 2)) //     MajorSubsystemVersion = fh.read(2)
-		fh.Read(make([]byte, 2)) //     MinorSubsystemVersion = fh.read(2)
-		fh.Read(make([]byte, 4)) //     Win32VersionValue = fh.read(4)
-		fh.Read(make([]byte, 4)) //     SizeOfImage = fh.read(4)
-		fh.Read(make([]byte, 4)) //     SizeOfHeaders = fh.read(4)
+		fh.Read(mem.GetBData(4)) //     SectionAlignment = fh.read(4)
+		fh.Read(mem.GetBData(4)) //     FileAlignment = fh.read(4)
+		fh.Read(mem.GetBData(2)) //     MajorOperatingSystemVersion = fh.read(2)
+		fh.Read(mem.GetBData(2)) //     MinorOperatingSystemVersion = fh.read(2)
+		fh.Read(mem.GetBData(2)) //     MajorImageVersion = fh.read(2)
+		fh.Read(mem.GetBData(2)) //     MinorImageVersion = fh.read(2)
+		fh.Read(mem.GetBData(2)) //     MajorSubsystemVersion = fh.read(2)
+		fh.Read(mem.GetBData(2)) //     MinorSubsystemVersion = fh.read(2)
+		fh.Read(mem.GetBData(4)) //     Win32VersionValue = fh.read(4)
+		fh.Read(mem.GetBData(4)) //     SizeOfImage = fh.read(4)
+		fh.Read(mem.GetBData(4)) //     SizeOfHeaders = fh.read(4)
 
 	}
 
@@ -265,39 +209,39 @@ func parseDLL(data []byte, out *infocard.Config, global_offset int) {
 	for i := 0; i < int(COFF_Head_NumberOfSections); i++ {                         // for i in range(0, COFF_Head_NumberOfSections):
 		logus.Log.Debug("i := 0; i < int(COFF_Head_NumberOfSections); i++, i=" + strconv.Itoa(i))
 		//     nt = fh.read(8)
-		nt := make([]byte, 8)
+		nt := mem.GetBData(8)
 		fh.Read(nt)
 
 		name := strings.ReplaceAll(string(nt), "\x00", "") //     name = nt.decode('utf-8').strip("\x00") # TODO: There was much more complex code for this in PHP, but the input format is completely different. Like different order and format different.
 
 		section := &DLLSection{}
 		DLL_Sections[name] = section
-		section.VirtualSize = ReadUnpack2[int](fh, BytesToRead(4), []string{"l"})          // LL_Sections[name]['VirtualSize'], = struct.unpack('=l', fh.read(4))
-		section.VirtualAddress = ReadUnpack2[int](fh, BytesToRead(4), []string{"l"})       //     DLL_Sections[name]['VirtualAddress'], = struct.unpack('=l', fh.read(4))
-		section.SizeOfRawData = ReadUnpack2[int](fh, BytesToRead(4), []string{"l"})        //     DLL_Sections[name]['SizeOfRawData'], = struct.unpack('=l', fh.read(4))
-		section.PointerToRawData = ReadUnpack2[int](fh, BytesToRead(4), []string{"l"})     //     DLL_Sections[name]['PointerToRawData'], = struct.unpack('=l', fh.read(4))
-		section.PointerToRelocations = ReadUnpack2[int](fh, BytesToRead(4), []string{"l"}) //     DLL_Sections[name]['PointerToRelocations'], = struct.unpack('=l', fh.read(4))
-		section.PointerToLinenumbers = ReadUnpack2[int](fh, BytesToRead(4), []string{"l"}) //     DLL_Sections[name]['PointerToLinenumbers'], = struct.unpack('=l', fh.read(4))
-		section.NumberOfRelocations = ReadUnpack2[int](fh, BytesToRead(2), []string{"h"})  //     DLL_Sections[name]['NumberOfRelocations'], = struct.unpack('h', fh.read(2))
-		section.NumberOfLinenumbers = ReadUnpack2[int](fh, BytesToRead(2), []string{"h"})  //     DLL_Sections[name]['NumberOfLinenumbers'], = struct.unpack('h', fh.read(2))
-		section.Characteristics = ReadUnpack2[int](fh, BytesToRead(4), []string{"l"})      //     DLL_Sections[name]['Characteristics'], = struct.unpack('=l', fh.read(4))
+		section.VirtualSize = bin.Unpack3[int](fh, mem.GetBData(4), []string{"l"})          // LL_Sections[name]['VirtualSize'], = struct.unpack('=l', fh.read(4))
+		section.VirtualAddress = bin.Unpack3[int](fh, mem.GetBData(4), []string{"l"})       //     DLL_Sections[name]['VirtualAddress'], = struct.unpack('=l', fh.read(4))
+		section.SizeOfRawData = bin.Unpack3[int](fh, mem.GetBData(4), []string{"l"})        //     DLL_Sections[name]['SizeOfRawData'], = struct.unpack('=l', fh.read(4))
+		section.PointerToRawData = bin.Unpack3[int](fh, mem.GetBData(4), []string{"l"})     //     DLL_Sections[name]['PointerToRawData'], = struct.unpack('=l', fh.read(4))
+		section.PointerToRelocations = bin.Unpack3[int](fh, mem.GetBData(4), []string{"l"}) //     DLL_Sections[name]['PointerToRelocations'], = struct.unpack('=l', fh.read(4))
+		section.PointerToLinenumbers = bin.Unpack3[int](fh, mem.GetBData(4), []string{"l"}) //     DLL_Sections[name]['PointerToLinenumbers'], = struct.unpack('=l', fh.read(4))
+		section.NumberOfRelocations = bin.Unpack3[int](fh, mem.GetBData(2), []string{"h"})  //     DLL_Sections[name]['NumberOfRelocations'], = struct.unpack('h', fh.read(2))
+		section.NumberOfLinenumbers = bin.Unpack3[int](fh, mem.GetBData(2), []string{"h"})  //     DLL_Sections[name]['NumberOfLinenumbers'], = struct.unpack('h', fh.read(2))
+		section.Characteristics = bin.Unpack3[int](fh, mem.GetBData(4), []string{"l"})      //     DLL_Sections[name]['Characteristics'], = struct.unpack('=l', fh.read(4))
 
 	}
 
 	logus.Log.Debug("rsrcstart")
-	rsrcstart := DLL_Sections[".rsrc"].PointerToRawData               // rsrcstart = DLL_Sections['.rsrc']['PointerToRawData']
-	fh.Seek(int64(rsrcstart)+int64(14), io.SeekStart)                 // fh.seek(rsrcstart + 14) # go to start of .rsrc
-	numentries := ReadUnpack2[int](fh, BytesToRead(2), []string{"h"}) // numentries, = struct.unpack('h', fh.read(2))
+	rsrcstart := DLL_Sections[".rsrc"].PointerToRawData                // rsrcstart = DLL_Sections['.rsrc']['PointerToRawData']
+	fh.Seek(int64(rsrcstart)+int64(14), io.SeekStart)                  // fh.seek(rsrcstart + 14) # go to start of .rsrc
+	numentries := bin.Unpack3[int](fh, mem.GetBData(2), []string{"h"}) // numentries, = struct.unpack('h', fh.read(2))
 	datatypes := []*DataType{}
 	// # get the data types stored in the resource section
 	for i := 0; i < numentries; i++ { // for i in range(0, numentries):
 		logus.Log.Debug("for i := 0; i < numentries; i++, i=" + strconv.Itoa(i))
 
-		dataType := ReadUnpack2[int](fh, BytesToRead(4), []string{"l"}) //     dataType, = struct.unpack('=l', fh.read(4))
+		dataType := bin.Unpack3[int](fh, mem.GetBData(4), []string{"l"}) //     dataType, = struct.unpack('=l', fh.read(4))
 
-		doi := make([]byte, 2)
+		doi := mem.GetBData(2)
 		fh.Read(doi) //     doi = fh.read(2)
-		doj := make([]byte, 1)
+		doj := mem.GetBData(1)
 		fh.Read(doj) //     doj = fh.read(1)
 
 		//     dataOffset, = struct.unpack('<i', doi + doj + '\x00'.encode('utf-8'))
@@ -318,22 +262,22 @@ func parseDLL(data []byte, out *infocard.Config, global_offset int) {
 		logus.Log.Debug("for _, datatype := range datatypes {" + fmt.Sprintf("%v", datatype))
 		fh.Seek(int64(datatype.Offset)+int64(rsrcstart), io.SeekStart) //     fh.seek(datatypes[i]['offset'] + rsrcstart)
 
-		name := MakeArray(8)
+		name := mem.GetBData(8)
 		fh.Read(name) //     name = fh.read(8)
 
-		fh.Seek(6, io.SeekCurrent)                                        //     fh.seek(6, os.SEEK_CUR)
-		numentries := ReadUnpack2[int](fh, BytesToRead(2), []string{"h"}) //     numentries, = struct.unpack('h', fh.read(2))
+		fh.Seek(6, io.SeekCurrent)                                         //     fh.seek(6, os.SEEK_CUR)
+		numentries := bin.Unpack3[int](fh, mem.GetBData(2), []string{"h"}) //     numentries, = struct.unpack('h', fh.read(2))
 
 		fh.Seek(0, io.SeekCurrent) //     sectionstart = fh.tell() # remember where we are here
 
 		for entry := 0; entry < numentries; entry++ { // for entry in range(0, numentries):                   //     for entry in range(0, numentries):
 			logus.Log.Debug("for entry := 0; entry < numentries; entry++ entry=" + strconv.Itoa(entry))
 			//         # get the id number and location of this entry
-			idnum := ReadUnpack2[int](fh, BytesToRead(4), []string{"i"}) //         idnum, = struct.unpack('i', fh.read(4))
+			idnum := bin.Unpack3[int](fh, mem.GetBData(4), []string{"i"}) //         idnum, = struct.unpack('i', fh.read(4))
 
-			doi := MakeArray(2)
+			doi := mem.GetBData(2)
 			fh.Read(doi) //     doi = fh.read(2)
-			doj := MakeArray(1)
+			doj := mem.GetBData(1)
 			fh.Read(doj) //     doj = fh.read(1)
 
 			//         nameloc, = struct.unpack('<i', doi + doj + '\x00'.encode('utf-8'))
@@ -342,27 +286,27 @@ func parseDLL(data []byte, out *infocard.Config, global_offset int) {
 			logus.Log.CheckError(err, "failed to unpack")
 			nameloc := unpacked_value[0].(int)
 
-			brk := MakeArray(1)
+			brk := mem.GetBData(1)
 			fh.Read(brk) //         brk = fh.read(1)
 
 			backto, _ := fh.Seek(0, io.SeekCurrent) //         backto = fh.tell() # remember where we were in the list of entries
 
 			fh.Seek(int64(rsrcstart)+int64(nameloc), io.SeekStart) //         fh.seek(rsrcstart + nameloc) # jump to the entry
 
-			name := MakeArray(8)
+			name := mem.GetBData(8)
 			fh.Read(name)              //         name = fh.read(8) # get the name
 			fh.Seek(8, io.SeekCurrent) //         fh.seek(8, os.SEEK_CUR)
 
-			lang := MakeArray(4)
+			lang := mem.GetBData(4)
 			fh.Read(lang) //         lang = fh.read(4) # language for this resource
 
-			someinfoloc := ReadUnpack2[int](fh, BytesToRead(4), []string{"i"}) //         someinfoloc, = struct.unpack('i', fh.read(4)) # location of the real location of the entry....
+			someinfoloc := bin.Unpack3[int](fh, mem.GetBData(4), []string{"i"}) //         someinfoloc, = struct.unpack('i', fh.read(4)) # location of the real location of the entry....
 
-			fh.Seek(int64(rsrcstart)+int64(someinfoloc), SEEK_SET)            //         fh.seek(rsrcstart + someinfoloc) # jump there
-			absloc := ReadUnpack2[int](fh, BytesToRead(4), []string{"i"})     //         absloc, = struct.unpack('i', fh.read(4)) # get the real location
-			datalength := ReadUnpack2[int](fh, BytesToRead(4), []string{"i"}) //         datalength, = struct.unpack('i', fh.read(4)) # entry length in bytes
+			fh.Seek(int64(rsrcstart)+int64(someinfoloc), SEEK_SET)             //         fh.seek(rsrcstart + someinfoloc) # jump there
+			absloc := bin.Unpack3[int](fh, mem.GetBData(4), []string{"i"})     //         absloc, = struct.unpack('i', fh.read(4)) # get the real location
+			datalength := bin.Unpack3[int](fh, mem.GetBData(4), []string{"i"}) //         datalength, = struct.unpack('i', fh.read(4)) # entry length in bytes
 
-			GetResource(data, out, absloc, datatype, idnum, global_offset, datalength)
+			GetResource(mem, data, out, absloc, datatype, idnum, global_offset, datalength)
 
 			//         # go back and get the next one
 			fh.Seek(backto, io.SeekStart) //         fh.seek(backto)
@@ -375,6 +319,7 @@ func parseDLL(data []byte, out *infocard.Config, global_offset int) {
 }
 
 func GetResource(
+	mem *bin.Bdatas,
 	data []byte,
 	out *infocard.Config,
 	absloc int,
@@ -390,7 +335,7 @@ func GetResource(
 
 	if datatype.Type_ == 0x06 { //         if datatypes[i]['type'] == 0x06: # string table
 		for strindex := 0; strindex < 16; strindex++ { //             for strindex in range(0, 16): # each string table has up to 16 entries
-			tableLen, n, err := ReadUnpack[int](fh, BytesToRead(2), []string{"h"}) //                 tableLen, = struct.unpack('h', fh.read(2))
+			tableLen, n, err := bin.Unpack[int](fh, mem.GetBData(2), []string{"h"}) //                 tableLen, = struct.unpack('h', fh.read(2))
 			//                 if not tableLen:
 			//                     continue # drop completely empty strings
 			if tableLen == 0 || n == 0 || err != nil {
