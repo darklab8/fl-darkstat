@@ -418,9 +418,9 @@ templ PinTd(nickname string, name string, pinm PinMod) {
 	<td style="display:flex;justify-content:space-between;min-width:50px;">
 		<span>{ name }</span>
 		if pinm==MainMode {
-			<span style="cursor:cell;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>pin</span>
+			<span style="cursor:copy;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>pin</span>
 		} else {
-			<span style="cursor:not-allowed;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>unpin</span>
+			<span style="cursor:no-drop;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>unpin</span>
 		}
 	</td>
 }
