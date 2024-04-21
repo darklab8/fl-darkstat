@@ -25,7 +25,7 @@ const (
 	ShipShowDetails
 )
 
-templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, pin string) {
+templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod) {
 	<table class={ "sortable", templ.KV("top-main", pinm==MainMode), templ.KV("top-pinned", pinm==PinMode) }>
 		<thead>
 			<tr>
@@ -59,15 +59,15 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, pin 
 			for _, ship := range ships {
 				// pin add later to hx-target
 				<tr
-					id={ pin + "bottominfo_" + ship.Nickname }
+					id={ string(pinm) + "bottominfo_" + ship.Nickname }
 					hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
 					hx-trigger="mousedown"
-					hx-target={ "#table-bottom-main" + pin }
+					hx-target={ "#table-bottom-main" + string(pinm) }
 					hx-swap="innerHTML"
 					preload="mouseover"
 					class={ templ.KV("hidden", pinm == PinMode) }
 				>
-					@PinTd(ship.Nickname, ship.Name, pinm, pin)
+					@PinTd(ship.Nickname, ship.Name, pinm)
 					<td>{ strconv.Itoa(ship.Class) }</td>
 					<td>{ ship.Type }</td>
 					<td>{ strconv.Itoa(ship.Price) }</td>
@@ -98,7 +98,7 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, pin 
 						hx-swap="innerHTML"
 						preload="mouseover"
 					></td>
-					@templ.Raw(JoinClickTriggers(pin+"bottominfo_"+ship.Nickname, "infocard_click"+ship.Nickname))
+					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+ship.Nickname, "infocard_click"+ship.Nickname))
 				</tr>
 			}
 		</tbody>
@@ -118,10 +118,10 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 			<div id="table-wrapper">
 				<div id="table-top">
 					<div id="table-top-main">
-						@ShipTable(ships, mode, MainMode, "")
+						@ShipTable(ships, mode, MainMode)
 					</div>
 					<div id="table-top-mainpin" class="hidden">
-						@ShipTable(ships, mode, PinMode, "pin")
+						@ShipTable(ships, mode, PinMode)
 					</div>
 				</div>
 				<div id="table-bottom">

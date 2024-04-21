@@ -392,11 +392,11 @@ func NotAllItemsUrl(url utils_types.FilePath) utils_types.FilePath {
 	return utils_types.FilePath(strings.ReplaceAll(url.ToString(), "all_", ""))
 }
 
-type PinMod int64
+type PinMod string
 
 const (
-	MainMode PinMod = iota
-	PinMode
+	MainMode PinMod = ""
+	PinMode  PinMod = "pin"
 )
 
 script Pin(id string) {
@@ -414,13 +414,13 @@ script Pin(id string) {
   }
 }
 
-templ PinTd(nickname string, name string, pinm PinMod, pin string) {
+templ PinTd(nickname string, name string, pinm PinMod) {
 	<td style="display:flex;justify-content:space-between;min-width:50px;">
 		<span>{ name }</span>
 		if pinm==MainMode {
-			<span style="cursor:cell;" class="pin" onClick={ Pin(pin + "bottominfo_" + nickname) }>pin</span>
+			<span style="cursor:cell;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>pin</span>
 		} else {
-			<span style="cursor:not-allowed;" class="pin" onClick={ Pin(pin + "bottominfo_" + nickname) }>unpin</span>
+			<span style="cursor:not-allowed;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>unpin</span>
 		}
 	</td>
 }

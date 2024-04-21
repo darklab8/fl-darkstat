@@ -28,7 +28,7 @@ const (
 	GunsMissiles
 )
 
-templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, pin string) {
+templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -66,15 +66,15 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, pin stri
 		<tbody>
 			for _, gun := range guns {
 				<tr
-					id={ pin + "bottominfo_" + gun.Nickname }
+					id={ string(pinm) + "bottominfo_" + gun.Nickname }
 					hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
 					hx-trigger="mousedown"
-					hx-target={ "#table-bottom-main" + pin }
+					hx-target={ "#table-bottom-main" + string(pinm) }
 					hx-swap="innerHTML"
 					preload="mouseover"
 					class={ templ.KV("hidden", pinm == PinMode) }
 				>
-					@PinTd(gun.Nickname, gun.Name, pinm, pin)
+					@PinTd(gun.Nickname, gun.Name, pinm)
 					<td>{ gun.Class }</td>
 					<td>{ gun.Type }</td>
 					<td>{ gun.DamageType }</td>
@@ -110,7 +110,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, pin stri
 						hx-swap="innerHTML"
 						preload="mouseover"
 					></td>
-					@templ.Raw(JoinClickTriggers(pin+"bottominfo_"+gun.Nickname, "infocard_click"+gun.Nickname))
+					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+gun.Nickname, "infocard_click"+gun.Nickname))
 				</tr>
 			}
 		</tbody>
@@ -132,10 +132,10 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
 			<div id="table-wrapper">
 				<div id="table-top">
 					<div id="table-top-main">
-						@GunTable(guns, mode, MainMode, "")
+						@GunTable(guns, mode, MainMode)
 					</div>
 					<div id="table-top-mainpin" class="hidden">
-						@GunTable(guns, mode, PinMode, "pin")
+						@GunTable(guns, mode, PinMode)
 					</div>
 				</div>
 				<div id="table-bottom">
