@@ -424,3 +424,12 @@ templ PinTd(nickname string, name string, pinm PinMod) {
 		}
 	</td>
 }
+
+templ FilterBar() {
+	<style>
+	#filterinput {
+		width:100%;
+	}
+	</style>
+	<input type="text" id="filterinput" onkeyup="FilteringFunction()" placeholder="Search for items.."/>
+}

@@ -139,6 +139,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
+					@FilterBar()
 					<div id="table-top-main">
 						@ShipTable(ships, mode, MainMode)
 					</div>

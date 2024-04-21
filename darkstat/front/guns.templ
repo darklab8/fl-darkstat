@@ -153,6 +153,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
+					@FilterBar()
 					<div id="table-top-main">
 						@GunTable(guns, mode, MainMode)
 					</div>
