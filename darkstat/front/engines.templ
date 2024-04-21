@@ -21,70 +21,74 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					<table class="sortable">
-						<thead>
-							<tr>
-								<th style="width:200px;">Engine</th>
-								<th style="width:50px;">Price</th>
-								<th style="width:50px;">Buyable</th>
-								<th style="width:100px;">Impulse Speed</th>
-								<th style="width:50px;">Cruise Speed</th>
-								<th style="width:50px;">Class</th>
-								<th style="width:50px;">Flame Effect</th>
-								<th style="width:50px;">Trail Effect</th>
-								<th style="width:50px;">Cruise Charge Time</th>
-								<th style="width:50px;">Linear Drag</th>
-								<th style="width:50px;">Max Force</th>
-								<th style="width:100px;">Referse Fraction</th>
-								<th style="width:50px;">Nickname</th>
-								<th style="width:50px;">HpType</th>
-								<th style="width:100px;">Name ID</th>
-								<th style="width:100px;">Info ID</th>
-								<th style="max-width:100%;"></th>
-							</tr>
-						</thead>
-						<tbody>
-							for _, engine := range engines {
-								<tr
-									id={ "bottominfo_click" + engine.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + EngineDetailedUrl(engine) }
-									hx-trigger="mousedown"
-									hx-target="#table-bottom"
-									hx-swap="innerHTML"
-									preload="mouseover"
-								>
-									<td>{ engine.Name }</td>
-									<td>{ strconv.Itoa(engine.Price) } </td>
-									<td>{ strconv.FormatBool(configs_export.Buyable(engine.Bases)) }</td>
-									<td>{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
-									<td>{ strconv.Itoa(engine.CruiseSpeed) }</td>
-									<td>{ engine.HpType }</td>
-									<td>{ engine.FlameEffect }</td>
-									<td>{ engine.TrailEffect }</td>
-									<td>{ strconv.Itoa(engine.CruiseChargeTime) }</td>
-									<td>{ strconv.Itoa(engine.LinearDrag) }</td>
-									<td>{ strconv.Itoa(engine.MaxForce) }</td>
-									<td>{ fmt.Sprintf("%.2f", engine.ReverseFraction) }</td>
-									<td>{ engine.Nickname } </td>
-									<td>{ engine.HpType } </td>
-									<td>{ strconv.Itoa(engine.NameID) } </td>
-									<td>{ strconv.Itoa(engine.InfoID) } </td>
-									<td
-										id={ "infocard_click" + engine.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(engine.Nickname)) }
-										hx-trigger="click"
-										hx-target="#infocard_view"
+					<div id="table-top-main">
+						<table class="sortable">
+							<thead>
+								<tr>
+									<th style="width:200px;">Engine</th>
+									<th style="width:50px;">Price</th>
+									<th style="width:50px;">Buyable</th>
+									<th style="width:100px;">Impulse Speed</th>
+									<th style="width:50px;">Cruise Speed</th>
+									<th style="width:50px;">Class</th>
+									<th style="width:50px;">Flame Effect</th>
+									<th style="width:50px;">Trail Effect</th>
+									<th style="width:50px;">Cruise Charge Time</th>
+									<th style="width:50px;">Linear Drag</th>
+									<th style="width:50px;">Max Force</th>
+									<th style="width:100px;">Referse Fraction</th>
+									<th style="width:50px;">Nickname</th>
+									<th style="width:50px;">HpType</th>
+									<th style="width:100px;">Name ID</th>
+									<th style="width:100px;">Info ID</th>
+									<th style="max-width:100%;"></th>
+								</tr>
+							</thead>
+							<tbody>
+								for _, engine := range engines {
+									<tr
+										id={ "bottominfo_click" + engine.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + EngineDetailedUrl(engine) }
+										hx-trigger="mousedown"
+										hx-target="#table-bottom-main"
 										hx-swap="innerHTML"
 										preload="mouseover"
-									></td>
-									@templ.Raw(JoinClickTriggers("bottominfo_click"+engine.Nickname, "infocard_click"+engine.Nickname))
-								</tr>
-							}
-						</tbody>
-					</table>
+									>
+										<td>{ engine.Name }</td>
+										<td>{ strconv.Itoa(engine.Price) } </td>
+										<td>{ strconv.FormatBool(configs_export.Buyable(engine.Bases)) }</td>
+										<td>{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
+										<td>{ strconv.Itoa(engine.CruiseSpeed) }</td>
+										<td>{ engine.HpType }</td>
+										<td>{ engine.FlameEffect }</td>
+										<td>{ engine.TrailEffect }</td>
+										<td>{ strconv.Itoa(engine.CruiseChargeTime) }</td>
+										<td>{ strconv.Itoa(engine.LinearDrag) }</td>
+										<td>{ strconv.Itoa(engine.MaxForce) }</td>
+										<td>{ fmt.Sprintf("%.2f", engine.ReverseFraction) }</td>
+										<td>{ engine.Nickname } </td>
+										<td>{ engine.HpType } </td>
+										<td>{ strconv.Itoa(engine.NameID) } </td>
+										<td>{ strconv.Itoa(engine.InfoID) } </td>
+										<td
+											id={ "infocard_click" + engine.Nickname }
+											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(engine.Nickname)) }
+											hx-trigger="click"
+											hx-target="#infocard_view"
+											hx-swap="innerHTML"
+											preload="mouseover"
+										></td>
+										@templ.Raw(JoinClickTriggers("bottominfo_click"+engine.Nickname, "infocard_click"+engine.Nickname))
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div id="table-bottom">
-					@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					<div id="table-bottom-main">
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
 				</div>
 			</div>
 			<div id="infocard_view">

@@ -25,6 +25,86 @@ const (
 	ShipShowDetails
 )
 
+templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, pin string) {
+	<table class={ "sortable", templ.KV("top-main", pinm==MainMode), templ.KV("top-pinned", pinm==PinMode) }>
+		<thead>
+			<tr>
+				<th style="min-width:200px;">Ship</th>
+				<th style="min-width:50px;">Class</th>
+				<th style="min-width:50px;">Type</th>
+				<th style="min-width:50px;">Price</th>
+				<th style="min-width:50px;">Buyable</th>
+				<th style="min-width:50px;">Armor</th>
+				<th style="min-width:50px;">Hold Size</th>
+				<th style="min-width:50px;">Nanobots</th>
+				<th style="min-width:50px;">Batteries</th>
+				<th style="min-width:100px;">Max Angular Speed (deg/s)</th>
+				<th style="min-width:100px;">Ang Dist. from 0 to 0.5 sec (deg)</th>
+				<th style="min-width:50px;">Time to 90% Max Angular Speed (s)</th>
+				<th style="min-width:50px;">Power Capacity</th>
+				<th style="min-width:50px;">Power Recharge Rate</th>
+				<th style="min-width:50px;">Thrust Capacity</th>
+				<th style="min-width:50px;">Thrust Recharge Rate</th>
+				<th style="min-width:50px;">Impulse Speed</th>
+				<th style="min-width:50px;">Reverse Fraction</th>
+				<th style="min-width:50px;">Nudge Force</th>
+				<th style="min-width:50px;">Strafe Forece</th>
+				<th style="min-width:50px;">Nickname</th>
+				<th style="min-width:100px;">Name ID</th>
+				<th style="min-width:100px;">Info ID</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, ship := range ships {
+				// pin add later to hx-target
+				<tr
+					id={ pin + "bottominfo_" + ship.Nickname }
+					hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
+					hx-trigger="mousedown"
+					hx-target={ "#table-bottom-main" + pin }
+					hx-swap="innerHTML"
+					preload="mouseover"
+					class={ templ.KV("hidden", pinm == PinMode) }
+				>
+					@PinTd(ship.Nickname, ship.Name, pinm, pin)
+					<td>{ strconv.Itoa(ship.Class) }</td>
+					<td>{ ship.Type }</td>
+					<td>{ strconv.Itoa(ship.Price) }</td>
+					<td>{ strconv.FormatBool(configs_export.Buyable(ship.Bases)) }</td>
+					<td>{ strconv.Itoa(ship.Armor) } </td>
+					<td>{ strconv.Itoa(ship.HoldSize) } </td>
+					<td>{ strconv.Itoa(ship.Nanobots) }</td>
+					<td>{ strconv.Itoa(ship.Batteries) }</td>
+					<td>{ fmt.Sprintf("%.2f",ship.MaxAngularSpeedDegS) }</td>
+					<td>{ fmt.Sprintf("%.2f",ship.AngularDistanceFrom0ToHalfSec) }</td>
+					<td>{ fmt.Sprintf("%.2f",ship.TimeTo90MaxAngularSpeed) }</td>
+					<td>{ strconv.Itoa(ship.PowerCapacity) }</td>
+					<td>{ strconv.Itoa(ship.PowerRechargeRate) }</td>
+					<td>{ strconv.Itoa(ship.ThrustCapacity) }</td>
+					<td>{ strconv.Itoa(ship.ThrustRecharge) }</td>
+					<td>{ fmt.Sprintf("%.2f",ship.ImpulseSpeed) }</td>
+					<td>{ fmt.Sprintf("%.2f",ship.ReverseFraction) }</td>
+					<td>{ fmt.Sprintf("%.2f",ship.NudgeForce) }</td>
+					<td>{ fmt.Sprintf("%.2f",ship.StrafeForce) }</td>
+					<td>{ ship.Nickname } </td>
+					<td>{ strconv.Itoa(ship.NameID) } </td>
+					<td>{ strconv.Itoa(ship.InfoID) } </td>
+					<td
+						id={ "infocard_click" + ship.Nickname }
+						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(ship.Nickname)) }
+						hx-trigger="click"
+						hx-target="#infocard_view"
+						hx-swap="innerHTML"
+						preload="mouseover"
+					></td>
+					@templ.Raw(JoinClickTriggers(pin+"bottominfo_"+ship.Nickname, "infocard_click"+ship.Nickname))
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
@@ -37,88 +117,28 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					<table class="sortable">
-						<thead>
-							<tr>
-								<th style="width:200px;">Ship</th>
-								<th style="width:50px;">Class</th>
-								<th style="width:50px;">Type</th>
-								<th style="width:50px;">Price</th>
-								<th style="width:50px;">Buyable</th>
-								<th style="width:50px;">Armor</th>
-								<th style="width:50px;">Hold Size</th>
-								<th style="width:50px;">Nanobots</th>
-								<th style="width:50px;">Batteries</th>
-								<th style="width:100px;">Max Angular Speed (deg/s)</th>
-								<th style="width:100px;">Ang Dist. from 0 to 0.5 sec (deg)</th>
-								<th style="width:50px;">Time to 90% Max Angular Speed (s)</th>
-								<th style="width:50px;">Power Capacity</th>
-								<th style="width:50px;">Power Recharge Rate</th>
-								<th style="width:50px;">Thrust Capacity</th>
-								<th style="width:50px;">Thrust Recharge Rate</th>
-								<th style="width:50px;">Impulse Speed</th>
-								<th style="width:50px;">Reverse Fraction</th>
-								<th style="width:50px;">Nudge Force</th>
-								<th style="width:50px;">Strafe Forece</th>
-								<th style="width:50px;">Nickname</th>
-								<th style="width:100px;">Name ID</th>
-								<th style="width:100px;">Info ID</th>
-								<th style="max-width:100%;"></th>
-							</tr>
-						</thead>
-						<tbody>
-							for _, ship := range ships {
-								<tr
-									id={ "bottominfo_click" + ship.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
-									hx-trigger="mousedown"
-									hx-target="#table-bottom"
-									hx-swap="innerHTML"
-									preload="mouseover"
-								>
-									<td>{ ship.Name }</td>
-									<td>{ strconv.Itoa(ship.Class) }</td>
-									<td>{ ship.Type }</td>
-									<td>{ strconv.Itoa(ship.Price) }</td>
-									<td>{ strconv.FormatBool(configs_export.Buyable(ship.Bases)) }</td>
-									<td>{ strconv.Itoa(ship.Armor) } </td>
-									<td>{ strconv.Itoa(ship.HoldSize) } </td>
-									<td>{ strconv.Itoa(ship.Nanobots) }</td>
-									<td>{ strconv.Itoa(ship.Batteries) }</td>
-									<td>{ fmt.Sprintf("%.2f",ship.MaxAngularSpeedDegS) }</td>
-									<td>{ fmt.Sprintf("%.2f",ship.AngularDistanceFrom0ToHalfSec) }</td>
-									<td>{ fmt.Sprintf("%.2f",ship.TimeTo90MaxAngularSpeed) }</td>
-									<td>{ strconv.Itoa(ship.PowerCapacity) }</td>
-									<td>{ strconv.Itoa(ship.PowerRechargeRate) }</td>
-									<td>{ strconv.Itoa(ship.ThrustCapacity) }</td>
-									<td>{ strconv.Itoa(ship.ThrustRecharge) }</td>
-									<td>{ fmt.Sprintf("%.2f",ship.ImpulseSpeed) }</td>
-									<td>{ fmt.Sprintf("%.2f",ship.ReverseFraction) }</td>
-									<td>{ fmt.Sprintf("%.2f",ship.NudgeForce) }</td>
-									<td>{ fmt.Sprintf("%.2f",ship.StrafeForce) }</td>
-									<td>{ ship.Nickname } </td>
-									<td>{ strconv.Itoa(ship.NameID) } </td>
-									<td>{ strconv.Itoa(ship.InfoID) } </td>
-									<td
-										id={ "infocard_click" + ship.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(ship.Nickname)) }
-										hx-trigger="click"
-										hx-target="#infocard_view"
-										hx-swap="innerHTML"
-										preload="mouseover"
-									></td>
-									@templ.Raw(JoinClickTriggers("bottominfo_click"+ship.Nickname, "infocard_click"+ship.Nickname))
-								</tr>
-							}
-						</tbody>
-					</table>
+					<div id="table-top-main">
+						@ShipTable(ships, mode, MainMode, "")
+					</div>
+					<div id="table-top-mainpin" class="hidden">
+						@ShipTable(ships, mode, PinMode, "pin")
+					</div>
 				</div>
 				<div id="table-bottom">
-					if mode == ShipShowBases {
-						@GoodAtBaseSharedT(ShowPricePerVolume(false))
-					} else if mode == ShipShowDetails {
-						@ShipDetailsShared([]string{})
-					}
+					<div id="table-bottom-main">
+						if mode == ShipShowBases {
+							@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						} else if mode == ShipShowDetails {
+							@ShipDetailsShared([]string{})
+						}
+					</div>
+					<div id="table-bottom-mainpin" class="hidden">
+						if mode == ShipShowBases {
+							@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						} else if mode == ShipShowDetails {
+							@ShipDetailsShared([]string{})
+						}
+					</div>
 				</div>
 			</div>
 			<div id="infocard_view">

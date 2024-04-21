@@ -74,15 +74,38 @@ templ TabContent() {
 				width: 75%;
 				height: 100%;
 				box-sizing: border-box;
-
+				
 				& #table-top {
-					overflow: scroll;
 					height: 65%;
+					overflow: hidden;
 					border-style: solid;
-    				border-width: 4px;
+					border-width: 4px;
 					border-color: var(--color_border);
 					box-sizing: border-box;
+
+					display: flex;
+					flex-direction: column;
+
+					& #table-top-main {
+						flex-grow: 1;
+						flex-shrink: 1;
+						overflow: scroll;
+						border-style: solid;
+						border-width: 4px;
+						border-color: var(--color_border);
+						box-sizing: border-box;
+					}
+					& #table-top-mainpin {
+						flex-shrink: 0;
+						overflow-x: scroll;
+						border-style: solid;
+						border-width: 4px;
+						border-color: var(--color_border);
+						box-sizing: border-box;
+					}
 				}
+
+				
 				& #table-bottom {
 					overflow: scroll;
 					height: 35%;
@@ -90,6 +113,29 @@ templ TabContent() {
     				border-width: 4px;
 					border-color: var(--color_border);
 					box-sizing: border-box;
+
+					display: flex;
+					flex-direction: row;
+
+					& #table-bottom-main {
+						min-width: 50%;
+						flex-grow:1;
+						flex-shrink: 1;
+						overflow: scroll;
+						border-style: solid;
+						border-width: 4px;
+						border-color: var(--color_border);
+						box-sizing: border-box;
+					}
+					& #table-bottom-mainpin {
+						min-width: 50%;
+						flex-shrink: 1;
+						overflow: scroll;
+						border-style: solid;
+						border-width: 4px;
+						border-color: var(--color_border);
+						box-sizing: border-box;
+					}
 				}
 			}
 			& #infocard_view {
@@ -111,6 +157,13 @@ templ TabContent() {
 				}
 			}
 		}
+
+	.hidden {
+		display: none;
+	}
+	span.pin {
+		color: gray;
+	}
 		
 	</style>
 }
@@ -333,4 +386,37 @@ func AllItemsUrl(url utils_types.FilePath) utils_types.FilePath {
 }
 func NotAllItemsUrl(url utils_types.FilePath) utils_types.FilePath {
 	return utils_types.FilePath(strings.ReplaceAll(url.ToString(), "all_", ""))
+}
+
+type PinMod int64
+
+const (
+	MainMode PinMod = iota
+	PinMode
+)
+
+script Pin(id string) {
+  if (id.includes("pin")) {
+	Hide(id)
+
+	if (TableLen(document.querySelector("#table-top-mainpin table")) === 1) {
+		Hide("table-top-mainpin")
+		Hide("table-bottom-mainpin")
+	}
+  } else {
+	Unhide("pin"+id)
+	Unhide("table-top-mainpin")
+	Unhide("table-bottom-mainpin")
+  }
+}
+
+templ PinTd(nickname string, name string, pinm PinMod, pin string) {
+	<td style="display:flex;justify-content:space-between;min-width:50px;">
+		<span>{ name }</span>
+		if pinm==MainMode {
+			<span style="cursor:cell;" class="pin" onClick={ Pin(pin + "bottominfo_" + nickname) }>pin</span>
+		} else {
+			<span style="cursor:not-allowed;" class="pin" onClick={ Pin(pin + "bottominfo_" + nickname) }>unpin</span>
+		}
+	</td>
 }

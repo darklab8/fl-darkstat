@@ -12,3 +12,6 @@ var PreloadJs string
 
 //go:embed sortable.js
 var SortableJs string
+
+//go:embed custom.js
+var CustomJS string

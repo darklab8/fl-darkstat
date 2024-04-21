@@ -21,82 +21,86 @@ templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					<table class="sortable">
-						<thead>
-							<tr>
-								<th style="width:200px;">Mine</th>
-								<th style="width:50px;">Price</th>
-								<th style="width:50px;">Buyable</th>
-								<th style="width:50px;">Ammo Price</th>
-								<th style="width:50px;">Hull Dmg</th>
-								<th style="width:50px;">Shield Dmg</th>
-								<th style="width:100px;">Value</th>
-								<th style="width:100px;">Refire</th>
-								<th style="width:50px;">Detonation Dist.</th>
-								<th style="width:50px;">Radius</th>
-								<th style="width:50px;">Seek Dist.</th>
-								<th style="width:50px;">Top Speed</th>
-								<th style="width:50px;">Acceleration</th>
-								<th style="width:50px;">Linear Drag</th>
-								<th style="width:50px;">Lifetime</th>
-								<th style="width:50px;">Owner Safe</th>
-								<th style="width:50px;">Toughness</th>
-								<th style="width:50px;">Hit Pts</th>
-								<th style="width:50px;">Lootable</th>
-								<th style="width:50px;">Nickname</th>
-								<th style="width:100px;">Name ID</th>
-								<th style="width:100px;">Info ID</th>
-								<th style="max-width:100%;"></th>
-							</tr>
-						</thead>
-						<tbody>
-							for _, mine := range mines {
-								<tr
-									id={ "bottominfo_click" + mine.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + MineDetailedUrl(mine) }
-									hx-trigger="mousedown"
-									hx-target="#table-bottom"
-									hx-swap="innerHTML"
-									preload="mouseover"
-								>
-									<td>{ mine.Name }</td>
-									<td>{ strconv.Itoa(mine.Price) } </td>
-									<td>{ strconv.FormatBool(configs_export.Buyable(mine.Bases)) }</td>
-									<td>{ strconv.Itoa(mine.AmmoPrice) } </td>
-									<td>{ strconv.Itoa(mine.HullDamage) }</td>
-									<td>{ strconv.Itoa(mine.ShieldDamage) }</td>
-									<td>{ fmt.Sprintf("%.2f",mine.Value) }</td>
-									<td>{ fmt.Sprintf("%.2f", mine.Refire) }</td>
-									<td>{ fmt.Sprintf("%.2f", mine.DetonationDistance) }</td>
-									<td>{ fmt.Sprintf("%.2f",mine.Radius) }</td>
-									<td>{ strconv.Itoa(mine.SeekDistance) }</td>
-									<td>{ strconv.Itoa(mine.TopSpeed) }</td>
-									<td>{ strconv.Itoa(mine.Acceleration) }</td>
-									<td>{ fmt.Sprintf("%.6f",mine.LinearDrag) }</td>
-									<td>{ fmt.Sprintf("%.2f",mine.LifeTime) }</td>
-									<td>{ strconv.Itoa(mine.OwnerSafe) }</td>
-									<td>{ fmt.Sprintf("%.2f",mine.Toughness) }</td>
-									<td>{ strconv.Itoa(mine.HitPts) }</td>
-									<td>{ strconv.FormatBool(mine.Lootable) }</td>
-									<td>{ mine.Nickname } </td>
-									<td>{ strconv.Itoa(mine.IdsName) } </td>
-									<td>{ strconv.Itoa(mine.IdsInfo) } </td>
-									<td
-										id={ "infocard_click" + mine.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(mine.Nickname)) }
-										hx-trigger="click"
-										hx-target="#infocard_view"
+					<div id="table-top-main">
+						<table class="sortable">
+							<thead>
+								<tr>
+									<th style="width:200px;">Mine</th>
+									<th style="width:50px;">Price</th>
+									<th style="width:50px;">Buyable</th>
+									<th style="width:50px;">Ammo Price</th>
+									<th style="width:50px;">Hull Dmg</th>
+									<th style="width:50px;">Shield Dmg</th>
+									<th style="width:100px;">Value</th>
+									<th style="width:100px;">Refire</th>
+									<th style="width:50px;">Detonation Dist.</th>
+									<th style="width:50px;">Radius</th>
+									<th style="width:50px;">Seek Dist.</th>
+									<th style="width:50px;">Top Speed</th>
+									<th style="width:50px;">Acceleration</th>
+									<th style="width:50px;">Linear Drag</th>
+									<th style="width:50px;">Lifetime</th>
+									<th style="width:50px;">Owner Safe</th>
+									<th style="width:50px;">Toughness</th>
+									<th style="width:50px;">Hit Pts</th>
+									<th style="width:50px;">Lootable</th>
+									<th style="width:50px;">Nickname</th>
+									<th style="width:100px;">Name ID</th>
+									<th style="width:100px;">Info ID</th>
+									<th style="max-width:100%;"></th>
+								</tr>
+							</thead>
+							<tbody>
+								for _, mine := range mines {
+									<tr
+										id={ "bottominfo_click" + mine.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + MineDetailedUrl(mine) }
+										hx-trigger="mousedown"
+										hx-target="#table-bottom-main"
 										hx-swap="innerHTML"
 										preload="mouseover"
-									></td>
-									@templ.Raw(JoinClickTriggers("bottominfo_click"+mine.Nickname, "infocard_click"+mine.Nickname))
-								</tr>
-							}
-						</tbody>
-					</table>
+									>
+										<td>{ mine.Name }</td>
+										<td>{ strconv.Itoa(mine.Price) } </td>
+										<td>{ strconv.FormatBool(configs_export.Buyable(mine.Bases)) }</td>
+										<td>{ strconv.Itoa(mine.AmmoPrice) } </td>
+										<td>{ strconv.Itoa(mine.HullDamage) }</td>
+										<td>{ strconv.Itoa(mine.ShieldDamage) }</td>
+										<td>{ fmt.Sprintf("%.2f",mine.Value) }</td>
+										<td>{ fmt.Sprintf("%.2f", mine.Refire) }</td>
+										<td>{ fmt.Sprintf("%.2f", mine.DetonationDistance) }</td>
+										<td>{ fmt.Sprintf("%.2f",mine.Radius) }</td>
+										<td>{ strconv.Itoa(mine.SeekDistance) }</td>
+										<td>{ strconv.Itoa(mine.TopSpeed) }</td>
+										<td>{ strconv.Itoa(mine.Acceleration) }</td>
+										<td>{ fmt.Sprintf("%.6f",mine.LinearDrag) }</td>
+										<td>{ fmt.Sprintf("%.2f",mine.LifeTime) }</td>
+										<td>{ strconv.Itoa(mine.OwnerSafe) }</td>
+										<td>{ fmt.Sprintf("%.2f",mine.Toughness) }</td>
+										<td>{ strconv.Itoa(mine.HitPts) }</td>
+										<td>{ strconv.FormatBool(mine.Lootable) }</td>
+										<td>{ mine.Nickname } </td>
+										<td>{ strconv.Itoa(mine.IdsName) } </td>
+										<td>{ strconv.Itoa(mine.IdsInfo) } </td>
+										<td
+											id={ "infocard_click" + mine.Nickname }
+											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(mine.Nickname)) }
+											hx-trigger="click"
+											hx-target="#infocard_view"
+											hx-swap="innerHTML"
+											preload="mouseover"
+										></td>
+										@templ.Raw(JoinClickTriggers("bottominfo_click"+mine.Nickname, "infocard_click"+mine.Nickname))
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div id="table-bottom">
-					@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					<div id="table-bottom-main">
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
 				</div>
 			</div>
 			<div id="infocard_view">

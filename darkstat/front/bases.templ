@@ -25,52 +25,56 @@ templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					<table class="sortable">
-						<thead>
-							<tr>
-								<th style="width:200px;">Base</th>
-								<th style="width:200px;">Owner - Faction</th>
-								<th style="width:100px;">System</th>
-								<th style="width:200px;">Base Nickname</th>
-								<th style="width:50px;">System Nickname</th>
-								<th style="width:100px;">Base Name ID</th>
-								<th style="width:100px;">Infocard ID</th>
-								<th style="max-width:100%;"></th>
-							</tr>
-						</thead>
-						<tbody>
-							for _, base := range bases {
-								<tr
-									id={ "marketgoods_click" + base.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + BaseMarketGoodUrl(base) }
-									hx-trigger="mousedown"
-									hx-target="#table-bottom"
-									hx-swap="innerHTML"
-									preload="mouseover"
-								>
-									<td>{ base.Name }</td>
-									<td>{ base.FactionName }</td>
-									<td>{ base.System }</td>
-									<td>{ base.Nickname }</td>
-									<td>{ base.SystemNickname }</td>
-									<td>{ strconv.Itoa(base.StridName) }</td>
-									<td>{ strconv.Itoa(base.InfocardID) }</td>
-									<td
-										id={ "infocard_click" + base.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(base.Infocard) }
-										hx-trigger="click"
-										hx-target="#infocard_view"
+					<div id="table-top-main">
+						<table class="sortable">
+							<thead>
+								<tr>
+									<th style="width:200px;">Base</th>
+									<th style="width:200px;">Owner - Faction</th>
+									<th style="width:100px;">System</th>
+									<th style="width:200px;">Base Nickname</th>
+									<th style="width:50px;">System Nickname</th>
+									<th style="width:100px;">Base Name ID</th>
+									<th style="width:100px;">Infocard ID</th>
+									<th style="max-width:100%;"></th>
+								</tr>
+							</thead>
+							<tbody>
+								for _, base := range bases {
+									<tr
+										id={ "marketgoods_click" + base.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + BaseMarketGoodUrl(base) }
+										hx-trigger="mousedown"
+										hx-target="#table-bottom-main"
 										hx-swap="innerHTML"
 										preload="mouseover"
-									></td>
-									@templ.Raw(JoinClickTriggers("marketgoods_click"+base.Nickname, "infocard_click"+base.Nickname))
-								</tr>
-							}
-						</tbody>
-					</table>
+									>
+										<td>{ base.Name }</td>
+										<td>{ base.FactionName }</td>
+										<td>{ base.System }</td>
+										<td>{ base.Nickname }</td>
+										<td>{ base.SystemNickname }</td>
+										<td>{ strconv.Itoa(base.StridName) }</td>
+										<td>{ strconv.Itoa(base.InfocardID) }</td>
+										<td
+											id={ "infocard_click" + base.Nickname }
+											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(base.Infocard) }
+											hx-trigger="click"
+											hx-target="#infocard_view"
+											hx-swap="innerHTML"
+											preload="mouseover"
+										></td>
+										@templ.Raw(JoinClickTriggers("marketgoods_click"+base.Nickname, "infocard_click"+base.Nickname))
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div id="table-bottom">
-					@BaseMarketGoodsBase()
+					<div id="table-bottom-main">
+						@BaseMarketGoodsBase()
+					</div>
 				</div>
 			</div>
 			<div id="infocard_view">

@@ -20,64 +20,68 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					<table class="sortable">
-						<thead>
-							<tr>
-								<th style="width:200px;">CM</th>
-								<th style="width:50px;">Price</th>
-								<th style="width:50px;">Buyable</th>
-								<th style="width:50px;">Diversion Chance</th>
-								<th style="width:100px;">Ammo Limit</th>
-								<th style="width:100px;">Lifetime</th>
-								<th style="width:50px;">Range</th>
-								<th style="width:50px;">AI Range</th>
-								<th style="width:50px;">Hit Pts</th>
-								<th style="width:50px;">Lootable</th>
-								<th style="width:50px;">Nickname</th>
-								<th style="width:100px;">Name ID</th>
-								<th style="width:100px;">Info ID</th>
-								<th style="max-width:100%;"></th>
-							</tr>
-						</thead>
-						<tbody>
-							for _, cm := range cms {
-								<tr
-									id={ "bottominfo_click" + cm.Nickname }
-									hx-get={ types.GetCtx(ctx).SiteRoot + CounterMeasreDetailedUrl(cm) }
-									hx-trigger="mousedown"
-									hx-target="#table-bottom"
-									hx-swap="innerHTML"
-									preload="mouseover"
-								>
-									<td>{ cm.Name }</td>
-									<td>{ strconv.Itoa(cm.Price) } </td>
-									<td>{ strconv.FormatBool(configs_export.Buyable(cm.Bases)) }</td>
-									<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
-									<td>{ strconv.Itoa(cm.AmmoLimit) }</td>
-									<td>{ strconv.Itoa(cm.Lifetime) }</td>
-									<td>{ strconv.Itoa(cm.Range) }</td>
-									<td>{ strconv.Itoa(cm.AIRange) }</td>
-									<td>{ strconv.Itoa(cm.HitPts) }</td>
-									<td>{ strconv.FormatBool(cm.Lootable) }</td>
-									<td>{ cm.Nickname } </td>
-									<td>{ strconv.Itoa(cm.NameID) } </td>
-									<td>{ strconv.Itoa(cm.InfoID) } </td>
-									<td
-										id={ "infocard_click" + cm.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(cm.Nickname)) }
-										hx-trigger="click"
-										hx-target="#infocard_view"
+					<div id="table-top-main">
+						<table class="sortable">
+							<thead>
+								<tr>
+									<th style="width:200px;">CM</th>
+									<th style="width:50px;">Price</th>
+									<th style="width:50px;">Buyable</th>
+									<th style="width:50px;">Diversion Chance</th>
+									<th style="width:100px;">Ammo Limit</th>
+									<th style="width:100px;">Lifetime</th>
+									<th style="width:50px;">Range</th>
+									<th style="width:50px;">AI Range</th>
+									<th style="width:50px;">Hit Pts</th>
+									<th style="width:50px;">Lootable</th>
+									<th style="width:50px;">Nickname</th>
+									<th style="width:100px;">Name ID</th>
+									<th style="width:100px;">Info ID</th>
+									<th style="max-width:100%;"></th>
+								</tr>
+							</thead>
+							<tbody>
+								for _, cm := range cms {
+									<tr
+										id={ "bottominfo_click" + cm.Nickname }
+										hx-get={ types.GetCtx(ctx).SiteRoot + CounterMeasreDetailedUrl(cm) }
+										hx-trigger="mousedown"
+										hx-target="#table-bottom-main"
 										hx-swap="innerHTML"
 										preload="mouseover"
-									></td>
-									@templ.Raw(JoinClickTriggers("bottominfo_click"+cm.Nickname, "infocard_click"+cm.Nickname))
-								</tr>
-							}
-						</tbody>
-					</table>
+									>
+										<td>{ cm.Name }</td>
+										<td>{ strconv.Itoa(cm.Price) } </td>
+										<td>{ strconv.FormatBool(configs_export.Buyable(cm.Bases)) }</td>
+										<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
+										<td>{ strconv.Itoa(cm.AmmoLimit) }</td>
+										<td>{ strconv.Itoa(cm.Lifetime) }</td>
+										<td>{ strconv.Itoa(cm.Range) }</td>
+										<td>{ strconv.Itoa(cm.AIRange) }</td>
+										<td>{ strconv.Itoa(cm.HitPts) }</td>
+										<td>{ strconv.FormatBool(cm.Lootable) }</td>
+										<td>{ cm.Nickname } </td>
+										<td>{ strconv.Itoa(cm.NameID) } </td>
+										<td>{ strconv.Itoa(cm.InfoID) } </td>
+										<td
+											id={ "infocard_click" + cm.Nickname }
+											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(cm.Nickname)) }
+											hx-trigger="click"
+											hx-target="#infocard_view"
+											hx-swap="innerHTML"
+											preload="mouseover"
+										></td>
+										@templ.Raw(JoinClickTriggers("bottominfo_click"+cm.Nickname, "infocard_click"+cm.Nickname))
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div id="table-bottom">
-					@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					<div id="table-bottom-main">
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
 				</div>
 			</div>
 			<div id="infocard_view">
