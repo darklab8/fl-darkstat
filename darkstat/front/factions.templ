@@ -129,7 +129,8 @@ templ FactionRepsBase() {
 	</table>
 }
 
-templ FactionReps(reps []configs_export.Reputation) {
+templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputation) {
+	<div class="bottom_name">{ faction.Name }</div>
 	@FactionRepsBase() {
 		for _, rep := range reps {
 			<tr

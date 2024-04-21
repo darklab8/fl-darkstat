@@ -24,7 +24,8 @@ templ RephacksBottomBase() {
 	</table>
 }
 
-templ RephackBottom(rephacks []configs_export.Rephack) {
+templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Rephack) {
+	<div class="bottom_name">{ faction.Name }</div>
 	@RephacksBottomBase() {
 		for _, rep := range rephacks {
 			<tr
