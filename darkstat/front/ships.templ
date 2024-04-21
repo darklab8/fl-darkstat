@@ -30,6 +30,10 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod) {
 		<thead>
 			<tr>
 				<th style="min-width:200px;">Ship</th>
+				if pinm == PinMode {
+					<th style="min-width:50px;">Select</th>
+					<th style="min-width:50px;">Select</th>
+				}
 				<th style="min-width:50px;">Class</th>
 				<th style="min-width:50px;">Type</th>
 				<th style="min-width:50px;">Price</th>
@@ -61,13 +65,31 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod) {
 				<tr
 					id={ string(pinm) + "bottominfo_" + ship.Nickname }
 					hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
-					hx-trigger="mousedown"
+					hx-trigger={ "mousedown" }
 					hx-target={ "#table-bottom-main" + string(pinm) }
 					hx-swap="innerHTML"
-					preload="mouseover"
+					preload={ "mouseover" }
 					class={ templ.KV("hidden", pinm == PinMode) }
 				>
 					@PinTd(ship.Nickname, ship.Name, pinm)
+					if pinm == PinMode {
+						<td
+							hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
+							hx-trigger="mousedown consume"
+							hx-target={ "#table-bottom-main" }
+							hx-swap="innerHTML"
+							preload="mouseover"
+							style="cursor:zoom-in;"
+						>To Left</td>
+						<td
+							hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
+							hx-trigger="mousedown consume"
+							hx-target={ "#table-bottom-main" + string(pinm) }
+							hx-swap="innerHTML"
+							preload="mouseover"
+							style="cursor:zoom-in;"
+						>To Right</td>
+					}
 					<td>{ strconv.Itoa(ship.Class) }</td>
 					<td>{ ship.Type }</td>
 					<td>{ strconv.Itoa(ship.Price) }</td>

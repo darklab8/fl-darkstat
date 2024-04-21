@@ -33,6 +33,10 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod) {
 		<thead>
 			<tr>
 				<th style="min-width:200px;">Gun</th>
+				if pinm == PinMode {
+					<th style="min-width:50px;">Select</th>
+					<th style="min-width:50px;">Select</th>
+				}
 				<th style="min-width:50px;">Class</th>
 				<th style="min-width:50px;">Type</th>
 				<th style="min-width:50px;">Technology</th>
@@ -68,13 +72,31 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod) {
 				<tr
 					id={ string(pinm) + "bottominfo_" + gun.Nickname }
 					hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
-					hx-trigger="mousedown"
+					hx-trigger={ "mousedown" }
 					hx-target={ "#table-bottom-main" + string(pinm) }
 					hx-swap="innerHTML"
-					preload="mouseover"
+					preload={ "mouseover" }
 					class={ templ.KV("hidden", pinm == PinMode) }
 				>
 					@PinTd(gun.Nickname, gun.Name, pinm)
+					if pinm == PinMode {
+						<td
+							hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
+							hx-trigger="mousedown consume"
+							hx-target={ "#table-bottom-main" }
+							hx-swap="innerHTML"
+							preload="mouseover"
+							style="cursor:zoom-in;"
+						>To Left</td>
+						<td
+							hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
+							hx-trigger="mousedown consume"
+							hx-target={ "#table-bottom-main" + string(pinm) }
+							hx-swap="innerHTML"
+							preload="mouseover"
+							style="cursor:zoom-in;"
+						>To Right</td>
+					}
 					<td>{ gun.Class }</td>
 					<td>{ gun.Type }</td>
 					<td>{ gun.DamageType }</td>
