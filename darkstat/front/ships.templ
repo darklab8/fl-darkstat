@@ -129,14 +129,14 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 						if mode == ShipShowBases {
 							@GoodAtBaseSharedT(ShowPricePerVolume(false))
 						} else if mode == ShipShowDetails {
-							@ShipDetailsShared([]string{})
+							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 					<div id="table-bottom-mainpin" class="hidden">
 						if mode == ShipShowBases {
 							@GoodAtBaseSharedT(ShowPricePerVolume(false))
 						} else if mode == ShipShowDetails {
-							@ShipDetailsShared([]string{})
+							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 				</div>
@@ -148,12 +148,12 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 	}
 }
 
-templ ShipDetailsShared(columns []string) {
+templ ShipDetailsShared(ship configs_export.Ship) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:50px;">Ship Hardpoint</th>
-				for index, _ := range columns {
+				for index, _ := range ship.BiggestHardpoint {
 					<th style="width:50px;">HpType { strconv.Itoa(index) }</th>
 				}
 				<th style="max-width:100%;"></th>
@@ -166,7 +166,8 @@ templ ShipDetailsShared(columns []string) {
 }
 
 templ ShipDetails(ship configs_export.Ship) {
-	@ShipDetailsShared(ship.BiggestHardpoint) {
+	<div class="bottom_name">{ ship.Name }</div>
+	@ShipDetailsShared(ship) {
 		for _, slot := range ship.Slots {
 			<tr>
 				<td>{ slot.SlotName }</td>

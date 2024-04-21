@@ -181,6 +181,7 @@ templ GunShowModifiersShared() {
 }
 
 templ GunShowModifiers(gun configs_export.Gun) {
+	<div class="bottom_name">{ gun.Name }</div>
 	@GunShowModifiersShared() {
 		for _, bonus := range gun.DamangeBonuses {
 			<tr>

@@ -107,7 +107,8 @@ templ BaseMarketGoodsBase() {
 	</table>
 }
 
-templ BaseMarketGoods(goods []configs_export.MarketGood) {
+templ BaseMarketGoods(name string, goods []configs_export.MarketGood) {
+	<div class="bottom_name">{ name }</div>
 	@BaseMarketGoodsBase() {
 		for _, good := range goods {
 			<tr

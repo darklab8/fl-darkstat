@@ -49,6 +49,9 @@ templ TabContent() {
   			top: 0; /* Don't forget this, required for the stickiness */
 			
 		}
+		.bottom_name {
+			padding: 5px;
+		}
 		td {
 			border-color: var(--color_border);
 		}
@@ -354,7 +357,8 @@ templ GoodAtBaseSharedT(show_price_per_volume ShowPricePerVolume) {
 
 type ShowPricePerVolume bool
 
-templ GoodAtBaseInfoT(base_infos []configs_export.GoodAtBase, show_price_per_volume ShowPricePerVolume) {
+templ GoodAtBaseInfoT(name string, base_infos []configs_export.GoodAtBase, show_price_per_volume ShowPricePerVolume) {
+	<div class="bottom_name">{ name }</div>
 	@GoodAtBaseSharedT(show_price_per_volume) {
 		for _, base_info := range base_infos {
 			<tr
