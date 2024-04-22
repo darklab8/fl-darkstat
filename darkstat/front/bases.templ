@@ -17,6 +17,58 @@ func BaseMarketGoodUrl(base configs_export.Base) string {
 	return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname)
 }
 
+templ BasesTable(bases []configs_export.Base, pinm PinMod) {
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th style="min-width:200px;">Base</th>
+				if pinm == PinMode {
+					<th style="min-width:50px;">Select</th>
+					<th style="min-width:50px;">Select</th>
+				}
+				<th style="min-width:200px;">Owner - Faction</th>
+				<th style="min-width:100px;">System</th>
+				<th style="min-width:200px;">Base Nickname</th>
+				<th style="min-width:50px;">System Nickname</th>
+				<th style="min-width:100px;">Base Name ID</th>
+				<th style="min-width:100px;">Infocard ID</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, base := range bases {
+				<tr
+					id={ string(pinm) + "bottominfo_" + base.Nickname }
+					hx-get={ types.GetCtx(ctx).SiteRoot + BaseMarketGoodUrl(base) }
+					hx-trigger="mousedown"
+					hx-target={ "#table-bottom-main" + string(pinm) }
+					hx-swap="innerHTML"
+					preload="mouseover"
+					class={ templ.KV("hidden", pinm == PinMode) }
+				>
+					@PinTd(base.Nickname, base.Name, pinm)
+					@PinSelectLeftRight(pinm, BaseMarketGoodUrl(base))
+					<td>{ base.FactionName }</td>
+					<td>{ base.System }</td>
+					<td>{ base.Nickname }</td>
+					<td>{ base.SystemNickname }</td>
+					<td>{ strconv.Itoa(base.StridName) }</td>
+					<td>{ strconv.Itoa(base.InfocardID) }</td>
+					<td
+						id={ "infocard_click" + base.Nickname }
+						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(base.Infocard) }
+						hx-trigger="click"
+						hx-target="#infocard_view"
+						hx-swap="innerHTML"
+						preload="mouseover"
+					></td>
+					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+base.Nickname, "infocard_click"+base.Nickname))
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
@@ -27,53 +79,17 @@ templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
 				<div id="table-top">
 					@FilterBar()
 					<div id="table-top-main">
-						<table class="sortable">
-							<thead>
-								<tr>
-									<th style="width:200px;">Base</th>
-									<th style="width:200px;">Owner - Faction</th>
-									<th style="width:100px;">System</th>
-									<th style="width:200px;">Base Nickname</th>
-									<th style="width:50px;">System Nickname</th>
-									<th style="width:100px;">Base Name ID</th>
-									<th style="width:100px;">Infocard ID</th>
-									<th style="max-width:100%;"></th>
-								</tr>
-							</thead>
-							<tbody>
-								for _, base := range bases {
-									<tr
-										id={ "marketgoods_click" + base.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + BaseMarketGoodUrl(base) }
-										hx-trigger="mousedown"
-										hx-target="#table-bottom-main"
-										hx-swap="innerHTML"
-										preload="mouseover"
-									>
-										<td>{ base.Name }</td>
-										<td>{ base.FactionName }</td>
-										<td>{ base.System }</td>
-										<td>{ base.Nickname }</td>
-										<td>{ base.SystemNickname }</td>
-										<td>{ strconv.Itoa(base.StridName) }</td>
-										<td>{ strconv.Itoa(base.InfocardID) }</td>
-										<td
-											id={ "infocard_click" + base.Nickname }
-											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(base.Infocard) }
-											hx-trigger="click"
-											hx-target="#infocard_view"
-											hx-swap="innerHTML"
-											preload="mouseover"
-										></td>
-										@templ.Raw(JoinClickTriggers("marketgoods_click"+base.Nickname, "infocard_click"+base.Nickname))
-									</tr>
-								}
-							</tbody>
-						</table>
+						@BasesTable(bases, MainMode)
+					</div>
+					<div id="table-top-mainpin" class="hidden">
+						@BasesTable(bases, PinMode)
 					</div>
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
+						@BaseMarketGoodsBase()
+					</div>
+					<div id="table-bottom-mainpin" class="hidden">
 						@BaseMarketGoodsBase()
 					</div>
 				</div>
@@ -89,16 +105,16 @@ templ BaseMarketGoodsBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:200px;">Good</th>
-				<th style="width:100px;">Type</th>
-				<th style="width:50px;">Price</th>
-				<th style="width:50px;">Level Req'd</th>
-				<th style="width:50px;">Reputation Req'd</th>
-				<th style="width:50px;">Base Sells</th>
-				<th style="width:50px;">Price Modifier</th>
-				<th style="width:50px;">Price Base</th>
-				<th style="width:300px;">Nickname</th>
-				<th style="width:300px;">HpType</th>
+				<th style="min-width:200px;">Good</th>
+				<th style="min-width:100px;">Type</th>
+				<th style="min-width:50px;">Price</th>
+				<th style="min-width:50px;">Level Req'd</th>
+				<th style="min-width:50px;">Reputation Req'd</th>
+				<th style="min-width:50px;">Base Sells</th>
+				<th style="min-width:50px;">Price Modifier</th>
+				<th style="min-width:50px;">Price Base</th>
+				<th style="min-width:300px;">Nickname</th>
+				<th style="min-width:300px;">HpType</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>

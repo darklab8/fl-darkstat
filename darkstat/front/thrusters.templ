@@ -13,6 +13,70 @@ func ThrusterDetailedUrl(thruster configs_export.Thruster) string {
 	return "thrusters/thruster_base_" + strings.ToLower(thruster.Nickname)
 }
 
+templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod) {
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th style="min-width:200px;">Thruster</th>
+				if pinm == PinMode {
+					<th style="min-width:50px;">Select</th>
+					<th style="min-width:50px;">Select</th>
+				}
+				<th style="min-width:50px;">Price</th>
+				<th style="min-width:50px;">Buyable</th>
+				<th style="min-width:50px;">Max Force</th>
+				<th style="min-width:50px;">Power Usage</th>
+				<th style="min-width:50px;">Efficiency</th>
+				<th style="min-width:100px;">Value</th>
+				<th style="min-width:100px;">Rating</th>
+				<th style="min-width:50px;">Hit Pts</th>
+				<th style="min-width:50px;">Lootable</th>
+				<th style="min-width:50px;">Nickname</th>
+				<th style="min-width:100px;">Name ID</th>
+				<th style="min-width:100px;">Info ID</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, thruster := range thrusters {
+				<tr
+					id={ string(pinm) + "bottominfo_" + thruster.Nickname }
+					hx-get={ types.GetCtx(ctx).SiteRoot + ThrusterDetailedUrl(thruster) }
+					hx-trigger="mousedown"
+					hx-target={ "#table-bottom-main" + string(pinm) }
+					hx-swap="innerHTML"
+					preload="mouseover"
+					class={ templ.KV("hidden", pinm == PinMode) }
+				>
+					@PinTd(thruster.Nickname, thruster.Name, pinm)
+					@PinSelectLeftRight(pinm, ThrusterDetailedUrl(thruster))
+					<td>{ strconv.Itoa(thruster.Price) } </td>
+					<td>{ strconv.FormatBool(configs_export.Buyable(thruster.Bases)) }</td>
+					<td>{ strconv.Itoa(thruster.MaxForce) } </td>
+					<td>{ strconv.Itoa(thruster.PowerUsage) }</td>
+					<td>{ fmt.Sprintf("%.2f",thruster.Efficiency) }</td>
+					<td>{ fmt.Sprintf("%.2f", thruster.Value) }</td>
+					<td>{ fmt.Sprintf("%.2f", thruster.Rating) }</td>
+					<td>{ strconv.Itoa(thruster.HitPts) }</td>
+					<td>{ strconv.FormatBool(thruster.Lootable) }</td>
+					<td>{ thruster.Nickname } </td>
+					<td>{ strconv.Itoa(thruster.NameID) } </td>
+					<td>{ strconv.Itoa(thruster.InfoID) } </td>
+					<td
+						id={ "infocard_click" + thruster.Nickname }
+						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(thruster.Nickname)) }
+						hx-trigger="click"
+						hx-target="#infocard_view"
+						hx-swap="innerHTML"
+						preload="mouseover"
+					></td>
+					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+thruster.Nickname, "infocard_click"+thruster.Nickname))
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty) {
@@ -23,66 +87,18 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty) {
 				<div id="table-top">
 					@FilterBar()
 					<div id="table-top-main">
-						<table class="sortable">
-							<thead>
-								<tr>
-									<th style="width:200px;">Thruster</th>
-									<th style="width:50px;">Price</th>
-									<th style="width:50px;">Buyable</th>
-									<th style="width:50px;">Max Force</th>
-									<th style="width:50px;">Power Usage</th>
-									<th style="width:50px;">Efficiency</th>
-									<th style="width:100px;">Value</th>
-									<th style="width:100px;">Rating</th>
-									<th style="width:50px;">Hit Pts</th>
-									<th style="width:50px;">Lootable</th>
-									<th style="width:50px;">Nickname</th>
-									<th style="width:100px;">Name ID</th>
-									<th style="width:100px;">Info ID</th>
-									<th style="max-width:100%;"></th>
-								</tr>
-							</thead>
-							<tbody>
-								for _, thruster := range thrusters {
-									<tr
-										id={ "bottominfo_click" + thruster.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + ThrusterDetailedUrl(thruster) }
-										hx-trigger="mousedown"
-										hx-target="#table-bottom-main"
-										hx-swap="innerHTML"
-										preload="mouseover"
-									>
-										<td>{ thruster.Name }</td>
-										<td>{ strconv.Itoa(thruster.Price) } </td>
-										<td>{ strconv.FormatBool(configs_export.Buyable(thruster.Bases)) }</td>
-										<td>{ strconv.Itoa(thruster.MaxForce) } </td>
-										<td>{ strconv.Itoa(thruster.PowerUsage) }</td>
-										<td>{ fmt.Sprintf("%.2f",thruster.Efficiency) }</td>
-										<td>{ fmt.Sprintf("%.2f", thruster.Value) }</td>
-										<td>{ fmt.Sprintf("%.2f", thruster.Rating) }</td>
-										<td>{ strconv.Itoa(thruster.HitPts) }</td>
-										<td>{ strconv.FormatBool(thruster.Lootable) }</td>
-										<td>{ thruster.Nickname } </td>
-										<td>{ strconv.Itoa(thruster.NameID) } </td>
-										<td>{ strconv.Itoa(thruster.InfoID) } </td>
-										<td
-											id={ "infocard_click" + thruster.Nickname }
-											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(thruster.Nickname)) }
-											hx-trigger="click"
-											hx-target="#infocard_view"
-											hx-swap="innerHTML"
-											preload="mouseover"
-										></td>
-										@templ.Raw(JoinClickTriggers("bottominfo_click"+thruster.Nickname, "infocard_click"+thruster.Nickname))
-									</tr>
-								}
-							</tbody>
-						</table>
+						@ThrustersTable(thrusters, MainMode)
+					</div>
+					<div id="table-top-mainpin" class="hidden">
+						@ThrustersTable(thrusters, PinMode)
 					</div>
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
+					<div id="table-bottom-mainpin" class="hidden">
+						@GoodAtBaseSharedT(ShowPricePerVolume(true))
 					</div>
 				</div>
 			</div>

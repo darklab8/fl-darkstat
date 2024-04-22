@@ -433,3 +433,24 @@ templ FilterBar() {
 	</style>
 	<input type="text" id="filterinput" onkeyup="FilteringFunction()" placeholder="Search for items.."/>
 }
+
+templ PinSelectLeftRight(pinm PinMod, url string) {
+	if pinm == PinMode {
+		<td
+			hx-get={ types.GetCtx(ctx).SiteRoot + url }
+			hx-trigger="mousedown consume"
+			hx-target={ "#table-bottom-main" }
+			hx-swap="innerHTML"
+			preload="mouseover"
+			style="cursor:zoom-in;"
+		>To Left</td>
+		<td
+			hx-get={ types.GetCtx(ctx).SiteRoot + url }
+			hx-trigger="mousedown consume"
+			hx-target={ "#table-bottom-main" + string(pinm) }
+			hx-swap="innerHTML"
+			preload="mouseover"
+			style="cursor:zoom-in;"
+		>To Right</td>
+	}
+}

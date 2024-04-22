@@ -72,24 +72,7 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod) {
 					class={ templ.KV("hidden", pinm == PinMode) }
 				>
 					@PinTd(ship.Nickname, ship.Name, pinm)
-					if pinm == PinMode {
-						<td
-							hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
-							hx-trigger="mousedown consume"
-							hx-target={ "#table-bottom-main" }
-							hx-swap="innerHTML"
-							preload="mouseover"
-							style="cursor:zoom-in;"
-						>To Left</td>
-						<td
-							hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
-							hx-trigger="mousedown consume"
-							hx-target={ "#table-bottom-main" + string(pinm) }
-							hx-swap="innerHTML"
-							preload="mouseover"
-							style="cursor:zoom-in;"
-						>To Right</td>
-					}
+					@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
 					<td>{ strconv.Itoa(ship.Class) }</td>
 					<td>{ ship.Type }</td>
 					<td>{ strconv.Itoa(ship.Price) }</td>

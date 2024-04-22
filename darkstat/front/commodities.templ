@@ -13,6 +13,71 @@ func GoodAtBaseInfoTUrl(commodity configs_export.Commodity) string {
 	return "commodities/comm_base_" + strings.ToLower(commodity.Nickname)
 }
 
+templ CommodityTable(commodities []configs_export.Commodity, pinm PinMod) {
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th style="min-width:200px;">Commodity</th>
+				if pinm == PinMode {
+					<th style="min-width:50px;">Select</th>
+					<th style="min-width:50px;">Select</th>
+				}
+				<th style="min-width:50px;">Price</th>
+				<th style="min-width:50px;">Price Per Volume</th>
+				<th style="min-width:50px;">Volume</th>
+				<th style="min-width:50px;">Best Buy / V</th>
+				<th style="min-width:50px;">Best Sell / V</th>
+				<th style="min-width:50px;">Profit / V</th>
+				<th style="min-width:50px;">Best Buy</th>
+				<th style="min-width:50px;">Best Sell</th>
+				<th style="min-width:50px;">Profit</th>
+				<th style="min-width:100px;">Nickname</th>
+				<th style="min-width:100px;">Name ID</th>
+				<th style="min-width:100px;">Infocard ID</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, commodity := range commodities {
+				<tr
+					id={ string(pinm) + "bottominfo_" + commodity.Nickname }
+					hx-get={ types.GetCtx(ctx).SiteRoot + GoodAtBaseInfoTUrl(commodity) }
+					hx-trigger="mousedown"
+					hx-target={ "#table-bottom-main" + string(pinm) }
+					hx-swap="innerHTML"
+					preload="mouseover"
+					class={ templ.KV("hidden", pinm == PinMode) }
+				>
+					@PinTd(commodity.Nickname, commodity.Name, pinm)
+					@PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
+					<td>{ commodity.Name }</td>
+					<td>{ strconv.Itoa(commodity.Price) }</td>
+					<td>{ fmt.Sprintf("%.2f", commodity.PricePerVolume) }</td>
+					<td>{ fmt.Sprintf("%.6f", commodity.Volume) }</td>
+					<td>{ fmt.Sprintf("%.2f", commodity.BestBuyPricePerVol) }</td>
+					<td>{ fmt.Sprintf("%.2f", commodity.BestSellPricePerVol) }</td>
+					<td>{ fmt.Sprintf("%.2f", commodity.ProffitMarginPerVol) }</td>
+					<td>{ fmt.Sprintf("%.2f", commodity.BestBuyPricePerVol * commodity.Volume) }</td>
+					<td>{ fmt.Sprintf("%.2f", commodity.BestSellPricePerVol * commodity.Volume) }</td>
+					<td>{ fmt.Sprintf("%.2f", commodity.ProffitMarginPerVol * commodity.Volume) }</td>
+					<td>{ commodity.Nickname }</td>
+					<td>{ strconv.Itoa(commodity.NameID) }</td>
+					<td>{ strconv.Itoa(commodity.InfocardID) }</td>
+					<td
+						id={ "infocard_click" + commodity.Nickname }
+						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(commodity.Infocard) }
+						hx-trigger="click"
+						hx-target="#infocard_view"
+						hx-swap="innerHTML"
+						preload="mouseover"
+					></td>
+					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+commodity.Nickname, "infocard_click"+commodity.Nickname))
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
@@ -23,65 +88,17 @@ templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
 				<div id="table-top">
 					@FilterBar()
 					<div id="table-top-main">
-						<table class="sortable">
-							<thead>
-								<tr>
-									<th style="width:200px;">Commodity</th>
-									<th style="width:50px;">Price</th>
-									<th style="width:50px;">Price Per Volume</th>
-									<th style="width:50px;">Volume</th>
-									<th style="width:50px;">Best Buy / V</th>
-									<th style="width:50px;">Best Sell / V</th>
-									<th style="width:50px;">Profit / V</th>
-									<th style="width:50px;">Best Buy</th>
-									<th style="width:50px;">Best Sell</th>
-									<th style="width:50px;">Profit</th>
-									<th style="width:100px;">Nickname</th>
-									<th style="width:100px;">Name ID</th>
-									<th style="width:100px;">Infocard ID</th>
-									<th style="max-width:100%;"></th>
-								</tr>
-							</thead>
-							<tbody>
-								for _, commodity := range commodities {
-									<tr
-										id={ "baseinfo_click" + commodity.Nickname }
-										hx-get={ types.GetCtx(ctx).SiteRoot + GoodAtBaseInfoTUrl(commodity) }
-										hx-trigger="mousedown"
-										hx-target="#table-bottom-main"
-										hx-swap="innerHTML"
-										preload="mouseover"
-									>
-										<td>{ commodity.Name }</td>
-										<td>{ strconv.Itoa(commodity.Price) }</td>
-										<td>{ fmt.Sprintf("%.2f", commodity.PricePerVolume) }</td>
-										<td>{ fmt.Sprintf("%.6f", commodity.Volume) }</td>
-										<td>{ fmt.Sprintf("%.2f", commodity.BestBuyPricePerVol) }</td>
-										<td>{ fmt.Sprintf("%.2f", commodity.BestSellPricePerVol) }</td>
-										<td>{ fmt.Sprintf("%.2f", commodity.ProffitMarginPerVol) }</td>
-										<td>{ fmt.Sprintf("%.2f", commodity.BestBuyPricePerVol * commodity.Volume) }</td>
-										<td>{ fmt.Sprintf("%.2f", commodity.BestSellPricePerVol * commodity.Volume) }</td>
-										<td>{ fmt.Sprintf("%.2f", commodity.ProffitMarginPerVol * commodity.Volume) }</td>
-										<td>{ commodity.Nickname }</td>
-										<td>{ strconv.Itoa(commodity.NameID) }</td>
-										<td>{ strconv.Itoa(commodity.InfocardID) }</td>
-										<td
-											id={ "infocard_click" + commodity.Nickname }
-											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(commodity.Infocard) }
-											hx-trigger="click"
-											hx-target="#infocard_view"
-											hx-swap="innerHTML"
-											preload="mouseover"
-										></td>
-										@templ.Raw(JoinClickTriggers("baseinfo_click"+commodity.Nickname, "infocard_click"+commodity.Nickname))
-									</tr>
-								}
-							</tbody>
-						</table>
+						@CommodityTable(commodities, MainMode)
+					</div>
+					<div id="table-top-mainpin" class="hidden">
+						@CommodityTable(commodities, PinMode)
 					</div>
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
+						@GoodAtBaseSharedT(ShowPricePerVolume(true))
+					</div>
+					<div id="table-bottom-mainpin" class="hidden">
 						@GoodAtBaseSharedT(ShowPricePerVolume(true))
 					</div>
 				</div>

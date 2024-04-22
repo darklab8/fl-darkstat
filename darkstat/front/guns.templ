@@ -79,24 +79,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod) {
 					class={ templ.KV("hidden", pinm == PinMode) }
 				>
 					@PinTd(gun.Nickname, gun.Name, pinm)
-					if pinm == PinMode {
-						<td
-							hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
-							hx-trigger="mousedown consume"
-							hx-target={ "#table-bottom-main" }
-							hx-swap="innerHTML"
-							preload="mouseover"
-							style="cursor:zoom-in;"
-						>To Left</td>
-						<td
-							hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
-							hx-trigger="mousedown consume"
-							hx-target={ "#table-bottom-main" + string(pinm) }
-							hx-swap="innerHTML"
-							preload="mouseover"
-							style="cursor:zoom-in;"
-						>To Right</td>
-					}
+					@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
 					<td>{ gun.Class }</td>
 					<td>{ gun.Type }</td>
 					<td>{ gun.DamageType }</td>
@@ -189,11 +172,11 @@ templ GunShowModifiersShared() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:50px;">Technology</th>
-				<th style="width:50px;">Target Type</th>
-				<th style="width:50px;">Damage Modifier</th>
-				<th style="width:50px;">Hull Dmg</th>
-				<th style="width:50px;">Shield Dmg</th>
+				<th style="min-width:50px;">Technology</th>
+				<th style="min-width:50px;">Target Type</th>
+				<th style="min-width:50px;">Damage Modifier</th>
+				<th style="min-width:50px;">Hull Dmg</th>
+				<th style="min-width:50px;">Shield Dmg</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
