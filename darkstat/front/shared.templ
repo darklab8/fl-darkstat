@@ -429,6 +429,12 @@ templ FilterBar() {
 	<style>
 	#filterinput {
 		width:100%;
+		background: var(--color_background);
+		color: var(--color_text);
+		border-color: var(--color_border);
+		&:focus {
+			 outline: none;
+		}
 	}
 	</style>
 	<input type="text" id="filterinput" onkeyup="FilteringFunction()" placeholder="Search for items.."/>
