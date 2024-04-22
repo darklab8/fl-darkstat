@@ -158,9 +158,9 @@ templ ShipDetailsShared(ship configs_export.Ship) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:50px;">Ship Hardpoint</th>
+				<th style="width:50px;min-width:50px;">Ship Hardpoint</th>
 				for index, _ := range ship.BiggestHardpoint {
-					<th style="width:50px;">HpType { strconv.Itoa(index) }</th>
+					<th style="width:50px;min-width:50px;">HpType { strconv.Itoa(index) }</th>
 				}
 				<th style="max-width:100%;"></th>
 			</tr>
