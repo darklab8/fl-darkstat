@@ -95,7 +95,7 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty) {
 					<div id="table-top-main">
 						@EnginesTable(engines, MainMode)
 					</div>
-					<div id="table-top-mainpin" class="hidden">
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@EnginesTable(engines, PinMode)
 					</div>
 				</div>
@@ -103,7 +103,7 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty) {
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowPricePerVolume(false))
 					</div>
-					<div id="table-bottom-mainpin" class="hidden">
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowPricePerVolume(false))
 					</div>
 				</div>

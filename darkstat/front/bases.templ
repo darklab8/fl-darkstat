@@ -81,7 +81,7 @@ templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
 					<div id="table-top-main">
 						@BasesTable(bases, MainMode)
 					</div>
-					<div id="table-top-mainpin" class="hidden">
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@BasesTable(bases, PinMode)
 					</div>
 				</div>
@@ -89,7 +89,7 @@ templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
 					<div id="table-bottom-main">
 						@BaseMarketGoodsBase()
 					</div>
-					<div id="table-bottom-mainpin" class="hidden">
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@BaseMarketGoodsBase()
 					</div>
 				</div>

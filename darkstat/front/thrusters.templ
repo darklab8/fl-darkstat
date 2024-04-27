@@ -89,7 +89,7 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty) {
 					<div id="table-top-main">
 						@ThrustersTable(thrusters, MainMode)
 					</div>
-					<div id="table-top-mainpin" class="hidden">
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@ThrustersTable(thrusters, PinMode)
 					</div>
 				</div>
@@ -97,7 +97,7 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty) {
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowPricePerVolume(false))
 					</div>
-					<div id="table-bottom-mainpin" class="hidden">
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowPricePerVolume(true))
 					</div>
 				</div>

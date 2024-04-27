@@ -107,7 +107,7 @@ templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty) {
 					<div id="table-top-main">
 						@MinesTable(mines, MainMode)
 					</div>
-					<div id="table-top-mainpin" class="hidden">
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@MinesTable(mines, PinMode)
 					</div>
 				</div>
@@ -115,7 +115,7 @@ templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty) {
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowPricePerVolume(false))
 					</div>
-					<div id="table-bottom-mainpin" class="hidden">
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowPricePerVolume(false))
 					</div>
 				</div>

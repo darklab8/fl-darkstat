@@ -140,7 +140,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
 					<div id="table-top-main">
 						@GunTable(guns, mode, MainMode)
 					</div>
-					<div id="table-top-mainpin" class="hidden">
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@GunTable(guns, mode, PinMode)
 					</div>
 				</div>
@@ -152,7 +152,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
 							@GunShowModifiersShared()
 						}
 					</div>
-					<div id="table-bottom-mainpin" class="hidden">
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						if mode == GunsShowBases || mode == GunsMissiles {
 							@GoodAtBaseSharedT(ShowPricePerVolume(false))
 						} else {

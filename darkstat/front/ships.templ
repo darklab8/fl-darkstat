@@ -126,7 +126,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 					<div id="table-top-main">
 						@ShipTable(ships, mode, MainMode)
 					</div>
-					<div id="table-top-mainpin" class="hidden">
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@ShipTable(ships, mode, PinMode)
 					</div>
 				</div>
@@ -138,7 +138,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
-					<div id="table-bottom-mainpin" class="hidden">
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						if mode == ShipShowBases {
 							@GoodAtBaseSharedT(ShowPricePerVolume(false))
 						} else if mode == ShipShowDetails {

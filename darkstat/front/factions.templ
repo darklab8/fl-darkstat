@@ -105,7 +105,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 					<div id="table-top-main">
 						@FactionTable(factions, mode, MainMode)
 					</div>
-					<div id="table-top-mainpin" class="hidden">
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@FactionTable(factions, mode, PinMode)
 					</div>
 				</div>
@@ -117,7 +117,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 							@RephacksBottomBase()
 						}
 					</div>
-					<div id="table-bottom-mainpin" class="hidden">
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						if mode == FactionShowBases {
 							@FactionRepsBase()
 						} else if mode == FactionShowRephacks {

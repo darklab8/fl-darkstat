@@ -88,7 +88,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty) {
 					<div id="table-top-main">
 						@CmTable(cms, MainMode)
 					</div>
-					<div id="table-top-mainpin" class="hidden">
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@CmTable(cms, PinMode)
 					</div>
 				</div>
@@ -96,7 +96,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty) {
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowPricePerVolume(false))
 					</div>
-					<div id="table-bottom-mainpin" class="hidden">
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowPricePerVolume(false))
 					</div>
 				</div>

@@ -90,7 +90,7 @@ templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
 					<div id="table-top-main">
 						@CommodityTable(commodities, MainMode)
 					</div>
-					<div id="table-top-mainpin" class="hidden">
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@CommodityTable(commodities, PinMode)
 					</div>
 				</div>
@@ -98,7 +98,7 @@ templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowPricePerVolume(true))
 					</div>
-					<div id="table-bottom-mainpin" class="hidden">
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowPricePerVolume(true))
 					</div>
 				</div>
