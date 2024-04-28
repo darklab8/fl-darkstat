@@ -24,18 +24,18 @@ tasks:
     cmds:
       - task: build-version
       - templ generate
-      - go run . --act=build
+      - go run . build
 
   web:
     cmds:
       - task: build-version
       - templ generate
-      - go run . --act=web
+      - go run . web
 
   dev:templ:
     cmds:
       - task: build-version
-      - templ generate -watch --cmd="go run . --act=web"
+      - templ generate -watch --cmd="go run . web"
 
   dev:watch:
     cmds:

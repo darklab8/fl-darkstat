@@ -24,7 +24,7 @@ runs:
 
     - name: build
       shell: bash
-      run: darkstat --act=build
+      run: darkstat build
       env:
         SITE_ROOT: ${{ inputs.site-root }}
         FLDARKSTAT_FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}

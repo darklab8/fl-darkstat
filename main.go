@@ -1,13 +1,13 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"strings"
+	"os"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkstat/builder"
 	"github.com/darklab8/fl-darkstat/darkstat/linker"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/web"
 	"github.com/darklab8/go-typelog/typelog"
@@ -19,8 +19,9 @@ type Action string
 func (a Action) ToStr() string { return string(a) }
 
 const (
-	Build Action = "build"
-	Web   Action = "web"
+	Build   Action = "build"
+	Web     Action = "web"
+	Version Action = "version"
 )
 
 func main() {
@@ -32,11 +33,10 @@ func main() {
 	}()
 
 	var action string
-	flag.StringVar(&action, "act", string(Web),
-		fmt.Sprintln("action to run. Possible choices...",
-			strings.Join([]string{Build.ToStr(), Web.ToStr()}, ", ")),
-	)
-	flag.Parse()
+	argsWithoutProg := os.Args[1:]
+	if len(argsWithoutProg) == 1 {
+		action = argsWithoutProg[0]
+	}
 	fmt.Println("act:", action)
 
 	web := func() {
@@ -59,6 +59,8 @@ func main() {
 		linker.NewLinker().Link().BuildAll().RenderToLocal()
 	case Web:
 		web()
+	case Version:
+		fmt.Println("version=", settings.GetVersion())
 	default:
 		web()
 	}
