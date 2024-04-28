@@ -3,6 +3,7 @@ package configs_export
 import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/conftypes"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
@@ -26,12 +27,14 @@ func (e *Exporter) GetBases() []Base {
 
 		var infocard_id int
 		var reputation_nickname string
+		var pos conftypes.Vector
 
 		if system, ok := e.configs.Systems.SystemsMap[base.System.Get()]; ok {
 			for _, system_base := range system.Bases {
 				if system_base.IdsName.Get() == base.StridName.Get() {
 					infocard_id = system_base.IDsInfo.Get()
 					reputation_nickname = system_base.RepNickname.Get()
+					pos, _ = system_base.Pos.GetValue()
 				}
 			}
 		}
@@ -72,6 +75,7 @@ func (e *Exporter) GetBases() []Base {
 			File:             utils_types.FilePath(base.File.Get()),
 			BGCS_base_run_by: base.BGCS_base_run_by.Get(),
 			MarketGoods:      market_goods,
+			Pos:              pos,
 		}
 
 		results = append(results, base)
@@ -103,4 +107,5 @@ type Base struct {
 	File             utils_types.FilePath
 	BGCS_base_run_by string
 	MarketGoods      []MarketGood
+	Pos              conftypes.Vector
 }

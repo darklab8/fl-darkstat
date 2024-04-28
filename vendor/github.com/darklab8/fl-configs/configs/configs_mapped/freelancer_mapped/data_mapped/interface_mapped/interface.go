@@ -34,7 +34,7 @@ func Read(input_file *iniload.IniLoader) *Config {
 
 	if resources, ok := input_file.SectionMap[RESOURCE_HEADER_MAP_TABLE]; ok {
 
-		for _, mappy := range resources[0].Params {
+		for _, mappy := range resources[0].ParamMap["map"] {
 
 			id_key, err := strconv.Atoi(mappy.First.AsString())
 			logus.Log.CheckFatal(err, "failed to read number from infocardmaptable")

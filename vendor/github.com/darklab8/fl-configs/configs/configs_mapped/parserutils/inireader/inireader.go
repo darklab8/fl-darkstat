@@ -313,7 +313,6 @@ func Read(fileref *file.File) *INIFile {
 	logus.Log.Debug("setting current section")
 	var cur_section *Section
 	for _, line := range lines {
-
 		comment_match := regexComment.FindStringSubmatch(line)
 		section_match := regexSection.FindStringSubmatch(line)
 		param_match := regexParam.FindStringSubmatch(line)
@@ -346,6 +345,10 @@ func Read(fileref *file.File) *INIFile {
 
 			param := Param{Key: key, First: first_value, Values: values, IsComment: isComment}
 			cur_section.AddParam(key, &param)
+		} else if len(section_match) > 0 {
+			cur_section = &Section{} // create new
+			cur_section.Type = inireader_types.IniHeader(section_match[0])
+			config.AddSection(inireader_types.IniHeader(section_match[0]), cur_section)
 		} else if len(comment_match) > 0 {
 			if cur_section == nil {
 				config.Comments = append(config.Comments, comment_match[1])
@@ -353,10 +356,6 @@ func Read(fileref *file.File) *INIFile {
 				comment := UniParseStr(comment_match[1])
 				cur_section.AddParam(KEY_COMMENT, &Param{Key: KEY_COMMENT, First: comment, Values: []UniValue{comment}, IsComment: true})
 			}
-		} else if len(section_match) > 0 {
-			cur_section = &Section{} // create new
-			cur_section.Type = inireader_types.IniHeader(section_match[0])
-			config.AddSection(inireader_types.IniHeader(section_match[0]), cur_section)
 		}
 
 	}

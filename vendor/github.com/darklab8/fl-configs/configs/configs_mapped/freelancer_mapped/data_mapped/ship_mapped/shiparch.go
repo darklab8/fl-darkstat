@@ -3,28 +3,10 @@ package ship_mapped
 import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/iniload"
-	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
 	"github.com/darklab8/fl-configs/configs/settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
 )
-
-type Vector struct {
-	semantic.Model
-	X *semantic.Float
-	Y *semantic.Float
-	Z *semantic.Float
-}
-
-func NewVector(section *inireader.Section, key string) *Vector {
-	v := &Vector{
-		X: semantic.NewFloat(section, key, semantic.Precision(2)),
-		Y: semantic.NewFloat(section, key, semantic.Precision(2)),
-		Z: semantic.NewFloat(section, key, semantic.Precision(2)),
-	}
-	v.Map(section)
-	return v
-}
 
 type Ship struct {
 	semantic.Model
@@ -48,9 +30,9 @@ type Ship struct {
 	ShieldLink  *ShieldLink
 	HpTypes     []*HpType
 
-	SteeringTorque   *Vector
-	AngularDrag      *Vector
-	RotationIntertia *Vector
+	SteeringTorque   *semantic.Vect
+	AngularDrag      *semantic.Vect
+	RotationIntertia *semantic.Vect
 
 	/*
 		Some info in Goods with category shiphull, it has link from [Ship] to hulll
@@ -106,9 +88,9 @@ func Read(files []*iniload.IniLoader) *Config {
 				},
 				HitPts: semantic.NewInt(section, "hit_pts"),
 
-				SteeringTorque:   NewVector(section, "steering_torque"),
-				AngularDrag:      NewVector(section, "angular_drag"),
-				RotationIntertia: NewVector(section, "rotation_inertia"),
+				SteeringTorque:   semantic.NewVector(section, "steering_torque", semantic.Precision(2)),
+				AngularDrag:      semantic.NewVector(section, "angular_drag", semantic.Precision(2)),
+				RotationIntertia: semantic.NewVector(section, "rotation_inertia", semantic.Precision(2)),
 			}
 			ship.Map(section)
 			ship.ShieldLink.Map(section)

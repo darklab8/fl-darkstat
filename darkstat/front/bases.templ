@@ -30,6 +30,9 @@ templ BasesTable(bases []configs_export.Base, pinm PinMod) {
 				<th style="min-width:100px;">System</th>
 				<th style="min-width:200px;">Base Nickname</th>
 				<th style="min-width:50px;">System Nickname</th>
+				<th style="min-width:50px;">Pos X</th>
+				<th style="min-width:50px;">Pos Y</th>
+				<th style="min-width:50px;">Pos Z</th>
 				<th style="min-width:100px;">Base Name ID</th>
 				<th style="min-width:100px;">Infocard ID</th>
 				<th style="max-width:100%;"></th>
@@ -52,6 +55,9 @@ templ BasesTable(bases []configs_export.Base, pinm PinMod) {
 					<td>{ base.System }</td>
 					<td>{ base.Nickname }</td>
 					<td>{ base.SystemNickname }</td>
+					<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
+					<td>{ fmt.Sprintf("%.0f", base.Pos.Y) }</td>
+					<td>{ fmt.Sprintf("%.0f", base.Pos.Z) }</td>
 					<td>{ strconv.Itoa(base.StridName) }</td>
 					<td>{ strconv.Itoa(base.InfocardID) }</td>
 					<td

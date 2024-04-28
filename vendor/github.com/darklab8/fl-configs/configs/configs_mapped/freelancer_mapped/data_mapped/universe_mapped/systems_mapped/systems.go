@@ -26,6 +26,7 @@ type Base struct {
 	IDsInfo     *semantic.Int
 	IdsName     *semantic.Int
 	RepNickname *semantic.String
+	Pos         *semantic.Vect
 }
 type System struct {
 	semantic.ConfigModel
@@ -139,6 +140,8 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 					base_to_add.IDsInfo = semantic.NewInt(obj, "ids_info", semantic.Optional())
 					base_to_add.IdsName = semantic.NewInt(obj, "ids_name", semantic.Optional())
+
+					base_to_add.Pos = semantic.NewVector(obj, "pos", semantic.Precision(0))
 
 					system_to_add.BasesByNick[base_to_add.Nickname.Get()] = base_to_add
 					system_to_add.BasesByBases[base_to_add.Base.Get()] = append(system_to_add.BasesByBases[base_to_add.Base.Get()], base_to_add)
