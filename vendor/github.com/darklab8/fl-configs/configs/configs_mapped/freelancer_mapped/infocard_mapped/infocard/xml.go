@@ -11,7 +11,7 @@ type RDL struct {
 }
 
 func (i *Infocard) XmlToText() ([]string, error) {
-	return XmlToText(i.Content)
+	return XmlToText(i.content)
 }
 
 func XmlToText(xml_stuff string) ([]string, error) {

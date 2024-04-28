@@ -61,7 +61,8 @@ func (e *Exporter) GetBases() []Base {
 		}
 
 		var nickname string = base.Nickname.Get()
-		e.infocards_parser.Set(InfocardKey(nickname), infocard_ids...)
+
+		e.exportInfocards(InfocardKey(nickname), infocard_ids...)
 
 		base := Base{
 			Name:             name,

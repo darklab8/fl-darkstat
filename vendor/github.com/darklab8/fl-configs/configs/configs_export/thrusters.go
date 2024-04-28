@@ -68,7 +68,7 @@ func (e *Exporter) GetThrusters() []Thruster {
 		}
 
 		thruster.Rating = float64(thruster.MaxForce) / float64(thruster.PowerUsage-100) * thruster.Value / 1000
-		e.infocards_parser.Set(InfocardKey(thruster.Nickname), thruster.InfoID)
+		e.exportInfocards(InfocardKey(thruster.Nickname), thruster.InfoID)
 		thrusters = append(thrusters, thruster)
 	}
 	return thrusters

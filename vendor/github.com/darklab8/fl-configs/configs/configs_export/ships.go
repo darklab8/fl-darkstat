@@ -174,7 +174,7 @@ func (e *Exporter) GetShips() []Ship {
 		if id, ok := ship_info.IdsInfo.GetValue(); ok {
 			infocards = append(infocards, id)
 		}
-		e.infocards_parser.Set(InfocardKey(ship.Nickname), infocards...)
+		e.exportInfocards(InfocardKey(ship.Nickname), infocards...)
 		ships = append(ships, ship)
 	}
 

@@ -2,6 +2,7 @@ package infocard_mapped
 
 import (
 	"strconv"
+	"sync"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/exe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
@@ -49,10 +50,21 @@ func ReadFromTextFile(input_file *file.File) *infocard.Config {
 }
 
 func Read(filesystem *filefind.Filesystem, freelancer_ini *exe_mapped.Config, input_file *file.File) *infocard.Config {
-	// p.Infocards =
+	var config *infocard.Config
 	if input_file != nil {
-		return ReadFromTextFile(input_file)
+		config = ReadFromTextFile(input_file)
 	} else {
-		return exe_mapped.GetAllInfocards(filesystem, freelancer_ini.GetDlls())
+		config = exe_mapped.GetAllInfocards(filesystem, freelancer_ini.GetDlls())
 	}
+
+	var wg sync.WaitGroup
+	for _, card := range config.Infocards {
+		wg.Add(1)
+		go func(card *infocard.Infocard) {
+			card.Lines, _ = card.XmlToText()
+			wg.Done()
+		}(card)
+	}
+	wg.Wait()
+	return config
 }

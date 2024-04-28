@@ -81,7 +81,7 @@ func (e *Exporter) GetFactions(bases []Base) []Faction {
 			faction.Name = string(faction_name)
 		}
 
-		e.infocards_parser.Set(InfocardKey(nickname), group.IdsInfo.Get())
+		e.exportInfocards(InfocardKey(nickname), group.IdsInfo.Get())
 
 		if short_name, ok := e.configs.Infocards.Infonames[group.IdsShortName.Get()]; ok {
 			faction.ShortName = string(short_name)

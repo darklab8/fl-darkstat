@@ -41,7 +41,7 @@ func (e *Exporter) GetTractors() []Tractor {
 			tractor.Name = string(name)
 		}
 
-		e.infocards_parser.Set(InfocardKey(tractor.Nickname), tractor.InfoID)
+		e.exportInfocards(InfocardKey(tractor.Nickname), tractor.InfoID)
 		tractors = append(tractors, tractor)
 	}
 	return tractors

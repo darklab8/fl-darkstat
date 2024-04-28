@@ -51,7 +51,7 @@ func (e *Exporter) GetCommodities() []Commodity {
 		}
 		commodity.Name = name
 		commodity.Infocard = InfocardKey(commodity.Nickname)
-		e.infocards_parser.Set(commodity.Infocard, equipment.IdsInfo.Get())
+		e.exportInfocards(commodity.Infocard, equipment.IdsInfo.Get())
 		commodity.InfocardID = equipment.IdsInfo.Get()
 
 		volume := equipment.Volume.Get()

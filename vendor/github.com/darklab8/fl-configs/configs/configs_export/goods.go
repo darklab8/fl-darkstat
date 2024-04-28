@@ -55,7 +55,7 @@ func (e *Exporter) getMarketGoods() map[string][]MarketGood {
 							category = equip.Category
 						}
 
-						e.infocards_parser.Set(InfocardKey(market_good_nickname), equip.IdsInfo.Get())
+						e.exportInfocards(InfocardKey(market_good_nickname), equip.IdsInfo.Get())
 					}
 				case "ship":
 					ship := e.configs.Goods.ShipsMap[good.Nickname.Get()]
@@ -71,7 +71,7 @@ func (e *Exporter) getMarketGoods() map[string][]MarketGood {
 						Name = string(infoname)
 					}
 
-					e.infocards_parser.Set(InfocardKey(market_good_nickname),
+					e.exportInfocards(InfocardKey(market_good_nickname),
 						shiparch.IdsInfo.Get(), shiparch.IdsInfo1.Get(), shiparch.IdsInfo2.Get(), shiparch.IdsInfo3.Get())
 				}
 
@@ -107,8 +107,6 @@ func (e *Exporter) getMarketGoods() map[string][]MarketGood {
 		}
 
 		goods_per_base[base_nickname] = append(goods_per_base[base_nickname], MarketGoods...)
-
-		e.infocards_parser.makeReady() // clearing calculating queue to be not calculating repetions
 	}
 	return goods_per_base
 }

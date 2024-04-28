@@ -65,7 +65,7 @@ func (e *Exporter) GetEngines() []Engine {
 			engine.Name = string(name)
 		}
 
-		e.infocards_parser.Set(InfocardKey(engine.Nickname), engine.InfoID)
+		e.exportInfocards(InfocardKey(engine.Nickname), engine.InfoID)
 
 		if engine.HpType == "" {
 			continue

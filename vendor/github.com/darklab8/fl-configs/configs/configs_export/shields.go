@@ -103,7 +103,7 @@ func (e *Exporter) GetShields() []Shield {
 			}
 		}
 
-		e.infocards_parser.Set(InfocardKey(shield.Nickname), shield.IdsInfo)
+		e.exportInfocards(InfocardKey(shield.Nickname), shield.IdsInfo)
 
 		shields = append(shields, shield)
 	}

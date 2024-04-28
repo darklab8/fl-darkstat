@@ -160,7 +160,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun) Gun {
 		gun.Name = "Undefined"
 	}
 
-	e.infocards_parser.Set(InfocardKey(gun.Nickname), gun.IdsInfo)
+	e.exportInfocards(InfocardKey(gun.Nickname), gun.IdsInfo)
 
 	gun.HullDamagePerSec = float64(gun.HullDamage) * gun.Refire
 	gun.ShieldDamagePerSec = float64(gun.ShieldDamage) * gun.Refire

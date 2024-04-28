@@ -1,11 +1,12 @@
 package infocard
 
 type Infocard struct {
-	Content string
+	content string
+	Lines   []string
 }
 
 func NewInfocard(Content string) *Infocard {
-	return &Infocard{Content: Content}
+	return &Infocard{content: Content}
 }
 
 type Infoname string

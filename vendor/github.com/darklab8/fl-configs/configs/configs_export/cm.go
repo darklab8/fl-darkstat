@@ -58,7 +58,7 @@ func (e *Exporter) GetCounterMeasures() []CounterMeasure {
 			}
 		}
 
-		e.infocards_parser.Set(InfocardKey(cm.Nickname), infocards...)
+		e.exportInfocards(InfocardKey(cm.Nickname), infocards...)
 		tractors = append(tractors, cm)
 	}
 	return tractors

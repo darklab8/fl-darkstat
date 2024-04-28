@@ -6,24 +6,39 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 )
 
+type InfocardKey string
+
+type Infocard []string
+
+func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
+	if _, ok := e.Infocards[InfocardKey(nickname)]; ok {
+		return
+	}
+
+	for _, info_id := range infocard_ids {
+		if value, ok := e.configs.Infocards.Infocards[info_id]; ok {
+			e.Infocards[InfocardKey(nickname)] = append(e.Infocards[InfocardKey(nickname)], value.Lines...)
+		}
+	}
+}
+
 type Exporter struct {
 	configs            *configs_mapped.MappedConfigs
 	show_empty_records bool
 
-	Bases            []Base
-	Factions         []Faction
-	Infocards        map[InfocardKey]*Infocard
-	Commodities      []Commodity
-	Guns             []Gun
-	Missiles         []Gun
-	Mines            []Mine
-	Shields          []Shield
-	Thrusters        []Thruster
-	Ships            []Ship
-	Tractors         []Tractor
-	Engines          []Engine
-	CMs              []CounterMeasure
-	infocards_parser *InfocardsParser
+	Bases       []Base
+	Factions    []Faction
+	Infocards   map[InfocardKey]Infocard
+	Commodities []Commodity
+	Guns        []Gun
+	Missiles    []Gun
+	Mines       []Mine
+	Shields     []Shield
+	Thrusters   []Thruster
+	Ships       []Ship
+	Tractors    []Tractor
+	Engines     []Engine
+	CMs         []CounterMeasure
 }
 
 type OptExport func(e *Exporter)
@@ -36,7 +51,7 @@ func NewExporter(configs *configs_mapped.MappedConfigs, opts ...OptExport) *Expo
 	e := &Exporter{
 		configs:            configs,
 		show_empty_records: false,
-		infocards_parser:   NewInfocardsParser(configs.Infocards),
+		Infocards:          map[InfocardKey]Infocard{},
 	}
 
 	for _, opt := range opts {
@@ -58,7 +73,6 @@ func (e *Exporter) Export() *Exporter {
 	e.Tractors = e.GetTractors()
 	e.Engines = e.GetEngines()
 	e.CMs = e.GetCounterMeasures()
-	e.Infocards = e.infocards_parser.Get()
 	return e
 }
 
