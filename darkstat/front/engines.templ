@@ -1,6 +1,7 @@
 package front
 
 import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
@@ -13,7 +14,7 @@ func EngineDetailedUrl(engine configs_export.Engine) string {
 	return "engines/engines_base_" + strings.ToLower(engine.Nickname)
 }
 
-templ EnginesTable(engines []configs_export.Engine, pinm PinMod) {
+templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -22,6 +23,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod) {
 					<th style="min-width:50px;">Select</th>
 					<th style="min-width:50px;">Select</th>
 				}
+				@ThDisco(disco)
 				<th style="min-width:50px;">Price</th>
 				<th style="min-width:50px;">Buyable</th>
 				<th style="min-width:100px;">Impulse Speed</th>
@@ -53,6 +55,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod) {
 				>
 					@PinTd(engine.Nickname, engine.Name, pinm)
 					@PinSelectLeftRight(pinm, EngineDetailedUrl(engine))
+					@TdDisco(disco, engine.Nickname, engine.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(engine.Price) } </td>
 					<td>{ strconv.FormatBool(configs_export.Buyable(engine.Bases)) }</td>
 					<td>{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
@@ -85,18 +88,18 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ Engines(engines []configs_export.Engine, mode ShowEmpty) {
+templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	@TabMenu(urls.Engines, mode)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					@FilterBar()
+					@FilterBar(disco)
 					<div id="table-top-main">
-						@EnginesTable(engines, MainMode)
+						@EnginesTable(engines, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@EnginesTable(engines, PinMode)
+						@EnginesTable(engines, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">

@@ -18,6 +18,17 @@ templ Html5() {
 			<script src={ types.GetCtx(ctx).StaticRoot + "htmx.js" }></script>
 			<script src={ types.GetCtx(ctx).StaticRoot + "preload.js" }></script>
 			<script src={ types.GetCtx(ctx).StaticRoot + "custom.js" }></script>
+			<script>
+			addEventListener("loadend", (event) => {
+				console.log("loadend1");
+			});
+			onloadend = (event) => {
+				console.log("onloadend");
+			};
+			onload = (event) => {
+				console.log("onload");
+			};
+			</script>
 		</head>
 		<body hx-ext="preload">
 			{ children... }

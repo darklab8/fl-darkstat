@@ -1,6 +1,7 @@
 package front
 
 import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
@@ -425,19 +426,41 @@ templ PinTd(nickname string, name string, pinm PinMod) {
 	</td>
 }
 
-templ FilterBar() {
+templ FilterBar(disco fronttypes.DiscoveryIDs) {
 	<style>
-	#filterinput {
-		width:100%;
-		background: var(--color_background);
-		color: var(--color_text);
-		border-color: var(--color_border);
-		&:focus {
-			 outline: none;
+	
+
+	#table-top-panel {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+
+		& #filterinput {
+			width:100%;
+			background: var(--color_background);
+			color: var(--color_text);
+			border-color: var(--color_border);
+			&:focus {
+				outline: none;
+			}
+		}
+
+		& select {
+			background: var(--color_background);
 		}
 	}
 	</style>
-	<input type="text" id="filterinput" onkeyup="FilteringFunction()" placeholder="Search rows by any content: name, faction, system and etc.."/>
+	<div id="table-top-panel">
+		<input type="text" id="filterinput" onkeyup="FilteringFunction()" placeholder="Search rows by any content: name, faction, system and etc.."/>
+		if bool(disco.Show) {
+			<select name="IDs" id="tractor_id_selector" onchange="FilteringFunction()">
+				<option value="">Tech compatibility by Tractor ID </option>
+				for _, id := range disco.Ids {
+					<option value={ string(id.Nickname) }><span>{ id.Name }</span> <span>( { string(id.Nickname) } )</span></option>
+				}
+			</select>
+		}
+	</div>
 }
 
 templ PinSelectLeftRight(pinm PinMod, url string) {
@@ -458,5 +481,21 @@ templ PinSelectLeftRight(pinm PinMod, url string) {
 			preload="mouseover"
 			style="cursor:zoom-in;"
 		>To Right</td>
+	}
+}
+
+templ ThDisco(disco fronttypes.DiscoveryIDs) {
+	if disco.Show {
+		<th style="min-width:50px;">ID Compat.</th>
+		<th style="min-width:50px;">TechCell</th>
+	}
+}
+
+templ TdDisco(disco fronttypes.DiscoveryIDs, nickname string, data *configs_export.DiscoveryTechCompat) {
+	if disco.Show {
+		<td class="tech_compat" techcompats={ marshalIDs(disco, nickname) }>
+			{ fmt.Sprintf("%.0f%%",(data.TechcompatByID[""]*100)) }
+		</td>
+		<td>{ data.TechCell }</td>
 	}
 }

@@ -1,6 +1,7 @@
 package front
 
 import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
@@ -28,7 +29,7 @@ const (
 	GunsMissiles
 )
 
-templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod) {
+templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -37,6 +38,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod) {
 					<th style="min-width:50px;">Select</th>
 					<th style="min-width:50px;">Select</th>
 				}
+				@ThDisco(disco)
 				<th style="min-width:50px;">Class</th>
 				<th style="min-width:50px;">Type</th>
 				<th style="min-width:50px;">Technology</th>
@@ -80,6 +82,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod) {
 				>
 					@PinTd(gun.Nickname, gun.Name, pinm)
 					@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
+					@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
 					<td>{ gun.Class }</td>
 					<td>{ gun.Type }</td>
 					<td>{ gun.DamageType }</td>
@@ -124,7 +127,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
+templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	if mode == GunsShowBases {
 		@TabMenu(urls.Guns, mode2)
 	} else if mode == GunsShowDamageBonuses {
@@ -136,12 +139,12 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					@FilterBar()
+					@FilterBar(disco)
 					<div id="table-top-main">
-						@GunTable(guns, mode, MainMode)
+						@GunTable(guns, mode, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@GunTable(guns, mode, PinMode)
+						@GunTable(guns, mode, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">

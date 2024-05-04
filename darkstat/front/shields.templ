@@ -1,6 +1,7 @@
 package front
 
 import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
@@ -13,7 +14,7 @@ func ShieldDetailedUrl(shield configs_export.Shield) string {
 	return "shields/shields_base_" + strings.ToLower(shield.Nickname)
 }
 
-templ ShieldTable(shields []configs_export.Shield, pinm PinMod) {
+templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -22,6 +23,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod) {
 					<th style="min-width:50px;">Select</th>
 					<th style="min-width:50px;">Select</th>
 				}
+				@ThDisco(disco)
 				<th style="min-width:50px;">Class</th>
 				<th style="min-width:50px;">Type</th>
 				<th style="min-width:50px;">Technology</th>
@@ -55,6 +57,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod) {
 				>
 					@PinTd(shield.Nickname, shield.Name, pinm)
 					@PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
+					@TdDisco(disco, shield.Nickname, shield.DiscoveryTechCompat)
 					<td>{ shield.Class }</td>
 					<td>{ shield.Type }</td>
 					<td>{ shield.Technology }</td>
@@ -89,18 +92,18 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShieldT(shields []configs_export.Shield,mode2 ShowEmpty) {
+templ ShieldT(shields []configs_export.Shield,mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	@TabMenu(urls.Shields, mode2)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					@FilterBar()
+					@FilterBar(disco)
 					<div id="table-top-main">
-						@ShieldTable(shields, MainMode)
+						@ShieldTable(shields, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShieldTable(shields, PinMode)
+						@ShieldTable(shields, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">

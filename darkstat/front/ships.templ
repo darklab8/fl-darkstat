@@ -1,12 +1,15 @@
 package front
 
 import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
 	"strings"
+	// "github.com/darklab8/fl-configs/configs/conftypes"
+	"encoding/json"
 )
 
 func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
@@ -25,7 +28,20 @@ const (
 	ShipShowDetails
 )
 
-templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod) {
+func marshalIDs(data fronttypes.DiscoveryIDs, item_nickname string) string {
+
+	var compat_by_id map[string]float64 = make(map[string]float64)
+
+	compat_by_id[""] = data.Config.GetCompatibilty(item_nickname, "")
+
+	for _, id := range data.Ids {
+		compat_by_id[string(id.Nickname)] = data.Config.GetCompatibilty(item_nickname, id.Nickname)
+	}
+	bytes, _ := json.Marshal(compat_by_id)
+	return string(bytes)
+}
+
+templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	<table class={ "sortable", templ.KV("top-main", pinm==MainMode), templ.KV("top-pinned", pinm==PinMode) }>
 		<thead>
 			<tr>
@@ -34,6 +50,7 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod) {
 					<th style="min-width:50px;">Select</th>
 					<th style="min-width:50px;">Select</th>
 				}
+				@ThDisco(disco)
 				<th style="min-width:50px;">Class</th>
 				<th style="min-width:50px;">Type</th>
 				<th style="min-width:50px;">Price</th>
@@ -73,6 +90,7 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod) {
 				>
 					@PinTd(ship.Nickname, ship.Name, pinm)
 					@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
+					@TdDisco(disco, ship.Nickname, ship.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(ship.Class) }</td>
 					<td>{ ship.Type }</td>
 					<td>{ strconv.Itoa(ship.Price) }</td>
@@ -112,7 +130,7 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
+templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	if mode == ShipShowBases {
 		@TabMenu(urls.Ships, mode2)
 	} else if mode == ShipShowDetails {
@@ -122,12 +140,12 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					@FilterBar()
+					@FilterBar(disco)
 					<div id="table-top-main">
-						@ShipTable(ships, mode, MainMode)
+						@ShipTable(ships, mode, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShipTable(ships, mode, PinMode)
+						@ShipTable(ships, mode, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">

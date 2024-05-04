@@ -10,9 +10,11 @@ import (
 
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-configs/configs/conftypes"
 	"github.com/darklab8/fl-darkstat/darkstat/builder"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -22,6 +24,7 @@ import (
 )
 
 type Linker struct {
+	mapped  *configs_mapped.MappedConfigs
 	configs *configs_export.Exporter
 }
 
@@ -34,10 +37,10 @@ func NewLinker(opts ...LinkOption) *Linker {
 	}
 
 	if l.configs == nil {
-		configs := configs_mapped.NewMappedConfigs()
+		l.mapped = configs_mapped.NewMappedConfigs()
 		logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(settings.FreelancerFolder))
-		configs.Read(settings.FreelancerFolder)
-		l.configs = configs_export.NewExporter(configs)
+		l.mapped.Read(settings.FreelancerFolder)
+		l.configs = configs_export.NewExporter(l.mapped)
 	}
 
 	return l
@@ -205,7 +208,34 @@ func (l *Linker) Link() *builder.Builder {
 	useful_ships := configs_export.FilterToUsefulShips(data.Ships)
 	useful_guns := configs_export.FilterToUsefulGun(data.Guns)
 
+	tractor_id := conftypes.TractorID("")
+
+	disco_ids := fronttypes.DiscoveryIDs{
+		Show:   true,
+		Ids:    l.configs.Tractors,
+		Config: l.mapped.Discovery.Techcompat,
+	}
 	build.RegComps(
+		builder.NewComponent(
+			urls.Ships+utils_types.FilePath(tractor_id),
+			front.ShipsT(useful_ships, front.ShipShowBases, front.ShowEmpty(false), disco_ids),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Ships)+utils_types.FilePath(tractor_id),
+			front.ShipsT(data.Ships, front.ShipShowBases, front.ShowEmpty(true), disco_ids),
+		),
+		builder.NewComponent(
+			urls.ShipDetails+utils_types.FilePath(tractor_id),
+			front.ShipsT(useful_ships, front.ShipShowDetails, front.ShowEmpty(false), disco_ids),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.ShipDetails)+utils_types.FilePath(tractor_id),
+			front.ShipsT(data.Ships, front.ShipShowDetails, front.ShowEmpty(true), disco_ids),
+		),
+	)
+
+	build.RegComps(
+
 		builder.NewComponent(
 			urls.Index,
 			front.Index(types.ThemeLight),
@@ -248,67 +278,51 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Guns,
-			front.GunsT(useful_guns, front.GunsShowBases, front.ShowEmpty(false)),
+			front.GunsT(useful_guns, front.GunsShowBases, front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Guns),
-			front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(true)),
+			front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.GunModifiers,
-			front.GunsT(useful_guns, front.GunsShowDamageBonuses, front.ShowEmpty(false)),
+			front.GunsT(useful_guns, front.GunsShowDamageBonuses, front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.GunModifiers),
-			front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true)),
+			front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.Missiles,
-			front.GunsT(configs_export.FilterToUsefulGun(data.Missiles), front.GunsMissiles, front.ShowEmpty(false)),
+			front.GunsT(configs_export.FilterToUsefulGun(data.Missiles), front.GunsMissiles, front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Missiles),
-			front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true)),
+			front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.Mines,
-			front.MinesT(configs_export.FilterToUsefulMines(data.Mines), front.ShowEmpty(false)),
+			front.MinesT(configs_export.FilterToUsefulMines(data.Mines), front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Mines),
-			front.MinesT(data.Mines, front.ShowEmpty(true)),
+			front.MinesT(data.Mines, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.Shields,
-			front.ShieldT(configs_export.FilterToUsefulShields(data.Shields), front.ShowEmpty(false)),
+			front.ShieldT(configs_export.FilterToUsefulShields(data.Shields), front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Shields),
-			front.ShieldT(data.Shields, front.ShowEmpty(true)),
+			front.ShieldT(data.Shields, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.Thrusters,
-			front.ThrusterT(configs_export.FilterToUsefulThrusters(data.Thrusters), front.ShowEmpty(false)),
+			front.ThrusterT(configs_export.FilterToUsefulThrusters(data.Thrusters), front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Thrusters),
-			front.ThrusterT(data.Thrusters, front.ShowEmpty(true)),
-		),
-		builder.NewComponent(
-			urls.Ships,
-			front.ShipsT(useful_ships, front.ShipShowBases, front.ShowEmpty(false)),
-		),
-		builder.NewComponent(
-			front.AllItemsUrl(urls.Ships),
-			front.ShipsT(data.Ships, front.ShipShowBases, front.ShowEmpty(true)),
-		),
-		builder.NewComponent(
-			urls.ShipDetails,
-			front.ShipsT(useful_ships, front.ShipShowDetails, front.ShowEmpty(false)),
-		),
-		builder.NewComponent(
-			front.AllItemsUrl(urls.ShipDetails),
-			front.ShipsT(data.Ships, front.ShipShowDetails, front.ShowEmpty(true)),
+			front.ThrusterT(data.Thrusters, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.Tractors,
@@ -320,19 +334,19 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Engines,
-			front.Engines(configs_export.FilterToUsefulEngines(data.Engines), front.ShowEmpty(false)),
+			front.Engines(configs_export.FilterToUsefulEngines(data.Engines), front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Engines),
-			front.Engines(data.Engines, front.ShowEmpty(true)),
+			front.Engines(data.Engines, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.CounterMeasures,
-			front.CounterMeasureT(configs_export.FilterToUsefulCounterMeasures(data.CMs), front.ShowEmpty(false)),
+			front.CounterMeasureT(configs_export.FilterToUsefulCounterMeasures(data.CMs), front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.CounterMeasures),
-			front.CounterMeasureT(data.CMs, front.ShowEmpty(true)),
+			front.CounterMeasureT(data.CMs, front.ShowEmpty(true), disco_ids),
 		),
 	)
 
@@ -436,6 +450,9 @@ func (l *Linker) Link() *builder.Builder {
 				front.ShipDetails(ship),
 			),
 		)
+
+		//  id IDTractor
+
 	}
 
 	for _, tractor := range data.Tractors {

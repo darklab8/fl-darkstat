@@ -1,6 +1,7 @@
 package front
 
 import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
@@ -83,7 +84,7 @@ templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					@FilterBar()
+					@FilterBar(fronttypes.DiscoveryIDs{})
 					<div id="table-top-main">
 						@BasesTable(bases, MainMode)
 					</div>

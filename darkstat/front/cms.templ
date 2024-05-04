@@ -1,6 +1,7 @@
 package front
 
 import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
@@ -12,7 +13,7 @@ func CounterMeasreDetailedUrl(cm configs_export.CounterMeasure) string {
 	return "cm/cm_base_" + strings.ToLower(cm.Nickname)
 }
 
-templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod) {
+templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -21,6 +22,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod) {
 					<th style="min-width:50px;">Select</th>
 					<th style="min-width:50px;">Select</th>
 				}
+				@ThDisco(disco)
 				<th style="width:50px;">Price</th>
 				<th style="width:50px;">Buyable</th>
 				<th style="width:50px;">Diversion Chance</th>
@@ -49,6 +51,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod) {
 				>
 					@PinTd(cm.Nickname, cm.Name, pinm)
 					@PinSelectLeftRight(pinm, CounterMeasreDetailedUrl(cm))
+					@TdDisco(disco, cm.Nickname, cm.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(cm.Price) } </td>
 					<td>{ strconv.FormatBool(configs_export.Buyable(cm.Bases)) }</td>
 					<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
@@ -78,18 +81,18 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty) {
+templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	@TabMenu(urls.CounterMeasures, mode2)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					@FilterBar()
+					@FilterBar(disco)
 					<div id="table-top-main">
-						@CmTable(cms, MainMode)
+						@CmTable(cms, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@CmTable(cms, PinMode)
+						@CmTable(cms, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">
