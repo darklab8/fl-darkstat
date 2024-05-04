@@ -4,12 +4,16 @@
     ],
     "go.testEnvVars": {
         "FLDARKSTAT_FREELANCER_FOLDER": "/home/naa/windows10shared/Discovery/DiscoveryFreelancer",
+        "DEV": "true",
+        // "FLDARKSTAT_FREELANCER_FOLDER": "/home/naa/windows10shared/Freelancer",
         "DARKSTAT_LOG_LEVEL": "DEBUG",
         "UTILS_LOG_LEVEL": "DEBUG",
     },
     "editor.formatOnSave": true,
     "terminal.integrated.env.linux": {
         "FLDARKSTAT_FREELANCER_FOLDER": "/home/naa/windows10shared/Discovery/DiscoveryFreelancer",
+        "DEV": "true",
+        // "FLDARKSTAT_FREELANCER_FOLDER": "/home/naa/windows10shared/Freelancer",
         "DARKSTAT_LOG_LEVEL": "DEBUG",
         "UTILS_LOG_LEVEL": "DEBUG",
         "FLDARKSTAT_HEADING": "Dev server for fl-darkstat | <a href=\"https://github.com/darklab8/fl-darkstat\">Github</a>",

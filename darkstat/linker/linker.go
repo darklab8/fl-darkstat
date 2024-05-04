@@ -210,11 +210,15 @@ func (l *Linker) Link() *builder.Builder {
 
 	tractor_id := conftypes.TractorID("")
 
-	disco_ids := fronttypes.DiscoveryIDs{
-		Show:   true,
-		Ids:    l.configs.Tractors,
-		Config: l.mapped.Discovery.Techcompat,
+	var disco_ids fronttypes.DiscoveryIDs
+	if l.mapped.Discovery != nil {
+		disco_ids = fronttypes.DiscoveryIDs{
+			Show:   true,
+			Ids:    l.configs.Tractors,
+			Config: l.mapped.Discovery.Techcompat,
+		}
 	}
+
 	build.RegComps(
 		builder.NewComponent(
 			urls.Ships+utils_types.FilePath(tractor_id),
