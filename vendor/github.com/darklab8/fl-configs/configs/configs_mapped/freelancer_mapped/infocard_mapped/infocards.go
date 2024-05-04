@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
+	"github.com/darklab8/fl-configs/configs/settings/logus"
 	logus1 "github.com/darklab8/fl-configs/configs/settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
 )
@@ -17,10 +18,13 @@ const (
 	FILENAME_FALLBACK = "infocards.xml"
 )
 
-func ReadFromTextFile(input_file *file.File) *infocard.Config {
+func ReadFromTextFile(input_file *file.File) (*infocard.Config, error) {
 	frelconfig := infocard.NewConfig()
 
-	lines := input_file.ReadLines()
+	lines, err := input_file.ReadLines()
+	if logus.Log.CheckError(err, "unable to read file in ReadFromTestFile") {
+		return nil, err
+	}
 
 	for index := 0; index < len(lines); index++ {
 
@@ -46,13 +50,17 @@ func ReadFromTextFile(input_file *file.File) *infocard.Config {
 			)
 		}
 	}
-	return frelconfig
+	return frelconfig, nil
 }
 
-func Read(filesystem *filefind.Filesystem, freelancer_ini *exe_mapped.Config, input_file *file.File) *infocard.Config {
+func Read(filesystem *filefind.Filesystem, freelancer_ini *exe_mapped.Config, input_file *file.File) (*infocard.Config, error) {
 	var config *infocard.Config
+	var err error
 	if input_file != nil {
-		config = ReadFromTextFile(input_file)
+		config, err = ReadFromTextFile(input_file)
+		if logus.Log.CheckError(err, "unable to read infocards", typelog.OptError(err)) {
+			return config, err
+		}
 	} else {
 		config = exe_mapped.GetAllInfocards(filesystem, freelancer_ini.GetDlls())
 	}
@@ -66,5 +74,5 @@ func Read(filesystem *filefind.Filesystem, freelancer_ini *exe_mapped.Config, in
 		}(card)
 	}
 	wg.Wait()
-	return config
+	return config, nil
 }

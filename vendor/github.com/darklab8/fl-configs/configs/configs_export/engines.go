@@ -20,9 +20,10 @@ type Engine struct {
 	InfoID   int
 
 	Bases []GoodAtBase
+	*DiscoveryTechCompat
 }
 
-func (e *Exporter) GetEngines() []Engine {
+func (e *Exporter) GetEngines(ids []Tractor) []Engine {
 	var engines []Engine
 
 	for _, engine_info := range e.configs.Equip.Engines {
@@ -71,6 +72,7 @@ func (e *Exporter) GetEngines() []Engine {
 			continue
 		}
 
+		engine.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, engine.Nickname)
 		engines = append(engines, engine)
 	}
 	return engines

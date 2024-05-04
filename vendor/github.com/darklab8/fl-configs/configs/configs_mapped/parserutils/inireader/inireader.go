@@ -308,7 +308,11 @@ func Read(fileref *file.File) *INIFile {
 	config.File = fileref
 
 	logus.Log.Debug("reading lines")
-	lines := fileref.ReadLines()
+	lines, err := fileref.ReadLines()
+
+	if logus.Log.CheckError(err, "unable to read ini with error", typelog.OptError(err)) {
+		return config
+	}
 
 	logus.Log.Debug("setting current section")
 	var cur_section *Section

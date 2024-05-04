@@ -31,9 +31,11 @@ type Mine struct {
 	Lootable bool
 
 	Bases []GoodAtBase
+
+	*DiscoveryTechCompat
 }
 
-func (e *Exporter) GetMines() []Mine {
+func (e *Exporter) GetMines(ids []Tractor) []Mine {
 	var mines []Mine
 
 	for _, mine_dropper := range e.configs.Equip.MineDroppers {
@@ -89,6 +91,7 @@ func (e *Exporter) GetMines() []Mine {
 		}
 
 		e.exportInfocards(InfocardKey(mine.Nickname), mine.IdsInfo)
+		mine.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, mine.Nickname)
 		mines = append(mines, mine)
 	}
 
@@ -98,7 +101,7 @@ func (e *Exporter) GetMines() []Mine {
 func FilterToUsefulMines(mines []Mine) []Mine {
 	var items []Mine = make([]Mine, 0, len(mines))
 	for _, item := range mines {
-		if len(item.Bases) == 0 {
+		if !Buyable(item.Bases) {
 			continue
 		}
 		items = append(items, item)

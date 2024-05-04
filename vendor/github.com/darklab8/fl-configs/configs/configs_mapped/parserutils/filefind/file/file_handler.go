@@ -8,23 +8,39 @@ package file
 import (
 	"bufio"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
+	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/bini"
 	"github.com/darklab8/fl-configs/configs/settings/logus"
+	"github.com/darklab8/go-typelog/typelog"
 
 	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
+type WebFile struct {
+	url string
+}
+
 type File struct {
 	filepath utils_types.FilePath
 	file     *os.File
 	lines    []string
+
+	webfile *WebFile
 }
 
 func NewFile(filepath utils_types.FilePath) *File {
 	return &File{filepath: filepath}
+}
+
+func NewWebFile(url string) *File {
+	return &File{webfile: &WebFile{
+		url: url,
+	}}
 }
 
 func (f *File) GetFilepath() utils_types.FilePath { return f.filepath }
@@ -42,10 +58,29 @@ func (f *File) close() {
 	f.file.Close()
 }
 
-func (f *File) ReadLines() []string {
+func (f *File) ReadLines() ([]string, error) {
+
+	if f.webfile != nil {
+		res, err := http.Get(f.webfile.url)
+		if err != nil {
+			logus.Log.Error("error making http request: %s\n", typelog.OptError(err))
+			return []string{}, err
+		}
+
+		resBody, err := io.ReadAll(res.Body)
+		if err != nil {
+			logus.Log.Error("client: could not read response body: %s\n", typelog.OptError(err))
+			return []string{}, err
+		}
+		fmt.Printf("client: response body: %s\n", resBody)
+
+		str := string(resBody)
+		return strings.Split(str, "\n"), nil
+	}
+
 	if bini.IsBini(f.filepath) {
 		f.lines = bini.Dump(f.filepath)
-		return f.lines
+		return f.lines, nil
 	}
 
 	f.openToReadF()
@@ -56,7 +91,7 @@ func (f *File) ReadLines() []string {
 	for scanner.Scan() {
 		f.lines = append(f.lines, scanner.Text())
 	}
-	return f.lines
+	return f.lines, nil
 }
 
 func (f *File) ScheduleToWrite(value ...string) {

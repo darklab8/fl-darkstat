@@ -5,3 +5,5 @@ type Vector struct {
 	Y float64
 	Z float64
 }
+
+type TractorID string

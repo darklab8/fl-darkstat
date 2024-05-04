@@ -17,9 +17,11 @@ type CounterMeasure struct {
 	InfoID   int
 
 	Bases []GoodAtBase
+
+	*DiscoveryTechCompat
 }
 
-func (e *Exporter) GetCounterMeasures() []CounterMeasure {
+func (e *Exporter) GetCounterMeasures(ids []Tractor) []CounterMeasure {
 	var tractors []CounterMeasure
 
 	for _, cm_info := range e.configs.Equip.CounterMeasureDroppers {
@@ -59,6 +61,7 @@ func (e *Exporter) GetCounterMeasures() []CounterMeasure {
 		}
 
 		e.exportInfocards(InfocardKey(cm.Nickname), infocards...)
+		cm.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, cm.Nickname)
 		tractors = append(tractors, cm)
 	}
 	return tractors

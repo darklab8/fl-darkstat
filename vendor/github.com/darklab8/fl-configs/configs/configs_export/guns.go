@@ -53,6 +53,7 @@ type Gun struct {
 	DamangeBonuses []DamageBonus
 
 	Missile
+	*DiscoveryTechCompat
 }
 
 func getGunClass(gun_info *equip_mapped.Gun) string {
@@ -69,7 +70,7 @@ func getGunClass(gun_info *equip_mapped.Gun) string {
 	return gun_class
 }
 
-func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun) Gun {
+func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 	gun := Gun{
 		Nickname:     gun_info.Nickname.Get(),
 		IdsName:      gun_info.IdsName.Get(),
@@ -175,14 +176,15 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun) Gun {
 		gun.Type = "gun"
 	}
 
+	gun.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, gun.Nickname)
 	return gun
 }
 
-func (e *Exporter) GetGuns() []Gun {
+func (e *Exporter) GetGuns(ids []Tractor) []Gun {
 	var guns []Gun
 
 	for _, gun_info := range e.configs.Equip.Guns {
-		gun := e.getGunInfo(gun_info)
+		gun := e.getGunInfo(gun_info, ids)
 
 		if gun.HpType == "" {
 			continue
@@ -216,7 +218,7 @@ func FilterToUsefulGun(guns []Gun) []Gun {
 			continue
 		}
 
-		if len(gun.Bases) == 0 {
+		if !Buyable(gun.Bases) {
 			continue
 		}
 		items = append(items, gun)

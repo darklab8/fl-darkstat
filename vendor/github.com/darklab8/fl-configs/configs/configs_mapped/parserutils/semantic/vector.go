@@ -1,8 +1,8 @@
 package semantic
 
 import (
-	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/conftypes"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
+	"github.com/darklab8/fl-configs/configs/conftypes"
 	"github.com/darklab8/fl-configs/configs/settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
 )

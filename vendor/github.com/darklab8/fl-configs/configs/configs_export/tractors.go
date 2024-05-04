@@ -1,5 +1,7 @@
 package configs_export
 
+import "github.com/darklab8/fl-configs/configs/conftypes"
+
 type Tractor struct {
 	Name       string
 	Price      int
@@ -7,7 +9,7 @@ type Tractor struct {
 	ReachSpeed int
 
 	Lootable bool
-	Nickname string
+	Nickname conftypes.TractorID
 	NameID   int
 	InfoID   int
 
@@ -19,14 +21,14 @@ func (e *Exporter) GetTractors() []Tractor {
 
 	for _, tractor_info := range e.configs.Equip.Tractors {
 		tractor := Tractor{}
-		tractor.Nickname = tractor_info.Nickname.Get()
+		tractor.Nickname = conftypes.TractorID(tractor_info.Nickname.Get())
 		tractor.MaxLength = tractor_info.MaxLength.Get()
 		tractor.ReachSpeed = tractor_info.ReachSpeed.Get()
 		tractor.Lootable = tractor_info.Lootable.Get()
 		tractor.NameID = tractor_info.IdsName.Get()
 		tractor.InfoID = tractor_info.IdsInfo.Get()
 
-		if good_info, ok := e.configs.Goods.GoodsMap[tractor.Nickname]; ok {
+		if good_info, ok := e.configs.Goods.GoodsMap[string(tractor.Nickname)]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
 				tractor.Price = price
 				tractor.Bases = e.GetAtBasesSold(GetAtBasesInput{

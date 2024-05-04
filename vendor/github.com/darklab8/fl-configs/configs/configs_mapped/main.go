@@ -27,12 +27,17 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/market_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/weaponmoddb"
+	"github.com/darklab8/fl-configs/configs/discovery/techcompat"
 
 	"github.com/darklab8/go-utils/goutils/utils"
 	"github.com/darklab8/go-utils/goutils/utils/time_measure"
 	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
+
+type DiscoveryConfig struct {
+	Techcompat *techcompat.Config
+}
 
 type MappedConfigs struct {
 	FreelancerINI *exe_mapped.Config
@@ -52,6 +57,8 @@ type MappedConfigs struct {
 	MBases         *mbases_mapped.Config
 	Consts         *const_mapped.Config
 	WeaponMods     *weaponmoddb.Config
+
+	Discovery *DiscoveryConfig
 }
 
 func NewMappedConfigs() *MappedConfigs {
@@ -93,6 +100,14 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		file_consts,
 		file_weaponmoddb,
 	)
+
+	var file_techcompat *iniload.IniLoader
+	if techcom := filesystem.GetFile("launcherconfig.xml"); techcom != nil {
+		p.Discovery = &DiscoveryConfig{}
+		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
+		all_files = append(all_files, file_techcompat)
+	}
+
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 		var wg sync.WaitGroup
 		for _, file := range all_files {
@@ -116,13 +131,17 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		p.Shiparch = ship_mapped.Read(files_shiparch)
 
 		p.InfocardmapINI = interface_mapped.Read(file_interface)
-		p.Infocards = infocard_mapped.Read(filesystem, p.FreelancerINI, filesystem.GetFile(infocard_mapped.FILENAME, infocard_mapped.FILENAME_FALLBACK))
+		p.Infocards, _ = infocard_mapped.Read(filesystem, p.FreelancerINI, filesystem.GetFile(infocard_mapped.FILENAME, infocard_mapped.FILENAME_FALLBACK))
 
 		p.InitialWorld = initialworld.Read(file_initialworld)
 		p.Empathy = empathy_mapped.Read(file_empathy)
 		p.MBases = mbases_mapped.Read(file_mbases)
 		p.Consts = const_mapped.Read(file_consts)
 		p.WeaponMods = weaponmoddb.Read(file_weaponmoddb)
+
+		if p.Discovery != nil {
+			p.Discovery.Techcompat = techcompat.Read(file_techcompat)
+		}
 	}, time_measure.WithMsg("Mapped stuff"))
 
 	logus.Log.Info("Parse OK for FreelancerFolderLocation=", utils_logus.FilePath(file1path))

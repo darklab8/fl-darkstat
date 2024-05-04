@@ -62,17 +62,17 @@ func NewExporter(configs *configs_mapped.MappedConfigs, opts ...OptExport) *Expo
 
 func (e *Exporter) Export() *Exporter {
 	e.Bases = e.GetBases()
+	e.Tractors = e.GetTractors()
 	e.Factions = e.GetFactions(e.Bases)
 	e.Commodities = e.GetCommodities()
-	e.Guns = e.GetGuns()
-	e.Missiles = e.GetMissiles()
-	e.Mines = e.GetMines()
-	e.Shields = e.GetShields()
-	e.Thrusters = e.GetThrusters()
-	e.Ships = e.GetShips()
-	e.Tractors = e.GetTractors()
-	e.Engines = e.GetEngines()
-	e.CMs = e.GetCounterMeasures()
+	e.Guns = e.GetGuns(e.Tractors)
+	e.Missiles = e.GetMissiles(e.Tractors)
+	e.Mines = e.GetMines(e.Tractors)
+	e.Shields = e.GetShields(e.Tractors)
+	e.Thrusters = e.GetThrusters(e.Tractors)
+	e.Ships = e.GetShips(e.Tractors)
+	e.Engines = e.GetEngines(e.Tractors)
+	e.CMs = e.GetCounterMeasures(e.Tractors)
 	return e
 }
 

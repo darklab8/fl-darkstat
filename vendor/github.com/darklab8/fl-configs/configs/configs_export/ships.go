@@ -4,6 +4,9 @@ import (
 	"math"
 	"sort"
 	"strings"
+
+	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-configs/configs/conftypes"
 )
 
 type Ship struct {
@@ -38,9 +41,11 @@ type Ship struct {
 	Bases            []GoodAtBase
 	Slots            []EquipmentSlot
 	BiggestHardpoint []string
+
+	*DiscoveryTechCompat
 }
 
-func (e *Exporter) GetShips() []Ship {
+func (e *Exporter) GetShips(ids []Tractor) []Ship {
 	var ships []Ship
 
 	for _, ship_info := range e.configs.Shiparch.Ships {
@@ -175,10 +180,37 @@ func (e *Exporter) GetShips() []Ship {
 			infocards = append(infocards, id)
 		}
 		e.exportInfocards(InfocardKey(ship.Nickname), infocards...)
+		ship.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, ship.Nickname)
 		ships = append(ships, ship)
 	}
 
 	return ships
+}
+
+type DiscoveryTechCompat struct {
+	TechcompatByID map[conftypes.TractorID]float64
+	TechCell       string
+}
+
+func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []Tractor, nickname string) *DiscoveryTechCompat {
+	if Discovery == nil {
+		return nil
+	}
+
+	techcompat := &DiscoveryTechCompat{
+		TechcompatByID: make(map[conftypes.TractorID]float64),
+	}
+	techcompat.TechcompatByID[""] = Discovery.Techcompat.GetCompatibilty(nickname, "")
+
+	for _, id := range ids {
+		techcompat.TechcompatByID[id.Nickname] = Discovery.Techcompat.GetCompatibilty(nickname, id.Nickname)
+	}
+
+	if compat, ok := Discovery.Techcompat.CompatByItem[nickname]; ok {
+		techcompat.TechCell = compat.TechCell
+	}
+
+	return techcompat
 }
 
 type EquipmentSlot struct {
@@ -192,7 +224,7 @@ var LogOgE = math.Log10(math.E)
 func FilterToUsefulShips(ships []Ship) []Ship {
 	var items []Ship = make([]Ship, 0, len(ships))
 	for _, item := range ships {
-		if len(item.Bases) == 0 {
+		if !Buyable(item.Bases) {
 			continue
 		}
 		items = append(items, item)

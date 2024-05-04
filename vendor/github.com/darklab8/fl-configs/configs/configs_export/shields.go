@@ -33,9 +33,11 @@ type Shield struct {
 	IdsInfo  int
 
 	Bases []GoodAtBase
+
+	*DiscoveryTechCompat
 }
 
-func (e *Exporter) GetShields() []Shield {
+func (e *Exporter) GetShields(ids []Tractor) []Shield {
 	var shields []Shield
 
 	for _, shield_gen := range e.configs.Equip.ShieldGens {
@@ -104,7 +106,7 @@ func (e *Exporter) GetShields() []Shield {
 		}
 
 		e.exportInfocards(InfocardKey(shield.Nickname), shield.IdsInfo)
-
+		shield.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, shield.Nickname)
 		shields = append(shields, shield)
 	}
 
@@ -126,7 +128,7 @@ func InitRegexExpression(expression string) *regexp.Regexp {
 func FilterToUsefulShields(shields []Shield) []Shield {
 	var items []Shield = make([]Shield, 0, len(shields))
 	for _, item := range shields {
-		if len(item.Bases) == 0 {
+		if !Buyable(item.Bases) {
 			continue
 		}
 		items = append(items, item)

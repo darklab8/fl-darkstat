@@ -4,11 +4,11 @@ type Missile struct {
 	MaxAngularVelocity float64
 }
 
-func (e *Exporter) GetMissiles() []Gun {
+func (e *Exporter) GetMissiles(ids []Tractor) []Gun {
 	var missiles []Gun
 
 	for _, gun_info := range e.configs.Equip.Guns {
-		missile := e.getGunInfo(gun_info)
+		missile := e.getGunInfo(gun_info, ids)
 
 		if missile.HpType == "" {
 			continue

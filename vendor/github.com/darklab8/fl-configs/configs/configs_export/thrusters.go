@@ -15,9 +15,11 @@ type Thruster struct {
 	InfoID     int
 
 	Bases []GoodAtBase
+
+	*DiscoveryTechCompat
 }
 
-func (e *Exporter) GetThrusters() []Thruster {
+func (e *Exporter) GetThrusters(ids []Tractor) []Thruster {
 	var thrusters []Thruster
 
 	for _, thruster_info := range e.configs.Equip.Thrusters {
@@ -69,6 +71,7 @@ func (e *Exporter) GetThrusters() []Thruster {
 
 		thruster.Rating = float64(thruster.MaxForce) / float64(thruster.PowerUsage-100) * thruster.Value / 1000
 		e.exportInfocards(InfocardKey(thruster.Nickname), thruster.InfoID)
+		thruster.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, thruster.Nickname)
 		thrusters = append(thrusters, thruster)
 	}
 	return thrusters
@@ -77,7 +80,7 @@ func (e *Exporter) GetThrusters() []Thruster {
 func FilterToUsefulThrusters(thrusters []Thruster) []Thruster {
 	var items []Thruster = make([]Thruster, 0, len(thrusters))
 	for _, item := range thrusters {
-		if len(item.Bases) == 0 {
+		if !Buyable(item.Bases) {
 			continue
 		}
 		items = append(items, item)
