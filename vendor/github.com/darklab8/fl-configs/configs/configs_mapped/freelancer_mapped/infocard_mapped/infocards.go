@@ -55,15 +55,17 @@ func ReadFromTextFile(input_file *file.File) (*infocard.Config, error) {
 
 func Read(filesystem *filefind.Filesystem, freelancer_ini *exe_mapped.Config, input_file *file.File) (*infocard.Config, error) {
 	var config *infocard.Config
-	var err error
-	if input_file != nil {
-		config, err = ReadFromTextFile(input_file)
-		if logus.Log.CheckError(err, "unable to read infocards", typelog.OptError(err)) {
-			return config, err
-		}
-	} else {
-		config = exe_mapped.GetAllInfocards(filesystem, freelancer_ini.GetDlls())
-	}
+	// TODO Read from text only for darklint // move this logic to it
+	// var err error
+	// if input_file != nil {
+	// 	config, err = ReadFromTextFile(input_file)
+	// 	if logus.Log.CheckError(err, "unable to read infocards", typelog.OptError(err)) {
+	// 		return config, err
+	// 	}
+	// } else {
+
+	// }
+	config = exe_mapped.GetAllInfocards(filesystem, freelancer_ini.GetDlls())
 
 	var wg sync.WaitGroup
 	for _, card := range config.Infocards {
