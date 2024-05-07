@@ -54,7 +54,9 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 				<th style="min-width:100px;">Hull Dmg/s</th>
 				<th style="min-width:100px;">Sheld Dmg/s</th>
 				<th style="min-width:100px;">Power/s</th>
-				<th style="min-width:100px;">Efficiency</th>
+				<th style="min-width:100px;">Avg. Efficiency</th>
+				<th style="min-width:100px;">Anti Hull Eff.</th>
+				<th style="min-width:100px;">Anti Shield Eff.</th>
 				<th style="min-width:100px;">Value</th>
 				<th style="min-width:100px;">Rating</th>
 				<th style="min-width:100px;">Speed</th>
@@ -98,7 +100,9 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 					<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
 					<td>{ fmt.Sprintf("%.2f",gun.ShieldDamagePerSec) }</td>
 					<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.Efficiency) }</td>
+					<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
+					<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
+					<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
 					<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
 					<td>{ fmt.Sprintf("%.2f",gun.Rating)  }</td>
 					<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
