@@ -7,3 +7,5 @@ web/static/export/*
 id_rsa*
 cover.out
 dist/*
+ruby_home/
+gems/
