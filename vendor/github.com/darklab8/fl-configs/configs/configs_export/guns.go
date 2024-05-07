@@ -45,7 +45,9 @@ type Gun struct {
 	HullDamagePerSec   float64
 	ShieldDamagePerSec float64
 	PowerUsagePerSec   float64
-	Efficiency         float64
+	AvgEfficiency      float64
+	HullEfficiency     float64
+	ShieldEfficiency   float64
 	Value              float64
 	Rating             float64
 
@@ -166,9 +168,11 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 	gun.HullDamagePerSec = float64(gun.HullDamage) * gun.Refire
 	gun.ShieldDamagePerSec = float64(gun.ShieldDamage) * gun.Refire
 	gun.PowerUsagePerSec = float64(gun.PowerUsage) * gun.Refire
-	gun.Efficiency = math.Max(float64(gun.HullDamage), float64(gun.ShieldDamage)) / gun.PowerUsage
+	gun.AvgEfficiency = (float64(gun.HullDamage) + float64(gun.ShieldDamage)) / (gun.PowerUsage * 2)
+	gun.HullEfficiency = float64(gun.HullDamage) / gun.PowerUsage
+	gun.ShieldEfficiency = float64(gun.ShieldDamage) / gun.PowerUsage
 	gun.Value = math.Max(float64(gun.HullDamagePerSec), float64(gun.ShieldDamagePerSec)) / float64(gun.Price) * 1000
-	gun.Rating = gun.Efficiency * gun.Value
+	gun.Rating = gun.AvgEfficiency * gun.Value
 
 	if gun.IsAutoTurret {
 		gun.Type = "turret"
