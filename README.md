@@ -13,13 +13,13 @@ See demos:
 # Support
 
 - It was made in mind with supporting [Freelancer Discovery](https://discoverygc.com/) as first order.
-- Support will be extended to Vanilla version.
+- Support is extended to Vanilla version.
 - Any other mode will be supported on request, see contacts to get in touch.
 
 # Development setup
 
 - git clone https://github.com/darklab8/fl-configs repository for game configs scan, download it to same parent folder as this repository
-- go work init ; go work use . ; go work use ../fl-configs
+- `go work init ; go work use . ; go work use ../fl-configs`
   - initialize Go workspaces, and provide relative path to fl-configs
   - go workspaces allow developing libraries code with real time update of usage to another repository
 - install [templ](https://templ.guide/quick-start/installation)
@@ -27,9 +27,12 @@ See demos:
   - check specific version in [go.mod](./go.mod)
   - In case of emergency we could use vendored in version perhaps
 - check [environment variables to set](.vscode/settings.json)
-  - set your own environment variable to Freelancer Folder
+  - set your own environment variable FLDARKSTAT_FREELANCER_FOLDER to Freelancer Folder
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
-  - run some command, for example task:web
+  - run some command, for example `task web`
+- if u wish access to `task dev:watch` that reloads running web server on file change, then install `pip install watchdog[watchmedo]` and ensure `watchmedo` binary is available to `task dev:watch` command written [in Taskfile]((Taskfile.yml))
+
+If u have problems with configuring development environment, then seek my contacts below to help you through it ^_^
 
 # Features
 
@@ -49,6 +52,9 @@ See demos:
 - Tractors tab has info regarding Discovery IDs and where to buy them ^_^
 - other extra tabs like Engines, CMs added
 - Tabs for different equipment could be showing more full list of equipment in "Show all" mode.
+- Has searching/filtering options with multiple matching items shown
+- You can pin items for comparison
+- For Discovery Freelancer, u can select ID/Tractor and having guns/ships etc filtered/shown according to what your ID can use without power core regeneration debuffs. Shows ID compatibility (75% ID compatibility at any equiped item will mean having only 75% of Power core regeneration)
 
 # Usage locally
 
@@ -70,8 +76,9 @@ See demos:
 - Also thanks to The Alex (From Freelancer Discovery) for getting me [Python script for reading dlls](https://github.com/darklab8/fl-configs/blob/master/docs/inspiration/dll_reading/alex_py/main.py)
   - That helped rewriting it in go for [fl-configs lib](https://github.com/darklab8/fl-configs)
 - Honorary mentions for very active moral support and extra ideas by
-    - IrateRedKite (from starport Discord)
-    - Bolte (from starport Discord)
+  - IrateRedKite (from starport Discord)
+  - Bolte (from starport Discord)
+
 <!--- 
 - In case it will be ever needed, [just in case linking flcompanion](<https://github.com/Corran-Raisu/FLCompanion>)
 - check Selfpatch for fl-data-discovery later https://github.com/Lazrius/DSLauncher/tree/default/Self%20Patch
