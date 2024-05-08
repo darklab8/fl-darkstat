@@ -30,7 +30,7 @@ See demos:
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
 
   - run some command, for example `task web`
-- if u wish access to `task dev:watch` that reloads running web server on file changes, then install `pip install watchdog[watchmedo]` and ensure `watchmedo` binary is available to `task dev:watch` command written [in Taskfile](Taskfile.yml))
+- if u wish access to `task dev:watch` that reloads running web server on file changes, then install `pip install watchdog[watchmedo]` and ensure `watchmedo` binary is available to `task dev:watch` command written [in Taskfile](Taskfile.yml)
 - If u wish making changes fl-configs and having them right away reflected to fl-darkstat
 
   - `go work init ; go work use . ; go work use ../fl-configs`
