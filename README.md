@@ -19,6 +19,8 @@ See demos:
 # Development setup
 
 - git clone https://github.com/darklab8/fl-configs repository for game configs scan, download it to same parent folder as this repository
+- install golang of project version or higher (potentially will work anyway).
+  - See current golang version [in CI workflow](.github/workflows/deploy.yml)
 - install [templ](https://templ.guide/quick-start/installation)
 
   - go install github.com/a-h/templ/cmd/templ@latest
@@ -27,6 +29,7 @@ See demos:
 - check [environment variables to set](.vscode/settings.json)
 
   - set your own environment variable FLDARKSTAT_FREELANCER_FOLDER to Freelancer Folder
+  - ensure it was set. `echo $FLDARKSTAT_FREELANCER_FOLDER` at Linux or `echo %FLDARKSTAT_FREELANCER_FOLDER%` at windows
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
 
   - run some command, for example `task web`
