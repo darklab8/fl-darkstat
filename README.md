@@ -51,7 +51,7 @@ If u have problems with configuring development environment, then seek my contac
   - See example in [fl-data-discovery repo](https://github.com/darklab8/fl-data-discovery). It contains .github/workflows + game data
 - scans Freelancer folder and builds to static assets (html/css/js) deployable to Github pages or any other static assets serving place.
 - Usable locally for Linux and Windows.
-- Only Freelancer Discovery mod is supported at the moment
+- Only Freelancer Discovery mod and Vanilla are supported at the moment
 
 # What makes different from regular flstat
 
