@@ -43,7 +43,7 @@ tasks:
       # pip install watchdog[watchmedo]
       - > 
         ~/venv/bin/watchmedo auto-restart 
-        --patterns "*.templ;*.go;*.css" 
+        --patterns "*.templ;*.go;*.css;*.js" 
         -i "*_templ.go"
         --recursive
         -- sh -c "task web; sleep infinity"

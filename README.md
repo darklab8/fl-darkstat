@@ -19,18 +19,24 @@ See demos:
 # Development setup
 
 - git clone https://github.com/darklab8/fl-configs repository for game configs scan, download it to same parent folder as this repository
-- `go work init ; go work use . ; go work use ../fl-configs`
-  - initialize Go workspaces, and provide relative path to fl-configs
-  - go workspaces allow developing libraries code with real time update of usage to another repository
 - install [templ](https://templ.guide/quick-start/installation)
+
   - go install github.com/a-h/templ/cmd/templ@latest
   - check specific version in [go.mod](./go.mod)
   - In case of emergency we could use vendored in version perhaps
 - check [environment variables to set](.vscode/settings.json)
+
   - set your own environment variable FLDARKSTAT_FREELANCER_FOLDER to Freelancer Folder
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
+
   - run some command, for example `task web`
-- if u wish access to `task dev:watch` that reloads running web server on file change, then install `pip install watchdog[watchmedo]` and ensure `watchmedo` binary is available to `task dev:watch` command written [in Taskfile]((Taskfile.yml))
+- if u wish access to `task dev:watch` that reloads running web server on file changes, then install `pip install watchdog[watchmedo]` and ensure `watchmedo` binary is available to `task dev:watch` command written [in Taskfile](Taskfile.yml))
+- If u wish making changes fl-configs and having them right away reflected to fl-darkstat
+
+  - `go work init ; go work use . ; go work use ../fl-configs`
+  - initialize Go workspaces, and provide relative path to fl-configs
+  - [go workspaces]([https://go.dev/doc/tutorial/workspaces](https://go.dev/doc/tutorial/workspaces)) allow developing libraries code with real time update of usage to another repository
+- All dependencies are vendored in with [go mod vendor](https://go.dev/ref/mod#go-mod-vendor) to [vendor folder](https://go.dev/ref/mod#go-mod-vendor) for long term maintanance purposes. We need to to run `go mod vendor` command after library updates for auto refreshing them. Vendored dependencies serve as backup in case of some libs dissapearings.
 
 If u have problems with configuring development environment, then seek my contacts below to help you through it ^_^
 
