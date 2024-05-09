@@ -78,12 +78,12 @@ templ Index(theme types.Theme) {
 	</style>
 	<script>
 		document.addEventListener('htmx:afterSettle',(event) => {
-			console.log("htmx:afterSettle");
+			// console.log("htmx:afterSettle");
 			LoadSelectedTractorID()
 			FilteringFunction()
 		});
 	</script>
 	@common.Html5() {
-		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>
+		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
 	}
 }

@@ -206,7 +206,6 @@ templ Button(text string, get_url utils_types.FilePath, is_selected bool) {
 	<button
 		preload="mouseover"
 		hx-trigger="mousedown"
-		hx-trigger="mousedown"
 		hx-get={ types.GetCtx(ctx).SiteRoot + get_url.ToString() }
 		class={ templ.KV("selected", is_selected) }
 		role="tab"
@@ -320,16 +319,6 @@ templ Infocard(info configs_export.Infocard) {
 			<p class="infocard_p">{ line }</p>
 		}
 	}
-}
-
-func JoinClickTriggers(first_id string, second_id string) string {
-	return `
-	<script>
-	document.getElementById('` + first_id + `').addEventListener('mousedown', () => {
-		document.getElementById('` + second_id + `').click();
-	});
-	</script>
-	`
 }
 
 templ GoodAtBaseSharedT(show_price_per_volume ShowPricePerVolume) {

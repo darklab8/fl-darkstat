@@ -64,12 +64,11 @@ templ BasesTable(bases []configs_export.Base, pinm PinMod) {
 					<td
 						id={ "infocard_click" + base.Nickname }
 						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(base.Infocard) }
-						hx-trigger="click"
+						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + base.Nickname }
 						hx-target="#infocard_view"
 						hx-swap="innerHTML"
 						preload="mouseover"
 					></td>
-					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+base.Nickname, "infocard_click"+base.Nickname))
 				</tr>
 			}
 		</tbody>

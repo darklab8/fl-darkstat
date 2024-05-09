@@ -116,12 +116,11 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 					<td
 						id={ "infocard_click" + ship.Nickname }
 						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(ship.Nickname)) }
-						hx-trigger="click"
+						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + ship.Nickname }
 						hx-target="#infocard_view"
 						hx-swap="innerHTML"
 						preload="mouseover"
 					></td>
-					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+ship.Nickname, "infocard_click"+ship.Nickname))
 				</tr>
 			}
 		</tbody>

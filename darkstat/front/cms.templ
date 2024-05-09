@@ -67,12 +67,11 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco fronttypes
 					<td
 						id={ "infocard_click" + cm.Nickname }
 						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(cm.Nickname)) }
-						hx-trigger="click"
+						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + cm.Nickname }
 						hx-target="#infocard_view"
 						hx-swap="innerHTML"
 						preload="mouseover"
 					></td>
-					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+cm.Nickname, "infocard_click"+cm.Nickname))
 				</tr>
 			}
 		</tbody>

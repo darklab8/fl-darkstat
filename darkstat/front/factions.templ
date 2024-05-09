@@ -78,12 +78,11 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					<td
 						id={ "infocard_click" + faction.Nickname }
 						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(faction.Infocard) }
-						hx-trigger="click"
+						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + faction.Nickname }
 						hx-target="#infocard_view"
 						hx-swap="innerHTML"
 						preload="mouseover"
 					></td>
-					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+faction.Nickname, "infocard_click"+faction.Nickname))
 				</tr>
 			}
 		</tbody>

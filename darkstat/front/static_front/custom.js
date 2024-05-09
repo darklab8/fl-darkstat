@@ -6,25 +6,25 @@ function TableLen(table) {
             count = count + 1;
         }
     }
-    console.log("count=" + count)
+    // console.log("count=" + count)
     return count;
 }
 
 
 function Hide(id) {
     var element = document.getElementById(id);
-    console.log("Hide.id=" + id)
+    // console.log("Hide.id=" + id)
     element.classList.add("hidden");
 }
 
 function Unhide(id) {
     var element = document.getElementById(id);
-    console.log("Unhide.id=" + id)
+    // console.log("Unhide.id=" + id)
     element.classList.remove("hidden");
 }
 
 function LoadSelectedTractorID() {
-    console.log("triggered LoadSelectedTractorID")
+    // console.log("triggered LoadSelectedTractorID")
     let selected_index = sessionStorage.getItem("tractor_id_selected_index");
     if (typeof (selected_index) != 'undefined' && selected_index != null) {
         tractor_id_elem = document.getElementById("tractor_id_selector");
@@ -36,7 +36,7 @@ function LoadSelectedTractorID() {
 
 function FilteringFunction() {
     // Declare variables
-    console.log("triggered FilteringFunction")
+    // console.log("triggered FilteringFunction")
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("filterinput");
     filter = input.value.toUpperCase();
@@ -70,15 +70,15 @@ function FilteringFunction() {
 
 
             techcompat_visible = compatibility > 10 || tractor_id_selected === ""
-            console.log("compatibility=", compatibility, "tractor_id_selected=", tractor_id_selected, "techcompat_visible=", techcompat_visible)
+            // console.log("compatibility=", compatibility, "tractor_id_selected=", tractor_id_selected, "techcompat_visible=", techcompat_visible)
         }
 
         if (txtValue.toUpperCase().indexOf(filter) > -1 && techcompat_visible === true) {
             tr[i].style.display = "";
-            console.log("row-i", i, "is made visible");
+            // console.log("row-i", i, "is made visible");
         } else {
             tr[i].style.display = "none";
-            console.log("row-i", i, "is made invisible");
+            // console.log("row-i", i, "is made invisible");
         }
     }
 }

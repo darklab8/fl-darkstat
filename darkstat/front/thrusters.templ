@@ -68,12 +68,11 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco fro
 					<td
 						id={ "infocard_click" + thruster.Nickname }
 						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(thruster.Nickname)) }
-						hx-trigger="click"
+						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + thruster.Nickname }
 						hx-target="#infocard_view"
 						hx-swap="innerHTML"
 						preload="mouseover"
 					></td>
-					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+thruster.Nickname, "infocard_click"+thruster.Nickname))
 				</tr>
 			}
 		</tbody>

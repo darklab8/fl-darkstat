@@ -41,7 +41,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 							<tbody>
 								for _, tractor := range tractors {
 									<tr
-										id={ "bottominfo_click" + string(tractor.Nickname) }
+										id={ "bottominfo_" + string(tractor.Nickname) }
 										hx-get={ types.GetCtx(ctx).SiteRoot + TractorDetailedUrl(tractor) }
 										hx-trigger="mousedown"
 										hx-target="#table-bottom-main"
@@ -60,12 +60,11 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 										<td
 											id={ "infocard_click" + string(tractor.Nickname) }
 											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(tractor.Nickname)) }
-											hx-trigger="click"
+											hx-trigger={ "mousedown from:#bottominfo_" + string(tractor.Nickname) }
 											hx-target="#infocard_view"
 											hx-swap="innerHTML"
 											preload="mouseover"
 										></td>
-										@templ.Raw(JoinClickTriggers("bottominfo_click"+string(tractor.Nickname), "infocard_click"+string(tractor.Nickname)))
 									</tr>
 								}
 							</tbody>

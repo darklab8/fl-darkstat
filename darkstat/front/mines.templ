@@ -86,12 +86,11 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco fronttypes.Disc
 					<td
 						id={ "infocard_click" + mine.Nickname }
 						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(mine.Nickname)) }
-						hx-trigger="click"
+						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + mine.Nickname }
 						hx-target="#infocard_view"
 						hx-swap="innerHTML"
 						preload="mouseover"
 					></td>
-					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+mine.Nickname, "infocard_click"+mine.Nickname))
 				</tr>
 			}
 		</tbody>

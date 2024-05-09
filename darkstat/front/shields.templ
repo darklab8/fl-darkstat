@@ -78,12 +78,11 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco fronttypes
 					<td
 						id={ "infocard_click" + shield.Nickname }
 						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(shield.Nickname)) }
-						hx-trigger="click"
+						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + shield.Nickname }
 						hx-target="#infocard_view"
 						hx-swap="innerHTML"
 						preload="mouseover"
 					></td>
-					@templ.Raw(JoinClickTriggers(string(pinm)+"bottominfo_"+shield.Nickname, "infocard_click"+shield.Nickname))
 				</tr>
 			}
 		</tbody>
