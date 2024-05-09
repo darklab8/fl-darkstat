@@ -6,6 +6,7 @@ into stuff rendered by fl-darkstat
 */
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/darklab8/fl-configs/configs/configs_export"
@@ -44,6 +45,10 @@ func NewLinker(opts ...LinkOption) *Linker {
 	}
 
 	return l
+}
+
+func PointerTo[T ~string](s T) *T {
+	return &s
 }
 
 func (l *Linker) Link() *builder.Builder {
@@ -206,7 +211,7 @@ func (l *Linker) Link() *builder.Builder {
 
 	useful_factions := configs_export.FilterToUsefulFactions(data.Factions)
 	useful_ships := configs_export.FilterToUsefulShips(data.Ships)
-	useful_guns := configs_export.FilterToUsefulGun(data.Guns)
+	// useful_guns := configs_export.FilterToUsefulGun(data.Guns)
 
 	tractor_id := conftypes.TractorID("")
 
@@ -279,30 +284,6 @@ func (l *Linker) Link() *builder.Builder {
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Commodities),
 			front.CommoditiesT(data.Commodities, front.ShowEmpty(true)),
-		),
-		builder.NewComponent(
-			urls.Guns,
-			front.GunsT(useful_guns, front.GunsShowBases, front.ShowEmpty(false), disco_ids),
-		),
-		builder.NewComponent(
-			front.AllItemsUrl(urls.Guns),
-			front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(true), disco_ids),
-		),
-		builder.NewComponent(
-			urls.GunModifiers,
-			front.GunsT(useful_guns, front.GunsShowDamageBonuses, front.ShowEmpty(false), disco_ids),
-		),
-		builder.NewComponent(
-			front.AllItemsUrl(urls.GunModifiers),
-			front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true), disco_ids),
-		),
-		builder.NewComponent(
-			urls.Missiles,
-			front.GunsT(configs_export.FilterToUsefulGun(data.Missiles), front.GunsMissiles, front.ShowEmpty(false), disco_ids),
-		),
-		builder.NewComponent(
-			front.AllItemsUrl(urls.Missiles),
-			front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.Mines,
@@ -393,6 +374,60 @@ func (l *Linker) Link() *builder.Builder {
 			),
 		)
 	}
+
+	var gun_chunks []front.GunChunkData
+	for i := 0; i < len(data.Guns)/100; i++ {
+
+		var CurUrl string = fmt.Sprintf("%s_%d", urls.Guns, i)
+		var NextUrl *string
+		if (i+1)*100 < len(data.Guns) {
+			NextUrl = PointerTo(fmt.Sprintf("%s_%d", urls.Guns, i+1))
+		}
+
+		data := front.GunChunkData{
+			Guns:       data.Guns[i*100 : (i+1)*100],
+			NextUrl:    NextUrl,
+			CurrentUrl: CurUrl,
+		}
+		gun_chunks = append(gun_chunks, data)
+	}
+
+	build.RegComps(
+		builder.NewComponent(
+			urls.Guns,
+			front.GunsT(gun_chunks, front.GunsShowBases, front.ShowEmpty(false), disco_ids),
+		),
+	)
+
+	for _, gun_chunk := range gun_chunks {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(gun_chunk.CurrentUrl),
+				front.GunChunk(gun_chunk, front.GunsShowBases, front.MainMode, disco_ids),
+			),
+		)
+	}
+
+	// builder.NewComponent(
+	// 	front.AllItemsUrl(urls.Guns),
+	// 	front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(true), disco_ids),
+	// ),
+	// builder.NewComponent(
+	// 	urls.GunModifiers,
+	// 	front.GunsT(useful_guns, front.GunsShowDamageBonuses, front.ShowEmpty(false), disco_ids),
+	// ),
+	// builder.NewComponent(
+	// 	front.AllItemsUrl(urls.GunModifiers),
+	// 	front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true), disco_ids),
+	// ),
+	// builder.NewComponent(
+	// 	urls.Missiles,
+	// 	front.GunsT(configs_export.FilterToUsefulGun(data.Missiles), front.GunsMissiles, front.ShowEmpty(false), disco_ids),
+	// ),
+	// builder.NewComponent(
+	// 	front.AllItemsUrl(urls.Missiles),
+	// 	front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true), disco_ids),
+	// ),
 
 	for _, gun := range data.Guns {
 		build.RegComps(

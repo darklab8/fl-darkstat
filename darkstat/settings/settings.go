@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -19,6 +20,8 @@ func init() {
 		workdir, _ := os.Getwd()
 		FreelancerFolder = utils_types.FilePath(workdir)
 	}
+
+	fmt.Println("FreelancerFolder=", FreelancerFolder)
 }
 
 //go:embed version.txt

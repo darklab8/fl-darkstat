@@ -29,7 +29,7 @@ const (
 	GunsMissiles
 )
 
-templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ GunTable(gun_chunks []GunChunkData, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -72,65 +72,88 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 			</tr>
 		</thead>
 		<tbody>
-			for _, gun := range guns {
-				<tr
-					id={ string(pinm) + "bottominfo_" + gun.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
-					hx-trigger={ "mousedown" }
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload={ "mouseover" }
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
-					@PinTd(gun.Nickname, gun.Name, pinm)
-					@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
-					@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
-					<td>{ gun.Class }</td>
-					<td>{ gun.Type }</td>
-					<td>{ gun.DamageType }</td>
-					<td>{ strconv.Itoa(gun.Price) } </td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(gun.Bases)) }</td>
-					<td>{ strconv.Itoa(gun.HullDamage) }</td>
-					<td>{ strconv.Itoa(gun.ShieldDamage) }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
-					if mode == GunsMissiles {
-						<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
-					}
-					<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.ShieldDamagePerSec) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.Rating)  }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
-					<td>{ gun.HitPts }</td>
-					<td>{ strconv.FormatBool(gun.Lootable) }</td>
-					<td>{ gun.Nickname } </td>
-					<td>{ gun.HpType } </td>
-					<td>{ strconv.Itoa(gun.IdsName) } </td>
-					<td>{ strconv.Itoa(gun.IdsInfo) } </td>
-					<td
-						id={ "infocard_click" + gun.Nickname }
-						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(gun.Nickname)) }
-						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + gun.Nickname }
-						hx-target="#infocard_view"
-						hx-swap="innerHTML"
-						preload="mouseover"
-					></td>
-				</tr>
+			for index, gun_chunk := range gun_chunks {
+				<tbody
+					id={ gun_chunk.CurrentUrl }
+					class={ gun_chunk.CurrentUrl }
+					hx-get={ gun_chunk.CurrentUrl }
+					hx-trigger={ "load delay:0." + strconv.Itoa(index) + "s" }
+					hx-target="this"
+					hx-swap="morph:innerHTML"
+				></tbody>
 			}
 		</tbody>
 	</table>
 }
 
+type GunChunkData struct {
+	Guns       []configs_export.Gun
+	CurrentUrl string
+	NextUrl    *string
+}
+
+templ GunChunk(gun_chunk GunChunkData, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+	for _, gun := range gun_chunk.Guns {
+		@GunRow(gun, mode, pinm, disco)
+	}
+}
+
+templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+	<tr
+		id={ string(pinm) + "bottominfo_" + gun.Nickname }
+		hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
+		hx-trigger={ "mousedown" }
+		hx-target={ "#table-bottom-main" + string(pinm) }
+		hx-swap="innerHTML"
+		preload={ "mouseover" }
+		class={ templ.KV("hidden", pinm == PinMode) }
+	>
+		@PinTd(gun.Nickname, gun.Name, pinm)
+		@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
+		@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
+		<td>{ gun.Class }</td>
+		<td>{ gun.Type }</td>
+		<td>{ gun.DamageType }</td>
+		<td>{ strconv.Itoa(gun.Price) } </td>
+		<td>{ strconv.FormatBool(configs_export.Buyable(gun.Bases)) }</td>
+		<td>{ strconv.Itoa(gun.HullDamage) }</td>
+		<td>{ strconv.Itoa(gun.ShieldDamage) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
+		if mode == GunsMissiles {
+			<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
+		}
+		<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.ShieldDamagePerSec) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.Rating)  }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
+		<td>{ gun.HitPts }</td>
+		<td>{ strconv.FormatBool(gun.Lootable) }</td>
+		<td>{ gun.Nickname } </td>
+		<td>{ gun.HpType } </td>
+		<td>{ strconv.Itoa(gun.IdsName) } </td>
+		<td>{ strconv.Itoa(gun.IdsInfo) } </td>
+		<td
+			id={ "infocard_click" + gun.Nickname }
+			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(gun.Nickname)) }
+			hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + gun.Nickname }
+			hx-target="#infocard_view"
+			hx-swap="innerHTML"
+			preload="mouseover"
+		></td>
+	</tr>
+}
+
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ GunsT(gun_chunks []GunChunkData, mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	if mode == GunsShowBases {
 		@TabMenu(urls.Guns, mode2)
 	} else if mode == GunsShowDamageBonuses {
@@ -144,10 +167,10 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco f
 				<div id="table-top">
 					@FilterBar(disco)
 					<div id="table-top-main">
-						@GunTable(guns, mode, MainMode, disco)
+						@GunTable(gun_chunks, mode, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@GunTable(guns, mode, PinMode, disco)
+						@GunTable(gun_chunks, mode, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">
