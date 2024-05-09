@@ -931,7 +931,7 @@
         }
 
         function insertNodesBefore(parentNode, insertBefore, fragment, settleInfo) {
-            handleAttributes(parentNode, fragment, settleInfo);
+            // DARKSTAT: handleAttributes(parentNode, fragment, settleInfo);
             while (fragment.childNodes.length > 0) {
                 var child = fragment.firstChild;
                 addClassToElement(child, htmx.config.addedClass);

@@ -12,6 +12,9 @@ import (
 //
 // see https://github.com/bigskysoftware/htmx/issues/879 for more details
 //
+// also commented out  //   handleAttributes(parentNode, fragment, settleInfo);
+// because we don't need CSS transitions and they are hurtful https://htmx.org/docs/#css_transitions
+//
 //go:embed htmx.1.9.11.js
 var HtmxJs string
 
