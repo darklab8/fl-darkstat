@@ -74,12 +74,12 @@ templ GunTable(gun_chunks []GunChunkData, mode GunTabMode, pinm PinMod, disco fr
 		<tbody>
 			for index, gun_chunk := range gun_chunks {
 				<tbody
-					id={ gun_chunk.CurrentUrl }
-					class={ gun_chunk.CurrentUrl }
-					hx-get={ gun_chunk.CurrentUrl }
+					id={ gun_chunk.CurrentUrl + string(pinm) }
+					class={ gun_chunk.CurrentUrl + string(pinm) }
+					hx-get={ gun_chunk.CurrentUrl + string(pinm) }
 					hx-trigger={ "load delay:0." + strconv.Itoa(index) + "s" }
 					hx-target="this"
-					hx-swap="morph:innerHTML"
+					hx-swap="innerHTML"
 				></tbody>
 			}
 		</tbody>

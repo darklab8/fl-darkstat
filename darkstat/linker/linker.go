@@ -406,6 +406,12 @@ func (l *Linker) Link() *builder.Builder {
 				front.GunChunk(gun_chunk, front.GunsShowBases, front.MainMode, disco_ids),
 			),
 		)
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(gun_chunk.CurrentUrl+string(front.PinMode)),
+				front.GunChunk(gun_chunk, front.GunsShowBases, front.PinMode, disco_ids),
+			),
+		)
 	}
 
 	// builder.NewComponent(
