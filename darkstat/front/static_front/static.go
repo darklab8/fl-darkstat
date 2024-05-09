@@ -12,8 +12,8 @@ import (
 //
 // see https://github.com/bigskysoftware/htmx/issues/879 for more details
 //
-//go:embed htmx.1.9.11.min.js
-var HtmxMinJs string
+//go:embed htmx.1.9.11.js
+var HtmxJs string
 
 //go:embed htmx.1.9.11.preload.js
 var PreloadJs string

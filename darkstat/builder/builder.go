@@ -51,7 +51,7 @@ func (b *Builder) build(components []*Component, params types.GlobalParams, file
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 		target_folder := utils_filepath.Join(utils_types.FilePath(params.Buildpath.ToString()), "static")
-		filesystem.WriteToMem(utils_filepath.Join(target_folder, "htmx.js"), []byte(static_front.HtmxMinJs))
+		filesystem.WriteToMem(utils_filepath.Join(target_folder, "htmx.js"), []byte(static_front.HtmxJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "preload.js"), []byte(static_front.PreloadJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "sortable.js"), []byte(static_front.SortableJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "custom.js"), []byte(static_front.CustomJS))
