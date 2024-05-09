@@ -6,6 +6,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/chunk"
+
 	"fmt"
 	"strings"
 )
@@ -29,7 +31,7 @@ const (
 	GunsMissiles
 )
 
-templ GunTable(gun_chunks []GunChunkData, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ GunTable(gun_chunks []chunk.Chunk[configs_export.Gun], mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -86,74 +88,64 @@ templ GunTable(gun_chunks []GunChunkData, mode GunTabMode, pinm PinMod, disco fr
 	</table>
 }
 
-type GunChunkData struct {
-	Guns       []configs_export.Gun
-	CurrentUrl string
-	NextUrl    *string
-}
-
-templ GunChunk(gun_chunk GunChunkData, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
-	for _, gun := range gun_chunk.Guns {
-		@GunRow(gun, mode, pinm, disco)
-	}
-}
-
-templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
-	<tr
-		id={ string(pinm) + "bottominfo_" + gun.Nickname }
-		hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
-		hx-trigger={ "mousedown" }
-		hx-target={ "#table-bottom-main" + string(pinm) }
-		hx-swap="innerHTML"
-		preload={ "mouseover" }
-		class={ templ.KV("hidden", pinm == PinMode) }
-	>
-		@PinTd(gun.Nickname, gun.Name, pinm)
-		@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
-		@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
-		<td>{ gun.Class }</td>
-		<td>{ gun.Type }</td>
-		<td>{ gun.DamageType }</td>
-		<td>{ strconv.Itoa(gun.Price) } </td>
-		<td>{ strconv.FormatBool(configs_export.Buyable(gun.Bases)) }</td>
-		<td>{ strconv.Itoa(gun.HullDamage) }</td>
-		<td>{ strconv.Itoa(gun.ShieldDamage) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
-		if mode == GunsMissiles {
-			<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
-		}
-		<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.ShieldDamagePerSec) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.Rating)  }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
-		<td>{ gun.HitPts }</td>
-		<td>{ strconv.FormatBool(gun.Lootable) }</td>
-		<td>{ gun.Nickname } </td>
-		<td>{ gun.HpType } </td>
-		<td>{ strconv.Itoa(gun.IdsName) } </td>
-		<td>{ strconv.Itoa(gun.IdsInfo) } </td>
-		<td
-			id={ "infocard_click" + gun.Nickname }
-			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(gun.Nickname)) }
-			hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + gun.Nickname }
-			hx-target="#infocard_view"
+templ GunChunk(gun_chunk chunk.Chunk[configs_export.Gun], mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+	for _, gun := range gun_chunk.Items {
+		<tr
+			id={ string(pinm) + "bottominfo_" + gun.Nickname }
+			hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
+			hx-trigger={ "mousedown" }
+			hx-target={ "#table-bottom-main" + string(pinm) }
 			hx-swap="innerHTML"
-			preload="mouseover"
-		></td>
-	</tr>
+			preload={ "mouseover" }
+			class={ templ.KV("hidden", pinm == PinMode) }
+		>
+			@PinTd(gun.Nickname, gun.Name, pinm)
+			@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
+			@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
+			<td>{ gun.Class }</td>
+			<td>{ gun.Type }</td>
+			<td>{ gun.DamageType }</td>
+			<td>{ strconv.Itoa(gun.Price) } </td>
+			<td>{ strconv.FormatBool(configs_export.Buyable(gun.Bases)) }</td>
+			<td>{ strconv.Itoa(gun.HullDamage) }</td>
+			<td>{ strconv.Itoa(gun.ShieldDamage) }</td>
+			<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>
+			<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
+			if mode == GunsMissiles {
+				<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
+			}
+			<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
+			<td>{ fmt.Sprintf("%.2f",gun.ShieldDamagePerSec) }</td>
+			<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
+			<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
+			<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
+			<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
+			<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
+			<td>{ fmt.Sprintf("%.2f",gun.Rating)  }</td>
+			<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
+			<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
+			<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
+			<td>{ gun.HitPts }</td>
+			<td>{ strconv.FormatBool(gun.Lootable) }</td>
+			<td>{ gun.Nickname } </td>
+			<td>{ gun.HpType } </td>
+			<td>{ strconv.Itoa(gun.IdsName) } </td>
+			<td>{ strconv.Itoa(gun.IdsInfo) } </td>
+			<td
+				id={ "infocard_click" + gun.Nickname }
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(gun.Nickname)) }
+				hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + gun.Nickname }
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+				preload="mouseover"
+			></td>
+		</tr>
+	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(gun_chunks []GunChunkData, mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ GunsT(gun_chunks []chunk.Chunk[configs_export.Gun], mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	if mode == GunsShowBases {
 		@TabMenu(urls.Guns, mode2)
 	} else if mode == GunsShowDamageBonuses {

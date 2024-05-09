@@ -83,7 +83,10 @@ templ Index(theme types.Theme) {
 			FilteringFunction()
 		});
 	</script>
+	<script src="https://unpkg.com/idiomorph/dist/idiomorph-ext.min.js"></script>
 	@common.Html5() {
-		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
+		<div hx-ext="morph">
+			<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
+		</div>
 	}
 }
