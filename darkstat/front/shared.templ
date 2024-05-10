@@ -481,9 +481,13 @@ templ ThDisco(disco fronttypes.DiscoveryIDs) {
 }
 
 templ TdDisco(disco fronttypes.DiscoveryIDs, nickname string, data *configs_export.DiscoveryTechCompat) {
-	if disco.Show {
+	if data != nil {
 		<td class="tech_compat" techcompats={ marshalIDs(disco, nickname) }>
-			{ fmt.Sprintf("%.0f%%",(data.TechcompatByID[""]*100)) }
+			if data.TechcompatByID != nil {
+				{ fmt.Sprintf("%.0f%%",(data.TechcompatByID[""]*100)) }
+			} else {
+				{ fmt.Sprintf("%.0f%%",0.0) }
+			}
 		</td>
 		<td>{ data.TechCell }</td>
 	}
