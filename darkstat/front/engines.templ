@@ -71,14 +71,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttype
 					<td>{ engine.HpType } </td>
 					<td>{ strconv.Itoa(engine.NameID) } </td>
 					<td>{ strconv.Itoa(engine.InfoID) } </td>
-					<td
-						id={ "infocard_click" + engine.Nickname }
-						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(engine.Nickname)) }
-						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + engine.Nickname }
-						hx-target="#infocard_view"
-						hx-swap="innerHTML"
-						preload="mouseover"
-					></td>
+					@TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm)
 				</tr>
 			}
 		</tbody>

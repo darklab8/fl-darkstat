@@ -83,14 +83,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco fronttypes.Disc
 					<td>{ mine.Nickname } </td>
 					<td>{ strconv.Itoa(mine.IdsName) } </td>
 					<td>{ strconv.Itoa(mine.IdsInfo) } </td>
-					<td
-						id={ "infocard_click" + mine.Nickname }
-						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(mine.Nickname)) }
-						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + mine.Nickname }
-						hx-target="#infocard_view"
-						hx-swap="innerHTML"
-						preload="mouseover"
-					></td>
+					@TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm)
 				</tr>
 			}
 		</tbody>

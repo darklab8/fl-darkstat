@@ -61,14 +61,7 @@ templ BasesTable(bases []configs_export.Base, pinm PinMod) {
 					<td>{ fmt.Sprintf("%.0f", base.Pos.Z) }</td>
 					<td>{ strconv.Itoa(base.StridName) }</td>
 					<td>{ strconv.Itoa(base.InfocardID) }</td>
-					<td
-						id={ "infocard_click" + base.Nickname }
-						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(base.Infocard) }
-						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + base.Nickname }
-						hx-target="#infocard_view"
-						hx-swap="innerHTML"
-						preload="mouseover"
-					></td>
+					@TdInfoCardClick(base.Infocard, base.Nickname, pinm)
 				</tr>
 			}
 		</tbody>

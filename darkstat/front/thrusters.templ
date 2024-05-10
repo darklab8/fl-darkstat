@@ -65,14 +65,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco fro
 					<td>{ thruster.Nickname } </td>
 					<td>{ strconv.Itoa(thruster.NameID) } </td>
 					<td>{ strconv.Itoa(thruster.InfoID) } </td>
-					<td
-						id={ "infocard_click" + thruster.Nickname }
-						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(thruster.Nickname)) }
-						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + thruster.Nickname }
-						hx-target="#infocard_view"
-						hx-swap="innerHTML"
-						preload="mouseover"
-					></td>
+					@TdInfoCardClick(configs_export.InfocardKey(thruster.Nickname), thruster.Nickname, pinm)
 				</tr>
 			}
 		</tbody>

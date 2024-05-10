@@ -64,14 +64,7 @@ templ CommodityTable(commodities []configs_export.Commodity, pinm PinMod) {
 					<td>{ commodity.Nickname }</td>
 					<td>{ strconv.Itoa(commodity.NameID) }</td>
 					<td>{ strconv.Itoa(commodity.InfocardID) }</td>
-					<td
-						id={ "infocard_click" + commodity.Nickname }
-						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(commodity.Infocard) }
-						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + commodity.Nickname }
-						hx-target="#infocard_view"
-						hx-swap="innerHTML"
-						preload="mouseover"
-					></td>
+					@TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm)
 				</tr>
 			}
 		</tbody>

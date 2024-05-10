@@ -455,21 +455,22 @@ templ FilterBar(disco fronttypes.DiscoveryIDs) {
 templ PinSelectLeftRight(pinm PinMod, url string) {
 	if pinm == PinMode {
 		<td
+			class="left-arrow-infocard-trigger"
 			hx-get={ types.GetCtx(ctx).SiteRoot + url }
 			hx-trigger="mousedown consume"
 			hx-target={ "#table-bottom-main" }
 			hx-swap="innerHTML"
 			preload="mouseover"
-			style="cursor:zoom-in;"
-		>To Left</td>
+			style="cursor:zoom-in; text-align: center;"
+		>&#8592;</td>
 		<td
 			hx-get={ types.GetCtx(ctx).SiteRoot + url }
-			hx-trigger="mousedown consume"
+			hx-trigger="mousedown"
 			hx-target={ "#table-bottom-main" + string(pinm) }
 			hx-swap="innerHTML"
 			preload="mouseover"
-			style="cursor:zoom-in;"
-		>To Right</td>
+			style="cursor:zoom-in; text-align: center;"
+		>&#8594;</td>
 	}
 }
 
@@ -486,5 +487,24 @@ templ TdDisco(disco fronttypes.DiscoveryIDs, nickname string, data *configs_expo
 			{ fmt.Sprintf("%.0f%%",(data.TechcompatByID[""]*100)) }
 		</td>
 		<td>{ data.TechCell }</td>
+	}
+}
+
+templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod) {
+	if pinm == PinMode {
+		<td
+			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
+			hx-trigger={ "mousedown from:closest tr, click from:previous td.left-arrow-infocard-trigger" }
+			hx-target="#infocard_view"
+			hx-swap="innerHTML"
+		></td>
+	} 
+	else {
+		<td
+			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
+			hx-trigger={ "mousedown from:closest tr" }
+			hx-target="#infocard_view"
+			hx-swap="innerHTML"
+		></td>
 	}
 }
