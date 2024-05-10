@@ -455,7 +455,7 @@ templ FilterBar(disco fronttypes.DiscoveryIDs) {
 templ PinSelectLeftRight(pinm PinMod, url string) {
 	if pinm == PinMode {
 		<td
-			class="left-arrow-infocard-trigger"
+			class="select_left_infocard_trigger"
 			hx-get={ types.GetCtx(ctx).SiteRoot + url }
 			hx-trigger="mousedown consume"
 			hx-target={ "#table-bottom-main" }
@@ -494,7 +494,7 @@ templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, p
 	if pinm == PinMode {
 		<td
 			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
-			hx-trigger={ "mousedown from:closest tr, click from:previous td.left-arrow-infocard-trigger" }
+			hx-trigger={ "mousedown from:closest tr, click from:previous td.select_left_infocard_trigger" }
 			hx-target="#infocard_view"
 			hx-swap="innerHTML"
 		></td>
