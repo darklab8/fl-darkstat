@@ -40,6 +40,7 @@ type Exporter struct {
 	Tractors    []Tractor
 	Engines     []Engine
 	CMs         []CounterMeasure
+	Scanners    []Scanner
 }
 
 type OptExport func(e *Exporter)
@@ -74,6 +75,7 @@ func (e *Exporter) Export() *Exporter {
 	e.Ships = e.GetShips(e.Tractors)
 	e.Engines = e.GetEngines(e.Tractors)
 	e.CMs = e.GetCounterMeasures(e.Tractors)
+	e.Scanners = e.GetScanners(e.Tractors)
 	return e
 }
 

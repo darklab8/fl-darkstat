@@ -199,6 +199,16 @@ type CounterMeasure struct {
 	DiversionPctg *semantic.Int
 }
 
+type Scanner struct {
+	semantic.Model
+	Nickname       *semantic.String
+	IdsName        *semantic.Int
+	IdsInfo        *semantic.Int
+	Range          *semantic.Int
+	CargoScanRange *semantic.Int
+	Lootable       *semantic.Bool
+}
+
 type Config struct {
 	Files []*iniload.IniLoader
 
@@ -233,6 +243,8 @@ type Config struct {
 	CounterMeasureDroppers []*CounterMeasureDropper
 	CounterMeasure         []*CounterMeasure
 	CounterMeasureMap      map[string]*CounterMeasure
+
+	Scanners []*Scanner
 
 	Tractors []*Tractor
 }
@@ -461,6 +473,17 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				frelconfig.CounterMeasure = append(frelconfig.CounterMeasure, item)
 				frelconfig.CounterMeasureMap[item.Nickname.Get()] = item
+			case "[Scanner]":
+				item := &Scanner{
+					Nickname: semantic.NewString(section, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+					IdsName:  semantic.NewInt(section, "ids_name"),
+					IdsInfo:  semantic.NewInt(section, "ids_info"),
+
+					Range:          semantic.NewInt(section, "range"),
+					CargoScanRange: semantic.NewInt(section, "cargo_scan_range"),
+					Lootable:       semantic.NewBool(section, "lootable", semantic.StrBool),
+				}
+				frelconfig.Scanners = append(frelconfig.Scanners, item)
 			}
 		}
 	}
