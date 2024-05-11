@@ -202,6 +202,22 @@ func (l *Linker) Link() *builder.Builder {
 		})
 	}
 
+	sort.Slice(data.Scanners, func(i, j int) bool {
+		if data.Scanners[i].Name != "" && data.Scanners[j].Name == "" {
+			return true
+		}
+		return data.Scanners[i].Name < data.Scanners[j].Name
+	})
+
+	for _, base_info := range data.Scanners {
+		sort.Slice(base_info.Bases, func(i, j int) bool {
+			if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
+				return true
+			}
+			return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
+		})
+	}
+
 	build := builder.NewBuilder()
 
 	useful_factions := configs_export.FilterToUsefulFactions(data.Factions)
@@ -396,6 +412,14 @@ func (l *Linker) Link() *builder.Builder {
 			front.AllItemsUrl(urls.CounterMeasures),
 			front.CounterMeasureT(data.CMs, front.ShowEmpty(true), disco_ids),
 		),
+		builder.NewComponent(
+			urls.Scanners,
+			front.ScannersT(configs_export.FilterToUserfulScanners(data.Scanners), front.ShowEmpty(false), disco_ids),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.Scanners),
+			front.ScannersT(data.Scanners, front.ShowEmpty(true), disco_ids),
+		),
 	)
 
 	for _, base := range data.Bases {
@@ -542,6 +566,15 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.CounterMeasreDetailedUrl(cm)),
 				front.GoodAtBaseInfoT(cm.Name, cm.Bases, front.ShowPricePerVolume(false)),
+			),
+		)
+	}
+
+	for _, item := range data.Scanners {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.ScannerDetailedUrl(item)),
+				front.GoodAtBaseInfoT(item.Name, item.Bases, front.ShowPricePerVolume(false)),
 			),
 		)
 	}

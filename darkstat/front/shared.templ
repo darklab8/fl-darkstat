@@ -331,6 +331,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				}
 				@Button("Tractors", urls.Tractors, urls.Tractors == url)
 				@Button("Engines", urls.Engines, urls.Engines == url)
+				@Button("Scanners", urls.Scanners, urls.Scanners == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:120px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Show All</button>
 			} else {
 				@Button("Bases", AllItemsUrl(urls.Bases), urls.Bases == url)
@@ -356,6 +357,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				}
 				@Button("Tractors", AllItemsUrl(urls.Tractors), urls.Tractors == url)
 				@Button("Engines", AllItemsUrl(urls.Engines), urls.Engines == url)
+				@Button("Scanners", AllItemsUrl(urls.Scanners), urls.Scanners == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:120px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Don't Show All</button>
 			}
 			<button style="width:120px; border-radius: 20px;" onClick={ GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).OppositeThemeRoot) } type="button">Light / Dark</button>

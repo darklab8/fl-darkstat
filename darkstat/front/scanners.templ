@@ -1,0 +1,96 @@
+package front
+
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
+	"strconv"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"strings"
+)
+
+func ScannerDetailedUrl(item configs_export.Scanner) string {
+	return "scanner/scanner_bases_" + strings.ToLower(item.Nickname)
+}
+
+templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th style="max-width:200px;">Scanner</th>
+				if pinm == PinMode {
+					<th style="min-width:50px;">Select</th>
+					<th style="min-width:50px;">Select</th>
+				}
+				@ThDisco(disco)
+				<th style="max-width:50px;">Price</th>
+				<th style="max-width:50px;">Buyable</th>
+				<th style="max-width:50px;">Range</th>
+				<th style="max-width:50px;">Cargo Range</th>
+				<th style="max-width:50px;">Lootable</th>
+				<th style="max-width:50px;">Nickname</th>
+				<th style="max-width:100px;">Name ID</th>
+				<th style="max-width:100px;">Info ID</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, scanner := range scanners {
+				<tr
+					id={ string(pinm) + "bottominfo_" + scanner.Nickname }
+					hx-get={ types.GetCtx(ctx).SiteRoot + ScannerDetailedUrl(scanner) }
+					hx-trigger="mousedown"
+					hx-target={ "#table-bottom-main" + string(pinm) }
+					hx-swap="innerHTML"
+					preload="mouseover"
+					class={ templ.KV("hidden", pinm == PinMode) }
+				>
+					@PinTd(scanner.Nickname, scanner.Name, pinm)
+					@PinSelectLeftRight(pinm, ScannerDetailedUrl(scanner))
+					@TdDisco(disco, scanner.Nickname, scanner.DiscoveryTechCompat)
+					<td>{ strconv.Itoa(scanner.Price) } </td>
+					<td>{ strconv.FormatBool(configs_export.Buyable(scanner.Bases)) }</td>
+					<td>{ strconv.Itoa(scanner.Range) }</td>
+					<td>{ strconv.Itoa(scanner.CargoScanRange) }</td>
+					<td>{ strconv.FormatBool(scanner.Lootable) }</td>
+					<td>{ scanner.Nickname } </td>
+					<td>{ strconv.Itoa(scanner.NameID) } </td>
+					<td>{ strconv.Itoa(scanner.InfoID) } </td>
+					@TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm)
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
+templ ScannersT(scanners []configs_export.Scanner,mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+	@TabMenu(urls.CounterMeasures, mode2)
+	@TabContent() {
+		<div class="splitter">
+			<div id="table-wrapper">
+				<div id="table-top">
+					@FilterBar(disco)
+					<div id="table-top-main">
+						@ScannerTable(scanners, MainMode, disco)
+					</div>
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
+						@ScannerTable(scanners, PinMode, disco)
+					</div>
+				</div>
+				<div id="table-bottom">
+					<div id="table-bottom-main">
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
+				</div>
+			</div>
+			<div id="infocard_view">
+				@InfocardShared()
+			</div>
+		</div>
+	}
+}
