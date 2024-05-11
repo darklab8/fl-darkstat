@@ -319,6 +319,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 					@Button("Gun Modifiers", urls.GunModifiers, urls.GunModifiers == url)
 					@Button("Missiles", urls.Missiles, urls.Missiles == url)
 					@Button("Mines", urls.Mines, urls.Mines == url)
+					@Button("CMs", urls.CounterMeasures, urls.CounterMeasures == url)
 				}
 				@Button("Shields", urls.Shields, urls.Shields == url)
 				@Button("Thrusters", urls.Thrusters, urls.Thrusters == url)
@@ -328,7 +329,6 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				}
 				@Button("Tractors", urls.Tractors, urls.Tractors == url)
 				@Button("Engines", urls.Engines, urls.Engines == url)
-				@Button("CMs", urls.CounterMeasures, urls.CounterMeasures == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:120px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Show All</button>
 			} else {
 				@Button("Bases", AllItemsUrl(urls.Bases), urls.Bases == url)
@@ -342,6 +342,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 					@Button("Gun Modifiers", AllItemsUrl(urls.GunModifiers), urls.GunModifiers == url)
 					@Button("Missiles", AllItemsUrl(urls.Missiles), urls.Missiles == url)
 					@Button("Mines", AllItemsUrl(urls.Mines), urls.Mines == url)
+					@Button("CMs", AllItemsUrl(urls.CounterMeasures), urls.CounterMeasures == url)
 				}
 				@Button("Shields", AllItemsUrl(urls.Shields), urls.Shields == url)
 				@Button("Thrusters", AllItemsUrl(urls.Thrusters), urls.Thrusters == url)
@@ -351,7 +352,6 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				}
 				@Button("Tractors", AllItemsUrl(urls.Tractors), urls.Tractors == url)
 				@Button("Engines", AllItemsUrl(urls.Engines), urls.Engines == url)
-				@Button("CMs", AllItemsUrl(urls.CounterMeasures), urls.CounterMeasures == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:120px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Don't Show All</button>
 			}
 			<button style="width:120px; border-radius: 20px;" onClick={ GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).OppositeThemeRoot) } type="button">Light / Dark</button>
