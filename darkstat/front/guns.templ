@@ -17,9 +17,7 @@ func GunDetailedUrl(gun configs_export.Gun, mode GunTabMode) string {
 	} else if mode == GunsMissiles {
 		return "guns/missiles_" + strings.ToLower(gun.Nickname)
 	} else if mode == GunsAmmo {
-		return "guns/guns_ammo_base" + strings.ToLower(gun.Nickname)
-	} else if mode == GunsMissilesAmmo {
-		return "guns/missiles_ammo_base" + strings.ToLower(gun.Nickname)
+		return "guns/ammo_base" + strings.ToLower(gun.Nickname)
 	}
 
 	panic("unsupported choice in GunDetailedUrl")
@@ -129,9 +127,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco f
 	} else if mode == GunsMissiles {
 		@TabMenu(urls.Missiles, mode2)
 	} else if mode == GunsAmmo {
-		@TabMenu(urls.GunsAmmo, mode2)
-	} else if mode == GunsMissilesAmmo {
-		@TabMenu(urls.MissilesAmmo, mode2)
+		@TabMenu(urls.Ammo, mode2)
 	}
 	@TabContent() {
 		<div class="splitter">
