@@ -553,14 +553,14 @@ templ PinSelectLeftRight(pinm PinMod, url string) {
 
 templ ThDisco(disco fronttypes.DiscoveryIDs) {
 	if disco.Show {
-		<th style="min-width:50px;">ID Compat.</th>
+		<th style="min-width:50px;display:none;" class="tech_compat">ID Compat.</th>
 		<th style="min-width:50px;">TechCell</th>
 	}
 }
 
 templ TdDisco(disco fronttypes.DiscoveryIDs, nickname string, data *configs_export.DiscoveryTechCompat) {
 	if disco.Show {
-		<td class="tech_compat" techcompats={ marshalIDs(disco, nickname) }>
+		<td style="display:none;" class="tech_compat" techcompats={ marshalIDs(disco, nickname) }>
 			{ fmt.Sprintf("%.0f%%",(data.TechcompatByID[""]*100)) }
 		</td>
 		<td>{ data.TechCell }</td>

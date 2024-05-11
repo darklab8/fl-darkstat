@@ -2,7 +2,7 @@ function TableLen(table) {
     var count = 0;
     for (var i = 0, row; row = table.rows[i]; i++) {
 
-        if (!row.classList.contains("hidden")) {
+        if (!row.classList.contains(HIDDEN_CLS)) {
             count = count + 1;
         }
     }
@@ -10,17 +10,22 @@ function TableLen(table) {
     return count;
 }
 
+var HIDDEN_CLS = "hidden";
 
 function Hide(id) {
     var element = document.getElementById(id);
     // console.log("Hide.id=" + id)
-    element.classList.add("hidden");
+    if (!element.classList.contains(HIDDEN_CLS)) {
+        element.classList.add(HIDDEN_CLS);
+    }
 }
 
 function Unhide(id) {
     var element = document.getElementById(id);
     // console.log("Unhide.id=" + id)
-    element.classList.remove("hidden");
+    if (element.classList.contains(HIDDEN_CLS)) {
+        element.classList.remove(HIDDEN_CLS);
+    }
 }
 
 function LoadSelectedTractorID() {
@@ -54,6 +59,23 @@ function FilteringFunction() {
 
     }
 
+    // making invisible info about ID Compatibility if no ID is selected
+    if (tractor_id_selected === "") {
+        row = tr[0];
+        cell = row.getElementsByClassName("tech_compat")[0];
+        if (typeof (cell) != 'undefined') {
+            cell.style.display = "none";
+        }
+
+    } else {
+        row = tr[0];
+        cell = row.getElementsByClassName("tech_compat")[0];
+        if (typeof (cell) != 'undefined') {
+            cell.style.display = "";
+        }
+
+    }
+
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 1; i < tr.length; i++) {
         // row = document.getElementById("bottominfo_dsy_councilhf")
@@ -70,6 +92,14 @@ function FilteringFunction() {
 
 
             techcompat_visible = compatibility > 10 || tractor_id_selected === ""
+
+            // making invisible info about ID Compatibility if no ID is selected
+            if (tractor_id_selected === "") {
+                cell.style.display = "none";
+            } else {
+                cell.style.display = "";
+            }
+
             // console.log("compatibility=", compatibility, "tractor_id_selected=", tractor_id_selected, "techcompat_visible=", techcompat_visible)
         }
 
