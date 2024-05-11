@@ -4,9 +4,6 @@ import (
 	"math"
 	"sort"
 	"strings"
-
-	"github.com/darklab8/fl-configs/configs/configs_mapped"
-	"github.com/darklab8/fl-configs/configs/conftypes"
 )
 
 type Ship struct {
@@ -185,32 +182,6 @@ func (e *Exporter) GetShips(ids []Tractor) []Ship {
 	}
 
 	return ships
-}
-
-type DiscoveryTechCompat struct {
-	TechcompatByID map[conftypes.TractorID]float64
-	TechCell       string
-}
-
-func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []Tractor, nickname string) *DiscoveryTechCompat {
-	if Discovery == nil {
-		return nil
-	}
-
-	techcompat := &DiscoveryTechCompat{
-		TechcompatByID: make(map[conftypes.TractorID]float64),
-	}
-	techcompat.TechcompatByID[""] = Discovery.Techcompat.GetCompatibilty(nickname, "")
-
-	for _, id := range ids {
-		techcompat.TechcompatByID[id.Nickname] = Discovery.Techcompat.GetCompatibilty(nickname, id.Nickname)
-	}
-
-	if compat, ok := Discovery.Techcompat.CompatByItem[nickname]; ok {
-		techcompat.TechCell = compat.TechCell
-	}
-
-	return techcompat
 }
 
 type EquipmentSlot struct {

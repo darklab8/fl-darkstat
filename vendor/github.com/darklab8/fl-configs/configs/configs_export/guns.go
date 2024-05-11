@@ -35,6 +35,9 @@ type Gun struct {
 	Lootable     bool
 
 	RequiredAmmo  bool
+	AmmoPrice     int
+	AmmoBases     []GoodAtBase
+	AmmoName      string
 	HullDamage    int
 	EnergyDamange int
 	ShieldDamage  int
@@ -120,6 +123,28 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 		gun.RequiredAmmo = required_ammo
 	}
 
+	if ammo_ids_name, ok := munition.IdsName.GetValue(); ok {
+		if name, ok := e.configs.Infocards.Infonames[ammo_ids_name]; ok {
+			gun.AmmoName = string(name)
+		} else {
+			gun.AmmoName = "undefined infoname for id"
+		}
+	} else {
+		gun.AmmoName = "undefined ammo ids name"
+	}
+
+	gun.AmmoPrice = -1
+	if good_info, ok := e.configs.Goods.GoodsMap[munition.Nickname.Get()]; ok {
+		if price, ok := good_info.Price.GetValue(); ok {
+			gun.AmmoPrice = price
+			gun.AmmoBases = e.GetAtBasesSold(GetAtBasesInput{
+				Nickname:       good_info.Nickname.Get(),
+				Price:          price,
+				PricePerVolume: -1,
+			})
+		}
+	}
+
 	gun.DamageType = "undefined"
 	if weapon_type, ok := munition.WeaponType.GetValue(); ok {
 		gun.DamageType = weapon_type
@@ -180,6 +205,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 		gun.Type = "gun"
 	}
 
+	fmt.Println("CalculateTEchCompat", e.configs.Discovery != nil, gun.Nickname)
 	gun.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, gun.Nickname)
 	return gun
 }
@@ -189,10 +215,6 @@ func (e *Exporter) GetGuns(ids []Tractor) []Gun {
 
 	for _, gun_info := range e.configs.Equip.Guns {
 		gun := e.getGunInfo(gun_info, ids)
-
-		if gun.HpType == "" {
-			continue
-		}
 
 		munition := e.configs.Equip.MunitionMap[gun_info.ProjectileArchetype.Get()]
 		if _, ok := munition.Motor.GetValue(); ok {
@@ -209,6 +231,11 @@ func (e *Exporter) GetGuns(ids []Tractor) []Gun {
 func FilterToUsefulGun(guns []Gun) []Gun {
 	var items []Gun = make([]Gun, 0, len(guns))
 	for _, gun := range guns {
+
+		if gun.HpType == "" {
+			continue
+		}
+
 		if strings.Contains(gun.DamageType, "w_npc") || strings.Contains(gun.DamageType, "station") {
 			continue
 		}

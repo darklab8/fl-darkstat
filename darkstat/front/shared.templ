@@ -316,8 +316,10 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				@Button("Commodities", urls.Commodities, urls.Commodities == url)
 				@DropDown("Weapons") {
 					@Button("Guns", urls.Guns, urls.Guns == url)
-					@Button("Gun Modifiers", urls.GunModifiers, urls.GunModifiers == url)
+					@Button("Guns Modifiers", urls.GunModifiers, urls.GunModifiers == url)
+					@Button("Guns Ammo", urls.GunsAmmo, urls.GunsAmmo == url)
 					@Button("Missiles", urls.Missiles, urls.Missiles == url)
+					@Button("Missiles Ammo", urls.MissilesAmmo, urls.MissilesAmmo == url)
 					@Button("Mines", urls.Mines, urls.Mines == url)
 					@Button("CMs", urls.CounterMeasures, urls.CounterMeasures == url)
 				}
@@ -339,8 +341,10 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				@Button("Commodities", AllItemsUrl(urls.Commodities), urls.Commodities == url)
 				@DropDown("Weapons") {
 					@Button("Guns", AllItemsUrl(urls.Guns), urls.Guns == url)
-					@Button("Gun Modifiers", AllItemsUrl(urls.GunModifiers), urls.GunModifiers == url)
+					@Button("Guns Modifiers", AllItemsUrl(urls.GunModifiers), urls.GunModifiers == url)
+					@Button("Guns Ammo", AllItemsUrl(urls.GunsAmmo), urls.GunsAmmo == url)
 					@Button("Missiles", AllItemsUrl(urls.Missiles), urls.Missiles == url)
+					@Button("Missiles Ammo", AllItemsUrl(urls.MissilesAmmo), urls.MissilesAmmo == url)
 					@Button("Mines", AllItemsUrl(urls.Mines), urls.Mines == url)
 					@Button("CMs", AllItemsUrl(urls.CounterMeasures), urls.CounterMeasures == url)
 				}

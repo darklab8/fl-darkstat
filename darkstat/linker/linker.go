@@ -207,6 +207,34 @@ func (l *Linker) Link() *builder.Builder {
 	useful_factions := configs_export.FilterToUsefulFactions(data.Factions)
 	useful_ships := configs_export.FilterToUsefulShips(data.Ships)
 	useful_guns := configs_export.FilterToUsefulGun(data.Guns)
+	useful_missiles := configs_export.FilterToUsefulGun(data.Missiles)
+
+	var ammo_useful_guns []configs_export.Gun = make([]configs_export.Gun, 0, 100)
+
+	var ammo_guns []configs_export.Gun = make([]configs_export.Gun, 0, 100)
+	var ammo_useful_missiles []configs_export.Gun = make([]configs_export.Gun, 0, 100)
+	var ammo_missiles []configs_export.Gun = make([]configs_export.Gun, 0, 100)
+
+	for _, gun := range data.Guns {
+		if !gun.RequiredAmmo {
+			continue
+		}
+
+		if configs_export.Buyable(gun.Bases) || configs_export.Buyable(gun.AmmoBases) {
+			ammo_useful_guns = append(ammo_useful_guns, gun)
+		}
+		ammo_guns = append(ammo_guns, gun)
+	}
+	for _, gun := range data.Missiles {
+		if !gun.RequiredAmmo {
+			continue
+		}
+
+		if configs_export.Buyable(gun.Bases) || configs_export.Buyable(gun.AmmoBases) {
+			ammo_useful_missiles = append(ammo_useful_missiles, gun)
+		}
+		ammo_missiles = append(ammo_missiles, gun)
+	}
 
 	tractor_id := conftypes.TractorID("")
 
@@ -297,12 +325,28 @@ func (l *Linker) Link() *builder.Builder {
 			front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
+			urls.GunsAmmo,
+			front.GunsT(ammo_useful_guns, front.GunsAmmo, front.ShowEmpty(false), disco_ids),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.GunsAmmo),
+			front.GunsT(ammo_guns, front.GunsAmmo, front.ShowEmpty(true), disco_ids),
+		),
+		builder.NewComponent(
 			urls.Missiles,
-			front.GunsT(configs_export.FilterToUsefulGun(data.Missiles), front.GunsMissiles, front.ShowEmpty(false), disco_ids),
+			front.GunsT(useful_missiles, front.GunsMissiles, front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Missiles),
 			front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true), disco_ids),
+		),
+		builder.NewComponent(
+			urls.MissilesAmmo,
+			front.GunsT(ammo_useful_missiles, front.GunsMissilesAmmo, front.ShowEmpty(false), disco_ids),
+		),
+		builder.NewComponent(
+			front.AllItemsUrl(urls.MissilesAmmo),
+			front.GunsT(ammo_missiles, front.GunsMissilesAmmo, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.Mines,
@@ -403,6 +447,22 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsShowDamageBonuses)),
 				front.GunShowModifiers(gun),
+			),
+		)
+	}
+	for _, gun := range ammo_guns {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsAmmo)),
+				front.GoodAtBaseInfoT(gun.AmmoName, gun.AmmoBases, front.ShowPricePerVolume(false)),
+			),
+		)
+	}
+	for _, gun := range ammo_missiles {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsMissilesAmmo)),
+				front.GoodAtBaseInfoT(gun.AmmoName, gun.AmmoBases, front.ShowPricePerVolume(false)),
 			),
 		)
 	}
