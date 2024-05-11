@@ -53,15 +53,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 		</thead>
 		<tbody>
 			for _, faction := range factions {
-				<tr
-					id={ string(pinm) + "bottominfo_" + faction.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + FactionRepUrl(faction, mode) }
-					hx-trigger="mousedown"
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload="mouseover"
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
+				@TrFromMainTb(faction.Nickname, FactionRepUrl(faction, mode), pinm) {
 					@PinTd(faction.Nickname, faction.Name, pinm)
 					@PinSelectLeftRight(pinm, FactionRepUrl(faction, mode))
 					<td>{ faction.ShortName }</td>
@@ -76,7 +68,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					<td>{ strconv.Itoa(faction.InfonameID) }</td>
 					<td>{ strconv.Itoa(faction.InfocardID) }</td>
 					@TdInfoCardClick(faction.Infocard, faction.Nickname, pinm)
-				</tr>
+				}
 			}
 		</tbody>
 	</table>

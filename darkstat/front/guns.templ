@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
 	"strings"
@@ -80,15 +79,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 		</thead>
 		<tbody>
 			for _, gun := range guns {
-				<tr
-					id={ string(pinm) + "bottominfo_" + gun.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + GunDetailedUrl(gun, mode) }
-					hx-trigger={ "mousedown" }
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload={ "mouseover" }
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
+				@TrFromMainTb(gun.Nickname, GunDetailedUrl(gun, mode), pinm) {
 					@PinTd(gun.Nickname, gun.Name, pinm)
 					@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
 					@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
@@ -122,7 +113,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 					<td>{ strconv.Itoa(gun.IdsName) } </td>
 					<td>{ strconv.Itoa(gun.IdsInfo) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm)
-				</tr>
+				}
 			}
 		</tbody>
 	</table>

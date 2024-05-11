@@ -112,3 +112,16 @@ function FilteringFunction() {
         }
     }
 }
+
+function RowHighlighter(row) {
+    var table = row.parentElement.parentElement;
+
+    var selected_row_id = row.rowIndex;
+
+    var rowsNotSelected = table.getElementsByTagName('tr');
+    for (var row = 0; row < rowsNotSelected.length; row++) {
+        rowsNotSelected[row].classList.remove('selected_row');
+    }
+    var rowSelected = table.getElementsByTagName('tr')[selected_row_id];
+    rowSelected.classList.add("selected_row");
+}

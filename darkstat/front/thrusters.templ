@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
 	"strings"
@@ -41,15 +40,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco fro
 		</thead>
 		<tbody>
 			for _, thruster := range thrusters {
-				<tr
-					id={ string(pinm) + "bottominfo_" + thruster.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + ThrusterDetailedUrl(thruster) }
-					hx-trigger="mousedown"
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload="mouseover"
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
+				@TrFromMainTb(thruster.Nickname, ThrusterDetailedUrl(thruster), pinm) {
 					@PinTd(thruster.Nickname, thruster.Name, pinm)
 					@PinSelectLeftRight(pinm, ThrusterDetailedUrl(thruster))
 					@TdDisco(disco, thruster.Nickname, thruster.DiscoveryTechCompat)
@@ -66,7 +57,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco fro
 					<td>{ strconv.Itoa(thruster.NameID) } </td>
 					<td>{ strconv.Itoa(thruster.InfoID) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(thruster.Nickname), thruster.Nickname, pinm)
-				</tr>
+				}
 			}
 		</tbody>
 	</table>

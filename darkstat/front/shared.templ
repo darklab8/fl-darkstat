@@ -68,6 +68,10 @@ templ TabContent() {
 				}
 			}
 		}
+		.selected_row {
+			background-color: var(--selected) !important;
+			filter: brightness(95%);
+		}
 		.splitter {
 			display: flex;
 			flex-direction: row;
@@ -593,4 +597,19 @@ templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, p
 			hx-swap="innerHTML"
 		></td>
 	}
+}
+
+templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
+	<tr
+		id={ string(pinm) + "bottominfo_" + nickname }
+		hx-get={ types.GetCtx(ctx).SiteRoot + detailed_url }
+		hx-trigger="mousedown"
+		hx-target={ "#table-bottom-main" + string(pinm) }
+		hx-swap="innerHTML"
+		preload="mouseover"
+		class={ templ.KV("hidden", pinm == PinMode) }
+		onclick="RowHighlighter(this)"
+	>
+		{ children... }
+	</tr>
 }

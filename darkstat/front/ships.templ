@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
 	"strings"
@@ -78,16 +77,7 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 		</thead>
 		<tbody>
 			for _, ship := range ships {
-				// pin add later to hx-target
-				<tr
-					id={ string(pinm) + "bottominfo_" + ship.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + ShipDetailedUrl(ship, mode) }
-					hx-trigger={ "mousedown" }
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload={ "mouseover" }
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
+				@TrFromMainTb(ship.Nickname, ShipDetailedUrl(ship, mode), pinm) {
 					@PinTd(ship.Nickname, ship.Name, pinm)
 					@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
 					@TdDisco(disco, ship.Nickname, ship.DiscoveryTechCompat)
@@ -114,7 +104,7 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 					<td>{ strconv.Itoa(ship.NameID) } </td>
 					<td>{ strconv.Itoa(ship.InfoID) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm)
-				</tr>
+				}
 			}
 		</tbody>
 	</table>

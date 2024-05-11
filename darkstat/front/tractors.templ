@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"strings"
 )
@@ -40,14 +39,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 							</thead>
 							<tbody>
 								for _, tractor := range tractors {
-									<tr
-										id={ "bottominfo_" + string(tractor.Nickname) }
-										hx-get={ types.GetCtx(ctx).SiteRoot + TractorDetailedUrl(tractor) }
-										hx-trigger="mousedown"
-										hx-target="#table-bottom-main"
-										hx-swap="innerHTML"
-										preload="mouseover"
-									>
+									@TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor), "") {
 										<td>{ tractor.Name }</td>
 										<td>{ strconv.Itoa(tractor.Price) } </td>
 										<td>{ strconv.FormatBool(configs_export.Buyable(tractor.Bases)) }</td>
@@ -58,7 +50,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 										<td>{ strconv.Itoa(tractor.NameID) } </td>
 										<td>{ strconv.Itoa(tractor.InfoID) } </td>
 										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "")
-									</tr>
+									}
 								}
 							</tbody>
 						</table>

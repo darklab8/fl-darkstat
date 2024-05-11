@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
 	"strings"
@@ -40,15 +39,7 @@ templ CommodityTable(commodities []configs_export.Commodity, pinm PinMod) {
 		</thead>
 		<tbody>
 			for _, commodity := range commodities {
-				<tr
-					id={ string(pinm) + "bottominfo_" + commodity.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + GoodAtBaseInfoTUrl(commodity) }
-					hx-trigger="mousedown"
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload="mouseover"
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
+				@TrFromMainTb(commodity.Nickname, GoodAtBaseInfoTUrl(commodity), pinm) {
 					@PinTd(commodity.Nickname, commodity.Name, pinm)
 					@PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
 					<td>{ commodity.Name }</td>
@@ -65,7 +56,7 @@ templ CommodityTable(commodities []configs_export.Commodity, pinm PinMod) {
 					<td>{ strconv.Itoa(commodity.NameID) }</td>
 					<td>{ strconv.Itoa(commodity.InfocardID) }</td>
 					@TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm)
-				</tr>
+				}
 			}
 		</tbody>
 	</table>

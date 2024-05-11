@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
 	"strings"
@@ -46,15 +45,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco fronttypes
 		</thead>
 		<tbody>
 			for _, shield := range shields {
-				<tr
-					id={ string(pinm) + "bottominfo_" + shield.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + ShieldDetailedUrl(shield) }
-					hx-trigger="mousedown"
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload="mouseover"
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
+				@TrFromMainTb(shield.Nickname, ShieldDetailedUrl(shield), pinm) {
 					@PinTd(shield.Nickname, shield.Name, pinm)
 					@PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
 					@TdDisco(disco, shield.Nickname, shield.DiscoveryTechCompat)
@@ -76,7 +67,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco fronttypes
 					<td>{ strconv.Itoa(shield.IdsName) } </td>
 					<td>{ strconv.Itoa(shield.IdsInfo) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm)
-				</tr>
+				}
 			}
 		</tbody>
 	</table>

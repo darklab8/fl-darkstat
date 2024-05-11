@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
 	"strings"
@@ -44,15 +43,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttype
 		</thead>
 		<tbody>
 			for _, engine := range engines {
-				<tr
-					id={ string(pinm) + "bottominfo_" + engine.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + EngineDetailedUrl(engine) }
-					hx-trigger="mousedown"
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload="mouseover"
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
+				@TrFromMainTb(engine.Nickname, EngineDetailedUrl(engine), pinm) {
 					@PinTd(engine.Nickname, engine.Name, pinm)
 					@PinSelectLeftRight(pinm, EngineDetailedUrl(engine))
 					@TdDisco(disco, engine.Nickname, engine.DiscoveryTechCompat)
@@ -72,7 +63,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttype
 					<td>{ strconv.Itoa(engine.NameID) } </td>
 					<td>{ strconv.Itoa(engine.InfoID) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm)
-				</tr>
+				}
 			}
 		</tbody>
 	</table>

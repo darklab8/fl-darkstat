@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"strings"
 )
@@ -36,15 +35,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco frontty
 		</thead>
 		<tbody>
 			for _, scanner := range scanners {
-				<tr
-					id={ string(pinm) + "bottominfo_" + scanner.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + ScannerDetailedUrl(scanner) }
-					hx-trigger="mousedown"
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload="mouseover"
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
+				@TrFromMainTb(scanner.Nickname, ScannerDetailedUrl(scanner), pinm) {
 					@PinTd(scanner.Nickname, scanner.Name, pinm)
 					@PinSelectLeftRight(pinm, ScannerDetailedUrl(scanner))
 					@TdDisco(disco, scanner.Nickname, scanner.DiscoveryTechCompat)
@@ -57,7 +48,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco frontty
 					<td>{ strconv.Itoa(scanner.NameID) } </td>
 					<td>{ strconv.Itoa(scanner.InfoID) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm)
-				</tr>
+				}
 			}
 		</tbody>
 	</table>

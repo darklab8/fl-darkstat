@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
 	"strings"
@@ -50,15 +49,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco fronttypes.Disc
 		</thead>
 		<tbody>
 			for _, mine := range mines {
-				<tr
-					id={ string(pinm) + "bottominfo_" + mine.Nickname }
-					hx-get={ types.GetCtx(ctx).SiteRoot + MineDetailedUrl(mine) }
-					hx-trigger="mousedown"
-					hx-target={ "#table-bottom-main" + string(pinm) }
-					hx-swap="innerHTML"
-					preload="mouseover"
-					class={ templ.KV("hidden", pinm == PinMode) }
-				>
+				@TrFromMainTb(mine.Nickname, MineDetailedUrl(mine), pinm) {
 					@PinTd(mine.Nickname, mine.Name, pinm)
 					@PinSelectLeftRight(pinm, MineDetailedUrl(mine))
 					@TdDisco(disco, mine.Nickname, mine.DiscoveryTechCompat)
@@ -84,7 +75,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco fronttypes.Disc
 					<td>{ strconv.Itoa(mine.IdsName) } </td>
 					<td>{ strconv.Itoa(mine.IdsInfo) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm)
-				</tr>
+				}
 			}
 		</tbody>
 	</table>
