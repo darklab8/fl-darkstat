@@ -123,44 +123,46 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
-	if mode == ShipShowBases {
-		@TabMenu(urls.Ships, mode2)
-	} else if mode == ShipShowDetails {
-		@TabMenu(urls.ShipDetails, mode2)
-	}
-	@TabContent() {
-		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
-					@FilterBar(disco)
-					<div id="table-top-main">
-						@ShipTable(ships, mode, MainMode, disco)
+	@TabLayout() {
+		if mode == ShipShowBases {
+			@TabMenu(urls.Ships, mode2)
+		} else if mode == ShipShowDetails {
+			@TabMenu(urls.ShipDetails, mode2)
+		}
+		@TabContent() {
+			<div class="splitter">
+				<div id="table-wrapper">
+					<div id="table-top">
+						@FilterBar(disco)
+						<div id="table-top-main">
+							@ShipTable(ships, mode, MainMode, disco)
+						</div>
+						<div id={ "table-top-main" + string(PinMode) } class="hidden">
+							@ShipTable(ships, mode, PinMode, disco)
+						</div>
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShipTable(ships, mode, PinMode, disco)
+					<div id="table-bottom">
+						<div id="table-bottom-main">
+							if mode == ShipShowBases {
+								@GoodAtBaseSharedT(ShowPricePerVolume(false))
+							} else if mode == ShipShowDetails {
+								@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
+							}
+						</div>
+						<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+							if mode == ShipShowBases {
+								@GoodAtBaseSharedT(ShowPricePerVolume(false))
+							} else if mode == ShipShowDetails {
+								@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
+							}
+						</div>
 					</div>
 				</div>
-				<div id="table-bottom">
-					<div id="table-bottom-main">
-						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowPricePerVolume(false))
-						} else if mode == ShipShowDetails {
-							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
-						}
-					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowPricePerVolume(false))
-						} else if mode == ShipShowDetails {
-							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
-						}
-					</div>
+				<div id="infocard_view">
+					@InfocardShared()
 				</div>
 			</div>
-			<div id="infocard_view">
-				@InfocardShared()
-			</div>
-		</div>
+		}
 	}
 }
 

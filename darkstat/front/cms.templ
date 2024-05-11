@@ -74,31 +74,33 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco fronttypes
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
-	@TabMenu(urls.CounterMeasures, mode2)
-	@TabContent() {
-		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
-					@FilterBar(disco)
-					<div id="table-top-main">
-						@CmTable(cms, MainMode, disco)
+	@TabLayout() {
+		@TabMenu(urls.CounterMeasures, mode2)
+		@TabContent() {
+			<div class="splitter">
+				<div id="table-wrapper">
+					<div id="table-top">
+						@FilterBar(disco)
+						<div id="table-top-main">
+							@CmTable(cms, MainMode, disco)
+						</div>
+						<div id={ "table-top-main" + string(PinMode) } class="hidden">
+							@CmTable(cms, PinMode, disco)
+						</div>
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@CmTable(cms, PinMode, disco)
+					<div id="table-bottom">
+						<div id="table-bottom-main">
+							@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						</div>
+						<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+							@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						</div>
 					</div>
 				</div>
-				<div id="table-bottom">
-					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowPricePerVolume(false))
-					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowPricePerVolume(false))
-					</div>
+				<div id="infocard_view">
+					@InfocardShared()
 				</div>
 			</div>
-			<div id="infocard_view">
-				@InfocardShared()
-			</div>
-		</div>
+		}
 	}
 }

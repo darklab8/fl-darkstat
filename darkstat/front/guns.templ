@@ -124,46 +124,48 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
-	if mode == GunsShowBases {
-		@TabMenu(urls.Guns, mode2)
-	} else if mode == GunsShowDamageBonuses {
-		@TabMenu(urls.GunModifiers, mode2)
-	} else if mode == GunsMissiles {
-		@TabMenu(urls.Missiles, mode2)
-	}
-	@TabContent() {
-		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
-					@FilterBar(disco)
-					<div id="table-top-main">
-						@GunTable(guns, mode, MainMode, disco)
+	@TabLayout() {
+		if mode == GunsShowBases {
+			@TabMenu(urls.Guns, mode2)
+		} else if mode == GunsShowDamageBonuses {
+			@TabMenu(urls.GunModifiers, mode2)
+		} else if mode == GunsMissiles {
+			@TabMenu(urls.Missiles, mode2)
+		}
+		@TabContent() {
+			<div class="splitter">
+				<div id="table-wrapper">
+					<div id="table-top">
+						@FilterBar(disco)
+						<div id="table-top-main">
+							@GunTable(guns, mode, MainMode, disco)
+						</div>
+						<div id={ "table-top-main" + string(PinMode) } class="hidden">
+							@GunTable(guns, mode, PinMode, disco)
+						</div>
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@GunTable(guns, mode, PinMode, disco)
+					<div id="table-bottom">
+						<div id="table-bottom-main">
+							if mode == GunsShowBases || mode == GunsMissiles {
+								@GoodAtBaseSharedT(ShowPricePerVolume(false))
+							} else {
+								@GunShowModifiersShared()
+							}
+						</div>
+						<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+							if mode == GunsShowBases || mode == GunsMissiles {
+								@GoodAtBaseSharedT(ShowPricePerVolume(false))
+							} else {
+								@GunShowModifiersShared()
+							}
+						</div>
 					</div>
 				</div>
-				<div id="table-bottom">
-					<div id="table-bottom-main">
-						if mode == GunsShowBases || mode == GunsMissiles {
-							@GoodAtBaseSharedT(ShowPricePerVolume(false))
-						} else {
-							@GunShowModifiersShared()
-						}
-					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						if mode == GunsShowBases || mode == GunsMissiles {
-							@GoodAtBaseSharedT(ShowPricePerVolume(false))
-						} else {
-							@GunShowModifiersShared()
-						}
-					</div>
+				<div id="infocard_view">
+					@InfocardShared()
 				</div>
 			</div>
-			<div id="infocard_view">
-				@InfocardShared()
-			</div>
-		</div>
+		}
 	}
 }
 

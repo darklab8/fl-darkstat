@@ -75,31 +75,33 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco fro
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
-	@TabMenu(urls.Thrusters, mode2)
-	@TabContent() {
-		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
-					@FilterBar(disco)
-					<div id="table-top-main">
-						@ThrustersTable(thrusters, MainMode, disco)
+	@TabLayout() {
+		@TabMenu(urls.Thrusters, mode2)
+		@TabContent() {
+			<div class="splitter">
+				<div id="table-wrapper">
+					<div id="table-top">
+						@FilterBar(disco)
+						<div id="table-top-main">
+							@ThrustersTable(thrusters, MainMode, disco)
+						</div>
+						<div id={ "table-top-main" + string(PinMode) } class="hidden">
+							@ThrustersTable(thrusters, PinMode, disco)
+						</div>
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ThrustersTable(thrusters, PinMode, disco)
+					<div id="table-bottom">
+						<div id="table-bottom-main">
+							@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						</div>
+						<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+							@GoodAtBaseSharedT(ShowPricePerVolume(true))
+						</div>
 					</div>
 				</div>
-				<div id="table-bottom">
-					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowPricePerVolume(false))
-					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowPricePerVolume(true))
-					</div>
+				<div id="infocard_view">
+					@InfocardShared()
 				</div>
 			</div>
-			<div id="infocard_view">
-				@InfocardShared()
-			</div>
-		</div>
+		}
 	}
 }

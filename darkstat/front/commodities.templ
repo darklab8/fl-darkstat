@@ -74,31 +74,33 @@ templ CommodityTable(commodities []configs_export.Commodity, pinm PinMod) {
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty) {
-	@TabMenu(urls.Commodities, mode)
-	@TabContent() {
-		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
-					@FilterBar(fronttypes.DiscoveryIDs{})
-					<div id="table-top-main">
-						@CommodityTable(commodities, MainMode)
+	@TabLayout() {
+		@TabMenu(urls.Commodities, mode)
+		@TabContent() {
+			<div class="splitter">
+				<div id="table-wrapper">
+					<div id="table-top">
+						@FilterBar(fronttypes.DiscoveryIDs{})
+						<div id="table-top-main">
+							@CommodityTable(commodities, MainMode)
+						</div>
+						<div id={ "table-top-main" + string(PinMode) } class="hidden">
+							@CommodityTable(commodities, PinMode)
+						</div>
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@CommodityTable(commodities, PinMode)
+					<div id="table-bottom">
+						<div id="table-bottom-main">
+							@GoodAtBaseSharedT(ShowPricePerVolume(true))
+						</div>
+						<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+							@GoodAtBaseSharedT(ShowPricePerVolume(true))
+						</div>
 					</div>
 				</div>
-				<div id="table-bottom">
-					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowPricePerVolume(true))
-					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowPricePerVolume(true))
-					</div>
+				<div id="infocard_view">
+					@InfocardShared()
 				</div>
 			</div>
-			<div id="infocard_view">
-				@InfocardShared()
-			</div>
-		</div>
+		}
 	}
 }

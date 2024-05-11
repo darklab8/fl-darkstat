@@ -85,44 +85,46 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ShowEmpty) {
-	if mode == FactionShowBases {
-		@TabMenu(urls.Factions, mode2)
-	} else if mode == FactionShowRephacks {
-		@TabMenu(urls.Rephacks, mode2)
-	}
-	@TabContent() {
-		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
-					@FilterBar(fronttypes.DiscoveryIDs{})
-					<div id="table-top-main">
-						@FactionTable(factions, mode, MainMode)
+	@TabLayout() {
+		if mode == FactionShowBases {
+			@TabMenu(urls.Factions, mode2)
+		} else if mode == FactionShowRephacks {
+			@TabMenu(urls.Rephacks, mode2)
+		}
+		@TabContent() {
+			<div class="splitter">
+				<div id="table-wrapper">
+					<div id="table-top">
+						@FilterBar(fronttypes.DiscoveryIDs{})
+						<div id="table-top-main">
+							@FactionTable(factions, mode, MainMode)
+						</div>
+						<div id={ "table-top-main" + string(PinMode) } class="hidden">
+							@FactionTable(factions, mode, PinMode)
+						</div>
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@FactionTable(factions, mode, PinMode)
+					<div id="table-bottom">
+						<div id="table-bottom-main">
+							if mode == FactionShowBases {
+								@FactionRepsBase()
+							} else if mode == FactionShowRephacks {
+								@RephacksBottomBase()
+							}
+						</div>
+						<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+							if mode == FactionShowBases {
+								@FactionRepsBase()
+							} else if mode == FactionShowRephacks {
+								@RephacksBottomBase()
+							}
+						</div>
 					</div>
 				</div>
-				<div id="table-bottom">
-					<div id="table-bottom-main">
-						if mode == FactionShowBases {
-							@FactionRepsBase()
-						} else if mode == FactionShowRephacks {
-							@RephacksBottomBase()
-						}
-					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						if mode == FactionShowBases {
-							@FactionRepsBase()
-						} else if mode == FactionShowRephacks {
-							@RephacksBottomBase()
-						}
-					</div>
+				<div id="infocard_view">
+					@InfocardShared()
 				</div>
 			</div>
-			<div id="infocard_view">
-				@InfocardShared()
-			</div>
-		</div>
+		}
 	}
 }
 

@@ -84,6 +84,7 @@ templ Index(theme types.Theme) {
 		});
 	</script>
 	@common.Html5() {
+		@MenuHeadingLayouts()
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
 	}
 }

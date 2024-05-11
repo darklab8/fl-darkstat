@@ -71,32 +71,34 @@ templ BasesTable(bases []configs_export.Base, pinm PinMod) {
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
-	@TabMenu(urls.Bases, mode)
-	@TabContent() {
-		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
-					@FilterBar(fronttypes.DiscoveryIDs{})
-					<div id="table-top-main">
-						@BasesTable(bases, MainMode)
+	@TabLayout() {
+		@TabMenu(urls.Bases, mode)
+		@TabContent() {
+			<div class="splitter">
+				<div id="table-wrapper">
+					<div id="table-top">
+						@FilterBar(fronttypes.DiscoveryIDs{})
+						<div id="table-top-main">
+							@BasesTable(bases, MainMode)
+						</div>
+						<div id={ "table-top-main" + string(PinMode) } class="hidden">
+							@BasesTable(bases, PinMode)
+						</div>
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@BasesTable(bases, PinMode)
+					<div id="table-bottom">
+						<div id="table-bottom-main">
+							@BaseMarketGoodsBase()
+						</div>
+						<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+							@BaseMarketGoodsBase()
+						</div>
 					</div>
 				</div>
-				<div id="table-bottom">
-					<div id="table-bottom-main">
-						@BaseMarketGoodsBase()
-					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@BaseMarketGoodsBase()
-					</div>
+				<div id="infocard_view">
+					@InfocardShared()
 				</div>
 			</div>
-			<div id="infocard_view">
-				@InfocardShared()
-			</div>
-		</div>
+		}
 	}
 }
 
