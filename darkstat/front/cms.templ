@@ -64,14 +64,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco fronttypes
 					<td>{ cm.Nickname } </td>
 					<td>{ strconv.Itoa(cm.NameID) } </td>
 					<td>{ strconv.Itoa(cm.InfoID) } </td>
-					<td
-						id={ "infocard_click" + cm.Nickname }
-						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(cm.Nickname)) }
-						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + cm.Nickname }
-						hx-target="#infocard_view"
-						hx-swap="innerHTML"
-						preload="mouseover"
-					></td>
+					@TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm)
 				</tr>
 			}
 		</tbody>

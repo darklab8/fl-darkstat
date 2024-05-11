@@ -57,14 +57,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 										<td>{ string(tractor.Nickname) } </td>
 										<td>{ strconv.Itoa(tractor.NameID) } </td>
 										<td>{ strconv.Itoa(tractor.InfoID) } </td>
-										<td
-											id={ "infocard_click" + string(tractor.Nickname) }
-											hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(tractor.Nickname)) }
-											hx-trigger={ "mousedown from:#bottominfo_" + string(tractor.Nickname) }
-											hx-target="#infocard_view"
-											hx-swap="innerHTML"
-											preload="mouseover"
-										></td>
+										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "")
 									</tr>
 								}
 							</tbody>

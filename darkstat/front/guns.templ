@@ -114,14 +114,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 					<td>{ gun.HpType } </td>
 					<td>{ strconv.Itoa(gun.IdsName) } </td>
 					<td>{ strconv.Itoa(gun.IdsInfo) } </td>
-					<td
-						id={ "infocard_click" + gun.Nickname }
-						hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(gun.Nickname)) }
-						hx-trigger={ "mousedown from:#" + string(pinm) + "bottominfo_" + gun.Nickname }
-						hx-target="#infocard_view"
-						hx-swap="innerHTML"
-						preload="mouseover"
-					></td>
+					@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm)
 				</tr>
 			}
 		</tbody>
