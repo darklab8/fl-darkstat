@@ -47,6 +47,7 @@ type Munition struct {
 	MaxAngularVelocity *semantic.Float
 
 	IdsName *semantic.Int
+	IdsInfo *semantic.Int
 }
 
 type Explosion struct {
@@ -324,6 +325,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				munition := &Munition{}
 				munition.Nickname = semantic.NewString(section, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				munition.IdsName = semantic.NewInt(section, "ids_name")
+				munition.IdsInfo = semantic.NewInt(section, "ids_info")
 				munition.ExplosionArch = semantic.NewString(section, "explosion_arch")
 				munition.RequiredAmmo = semantic.NewBool(section, "requires_ammo", semantic.StrBool)
 				munition.HullDamage = semantic.NewInt(section, "hull_damage")

@@ -1,0 +1,87 @@
+package front
+
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
+	"strconv"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"strings"
+)
+
+func AmmoDetailedUrl(ammo configs_export.Ammo) string {
+	return "ammo/ammo_base_" + strings.ToLower(ammo.Nickname)
+}
+
+templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th style="min-width:200px;">Ammo</th>
+				if pinm == PinMode {
+					<th style="min-width:50px;">Select</th>
+					<th style="min-width:50px;">Select</th>
+				}
+				@ThDisco(disco)
+				<th style="min-width:50px;">Price</th>
+				<th style="min-width:50px;">Buyable</th>
+				<th style="min-width:50px;">Hit Pts</th>
+				<th style="min-width:50px;">Ammo Limit</th>
+				<th style="min-width:50px;">Volume</th>
+				<th style="min-width:50px;">Nickname</th>
+				<th style="min-width:100px;">Name ID</th>
+				<th style="min-width:100px;">Info ID</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, ammo := range ammos {
+				@TrFromMainTb(ammo.Nickname, AmmoDetailedUrl(ammo), pinm) {
+					@PinTd(ammo.Nickname, ammo.Name, pinm)
+					@PinSelectLeftRight(pinm, AmmoDetailedUrl(ammo))
+					@TdDisco(disco, ammo.Nickname, ammo.DiscoveryTechCompat)
+					<td>{ strconv.Itoa(ammo.Price) } </td>
+					<td>{ strconv.FormatBool(configs_export.Buyable(ammo.Bases)) }</td>
+					<td>{ strconv.Itoa(ammo.HitPts) } </td>
+					<td>{ strconv.Itoa(ammo.AmmoLimit) }</td>
+					<td>{ strconv.Itoa(ammo.Volume) }</td>
+					<td>{ ammo.Nickname } </td>
+					<td>{ strconv.Itoa(ammo.NameID) } </td>
+					<td>{ strconv.Itoa(ammo.InfoID) } </td>
+					@TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm)
+				}
+			}
+		</tbody>
+	</table>
+}
+
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
+templ AmmoT(ammos []configs_export.Ammo,mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+	@TabMenu(urls.Ammo, mode2)
+	@TabContent() {
+		<div class="splitter">
+			<div id="table-wrapper">
+				<div id="table-top">
+					@FilterBar(disco)
+					<div id="table-top-main">
+						@AmmoTable(ammos, MainMode, disco)
+					</div>
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
+						@AmmoTable(ammos, PinMode, disco)
+					</div>
+				</div>
+				<div id="table-bottom">
+					<div id="table-bottom-main">
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+					</div>
+				</div>
+			</div>
+			<div id="infocard_view">
+				@InfocardShared()
+			</div>
+		</div>
+	}
+}

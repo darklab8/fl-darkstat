@@ -225,31 +225,6 @@ func (l *Linker) Link() *builder.Builder {
 	useful_guns := configs_export.FilterToUsefulGun(data.Guns)
 	useful_missiles := configs_export.FilterToUsefulGun(data.Missiles)
 
-	var useful_ammo []configs_export.Gun = make([]configs_export.Gun, 0, 100)
-
-	var all_ammo []configs_export.Gun = make([]configs_export.Gun, 0, 100)
-
-	for _, gun := range data.Guns {
-		if !gun.RequiredAmmo {
-			continue
-		}
-
-		if configs_export.Buyable(gun.Bases) || configs_export.Buyable(gun.AmmoBases) {
-			useful_ammo = append(useful_ammo, gun)
-		}
-		all_ammo = append(all_ammo, gun)
-	}
-	for _, gun := range data.Missiles {
-		if !gun.RequiredAmmo {
-			continue
-		}
-
-		if configs_export.Buyable(gun.Bases) || configs_export.Buyable(gun.AmmoBases) {
-			useful_ammo = append(useful_ammo, gun)
-		}
-		all_ammo = append(all_ammo, gun)
-	}
-
 	tractor_id := conftypes.TractorID("")
 
 	var disco_ids fronttypes.DiscoveryIDs
@@ -340,11 +315,11 @@ func (l *Linker) Link() *builder.Builder {
 		),
 		builder.NewComponent(
 			urls.Ammo,
-			front.GunsT(useful_ammo, front.GunsAmmo, front.ShowEmpty(false), disco_ids),
+			front.AmmoT(configs_export.FilterToUsefulAmmo(data.Ammos), front.ShowEmpty(false), disco_ids),
 		),
 		builder.NewComponent(
 			front.AllItemsUrl(urls.Ammo),
-			front.GunsT(all_ammo, front.GunsAmmo, front.ShowEmpty(true), disco_ids),
+			front.AmmoT(data.Ammos, front.ShowEmpty(true), disco_ids),
 		),
 		builder.NewComponent(
 			urls.Missiles,
@@ -464,11 +439,11 @@ func (l *Linker) Link() *builder.Builder {
 			),
 		)
 	}
-	for _, gun := range all_ammo {
+	for _, ammo := range data.Ammos {
 		build.RegComps(
 			builder.NewComponent(
-				utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsAmmo)),
-				front.GoodAtBaseInfoT(gun.AmmoName, gun.AmmoBases, front.ShowPricePerVolume(false)),
+				utils_types.FilePath(front.AmmoDetailedUrl(ammo)),
+				front.GoodAtBaseInfoT(ammo.Name, ammo.Bases, front.ShowPricePerVolume(false)),
 			),
 		)
 	}

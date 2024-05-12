@@ -34,10 +34,10 @@ type Gun struct {
 	TurnRate     float64
 	Lootable     bool
 
-	RequiredAmmo  bool
-	AmmoPrice     int
-	AmmoBases     []GoodAtBase
-	AmmoName      string
+	RequiredAmmo bool
+	// AmmoPrice     int
+	// AmmoBases     []GoodAtBase
+	// AmmoName      string
 	HullDamage    int
 	EnergyDamange int
 	ShieldDamage  int
@@ -121,28 +121,6 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 
 	if required_ammo, ok := munition.RequiredAmmo.GetValue(); ok {
 		gun.RequiredAmmo = required_ammo
-	}
-
-	if ammo_ids_name, ok := munition.IdsName.GetValue(); ok {
-		if name, ok := e.configs.Infocards.Infonames[ammo_ids_name]; ok {
-			gun.AmmoName = string(name)
-		} else {
-			gun.AmmoName = "undefined infoname for id"
-		}
-	} else {
-		gun.AmmoName = "undefined ammo ids name"
-	}
-
-	gun.AmmoPrice = -1
-	if good_info, ok := e.configs.Goods.GoodsMap[munition.Nickname.Get()]; ok {
-		if price, ok := good_info.Price.GetValue(); ok {
-			gun.AmmoPrice = price
-			gun.AmmoBases = e.GetAtBasesSold(GetAtBasesInput{
-				Nickname:       good_info.Nickname.Get(),
-				Price:          price,
-				PricePerVolume: -1,
-			})
-		}
 	}
 
 	gun.DamageType = "undefined"
