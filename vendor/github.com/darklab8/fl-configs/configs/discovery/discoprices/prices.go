@@ -33,8 +33,8 @@ func Read(input_file *iniload.IniLoader) *Config {
 		for mg_index, _ := range price_info.ParamMap["marketgood"] {
 			market_good := &Price{}
 			market_good.Map(price_info)
-			market_good.BaseNickname = semantic.NewString(price_info, "marketgood", semantic.OptsS(semantic.Index(mg_index), semantic.Order(0)))
-			market_good.CommodityNickname = semantic.NewString(price_info, "marketgood", semantic.OptsS(semantic.Index(mg_index), semantic.Order(1)))
+			market_good.BaseNickname = semantic.NewString(price_info, "marketgood", semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Index(mg_index), semantic.Order(0)))
+			market_good.CommodityNickname = semantic.NewString(price_info, "marketgood", semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Index(mg_index), semantic.Order(1)))
 			market_good.Price = semantic.NewInt(price_info, "marketgood", semantic.Index(mg_index), semantic.Order(2))
 			market_good.SellOnly = semantic.NewBool(price_info, "marketgood", semantic.IntBool, semantic.Index(mg_index), semantic.Order(3))
 			conf.Prices = append(conf.Prices, market_good)
