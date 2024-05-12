@@ -27,6 +27,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/market_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/weaponmoddb"
+	"github.com/darklab8/fl-configs/configs/discovery/discoprices"
 	"github.com/darklab8/fl-configs/configs/discovery/techcompat"
 
 	"github.com/darklab8/go-utils/goutils/utils"
@@ -37,6 +38,7 @@ import (
 
 type DiscoveryConfig struct {
 	Techcompat *techcompat.Config
+	Prices     *discoprices.Config
 }
 
 type MappedConfigs struct {
@@ -102,10 +104,12 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 	)
 
 	var file_techcompat *iniload.IniLoader
+	var file_prices *iniload.IniLoader
 	if techcom := filesystem.GetFile("launcherconfig.xml"); techcom != nil {
 		p.Discovery = &DiscoveryConfig{}
 		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
-		all_files = append(all_files, file_techcompat)
+		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
+		all_files = append(all_files, file_techcompat, file_prices)
 	}
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
@@ -141,6 +145,7 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 
 		if p.Discovery != nil {
 			p.Discovery.Techcompat = techcompat.Read(file_techcompat)
+			p.Discovery.Prices = discoprices.Read(file_prices)
 		}
 	}, time_measure.WithMsg("Mapped stuff"))
 

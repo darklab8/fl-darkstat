@@ -1,6 +1,8 @@
 package configs_export
 
 import (
+	"fmt"
+
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 )
 
@@ -67,6 +69,7 @@ func (e *Exporter) GetCommodities() []Commodity {
 			Nickname:       commodity.Nickname,
 			Price:          commodity.Price,
 			PricePerVolume: commodity.PricePerVolume,
+			Volume:         commodity.Volume,
 		})
 
 		for _, base_info := range commodity.Bases {
@@ -93,13 +96,47 @@ type GetAtBasesInput struct {
 	Nickname       string
 	Price          int
 	PricePerVolume float64
+	Volume         float64
 }
 
 func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 	var bases_list []GoodAtBase
+	var bases_already_found map[string]bool = make(map[string]bool)
+
+	if commodity.Nickname == "commodity_helium" {
+		fmt.Println()
+	}
+
+	if e.configs.Discovery != nil {
+		for _, base_market := range e.configs.Discovery.Prices.BasesPerGood[commodity.Nickname] {
+
+			var base_info GoodAtBase = GoodAtBase{
+				BaseNickname:   base_market.BaseNickname.Get(),
+				BaseSells:      !base_market.SellOnly.Get(),
+				Price:          base_market.Price.Get(),
+				PricePerVolume: float64(base_market.Price.Get()) / float64(commodity.Volume),
+			}
+
+			more_info := e.GetBaseInfo(universe_mapped.BaseNickname(base_info.BaseNickname))
+			base_info.BaseName = more_info.BaseName
+			base_info.SystemName = more_info.SystemName
+			base_info.Faction = more_info.Faction
+
+			bases_list = append(bases_list, base_info)
+			bases_already_found[base_info.BaseNickname] = true
+		}
+	}
 
 	for _, base_market := range e.configs.Market.BasesPerGood[commodity.Nickname] {
 		base_nickname := base_market.Base
+
+		// skip read from disco already
+		if e.configs.Discovery != nil {
+			if _, already_found := bases_already_found[base_nickname]; already_found {
+				continue
+			}
+		}
+
 		market_good := base_market.MarketGood
 		base_info := GoodAtBase{}
 		base_info.BaseSells = !market_good.IsBuyOnly.Get()
@@ -110,41 +147,56 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 		base_info.LevelRequired = market_good.LevelRequired.Get()
 		base_info.RepRequired = market_good.RepRequired.Get()
 
-		if universe_base, ok := e.configs.Universe_config.BasesMap[universe_mapped.BaseNickname(base_nickname)]; ok {
+		more_info := e.GetBaseInfo(universe_mapped.BaseNickname(base_info.BaseNickname))
+		base_info.BaseName = more_info.BaseName
+		base_info.SystemName = more_info.SystemName
+		base_info.Faction = more_info.Faction
 
-			if infoname, ok := e.configs.Infocards.Infonames[universe_base.StridName.Get()]; ok {
-				base_info.BaseName = string(infoname)
-			}
-			system_nickname := universe_base.System.Get()
-
-			if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(system_nickname)]; ok {
-				if infoname, ok := e.configs.Infocards.Infonames[system.Strid_name.Get()]; ok {
-					base_info.SystemName = string(infoname)
-				}
-			}
-
-			var reputation_nickname string
-			if system, ok := e.configs.Systems.SystemsMap[universe_base.System.Get()]; ok {
-				for _, system_base := range system.Bases {
-					if system_base.IdsName.Get() == universe_base.StridName.Get() {
-						reputation_nickname = system_base.RepNickname.Get()
-					}
-				}
-			}
-
-			var factionName string
-			if group, exists := e.configs.InitialWorld.GroupsMap[reputation_nickname]; exists {
-				if faction_name, exists := e.configs.Infocards.Infonames[group.IdsName.Get()]; exists {
-					factionName = string(faction_name)
-				}
-			}
-
-			base_info.Faction = factionName
-
-			bases_list = append(bases_list, base_info)
-		}
+		bases_list = append(bases_list, base_info)
 	}
 	return bases_list
+}
+
+type BaseInfo struct {
+	BaseName   string
+	SystemName string
+	Faction    string
+}
+
+func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseInfo {
+	var result BaseInfo
+	if universe_base, ok := e.configs.Universe_config.BasesMap[universe_mapped.BaseNickname(base_nickname)]; ok {
+
+		if infoname, ok := e.configs.Infocards.Infonames[universe_base.StridName.Get()]; ok {
+			result.BaseName = string(infoname)
+		}
+		system_nickname := universe_base.System.Get()
+
+		if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(system_nickname)]; ok {
+			if infoname, ok := e.configs.Infocards.Infonames[system.Strid_name.Get()]; ok {
+				result.SystemName = string(infoname)
+			}
+		}
+
+		var reputation_nickname string
+		if system, ok := e.configs.Systems.SystemsMap[universe_base.System.Get()]; ok {
+			for _, system_base := range system.Bases {
+				if system_base.IdsName.Get() == universe_base.StridName.Get() {
+					reputation_nickname = system_base.RepNickname.Get()
+				}
+			}
+		}
+
+		var factionName string
+		if group, exists := e.configs.InitialWorld.GroupsMap[reputation_nickname]; exists {
+			if faction_name, exists := e.configs.Infocards.Infonames[group.IdsName.Get()]; exists {
+				factionName = string(faction_name)
+			}
+		}
+
+		result.Faction = factionName
+	}
+	return result
 }
 
 func FilterToUsefulCommodities(commodities []Commodity) []Commodity {
