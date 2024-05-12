@@ -46,6 +46,10 @@ type Munition struct {
 	Motor              *semantic.String
 	MaxAngularVelocity *semantic.Float
 
+	HitPts    *semantic.Int
+	AmmoLimit *semantic.Int
+	Volume    *semantic.Int
+
 	IdsName *semantic.Int
 	IdsInfo *semantic.Int
 }
@@ -336,6 +340,11 @@ func Read(files []*iniload.IniLoader) *Config {
 				munition.Mass = semantic.NewInt(section, "mass")
 				munition.Motor = semantic.NewString(section, "motor", semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				munition.MaxAngularVelocity = semantic.NewFloat(section, "max_angular_velocity", semantic.Precision(4))
+
+				munition.HitPts = semantic.NewInt(section, "hit_pts")
+				munition.AmmoLimit = semantic.NewInt(section, "ammo_limit")
+				munition.Volume = semantic.NewInt(section, "volume")
+
 				frelconfig.Munitions = append(frelconfig.Munitions, munition)
 				frelconfig.MunitionMap[munition.Nickname.Get()] = munition
 			case "[Explosion]":

@@ -26,14 +26,14 @@ func (e *Exporter) GetAmmo(ids []Tractor) []Ammo {
 		munition.NameID, _ = munition_info.IdsName.GetValue()
 		munition.InfoID, _ = munition_info.IdsInfo.GetValue()
 
+		munition.HitPts, _ = munition_info.HitPts.GetValue()
+		munition.AmmoLimit, _ = munition_info.AmmoLimit.GetValue()
+		munition.Volume, _ = munition_info.Volume.GetValue()
+
 		if ammo_ids_name, ok := munition_info.IdsName.GetValue(); ok {
 			if name, ok := e.configs.Infocards.Infonames[ammo_ids_name]; ok {
 				munition.Name = string(name)
-			} else {
-				munition.Name = "undefined infoname"
 			}
-		} else {
-			munition.Name = "undefined infoid"
 		}
 
 		munition.Price = -1
@@ -48,7 +48,7 @@ func (e *Exporter) GetAmmo(ids []Tractor) []Ammo {
 			}
 		}
 
-		if !Buyable(munition.Bases) && (munition.Name == "undefined infoid" || munition.Name == "undefined infoname") {
+		if !Buyable(munition.Bases) && (munition.Name == "") {
 			continue
 		}
 

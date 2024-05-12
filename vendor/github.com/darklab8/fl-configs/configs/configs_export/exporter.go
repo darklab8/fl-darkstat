@@ -19,8 +19,10 @@ func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
 	for _, info_id := range infocard_ids {
 		if value, ok := e.configs.Infocards.Infocards[info_id]; ok {
 			e.Infocards[InfocardKey(nickname)] = append(e.Infocards[InfocardKey(nickname)], value.Lines...)
+			return
 		}
 	}
+	e.Infocards[InfocardKey(nickname)] = []string{"no infocard"}
 }
 
 type Exporter struct {
