@@ -1,6 +1,7 @@
 package infocard_mapped
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -61,7 +62,7 @@ func ReadFromTextFile(input_file *file.File) (*infocard.Config, error) {
 var InfocardReader *regexp.Regexp
 
 func init() {
-	inireader.InitRegexExpression(&InfocardReader, `^([0-9]+)=(.*)$`)
+	inireader.InitRegexExpression(&InfocardReader, `^([0-9]+)[= ]+(.*)$`)
 }
 
 func ReadFromDiscoServerConfig(input_file *file.File) (*infocard.Config, error) {
@@ -83,6 +84,11 @@ func ReadFromDiscoServerConfig(input_file *file.File) (*infocard.Config, error) 
 		if err != nil {
 			continue
 		}
+
+		if id == 531454 {
+			fmt.Println()
+		}
+
 		content := line_match[2]
 
 		var kind infocard.RecordKind = infocard.TYPE_NAME
