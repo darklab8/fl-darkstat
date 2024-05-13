@@ -135,7 +135,17 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		p.Shiparch = ship_mapped.Read(files_shiparch)
 
 		p.InfocardmapINI = interface_mapped.Read(file_interface)
-		p.Infocards, _ = infocard_mapped.Read(filesystem, p.FreelancerINI, filesystem.GetFile(infocard_mapped.FILENAME, infocard_mapped.FILENAME_FALLBACK))
+
+		var infocards_override *file.File
+		if p.Discovery != nil {
+			infocards_override = filesystem.GetFile("temp.disco.infocards.txt")
+
+			if infocards_override == nil {
+				infocards_override = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/infocard_overrides.cfg"))
+			}
+		}
+
+		p.Infocards, _ = infocard_mapped.Read(filesystem, p.FreelancerINI, infocards_override)
 
 		p.InitialWorld = initialworld.Read(file_initialworld)
 		p.Empathy = empathy_mapped.Read(file_empathy)

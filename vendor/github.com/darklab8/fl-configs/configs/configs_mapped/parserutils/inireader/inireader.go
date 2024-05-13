@@ -283,12 +283,12 @@ var regexParam *regexp.Regexp
 var regexLetter *regexp.Regexp
 
 func init() {
-	initRegexExpression(&regexNumber, `^[0-9\-]+(?:\.)?([0-9\-]*)$`)
-	initRegexExpression(&regexComment, `;(.*)`)
-	initRegexExpression(&regexSection, `^\[.*\]`)
-	initRegexExpression(&regexLetter, `[a-zA-Z]`)
+	InitRegexExpression(&regexNumber, `^[0-9\-]+(?:\.)?([0-9\-]*)$`)
+	InitRegexExpression(&regexComment, `;(.*)`)
+	InitRegexExpression(&regexSection, `^\[.*\]`)
+	InitRegexExpression(&regexLetter, `[a-zA-Z]`)
 	// param or commented out param
-	initRegexExpression(&regexParam, `(;%|^)[ 	]*([a-zA-Z_][a-zA-Z_0-9]+)\s=\s([a-zA-Z_, 0-9-.\/\\]+)`)
+	InitRegexExpression(&regexParam, `(;%|^)[ 	]*([a-zA-Z_][a-zA-Z_0-9]+)\s=\s([a-zA-Z_, 0-9-.\/\\]+)`)
 }
 
 var CASE_SENSETIVE_KEYS = [...]string{"BGCS_base_run_by", "NavMapScale"}
