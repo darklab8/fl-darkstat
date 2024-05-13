@@ -112,6 +112,15 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		all_files = append(all_files, file_techcompat, file_prices)
 	}
 
+	var infocards_override *file.File
+	if p.Discovery != nil {
+		infocards_override = filesystem.GetFile("temp.disco.infocards.txt")
+
+		if infocards_override == nil {
+			infocards_override = file.NewWebFile("https://discoverygc.com/gameconfigpublic/infocard_overrides.cfg")
+		}
+	}
+
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 		var wg sync.WaitGroup
 		for _, file := range all_files {
@@ -135,15 +144,6 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		p.Shiparch = ship_mapped.Read(files_shiparch)
 
 		p.InfocardmapINI = interface_mapped.Read(file_interface)
-
-		var infocards_override *file.File
-		if p.Discovery != nil {
-			infocards_override = filesystem.GetFile("temp.disco.infocards.txt")
-
-			if infocards_override == nil {
-				infocards_override = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/infocard_overrides.cfg"))
-			}
-		}
 
 		p.Infocards, _ = infocard_mapped.Read(filesystem, p.FreelancerINI, infocards_override)
 
