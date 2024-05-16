@@ -100,3 +100,20 @@ If u have problems with configuring development environment, then seek my contac
 - or open [Pull Request here](https://github.com/darklab8/fl-darkstat/issues) and write there
 
 See anouncements at [Discovery Freelancer forum thread](https://discoverygc.com/forums/showthread.php?tid=187294)
+
+# Licensing
+
+Copyright (c) 2024 Andrei Novoselov https://github.com/darklab8/fl-darkstat
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
