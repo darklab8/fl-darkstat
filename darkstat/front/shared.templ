@@ -454,7 +454,7 @@ templ PinTd2(nickname string, name string, pinm PinMod, url string) {
 			<span
 				style="cursor:copy;"
 				class="pin"
-				hx-on::after-request={ Pin2(string(pinm) + "bottominfo_" + nickname) }
+				onClick={ Pin2(string(pinm) + "bottominfo_" + nickname) }
 				hx-get={ types.GetCtx(ctx).SiteRoot + url }
 				hx-trigger="mousedown"
 				hx-target="#table-top-mainpin table tbody"
