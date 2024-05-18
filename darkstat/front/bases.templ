@@ -41,23 +41,27 @@ templ BasesTable(bases []configs_export.Base, pinm PinMod) {
 		</thead>
 		<tbody>
 			for _, base := range bases {
-				@TrFromMainTb(base.Nickname, BaseMarketGoodUrl(base), pinm) {
-					@PinTd(base.Nickname, base.Name, pinm)
-					@PinSelectLeftRight(pinm, BaseMarketGoodUrl(base))
-					<td>{ base.FactionName }</td>
-					<td>{ base.System }</td>
-					<td>{ base.Nickname }</td>
-					<td>{ base.SystemNickname }</td>
-					<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
-					<td>{ fmt.Sprintf("%.0f", base.Pos.Y) }</td>
-					<td>{ fmt.Sprintf("%.0f", base.Pos.Z) }</td>
-					<td>{ strconv.Itoa(base.StridName) }</td>
-					<td>{ strconv.Itoa(base.InfocardID) }</td>
-					@TdInfoCardClick(base.Infocard, base.Nickname, pinm)
-				}
+				@BaseRow(base, pinm)
 			}
 		</tbody>
 	</table>
+}
+
+templ BaseRow(base configs_export.Base, pinm PinMod) {
+	@TrFromMainTb(base.Nickname, BaseMarketGoodUrl(base), pinm) {
+		@PinTd(base.Nickname, base.Name, pinm)
+		@PinSelectLeftRight(pinm, BaseMarketGoodUrl(base))
+		<td>{ base.FactionName }</td>
+		<td>{ base.System }</td>
+		<td>{ base.Nickname }</td>
+		<td>{ base.SystemNickname }</td>
+		<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
+		<td>{ fmt.Sprintf("%.0f", base.Pos.Y) }</td>
+		<td>{ fmt.Sprintf("%.0f", base.Pos.Z) }</td>
+		<td>{ strconv.Itoa(base.StridName) }</td>
+		<td>{ strconv.Itoa(base.InfocardID) }</td>
+		@TdInfoCardClick(base.Infocard, base.Nickname, pinm)
+	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers

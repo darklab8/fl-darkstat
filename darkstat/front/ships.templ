@@ -20,6 +20,15 @@ func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 	panic("unsupported ship mode")
 }
 
+func ShipPinnedUrl(ship configs_export.Ship, mode ShipTabMode) string {
+	if mode == ShipShowBases {
+		return "ships/pinned/ships_base_" + strings.ToLower(ship.Nickname)
+	} else if mode == ShipShowDetails {
+		return "ships/pinned/ships_details_" + strings.ToLower(ship.Nickname)
+	}
+	panic("unsupported ship mode")
+}
+
 type ShipTabMode int64
 
 const (
@@ -77,37 +86,41 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 		</thead>
 		<tbody>
 			for _, ship := range ships {
-				@TrFromMainTb(ship.Nickname, ShipDetailedUrl(ship, mode), pinm) {
-					@PinTd(ship.Nickname, ship.Name, pinm)
-					@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
-					@TdDisco(disco, ship.Nickname, ship.DiscoveryTechCompat)
-					<td>{ strconv.Itoa(ship.Class) }</td>
-					<td>{ ship.Type }</td>
-					<td>{ strconv.Itoa(ship.Price) }</td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(ship.Bases)) }</td>
-					<td>{ strconv.Itoa(ship.Armor) } </td>
-					<td>{ strconv.Itoa(ship.HoldSize) } </td>
-					<td>{ strconv.Itoa(ship.Nanobots) }</td>
-					<td>{ strconv.Itoa(ship.Batteries) }</td>
-					<td>{ fmt.Sprintf("%.2f",ship.MaxAngularSpeedDegS) }</td>
-					<td>{ fmt.Sprintf("%.2f",ship.AngularDistanceFrom0ToHalfSec) }</td>
-					<td>{ fmt.Sprintf("%.2f",ship.TimeTo90MaxAngularSpeed) }</td>
-					<td>{ strconv.Itoa(ship.PowerCapacity) }</td>
-					<td>{ strconv.Itoa(ship.PowerRechargeRate) }</td>
-					<td>{ strconv.Itoa(ship.ThrustCapacity) }</td>
-					<td>{ strconv.Itoa(ship.ThrustRecharge) }</td>
-					<td>{ fmt.Sprintf("%.2f",ship.ImpulseSpeed) }</td>
-					<td>{ fmt.Sprintf("%.2f",ship.ReverseFraction) }</td>
-					<td>{ fmt.Sprintf("%.2f",ship.NudgeForce) }</td>
-					<td>{ fmt.Sprintf("%.2f",ship.StrafeForce) }</td>
-					<td>{ ship.Nickname } </td>
-					<td>{ strconv.Itoa(ship.NameID) } </td>
-					<td>{ strconv.Itoa(ship.InfoID) } </td>
-					@TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm)
-				}
+				@ShipRow(ship, mode, pinm, disco, false)
 			}
 		</tbody>
 	</table>
+}
+
+templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, prerender bool) {
+	@TrFromMainTb2(ship.Nickname, ShipDetailedUrl(ship, mode), pinm, prerender) {
+		@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
+		@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
+		@TdDisco(disco, ship.Nickname, ship.DiscoveryTechCompat)
+		<td>{ strconv.Itoa(ship.Class) }</td>
+		<td>{ ship.Type }</td>
+		<td>{ strconv.Itoa(ship.Price) }</td>
+		<td>{ strconv.FormatBool(configs_export.Buyable(ship.Bases)) }</td>
+		<td>{ strconv.Itoa(ship.Armor) } </td>
+		<td>{ strconv.Itoa(ship.HoldSize) } </td>
+		<td>{ strconv.Itoa(ship.Nanobots) }</td>
+		<td>{ strconv.Itoa(ship.Batteries) }</td>
+		<td>{ fmt.Sprintf("%.2f",ship.MaxAngularSpeedDegS) }</td>
+		<td>{ fmt.Sprintf("%.2f",ship.AngularDistanceFrom0ToHalfSec) }</td>
+		<td>{ fmt.Sprintf("%.2f",ship.TimeTo90MaxAngularSpeed) }</td>
+		<td>{ strconv.Itoa(ship.PowerCapacity) }</td>
+		<td>{ strconv.Itoa(ship.PowerRechargeRate) }</td>
+		<td>{ strconv.Itoa(ship.ThrustCapacity) }</td>
+		<td>{ strconv.Itoa(ship.ThrustRecharge) }</td>
+		<td>{ fmt.Sprintf("%.2f",ship.ImpulseSpeed) }</td>
+		<td>{ fmt.Sprintf("%.2f",ship.ReverseFraction) }</td>
+		<td>{ fmt.Sprintf("%.2f",ship.NudgeForce) }</td>
+		<td>{ fmt.Sprintf("%.2f",ship.StrafeForce) }</td>
+		<td>{ ship.Nickname } </td>
+		<td>{ strconv.Itoa(ship.NameID) } </td>
+		<td>{ strconv.Itoa(ship.InfoID) } </td>
+		@TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm)
+	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
@@ -127,7 +140,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 						@ShipTable(ships, mode, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShipTable(ships, mode, PinMode, disco)
+						@ShipTable([]configs_export.Ship{}, mode, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">

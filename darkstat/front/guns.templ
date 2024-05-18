@@ -16,8 +16,18 @@ func GunDetailedUrl(gun configs_export.Gun, mode GunTabMode) string {
 		return "guns/guns_bonuses_" + strings.ToLower(gun.Nickname)
 	} else if mode == GunsMissiles {
 		return "guns/missiles_" + strings.ToLower(gun.Nickname)
-	} else if mode == GunsAmmo {
-		return "guns/ammo_base" + strings.ToLower(gun.Nickname)
+	}
+
+	panic("unsupported choice in GunDetailedUrl")
+}
+
+func GunPinnedRowUrl(gun configs_export.Gun, mode GunTabMode) string {
+	if mode == GunsShowBases {
+		return "guns/pinned/guns_base_" + strings.ToLower(gun.Nickname)
+	} else if mode == GunsShowDamageBonuses {
+		return "guns/pinned/guns_bonuses_" + strings.ToLower(gun.Nickname)
+	} else if mode == GunsMissiles {
+		return "guns/pinned/missiles_" + strings.ToLower(gun.Nickname)
 	}
 
 	panic("unsupported choice in GunDetailedUrl")
@@ -29,8 +39,6 @@ const (
 	GunsShowBases GunTabMode = iota
 	GunsShowDamageBonuses
 	GunsMissiles
-	GunsAmmo
-	GunsMissilesAmmo
 )
 
 templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
@@ -77,44 +85,48 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 		</thead>
 		<tbody>
 			for _, gun := range guns {
-				@TrFromMainTb(gun.Nickname, GunDetailedUrl(gun, mode), pinm) {
-					@PinTd(gun.Nickname, gun.Name, pinm)
-					@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
-					@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
-					<td>{ gun.Class }</td>
-					<td>{ gun.Type }</td>
-					<td>{ gun.DamageType }</td>
-					<td>{ strconv.Itoa(gun.Price) } </td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(gun.Bases)) }</td>
-					<td>{ strconv.Itoa(gun.HullDamage) }</td>
-					<td>{ strconv.Itoa(gun.ShieldDamage) }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
-					if mode == GunsMissiles {
-						<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
-					}
-					<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.ShieldDamagePerSec) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
-					<td>{ fmt.Sprintf("%.2f",gun.Rating)  }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
-					<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
-					<td>{ gun.HitPts }</td>
-					<td>{ strconv.FormatBool(gun.Lootable) }</td>
-					<td>{ gun.Nickname } </td>
-					<td>{ gun.HpType } </td>
-					<td>{ strconv.Itoa(gun.IdsName) } </td>
-					<td>{ strconv.Itoa(gun.IdsInfo) } </td>
-					@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm)
-				}
+				@GunRow(gun, mode, pinm, disco, false)
 			}
 		</tbody>
 	</table>
+}
+
+templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, prerender bool) {
+	@TrFromMainTb2(gun.Nickname, GunDetailedUrl(gun, mode), pinm, prerender) {
+		@PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
+		@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
+		@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
+		<td>{ gun.Class }</td>
+		<td>{ gun.Type }</td>
+		<td>{ gun.DamageType }</td>
+		<td>{ strconv.Itoa(gun.Price) } </td>
+		<td>{ strconv.FormatBool(configs_export.Buyable(gun.Bases)) }</td>
+		<td>{ strconv.Itoa(gun.HullDamage) }</td>
+		<td>{ strconv.Itoa(gun.ShieldDamage) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
+		if mode == GunsMissiles {
+			<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
+		}
+		<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.ShieldDamagePerSec) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.Rating)  }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
+		<td>{ gun.HitPts }</td>
+		<td>{ strconv.FormatBool(gun.Lootable) }</td>
+		<td>{ gun.Nickname } </td>
+		<td>{ gun.HpType } </td>
+		<td>{ strconv.Itoa(gun.IdsName) } </td>
+		<td>{ strconv.Itoa(gun.IdsInfo) } </td>
+		@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm)
+	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
@@ -126,8 +138,6 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco f
 		@TabMenu(urls.GunModifiers, mode2)
 	} else if mode == GunsMissiles {
 		@TabMenu(urls.Missiles, mode2)
-	} else if mode == GunsAmmo {
-		@TabMenu(urls.Ammo, mode2)
 	}
 	@TabContent() {
 		<div class="splitter">
@@ -138,19 +148,19 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco f
 						@GunTable(guns, mode, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@GunTable(guns, mode, PinMode, disco)
+						@GunTable([]configs_export.Gun{}, mode, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
-						if mode == GunsShowBases || mode == GunsMissiles || mode == GunsAmmo || mode == GunsMissilesAmmo {
+						if mode == GunsShowBases || mode == GunsMissiles {
 							@GoodAtBaseSharedT(ShowPricePerVolume(false))
 						} else {
 							@GunShowModifiersShared()
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						if mode == GunsShowBases || mode == GunsMissiles || mode == GunsAmmo || mode == GunsMissilesAmmo {
+						if mode == GunsShowBases || mode == GunsMissiles {
 							@GoodAtBaseSharedT(ShowPricePerVolume(false))
 						} else {
 							@GunShowModifiersShared()

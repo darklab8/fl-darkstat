@@ -437,6 +437,15 @@ func (l *Linker) Link() *builder.Builder {
 				utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsShowDamageBonuses)),
 				front.GunShowModifiers(gun),
 			),
+
+			builder.NewComponent(
+				utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowBases)),
+				front.GunRow(gun, front.GunsShowBases, front.PinMode, disco_ids, true),
+			),
+			builder.NewComponent(
+				utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowDamageBonuses)),
+				front.GunRow(gun, front.GunsShowDamageBonuses, front.PinMode, disco_ids, true),
+			),
 		)
 	}
 	for _, ammo := range data.Ammos {
@@ -453,6 +462,10 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.GunDetailedUrl(missile, front.GunsMissiles)),
 				front.GoodAtBaseInfoT(missile.Name, missile.Bases, front.ShowPricePerVolume(false)),
+			),
+			builder.NewComponent(
+				utils_types.FilePath(front.GunPinnedRowUrl(missile, front.GunsMissiles)),
+				front.GunRow(missile, front.GunsMissiles, front.PinMode, disco_ids, true),
 			),
 		)
 	}
@@ -493,6 +506,14 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowDetails)),
 				front.ShipDetails(ship),
+			),
+			builder.NewComponent(
+				utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowBases)),
+				front.ShipRow(ship, front.ShipShowBases, front.PinMode, disco_ids, true),
+			),
+			builder.NewComponent(
+				utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowDetails)),
+				front.ShipRow(ship, front.ShipShowDetails, front.PinMode, disco_ids, true),
 			),
 		)
 

@@ -410,6 +410,24 @@ script Pin(id string) {
   }
 }
 
+script Pin2(id string) {
+  // htmx adding row to table version for performance
+  if (id.includes("pin")) {
+	// deleting htmx added row in table
+	row = document.querySelector("#" + id)
+	row.remove()
+
+	if (TableLen(document.querySelector("#table-top-mainpin table")) === 1) {
+		Hide("table-top-mainpin")
+		Hide("table-bottom-mainpin")
+	}
+  } else {
+	// htmx adds as another element to table
+	Unhide("table-top-mainpin")
+	Unhide("table-bottom-mainpin")
+  }
+}
+
 templ PinTd(nickname string, name string, pinm PinMod) {
 	<td style="display:flex;justify-content:space-between;min-width:50px;">
 		<span>{ name }</span>
@@ -417,6 +435,26 @@ templ PinTd(nickname string, name string, pinm PinMod) {
 			<span style="cursor:copy;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>pin</span>
 		} else {
 			<span style="cursor:no-drop;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>unpin</span>
+		}
+	</td>
+}
+
+templ PinTd2(nickname string, name string, pinm PinMod, url string) {
+	// htmx adding row to table version for performance
+	<td style="display:flex;justify-content:space-between;min-width:50px;">
+		<span>{ name }</span>
+		if pinm==MainMode {
+			<span
+				style="cursor:copy;"
+				class="pin"
+				onClick={ Pin2(string(pinm) + "bottominfo_" + nickname) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + url }
+				hx-trigger="mousedown"
+				hx-target="#table-top-mainpin table tbody"
+				hx-swap="beforeend"
+			>pin</span>
+		} else {
+			<span style="cursor:no-drop;" class="pin" onClick={ Pin2(string(pinm) + "bottominfo_" + nickname) }>unpin</span>
 		}
 	</td>
 }
@@ -515,6 +553,12 @@ templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, p
 }
 
 templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
+	@TrFromMainTb2(nickname, detailed_url, pinm, false) {
+		{ children... }
+	}
+}
+
+templ TrFromMainTb2(nickname string, detailed_url string, pinm PinMod, prerender bool) {
 	<tr
 		id={ string(pinm) + "bottominfo_" + nickname }
 		hx-get={ types.GetCtx(ctx).SiteRoot + detailed_url }
@@ -522,7 +566,7 @@ templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
 		hx-target={ "#table-bottom-main" + string(pinm) }
 		hx-swap="innerHTML"
 		preload="mouseover"
-		class={ templ.KV("hidden", pinm == PinMode) }
+		class={ templ.KV("hidden", pinm == PinMode && !prerender) }
 		onclick="RowHighlighter(this)"
 	>
 		{ children... }
