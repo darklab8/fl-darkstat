@@ -425,6 +425,13 @@ script Pin2(id string) {
 	// htmx adds as another element to table
 	Unhide("table-top-mainpin")
 	Unhide("table-bottom-mainpin")
+
+	rows = document.querySelectorAll("#pin"+id)
+	if (rows.length >= 1) {
+		for (i = 1; i < rows.length; i++) {
+			rows[i].remove()
+		}
+	}
   }
 }
 
@@ -447,7 +454,7 @@ templ PinTd2(nickname string, name string, pinm PinMod, url string) {
 			<span
 				style="cursor:copy;"
 				class="pin"
-				onClick={ Pin2(string(pinm) + "bottominfo_" + nickname) }
+				hx-on::after-request={ Pin2(string(pinm) + "bottominfo_" + nickname) }
 				hx-get={ types.GetCtx(ctx).SiteRoot + url }
 				hx-trigger="mousedown"
 				hx-target="#table-top-mainpin table tbody"
