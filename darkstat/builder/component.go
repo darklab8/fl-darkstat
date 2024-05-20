@@ -5,7 +5,6 @@ import (
 	"context"
 
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
-	"github.com/yosssi/gohtml"
 
 	"github.com/a-h/templ"
 	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
@@ -44,6 +43,6 @@ func (h *Component) Write(gp types.GlobalParams) WriteResult {
 	// Usage of gohtml is not obligatory, but nice touch simplifying debugging view.
 	return WriteResult{
 		realpath: realpath,
-		bytes:    gohtml.FormatBytes(buf.Bytes()),
+		bytes:    buf.Bytes(),
 	}
 }

@@ -49,11 +49,11 @@ func main() {
 			var linked_build *builder.Builder
 			time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 				linked_build = linker.NewLinker().Link()
-			}, time_measure.WithMsg("linking stuff"))
+			}, time_measure.WithMsg("linking stuff linker.NewLinker().Link()"))
 			time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 				fs = linked_build.BuildAll()
-			}, time_measure.WithMsg("building stuff"))
-		}, time_measure.WithMsg("total time for web"))
+			}, time_measure.WithMsg("building stuff linked_build.BuildAll()"))
+		}, time_measure.WithMsg("total time for web web := func()"))
 		web.NewWeb(fs).Serve()
 	}
 

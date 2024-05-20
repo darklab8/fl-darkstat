@@ -1,7 +1,6 @@
 package configs_export
 
 import (
-	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -113,9 +112,9 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 
 	}
 
-	if gun.Nickname == "dsy_snova_ai" {
-		fmt.Println()
-	}
+	// if gun.Nickname == "dsy_snova_ai" {
+	// 	fmt.Println()
+	// }
 
 	gun.ShieldDamage = int(float64(gun.HullDamage)*float64(e.configs.Consts.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get()) + float64(gun.EnergyDamange))
 
@@ -183,7 +182,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 		gun.Type = "gun"
 	}
 
-	fmt.Println("CalculateTEchCompat", e.configs.Discovery != nil, gun.Nickname)
+	// fmt.Println("CalculateTEchCompat", e.configs.Discovery != nil, gun.Nickname)
 	gun.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, gun.Nickname)
 	return gun
 }

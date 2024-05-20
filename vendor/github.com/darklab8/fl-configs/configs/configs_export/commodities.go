@@ -1,8 +1,6 @@
 package configs_export
 
 import (
-	"fmt"
-
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 )
 
@@ -103,9 +101,9 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 	var bases_list []GoodAtBase
 	var bases_already_found map[string]bool = make(map[string]bool)
 
-	if commodity.Nickname == "commodity_helium" {
-		fmt.Println()
-	}
+	// if commodity.Nickname == "commodity_helium" {
+	// 	fmt.Println()
+	// }
 
 	if e.configs.Discovery != nil {
 		for _, base_market := range e.configs.Discovery.Prices.BasesPerGood[commodity.Nickname] {

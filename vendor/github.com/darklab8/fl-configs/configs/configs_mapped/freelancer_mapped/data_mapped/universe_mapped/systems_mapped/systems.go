@@ -1,8 +1,6 @@
 package systems_mapped
 
 import (
-	"fmt"
-
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
@@ -53,18 +51,15 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 	var system_files map[string]*file.File = make(map[string]*file.File)
 	for _, base := range universe_config.Bases {
 		base_system := base.System.Get()
-		fmt.Println("base_system=", base_system)
-		if base_system == "ew06" {
-			fmt.Println()
-		}
+		// fmt.Println("base_system=", base_system)
 		universe_system := universe_config.SystemMap[universe_mapped.SystemNickname(base_system)]
 
 		if universe_system == nil {
-			fmt.Println("base_system==", base_system)
-			for key, _ := range universe_config.SystemMap {
-				fmt.Print("key=", key)
-			}
-			fmt.Println()
+			// fmt.Println("base_system==", base_system)
+			// for key, _ := range universe_config.SystemMap {
+			// 	fmt.Print("key=", key)
+			// }
+			// fmt.Println()
 		}
 
 		var filename utils_types.FilePath
@@ -84,9 +79,9 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 		// }()
 		filename = universe_system.File.FileName()
 		path := filesystem.GetFile(filename)
-		if path.GetFilepath() == "" {
-			fmt.Println()
-		}
+		// if path.GetFilepath() == "" {
+		// 	fmt.Println()
+		// }
 		system_files[base.System.Get()] = file.NewFile(path.GetFilepath())
 	}
 

@@ -15,13 +15,13 @@ Filesystem allows us to write to files to memory for later reusage in web app se
 Optionally same filesystem supports rendering to local, for deployment of static assets
 */
 type Filesystem struct {
-	Files      map[utils_types.FilePath]string
+	Files      map[utils_types.FilePath][]byte
 	build_root utils_types.FilePath
 }
 
 func NewFileystem(build_root utils_types.FilePath) *Filesystem {
 	b := &Filesystem{
-		Files:      make(map[utils_types.FilePath]string),
+		Files:      make(map[utils_types.FilePath][]byte),
 		build_root: build_root,
 	}
 	return b
@@ -30,7 +30,7 @@ func NewFileystem(build_root utils_types.FilePath) *Filesystem {
 var PermReadWrite os.FileMode = 0666
 
 func (f *Filesystem) WriteToMem(path utils_types.FilePath, content []byte) {
-	f.Files[path] = string(content)
+	f.Files[path] = content
 }
 
 func (f *Filesystem) RenderToLocal() {
