@@ -71,6 +71,7 @@ func (e *Exporter) Export() *Exporter {
 	e.Bases = e.GetBases()
 	e.Tractors = e.GetTractors()
 	e.Factions = e.GetFactions(e.Bases)
+	e.Bases = e.GetMissions(e.Bases, e.Factions)
 	e.Commodities = e.GetCommodities()
 	e.Guns = e.GetGuns(e.Tractors)
 	e.Missiles = e.GetMissiles(e.Tractors)

@@ -237,6 +237,7 @@ func UniParse(input string) (UniValue, error) {
 		}
 
 		var precision int
+
 		if !strings.Contains(input, ".") {
 			precision = 0
 		} else {
@@ -283,7 +284,7 @@ var regexParam *regexp.Regexp
 var regexLetter *regexp.Regexp
 
 func init() {
-	InitRegexExpression(&regexNumber, `^[0-9\-]+(?:\.)?([0-9\-]*)$`)
+	InitRegexExpression(&regexNumber, `^[0-9\-]+(?:\.)?([0-9\-]*)(?:E[-0-9]+)?$`)
 	InitRegexExpression(&regexComment, `;(.*)`)
 	InitRegexExpression(&regexSection, `^\[.*\]`)
 	InitRegexExpression(&regexLetter, `[a-zA-Z]`)

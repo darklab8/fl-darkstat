@@ -12,6 +12,8 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/interface_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/empathy_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/mbases_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/rnd_msns_mapped/diff2money"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/rnd_msns_mapped/npcranktodiff"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/ship_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
@@ -60,6 +62,9 @@ type MappedConfigs struct {
 	Consts         *const_mapped.Config
 	WeaponMods     *weaponmoddb.Config
 
+	NpcRankToDiff *npcranktodiff.Config
+	DiffToMoney   *diff2money.Config
+
 	Discovery *DiscoveryConfig
 }
 
@@ -90,6 +95,9 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 	file_consts := iniload.NewLoader(filesystem.GetFile(const_mapped.FILENAME))
 	file_weaponmoddb := iniload.NewLoader(filesystem.GetFile(weaponmoddb.FILENAME))
 
+	file_diff2money := iniload.NewLoader(filesystem.GetFile(diff2money.FILENAME))
+	file_npcranktodiff := iniload.NewLoader(filesystem.GetFile(npcranktodiff.FILENAME))
+
 	all_files := append(files_goods, files_market...)
 	all_files = append(all_files, files_equip...)
 	all_files = append(all_files, files_shiparch...)
@@ -101,6 +109,8 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		file_mbases,
 		file_consts,
 		file_weaponmoddb,
+		file_diff2money,
+		file_npcranktodiff,
 	)
 
 	var file_techcompat *iniload.IniLoader
@@ -123,8 +133,8 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 		var wg sync.WaitGroup
+		wg.Add(len(all_files))
 		for _, file := range all_files {
-			wg.Add(1)
 			go func(file *iniload.IniLoader) {
 				file.Scan()
 				wg.Done()
@@ -134,29 +144,82 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 	}, time_measure.WithMsg("Scanned ini loaders"))
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
-		p.Universe_config = universe_mapped.Read(file_universe)
+		var wg sync.WaitGroup
+		wg.Add(13)
+		go func() {
+			time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+				p.Universe_config = universe_mapped.Read(file_universe)
+				p.Systems = systems_mapped.Read(p.Universe_config, filesystem)
+			}, time_measure.WithMsg("map systems"))
+			wg.Done()
+		}()
 
-		p.Systems = systems_mapped.Read(p.Universe_config, filesystem)
+		go func() {
+			p.Market = market_mapped.Read(files_market)
+			wg.Done()
+		}()
+		go func() {
+			p.Equip = equip_mapped.Read(files_equip)
+			wg.Done()
+		}()
+		go func() {
+			p.Goods = equipment_mapped.Read(files_goods)
+			wg.Done()
+		}()
+		go func() {
+			p.Shiparch = ship_mapped.Read(files_shiparch)
+			wg.Done()
+		}()
 
-		p.Market = market_mapped.Read(files_market)
-		p.Equip = equip_mapped.Read(files_equip)
-		p.Goods = equipment_mapped.Read(files_goods)
-		p.Shiparch = ship_mapped.Read(files_shiparch)
+		go func() {
+			p.InfocardmapINI = interface_mapped.Read(file_interface)
+			wg.Done()
+		}()
 
-		p.InfocardmapINI = interface_mapped.Read(file_interface)
+		go func() {
+			p.Infocards, _ = infocard_mapped.Read(filesystem, p.FreelancerINI, infocards_override)
+			wg.Done()
+		}()
 
-		p.Infocards, _ = infocard_mapped.Read(filesystem, p.FreelancerINI, infocards_override)
+		go func() {
+			p.InitialWorld = initialworld.Read(file_initialworld)
+			wg.Done()
+		}()
+		go func() {
+			p.Empathy = empathy_mapped.Read(file_empathy)
+			wg.Done()
+		}()
+		go func() {
+			p.MBases = mbases_mapped.Read(file_mbases)
+			wg.Done()
+		}()
+		go func() {
+			p.Consts = const_mapped.Read(file_consts)
+			wg.Done()
+		}()
+		go func() {
+			p.WeaponMods = weaponmoddb.Read(file_weaponmoddb)
+			wg.Done()
+		}()
 
-		p.InitialWorld = initialworld.Read(file_initialworld)
-		p.Empathy = empathy_mapped.Read(file_empathy)
-		p.MBases = mbases_mapped.Read(file_mbases)
-		p.Consts = const_mapped.Read(file_consts)
-		p.WeaponMods = weaponmoddb.Read(file_weaponmoddb)
+		go func() {
+			p.NpcRankToDiff = npcranktodiff.Read(file_npcranktodiff)
+			p.DiffToMoney = diff2money.Read(file_diff2money)
+			wg.Done()
+		}()
 
 		if p.Discovery != nil {
-			p.Discovery.Techcompat = techcompat.Read(file_techcompat)
-			p.Discovery.Prices = discoprices.Read(file_prices)
+			wg.Add(2)
+			go func() {
+				p.Discovery.Techcompat = techcompat.Read(file_techcompat)
+				wg.Done()
+			}()
+			go func() {
+				p.Discovery.Prices = discoprices.Read(file_prices)
+				wg.Done()
+			}()
 		}
+		wg.Wait()
 	}, time_measure.WithMsg("Mapped stuff"))
 
 	logus.Log.Info("Parse OK for FreelancerFolderLocation=", utils_logus.FilePath(file1path))

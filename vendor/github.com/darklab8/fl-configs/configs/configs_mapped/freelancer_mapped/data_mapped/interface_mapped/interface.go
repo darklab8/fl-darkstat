@@ -37,10 +37,10 @@ func Read(input_file *iniload.IniLoader) *Config {
 		for _, mappy := range resources[0].ParamMap["map"] {
 
 			id_key, err := strconv.Atoi(mappy.First.AsString())
-			logus.Log.CheckFatal(err, "failed to read number from infocardmaptable")
+			logus.Log.CheckPanic(err, "failed to read number from infocardmaptable")
 
 			id_value, err := strconv.Atoi(mappy.Values[1].AsString())
-			logus.Log.CheckFatal(err, "failed to read number from infocardmaptable")
+			logus.Log.CheckPanic(err, "failed to read number from infocardmaptable")
 
 			frelconfig.InfocardMapTable.Map[id_key] = id_value
 		}

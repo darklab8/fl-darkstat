@@ -109,4 +109,6 @@ type Base struct {
 	BGCS_base_run_by string
 	MarketGoods      []MarketGood
 	Pos              conftypes.Vector
+
+	Missions BaseMissions
 }

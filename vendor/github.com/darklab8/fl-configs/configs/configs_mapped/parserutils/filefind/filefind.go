@@ -36,7 +36,7 @@ func FindConfigs(folderpath utils_types.FilePath) *Filesystem {
 			return nil
 		}
 
-		logus.Log.CheckFatal(err, "unable to read file")
+		logus.Log.CheckPanic(err, "unable to read file")
 
 		file := file.NewFile(utils_types.FilePath(path))
 		filesystem.Files = append(filesystem.Files, file)
@@ -47,7 +47,7 @@ func FindConfigs(folderpath utils_types.FilePath) *Filesystem {
 		return nil
 	})
 
-	logus.Log.CheckFatal(err, "unable to read files")
+	logus.Log.CheckPanic(err, "unable to read files")
 	return filesystem
 }
 

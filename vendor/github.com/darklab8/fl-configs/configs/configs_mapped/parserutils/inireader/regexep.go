@@ -13,5 +13,5 @@ func InitRegexExpression(regex **regexp.Regexp, expression string) {
 	var err error
 
 	*regex, err = regexp.Compile(expression)
-	logus.Log.CheckFatal(err, "failed to parse numberParser in ", utils_logus.FilePath(utils.GetCurrentFile()))
+	logus.Log.CheckPanic(err, "failed to parse numberParser in ", utils_logus.FilePath(utils.GetCurrentFile()))
 }

@@ -18,12 +18,20 @@ type Mroom struct {
 	Bartrender       *semantic.String
 }
 
+type MissionType struct {
+	semantic.Model
+	MinDifficulty *semantic.Float
+	MaxDifficulty *semantic.Float
+	Weight        *semantic.Int
+}
+
 type BaseFaction struct {
 	semantic.Model
 
-	Faction *semantic.String
-	Weight  *semantic.Int
-	Npcs    []*semantic.String
+	MissionType *MissionType
+	Faction     *semantic.String
+	Weight      *semantic.Int
+	Npcs        []*semantic.String
 }
 
 type Bribe struct {
@@ -52,6 +60,12 @@ type NPC struct {
 	Affiliation *semantic.String
 }
 
+type MVendor struct {
+	semantic.Model
+	MinOffers *semantic.Int
+	MaxOffers *semantic.Int
+}
+
 type Base struct {
 	semantic.Model
 
@@ -63,6 +77,7 @@ type Base struct {
 	BaseFactionsMap map[string]*BaseFaction
 	NPCs            []*NPC
 	Bar             *Mroom
+	MVendor         *MVendor
 }
 
 type Config struct {
@@ -99,12 +114,26 @@ func Read(input_file *iniload.IniLoader) *Config {
 				section := input_file.Sections[j]
 
 				switch section.Type {
+				case "[MVendor]":
+					vendor := &MVendor{
+						MinOffers: semantic.NewInt(section, "num_offers", semantic.Order(0)),
+						MaxOffers: semantic.NewInt(section, "num_offers", semantic.Order(1)),
+					}
+					base.MVendor = vendor
 				case "[BaseFaction]":
 					faction := &BaseFaction{
 						Faction: semantic.NewString(section, "faction", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 						Weight:  semantic.NewInt(section, "weight"),
 					}
 					faction.Map(section)
+
+					mission_type := &MissionType{
+						MinDifficulty: semantic.NewFloat(section, "mission_type", semantic.Precision(2), semantic.Order(1)),
+						MaxDifficulty: semantic.NewFloat(section, "mission_type", semantic.Precision(2), semantic.Order(2)),
+						Weight:        semantic.NewInt(section, "mission_type", semantic.Order(3)),
+					}
+					mission_type.Map(section)
+					faction.MissionType = mission_type
 
 					for index, _ := range section.ParamMap["npc"] {
 						faction.Npcs = append(faction.Npcs,

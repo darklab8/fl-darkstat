@@ -121,7 +121,7 @@ func init() {
 
 func InitRegexExpression(expression string) *regexp.Regexp {
 	regex, err := regexp.Compile(string(expression))
-	logus.Log.CheckFatal(err, "failed to init regex={%s} in ", typelog.String("expression", expression))
+	logus.Log.CheckPanic(err, "failed to init regex={%s} in ", typelog.String("expression", expression))
 	return regex
 }
 

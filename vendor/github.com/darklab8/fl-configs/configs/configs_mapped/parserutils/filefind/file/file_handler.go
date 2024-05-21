@@ -50,7 +50,7 @@ func (f *File) openToReadF() *File {
 	file, err := os.Open(string(f.filepath))
 	f.file = file
 
-	logus.Log.CheckFatal(err, "failed to open ", utils_logus.FilePath(f.filepath))
+	logus.Log.CheckPanic(err, "failed to open ", utils_logus.FilePath(f.filepath))
 	return f
 }
 
@@ -114,12 +114,12 @@ func (f *File) WriteLines() {
 func (f *File) createToWriteF() *File {
 	file, err := os.Create(string(f.filepath))
 	f.file = file
-	logus.Log.CheckFatal(err, "failed to open ", utils_logus.FilePath(f.filepath))
+	logus.Log.CheckPanic(err, "failed to open ", utils_logus.FilePath(f.filepath))
 
 	return f
 }
 func (f *File) writelnF(msg string) {
 	_, err := f.file.WriteString(fmt.Sprintf("%v\n", msg))
 
-	logus.Log.CheckFatal(err, "failed to write string to file")
+	logus.Log.CheckPanic(err, "failed to write string to file")
 }

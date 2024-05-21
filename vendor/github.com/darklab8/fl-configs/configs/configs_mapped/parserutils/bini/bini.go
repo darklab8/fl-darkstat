@@ -43,7 +43,7 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 
 	var string_table map[int]string = make(map[int]string)
 	data, err := os.ReadFile(path.ToString())
-	logus.Log.CheckFatal(err, "uunable to open file", utils_logus.FilePath(path))
+	logus.Log.CheckPanic(err, "uunable to open file", utils_logus.FilePath(path))
 
 	file_size := len(data)
 
@@ -80,7 +80,7 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 
 		tr := charmap.Windows1252.NewDecoder().Reader(strings.NewReader(string(table)))
 		windows_decoded, err := io.ReadAll(tr)
-		logus.Log.CheckFatal(err, "failed decoding to 1252", utils_logus.FilePath(path))
+		logus.Log.CheckPanic(err, "failed decoding to 1252", utils_logus.FilePath(path))
 
 		string_table[count] = string(windows_decoded) // to lower
 		count += len(table) + 1
