@@ -14,11 +14,25 @@ func InfocardURL(infocard_key configs_export.InfocardKey) string {
 	return "infocards/info_" + strings.ToLower(string(infocard_key))
 }
 
-func BaseMarketGoodUrl(base configs_export.Base) string {
-	return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname)
+func BaseDetailedUrl(base configs_export.Base, tab_mode BaseMode) string {
+
+	if tab_mode == BaseShowShops {
+		return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname)
+	} else if tab_mode == BaseShowMissions {
+		return "bases/missions/msns_" + strings.ToLower(base.Nickname)
+	}
+
+	panic("not supported mode for base")
 }
 
-templ BasesTable(bases []configs_export.Base, pinm PinMod) {
+type BaseMode int64
+
+const (
+	BaseShowShops BaseMode = iota
+	BaseShowMissions
+)
+
+templ BasesTable(bases []configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -29,6 +43,13 @@ templ BasesTable(bases []configs_export.Base, pinm PinMod) {
 				}
 				<th style="min-width:200px;">Owner - Faction</th>
 				<th style="min-width:100px;">System</th>
+				if tab_mode == BaseShowMissions {
+					<th style="min-width:50px;">Avg Award</th>
+					<th style="min-width:50px;">Max Award</th>
+					<th style="min-width:50px;">Min Offers</th>
+					<th style="min-width:50px;">Max Offers</th>
+					<th style="min-width:50px;">Ship Ranks</th>
+				}
 				<th style="min-width:200px;">Base Nickname</th>
 				<th style="min-width:50px;">System Nickname</th>
 				<th style="min-width:50px;">Pos X</th>
@@ -41,18 +62,25 @@ templ BasesTable(bases []configs_export.Base, pinm PinMod) {
 		</thead>
 		<tbody>
 			for _, base := range bases {
-				@BaseRow(base, pinm)
+				@BaseRow(base, tab_mode, pinm)
 			}
 		</tbody>
 	</table>
 }
 
-templ BaseRow(base configs_export.Base, pinm PinMod) {
-	@TrFromMainTb(base.Nickname, BaseMarketGoodUrl(base), pinm) {
+templ BaseRow(base configs_export.Base, tab_mode BaseMode, pinm PinMod) {
+	@TrFromMainTb(base.Nickname, BaseDetailedUrl(base, tab_mode), pinm) {
 		@PinTd(base.Nickname, base.Name, pinm)
-		@PinSelectLeftRight(pinm, BaseMarketGoodUrl(base))
+		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		<td>{ base.FactionName }</td>
 		<td>{ base.System }</td>
+		if tab_mode == BaseShowMissions {
+			<td>{ strconv.Itoa(base.Missions.AvgMoneyAward) }</td>
+			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
+			<td>{ strconv.Itoa(base.Missions.MinOffers) }</td>
+			<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>
+			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.ShipRanks)), ",") }</td>
+		}
 		<td>{ base.Nickname }</td>
 		<td>{ base.SystemNickname }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
@@ -66,26 +94,38 @@ templ BaseRow(base configs_export.Base, pinm PinMod) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []configs_export.Base, mode ShowEmpty) {
-	@TabMenu(urls.Bases, mode)
+templ BasesT(bases []configs_export.Base, tab_mode BaseMode, mode ShowEmpty) {
+	if tab_mode == BaseShowShops {
+		@TabMenu(urls.Bases, mode)
+	} else if tab_mode == BaseShowMissions {
+		@TabMenu(urls.Missions, mode)
+	}
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
 					@FilterBar(fronttypes.DiscoveryIDs{})
 					<div id="table-top-main">
-						@BasesTable(bases, MainMode)
+						@BasesTable(bases, tab_mode, MainMode)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@BasesTable(bases, PinMode)
+						@BasesTable(bases, tab_mode, PinMode)
 					</div>
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
-						@BaseMarketGoodsBase()
+						if tab_mode == BaseShowShops {
+							@BaseMarketGoodsBase()
+						} else if tab_mode == BaseShowMissions {
+							@BaseMissionsBase()
+						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@BaseMarketGoodsBase()
+						if tab_mode == BaseShowShops {
+							@BaseMarketGoodsBase()
+						} else if tab_mode == BaseShowMissions {
+							@BaseMissionsBase()
+						}
 					</div>
 				</div>
 			</div>
@@ -119,7 +159,7 @@ templ BaseMarketGoodsBase() {
 	</table>
 }
 
-templ BaseMarketGoods(name string, goods []configs_export.MarketGood) {
+templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode BaseMode) {
 	<div class="bottom_name">{ name }</div>
 	@BaseMarketGoodsBase() {
 		for _, good := range goods {
@@ -140,6 +180,50 @@ templ BaseMarketGoods(name string, goods []configs_export.MarketGood) {
 				<td>{ strconv.Itoa(good.PriceBase) }</td>
 				<td>{ good.Nickname }</td>
 				<td>{ good.HpType }</td>
+				<td></td>
+			</tr>
+		}
+	}
+}
+
+templ BaseMissionsBase() {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="min-width:200px;">Faction</th>
+				<th style="min-width:100px;">Min Difficulty</th>
+				<th style="min-width:50px;">Max Difficulty</th>
+				<th style="min-width:50px;">Chance</th>
+				<th style="min-width:50px;">Money Award</th>
+				<th style="min-width:50px;">NpcRanks</th>
+				<th style="min-width:300px;">Faction Nickname</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_mode BaseMode) {
+	<div class="bottom_name">{ name }</div>
+	@BaseMissionsBase() {
+		for _, msn_giver := range mission_givers.Factions {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(msn_giver.Infocard) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+				preload="mouseover"
+			>
+				<td>{ msn_giver.FactionName }</td>
+				<td>{ fmt.Sprintf("%.2f", msn_giver.MinDifficulty) }</td>
+				<td>{ fmt.Sprintf("%.2f", msn_giver.MaxDifficulty) }</td>
+				<td>{ strconv.Itoa(msn_giver.Weight) }</td>
+				<td>{ strconv.Itoa(msn_giver.MoneyAward) }</td>
+				// Add here reputation requirements to get missions
+				<td>{ strings.Join(strings.Fields(fmt.Sprint(msn_giver.NpcRanks)), ",") }</td>
 				<td></td>
 			</tr>
 		}

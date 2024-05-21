@@ -285,11 +285,19 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Bases,
-					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.ShowEmpty(false)),
+					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, front.ShowEmpty(false)),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Bases),
-					front.BasesT(data.Bases, front.ShowEmpty(true)),
+					front.BasesT(data.Bases, front.BaseShowShops, front.ShowEmpty(true)),
+				),
+				builder.NewComponent(
+					urls.Missions,
+					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, front.ShowEmpty(false)),
+				),
+				builder.NewComponent(
+					front.AllItemsUrl(urls.Missions),
+					front.BasesT(data.Bases, front.BaseShowMissions, front.ShowEmpty(true)),
 				),
 				builder.NewComponent(
 					urls.Factions,
@@ -408,8 +416,12 @@ func (l *Linker) Link() *builder.Builder {
 			for _, base := range data.Bases {
 				build.RegComps(
 					builder.NewComponent(
-						utils_types.FilePath(front.BaseMarketGoodUrl(base)),
-						front.BaseMarketGoods(base.Name, base.MarketGoods),
+						utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseShowShops)),
+						front.BaseMarketGoods(base.Name, base.MarketGoods, front.BaseShowShops),
+					),
+					builder.NewComponent(
+						utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseShowMissions)),
+						front.BaseMissions(base.Name, base.Missions, front.BaseShowMissions),
 					),
 				)
 			}
