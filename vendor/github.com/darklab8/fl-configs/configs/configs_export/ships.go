@@ -111,7 +111,7 @@ func (e *Exporter) GetShips(ids []Tractor) []Ship {
 
 						ship.MaxAngularSpeedDegS *= Pi180
 
-						// Estimation made on mn my own formula :/
+						// Estimation made on my own formula :/
 						if ship.TimeTo90MaxAngularSpeed > 0.5 {
 							ship.AngularDistanceFrom0ToHalfSec = ship.MaxAngularSpeedDegS * (0.5 / ship.TimeTo90MaxAngularSpeed) / 2
 						} else {
