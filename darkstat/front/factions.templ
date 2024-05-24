@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-configs/configs/config_consts"
 	"fmt"
 	"strings"
 )
@@ -125,6 +126,7 @@ templ FactionRepsBase() {
 				<th style="width:200px;">Name</th>
 				<th style="width:100px;">Reputation</th>
 				<th style="width:50px;">Empathy Rate</th>
+				<th style="width:50px;">Relationship</th>
 				<th style="width:50px;">Nickname</th>
 				<th style="max-width:100%;"></th>
 			</tr>
@@ -149,6 +151,7 @@ templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputati
 				<td>{ rep.Name }</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Rep) }</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Empathy) }</td>
+				<td>{ config_consts.GetRelationshipStatus(rep.Rep).ToStr() }</td>
 				<td>{ rep.Nickname }</td>
 				<td></td>
 			</tr>

@@ -81,13 +81,17 @@ func (l *Linker) Link() *builder.Builder {
 				return data.Factions[i].Name < data.Factions[j].Name
 			})
 
-			for _, faction := range data.Factions {
-				sort.Slice(faction.Reputations, func(i, j int) bool {
-					if faction.Reputations[i].Name != "" && faction.Reputations[j].Name == "" {
-						return true
+			for fac_index, faction := range data.Factions {
+				var reps []configs_export.Reputation = make([]configs_export.Reputation, 0, len(faction.Reputations))
+				for _, rep := range faction.Reputations {
+					if rep.Name != "" {
+						reps = append(reps, rep)
 					}
-					return faction.Reputations[i].Name < faction.Reputations[j].Name
+				}
+				sort.Slice(reps, func(i, j int) bool {
+					return reps[i].Rep > reps[j].Rep
 				})
+				data.Factions[fac_index].Reputations = reps
 			}
 
 			sort.Slice(data.Commodities, func(i, j int) bool {
