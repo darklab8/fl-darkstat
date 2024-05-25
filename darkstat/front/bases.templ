@@ -240,7 +240,7 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 				<td>
 					@PrintEnemies(msn_giver.Enemies)
 				</td>
-				<td>{ strings.Join(strings.Fields(fmt.Sprint(msn_giver.FactionName)), ",") }</td>
+				<td>{ strings.Join(strings.Fields(fmt.Sprint(msn_giver.NpcRanks)), ",") }</td>
 				<td>
 					if msn_giver.Err != nil {
 						{ msn_giver.Err.Error() }
