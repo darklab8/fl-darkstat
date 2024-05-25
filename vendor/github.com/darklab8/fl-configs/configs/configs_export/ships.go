@@ -189,7 +189,7 @@ type EquipmentSlot struct {
 	AllowedEquip []string
 }
 
-var Pi180 = 57.29578 // number turning radians to degrees
+var Pi180 = 180 / math.Pi // number turning radians to degrees
 var LogOgE = math.Log10(math.E)
 
 func FilterToUsefulShips(ships []Ship) []Ship {
