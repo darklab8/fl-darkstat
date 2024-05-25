@@ -10,7 +10,6 @@ import (
 	"github.com/darklab8/fl-configs/configs/config_consts"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
-	"github.com/darklab8/fl-configs/configs/settings/logus"
 )
 
 type MissioNFaction struct {
@@ -224,26 +223,28 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 					continue
 				}
 
-				matched_vignette := false
-				for _, vignette := range system.MissionZoneVignettes {
+				// EXPERIMENTAL: Turned off check for vignette check to be within npc spawning zones.
+				// looks to be not necessary
+				// matched_vignette := false
+				// for _, vignette := range system.MissionZoneVignettes {
 
-					distance, dist_err := DistanceForVecs(system_base.Pos, npc_spawn_zone.Pos)
-					if dist_err != nil {
-						continue
-					}
+				// 	distance, dist_err := DistanceForVecs(vignette.Pos, npc_spawn_zone.Pos)
+				// 	if dist_err != nil {
+				// 		continue
+				// 	}
 
-					max_spwn_zone_size, err_max_size := GetMaxRadius(npc_spawn_zone.Size)
-					logus.Log.CheckWarn(err_max_size, "expected finding max size, but object does not have it")
+				// 	max_spwn_zone_size, err_max_size := GetMaxRadius(npc_spawn_zone.Size)
+				// 	logus.Log.CheckWarn(err_max_size, "expected finding max size, but object does not have it")
 
-					if distance < float64(vignette.Size.Get())+max_spwn_zone_size {
-						matched_vignette = true
-						break
-					}
-				}
+				// 	if distance < float64(vignette.Size.Get())+max_spwn_zone_size {
+				// 		matched_vignette = true
+				// 		break
+				// 	}
+				// }
 
-				if !matched_vignette {
-					continue
-				}
+				// if !matched_vignette {
+				// 	continue
+				// }
 
 				for _, enemy := range enemies {
 					faction_enemy, faction_found := factions_map[enemy.FactionNickname.Get()]
@@ -287,10 +288,6 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 			base.Missions.MaxOffers, _ = base_info.MVendor.MaxOffers.GetValue()
 		}
 
-		if strings.Contains(base.Name, "Essex") {
-			fmt.Println()
-		}
-
 		// summarization for base
 		for fc_index, faction := range base.Missions.Factions {
 			if faction.Err != nil {
@@ -318,7 +315,7 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 		}
 
 		// add unique found ship categories from factions to Missions overview
-		for key, _ := range base.Missions.NpcRanksAtBaseMap {
+		for key := range base.Missions.NpcRanksAtBaseMap {
 			base.Missions.NpcRanksAtBase = append(base.Missions.NpcRanksAtBase, key)
 		}
 		sort.Ints(base.Missions.NpcRanksAtBase)
