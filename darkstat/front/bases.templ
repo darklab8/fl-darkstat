@@ -49,6 +49,8 @@ templ BasesTable(bases []configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					<th style="min-width:50px;">Min Offers</th>
 					<th style="min-width:50px;">Max Offers</th>
 					<th style="min-width:50px;">Ship Ranks</th>
+					<th style="min-width:50px;">Enemies</th>
+					<th style="min-width:50px;">Error</th>
 				}
 				<th style="min-width:200px;">Base Nickname</th>
 				<th style="min-width:50px;">System Nickname</th>
@@ -79,7 +81,15 @@ templ BaseRow(base configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MinOffers) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>
-			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.ShipRanks)), ",") }</td>
+			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
+			<td>
+				@PrintEnemies(EnemistToList(base.Missions.EnemiesAtBaseMap))
+			</td>
+			<td>
+				if base.Missions.Err != nil {
+					{ base.Missions.Err.Error() }
+				}
+			</td>
 		}
 		<td>{ base.Nickname }</td>
 		<td>{ base.SystemNickname }</td>
@@ -194,8 +204,12 @@ templ BaseMissionsBase() {
 				<th style="min-width:100px;">Min Difficulty</th>
 				<th style="min-width:50px;">Max Difficulty</th>
 				<th style="min-width:50px;">Chance</th>
-				<th style="min-width:50px;">Money Award</th>
+				<th style="min-width:50px;">Min Money Award</th>
+				<th style="min-width:50px;">Max Money Award</th>
+				<th style="min-width:50px;">Enemies</th>
+				// <th style="min-width:50px;">Rep Req</th> // can it be used?
 				<th style="min-width:50px;">NpcRanks</th>
+				<th style="min-width:300px;">Error</th>
 				<th style="min-width:300px;">Faction Nickname</th>
 				<th style="max-width:100%;"></th>
 			</tr>
@@ -221,11 +235,40 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 				<td>{ fmt.Sprintf("%.2f", msn_giver.MinDifficulty) }</td>
 				<td>{ fmt.Sprintf("%.2f", msn_giver.MaxDifficulty) }</td>
 				<td>{ strconv.Itoa(msn_giver.Weight) }</td>
-				<td>{ strconv.Itoa(msn_giver.MoneyAward) }</td>
-				// Add here reputation requirements to get missions
-				<td>{ strings.Join(strings.Fields(fmt.Sprint(msn_giver.NpcRanks)), ",") }</td>
+				<td>{ strconv.Itoa(msn_giver.MinAward) }</td>
+				<td>{ strconv.Itoa(msn_giver.MaxAward) }</td>
+				<td>
+					@PrintEnemies(msn_giver.Enemies)
+				</td>
+				<td>{ strings.Join(strings.Fields(fmt.Sprint(msn_giver.FactionName)), ",") }</td>
+				<td>
+					if msn_giver.Err != nil {
+						{ msn_giver.Err.Error() }
+					}
+				</td>
+				<td>{ msn_giver.FactionNickname }</td>
 				<td></td>
 			</tr>
+		}
+	}
+}
+
+func EnemistToList(enemies map[string]configs_export.Faction) []configs_export.Faction {
+	var result []configs_export.Faction = make([]configs_export.Faction, 0, len(enemies))
+	for _, enemy := range enemies {
+		if enemy.Nickname == "" {
+			continue
+		}
+		result = append(result, enemy)
+	}
+	return result
+}
+
+templ PrintEnemies(enemies []configs_export.Faction) {
+	for enemy_index, enemy := range enemies {
+		{ enemy.Name } ( { enemy.Nickname } )
+		if enemy_index != len(enemies) - 1 {
+			{ ", " }
 		}
 	}
 }
