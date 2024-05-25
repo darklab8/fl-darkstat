@@ -2,10 +2,8 @@ package configs_export
 
 import (
 	"errors"
-	"fmt"
 	"math"
 	"sort"
-	"strings"
 
 	"github.com/darklab8/fl-configs/configs/config_consts"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
