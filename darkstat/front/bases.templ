@@ -44,7 +44,7 @@ templ BasesTable(bases []configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				<th style="min-width:200px;">Owner - Faction</th>
 				<th style="min-width:100px;">System</th>
 				if tab_mode == BaseShowMissions {
-					<th style="min-width:50px;">Avg Award</th>
+					<th style="min-width:50px;">Min Award</th>
 					<th style="min-width:50px;">Max Award</th>
 					<th style="min-width:50px;">Min Offers</th>
 					<th style="min-width:50px;">Max Offers</th>
@@ -77,7 +77,7 @@ templ BaseRow(base configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 		<td>{ base.FactionName }</td>
 		<td>{ base.System }</td>
 		if tab_mode == BaseShowMissions {
-			<td>{ strconv.Itoa(base.Missions.AvgMoneyAward) }</td>
+			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MinOffers) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>

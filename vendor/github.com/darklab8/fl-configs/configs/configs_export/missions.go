@@ -2,12 +2,15 @@ package configs_export
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"sort"
+	"strings"
 
 	"github.com/darklab8/fl-configs/configs/config_consts"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
+	"github.com/darklab8/fl-configs/configs/settings/logus"
 )
 
 type MissioNFaction struct {
@@ -35,7 +38,7 @@ type BaseMissions struct {
 
 	EnemiesAtBaseMap map[string]Faction
 
-	AvgMoneyAward int
+	MinMoneyAward int
 	MaxMoneyAward int
 	Err           error
 }
@@ -135,8 +138,16 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 				base.Missions.Factions = append(base.Missions.Factions, faction)
 				continue
 			}
+
 			faction.Infocard = faction_export_info.Infocard
 			faction.FactionName = faction_export_info.Name
+
+			_, gives_missions := faction_info.MissionType.MinDifficulty.GetValue()
+			if !gives_missions {
+				faction.Err = errors.New("mission_type is not in mbase")
+				base.Missions.Factions = append(base.Missions.Factions, faction)
+				continue
+			}
 
 			// Verify that faction has Spawn zones before adding
 			// Otherwise skip
@@ -221,7 +232,10 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 						continue
 					}
 
-					if distance < float64(vignette.Size.Get())+float64(npc_spawn_zone.Size.Get()) {
+					max_spwn_zone_size, err_max_size := GetMaxRadius(npc_spawn_zone.Size)
+					logus.Log.CheckWarn(err_max_size, "expected finding max size, but object does not have it")
+
+					if distance < float64(vignette.Size.Get())+max_spwn_zone_size {
 						matched_vignette = true
 						break
 					}
@@ -273,8 +287,11 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 			base.Missions.MaxOffers, _ = base_info.MVendor.MaxOffers.GetValue()
 		}
 
-		// Calculated base awardness
-		counted_factions := 0
+		if strings.Contains(base.Name, "Essex") {
+			fmt.Println()
+		}
+
+		// summarization for base
 		for fc_index, faction := range base.Missions.Factions {
 			if faction.Err != nil {
 				faction.MaxAward = 0
@@ -291,15 +308,13 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 				base.Missions.EnemiesAtBaseMap[enemy_faction.Nickname] = enemy_faction
 			}
 
-			base.Missions.AvgMoneyAward += ((faction.MaxAward + faction.MinAward) / 2)
-			counted_factions += 1
+			if faction.MinAward < base.Missions.MinMoneyAward || base.Missions.MinMoneyAward == 0 {
+				base.Missions.MinMoneyAward = faction.MinAward
+			}
 
 			if faction.MaxAward > base.Missions.MaxMoneyAward {
 				base.Missions.MaxMoneyAward = faction.MaxAward
 			}
-		}
-		if counted_factions == 0 {
-			counted_factions = 1
 		}
 
 		// add unique found ship categories from factions to Missions overview
@@ -308,7 +323,6 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 		}
 		sort.Ints(base.Missions.NpcRanksAtBase)
 
-		base.Missions.AvgMoneyAward = base.Missions.AvgMoneyAward / counted_factions
 		bases[base_index] = base
 	}
 
@@ -328,4 +342,28 @@ func DistanceForVecs(Pos1 *semantic.Vect, Pos2 *semantic.Vect) (float64, error) 
 	z_dist := math.Pow((Pos1.Z.Get() - Pos2.Z.Get()), 2)
 	distance := math.Pow((x_dist + y_dist + z_dist), 0.5)
 	return distance, nil
+}
+
+func GetMaxRadius(Size *semantic.Vect) (float64, error) {
+	max_size := 0.0
+	if value, ok := Size.X.GetValue(); ok {
+		if value > max_size {
+			max_size = value
+		}
+	}
+	if value, ok := Size.Y.GetValue(); ok {
+		if value > max_size {
+			max_size = value
+		}
+	}
+	if value, ok := Size.Z.GetValue(); ok {
+		if value > max_size {
+			max_size = value
+		}
+	}
+	if max_size == 0 {
+		return 0, errors.New("not found size")
+	}
+
+	return max_size, nil
 }

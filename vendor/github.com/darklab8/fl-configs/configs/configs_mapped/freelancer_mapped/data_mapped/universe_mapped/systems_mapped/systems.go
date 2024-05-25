@@ -51,7 +51,7 @@ type Patrol struct {
 type MissionPatrolZone struct {
 	semantic.Model
 	Nickname *semantic.String
-	Size     *semantic.Int
+	Size     *semantic.Vect
 	Shape    *semantic.String
 	Pos      *semantic.Vect
 
@@ -217,7 +217,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					if vignette_type, ok := zone_info.ParamMap["vignette_type"]; ok && len(vignette_type) > 0 {
 						vignette := &MissionVignetteZone{
 							Nickname:     semantic.NewString(zone_info, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Size:         semantic.NewInt(zone_info, "ids_info", semantic.Optional()),
+							Size:         semantic.NewInt(zone_info, "size", semantic.Optional()),
 							Shape:        semantic.NewString(zone_info, "shape", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Pos:          semantic.NewVector(zone_info, "pos", semantic.Precision(2)),
 							VignetteType: semantic.NewString(zone_info, "vignette_type", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -230,7 +230,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					if identifier, ok := zone_info.ParamMap["faction"]; ok && len(identifier) > 0 {
 						spawn_area := &MissionPatrolZone{
 							Nickname: semantic.NewString(zone_info, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Size:     semantic.NewInt(zone_info, "ids_info", semantic.Optional()),
+							Size:     semantic.NewVector(zone_info, "size", semantic.Precision(2)),
 							Shape:    semantic.NewString(zone_info, "shape", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Pos:      semantic.NewVector(zone_info, "pos", semantic.Precision(2)),
 						}
