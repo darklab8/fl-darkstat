@@ -2,10 +2,11 @@ package configs_export
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"sort"
+	"strings"
 
-	"github.com/darklab8/fl-configs/configs/config_consts"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
 )
@@ -67,6 +68,10 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 		base.Missions.NpcRanksAtBaseMap = make(map[int]bool)
 		base.Missions.EnemiesAtBaseMap = make(map[string]Faction)
 
+		if strings.Contains(base.Name, "Brixt") {
+			fmt.Println()
+		}
+
 		base_info, ok := e.configs.MBases.BaseMap[base.Nickname]
 		if !ok {
 			base.Missions.Err = errors.New("base is not defined in mbases")
@@ -104,7 +109,7 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 				continue
 			}
 
-			if distance < vignette_valid_base_mission_range-float64(vignette.Size.Get()) {
+			if distance < vignette_valid_base_mission_range+float64(vignette.Size.Get()) {
 				base_has_vignettes = true
 				break
 			}
@@ -148,13 +153,14 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 
 			// Verify that faction has Spawn zones before adding
 			// Otherwise skip
-			spawn_zones, found_zones := system.MissionsSpawnZonesByFaction[faction.FactionNickname]
-			if !found_zones {
-				faction.Err = errors.New("no mission faction npc spawning zones")
-				base.Missions.Factions = append(base.Missions.Factions, faction)
-				continue
-			}
-			_ = spawn_zones
+			// NEWS: Looks like boolshit condition. Delete once tuned
+			// spawn_zones, found_zones := system.MissionsSpawnZonesByFaction[faction.FactionNickname]
+			// if !found_zones {
+			// 	faction.Err = errors.New("no mission faction npc spawning zones")
+			// 	base.Missions.Factions = append(base.Missions.Factions, faction)
+			// 	continue
+			// }
+			// _ = spawn_zones
 
 			for money_index, diff_to_money := range diffs_to_money {
 
@@ -211,8 +217,8 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 					if !rep_exists {
 						continue
 					}
-					relationship_status := config_consts.GetRelationshipStatus(potential_enemy_rep.Rep)
-					if relationship_status == config_consts.RepEnemy {
+
+					if potential_enemy_rep.Rep <= -(0.3 - 0.001) {
 						enemies = append(enemies, potential_enemy)
 					}
 				}
