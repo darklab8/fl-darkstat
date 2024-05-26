@@ -46,7 +46,8 @@ templ BasesTable(bases []configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				if tab_mode == BaseShowMissions {
 					<th style="min-width:50px;">Min Award</th>
 					<th style="min-width:50px;">Max Award</th>
-					<th style="min-width:50px;">enemy NPCs exist</th>
+					<th style="min-width:50px;">Enemy NPCs exist</th>
+					<th style="min-width:50px;">Vignettes</th>
 					<th style="min-width:50px;">Min Offers</th>
 					<th style="min-width:50px;">Max Offers</th>
 					<th style="min-width:50px;">Ship Ranks</th>
@@ -81,6 +82,7 @@ templ BaseRow(base configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
 			<td>{ fmt.Sprintf("%.0f%%", base.Missions.NpcExist * 100) }</td>
+			<td>{ strconv.Itoa(base.Missions.Vignettes) }</td>
 			<td>{ strconv.Itoa(base.Missions.MinOffers) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>
 			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>

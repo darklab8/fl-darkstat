@@ -94,6 +94,7 @@ type BaseMissions struct {
 	MinMoneyAward int
 	MaxMoneyAward int
 	NpcExist      float64
+	Vignettes     int
 	Err           error
 }
 
@@ -157,7 +158,7 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 		}
 
 		// Verify that base vignette fields exist in 30k around of it, otherwise base is not able to start missions
-		base_has_vignettes := false
+
 		vignette_valid_base_mission_range := float64(30000)
 		for _, vignette := range system.MissionZoneVignettes {
 			distance, dist_err := DistanceForVecs(system_base.Pos, vignette.Pos)
@@ -166,12 +167,12 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 			}
 
 			if distance < vignette_valid_base_mission_range+float64(vignette.Size.Get()) {
-				base_has_vignettes = true
-				break
+				base.Missions.Vignettes += 1
+
 			}
 		}
 
-		if !base_has_vignettes {
+		if base.Missions.Vignettes == 0 {
 			base.Missions.Err = errors.New("base has no vignette zones")
 			bases[base_index] = base
 			continue
