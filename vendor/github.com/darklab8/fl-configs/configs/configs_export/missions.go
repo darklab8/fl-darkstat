@@ -12,7 +12,7 @@ import (
 
 type EnemyFaction struct {
 	Faction
-	NpcExist float64 // 0 to 1, percentage
+	NpcExist bool
 }
 
 /*
@@ -61,8 +61,7 @@ func (e *Exporter) NewEnemyFaction(faction Faction, npc_ranks []int) EnemyFactio
 		}
 	}
 
-	result.NpcExist = float64(len(npc_ranks_exist)) / float64(len(npc_ranks_need))
-
+	result.NpcExist = len(npc_ranks_exist) > 0
 	return result
 }
 
@@ -93,7 +92,6 @@ type BaseMissions struct {
 
 	MinMoneyAward int
 	MaxMoneyAward int
-	NpcExist      float64
 	Vignettes     int
 	Err           error
 }
@@ -281,9 +279,9 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 
 				// EXPERIMENTAL: Turned off check for vignette check to be within npc spawning zones.
 				// looks to be not necessary
-				if !IsAnyVignetteWithinNPCSpawnRange(system, npc_spawn_zone) {
-					continue
-				}
+				// if !IsAnyVignetteWithinNPCSpawnRange(system, npc_spawn_zone) {
+				// 	continue
+				// }
 
 				for _, enemy := range enemies {
 					faction_enemy, faction_found := factions_map[enemy.FactionNickname.Get()]
@@ -296,7 +294,7 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 			}
 
 			if len(base_enemies) == 0 {
-				faction.Err = errors.New("no enemy npc spawns near vignettes")
+				faction.Err = errors.New("no npc spawn zones with enemies")
 				base.Missions.Factions = append(base.Missions.Factions, faction)
 				continue
 			}
@@ -315,9 +313,33 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 			continue
 		}
 
+		npc_exist := false
+		for _, faction := range base.Missions.Factions {
+			if faction.Err != nil {
+				continue
+			}
+			for _, enemy_faction := range faction.Enemies {
+				if enemy_faction.NpcExist {
+					npc_exist = true
+				}
+			}
+		}
+		if !npc_exist {
+			base.Missions.Err = errors.New("npcs do not exist")
+			bases[base_index] = base
+			continue
+		}
+
 		if base_info.MVendor != nil {
 			base.Missions.MinOffers, _ = base_info.MVendor.MinOffers.GetValue()
 			base.Missions.MaxOffers, _ = base_info.MVendor.MaxOffers.GetValue()
+
+			if base.Missions.Vignettes < base.Missions.MinOffers {
+				base.Missions.MinOffers = base.Missions.Vignettes
+			}
+			if base.Missions.Vignettes < base.Missions.MaxOffers {
+				base.Missions.MaxOffers = base.Missions.Vignettes
+			}
 		}
 
 		// summarization for base
@@ -345,22 +367,6 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 				base.Missions.MaxMoneyAward = faction.MaxAward
 			}
 		}
-
-		npc_exists_count := 0
-		npc_exists_chance := 0.0
-		for _, faction := range base.Missions.Factions {
-			if faction.Err != nil {
-				continue
-			}
-			for _, enemy_faction := range faction.Enemies {
-				npc_exists_chance += enemy_faction.NpcExist
-				npc_exists_count += 1
-			}
-		}
-		if npc_exists_count == 0 {
-			npc_exists_count += 1
-		}
-		base.Missions.NpcExist = npc_exists_chance / float64(npc_exists_count)
 
 		// add unique found ship categories from factions to Missions overview
 		for key := range base.Missions.NpcRanksAtBaseMap {
