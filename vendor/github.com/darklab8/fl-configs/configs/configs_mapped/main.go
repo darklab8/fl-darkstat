@@ -11,7 +11,9 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/interface_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/empathy_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/faction_props_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/mbases_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/npc_ships"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/rnd_msns_mapped/diff2money"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/rnd_msns_mapped/npcranktodiff"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/ship_mapped"
@@ -65,6 +67,9 @@ type MappedConfigs struct {
 	NpcRankToDiff *npcranktodiff.Config
 	DiffToMoney   *diff2money.Config
 
+	FactionProps *faction_props_mapped.Config
+	NpcShips     *npc_ships.Config
+
 	Discovery *DiscoveryConfig
 }
 
@@ -98,6 +103,9 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 	file_diff2money := iniload.NewLoader(filesystem.GetFile(diff2money.FILENAME))
 	file_npcranktodiff := iniload.NewLoader(filesystem.GetFile(npcranktodiff.FILENAME))
 
+	file_faction_props := iniload.NewLoader(filesystem.GetFile(faction_props_mapped.FILENAME))
+	file_npc_ships := iniload.NewLoader(filesystem.GetFile(npc_ships.FILENAME))
+
 	all_files := append(files_goods, files_market...)
 	all_files = append(all_files, files_equip...)
 	all_files = append(all_files, files_shiparch...)
@@ -111,6 +119,8 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		file_weaponmoddb,
 		file_diff2money,
 		file_npcranktodiff,
+		file_faction_props,
+		file_npc_ships,
 	)
 
 	var file_techcompat *iniload.IniLoader
@@ -145,7 +155,8 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 		var wg sync.WaitGroup
-		wg.Add(13)
+
+		wg.Add(1)
 		go func() {
 			time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 				p.Universe_config = universe_mapped.Read(file_universe)
@@ -154,57 +165,72 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 			wg.Done()
 		}()
 
+		wg.Add(1)
 		go func() {
 			p.Market = market_mapped.Read(files_market)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			p.Equip = equip_mapped.Read(files_equip)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			p.Goods = equipment_mapped.Read(files_goods)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			p.Shiparch = ship_mapped.Read(files_shiparch)
 			wg.Done()
 		}()
-
+		wg.Add(1)
 		go func() {
 			p.InfocardmapINI = interface_mapped.Read(file_interface)
 			wg.Done()
 		}()
-
+		wg.Add(1)
 		go func() {
 			p.Infocards, _ = infocard_mapped.Read(filesystem, p.FreelancerINI, infocards_override)
 			wg.Done()
 		}()
-
+		wg.Add(1)
 		go func() {
 			p.InitialWorld = initialworld.Read(file_initialworld)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			p.Empathy = empathy_mapped.Read(file_empathy)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			p.MBases = mbases_mapped.Read(file_mbases)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			p.Consts = const_mapped.Read(file_consts)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			p.WeaponMods = weaponmoddb.Read(file_weaponmoddb)
 			wg.Done()
 		}()
-
+		wg.Add(1)
 		go func() {
 			p.NpcRankToDiff = npcranktodiff.Read(file_npcranktodiff)
 			p.DiffToMoney = diff2money.Read(file_diff2money)
+			wg.Done()
+		}()
+
+		wg.Add(1)
+		go func() {
+			p.FactionProps = faction_props_mapped.Read(file_faction_props)
+			p.NpcShips = npc_ships.Read(file_npc_ships)
 			wg.Done()
 		}()
 

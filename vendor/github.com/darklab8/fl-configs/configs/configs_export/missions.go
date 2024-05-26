@@ -3,13 +3,68 @@ package configs_export
 import (
 	"errors"
 	"fmt"
-	"math"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
-	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
 )
+
+type EnemyFaction struct {
+	Faction
+	NpcExist float64 // 0 to 1, percentage
+}
+
+/*
+Calculates for enemy faction percentage of ships defined in faction_props/npcships.ini
+If they aren't defined, Freelancer will be showing corrupted no missions when they encounter.
+*/
+func (e *Exporter) NewEnemyFaction(faction Faction, npc_ranks []int) EnemyFaction {
+	var npc_ranks_need map[int]bool = make(map[int]bool)
+	for _, rank := range npc_ranks {
+		npc_ranks_need[rank] = true
+	}
+
+	var npc_ranks_exist map[int]bool = make(map[int]bool)
+
+	result := EnemyFaction{
+		Faction: faction,
+	}
+
+	faction_prop, prop_exists := e.configs.FactionProps.FactionPropMapByNickname[faction.Nickname]
+
+	if !prop_exists {
+		return result
+	}
+
+	for _, npc_ship := range faction_prop.NpcShips {
+		npc_ship_nickname := npc_ship.Get()
+		if npc_shiparch, ok := e.configs.NpcShips.NpcShipsByNickname[npc_ship_nickname]; ok {
+
+			has_class_fighter := false
+			for _, npc_class := range npc_shiparch.NpcClass {
+				if npc_class.Get() == "class_fighter" {
+					has_class_fighter = true
+					break
+				}
+			}
+			if !has_class_fighter {
+				continue
+			}
+			str_level := npc_shiparch.Level.Get()
+			if level, err := strconv.Atoi(str_level[1:]); err == nil {
+
+				if _, ok := npc_ranks_need[level]; ok {
+					npc_ranks_exist[level] = true
+				}
+			}
+		}
+	}
+
+	result.NpcExist = float64(len(npc_ranks_exist)) / float64(len(npc_ranks_need))
+
+	return result
+}
 
 type MissioNFaction struct {
 	FactionName     string
@@ -23,7 +78,7 @@ type MissioNFaction struct {
 	MinAward int
 	MaxAward int
 	NpcRanks []int
-	Enemies  []Faction
+	Enemies  []EnemyFaction
 	Err      error
 }
 
@@ -34,10 +89,11 @@ type BaseMissions struct {
 	NpcRanksAtBaseMap map[int]bool
 	NpcRanksAtBase    []int
 
-	EnemiesAtBaseMap map[string]Faction
+	EnemiesAtBaseMap map[string]EnemyFaction
 
 	MinMoneyAward int
 	MaxMoneyAward int
+	NpcExist      float64
 	Err           error
 }
 
@@ -66,7 +122,7 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 
 	for base_index, base := range bases {
 		base.Missions.NpcRanksAtBaseMap = make(map[int]bool)
-		base.Missions.EnemiesAtBaseMap = make(map[string]Faction)
+		base.Missions.EnemiesAtBaseMap = make(map[string]EnemyFaction)
 
 		if strings.Contains(base.Name, "Brixt") {
 			fmt.Println()
@@ -121,6 +177,12 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 			continue
 		}
 
+		if base_info.MVendor == nil {
+			base.Missions.Err = errors.New("no mvendor in mbase")
+			bases[base_index] = base
+			continue
+		}
+
 		for _, faction_info := range base_info.BaseFactions {
 			faction := MissioNFaction{
 				FactionNickname: faction_info.Faction.Get(),
@@ -150,17 +212,6 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 				base.Missions.Factions = append(base.Missions.Factions, faction)
 				continue
 			}
-
-			// Verify that faction has Spawn zones before adding
-			// Otherwise skip
-			// NEWS: Looks like boolshit condition. Delete once tuned
-			// spawn_zones, found_zones := system.MissionsSpawnZonesByFaction[faction.FactionNickname]
-			// if !found_zones {
-			// 	faction.Err = errors.New("no mission faction npc spawning zones")
-			// 	base.Missions.Factions = append(base.Missions.Factions, faction)
-			// 	continue
-			// }
-			// _ = spawn_zones
 
 			for money_index, diff_to_money := range diffs_to_money {
 
@@ -229,26 +280,9 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 
 				// EXPERIMENTAL: Turned off check for vignette check to be within npc spawning zones.
 				// looks to be not necessary
-				// matched_vignette := false
-				// for _, vignette := range system.MissionZoneVignettes {
-
-				// 	distance, dist_err := DistanceForVecs(vignette.Pos, npc_spawn_zone.Pos)
-				// 	if dist_err != nil {
-				// 		continue
-				// 	}
-
-				// 	max_spwn_zone_size, err_max_size := GetMaxRadius(npc_spawn_zone.Size)
-				// 	logus.Log.CheckWarn(err_max_size, "expected finding max size, but object does not have it")
-
-				// 	if distance < float64(vignette.Size.Get())+max_spwn_zone_size {
-				// 		matched_vignette = true
-				// 		break
-				// 	}
-				// }
-
-				// if !matched_vignette {
-				// 	continue
-				// }
+				if !IsAnyVignetteWithinNPCSpawnRange(system, npc_spawn_zone) {
+					continue
+				}
 
 				for _, enemy := range enemies {
 					faction_enemy, faction_found := factions_map[enemy.FactionNickname.Get()]
@@ -260,20 +294,13 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 				}
 			}
 
-			// Find if the factions has defined NPCs in faction_prop.ini
-			// Which have the necessary NPCRank
-			// if not defined, then skip this faction
-			// Add class of ships that will be encountered during missions of this faction
-			// for _, enemy_faction := range base_enemies {
-			// }
-
 			if len(base_enemies) == 0 {
 				faction.Err = errors.New("no enemy npc spawns near vignettes")
 				base.Missions.Factions = append(base.Missions.Factions, faction)
 				continue
 			}
 			for _, enemy_faction := range base_enemies {
-				faction.Enemies = append(faction.Enemies, enemy_faction)
+				faction.Enemies = append(faction.Enemies, e.NewEnemyFaction(enemy_faction, faction.NpcRanks))
 			}
 
 			base.Missions.Factions = append(base.Missions.Factions, faction)
@@ -318,6 +345,22 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 			}
 		}
 
+		npc_exists_count := 0
+		npc_exists_chance := 0.0
+		for _, faction := range base.Missions.Factions {
+			if faction.Err != nil {
+				continue
+			}
+			for _, enemy_faction := range faction.Enemies {
+				npc_exists_chance += enemy_faction.NpcExist
+				npc_exists_count += 1
+			}
+		}
+		if npc_exists_count == 0 {
+			npc_exists_count += 1
+		}
+		base.Missions.NpcExist = npc_exists_chance / float64(npc_exists_count)
+
 		// add unique found ship categories from factions to Missions overview
 		for key := range base.Missions.NpcRanksAtBaseMap {
 			base.Missions.NpcRanksAtBase = append(base.Missions.NpcRanksAtBase, key)
@@ -328,43 +371,4 @@ func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
 	}
 
 	return bases
-}
-
-func DistanceForVecs(Pos1 *semantic.Vect, Pos2 *semantic.Vect) (float64, error) {
-	if _, ok := Pos1.X.GetValue(); !ok {
-		return 0, errors.New("no x")
-	}
-	if _, ok := Pos2.X.GetValue(); !ok {
-		return 0, errors.New("no x")
-	}
-
-	x_dist := math.Pow((Pos1.X.Get() - Pos2.X.Get()), 2)
-	y_dist := math.Pow((Pos1.Y.Get() - Pos2.Y.Get()), 2)
-	z_dist := math.Pow((Pos1.Z.Get() - Pos2.Z.Get()), 2)
-	distance := math.Pow((x_dist + y_dist + z_dist), 0.5)
-	return distance, nil
-}
-
-func GetMaxRadius(Size *semantic.Vect) (float64, error) {
-	max_size := 0.0
-	if value, ok := Size.X.GetValue(); ok {
-		if value > max_size {
-			max_size = value
-		}
-	}
-	if value, ok := Size.Y.GetValue(); ok {
-		if value > max_size {
-			max_size = value
-		}
-	}
-	if value, ok := Size.Z.GetValue(); ok {
-		if value > max_size {
-			max_size = value
-		}
-	}
-	if max_size == 0 {
-		return 0, errors.New("not found size")
-	}
-
-	return max_size, nil
 }
