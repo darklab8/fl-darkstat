@@ -46,6 +46,7 @@ templ BasesTable(bases []configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				if tab_mode == BaseShowMissions {
 					<th style="min-width:50px;">Min Award</th>
 					<th style="min-width:50px;">Max Award</th>
+					<th style="min-width:50px;">enemy NPCs exist</th>
 					<th style="min-width:50px;">Min Offers</th>
 					<th style="min-width:50px;">Max Offers</th>
 					<th style="min-width:50px;">Ship Ranks</th>
@@ -79,6 +80,7 @@ templ BaseRow(base configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 		if tab_mode == BaseShowMissions {
 			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
+			<td>{ fmt.Sprintf("%.0f%%", base.Missions.NpcExist * 100) }</td>
 			<td>{ strconv.Itoa(base.Missions.MinOffers) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>
 			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
@@ -206,7 +208,7 @@ templ BaseMissionsBase() {
 				<th style="min-width:50px;">Chance</th>
 				<th style="min-width:50px;">Min Money Award</th>
 				<th style="min-width:50px;">Max Money Award</th>
-				<th style="min-width:50px;">Enemies</th>
+				<th style="min-width:50px;">Enemies: Faction Name ( Faction Nickname, NPcs exist for NpcRanks)</th>
 				// <th style="min-width:50px;">Rep Req</th> // can it be used?
 				<th style="min-width:50px;">NpcRanks</th>
 				<th style="min-width:300px;">Error</th>
@@ -253,8 +255,8 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 	}
 }
 
-func EnemistToList(enemies map[string]configs_export.Faction) []configs_export.Faction {
-	var result []configs_export.Faction = make([]configs_export.Faction, 0, len(enemies))
+func EnemistToList(enemies map[string]configs_export.EnemyFaction) []configs_export.EnemyFaction {
+	var result []configs_export.EnemyFaction = make([]configs_export.EnemyFaction, 0, len(enemies))
 	for _, enemy := range enemies {
 		if enemy.Nickname == "" {
 			continue
@@ -264,9 +266,9 @@ func EnemistToList(enemies map[string]configs_export.Faction) []configs_export.F
 	return result
 }
 
-templ PrintEnemies(enemies []configs_export.Faction) {
+templ PrintEnemies(enemies []configs_export.EnemyFaction) {
 	for enemy_index, enemy := range enemies {
-		{ enemy.Name } ( { enemy.Nickname } )
+		{ enemy.Name } ( { enemy.Nickname }, { fmt.Sprintf("%.0f%%", enemy.NpcExist * 100) } )
 		if enemy_index != len(enemies) - 1 {
 			{ ", " }
 		}
