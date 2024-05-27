@@ -70,6 +70,7 @@ If u have problems with configuring development environment, then seek my contac
 - download latest in [releases](https://github.com/darklab8/fl-darkstat/releases) appropriate for your OS and CPU architecture.
 - put file into root of Freelancer folder and start
 - visit http://localhost:8000/ as printed in console to see web site locally
+- Launching from `cmd` or any other console at Freelancer Discovery folder path is preferable. Because u will see detailed log output.
 
 P.S. The tool uses lazy filesyste approach by grabbing first file with matching name. I did not use full paths.
 So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery folder
