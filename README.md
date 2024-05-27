@@ -71,6 +71,9 @@ If u have problems with configuring development environment, then seek my contac
 - put file into root of Freelancer folder and start
 - visit http://localhost:8000/ as printed in console to see web site locally
 
+P.S. The tool uses lazy filesyste approach by grabbing first file with matching name. I did not use full paths.
+So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery folder
+
 # Acknowledments
 
 - The tool was strongly inspired by [flstat](https://discoverygc.com/forums/showthread.php?tid=115254) originally written by Dan Tascau
