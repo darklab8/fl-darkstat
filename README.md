@@ -28,8 +28,9 @@ See demos:
   - In case of emergency we could use vendored in version perhaps
 - check [environment variables to set](.vscode/settings.json)
 
-  - set your own environment variable FLDARKSTAT_FREELANCER_FOLDER to Freelancer Folder
-  - ensure it was set. `echo $FLDARKSTAT_FREELANCER_FOLDER` at Linux or `echo %FLDARKSTAT_FREELANCER_FOLDER%` at windows
+  - set your own environment variable FREELANCER_FOLDER to Freelancer Folder
+  - ensure it was set. `echo $FREELANCER_FOLDER` at Linux or `echo %FREELANCER_FOLDER%` at windows
+
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
 
   - run some command, for example `task web`

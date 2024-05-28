@@ -6,7 +6,7 @@ import (
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
-	"github.com/darklab8/fl-configs/configs/settings/logus"
+	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
 )
 
 func DistanceForVecs(Pos1 *semantic.Vect, Pos2 *semantic.Vect) (float64, error) {

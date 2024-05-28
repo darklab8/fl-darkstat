@@ -3,7 +3,7 @@ package inireader
 import (
 	"regexp"
 
-	"github.com/darklab8/fl-configs/configs/settings/logus"
+	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
 
 	"github.com/darklab8/go-utils/goutils/utils"
 	"github.com/darklab8/go-utils/goutils/utils/utils_logus"

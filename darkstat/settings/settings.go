@@ -1,24 +1,16 @@
 package settings
 
 import (
-	"os"
 	"strings"
 
 	_ "embed"
 
+	"github.com/darklab8/fl-configs/configs/configs_settings"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
-var FreelancerFolder utils_types.FilePath
-
-var ToolName = "fldarkstat"
-
-func init() {
-	FreelancerFolder = utils_types.FilePath(os.Getenv(strings.ToUpper(ToolName) + "_FREELANCER_FOLDER"))
-	if FreelancerFolder == "" {
-		workdir, _ := os.Getwd()
-		FreelancerFolder = utils_types.FilePath(workdir)
-	}
+func GetFreelancerFolder() utils_types.FilePath {
+	return configs_settings.GetGameLocation()
 }
 
 //go:embed version.txt

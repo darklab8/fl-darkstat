@@ -7,7 +7,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader/inireader_types"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
-	"github.com/darklab8/fl-configs/configs/settings/logus"
+	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
 )
 
 const (

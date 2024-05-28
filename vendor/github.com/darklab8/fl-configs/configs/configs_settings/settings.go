@@ -1,4 +1,4 @@
-package configs_fixtures
+package configs_settings
 
 import (
 	"os"
@@ -6,7 +6,7 @@ import (
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
-func FixtureGameLocation() utils_types.FilePath {
+func GetGameLocation() utils_types.FilePath {
 
 	var folder utils_types.FilePath = utils_types.FilePath(os.Getenv("FREELANCER_FOLDER"))
 

@@ -8,7 +8,7 @@ import (
 	"bytes"
 
 	gbp "github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/exe_mapped/go-binary-pack"
-	"github.com/darklab8/fl-configs/configs/settings/logus"
+	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
 )
 
 type Bdatas struct {

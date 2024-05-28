@@ -37,11 +37,11 @@ func NewLinker(opts ...LinkOption) *Linker {
 	}
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
-
+		freelancer_folder := settings.GetFreelancerFolder()
 		if l.configs == nil {
 			l.mapped = configs_mapped.NewMappedConfigs()
-			logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(settings.FreelancerFolder))
-			l.mapped.Read(settings.FreelancerFolder)
+			logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
+			l.mapped.Read(freelancer_folder)
 			l.configs = configs_export.NewExporter(l.mapped)
 		}
 	}, time_measure.WithMsg("MappedConfigs creation"))

@@ -2,12 +2,11 @@
 ## explicit; go 1.20
 github.com/a-h/templ
 github.com/a-h/templ/safehtml
-# github.com/darklab8/fl-configs v0.56.1
+# github.com/darklab8/fl-configs v0.56.3
 ## explicit; go 1.21.1
 github.com/darklab8/fl-configs/configs/config_consts
 github.com/darklab8/fl-configs/configs/configs_export
 github.com/darklab8/fl-configs/configs/configs_mapped
-github.com/darklab8/fl-configs/configs/configs_mapped/configs_fixtures
 github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/const_mapped
 github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped
 github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped
@@ -36,10 +35,11 @@ github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/iniload
 github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader
 github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader/inireader_types
 github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic
+github.com/darklab8/fl-configs/configs/configs_settings
+github.com/darklab8/fl-configs/configs/configs_settings/logus
 github.com/darklab8/fl-configs/configs/conftypes
 github.com/darklab8/fl-configs/configs/discovery/discoprices
 github.com/darklab8/fl-configs/configs/discovery/techcompat
-github.com/darklab8/fl-configs/configs/settings/logus
 # github.com/darklab8/go-typelog v0.6.0
 ## explicit; go 1.21.1
 github.com/darklab8/go-typelog/typelog

@@ -2,17 +2,17 @@ name: Build darkstat static assets
 description: ""
 inputs:
   freelancer-folder:
-      description: Path to root of freelancer directory
-      default: ${{ github.workspace }}
-      type: string
+    description: Path to root of freelancer directory
+    default: ${{ github.workspace }}
+    type: string
   site-root:
-      description: Site root prefix to static assets
-      type: string
-      default: "/"
+    description: Site root prefix to static assets
+    type: string
+    default: "/"
   heading:
-      description: Heading at the site rigit.
-      type: string
-      default: "fl-darkstat powered by <a href=\"https://github.com/darklab8/fl-darkstat\">Github</a>" 
+    description: Heading at the site rigit.
+    type: string
+    default: 'fl-darkstat powered by <a href="https://github.com/darklab8/fl-darkstat">Github</a>'
 
 runs:
   using: "composite"
@@ -27,5 +27,5 @@ runs:
       run: darkstat build
       env:
         SITE_ROOT: ${{ inputs.site-root }}
-        FLDARKSTAT_FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
+        FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
         FLDARKSTAT_HEADING: ${{ inputs.heading }}
