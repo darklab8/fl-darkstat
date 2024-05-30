@@ -1,4 +1,3 @@
-.vscode
 go.work*
 *.wasm
 web/static/export/*

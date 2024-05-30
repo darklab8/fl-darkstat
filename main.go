@@ -25,6 +25,7 @@ const (
 )
 
 func main() {
+	fmt.Println("freelancer folder=", settings.GetFreelancerFolder())
 	defer func() {
 		if r := recover(); r != nil {
 			logus.Log.Error("Program crashed. Sleeping 10 seconds before exit", typelog.Any("recover", r))
