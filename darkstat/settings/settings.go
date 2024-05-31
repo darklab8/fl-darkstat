@@ -1,6 +1,8 @@
 package settings
 
 import (
+	"fmt"
+	"os"
 	"strings"
 
 	_ "embed"
@@ -15,6 +17,18 @@ func GetFreelancerFolder() utils_types.FilePath {
 
 //go:embed version.txt
 var version string
+
+var TractorTabName string
+
+func init() {
+	if value, ok := os.LookupEnv("DARKSTAT_TRACTOR_TAB_NAME"); ok {
+		TractorTabName = value
+	} else {
+		TractorTabName = "Tractors"
+	}
+
+	fmt.Sprintln("settings.TractorTabName=", TractorTabName)
+}
 
 func GetVersion() string {
 	// cleaning up version from... debugging logs used during dev env

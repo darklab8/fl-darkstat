@@ -5,6 +5,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
+
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"strconv"
 	"fmt"
@@ -236,7 +238,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 			color: var(--color_text);
 			border-color: var(--color_border);
 
-			min-width: 60px;
+			min-width: 50px;
 			cursor: pointer;
 			min-height: 36px;
 
@@ -252,7 +254,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				@Button("Bases", urls.Bases, urls.Bases == url)
 				@Button("Missions", urls.Missions, urls.Missions == url)
 				@Button("Factions", urls.Factions, urls.Factions == url)
-				@Button("Rephacks", urls.Rephacks, urls.Rephacks == url)
+				@Button("Bribes", urls.Rephacks, urls.Rephacks == url)
 				@Button("Commodities", urls.Commodities, urls.Commodities == url)
 				@Button("Guns", urls.Guns, urls.Guns == url)
 				@Button("Guns Mods", urls.GunModifiers, urls.GunModifiers == url)
@@ -264,15 +266,15 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				@Button("Thrusters", urls.Thrusters, urls.Thrusters == url)
 				@Button("Ships", urls.Ships, urls.Ships == url)
 				@Button("Ship Details", urls.ShipDetails, urls.ShipDetails == url)
-				@Button("Tractors", urls.Tractors, urls.Tractors == url)
+				@Button(settings.TractorTabName, urls.Tractors, urls.Tractors == url)
 				@Button("Engines", urls.Engines, urls.Engines == url)
 				@Button("Scanners", urls.Scanners, urls.Scanners == url)
-				<button preload="mouseover" hx-trigger="mousedown" style="width:100px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Show All</button>
+				<button preload="mouseover" hx-trigger="mousedown" style="width:80px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Show All</button>
 			} else {
 				@Button("Bases", AllItemsUrl(urls.Bases), urls.Bases == url)
 				@Button("Missions", AllItemsUrl(urls.Missions), urls.Missions == url)
 				@Button("Factions", AllItemsUrl(urls.Factions), urls.Factions == url)
-				@Button("Rephacks", AllItemsUrl(urls.Rephacks), urls.Rephacks == url)
+				@Button("Bribes", AllItemsUrl(urls.Rephacks), urls.Rephacks == url)
 				@Button("Commodities", AllItemsUrl(urls.Commodities), urls.Commodities == url)
 				@Button("Guns", AllItemsUrl(urls.Guns), urls.Guns == url)
 				@Button("Guns Mods", AllItemsUrl(urls.GunModifiers), urls.GunModifiers == url)
@@ -284,12 +286,12 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				@Button("Thrusters", AllItemsUrl(urls.Thrusters), urls.Thrusters == url)
 				@Button("Ships", AllItemsUrl(urls.Ships), urls.Ships == url)
 				@Button("Ship Details", AllItemsUrl(urls.ShipDetails), urls.ShipDetails == url)
-				@Button("Tractors", AllItemsUrl(urls.Tractors), urls.Tractors == url)
+				@Button(settings.TractorTabName, AllItemsUrl(urls.Tractors), urls.Tractors == url)
 				@Button("Engines", AllItemsUrl(urls.Engines), urls.Engines == url)
 				@Button("Scanners", AllItemsUrl(urls.Scanners), urls.Scanners == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:90px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Don't Show All</button>
 			}
-			<button style="width:90px; border-radius: 20px;" onClick={ GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).OppositeThemeRoot) } type="button">Light / Dark</button>
+			<button style="width:80px; border-radius: 20px;" onClick={ GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).OppositeThemeRoot) } type="button">Light / Dark</button>
 		</div>
 	}
 	<hr/>

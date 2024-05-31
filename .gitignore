@@ -8,3 +8,4 @@ cover.out
 dist/*
 ruby_home/
 gems/
+!.vscode/
