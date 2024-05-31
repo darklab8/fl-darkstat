@@ -42,7 +42,6 @@ templ CommodityTable(commodities []configs_export.Commodity, pinm PinMod) {
 				@TrFromMainTb(commodity.Nickname, GoodAtBaseInfoTUrl(commodity), pinm) {
 					@PinTd(commodity.Nickname, commodity.Name, pinm)
 					@PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
-					<td>{ commodity.Name }</td>
 					<td>{ strconv.Itoa(commodity.Price) }</td>
 					<td>{ fmt.Sprintf("%.2f", commodity.PricePerVolume) }</td>
 					<td>{ fmt.Sprintf("%.6f", commodity.Volume) }</td>
