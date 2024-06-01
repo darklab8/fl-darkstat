@@ -99,10 +99,10 @@ templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, disco fronttypes.Disc
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
 				</div>
 			</div>

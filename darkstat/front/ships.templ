@@ -146,14 +146,14 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 				<div id="table-bottom">
 					<div id="table-bottom-main">
 						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowPricePerVolume(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false))
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowPricePerVolume(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false))
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}

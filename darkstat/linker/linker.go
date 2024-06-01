@@ -460,7 +460,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.GoodAtBaseInfoTUrl(base_info)),
-						front.GoodAtBaseInfoT(base_info.Name, base_info.Bases, front.ShowPricePerVolume(true)),
+						front.GoodAtBaseInfoT(base_info.Name, base_info.Bases, front.ShowAsCommodity(true)),
 					),
 				)
 			}
@@ -469,7 +469,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsShowBases)),
-						front.GoodAtBaseInfoT(gun.Name, gun.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(gun.Name, gun.Bases, front.ShowAsCommodity(false)),
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsShowDamageBonuses)),
@@ -490,7 +490,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.AmmoDetailedUrl(ammo)),
-						front.GoodAtBaseInfoT(ammo.Name, ammo.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(ammo.Name, ammo.Bases, front.ShowAsCommodity(false)),
 					),
 				)
 			}
@@ -499,7 +499,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.GunDetailedUrl(missile, front.GunsMissiles)),
-						front.GoodAtBaseInfoT(missile.Name, missile.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(missile.Name, missile.Bases, front.ShowAsCommodity(false)),
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.GunPinnedRowUrl(missile, front.GunsMissiles)),
@@ -512,7 +512,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.MineDetailedUrl(mine)),
-						front.GoodAtBaseInfoT(mine.Name, mine.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(mine.Name, mine.Bases, front.ShowAsCommodity(false)),
 					),
 				)
 			}
@@ -521,7 +521,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.ShieldDetailedUrl(shield)),
-						front.GoodAtBaseInfoT(shield.Name, shield.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(shield.Name, shield.Bases, front.ShowAsCommodity(false)),
 					),
 				)
 			}
@@ -530,7 +530,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.ThrusterDetailedUrl(thruster)),
-						front.GoodAtBaseInfoT(thruster.Name, thruster.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(thruster.Name, thruster.Bases, front.ShowAsCommodity(false)),
 					),
 				)
 			}
@@ -539,7 +539,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowBases)),
-						front.GoodAtBaseInfoT(ship.Name, ship.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(ship.Name, ship.Bases, front.ShowAsCommodity(false)),
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowDetails)),
@@ -563,7 +563,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.TractorDetailedUrl(tractor)),
-						front.GoodAtBaseInfoT(tractor.Name, tractor.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(tractor.Name, tractor.Bases, front.ShowAsCommodity(false)),
 					),
 				)
 			}
@@ -572,7 +572,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.EngineDetailedUrl(engine)),
-						front.GoodAtBaseInfoT(engine.Name, engine.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(engine.Name, engine.Bases, front.ShowAsCommodity(false)),
 					),
 				)
 			}
@@ -581,7 +581,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.CounterMeasreDetailedUrl(cm)),
-						front.GoodAtBaseInfoT(cm.Name, cm.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(cm.Name, cm.Bases, front.ShowAsCommodity(false)),
 					),
 				)
 			}
@@ -590,7 +590,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.ScannerDetailedUrl(item)),
-						front.GoodAtBaseInfoT(item.Name, item.Bases, front.ShowPricePerVolume(false)),
+						front.GoodAtBaseInfoT(item.Name, item.Bases, front.ShowAsCommodity(false)),
 					),
 				)
 			}

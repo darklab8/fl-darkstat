@@ -81,10 +81,10 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, disco fron
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowPricePerVolume(true))
+						@GoodAtBaseSharedT(ShowAsCommodity(true))
 					</div>
 				</div>
 			</div>

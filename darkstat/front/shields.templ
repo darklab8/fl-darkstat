@@ -91,10 +91,10 @@ templ ShieldT(shields []configs_export.Shield,mode2 ShowEmpty, disco fronttypes.
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowPricePerVolume(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
 				</div>
 			</div>

@@ -75,10 +75,10 @@ templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty, disco
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowPricePerVolume(true))
+						@GoodAtBaseSharedT(ShowAsCommodity(true))
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowPricePerVolume(true))
+						@GoodAtBaseSharedT(ShowAsCommodity(true))
 					</div>
 				</div>
 			</div>
