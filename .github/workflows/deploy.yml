@@ -20,11 +20,11 @@ jobs:
       - name: Check out source repository
         uses: actions/checkout@v2
 
-      - uses: actions/checkout@v4
+      - uses: darklab8/fl-configs/.github/actions/checkout-freelancer@master
         with:
-          repository: 'darklab8/fl-data'
-          path: '${{ github.workspace }}/fl-data'
-          token: ${{ secrets.FL_DATA_KEY }}
+          freelancer-mod: "discovery"
+          freelancer-folder: ${{ github.workspace }}/fl-data
+          ssh-key-base64-discovery: ${{ secrets.ID_RSA_FILES_FREELANCER_DISCOVERY }}
 
       - run: ls ./fl-data
   
