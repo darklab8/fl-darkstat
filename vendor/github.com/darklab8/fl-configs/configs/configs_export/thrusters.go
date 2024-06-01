@@ -36,9 +36,8 @@ func (e *Exporter) GetThrusters(ids []Tractor) []Thruster {
 			if price, ok := good_info.Price.GetValue(); ok {
 				thruster.Price = price
 				thruster.Bases = e.GetAtBasesSold(GetAtBasesInput{
-					Nickname:       good_info.Nickname.Get(),
-					Price:          price,
-					PricePerVolume: -1,
+					Nickname: good_info.Nickname.Get(),
+					Price:    price,
 				})
 			}
 		}

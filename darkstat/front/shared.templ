@@ -338,9 +338,11 @@ templ GoodAtBaseSharedT(show_price_per_volume ShowPricePerVolume) {
 				<th style="width:250px;min-width:250px;">Base</th>
 				<th style="width:100px;min-width:100px;">Faction</th>
 				<th style="width:50px;min-width:50px;">System</th>
-				<th style="width:50px;min-width:50px;">Price</th>
+				<th style="width:50px;min-width:50px;">Price To Sell</th>
+				<th style="width:50px;min-width:50px;">Price To Buy</th>
 				if show_price_per_volume {
-					<th style="width:50px;min-width:50px;">Price Per Volume</th>
+					<th style="width:50px;min-width:50px;">Price To Sell Per Vol</th>
+					<th style="width:50px;min-width:50px;">Price To Buy Per Vol</th>
 				}
 				<th style="width:50px;min-width:50px;">Base Sells</th>
 				<th style="width:50px;min-width:50px;">Level Req'd</th>
@@ -371,9 +373,11 @@ templ GoodAtBaseInfoT(name string, base_infos []configs_export.GoodAtBase, show_
 				<td>{ base_info.BaseName }</td>
 				<td>{ base_info.Faction }</td>
 				<td>{ base_info.SystemName }</td>
-				<td>{ strconv.Itoa(base_info.Price) }</td>
+				<td>{ strconv.Itoa(base_info.PriceBaseBuysFor) }</td>
+				<td>{ strconv.Itoa(base_info.PriceBaseSellsFor) }</td>
 				if show_price_per_volume {
-					<td>{ fmt.Sprintf("%.2f", base_info.PricePerVolume) }</td>
+					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
+					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
 				}
 				<td>{ strconv.FormatBool(base_info.BaseSells) }</td>
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>

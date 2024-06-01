@@ -73,9 +73,8 @@ func (e *Exporter) GetShields(ids []Tractor) []Shield {
 			if price, ok := good_info.Price.GetValue(); ok {
 				shield.Price = price
 				shield.Bases = e.GetAtBasesSold(GetAtBasesInput{
-					Nickname:       good_info.Nickname.Get(),
-					Price:          price,
-					PricePerVolume: -1,
+					Nickname: good_info.Nickname.Get(),
+					Price:    price,
 				})
 
 				var shield_value float64

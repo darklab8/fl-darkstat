@@ -321,11 +321,11 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Commodities,
-					front.CommoditiesT(configs_export.FilterToUsefulCommodities(data.Commodities), front.ShowEmpty(false)),
+					front.CommoditiesT(configs_export.FilterToUsefulCommodities(data.Commodities), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Commodities),
-					front.CommoditiesT(data.Commodities, front.ShowEmpty(true)),
+					front.CommoditiesT(data.Commodities, front.ShowEmpty(true), disco_ids),
 				),
 				builder.NewComponent(
 					urls.Guns,

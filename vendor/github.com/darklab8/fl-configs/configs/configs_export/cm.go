@@ -37,9 +37,8 @@ func (e *Exporter) GetCounterMeasures(ids []Tractor) []CounterMeasure {
 			if price, ok := good_info.Price.GetValue(); ok {
 				cm.Price = price
 				cm.Bases = e.GetAtBasesSold(GetAtBasesInput{
-					Nickname:       good_info.Nickname.Get(),
-					Price:          price,
-					PricePerVolume: -1,
+					Nickname: good_info.Nickname.Get(),
+					Price:    price,
 				})
 			}
 		}

@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -75,20 +76,30 @@ func getGunClass(gun_info *equip_mapped.Gun) string {
 }
 
 func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
+	gun_nickname := gun_info.Nickname.Get()
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in f", r)
+			fmt.Println("recovered gun_nickname", gun_nickname)
+			panic(r)
+		}
+	}()
+
 	gun := Gun{
-		Nickname:     gun_info.Nickname.Get(),
-		IdsName:      gun_info.IdsName.Get(),
-		IdsInfo:      gun_info.IdsInfo.Get(),
-		Class:        getGunClass(gun_info),
-		HitPts:       gun_info.HitPts.Get(),
-		PowerUsage:   gun_info.PowerUsage.Get(),
-		Refire:       float64(1 / gun_info.RefireDelay.Get()),
-		Speed:        gun_info.MuzzleVelosity.Get(),
-		Toughness:    gun_info.Toughness.Get(),
-		IsAutoTurret: gun_info.IsAutoTurret.Get(),
-		TurnRate:     gun_info.TurnRate.Get(),
-		Lootable:     gun_info.Lootable.Get(),
+		Nickname:   gun_nickname,
+		IdsName:    gun_info.IdsName.Get(),
+		IdsInfo:    gun_info.IdsInfo.Get(),
+		Class:      getGunClass(gun_info),
+		HitPts:     gun_info.HitPts.Get(),
+		PowerUsage: gun_info.PowerUsage.Get(),
+		Refire:     float64(1 / gun_info.RefireDelay.Get()),
+		Speed:      gun_info.MuzzleVelosity.Get(),
+		Toughness:  gun_info.Toughness.Get(),
+		TurnRate:   gun_info.TurnRate.Get(),
+		Lootable:   gun_info.Lootable.Get(),
 	}
+	gun.IsAutoTurret, _ = gun_info.IsAutoTurret.GetValue()
+
 	gun.HpType, _ = gun_info.HPGunType.GetValue()
 
 	gun.PowerPerSec = gun.PowerUsage * gun.Refire
@@ -150,9 +161,8 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 		if price, ok := good_info.Price.GetValue(); ok {
 			gun.Price = price
 			gun.Bases = e.GetAtBasesSold(GetAtBasesInput{
-				Nickname:       good_info.Nickname.Get(),
-				Price:          price,
-				PricePerVolume: -1,
+				Nickname: good_info.Nickname.Get(),
+				Price:    price,
 			})
 		}
 	}

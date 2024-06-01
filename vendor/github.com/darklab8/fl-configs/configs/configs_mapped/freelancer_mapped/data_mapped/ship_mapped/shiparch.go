@@ -4,8 +4,6 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
-	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
-	"github.com/darklab8/go-typelog/typelog"
 )
 
 type Ship struct {
@@ -114,17 +112,10 @@ func Read(files []*iniload.IniLoader) *Config {
 				ship.HpTypes = append(ship.HpTypes, hp_type)
 			}
 
-			func() {
-				defer func() {
-					if r := recover(); r != nil {
-						logus.Log.Debug("Recovered from grabbing ship IdsName. Error:\n", typelog.Any("recover", r))
-					}
-				}()
+			// ids_name, ids_name_exists := ship.IdsName.GetValue()
 
-				ship.IdsName.Get()
-				frelconfig.Ships = append(frelconfig.Ships, ship)
-				frelconfig.ShipsMap[ship.Nickname.Get()] = ship
-			}()
+			frelconfig.Ships = append(frelconfig.Ships, ship)
+			frelconfig.ShipsMap[ship.Nickname.Get()] = ship
 
 		}
 	}

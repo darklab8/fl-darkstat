@@ -41,9 +41,8 @@ func (e *Exporter) GetAmmo(ids []Tractor) []Ammo {
 			if price, ok := good_info.Price.GetValue(); ok {
 				munition.Price = price
 				munition.Bases = e.GetAtBasesSold(GetAtBasesInput{
-					Nickname:       good_info.Nickname.Get(),
-					Price:          price,
-					PricePerVolume: -1,
+					Nickname: good_info.Nickname.Get(),
+					Price:    price,
 				})
 			}
 		}

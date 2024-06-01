@@ -31,9 +31,8 @@ func (e *Exporter) GetScanners(ids []Tractor) []Scanner {
 			if price, ok := good_info.Price.GetValue(); ok {
 				item.Price = price
 				item.Bases = e.GetAtBasesSold(GetAtBasesInput{
-					Nickname:       good_info.Nickname.Get(),
-					Price:          price,
-					PricePerVolume: -1,
+					Nickname: good_info.Nickname.Get(),
+					Price:    price,
 				})
 			}
 		}

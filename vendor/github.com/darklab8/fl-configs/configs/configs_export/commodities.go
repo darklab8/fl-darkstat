@@ -1,35 +1,43 @@
 package configs_export
 
 import (
+	"fmt"
+
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 )
 
 type GoodAtBase struct {
-	BaseNickname   string
-	BaseName       string
-	BaseSells      bool
-	Price          int
-	PricePerVolume float64
-	LevelRequired  int
-	RepRequired    float64
-	SystemName     string
-	Faction        string
+	BaseNickname      string
+	BaseName          string
+	BaseSells         bool
+	PriceBaseBuysFor  int
+	PriceBaseSellsFor int
+	Volume            float64
+	LevelRequired     int
+	RepRequired       float64
+	SystemName        string
+	Faction           string
 }
 
 type Commodity struct {
-	Nickname            string
-	Name                string
-	Price               int
-	PricePerVolume      float64
-	Combinable          bool
-	Volume              float64
-	NameID              int
-	InfocardID          int
-	Infocard            InfocardKey
-	Bases               []GoodAtBase
-	BestBuyPricePerVol  float64
-	BestSellPricePerVol float64
-	ProffitMarginPerVol float64
+	Nickname              string
+	Name                  string
+	Combinable            bool
+	Volume                float64
+	NameID                int
+	InfocardID            int
+	Infocard              InfocardKey
+	Bases                 []GoodAtBase
+	PriceBestBaseBuysFor  int
+	PriceBestBaseSellsFor int
+	ProffitMargin         int
+}
+
+func GetPricePerVoume(price int, volume float64) float64 {
+	if volume == 0 {
+		return -1
+	}
+	return float64(price) / float64(volume)
 }
 
 func (e *Exporter) GetCommodities() []Commodity {
@@ -56,32 +64,28 @@ func (e *Exporter) GetCommodities() []Commodity {
 
 		volume := equipment.Volume.Get()
 		commodity.Volume = volume
-		commodity.Price = comm.Price.Get()
-		if volume != 0 {
-			commodity.PricePerVolume = float64(commodity.Price) / float64(volume)
-		} else {
-			commodity.PricePerVolume = -1
-		}
+		base_item_price := comm.Price.Get()
 
 		commodity.Bases = e.GetAtBasesSold(GetAtBasesInput{
-			Nickname:       commodity.Nickname,
-			Price:          commodity.Price,
-			PricePerVolume: commodity.PricePerVolume,
-			Volume:         commodity.Volume,
+			Nickname: commodity.Nickname,
+			Price:    base_item_price,
+			Volume:   commodity.Volume,
 		})
 
 		for _, base_info := range commodity.Bases {
-			if base_info.PricePerVolume > float64(commodity.BestSellPricePerVol) {
-				commodity.BestSellPricePerVol = base_info.PricePerVolume
+			if base_info.PriceBaseBuysFor > commodity.PriceBestBaseBuysFor {
+				commodity.PriceBestBaseBuysFor = base_info.PriceBaseBuysFor
 			}
+			if base_info.PriceBaseSellsFor < commodity.PriceBestBaseSellsFor || commodity.PriceBestBaseSellsFor == 0 {
+				if base_info.BaseSells {
+					commodity.PriceBestBaseSellsFor = base_info.PriceBaseSellsFor
+				}
 
-			if (base_info.PricePerVolume < commodity.BestBuyPricePerVol || commodity.BestBuyPricePerVol == 0) && base_info.BaseSells {
-				commodity.BestBuyPricePerVol = base_info.PricePerVolume
 			}
 		}
 
-		if commodity.BestBuyPricePerVol > 0 && commodity.BestSellPricePerVol > 0 {
-			commodity.ProffitMarginPerVol = commodity.BestSellPricePerVol - commodity.BestBuyPricePerVol
+		if commodity.PriceBestBaseBuysFor > 0 && commodity.PriceBestBaseSellsFor > 0 {
+			commodity.ProffitMargin = commodity.PriceBestBaseBuysFor - commodity.PriceBestBaseSellsFor
 		}
 
 		commodities = append(commodities, commodity)
@@ -91,34 +95,41 @@ func (e *Exporter) GetCommodities() []Commodity {
 }
 
 type GetAtBasesInput struct {
-	Nickname       string
-	Price          int
-	PricePerVolume float64
-	Volume         float64
+	Nickname string
+	Price    int
+	Volume   float64
 }
 
 func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 	var bases_list []GoodAtBase
 	var bases_already_found map[string]bool = make(map[string]bool)
 
-	// if commodity.Nickname == "commodity_helium" {
-	// 	fmt.Println()
-	// }
-
 	if e.configs.Discovery != nil {
 		for _, base_market := range e.configs.Discovery.Prices.BasesPerGood[commodity.Nickname] {
+			var base_info GoodAtBase
+			base_nickname := base_market.BaseNickname.Get()
 
-			var base_info GoodAtBase = GoodAtBase{
-				BaseNickname:   base_market.BaseNickname.Get(),
-				BaseSells:      !base_market.SellOnly.Get(),
-				Price:          base_market.Price.Get(),
-				PricePerVolume: float64(base_market.Price.Get()) / float64(commodity.Volume),
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Println("Recovered in f", r)
+					fmt.Println("recovered base_nickname", base_nickname)
+					fmt.Println("recovered commodity nickname", commodity.Nickname)
+					panic(r)
+				}
+			}()
+
+			base_info = GoodAtBase{
+				BaseNickname:      base_nickname,
+				BaseSells:         !base_market.SellOnly.Get(),
+				PriceBaseBuysFor:  base_market.PriceBaseBuysFor.Get(),
+				PriceBaseSellsFor: base_market.PriceBaseSellsFor.Get(),
 			}
 
 			more_info := e.GetBaseInfo(universe_mapped.BaseNickname(base_info.BaseNickname))
 			base_info.BaseName = more_info.BaseName
 			base_info.SystemName = more_info.SystemName
 			base_info.Faction = more_info.Faction
+			base_info.Volume = commodity.Volume
 
 			bases_list = append(bases_list, base_info)
 			bases_already_found[base_info.BaseNickname] = true
@@ -137,10 +148,17 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 
 		market_good := base_market.MarketGood
 		base_info := GoodAtBase{}
+		base_info.Volume = commodity.Volume
 		base_info.BaseSells = !market_good.IsBuyOnly.Get()
 		base_info.BaseNickname = base_nickname
-		base_info.Price = int(market_good.PriceModifier.Get() * float64(commodity.Price))
-		base_info.PricePerVolume = market_good.PriceModifier.Get() * float64(commodity.PricePerVolume)
+
+		base_info.PriceBaseSellsFor = int(market_good.PriceModifier.Get() * float64(commodity.Price))
+
+		if e.configs.Discovery != nil {
+			base_info.PriceBaseBuysFor = market_good.DiscoBaseBuysFor.Get()
+		} else {
+			base_info.PriceBaseBuysFor = base_info.PriceBaseSellsFor
+		}
 
 		base_info.LevelRequired = market_good.LevelRequired.Get()
 		base_info.RepRequired = market_good.RepRequired.Get()

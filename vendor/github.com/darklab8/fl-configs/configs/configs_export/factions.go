@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/mbases_mapped"
@@ -102,9 +103,18 @@ func (e *Exporter) GetFactions(bases []Base) []Faction {
 			rep_to_add.Rep = reputation.Rep.Get()
 
 			target_faction := e.configs.InitialWorld.GroupsMap[rep_to_add.Nickname]
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Println("Recovered in f", r)
+					fmt.Println("recovered rep_to_add.Nickname", rep_to_add.Nickname)
+					panic(r)
+				}
+			}()
 
-			if name, ok := e.configs.Infocards.Infonames[target_faction.IdsName.Get()]; ok {
-				rep_to_add.Name = string(name)
+			if target_faction != nil {
+				if name, ok := e.configs.Infocards.Infonames[target_faction.IdsName.Get()]; ok {
+					rep_to_add.Name = string(name)
+				}
 			}
 
 			if empathy_exists {

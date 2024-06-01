@@ -53,9 +53,8 @@ func (e *Exporter) GetMines(ids []Tractor) []Mine {
 			if price, ok := good_info.Price.GetValue(); ok {
 				mine.Price = price
 				mine.Bases = e.GetAtBasesSold(GetAtBasesInput{
-					Nickname:       good_info.Nickname.Get(),
-					Price:          price,
-					PricePerVolume: -1,
+					Nickname: good_info.Nickname.Get(),
+					Price:    price,
 				})
 			}
 		}

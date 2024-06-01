@@ -13,8 +13,9 @@ type MarketGood struct {
 	semantic.Model
 	Nickname *semantic.String // 0
 
-	LevelRequired *semantic.Int   // 1
-	RepRequired   *semantic.Float // 2
+	LevelRequired    *semantic.Int   // 1
+	RepRequired      *semantic.Float // 2
+	DiscoBaseBuysFor *semantic.Int   // 3
 
 	IsBuyOnly     *semantic.Bool  // 5
 	PriceModifier *semantic.Float // 6
@@ -71,6 +72,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				good_to_add.Nickname = semantic.NewString(section, KEY_MARKET_GOOD, semantic.OptsS(semantic.Index(good_index)), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				good_to_add.LevelRequired = semantic.NewInt(section, KEY_MARKET_GOOD, semantic.Index(good_index), semantic.Order(1))
 				good_to_add.RepRequired = semantic.NewFloat(section, KEY_MARKET_GOOD, semantic.Precision(2), semantic.Index(good_index), semantic.Order(2))
+				good_to_add.DiscoBaseBuysFor = semantic.NewInt(section, KEY_MARKET_GOOD, semantic.Index(good_index), semantic.Order(3))
 				good_to_add.IsBuyOnly = semantic.NewBool(section, KEY_MARKET_GOOD, semantic.IntBool, semantic.Index(good_index), semantic.Order(5))
 				good_to_add.PriceModifier = semantic.NewFloat(section, KEY_MARKET_GOOD, semantic.Precision(2), semantic.Index(good_index), semantic.Order(6))
 				base_to_add.MarketGoods = append(base_to_add.MarketGoods, good_to_add)

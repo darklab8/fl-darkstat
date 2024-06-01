@@ -4,6 +4,9 @@ import (
 	"math"
 	"sort"
 	"strings"
+
+	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
+	"github.com/darklab8/go-typelog/typelog"
 )
 
 type Ship struct {
@@ -50,9 +53,23 @@ func (e *Exporter) GetShips(ids []Tractor) []Ship {
 			Nickname: ship_info.Nickname.Get(),
 		}
 
+		// defer func() {
+		// 	if r := recover(); r != nil {
+		// 		fmt.Println("Recovered in f", r)
+		// 		fmt.Println("ship.Nickname", ship.Nickname)
+		// 		panic(r)
+		// 	}
+		// }()
+
 		ship.Class, _ = ship_info.ShipClass.GetValue()
 		ship.Type = strings.ToLower(ship_info.Type.Get())
-		ship.NameID = ship_info.IdsName.Get()
+
+		if ship_name_id, ship_has_name := ship_info.IdsName.GetValue(); ship_has_name {
+			ship.NameID = ship_name_id
+		} else {
+			logus.Log.Warn("WARNING, ship has no ItdsName", typelog.String("ship.Nickname", ship.Nickname))
+		}
+
 		ship.InfoID, _ = ship_info.IdsInfo.GetValue()
 
 		if bots, ok := ship_info.Nanobots.GetValue(); ok {
@@ -121,9 +138,8 @@ func (e *Exporter) GetShips(ids []Tractor) []Ship {
 				}
 
 				ship.Bases = e.GetAtBasesSold(GetAtBasesInput{
-					Nickname:       ship_package_good.Nickname.Get(),
-					Price:          ship.Price,
-					PricePerVolume: -1,
+					Nickname: ship_package_good.Nickname.Get(),
+					Price:    ship.Price,
 				})
 			}
 
