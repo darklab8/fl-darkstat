@@ -11,9 +11,9 @@
             "program": "${workspaceFolder}",
             "args": [],
             "env": {
-                "FREELANCER_FOLDER": "${env:HOME}/windows10shared/Discovery/DiscoveryFreelancer",
+                "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-discovery",
                 "DEV": "true",
-                // "FREELANCER_FOLDER": "${env:HOME}/windows10shared/Freelancer",
+                // "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
                 "DARKSTAT_LOG_LEVEL": "DEBUG",
                 "UTILS_LOG_LEVEL": "DEBUG",
                 "FLDARKSTAT_HEADING": "Dev server for fl-darkstat | <a href=\"https://github.com/darklab8/fl-darkstat\">Github</a>",
