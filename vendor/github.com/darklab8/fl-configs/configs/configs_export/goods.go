@@ -101,7 +101,7 @@ func (e *Exporter) getMarketGoods() map[string][]MarketGood {
 				Type:          category,
 				LevelRequired: market_good.LevelRequired.Get(),
 				RepRequired:   market_good.RepRequired.Get(),
-				BaseSells:     market_good.BaseSellsIfAboveZero.Get() > 0,
+				BaseSells:     market_good.BaseSells(),
 				PriceModifier: market_good.PriceModifier.Get(),
 				PriceBase:     price_base,
 				PriceToBuy:    int(math.Floor(float64(price_base) * market_good.PriceModifier.Get())),
@@ -111,7 +111,7 @@ func (e *Exporter) getMarketGoods() map[string][]MarketGood {
 			if category == "commodity" {
 
 				if e.configs.Discovery != nil {
-					good_to_add.PriceToSell = utils.Ptr(market_good.SellPrice.Get())
+					good_to_add.PriceToSell = utils.Ptr(market_good.BaseSellsIPositiveAndDiscoSellPrice.Get())
 				} else {
 					good_to_add.PriceToSell = &good_to_add.PriceToBuy
 				}

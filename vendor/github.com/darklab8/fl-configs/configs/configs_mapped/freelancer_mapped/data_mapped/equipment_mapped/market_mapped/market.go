@@ -13,13 +13,17 @@ type MarketGood struct {
 	semantic.Model
 	Nickname *semantic.String // 0
 
-	LevelRequired *semantic.Int   // 1
-	RepRequired   *semantic.Float // 2
-	SellPrice     *semantic.Int   // 3
+	LevelRequired                       *semantic.Int   // 1
+	RepRequired                         *semantic.Float // 2
+	BaseSellsIPositiveAndDiscoSellPrice *semantic.Int   // 3
 
-	BaseSellsIfAboveZero *semantic.Int   // 4 . Base sells if value is above 0
+	baseSellsIfAboveZero *semantic.Int   // 4 . Base sells if value is above 0
 	Display              *semantic.Int   // 5.
 	PriceModifier        *semantic.Float // 6
+}
+
+func (m *MarketGood) BaseSells() bool {
+	return m.BaseSellsIPositiveAndDiscoSellPrice.Get() > 0 && m.baseSellsIfAboveZero.Get() > 0
 }
 
 type BaseGood struct {
@@ -73,8 +77,8 @@ func Read(files []*iniload.IniLoader) *Config {
 				good_to_add.Nickname = semantic.NewString(section, KEY_MARKET_GOOD, semantic.OptsS(semantic.Index(good_index)), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				good_to_add.LevelRequired = semantic.NewInt(section, KEY_MARKET_GOOD, semantic.Index(good_index), semantic.Order(1))
 				good_to_add.RepRequired = semantic.NewFloat(section, KEY_MARKET_GOOD, semantic.Precision(2), semantic.Index(good_index), semantic.Order(2))
-				good_to_add.SellPrice = semantic.NewInt(section, KEY_MARKET_GOOD, semantic.Index(good_index), semantic.Order(3))
-				good_to_add.BaseSellsIfAboveZero = semantic.NewInt(section, KEY_MARKET_GOOD, semantic.Index(good_index), semantic.Order(4))
+				good_to_add.BaseSellsIPositiveAndDiscoSellPrice = semantic.NewInt(section, KEY_MARKET_GOOD, semantic.Index(good_index), semantic.Order(3))
+				good_to_add.baseSellsIfAboveZero = semantic.NewInt(section, KEY_MARKET_GOOD, semantic.Index(good_index), semantic.Order(4))
 
 				good_to_add.PriceModifier = semantic.NewFloat(section, KEY_MARKET_GOOD, semantic.Precision(2), semantic.Index(good_index), semantic.Order(6))
 				base_to_add.MarketGoods = append(base_to_add.MarketGoods, good_to_add)
