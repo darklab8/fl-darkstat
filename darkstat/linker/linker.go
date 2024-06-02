@@ -567,6 +567,10 @@ func (l *Linker) Link() *builder.Builder {
 						utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowDetails)),
 						front.ShipRow(ship, front.ShipShowDetails, front.PinMode, disco_ids, true),
 					),
+					builder.NewComponent(
+						utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowIDs)),
+						front.ShipRow(ship, front.ShipShowIDs, front.PinMode, disco_ids, true),
+					),
 				)
 
 				if disco_ids.Show {

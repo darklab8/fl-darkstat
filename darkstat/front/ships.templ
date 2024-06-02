@@ -101,7 +101,11 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 
 templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, prerender bool) {
 	@TrFromMainTb2(ship.Nickname, ShipDetailedUrl(ship, mode), pinm, prerender) {
-		@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
+		if mode != ShipShowIDs {
+			@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
+		} else {
+			<td>{ ship.Name }</td>
+		}
 		@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
 		@TdDisco(disco, ship.Nickname, ship.DiscoveryTechCompat)
 		<td>{ strconv.Itoa(ship.Class) }</td>
@@ -229,12 +233,13 @@ templ ShipsIDsShared(ship configs_export.Ship) {
 }
 
 templ ShipsIDsDetailed(ship configs_export.Ship) {
+	<input style="width: 100%;" type="text" id="bottom_input" onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')" placeholder="Search rows by any content: name, nickname etc.."/>
 	<div class="bottom_name">{ ship.Name }</div>
 	@ShipsIDsShared(ship) {
 		for _, disco_id := range ship.DiscoIDsCompatsOrdered {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(ship.Nickname)) }
-				hx-trigger={ "mousedown down" }
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(disco_id.Tractor.Nickname)) }
+				hx-trigger={ "mousedown" }
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
 			>
