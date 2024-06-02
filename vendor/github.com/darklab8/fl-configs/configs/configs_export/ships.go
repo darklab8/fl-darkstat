@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
+	"github.com/darklab8/fl-configs/configs/conftypes"
 	"github.com/darklab8/go-typelog/typelog"
 )
 
@@ -43,6 +44,7 @@ type Ship struct {
 	BiggestHardpoint []string
 
 	*DiscoveryTechCompat
+	DiscoIDsCompatsOrdered []CompatibleIDsForTractor
 }
 
 func (e *Exporter) GetShips(ids []Tractor) []Ship {
@@ -197,6 +199,35 @@ func (e *Exporter) GetShips(ids []Tractor) []Ship {
 		ships = append(ships, ship)
 	}
 
+	if e.configs.Discovery != nil {
+		var TractorsByID map[conftypes.TractorID]Tractor = make(map[conftypes.TractorID]Tractor)
+		for _, tractor := range ids {
+			TractorsByID[tractor.Nickname] = tractor
+		}
+
+		for ship_index, ship := range ships {
+			for tractor_id, tech_tecompability := range ship.DiscoveryTechCompat.TechcompatByID {
+				if tech_tecompability < 11.0/100.0 {
+					continue
+				}
+
+				if tractor, ok := TractorsByID[tractor_id]; ok {
+					ship.DiscoIDsCompatsOrdered = append(ship.DiscoIDsCompatsOrdered, CompatibleIDsForTractor{
+						TechCompat: tech_tecompability,
+						Tractor:    tractor,
+					})
+				}
+			}
+
+			sort.Slice(ship.DiscoIDsCompatsOrdered, func(i, j int) bool {
+				return ship.DiscoIDsCompatsOrdered[i].TechCompat < ship.DiscoIDsCompatsOrdered[j].TechCompat
+			})
+
+			ships[ship_index] = ship
+		}
+
+	}
+
 	return ships
 }
 
@@ -217,4 +248,9 @@ func FilterToUsefulShips(ships []Ship) []Ship {
 		items = append(items, item)
 	}
 	return items
+}
+
+type CompatibleIDsForTractor struct {
+	TechCompat float64
+	Tractor    Tractor
 }
