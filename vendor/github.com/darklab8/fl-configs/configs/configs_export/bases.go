@@ -88,7 +88,7 @@ func (e *Exporter) GetBases() []Base {
 func FilterToUserfulBases(bases []Base) []Base {
 	var useful_bases []Base = make([]Base, 0, len(bases))
 	for _, item := range bases {
-		if item.Name == "" {
+		if (item.Name == "Object Unknown" || item.Name == "") && len(item.MarketGoods) == 0 {
 			continue
 		}
 		useful_bases = append(useful_bases, item)
