@@ -154,7 +154,8 @@ templ BaseMarketGoodsBase() {
 			<tr class="flexed-tr">
 				<th style="min-width:200px;">Good</th>
 				<th style="min-width:100px;">Type</th>
-				<th style="min-width:50px;">Price</th>
+				<th style="min-width:50px;">Price To Sell</th>
+				<th style="min-width:50px;">Price To Buy</th>
 				<th style="min-width:50px;">Level Req'd</th>
 				<th style="min-width:50px;">Reputation Req'd</th>
 				<th style="min-width:50px;">Base Sells</th>
@@ -184,10 +185,15 @@ templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode B
 			>
 				<td>{ good.Name }</td>
 				<td>{ string(good.Type) }</td>
-				<td>{ strconv.Itoa(good.Price) }</td>
+				<td>
+					if good.PriceToSell != nil {
+						{ strconv.Itoa(*good.PriceToSell) }
+					}
+				</td>
+				<td>{ strconv.Itoa(good.PriceToBuy) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
-				<td>{ strconv.FormatBool(!good.IsBuyOnly) }</td>
+				<td>{ strconv.FormatBool(good.BaseSells) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
 				<td>{ strconv.Itoa(good.PriceBase) }</td>
 				<td>{ good.Nickname }</td>

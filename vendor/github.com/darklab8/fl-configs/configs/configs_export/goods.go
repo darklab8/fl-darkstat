@@ -2,6 +2,8 @@ package configs_export
 
 import (
 	"math"
+
+	"github.com/darklab8/go-utils/goutils/utils"
 )
 
 type MarketGood struct {
@@ -14,10 +16,11 @@ type MarketGood struct {
 	RepRequired   float64
 	Infocard      InfocardKey
 
-	IsBuyOnly     bool
+	BaseSells     bool
 	PriceModifier float64
 	PriceBase     int
-	Price         int
+	PriceToBuy    int
+	PriceToSell   *int
 }
 
 func NameWithSpacesOnly(word string) bool {
@@ -91,19 +94,31 @@ func (e *Exporter) getMarketGoods() map[string][]MarketGood {
 				Name = ""
 			}
 
-			MarketGoods = append(MarketGoods, MarketGood{
+			good_to_add := MarketGood{
 				Name:          Name,
 				Nickname:      market_good_nickname,
 				HpType:        hptype,
 				Type:          category,
 				LevelRequired: market_good.LevelRequired.Get(),
 				RepRequired:   market_good.RepRequired.Get(),
-				IsBuyOnly:     market_good.IsBuyOnly.Get(),
+				BaseSells:     market_good.BaseSellsIfAboveZero.Get() > 0,
 				PriceModifier: market_good.PriceModifier.Get(),
 				PriceBase:     price_base,
-				Price:         int(math.Floor(float64(price_base) * market_good.PriceModifier.Get())),
+				PriceToBuy:    int(math.Floor(float64(price_base) * market_good.PriceModifier.Get())),
 				Infocard:      InfocardKey(market_good_nickname),
-			})
+			}
+
+			if category == "commodity" {
+
+				if e.configs.Discovery != nil {
+					good_to_add.PriceToSell = utils.Ptr(market_good.SellPrice.Get())
+				} else {
+					good_to_add.PriceToSell = &good_to_add.PriceToBuy
+				}
+
+			}
+
+			MarketGoods = append(MarketGoods, good_to_add)
 		}
 
 		goods_per_base[base_nickname] = append(goods_per_base[base_nickname], MarketGoods...)

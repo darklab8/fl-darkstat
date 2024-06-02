@@ -149,13 +149,14 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 		market_good := base_market.MarketGood
 		base_info := GoodAtBase{}
 		base_info.Volume = commodity.Volume
-		base_info.BaseSells = !market_good.IsBuyOnly.Get()
+		base_info.BaseSells = market_good.BaseSellsIfAboveZero.Get() > 0
+
 		base_info.BaseNickname = base_nickname
 
 		base_info.PriceBaseSellsFor = int(market_good.PriceModifier.Get() * float64(commodity.Price))
 
 		if e.configs.Discovery != nil {
-			base_info.PriceBaseBuysFor = market_good.DiscoBaseBuysFor.Get()
+			base_info.PriceBaseBuysFor = market_good.SellPrice.Get()
 		} else {
 			base_info.PriceBaseBuysFor = base_info.PriceBaseSellsFor
 		}
