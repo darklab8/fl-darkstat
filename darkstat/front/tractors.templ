@@ -12,10 +12,33 @@ func TractorDetailedUrl(tractor configs_export.Tractor) string {
 	return "tractor/tractor_base_" + strings.ToLower(string(tractor.Nickname))
 }
 
+templ TractorHeaders() {
+	<th style="width:50px;">Price</th>
+	<th style="width:50px;">Buyable</th>
+	<th style="width:50px;">Max Length</th>
+	<th style="width:50px;">Reach Speed</th>
+	<th style="width:50px;">Lootable</th>
+	<th style="width:50px;">Nickname</th>
+	<th style="width:100px;">Name ID</th>
+	<th style="width:100px;">Info ID</th>
+	<th style="max-width:100%;"></th>
+}
+
+templ TractorValues(tractor configs_export.Tractor) {
+	<td>{ strconv.Itoa(tractor.Price) } </td>
+	<td>{ strconv.FormatBool(configs_export.Buyable(tractor.Bases)) }</td>
+	<td>{ strconv.Itoa(tractor.MaxLength) } </td>
+	<td>{ strconv.Itoa(tractor.ReachSpeed) }</td>
+	<td>{ strconv.FormatBool(tractor.Lootable) }</td>
+	<td>{ string(tractor.Nickname) } </td>
+	<td>{ strconv.Itoa(tractor.NameID) } </td>
+	<td>{ strconv.Itoa(tractor.InfoID) } </td>
+}
+
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
-	@TabMenu(urls.Tractors, mode2)
+templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+	@TabMenu(urls.Tractors, mode2, disco)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
@@ -26,29 +49,14 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty) {
 							<thead>
 								<tr>
 									<th style="width:200px;">Tractor</th>
-									<th style="width:50px;">Price</th>
-									<th style="width:50px;">Buyable</th>
-									<th style="width:50px;">Max Length</th>
-									<th style="width:50px;">Reach Speed</th>
-									<th style="width:50px;">Lootable</th>
-									<th style="width:50px;">Nickname</th>
-									<th style="width:100px;">Name ID</th>
-									<th style="width:100px;">Info ID</th>
-									<th style="max-width:100%;"></th>
+									@TractorHeaders()
 								</tr>
 							</thead>
 							<tbody>
 								for _, tractor := range tractors {
 									@TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor), "") {
 										<td>{ tractor.Name }</td>
-										<td>{ strconv.Itoa(tractor.Price) } </td>
-										<td>{ strconv.FormatBool(configs_export.Buyable(tractor.Bases)) }</td>
-										<td>{ strconv.Itoa(tractor.MaxLength) } </td>
-										<td>{ strconv.Itoa(tractor.ReachSpeed) }</td>
-										<td>{ strconv.FormatBool(tractor.Lootable) }</td>
-										<td>{ string(tractor.Nickname) } </td>
-										<td>{ strconv.Itoa(tractor.NameID) } </td>
-										<td>{ strconv.Itoa(tractor.InfoID) } </td>
+										@TractorValues(tractor)
 										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "")
 									}
 								}

@@ -220,7 +220,7 @@ templ Button(text string, get_url utils_types.FilePath, is_selected bool) {
 	>{ text }</button>
 }
 
-templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
+templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	<style>
 	.tab-list {
 		height: 100%;
@@ -266,6 +266,9 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				@Button("Thrusters", urls.Thrusters, urls.Thrusters == url)
 				@Button("Ships", urls.Ships, urls.Ships == url)
 				@Button("Ship Details", urls.ShipDetails, urls.ShipDetails == url)
+				if disco.Show {
+					@Button("Ships IDs", urls.ShipsIDs, urls.ShipsIDs == url)
+				}
 				@Button(settings.TractorTabName, urls.Tractors, urls.Tractors == url)
 				@Button("Engines", urls.Engines, urls.Engines == url)
 				@Button("Scanners", urls.Scanners, urls.Scanners == url)
@@ -286,6 +289,9 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty) {
 				@Button("Thrusters", AllItemsUrl(urls.Thrusters), urls.Thrusters == url)
 				@Button("Ships", AllItemsUrl(urls.Ships), urls.Ships == url)
 				@Button("Ship Details", AllItemsUrl(urls.ShipDetails), urls.ShipDetails == url)
+				if disco.Show {
+					@Button("Ships IDs", AllItemsUrl(urls.ShipsIDs), urls.ShipsIDs == url)
+				}
 				@Button(settings.TractorTabName, AllItemsUrl(urls.Tractors), urls.Tractors == url)
 				@Button("Engines", AllItemsUrl(urls.Engines), urls.Engines == url)
 				@Button("Scanners", AllItemsUrl(urls.Scanners), urls.Scanners == url)

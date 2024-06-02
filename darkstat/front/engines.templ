@@ -72,7 +72,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttype
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
-	@TabMenu(urls.Engines, mode)
+	@TabMenu(urls.Engines, mode, disco)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">

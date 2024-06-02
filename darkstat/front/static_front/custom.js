@@ -113,6 +113,31 @@ function FilteringFunction() {
     }
 }
 
+function FilteringForAnyTable(table_selector, input_selector) {
+    // Declare variables
+    // console.log("triggered FilteringFunction")
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById(input_selector); // "filterinput"
+    filter = input.value.toUpperCase();
+    table = document.querySelector(table_selector); // "#table-top table"
+    tr = table.getElementsByTagName("tr");
+
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 1; i < tr.length; i++) {
+        row = tr[i];
+        txtValue = row.textContent || row.innerText;
+
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+            // console.log("row-i", i, "is made visible");
+        } else {
+            tr[i].style.display = "none";
+            // console.log("row-i", i, "is made invisible");
+        }
+    }
+}
+
 function RowHighlighter(row) {
     var table = row.parentElement.parentElement;
 

@@ -289,35 +289,35 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Bases,
-					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, front.ShowEmpty(false)),
+					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Bases),
-					front.BasesT(data.Bases, front.BaseShowShops, front.ShowEmpty(true)),
+					front.BasesT(data.Bases, front.BaseShowShops, front.ShowEmpty(true), disco_ids),
 				),
 				builder.NewComponent(
 					urls.Missions,
-					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, front.ShowEmpty(false)),
+					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Missions),
-					front.BasesT(data.Bases, front.BaseShowMissions, front.ShowEmpty(true)),
+					front.BasesT(data.Bases, front.BaseShowMissions, front.ShowEmpty(true), disco_ids),
 				),
 				builder.NewComponent(
 					urls.Factions,
-					front.FactionsT(useful_factions, front.FactionShowBases, front.ShowEmpty(false)),
+					front.FactionsT(useful_factions, front.FactionShowBases, front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Factions),
-					front.FactionsT(data.Factions, front.FactionShowBases, front.ShowEmpty(true)),
+					front.FactionsT(data.Factions, front.FactionShowBases, front.ShowEmpty(true), disco_ids),
 				),
 				builder.NewComponent(
 					urls.Rephacks,
-					front.FactionsT(useful_factions, front.FactionShowRephacks, front.ShowEmpty(false)),
+					front.FactionsT(useful_factions, front.FactionShowRephacks, front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Rephacks),
-					front.FactionsT(data.Factions, front.FactionShowRephacks, front.ShowEmpty(true)),
+					front.FactionsT(data.Factions, front.FactionShowRephacks, front.ShowEmpty(true), disco_ids),
 				),
 				builder.NewComponent(
 					urls.Commodities,
@@ -385,12 +385,13 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Tractors,
-					front.TractorsT(configs_export.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false)),
+					front.TractorsT(configs_export.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Tractors),
-					front.TractorsT(data.Tractors, front.ShowEmpty(true)),
+					front.TractorsT(data.Tractors, front.ShowEmpty(true), disco_ids),
 				),
+
 				builder.NewComponent(
 					urls.Engines,
 					front.Engines(configs_export.FilterToUsefulEngines(data.Engines), front.ShowEmpty(false), disco_ids),
@@ -416,6 +417,19 @@ func (l *Linker) Link() *builder.Builder {
 					front.ScannersT(data.Scanners, front.ShowEmpty(true), disco_ids),
 				),
 			)
+
+			if disco_ids.Show {
+				build.RegComps(
+					builder.NewComponent(
+						urls.ShipsIDs,
+						front.ShipsT(useful_ships, front.ShipShowIDs, front.ShowEmpty(false), disco_ids),
+					),
+					builder.NewComponent(
+						front.AllItemsUrl(urls.ShipsIDs),
+						front.ShipsT(data.Ships, front.ShipShowIDs, front.ShowEmpty(true), disco_ids),
+					),
+				)
+			}
 
 			for _, base := range data.Bases {
 				build.RegComps(
@@ -555,8 +569,14 @@ func (l *Linker) Link() *builder.Builder {
 					),
 				)
 
-				//  id IDTractor
-
+				if disco_ids.Show {
+					build.RegComps(
+						builder.NewComponent(
+							utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowIDs)),
+							front.ShipsIDsDetailed(ship),
+						),
+					)
+				}
 			}
 
 			for _, tractor := range data.Tractors {

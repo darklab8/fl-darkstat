@@ -84,7 +84,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco fronttypes.Disc
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
-	@TabMenu(urls.Mines, mode2)
+	@TabMenu(urls.Mines, mode2, disco)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">

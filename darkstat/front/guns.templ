@@ -133,11 +133,11 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 // https://www.cssscript.com/fast-html-table-sorting/
 templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	if mode == GunsShowBases {
-		@TabMenu(urls.Guns, mode2)
+		@TabMenu(urls.Guns, mode2, disco)
 	} else if mode == GunsShowDamageBonuses {
-		@TabMenu(urls.GunModifiers, mode2)
+		@TabMenu(urls.GunModifiers, mode2, disco)
 	} else if mode == GunsMissiles {
-		@TabMenu(urls.Missiles, mode2)
+		@TabMenu(urls.Missiles, mode2, disco)
 	}
 	@TabContent() {
 		<div class="splitter">

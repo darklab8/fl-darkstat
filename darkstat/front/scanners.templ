@@ -57,7 +57,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco frontty
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ ScannersT(scanners []configs_export.Scanner,mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
-	@TabMenu(urls.Scanners, mode2)
+	@TabMenu(urls.Scanners, mode2, disco)
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">

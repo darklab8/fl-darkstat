@@ -106,11 +106,11 @@ templ BaseRow(base configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []configs_export.Base, tab_mode BaseMode, mode ShowEmpty) {
+templ BasesT(bases []configs_export.Base, tab_mode BaseMode, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	if tab_mode == BaseShowShops {
-		@TabMenu(urls.Bases, mode)
+		@TabMenu(urls.Bases, mode, disco)
 	} else if tab_mode == BaseShowMissions {
-		@TabMenu(urls.Missions, mode)
+		@TabMenu(urls.Missions, mode, disco)
 	}
 	@TabContent() {
 		<div class="splitter">

@@ -77,11 +77,11 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ShowEmpty) {
+templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	if mode == FactionShowBases {
-		@TabMenu(urls.Factions, mode2)
+		@TabMenu(urls.Factions, mode2, disco)
 	} else if mode == FactionShowRephacks {
-		@TabMenu(urls.Rephacks, mode2)
+		@TabMenu(urls.Rephacks, mode2, disco)
 	}
 	@TabContent() {
 		<div class="splitter">

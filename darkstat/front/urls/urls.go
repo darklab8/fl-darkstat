@@ -21,6 +21,7 @@ const (
 	Ships           utils_types.FilePath = "ships.html"
 	ShipDetails     utils_types.FilePath = "ship_details.html"
 	Tractors        utils_types.FilePath = "tractors.html"
+	ShipsIDs        utils_types.FilePath = "id_ships.html"
 	Engines         utils_types.FilePath = "engines.html"
 	CounterMeasures utils_types.FilePath = "counter_measures.html"
 	Scanners        utils_types.FilePath = "scanners.html"

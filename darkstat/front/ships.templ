@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"fmt"
 	"strings"
 	// "github.com/darklab8/fl-configs/configs/conftypes"
@@ -16,7 +17,10 @@ func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 		return "ships/ships_base_" + strings.ToLower(ship.Nickname)
 	} else if mode == ShipShowDetails {
 		return "ships/ships_details_" + strings.ToLower(ship.Nickname)
+	} else if mode == ShipShowIDs {
+		return "ships/ships_ids" + strings.ToLower(ship.Nickname)
 	}
+
 	panic("unsupported ship mode")
 }
 
@@ -25,6 +29,8 @@ func ShipPinnedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 		return "ships/pinned/ships_base_" + strings.ToLower(ship.Nickname)
 	} else if mode == ShipShowDetails {
 		return "ships/pinned/ships_details_" + strings.ToLower(ship.Nickname)
+	} else if mode == ShipShowIDs {
+		return "ships/pinned/ships_ids" + strings.ToLower(ship.Nickname)
 	}
 	panic("unsupported ship mode")
 }
@@ -34,6 +40,7 @@ type ShipTabMode int64
 const (
 	ShipShowBases ShipTabMode = iota
 	ShipShowDetails
+	ShipShowIDs
 )
 
 func marshalIDs(data fronttypes.DiscoveryIDs, item_nickname string) string {
@@ -127,9 +134,11 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fro
 // https://www.cssscript.com/fast-html-table-sorting/
 templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	if mode == ShipShowBases {
-		@TabMenu(urls.Ships, mode2)
+		@TabMenu(urls.Ships, mode2, disco)
 	} else if mode == ShipShowDetails {
-		@TabMenu(urls.ShipDetails, mode2)
+		@TabMenu(urls.ShipDetails, mode2, disco)
+	} else if mode == ShipShowIDs {
+		@TabMenu(urls.ShipsIDs, mode2, disco)
 	}
 	@TabContent() {
 		<div class="splitter">
@@ -149,6 +158,8 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 							@GoodAtBaseSharedT(ShowAsCommodity(false))
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
+						} else if mode == ShipShowIDs {
+							@ShipsIDsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
@@ -156,6 +167,8 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 							@GoodAtBaseSharedT(ShowAsCommodity(false))
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
+						} else if mode == ShipShowIDs {
+							@ShipsIDsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 				</div>
@@ -196,6 +209,38 @@ templ ShipDetails(ship configs_export.Ship) {
 				for _, _ = range ship.BiggestHardpoint[len(slot.AllowedEquip):] {
 					<td></td>
 				}
+				<td></td>
+			</tr>
+		}
+	}
+}
+
+templ ShipsIDsShared(ship configs_export.Ship) {
+	<table class="sortable">
+		<thead>
+			<th style="width:200px;">Tractor</th>
+			<th style="width:50px;">Tech Compat</th>
+			@TractorHeaders()
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ ShipsIDsDetailed(ship configs_export.Ship) {
+	<div class="bottom_name">{ ship.Name }</div>
+	@ShipsIDsShared(ship) {
+		for _, disco_id := range ship.DiscoIDsCompatsOrdered {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(ship.Nickname)) }
+				hx-trigger={ "mousedown down" }
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+			>
+				<td>{ disco_id.Tractor.Name }</td>
+				<td>{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) }</td>
+				@TractorValues(disco_id.Tractor)
 				<td></td>
 			</tr>
 		}
