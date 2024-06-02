@@ -14,7 +14,8 @@ const (
 )
 
 func (r *Config) GetDlls() []string {
-	return utils.CompL(r.Dlls, func(x *semantic.String) string { return x.Get() })
+	dlls := utils.CompL(r.Dlls, func(x *semantic.String) string { return x.Get() })
+	return append([]string{"resources.dll"}, dlls...)
 }
 
 type Config struct {

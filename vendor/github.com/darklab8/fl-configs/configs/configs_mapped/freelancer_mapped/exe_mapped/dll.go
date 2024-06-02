@@ -378,7 +378,10 @@ func ParseDLLs(dll_fnames []*file.File) *infocard.Config {
 			continue
 		}
 
-		global_offset := int(math.Pow(2, 16)) * (idx + 1)
+		// if you inject "resources.dll" as 0 element of the list to process
+		// despite it being not present in freelancer.ini and original Alex parsing script
+		// then we go with global_offset from (idx) instead of (idx+1) as Alex had.
+		global_offset := int(math.Pow(2, 16)) * (idx)
 		parseDLL(data, out, global_offset)
 	}
 
