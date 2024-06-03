@@ -134,11 +134,7 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 
 	var infocards_override *file.File
 	if p.Discovery != nil {
-		infocards_override = filesystem.GetFile("temp.disco.infocards.txt")
-
-		if infocards_override == nil {
-			infocards_override = file.NewWebFile("https://discoverygc.com/gameconfigpublic/infocard_overrides.cfg")
-		}
+		infocards_override = file.NewWebFile("https://discoverygc.com/gameconfigpublic/infocard_overrides.cfg")
 	}
 
 	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
