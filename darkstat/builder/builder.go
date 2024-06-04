@@ -2,6 +2,7 @@ package builder
 
 import (
 	"os"
+	"time"
 
 	"github.com/darklab8/fl-darkstat/darkstat/common/static_common"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
@@ -78,6 +79,7 @@ func (b *Builder) BuildAll() *Filesystem {
 		StaticRoot:        siteRoot + staticPrefix,
 		OppositeThemeRoot: siteRoot + "dark.html",
 		Heading:           os.Getenv("FLDARKSTAT_HEADING"),
+		Timestamp:         time.Now().UTC(),
 	}, filesystem)
 
 	// // Implement dark theme later

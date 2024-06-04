@@ -2,6 +2,7 @@ package types
 
 import (
 	"context"
+	"time"
 
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
@@ -27,6 +28,7 @@ type GlobalParams struct {
 	OppositeThemeRoot string
 	Pagepath          string
 	Heading           string
+	Timestamp         time.Time
 }
 
 func GetCtx(ctx context.Context) GlobalParams {

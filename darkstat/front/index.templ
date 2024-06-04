@@ -24,6 +24,7 @@ templ Index(theme types.Theme) {
 				--selected: #474747;
 				--color_link: #4D8ED0;
 				--color_hover_link: #57A5F2;
+				--color_time: var(--color_text);
 			}
 			body {
 				background: var(--color_background);
@@ -47,6 +48,7 @@ templ Index(theme types.Theme) {
 				--selected: #D7D7D7;
 				--color_link: #2A4E73;
 				--color_hover_link: #152B41;
+				--color_time: #656565;
 			}
 			
 			body {
@@ -78,6 +80,14 @@ templ Index(theme types.Theme) {
 		a:hover {
 			color: var(--color_hover_link);
 		}
+
+		#time {
+			position: absolute;
+			bottom: 5px;
+			right: 5px;
+			color: var(--color_time);
+			font-size: 0.9em;
+		}
 	</style>
 	<script>
 		document.addEventListener('htmx:afterSettle',(event) => {
@@ -88,5 +98,6 @@ templ Index(theme types.Theme) {
 	</script>
 	@common.Html5() {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
+		<div id="time">Refreshed at { types.GetCtx(ctx).Timestamp.Format("Mon, 02 Jan 2006 15:04:05 -0700") }</div>
 	}
 }
