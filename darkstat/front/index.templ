@@ -80,14 +80,6 @@ templ Index(theme types.Theme) {
 		a:hover {
 			color: var(--color_hover_link);
 		}
-
-		#time {
-			position: absolute;
-			bottom: 5px;
-			right: 5px;
-			color: var(--color_time);
-			font-size: 0.9em;
-		}
 	</style>
 	<script>
 		document.addEventListener('htmx:afterSettle',(event) => {
@@ -98,6 +90,5 @@ templ Index(theme types.Theme) {
 	</script>
 	@common.Html5() {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
-		<div id="time">Refreshed at { types.GetCtx(ctx).Timestamp.Format("Mon, 02 Jan 2006 15:04:05 -0700") }</div>
 	}
 }

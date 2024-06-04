@@ -188,10 +188,17 @@ templ Heading() {
 		}
 		.right {
 			margin: 10px;
-			
+			display: flex;
+			flex-direction: column;
 		}
 		.left {
 			align-self: stretch;
+
+		}
+		#time {
+			color: var(--color_time);
+			font-size: 0.9em;
+			align-self: flex-end;
 		}
 	</style>
 	<div class="heading">
@@ -199,7 +206,10 @@ templ Heading() {
 			{ children... }
 		</div>
 		<div class="right">
-			@templ.Raw(types.GetCtx(ctx).Heading)
+			<div id="time">Refreshed at { types.GetCtx(ctx).Timestamp.Format("02 Jan 2006 15:04:05") } UTC</div>
+			<div>
+				@templ.Raw(types.GetCtx(ctx).Heading)
+			</div>
 		</div>
 	</div>
 }
