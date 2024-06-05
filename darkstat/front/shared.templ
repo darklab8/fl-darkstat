@@ -611,6 +611,15 @@ templ TrFromMainTb2(nickname string, detailed_url string, pinm PinMod, prerender
 	</tr>
 }
 
-templ EmbedInfocardForSearch(probably_info_name string) {
-	<span style="display:none;">{ probably_info_name }</span>
+func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
+	if infocard_lines, ok := infocards[infokey]; ok {
+		if len(infocard_lines) > 0 {
+			return string(infocard_lines[0])
+		}
+	}
+	return ""
+}
+
+templ EmbedInfocardForSearch(infocards configs_export.Infocards, infokey configs_export.InfocardKey) {
+	<span style="display:none;">{ GetFirstLine(infocards, infokey) }</span>
 }

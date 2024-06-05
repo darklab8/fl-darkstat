@@ -261,19 +261,19 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					urls.Ships+utils_types.FilePath(tractor_id),
-					front.ShipsT(useful_ships, front.ShipShowBases, front.ShowEmpty(false), disco_ids),
+					front.ShipsT(useful_ships, front.ShipShowBases, front.ShowEmpty(false), disco_ids, data.Infocards),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Ships)+utils_types.FilePath(tractor_id),
-					front.ShipsT(data.Ships, front.ShipShowBases, front.ShowEmpty(true), disco_ids),
+					front.ShipsT(data.Ships, front.ShipShowBases, front.ShowEmpty(true), disco_ids, data.Infocards),
 				),
 				builder.NewComponent(
 					urls.ShipDetails+utils_types.FilePath(tractor_id),
-					front.ShipsT(useful_ships, front.ShipShowDetails, front.ShowEmpty(false), disco_ids),
+					front.ShipsT(useful_ships, front.ShipShowDetails, front.ShowEmpty(false), disco_ids, data.Infocards),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.ShipDetails)+utils_types.FilePath(tractor_id),
-					front.ShipsT(data.Ships, front.ShipShowDetails, front.ShowEmpty(true), disco_ids),
+					front.ShipsT(data.Ships, front.ShipShowDetails, front.ShowEmpty(true), disco_ids, data.Infocards),
 				),
 			)
 
@@ -329,19 +329,19 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Guns,
-					front.GunsT(useful_guns, front.GunsShowBases, front.ShowEmpty(false), disco_ids),
+					front.GunsT(useful_guns, front.GunsShowBases, front.ShowEmpty(false), disco_ids, data.Infocards),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Guns),
-					front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(true), disco_ids),
+					front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(true), disco_ids, data.Infocards),
 				),
 				builder.NewComponent(
 					urls.GunModifiers,
-					front.GunsT(useful_guns, front.GunsShowDamageBonuses, front.ShowEmpty(false), disco_ids),
+					front.GunsT(useful_guns, front.GunsShowDamageBonuses, front.ShowEmpty(false), disco_ids, data.Infocards),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.GunModifiers),
-					front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true), disco_ids),
+					front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true), disco_ids, data.Infocards),
 				),
 				builder.NewComponent(
 					urls.Ammo,
@@ -353,11 +353,11 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Missiles,
-					front.GunsT(useful_missiles, front.GunsMissiles, front.ShowEmpty(false), disco_ids),
+					front.GunsT(useful_missiles, front.GunsMissiles, front.ShowEmpty(false), disco_ids, data.Infocards),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Missiles),
-					front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true), disco_ids),
+					front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true), disco_ids, data.Infocards),
 				),
 				builder.NewComponent(
 					urls.Mines,
@@ -422,11 +422,11 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						urls.ShipsIDs,
-						front.ShipsT(useful_ships, front.ShipShowIDs, front.ShowEmpty(false), disco_ids),
+						front.ShipsT(useful_ships, front.ShipShowIDs, front.ShowEmpty(false), disco_ids, data.Infocards),
 					),
 					builder.NewComponent(
 						front.AllItemsUrl(urls.ShipsIDs),
-						front.ShipsT(data.Ships, front.ShipShowIDs, front.ShowEmpty(true), disco_ids),
+						front.ShipsT(data.Ships, front.ShipShowIDs, front.ShowEmpty(true), disco_ids, data.Infocards),
 					),
 				)
 			}
@@ -492,11 +492,11 @@ func (l *Linker) Link() *builder.Builder {
 
 					builder.NewComponent(
 						utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowBases)),
-						front.GunRow(gun, front.GunsShowBases, front.PinMode, disco_ids, true),
+						front.GunRow(gun, front.GunsShowBases, front.PinMode, disco_ids, data.Infocards, true),
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowDamageBonuses)),
-						front.GunRow(gun, front.GunsShowDamageBonuses, front.PinMode, disco_ids, true),
+						front.GunRow(gun, front.GunsShowDamageBonuses, front.PinMode, disco_ids, data.Infocards, true),
 					),
 				)
 			}
@@ -517,7 +517,7 @@ func (l *Linker) Link() *builder.Builder {
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.GunPinnedRowUrl(missile, front.GunsMissiles)),
-						front.GunRow(missile, front.GunsMissiles, front.PinMode, disco_ids, true),
+						front.GunRow(missile, front.GunsMissiles, front.PinMode, disco_ids, data.Infocards, true),
 					),
 				)
 			}
@@ -561,15 +561,15 @@ func (l *Linker) Link() *builder.Builder {
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowBases)),
-						front.ShipRow(ship, front.ShipShowBases, front.PinMode, disco_ids, true),
+						front.ShipRow(ship, front.ShipShowBases, front.PinMode, disco_ids, data.Infocards, true),
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowDetails)),
-						front.ShipRow(ship, front.ShipShowDetails, front.PinMode, disco_ids, true),
+						front.ShipRow(ship, front.ShipShowDetails, front.PinMode, disco_ids, data.Infocards, true),
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowIDs)),
-						front.ShipRow(ship, front.ShipShowIDs, front.PinMode, disco_ids, true),
+						front.ShipRow(ship, front.ShipShowIDs, front.PinMode, disco_ids, data.Infocards, true),
 					),
 				)
 

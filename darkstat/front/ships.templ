@@ -56,7 +56,7 @@ func marshalIDs(data fronttypes.DiscoveryIDs, item_nickname string) string {
 	return string(bytes)
 }
 
-templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards) {
 	<table class={ "sortable", templ.KV("top-main", pinm==MainMode), templ.KV("top-pinned", pinm==PinMode) }>
 		<thead>
 			<tr>
@@ -93,13 +93,13 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 		</thead>
 		<tbody>
 			for _, ship := range ships {
-				@ShipRow(ship, mode, pinm, disco, false)
+				@ShipRow(ship, mode, pinm, disco, infocards, false)
 			}
 		</tbody>
 	</table>
 }
 
-templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, prerender bool) {
+templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
 	@TrFromMainTb2(ship.Nickname, ShipDetailedUrl(ship, mode), pinm, prerender) {
 		if mode != ShipShowIDs {
 			@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
@@ -129,7 +129,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fro
 		<td>{ fmt.Sprintf("%.2f",ship.StrafeForce) }</td>
 		<td>
 			{ ship.Nickname }
-			@EmbedInfocardForSearch(ship.ProbablyInfoName)
+			@EmbedInfocardForSearch(infocards, configs_export.InfocardKey(ship.Nickname))
 		</td>
 		<td>{ strconv.Itoa(ship.NameID) } </td>
 		<td>{ strconv.Itoa(ship.InfoID) } </td>
@@ -139,7 +139,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fro
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards) {
 	if mode == ShipShowBases {
 		@TabMenu(urls.Ships, mode2, disco)
 	} else if mode == ShipShowDetails {
@@ -153,10 +153,10 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 				<div id="table-top">
 					@FilterBar(disco)
 					<div id="table-top-main">
-						@ShipTable(ships, mode, MainMode, disco)
+						@ShipTable(ships, mode, MainMode, disco, infocards)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShipTable([]configs_export.Ship{}, mode, PinMode, disco)
+						@ShipTable([]configs_export.Ship{}, mode, PinMode, disco, infocards)
 					</div>
 				</div>
 				<div id="table-bottom">

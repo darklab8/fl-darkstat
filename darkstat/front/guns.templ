@@ -41,7 +41,7 @@ const (
 	GunsMissiles
 )
 
-templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -85,13 +85,13 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 		</thead>
 		<tbody>
 			for _, gun := range guns {
-				@GunRow(gun, mode, pinm, disco, false)
+				@GunRow(gun, mode, pinm, disco, infocards, false)
 			}
 		</tbody>
 	</table>
 }
 
-templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, prerender bool) {
+templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
 	@TrFromMainTb2(gun.Nickname, GunDetailedUrl(gun, mode), pinm, prerender) {
 		@PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
 		@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
@@ -123,7 +123,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 		<td>{ strconv.FormatBool(gun.Lootable) }</td>
 		<td>
 			{ gun.Nickname }
-			@EmbedInfocardForSearch(gun.ProbablyInfoName)
+			@EmbedInfocardForSearch(infocards, configs_export.InfocardKey(gun.Nickname))
 		</td>
 		<td>{ gun.HpType } </td>
 		<td>{ strconv.Itoa(gun.IdsName) } </td>
@@ -134,7 +134,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards) {
 	if mode == GunsShowBases {
 		@TabMenu(urls.Guns, mode2, disco)
 	} else if mode == GunsShowDamageBonuses {
@@ -148,10 +148,10 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco f
 				<div id="table-top">
 					@FilterBar(disco)
 					<div id="table-top-main">
-						@GunTable(guns, mode, MainMode, disco)
+						@GunTable(guns, mode, MainMode, disco, infocards)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@GunTable([]configs_export.Gun{}, mode, PinMode, disco)
+						@GunTable([]configs_export.Gun{}, mode, PinMode, disco, infocards)
 					</div>
 				</div>
 				<div id="table-bottom">
