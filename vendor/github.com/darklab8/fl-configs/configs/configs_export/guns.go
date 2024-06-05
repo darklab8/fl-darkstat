@@ -15,11 +15,11 @@ type DamageBonus struct {
 }
 
 type Gun struct {
+	Nickname string
 	Name     string
 	Type     string
 	Price    int
 	Class    string
-	Nickname string
 	HpType   string
 	IdsName  int
 	IdsInfo  int

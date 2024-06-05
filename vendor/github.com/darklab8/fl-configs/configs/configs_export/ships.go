@@ -11,6 +11,8 @@ import (
 )
 
 type Ship struct {
+	Nickname string
+
 	Name      string
 	Class     int
 	Type      string
@@ -35,7 +37,6 @@ type Ship struct {
 
 	NudgeForce  float64
 	StrafeForce float64
-	Nickname    string
 	NameID      int
 	InfoID      int
 
@@ -196,6 +197,7 @@ func (e *Exporter) GetShips(ids []Tractor) []Ship {
 		}
 		e.exportInfocards(InfocardKey(ship.Nickname), infocards...)
 		ship.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, ship.Nickname)
+
 		ships = append(ships, ship)
 	}
 

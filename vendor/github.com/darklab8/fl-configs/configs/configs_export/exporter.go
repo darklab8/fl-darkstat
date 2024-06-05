@@ -27,13 +27,15 @@ func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
 	}
 }
 
+type Infocards map[InfocardKey]Infocard
+
 type Exporter struct {
 	configs            *configs_mapped.MappedConfigs
 	show_empty_records bool
 
 	Bases       []Base
 	Factions    []Faction
-	Infocards   map[InfocardKey]Infocard
+	Infocards   Infocards
 	Commodities []Commodity
 	Guns        []Gun
 	Missiles    []Gun
