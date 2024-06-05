@@ -208,7 +208,7 @@ templ ShipDetails(ship configs_export.Ship) {
 	<div class="bottom_name">{ ship.Name }</div>
 	@ShipDetailsShared(ship) {
 		for _, slot := range ship.Slots {
-			<tr>
+			@HighlightableRow() {
 				<td>{ slot.SlotName }</td>
 				for _, equip := range slot.AllowedEquip {
 					<td>{ equip }</td>
@@ -217,7 +217,7 @@ templ ShipDetails(ship configs_export.Ship) {
 					<td></td>
 				}
 				<td></td>
-			</tr>
+			}
 		}
 	}
 }
@@ -245,6 +245,7 @@ templ ShipsIDsDetailed(ship configs_export.Ship) {
 				hx-trigger={ "mousedown" }
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
+				onclick="RowHighlighter(this)"
 			>
 				<td>{ disco_id.Tractor.Name }</td>
 				<td>{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) }</td>

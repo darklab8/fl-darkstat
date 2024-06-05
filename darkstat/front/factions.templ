@@ -147,6 +147,7 @@ templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputati
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
 				preload="mouseover"
+				onclick="RowHighlighter(this)"
 			>
 				<td>{ rep.Name }</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Rep) }</td>

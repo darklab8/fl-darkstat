@@ -200,7 +200,9 @@ templ GunShowModifiers(gun configs_export.Gun) {
 	<div class="bottom_name">{ gun.Name }</div>
 	@GunShowModifiersShared() {
 		for _, bonus := range gun.DamangeBonuses {
-			<tr>
+			<tr
+				onclick="RowHighlighter(this)"
+			>
 				<td>{ gun.DamageType }</td>
 				<td>{ bonus.Type }</td>
 				<td>{ fmt.Sprintf("%.2f", bonus.Modifier) }</td>

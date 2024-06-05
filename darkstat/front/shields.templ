@@ -104,3 +104,11 @@ templ ShieldT(shields []configs_export.Shield,mode2 ShowEmpty, disco fronttypes.
 		</div>
 	}
 }
+
+templ HighlightableRow() {
+	<tr
+		onclick="RowHighlighter(this)"
+	>
+		{ children... }
+	</tr>
+}

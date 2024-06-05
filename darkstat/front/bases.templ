@@ -182,6 +182,7 @@ templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode B
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
 				preload="mouseover"
+				onclick="RowHighlighter(this)"
 			>
 				<td>{ good.Name }</td>
 				<td>{ string(good.Type) }</td>
@@ -238,6 +239,7 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
 				preload="mouseover"
+				onclick="RowHighlighter(this)"
 			>
 				<td>{ msn_giver.FactionName }</td>
 				<td>{ fmt.Sprintf("%.2f", msn_giver.MinDifficulty) }</td>

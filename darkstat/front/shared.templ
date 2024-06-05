@@ -389,6 +389,7 @@ templ GoodAtBaseInfoT(name string, base_infos []configs_export.GoodAtBase, is_co
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
 				preload="mouseover"
+				onclick="RowHighlighter(this)"
 			>
 				<td>{ base_info.BaseName }</td>
 				<td>{ base_info.Faction }</td>

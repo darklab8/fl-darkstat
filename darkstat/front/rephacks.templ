@@ -34,6 +34,7 @@ templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Re
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
 				preload="mouseover"
+				onclick="RowHighlighter(this)"
 			>
 				<td>{ rep.BaseName }</td>
 				<td>{ rep.BaseOwner }</td>
