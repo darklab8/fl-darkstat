@@ -127,7 +127,10 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fro
 		<td>{ fmt.Sprintf("%.2f",ship.ReverseFraction) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.NudgeForce) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.StrafeForce) }</td>
-		<td>{ ship.Nickname } </td>
+		<td>
+			{ ship.Nickname }
+			@EmbedInfocardForSearch(ship.ProbablyInfoName)
+		</td>
 		<td>{ strconv.Itoa(ship.NameID) } </td>
 		<td>{ strconv.Itoa(ship.InfoID) } </td>
 		@TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm)

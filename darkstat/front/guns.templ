@@ -121,7 +121,10 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 		<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
 		<td>{ gun.HitPts }</td>
 		<td>{ strconv.FormatBool(gun.Lootable) }</td>
-		<td>{ gun.Nickname } </td>
+		<td>
+			{ gun.Nickname }
+			@EmbedInfocardForSearch(gun.ProbablyInfoName)
+		</td>
 		<td>{ gun.HpType } </td>
 		<td>{ strconv.Itoa(gun.IdsName) } </td>
 		<td>{ strconv.Itoa(gun.IdsInfo) } </td>
