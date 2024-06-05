@@ -26,13 +26,6 @@ templ Index(theme types.Theme) {
 				--color_hover_link: #57A5F2;
 				--color_time: #4b4b4b;
 			}
-			body {
-				background: var(--color_background);
-			}
-			* {
-				color: var(--color_text);
-			}
-
 			</style>
 		case types.ThemeLight:
 			<style>
@@ -50,13 +43,21 @@ templ Index(theme types.Theme) {
 				--color_hover_link: #152B41;
 				--color_time: #a9a9a9;
 			}
-			
-			body {
-
-			}
 			</style>
 	}
 	<style>
+	body, input {
+		background: var(--color_background);
+	}
+	input {
+		background: var(--color_background);
+		color: var(--color_text);
+		border-color: var(--color_border);
+	}
+	* {
+		color: var(--color_text);
+	}
+
 	// scrollbars
 	html {
 		scrollbar-color: var(--color_scrollbar_thing) var(--color_scrollbar_background);
