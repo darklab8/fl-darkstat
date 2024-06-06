@@ -59,9 +59,7 @@ func (e *Exporter) GetMines(ids []Tractor) []Mine {
 			}
 		}
 
-		if name, ok := e.configs.Infocards.Infonames[mine.IdsName]; ok {
-			mine.Name = string(name)
-		}
+		mine.Name = e.GetInfocardName(mine.IdsName, mine.Nickname)
 
 		mine_info := e.configs.Equip.MinesMap[mine_dropper.ProjectileArchetype.Get()]
 		explosion := e.configs.Equip.ExplosionMap[mine_info.ExplosionArch.Get()]

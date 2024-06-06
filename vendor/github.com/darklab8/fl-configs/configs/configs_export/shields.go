@@ -90,11 +90,7 @@ func (e *Exporter) GetShields(ids []Tractor) []Shield {
 			}
 		}
 
-		if name, ok := e.configs.Infocards.Infonames[shield.IdsName]; ok {
-			shield.Name = string(name)
-		} else {
-			continue
-		}
+		shield.Name = e.GetInfocardName(shield.IdsName, shield.Nickname)
 
 		if hp_type, ok := shield_gen.HpType.GetValue(); ok {
 			shield.HpType = hp_type

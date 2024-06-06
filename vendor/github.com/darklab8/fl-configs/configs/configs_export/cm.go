@@ -43,9 +43,7 @@ func (e *Exporter) GetCounterMeasures(ids []Tractor) []CounterMeasure {
 			}
 		}
 
-		if name, ok := e.configs.Infocards.Infonames[cm.NameID]; ok {
-			cm.Name = string(name)
-		}
+		cm.Name = e.GetInfocardName(cm.NameID, cm.Nickname)
 
 		infocards := []int{cm.InfoID}
 		if ammo_info, ok := e.configs.Equip.CounterMeasureMap[cm_info.ProjectileArchetype.Get()]; ok {

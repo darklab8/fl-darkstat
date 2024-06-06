@@ -77,16 +77,11 @@ func (e *Exporter) GetFactions(bases []Base) []Faction {
 				faction.Rephacks = append(faction.Rephacks, rephack)
 			}
 		}
-
-		if faction_name, ok := e.configs.Infocards.Infonames[group.IdsName.Get()]; ok {
-			faction.Name = string(faction_name)
-		}
+		faction.Name = e.GetInfocardName(group.IdsName.Get(), faction.Nickname)
 
 		e.exportInfocards(InfocardKey(nickname), group.IdsInfo.Get())
 
-		if short_name, ok := e.configs.Infocards.Infonames[group.IdsShortName.Get()]; ok {
-			faction.ShortName = string(short_name)
-		}
+		faction.ShortName = e.GetInfocardName(group.IdsShortName.Get(), faction.Nickname)
 
 		empathy_rates, empathy_exists := e.configs.Empathy.RepoChangeMap[faction.Nickname]
 
@@ -112,9 +107,7 @@ func (e *Exporter) GetFactions(bases []Base) []Faction {
 			}()
 
 			if target_faction != nil {
-				if name, ok := e.configs.Infocards.Infonames[target_faction.IdsName.Get()]; ok {
-					rep_to_add.Name = string(name)
-				}
+				rep_to_add.Name = e.GetInfocardName(target_faction.IdsName.Get(), rep_to_add.Nickname)
 			}
 
 			if empathy_exists {

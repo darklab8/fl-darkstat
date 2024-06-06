@@ -7,7 +7,6 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
 	"github.com/darklab8/go-utils/goutils/utils/time_measure"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
 const (
@@ -140,8 +139,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 		for _, base := range universe_config.Bases {
 			base_system := base.System.Get()
 			universe_system := universe_config.SystemMap[universe_mapped.SystemNickname(base_system)]
-			var filename utils_types.FilePath
-			filename = universe_system.File.FileName()
+			filename := universe_system.File.FileName()
 			path := filesystem.GetFile(filename)
 			system_files[base.System.Get()] = file.NewFile(path.GetFilepath())
 		}
@@ -237,7 +235,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						spawn_area.Map(zone_info)
 
 						if factions, ok := zone_info.ParamMap["faction"]; ok {
-							for index, _ := range factions {
+							for index := range factions {
 								faction := &Patrol{
 									FactionNickname: semantic.NewString(zone_info, "faction",
 										semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Index(index), semantic.Order(0))),

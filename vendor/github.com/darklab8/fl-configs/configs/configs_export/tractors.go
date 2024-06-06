@@ -42,9 +42,7 @@ func (e *Exporter) GetTractors() []Tractor {
 			}
 		}
 
-		if name, ok := e.configs.Infocards.Infonames[tractor.NameID]; ok {
-			tractor.Name = string(name)
-		}
+		tractor.Name = e.GetInfocardName(tractor.NameID, string(tractor.Nickname))
 
 		e.exportInfocards(InfocardKey(tractor.Nickname), tractor.InfoID)
 		tractors = append(tractors, tractor)

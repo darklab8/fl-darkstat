@@ -31,9 +31,7 @@ func (e *Exporter) GetAmmo(ids []Tractor) []Ammo {
 		munition.Volume, _ = munition_info.Volume.GetValue()
 
 		if ammo_ids_name, ok := munition_info.IdsName.GetValue(); ok {
-			if name, ok := e.configs.Infocards.Infonames[ammo_ids_name]; ok {
-				munition.Name = string(name)
-			}
+			munition.Name = e.GetInfocardName(ammo_ids_name, munition.Nickname)
 		}
 
 		munition.Price = -1

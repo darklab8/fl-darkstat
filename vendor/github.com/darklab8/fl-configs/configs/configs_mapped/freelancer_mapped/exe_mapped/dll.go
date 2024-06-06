@@ -18,6 +18,8 @@ import (
 
 	gbp "github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/exe_mapped/go-binary-pack"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
+	"github.com/darklab8/fl-configs/configs/configs_settings"
+	"github.com/darklab8/go-typelog/typelog"
 	"golang.org/x/text/encoding/charmap"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/bin"
@@ -382,7 +384,19 @@ func ParseDLLs(dll_fnames []*file.File) *infocard.Config {
 		// despite it being not present in freelancer.ini and original Alex parsing script
 		// then we go with global_offset from (idx) instead of (idx+1) as Alex had.
 		global_offset := int(math.Pow(2, 16)) * (idx)
-		parseDLL(data, out, global_offset)
+
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					logus.Log.Error("unable to read dll. Recovered by skipping dll.", typelog.String("filepath", name.GetFilepath().ToString()), typelog.Any("recover", r))
+					if configs_settings.Strict {
+						panic(r)
+					}
+				}
+			}()
+			parseDLL(data, out, global_offset)
+		}()
+
 	}
 
 	return out

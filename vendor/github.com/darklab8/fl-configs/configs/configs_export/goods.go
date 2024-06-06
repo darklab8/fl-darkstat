@@ -53,10 +53,8 @@ func (e *Exporter) getMarketGoods() map[string][]MarketGood {
 				switch category {
 				default:
 					if equip, ok := e.configs.Equip.ItemsMap[market_good_nickname]; ok {
-						if infoname, ok := e.configs.Infocards.Infonames[equip.IdsName.Get()]; ok {
-							Name = string(infoname)
-							category = equip.Category
-						}
+						category = equip.Category
+						Name = e.GetInfocardName(equip.IdsName.Get(), market_good_nickname)
 
 						e.exportInfocards(InfocardKey(market_good_nickname), equip.IdsInfo.Get())
 					}
@@ -70,9 +68,7 @@ func (e *Exporter) getMarketGoods() map[string][]MarketGood {
 					ship_nickname := ship_hull.Ship.Get()
 					shiparch := e.configs.Shiparch.ShipsMap[ship_nickname]
 
-					if infoname, ok := e.configs.Infocards.Infonames[shiparch.IdsName.Get()]; ok {
-						Name = string(infoname)
-					}
+					Name = e.GetInfocardName(shiparch.IdsName.Get(), ship_nickname)
 
 					e.exportInfocards(InfocardKey(market_good_nickname),
 						shiparch.IdsInfo.Get(), shiparch.IdsInfo1.Get(), shiparch.IdsInfo2.Get(), shiparch.IdsInfo3.Get())

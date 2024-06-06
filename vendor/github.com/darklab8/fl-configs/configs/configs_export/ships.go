@@ -85,9 +85,7 @@ func (e *Exporter) GetShips(ids []Tractor) []Ship {
 		ship.NudgeForce = ship_info.NudgeForce.Get()
 		ship.StrafeForce, _ = ship_info.StrafeForce.GetValue()
 
-		if name, ok := e.configs.Infocards.Infonames[ship.NameID]; ok {
-			ship.Name = string(name)
-		}
+		ship.Name = e.GetInfocardName(ship.NameID, ship.Nickname)
 
 		if ship_hull_good, ok := e.configs.Goods.ShipHullsMapByShip[ship.Nickname]; ok {
 			ship.Price = ship_hull_good.Price.Get()

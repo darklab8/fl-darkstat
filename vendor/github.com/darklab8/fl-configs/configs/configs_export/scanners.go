@@ -37,9 +37,7 @@ func (e *Exporter) GetScanners(ids []Tractor) []Scanner {
 			}
 		}
 
-		if name, ok := e.configs.Infocards.Infonames[item.NameID]; ok {
-			item.Name = string(name)
-		}
+		item.Name = e.GetInfocardName(item.NameID, item.Nickname)
 
 		e.exportInfocards(InfocardKey(item.Nickname), item.InfoID)
 		item.DiscoveryTechCompat = CalculateTechCompat(e.configs.Discovery, ids, item.Nickname)

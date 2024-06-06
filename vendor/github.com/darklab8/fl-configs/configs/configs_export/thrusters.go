@@ -42,9 +42,7 @@ func (e *Exporter) GetThrusters(ids []Tractor) []Thruster {
 			}
 		}
 
-		if name, ok := e.configs.Infocards.Infonames[thruster.NameID]; ok {
-			thruster.Name = string(name)
-		}
+		thruster.Name = e.GetInfocardName(thruster.NameID, thruster.Nickname)
 
 		/*
 			Copy paste of Adoxa's changelog

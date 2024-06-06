@@ -13,16 +13,12 @@ func (e *Exporter) GetBases() []Base {
 	commodities_per_base := e.getMarketGoods()
 
 	for _, base := range e.configs.Universe_config.Bases {
-		var name string
-		if base_infocard, ok := e.configs.Infocards.Infonames[base.StridName.Get()]; ok {
-			name = string(base_infocard)
-		}
+		var name string = e.GetInfocardName(base.StridName.Get(), base.Nickname.Get())
 
 		var system_name infocard.Infoname
 		if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(base.System.Get())]; ok {
-			if infoname, ok := e.configs.Infocards.Infonames[system.Strid_name.Get()]; ok {
-				system_name = infoname
-			}
+
+			system_name = infocard.Infoname(e.GetInfocardName(system.Strid_name.Get(), system.Nickname.Get()))
 		}
 
 		var infocard_id int
@@ -50,9 +46,7 @@ func (e *Exporter) GetBases() []Base {
 		var factionName string
 		if group, exists := e.configs.InitialWorld.GroupsMap[reputation_nickname]; exists {
 			infocard_ids = append(infocard_ids, group.IdsInfo.Get())
-			if faction_name, exists := e.configs.Infocards.Infonames[group.IdsName.Get()]; exists {
-				factionName = string(faction_name)
-			}
+			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
 		}
 
 		var market_goods []MarketGood

@@ -44,8 +44,6 @@ func (e *Exporter) GetCommodities() []Commodity {
 	commodities := make([]Commodity, 0, 100)
 
 	for _, comm := range e.configs.Goods.Commodities {
-
-		var name string
 		commodity := Commodity{}
 		commodity.Nickname = comm.Nickname.Get()
 		commodity.Combinable = comm.Combinable.Get()
@@ -54,10 +52,8 @@ func (e *Exporter) GetCommodities() []Commodity {
 		equipment := e.configs.Equip.CommoditiesMap[equipment_name]
 
 		commodity.NameID = equipment.IdsName.Get()
-		if infoname, ok := e.configs.Infocards.Infonames[equipment.IdsName.Get()]; ok {
-			name = string(infoname)
-		}
-		commodity.Name = name
+
+		commodity.Name = e.GetInfocardName(equipment.IdsName.Get(), commodity.Nickname)
 		commodity.Infocard = InfocardKey(commodity.Nickname)
 		e.exportInfocards(commodity.Infocard, equipment.IdsInfo.Get())
 		commodity.InfocardID = equipment.IdsInfo.Get()
@@ -183,16 +179,11 @@ type BaseInfo struct {
 func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseInfo {
 	var result BaseInfo
 	if universe_base, ok := e.configs.Universe_config.BasesMap[universe_mapped.BaseNickname(base_nickname)]; ok {
-
-		if infoname, ok := e.configs.Infocards.Infonames[universe_base.StridName.Get()]; ok {
-			result.BaseName = string(infoname)
-		}
+		result.BaseName = e.GetInfocardName(universe_base.StridName.Get(), string(base_nickname))
 		system_nickname := universe_base.System.Get()
 
 		if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(system_nickname)]; ok {
-			if infoname, ok := e.configs.Infocards.Infonames[system.Strid_name.Get()]; ok {
-				result.SystemName = string(infoname)
-			}
+			result.SystemName = e.GetInfocardName(system.Strid_name.Get(), system_nickname)
 		}
 
 		var reputation_nickname string
@@ -206,9 +197,7 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 
 		var factionName string
 		if group, exists := e.configs.InitialWorld.GroupsMap[reputation_nickname]; exists {
-			if faction_name, exists := e.configs.Infocards.Infonames[group.IdsName.Get()]; exists {
-				factionName = string(faction_name)
-			}
+			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
 		}
 
 		result.Faction = factionName

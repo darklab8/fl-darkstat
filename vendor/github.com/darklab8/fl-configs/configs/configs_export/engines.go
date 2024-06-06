@@ -61,9 +61,7 @@ func (e *Exporter) GetEngines(ids []Tractor) []Engine {
 			}
 		}
 
-		if name, ok := e.configs.Infocards.Infonames[engine.NameID]; ok {
-			engine.Name = string(name)
-		}
+		engine.Name = e.GetInfocardName(engine.NameID, engine.Nickname)
 
 		e.exportInfocards(InfocardKey(engine.Nickname), engine.InfoID)
 

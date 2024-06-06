@@ -167,9 +167,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 		}
 	}
 
-	if name, ok := e.configs.Infocards.Infonames[gun.IdsName]; ok {
-		gun.Name = string(name)
-	}
+	gun.Name = e.GetInfocardName(gun.IdsName, gun.Nickname)
 
 	if NameWithSpacesOnly(gun.Name) {
 		gun.Name = "Undefined"
