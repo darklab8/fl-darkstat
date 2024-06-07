@@ -126,7 +126,6 @@ func ParseDLL(fileData []byte, out *infocard.Config, globalOffset int) {
 					}
 					if res.Locales[0].Data[0] == 0xFF && res.Locales[0].Data[1] == 0xFE {
 						idx += 2
-						count -= 2
 					}
 				}
 				str, err := decodeUnicode(res.Locales[0].Data[idx:count])
