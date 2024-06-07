@@ -70,6 +70,9 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 				<th style="min-width:50px;">Type</th>
 				<th style="min-width:50px;">Price</th>
 				<th style="min-width:50px;">Buyable</th>
+				if disco.Show {
+					<th>CruiseSpeed</th>
+				}
 				<th style="min-width:50px;">Armor</th>
 				<th style="min-width:50px;">Hold Size</th>
 				<th style="min-width:50px;">Nanobots</th>
@@ -112,6 +115,9 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fro
 		<td>{ ship.Type }</td>
 		<td>{ strconv.Itoa(ship.Price) }</td>
 		<td>{ strconv.FormatBool(configs_export.Buyable(ship.Bases)) }</td>
+		if disco.Show {
+			<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
+		}
 		<td>{ strconv.Itoa(ship.Armor) } </td>
 		<td>{ strconv.Itoa(ship.HoldSize) } </td>
 		<td>{ strconv.Itoa(ship.Nanobots) }</td>

@@ -1,34 +1,44 @@
 package infocard
 
 import (
+	"bytes"
 	"encoding/xml"
+	"io"
 	"strings"
 )
-
-type RDL struct {
-	XMLName xml.Name `xml:"RDL"`
-	TEXT    []string `xml:"TEXT"`
-}
 
 func (i *Infocard) XmlToText() ([]string, error) {
 	return XmlToText(i.content)
 }
 
-func XmlToText(xml_stuff string) ([]string, error) {
-	var structy RDL
+func XmlToText(raw string) ([]string, error) {
+	prepared := strings.ReplaceAll(string(raw), `<?xml version="1.0" encoding="UTF-16"?>`, "")
+	decoder := xml.NewDecoder(bytes.NewBufferString(prepared))
 
-	prepared := strings.ReplaceAll(string(xml_stuff), `<?xml version="1.0" encoding="UTF-16"?>`, "")
+	lines := make([]string, 0, 10)
+	var sb strings.Builder
+	for {
+		token, err := decoder.Token()
+		if err != nil {
+			if err == io.EOF {
+				break
+			} else {
+				return nil, err
+			}
+		}
 
-	err := xml.Unmarshal([]byte(prepared), &structy)
-
-	if _, ok := err.(*xml.SyntaxError); ok {
-		replaced := strings.ReplaceAll(prepared, "&", "")
-		err = xml.Unmarshal([]byte(replaced), &structy)
+		switch tok := token.(type) {
+		case xml.EndElement:
+			if tok.Name.Local == "PARA" || tok.Name.Local == "POP" {
+				lines = append(lines, sb.String())
+				sb.Reset()
+			}
+		case xml.CharData:
+			sb.WriteString(string(tok))
+		default:
+			continue
+		}
 	}
 
-	// logus.Log.CheckError(err, "unable converting xml to text", typelog.String("xml_stuff", string(xml_stuff)))
-	if err != nil {
-		return nil, err
-	}
-	return structy.TEXT, nil
+	return lines, nil
 }

@@ -1,5 +1,7 @@
 package configs_export
 
+import "github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
+
 type Engine struct {
 	Name  string
 	Price int
@@ -23,21 +25,24 @@ type Engine struct {
 	*DiscoveryTechCompat
 }
 
+func (e *Exporter) GetEngineSpeed(engine_info *equip_mapped.Engine) int {
+	if cruise_speed, ok := engine_info.CruiseSpeed.GetValue(); ok {
+		return cruise_speed
+	} else {
+		if cruise_speed, ok := e.configs.Consts.EngineEquipConsts.CRUISING_SPEED.GetValue(); ok {
+			return cruise_speed
+		}
+	}
+	return 350
+}
+
 func (e *Exporter) GetEngines(ids []Tractor) []Engine {
 	var engines []Engine
 
 	for _, engine_info := range e.configs.Equip.Engines {
 		engine := Engine{}
 		engine.Nickname = engine_info.Nickname.Get()
-		if cruise_speed, ok := engine_info.CruiseSpeed.GetValue(); ok {
-			engine.CruiseSpeed = cruise_speed
-		} else {
-			if cruise_speed, ok := e.configs.Consts.EngineEquipConsts.CRUISING_SPEED.GetValue(); ok {
-				engine.CruiseSpeed = cruise_speed
-			} else {
-				engine.CruiseSpeed = 350
-			}
-		}
+		engine.CruiseSpeed = e.GetEngineSpeed(engine_info)
 		engine.CruiseChargeTime, _ = engine_info.CruiseChargeTime.GetValue()
 		engine.LinearDrag = engine_info.LinearDrag.Get()
 		engine.MaxForce = engine_info.MaxForce.Get()

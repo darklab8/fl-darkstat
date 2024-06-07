@@ -115,8 +115,7 @@ func (e *Exporter) GetShips(ids []Tractor) []Ship {
 						ship.ThrustRecharge = power.ThrustRecharge.Get()
 					}
 					if engine, ok := e.configs.Equip.EnginesMap[addon_nickname]; ok {
-						ship.CruiseSpeed, _ = engine.CruiseSpeed.GetValue()
-
+						ship.CruiseSpeed = e.GetEngineSpeed(engine)
 						engine_linear_drag, _ := engine.LinearDrag.GetValue()
 						ship_linear_drag, _ := ship_info.LinearDrag.GetValue()
 						engine_max_force, _ := engine.MaxForce.GetValue()
