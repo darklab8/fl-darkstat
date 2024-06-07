@@ -1,12 +1,12 @@
 package builder
 
 import (
-	"os"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkstat/common/static_common"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/goutils/utils/time_measure"
 	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
@@ -66,19 +66,14 @@ func (b *Builder) BuildAll() *Filesystem {
 
 	staticPrefix := "static/"
 
-	var siteRoot string
-	if value, ok := os.LookupEnv("SITE_ROOT"); ok {
-		siteRoot = value
-	} else {
-		siteRoot = "/"
-	}
+	siteRoot := settings.Conf.SiteRoot
 	b.build(b.components, types.GlobalParams{
 		Buildpath:         "",
 		Theme:             types.ThemeLight,
 		SiteRoot:          siteRoot,
 		StaticRoot:        siteRoot + staticPrefix,
 		OppositeThemeRoot: siteRoot + "dark.html",
-		Heading:           os.Getenv("FLDARKSTAT_HEADING"),
+		Heading:           settings.Conf.AppHeading,
 		Timestamp:         time.Now().UTC(),
 	}, filesystem)
 
@@ -90,7 +85,7 @@ func (b *Builder) BuildAll() *Filesystem {
 	// 	SiteRoot:          siteRoot,
 	// 	StaticRoot:        siteRoot + staticPrefix,
 	// 	OppositeThemeRoot: siteRoot,
-	// 	Heading:           os.Getenv("FLDARKSTAT_HEADING"),
+	// 	Heading:           settings.Conf.AppHeading,
 	// }, filesystem)
 
 	return filesystem
