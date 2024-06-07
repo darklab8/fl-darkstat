@@ -22,5 +22,5 @@ func ShellRunArgs(program string, args ...string) {
 	}
 	err := command.Run()
 
-	utils_logus.Log.CheckFatal(err, "failed to run shell command")
+	utils_logus.Log.CheckPanic(err, "failed to run shell command")
 }

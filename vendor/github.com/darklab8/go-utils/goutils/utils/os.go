@@ -25,7 +25,7 @@ func GetProjectDir() utils_types.FilePath {
 	if folder_override, ok := os.LookupEnv("AUTOGIT_PROJECT_FOLDER"); ok {
 		path = folder_override
 	}
-	utils_logus.Log.CheckFatal(err, "unable to get workdir")
+	utils_logus.Log.CheckPanic(err, "unable to get workdir")
 	return utils_types.FilePath(path)
 }
 

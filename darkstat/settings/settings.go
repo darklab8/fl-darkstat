@@ -2,12 +2,12 @@ package settings
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	_ "embed"
 
 	"github.com/darklab8/fl-configs/configs/configs_settings"
+	"github.com/darklab8/go-utils/goutils/utils/utils_env"
 )
 
 //go:embed version.txt
@@ -16,7 +16,7 @@ var version string
 type DarkstatEnvVars struct {
 	configs_settings.ConfEnvVars
 	TractorTabName string
-	IsDevEnv       bool
+	IsDevEnv       utils_env.EnvBool
 	SiteRoot       string
 	AppHeading     string
 	AppVersion     string
@@ -25,12 +25,13 @@ type DarkstatEnvVars struct {
 var Env DarkstatEnvVars
 
 func init() {
+	env := utils_env.NewEnvConfig()
 	Env = DarkstatEnvVars{
 		ConfEnvVars:    configs_settings.Env,
-		TractorTabName: getEnvWithDefault("DARKSTAT_TRACTOR_TAB_NAME", "Tractors"),
-		IsDevEnv:       os.Getenv("DEV") == "true",
-		SiteRoot:       getEnvWithDefault("SITE_ROOT", "/"),
-		AppHeading:     os.Getenv("FLDARKSTAT_HEADING"),
+		TractorTabName: env.GetEnvWithDefault("DARKSTAT_TRACTOR_TAB_NAME", "Tractors"),
+		IsDevEnv:       env.GetEnvBool("DEV"),
+		SiteRoot:       env.GetEnvWithDefault("SITE_ROOT", "/"),
+		AppHeading:     env.GetEnv("FLDARKSTAT_HEADING"),
 		AppVersion:     getAppVersion(),
 	}
 	fmt.Sprintln("conf=", Env)
@@ -45,12 +46,4 @@ func getAppVersion() string {
 		}
 	}
 	return version
-}
-
-func getEnvWithDefault(key string, default_ string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	} else {
-		return default_
-	}
 }

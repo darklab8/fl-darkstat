@@ -12,7 +12,7 @@ import (
 func TmpRender(templateRef *template.Template, data interface{}) string {
 	header := bytes.Buffer{}
 	err := templateRef.Execute(&header, data)
-	utils_logus.Log.CheckFatal(err, "failed to render template")
+	utils_logus.Log.CheckPanic(err, "failed to render template")
 	return header.String()
 }
 
@@ -24,6 +24,6 @@ func TmpInit(content utils_types.TemplateExpression) *template.Template {
 
 	var err error
 	templateRef, err := template.New("test").Funcs(funcs).Parse(string(content))
-	utils_logus.Log.CheckFatal(err, "failed to init template")
+	utils_logus.Log.CheckPanic(err, "failed to init template")
 	return templateRef
 }
