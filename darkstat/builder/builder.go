@@ -66,14 +66,14 @@ func (b *Builder) BuildAll() *Filesystem {
 
 	staticPrefix := "static/"
 
-	siteRoot := settings.Conf.SiteRoot
+	siteRoot := settings.Env.SiteRoot
 	b.build(b.components, types.GlobalParams{
 		Buildpath:         "",
 		Theme:             types.ThemeLight,
 		SiteRoot:          siteRoot,
 		StaticRoot:        siteRoot + staticPrefix,
 		OppositeThemeRoot: siteRoot + "dark.html",
-		Heading:           settings.Conf.AppHeading,
+		Heading:           settings.Env.AppHeading,
 		Timestamp:         time.Now().UTC(),
 	}, filesystem)
 

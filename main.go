@@ -25,11 +25,11 @@ const (
 )
 
 func main() {
-	fmt.Println("freelancer folder=", settings.Conf.FreelancerFolder)
+	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder)
 	defer func() {
 		if r := recover(); r != nil {
 			logus.Log.Error("Program crashed. Sleeping 10 seconds before exit", typelog.Any("recover", r))
-			if !settings.Conf.IsDevEnv {
+			if !settings.Env.IsDevEnv {
 				fmt.Println("going to sleeping")
 				time.Sleep(10 * time.Second)
 			}
@@ -65,7 +65,7 @@ func main() {
 	case Web:
 		web()
 	case Version:
-		fmt.Println("version=", settings.Conf.AppVersion)
+		fmt.Println("version=", settings.Env.AppVersion)
 	default:
 		web()
 	}

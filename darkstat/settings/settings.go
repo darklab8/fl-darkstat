@@ -14,7 +14,8 @@ import (
 //go:embed version.txt
 var version string
 
-type Configs struct {
+type DarkstatEnvVars struct {
+	configs_settings.ConfEnvVars
 	TractorTabName   string
 	IsDevEnv         bool
 	SiteRoot         string
@@ -23,22 +24,18 @@ type Configs struct {
 	AppVersion       string
 }
 
-var Conf Configs
+var Env DarkstatEnvVars
 
 func init() {
-	Conf = Configs{
-		TractorTabName:   getEnvWithDefault("DARKSTAT_TRACTOR_TAB_NAME", "Tractors"),
-		IsDevEnv:         os.Getenv("DEV") == "true",
-		SiteRoot:         getEnvWithDefault("SITE_ROOT", "/"),
-		AppHeading:       os.Getenv("FLDARKSTAT_HEADING"),
-		FreelancerFolder: getFreelancerFolder(),
-		AppVersion:       getAppVersion(),
+	Env = DarkstatEnvVars{
+		ConfEnvVars:    configs_settings.Env,
+		TractorTabName: getEnvWithDefault("DARKSTAT_TRACTOR_TAB_NAME", "Tractors"),
+		IsDevEnv:       os.Getenv("DEV") == "true",
+		SiteRoot:       getEnvWithDefault("SITE_ROOT", "/"),
+		AppHeading:     os.Getenv("FLDARKSTAT_HEADING"),
+		AppVersion:     getAppVersion(),
 	}
-	fmt.Sprintln("conf=", Conf)
-}
-
-func getFreelancerFolder() utils_types.FilePath {
-	return configs_settings.GetGameLocation()
+	fmt.Sprintln("conf=", Env)
 }
 
 func getAppVersion() string {
