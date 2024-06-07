@@ -243,9 +243,9 @@ func (l *Linker) Link() *builder.Builder {
 
 		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
 			useful_factions = configs_export.FilterToUsefulFactions(data.Factions)
-			useful_ships = configs_export.FilterToUsefulShips(data.Ships)
-			useful_guns = configs_export.FilterToUsefulGun(data.Guns)
-			useful_missiles = configs_export.FilterToUsefulGun(data.Missiles)
+			useful_ships = data.FilterToUsefulShips(data.Ships)
+			useful_guns = data.FilterToUsefulGun(data.Guns)
+			useful_missiles = data.FilterToUsefulGun(data.Missiles)
 
 			if l.mapped.Discovery != nil {
 				disco_ids = fronttypes.DiscoveryIDs{
@@ -321,7 +321,7 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Commodities,
-					front.CommoditiesT(configs_export.FilterToUsefulCommodities(data.Commodities), front.ShowEmpty(false), disco_ids),
+					front.CommoditiesT(data.FilterToUsefulCommodities(data.Commodities), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Commodities),
@@ -345,7 +345,7 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Ammo,
-					front.AmmoT(configs_export.FilterToUsefulAmmo(data.Ammos), front.ShowEmpty(false), disco_ids),
+					front.AmmoT(data.FilterToUsefulAmmo(data.Ammos), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Ammo),
@@ -361,7 +361,7 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Mines,
-					front.MinesT(configs_export.FilterToUsefulMines(data.Mines), front.ShowEmpty(false), disco_ids),
+					front.MinesT(data.FilterToUsefulMines(data.Mines), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Mines),
@@ -369,7 +369,7 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Shields,
-					front.ShieldT(configs_export.FilterToUsefulShields(data.Shields), front.ShowEmpty(false), disco_ids),
+					front.ShieldT(data.FilterToUsefulShields(data.Shields), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Shields),
@@ -377,7 +377,7 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Thrusters,
-					front.ThrusterT(configs_export.FilterToUsefulThrusters(data.Thrusters), front.ShowEmpty(false), disco_ids),
+					front.ThrusterT(data.FilterToUsefulThrusters(data.Thrusters), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Thrusters),
@@ -385,7 +385,7 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Tractors,
-					front.TractorsT(configs_export.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), disco_ids),
+					front.TractorsT(data.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Tractors),
@@ -394,7 +394,7 @@ func (l *Linker) Link() *builder.Builder {
 
 				builder.NewComponent(
 					urls.Engines,
-					front.Engines(configs_export.FilterToUsefulEngines(data.Engines), front.ShowEmpty(false), disco_ids),
+					front.Engines(data.FilterToUsefulEngines(data.Engines), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Engines),
@@ -402,7 +402,7 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.CounterMeasures,
-					front.CounterMeasureT(configs_export.FilterToUsefulCounterMeasures(data.CMs), front.ShowEmpty(false), disco_ids),
+					front.CounterMeasureT(data.FilterToUsefulCounterMeasures(data.CMs), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.CounterMeasures),
@@ -410,7 +410,7 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Scanners,
-					front.ScannersT(configs_export.FilterToUserfulScanners(data.Scanners), front.ShowEmpty(false), disco_ids),
+					front.ScannersT(data.FilterToUserfulScanners(data.Scanners), front.ShowEmpty(false), disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Scanners),
