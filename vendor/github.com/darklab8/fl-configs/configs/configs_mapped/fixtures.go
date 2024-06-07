@@ -11,7 +11,7 @@ func TestFixtureConfigs() *MappedConfigs {
 		return parsed
 	}
 
-	game_location := configs_settings.GetGameLocation()
+	game_location := configs_settings.Env.FreelancerFolder
 	parsed = NewMappedConfigs().Read(game_location)
 
 	return parsed

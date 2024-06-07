@@ -11,6 +11,6 @@ func FixtureFileFind() *filefind.Filesystem {
 	if cached != nil {
 		return cached
 	}
-	cached = filefind.FindConfigs(configs_settings.GetGameLocation())
+	cached = filefind.FindConfigs(configs_settings.Env.FreelancerFolder)
 	return cached
 }

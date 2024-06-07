@@ -140,7 +140,7 @@ func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []Tracto
 }
 
 func (e *Exporter) GetInfocardName(ids_name int, nickname string) string {
-	if configs_settings.FallbackInfonamesToNickname {
+	if configs_settings.Env.FallbackInfonamesToNickname {
 		return fmt.Sprintf("[%s]", nickname)
 	}
 

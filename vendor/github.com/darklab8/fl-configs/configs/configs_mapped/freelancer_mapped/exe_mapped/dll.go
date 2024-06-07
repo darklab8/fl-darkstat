@@ -389,7 +389,7 @@ func ParseDLLs(dll_fnames []*file.File) *infocard.Config {
 			defer func() {
 				if r := recover(); r != nil {
 					logus.Log.Error("unable to read dll. Recovered by skipping dll.", typelog.String("filepath", name.GetFilepath().ToString()), typelog.Any("recover", r))
-					if configs_settings.Strict {
+					if configs_settings.Env.Strict {
 						panic(r)
 					}
 				}
