@@ -286,7 +286,7 @@ var regexLetter *regexp.Regexp
 func init() {
 	InitRegexExpression(&regexNumber, `^[0-9\-]+(?:\.)?([0-9\-]*)(?:E[-0-9]+)?$`)
 	InitRegexExpression(&regexComment, `;(.*)`)
-	InitRegexExpression(&regexSection, `^\[.*\]`)
+	InitRegexExpression(&regexSection, `^\x{FEFF}?\[.*\]`)
 	InitRegexExpression(&regexLetter, `[a-zA-Z]`)
 	// param or commented out param
 	InitRegexExpression(&regexParam, `(;%|^)[ 	]*([a-zA-Z_][a-zA-Z_0-9]+)\s=\s([a-zA-Z_, 0-9-.\/\\]+)`)
