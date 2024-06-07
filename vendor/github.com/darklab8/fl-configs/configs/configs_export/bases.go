@@ -25,12 +25,15 @@ func (e *Exporter) GetBases() []Base {
 		var reputation_nickname string
 		var pos conftypes.Vector
 
+		var archetypes []string
 		if system, ok := e.configs.Systems.SystemsMap[base.System.Get()]; ok {
 			for _, system_base := range system.Bases {
 				if system_base.IdsName.Get() == base.StridName.Get() {
 					infocard_id = system_base.IDsInfo.Get()
 					reputation_nickname = system_base.RepNickname.Get()
 					pos, _ = system_base.Pos.GetValue()
+					archetype, _ := system_base.Archetype.GetValue()
+					archetypes = append(archetypes, archetype)
 				}
 			}
 		}
@@ -71,6 +74,7 @@ func (e *Exporter) GetBases() []Base {
 			BGCS_base_run_by: base.BGCS_base_run_by.Get(),
 			MarketGoods:      market_goods,
 			Pos:              pos,
+			Archetypes:       archetypes,
 		}
 
 		results = append(results, base)
@@ -85,6 +89,17 @@ func FilterToUserfulBases(bases []Base) []Base {
 		if (item.Name == "Object Unknown" || item.Name == "") && len(item.MarketGoods) == 0 {
 			continue
 		}
+
+		is_invisible := true
+		for _, archetype := range item.Archetypes {
+			if archetype != "invisible_base" {
+				is_invisible = false
+			}
+		}
+		if is_invisible {
+			continue
+		}
+
 		useful_bases = append(useful_bases, item)
 	}
 	return useful_bases
@@ -92,6 +107,7 @@ func FilterToUserfulBases(bases []Base) []Base {
 
 type Base struct {
 	Name             string
+	Archetypes       []string
 	Nickname         string
 	FactionName      string
 	System           string

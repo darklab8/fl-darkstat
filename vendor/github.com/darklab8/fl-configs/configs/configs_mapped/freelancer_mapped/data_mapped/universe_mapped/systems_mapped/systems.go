@@ -98,9 +98,10 @@ type TradeLaneRing struct {
 
 type Base struct {
 	semantic.Model
-	Nickname *semantic.String
-	Base     *semantic.String // base.nickname in universe.ini
-	DockWith *semantic.String
+	Nickname  *semantic.String
+	Base      *semantic.String // base.nickname in universe.ini
+	DockWith  *semantic.String
+	Archetype *semantic.String
 
 	IDsInfo     *semantic.Int
 	IdsName     *semantic.Int
@@ -189,7 +190,9 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 					// check if it is base object
 					if _, ok := obj.ParamMap[KEY_BASE]; ok {
-						base_to_add := &Base{}
+						base_to_add := &Base{
+							Archetype: semantic.NewString(obj, "archetype", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						}
 						base_to_add.Map(obj)
 
 						base_to_add.Nickname = semantic.NewString(obj, KEY_NICKNAME, semantic.WithLowercaseS(), semantic.WithoutSpacesS())
