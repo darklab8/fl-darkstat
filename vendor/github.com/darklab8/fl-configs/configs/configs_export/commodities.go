@@ -127,6 +127,12 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 			base_info.Faction = more_info.Faction
 			base_info.Volume = commodity.Volume
 
+			if e.useful_bases_by_nick != nil {
+				if _, ok := e.useful_bases_by_nick[base_info.BaseNickname]; !ok {
+					continue
+				}
+			}
+
 			bases_list = append(bases_list, base_info)
 			bases_already_found[base_info.BaseNickname] = true
 		}
@@ -164,6 +170,12 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 		base_info.BaseName = more_info.BaseName
 		base_info.SystemName = more_info.SystemName
 		base_info.Faction = more_info.Faction
+
+		if e.useful_bases_by_nick != nil {
+			if _, ok := e.useful_bases_by_nick[base_info.BaseNickname]; !ok {
+				continue
+			}
+		}
 
 		bases_list = append(bases_list, base_info)
 	}
@@ -205,10 +217,10 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 	return result
 }
 
-func FilterToUsefulCommodities(commodities []Commodity) []Commodity {
+func (e *Exporter) FilterToUsefulCommodities(commodities []Commodity) []Commodity {
 	var items []Commodity = make([]Commodity, 0, len(commodities))
 	for _, item := range commodities {
-		if !Buyable(item.Bases) {
+		if !e.Buyable(item.Bases) {
 			continue
 		}
 		items = append(items, item)

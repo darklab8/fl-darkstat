@@ -120,10 +120,10 @@ func InitRegexExpression(expression string) *regexp.Regexp {
 	return regex
 }
 
-func FilterToUsefulShields(shields []Shield) []Shield {
+func (e *Exporter) FilterToUsefulShields(shields []Shield) []Shield {
 	var items []Shield = make([]Shield, 0, len(shields))
 	for _, item := range shields {
-		if !Buyable(item.Bases) {
+		if !e.Buyable(item.Bases) {
 			continue
 		}
 		items = append(items, item)

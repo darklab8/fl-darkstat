@@ -95,10 +95,10 @@ func (e *Exporter) GetMines(ids []Tractor) []Mine {
 	return mines
 }
 
-func FilterToUsefulMines(mines []Mine) []Mine {
+func (e *Exporter) FilterToUsefulMines(mines []Mine) []Mine {
 	var items []Mine = make([]Mine, 0, len(mines))
 	for _, item := range mines {
-		if !Buyable(item.Bases) {
+		if !e.Buyable(item.Bases) {
 			continue
 		}
 		items = append(items, item)

@@ -50,11 +50,11 @@ func (e *Exporter) GetTractors() []Tractor {
 	return tractors
 }
 
-func FilterToUsefulTractors(tractors []Tractor) []Tractor {
+func (e *Exporter) FilterToUsefulTractors(tractors []Tractor) []Tractor {
 	var buyable_tractors []Tractor = make([]Tractor, 0, len(tractors))
 	for _, item := range tractors {
 
-		if !Buyable(item.Bases) && (strings.Contains(strings.ToLower(item.Name), "discontinued") ||
+		if !e.Buyable(item.Bases) && (strings.Contains(strings.ToLower(item.Name), "discontinued") ||
 			strings.Contains(strings.ToLower(item.Name), "not in use") ||
 			strings.Contains(strings.ToLower(item.Name), strings.ToLower("Special Operative ID")) ||
 			strings.Contains(strings.ToLower(item.Name), strings.ToLower("SRP ID")) ||

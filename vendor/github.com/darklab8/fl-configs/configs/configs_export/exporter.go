@@ -2,7 +2,6 @@ package configs_export
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_settings"
@@ -35,7 +34,9 @@ type Exporter struct {
 	configs            *configs_mapped.MappedConfigs
 	show_empty_records bool
 
-	Bases       []Base
+	Bases                []Base
+	useful_bases_by_nick map[string]Base
+
 	Factions    []Faction
 	Infocards   Infocards
 	Commodities []Commodity
@@ -73,6 +74,12 @@ func NewExporter(configs *configs_mapped.MappedConfigs, opts ...OptExport) *Expo
 
 func (e *Exporter) Export() *Exporter {
 	e.Bases = e.GetBases()
+	useful_bases := FilterToUserfulBases(e.Bases)
+	e.useful_bases_by_nick = make(map[string]Base)
+	for _, base := range useful_bases {
+		e.useful_bases_by_nick[base.Nickname] = base
+	}
+
 	e.Tractors = e.GetTractors()
 	e.Factions = e.GetFactions(e.Bases)
 	e.Bases = e.GetMissions(e.Bases, e.Factions)
@@ -103,14 +110,21 @@ func Empty(phrase string) bool {
 	return true
 }
 
-func Buyable(Bases []GoodAtBase) bool {
+func (e *Exporter) Buyable(Bases []GoodAtBase) bool {
 	for _, base := range Bases {
-		if !strings.Contains(base.SystemName, "Bastille") {
-			return true
+
+		if e.useful_bases_by_nick != nil {
+			if _, ok := e.useful_bases_by_nick[base.BaseNickname]; ok {
+				return true
+			}
 		}
 	}
 
 	return false
+}
+
+func Buyable(Bases []GoodAtBase) bool {
+	return len(Bases) > 0
 }
 
 type DiscoveryTechCompat struct {

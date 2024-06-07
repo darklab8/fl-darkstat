@@ -213,7 +213,7 @@ func (e *Exporter) GetGuns(ids []Tractor) []Gun {
 	return guns
 }
 
-func FilterToUsefulGun(guns []Gun) []Gun {
+func (e *Exporter) FilterToUsefulGun(guns []Gun) []Gun {
 	var items []Gun = make([]Gun, 0, len(guns))
 	for _, gun := range guns {
 
@@ -234,7 +234,7 @@ func FilterToUsefulGun(guns []Gun) []Gun {
 			continue
 		}
 
-		if !Buyable(gun.Bases) {
+		if !e.Buyable(gun.Bases) {
 			continue
 		}
 		items = append(items, gun)

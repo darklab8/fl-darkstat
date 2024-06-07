@@ -46,10 +46,10 @@ func (e *Exporter) GetScanners(ids []Tractor) []Scanner {
 	return scanners
 }
 
-func FilterToUserfulScanners(items []Scanner) []Scanner {
+func (e *Exporter) FilterToUserfulScanners(items []Scanner) []Scanner {
 	var useful_items []Scanner = make([]Scanner, 0, len(items))
 	for _, item := range items {
-		if !Buyable(item.Bases) {
+		if !e.Buyable(item.Bases) {
 			continue
 		}
 		useful_items = append(useful_items, item)

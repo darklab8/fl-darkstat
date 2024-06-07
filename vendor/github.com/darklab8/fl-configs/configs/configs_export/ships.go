@@ -238,10 +238,10 @@ type EquipmentSlot struct {
 var Pi180 = 180 / math.Pi // number turning radians to degrees
 var LogOgE = math.Log10(math.E)
 
-func FilterToUsefulShips(ships []Ship) []Ship {
+func (e *Exporter) FilterToUsefulShips(ships []Ship) []Ship {
 	var items []Ship = make([]Ship, 0, len(ships))
 	for _, item := range ships {
-		if !Buyable(item.Bases) {
+		if !e.Buyable(item.Bases) {
 			continue
 		}
 		items = append(items, item)

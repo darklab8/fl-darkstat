@@ -1,6 +1,8 @@
 package configs_export
 
 import (
+	"strings"
+
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
 	"github.com/darklab8/fl-configs/configs/conftypes"
@@ -87,6 +89,10 @@ func FilterToUserfulBases(bases []Base) []Base {
 	var useful_bases []Base = make([]Base, 0, len(bases))
 	for _, item := range bases {
 		if (item.Name == "Object Unknown" || item.Name == "") && len(item.MarketGoods) == 0 {
+			continue
+		}
+
+		if strings.Contains(item.System, "Bastille") {
 			continue
 		}
 

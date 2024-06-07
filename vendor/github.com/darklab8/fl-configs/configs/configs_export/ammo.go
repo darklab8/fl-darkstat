@@ -45,7 +45,7 @@ func (e *Exporter) GetAmmo(ids []Tractor) []Ammo {
 			}
 		}
 
-		if !Buyable(munition.Bases) && (munition.Name == "") {
+		if !e.Buyable(munition.Bases) && (munition.Name == "") {
 			continue
 		}
 
@@ -56,10 +56,10 @@ func (e *Exporter) GetAmmo(ids []Tractor) []Ammo {
 	return tractors
 }
 
-func FilterToUsefulAmmo(cms []Ammo) []Ammo {
+func (e *Exporter) FilterToUsefulAmmo(cms []Ammo) []Ammo {
 	var useful_items []Ammo = make([]Ammo, 0, len(cms))
 	for _, item := range cms {
-		if !Buyable(item.Bases) {
+		if !e.Buyable(item.Bases) {
 			continue
 		}
 		useful_items = append(useful_items, item)

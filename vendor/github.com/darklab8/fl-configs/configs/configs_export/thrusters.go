@@ -74,10 +74,10 @@ func (e *Exporter) GetThrusters(ids []Tractor) []Thruster {
 	return thrusters
 }
 
-func FilterToUsefulThrusters(thrusters []Thruster) []Thruster {
+func (e *Exporter) FilterToUsefulThrusters(thrusters []Thruster) []Thruster {
 	var items []Thruster = make([]Thruster, 0, len(thrusters))
 	for _, item := range thrusters {
-		if !Buyable(item.Bases) {
+		if !e.Buyable(item.Bases) {
 			continue
 		}
 		items = append(items, item)

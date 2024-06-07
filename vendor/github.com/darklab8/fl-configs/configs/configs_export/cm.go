@@ -64,10 +64,10 @@ func (e *Exporter) GetCounterMeasures(ids []Tractor) []CounterMeasure {
 	return tractors
 }
 
-func FilterToUsefulCounterMeasures(cms []CounterMeasure) []CounterMeasure {
+func (e *Exporter) FilterToUsefulCounterMeasures(cms []CounterMeasure) []CounterMeasure {
 	var useful_items []CounterMeasure = make([]CounterMeasure, 0, len(cms))
 	for _, item := range cms {
-		if !Buyable(item.Bases) {
+		if !e.Buyable(item.Bases) {
 			continue
 		}
 		useful_items = append(useful_items, item)
