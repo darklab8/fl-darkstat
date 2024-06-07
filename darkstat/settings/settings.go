@@ -8,7 +8,6 @@ import (
 	_ "embed"
 
 	"github.com/darklab8/fl-configs/configs/configs_settings"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
 //go:embed version.txt
@@ -16,12 +15,11 @@ var version string
 
 type DarkstatEnvVars struct {
 	configs_settings.ConfEnvVars
-	TractorTabName   string
-	IsDevEnv         bool
-	SiteRoot         string
-	AppHeading       string
-	FreelancerFolder utils_types.FilePath
-	AppVersion       string
+	TractorTabName string
+	IsDevEnv       bool
+	SiteRoot       string
+	AppHeading     string
+	AppVersion     string
 }
 
 var Env DarkstatEnvVars

@@ -279,7 +279,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco fronttypes.Discove
 				if disco.Show {
 					@Button("Ships IDs", urls.ShipsIDs, urls.ShipsIDs == url)
 				}
-				@Button(settings.Conf.TractorTabName, urls.Tractors, urls.Tractors == url)
+				@Button(settings.Env.TractorTabName, urls.Tractors, urls.Tractors == url)
 				@Button("Engines", urls.Engines, urls.Engines == url)
 				@Button("Scanners", urls.Scanners, urls.Scanners == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:80px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Show All</button>
@@ -302,7 +302,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco fronttypes.Discove
 				if disco.Show {
 					@Button("Ships IDs", AllItemsUrl(urls.ShipsIDs), urls.ShipsIDs == url)
 				}
-				@Button(settings.Conf.TractorTabName, AllItemsUrl(urls.Tractors), urls.Tractors == url)
+				@Button(settings.Env.TractorTabName, AllItemsUrl(urls.Tractors), urls.Tractors == url)
 				@Button("Engines", AllItemsUrl(urls.Engines), urls.Engines == url)
 				@Button("Scanners", AllItemsUrl(urls.Scanners), urls.Scanners == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:90px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">Don't Show All</button>
