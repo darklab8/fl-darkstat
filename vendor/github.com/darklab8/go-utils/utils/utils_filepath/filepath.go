@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/darklab8/go-utils/goutils/utils"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 func Join(paths ...utils_types.FilePath) utils_types.FilePath {

@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 // Linux friendly filepath, that can be returned to Windows way from linux

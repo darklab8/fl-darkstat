@@ -34,10 +34,10 @@ import (
 	"github.com/darklab8/fl-configs/configs/discovery/discoprices"
 	"github.com/darklab8/fl-configs/configs/discovery/techcompat"
 
-	"github.com/darklab8/go-utils/goutils/utils"
-	"github.com/darklab8/go-utils/goutils/utils/time_measure"
-	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils"
+	"github.com/darklab8/go-utils/utils/timeit"
+	"github.com/darklab8/go-utils/utils/utils_logus"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type DiscoveryConfig struct {
@@ -137,7 +137,7 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		infocards_override = file.NewWebFile("https://discoverygc.com/gameconfigpublic/infocard_overrides.cfg")
 	}
 
-	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+	timeit.NewTimerF(func(m *timeit.Timer) {
 		var wg sync.WaitGroup
 		wg.Add(len(all_files))
 		for _, file := range all_files {
@@ -147,17 +147,17 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 			}(file)
 		}
 		wg.Wait()
-	}, time_measure.WithMsg("Scanned ini loaders"))
+	}, timeit.WithMsg("Scanned ini loaders"))
 
-	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+	timeit.NewTimerF(func(m *timeit.Timer) {
 		var wg sync.WaitGroup
 
 		wg.Add(1)
 		go func() {
-			time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+			timeit.NewTimerF(func(m *timeit.Timer) {
 				p.Universe_config = universe_mapped.Read(file_universe)
 				p.Systems = systems_mapped.Read(p.Universe_config, filesystem)
-			}, time_measure.WithMsg("map systems"))
+			}, timeit.WithMsg("map systems"))
 			wg.Done()
 		}()
 
@@ -242,7 +242,7 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 			}()
 		}
 		wg.Wait()
-	}, time_measure.WithMsg("Mapped stuff"))
+	}, timeit.WithMsg("Mapped stuff"))
 
 	logus.Log.Info("Parse OK for FreelancerFolderLocation=", utils_logus.FilePath(file1path))
 

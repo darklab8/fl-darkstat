@@ -12,7 +12,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader/inireader_types"
 	"github.com/darklab8/go-typelog/typelog"
-	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
+	"github.com/darklab8/go-utils/utils/utils_logus"
 
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
 )

@@ -17,8 +17,8 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
 
-	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils/utils_logus"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type WebFile struct {

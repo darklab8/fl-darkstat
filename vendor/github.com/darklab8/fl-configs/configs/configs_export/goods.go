@@ -3,7 +3,7 @@ package configs_export
 import (
 	"math"
 
-	"github.com/darklab8/go-utils/goutils/utils"
+	"github.com/darklab8/go-utils/utils"
 )
 
 type MarketGood struct {

@@ -1,13 +1,12 @@
 package utils
 
 import (
-	"os"
-
-	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
+	"github.com/darklab8/go-utils/utils/utils_logus"
+	"github.com/darklab8/go-utils/utils/utils_settings"
 )
 
 func RegenerativeTest(callback func() error) error {
-	if os.Getenv("DARK_TEST_REGENERATE") != "true" {
+	if !utils_settings.Envs.AreTestsRegenerating.ToBool() {
 		utils_logus.Log.Debug("Skipping test data regenerative code")
 		return nil
 	}

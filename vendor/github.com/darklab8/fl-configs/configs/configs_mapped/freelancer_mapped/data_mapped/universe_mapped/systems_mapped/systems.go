@@ -6,7 +6,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
-	"github.com/darklab8/go-utils/goutils/utils/time_measure"
+	"github.com/darklab8/go-utils/utils/timeit"
 )
 
 const (
@@ -136,7 +136,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 	frelconfig := &Config{}
 
 	var system_files map[string]*file.File = make(map[string]*file.File)
-	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+	timeit.NewTimerF(func(m *timeit.Timer) {
 		for _, base := range universe_config.Bases {
 			base_system := base.System.Get()
 			universe_system := universe_config.SystemMap[universe_mapped.SystemNickname(base_system)]
@@ -144,12 +144,12 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 			path := filesystem.GetFile(filename)
 			system_files[base.System.Get()] = file.NewFile(path.GetFilepath())
 		}
-	}, time_measure.WithMsg("systems prepared files"))
+	}, timeit.WithMsg("systems prepared files"))
 
 	var system_iniconfigs map[string]*inireader.INIFile = make(map[string]*inireader.INIFile)
 
 	func() {
-		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+		timeit.NewTimerF(func(m *timeit.Timer) {
 			// Read system files with parallelism ^_^
 			iniconfigs_channel := make(chan *FileRead)
 			read_file := func(data *FileRead) {
@@ -166,10 +166,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 				result := <-iniconfigs_channel
 				system_iniconfigs[result.system_key] = result.ini
 			}
-		}, time_measure.WithMsg("Read system files with parallelism ^_^"))
+		}, timeit.WithMsg("Read system files with parallelism ^_^"))
 	}()
 
-	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+	timeit.NewTimerF(func(m *timeit.Timer) {
 		frelconfig.SystemsMap = make(map[string]*System)
 		frelconfig.Systems = make([]*System, 0)
 		for system_key, sysiniconf := range system_iniconfigs {
@@ -259,7 +259,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 				}
 			}
 		}
-	}, time_measure.WithMsg("Map universe itself"))
+	}, timeit.WithMsg("Map universe itself"))
 
 	return frelconfig
 }
