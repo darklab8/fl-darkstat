@@ -2,26 +2,7 @@
     "go.testFlags": [
         "-v"
     ],
-    "go.testEnvVars": {
-        "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-discovery",
-        "DEV_ENV": "true",
-        //"FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
-        "DARKSTAT_LOG_LEVEL": "DEBUG",
-        "UTILS_LOG_LEVEL": "DEBUG",
-        "DARKSTAT_TRACTOR_TAB_NAME": "IDs",
-        // "CONFIGS_FALLBACK_TO_NICKNAMES": "true",
-        // "CONFIGS_STRICT": "false",
-    },
+    // "go.testEnvVars": {},
     "editor.formatOnSave": true,
-    "terminal.integrated.env.linux": {
-        "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-discovery",
-        "DEV_ENV": "true",
-        //"FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
-        "DARKSTAT_LOG_LEVEL": "DEBUG",
-        "UTILS_LOG_LEVEL": "DEBUG",
-        "FLDARKSTAT_HEADING": "Dev server for fl-darkstat | <a href=\"https://github.com/darklab8/fl-darkstat\">Github</a>",
-        "DARKSTAT_TRACTOR_TAB_NAME": "IDs",
-        // "CONFIGS_FALLBACK_TO_NICKNAMES": "true",
-        // "CONFIGS_STRICT": "false",
-    }
+    // "terminal.integrated.env.linux": {}
 }

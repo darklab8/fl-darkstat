@@ -7,7 +7,8 @@ import (
 	_ "embed"
 
 	"github.com/darklab8/fl-configs/configs/configs_settings"
-	"github.com/darklab8/go-utils/utils/utils_env"
+	"github.com/darklab8/go-utils/utils/enverant"
+	"github.com/darklab8/go-utils/utils/utils_os"
 	"github.com/darklab8/go-utils/utils/utils_settings"
 )
 
@@ -26,12 +27,15 @@ type DarkstatEnvVars struct {
 var Env DarkstatEnvVars
 
 func init() {
-	env := utils_env.NewEnvConfig()
+	env := enverant.NewEnverant(
+		enverant.WithEnvFile(utils_os.GetCurrentFolder().Dir().Dir().Join(".vscode", "enverant.json").ToString()),
+	)
 	Env = DarkstatEnvVars{
-		ConfEnvVars:    configs_settings.Env,
-		TractorTabName: env.GetEnvWithDefault("DARKSTAT_TRACTOR_TAB_NAME", "Tractors"),
-		SiteRoot:       env.GetEnvWithDefault("SITE_ROOT", "/"),
-		AppHeading:     env.GetEnv("FLDARKSTAT_HEADING"),
+		UtilsEnvs:      utils_settings.GetEnvs(env),
+		ConfEnvVars:    configs_settings.GetEnvs(env),
+		TractorTabName: env.GetStrOr("DARKSTAT_TRACTOR_TAB_NAME", "Tractors"),
+		SiteRoot:       env.GetStrOr("SITE_ROOT", "/"),
+		AppHeading:     env.GetStrOr("FLDARKSTAT_HEADING", ""),
 		AppVersion:     getAppVersion(),
 	}
 	fmt.Sprintln("conf=", Env)

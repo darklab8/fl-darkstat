@@ -26,10 +26,11 @@ See demos:
   - go install github.com/a-h/templ/cmd/templ@latest
   - check specific version in [go.mod](./go.mod)
   - In case of emergency we could use vendored in version perhaps
-- check [environment variables to set](.vscode/settings.json)
+- check [environment variables to set](.vscode/enverant.json)
 
   - set your own environment variable FREELANCER_FOLDER to Freelancer Folder
   - ensure it was set. `echo $FREELANCER_FOLDER` at Linux or `echo %FREELANCER_FOLDER%` at windows
+    - optionally is enough to change value in [enverant.json](.vscode/enverant.json) for that, and optionally overridable with Environment Variable of corresponding key name
 
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
 
