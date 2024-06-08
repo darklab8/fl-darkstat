@@ -8,15 +8,16 @@ import (
 
 	"github.com/darklab8/fl-configs/configs/configs_settings"
 	"github.com/darklab8/go-utils/utils/utils_env"
+	"github.com/darklab8/go-utils/utils/utils_settings"
 )
 
 //go:embed version.txt
 var version string
 
 type DarkstatEnvVars struct {
+	utils_settings.UtilsEnvs
 	configs_settings.ConfEnvVars
 	TractorTabName string
-	IsDevEnv       utils_env.EnvBool
 	SiteRoot       string
 	AppHeading     string
 	AppVersion     string
@@ -29,7 +30,6 @@ func init() {
 	Env = DarkstatEnvVars{
 		ConfEnvVars:    configs_settings.Env,
 		TractorTabName: env.GetEnvWithDefault("DARKSTAT_TRACTOR_TAB_NAME", "Tractors"),
-		IsDevEnv:       env.GetEnvBool("DEV"),
 		SiteRoot:       env.GetEnvWithDefault("SITE_ROOT", "/"),
 		AppHeading:     env.GetEnv("FLDARKSTAT_HEADING"),
 		AppVersion:     getAppVersion(),

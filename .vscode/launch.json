@@ -12,7 +12,7 @@
             "args": [],
             "env": {
                 "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-discovery",
-                "DEV": "true",
+                "DEV_ENV": "true",
                 // "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
                 "DARKSTAT_LOG_LEVEL": "DEBUG",
                 "UTILS_LOG_LEVEL": "DEBUG",

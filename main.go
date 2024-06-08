@@ -29,7 +29,7 @@ func main() {
 	defer func() {
 		if r := recover(); r != nil {
 			logus.Log.Error("Program crashed. Sleeping 10 seconds before exit", typelog.Any("recover", r))
-			if !settings.Env.IsDevEnv.ToBool() {
+			if !settings.Env.IsDevEnv {
 				fmt.Println("going to sleeping")
 				time.Sleep(10 * time.Second)
 			}
