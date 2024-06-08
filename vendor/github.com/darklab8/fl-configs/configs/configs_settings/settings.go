@@ -28,15 +28,17 @@ func init() {
 func GetEnvs(envs *enverant.Enverant) ConfEnvVars {
 	Env = ConfEnvVars{
 		UtilsEnvs:                   utils_settings.GetEnvs(envs),
-		FallbackInfonamesToNickname: envs.GetBoolOr("CONFIGS_FALLBACK_TO_NICKNAMES", false),
-		Strict:                      envs.GetBoolOr("CONFIGS_STRICT", true),
+		FallbackInfonamesToNickname: envs.GetBool("CONFIGS_FALLBACK_TO_NICKNAMES", enverant.OrBool(false)),
+		Strict:                      envs.GetBool("CONFIGS_STRICT", enverant.OrBool(true)),
 		FreelancerFolder:            getGameLocation(envs),
 	}
 	return Env
 }
 
 func getGameLocation(envs *enverant.Enverant) utils_types.FilePath {
-	var folder utils_types.FilePath = utils_types.FilePath(envs.GetStr("FREELANCER_FOLDER"))
+	var folder utils_types.FilePath = utils_types.FilePath(
+		envs.GetStr("FREELANCER_FOLDER", enverant.OrStr("")),
+	)
 
 	if folder == "" {
 		workdir, _ := os.Getwd()

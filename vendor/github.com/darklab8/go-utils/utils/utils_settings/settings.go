@@ -16,8 +16,8 @@ func init() {
 
 func GetEnvs(envs *enverant.Enverant) UtilsEnvs {
 	Envs = UtilsEnvs{
-		IsDevEnv:             envs.GetBoolOr("DEV_ENV", false),
-		AreTestsRegenerating: envs.GetBoolOr("DARK_TEST_REGENERATE", false),
+		IsDevEnv:             envs.GetBool("DEV_ENV", enverant.OrBool(false)),
+		AreTestsRegenerating: envs.GetBool("DARK_TEST_REGENERATE", enverant.OrBool(false)),
 	}
 	return Envs
 }

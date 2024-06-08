@@ -33,9 +33,9 @@ func init() {
 	Env = DarkstatEnvVars{
 		UtilsEnvs:      utils_settings.GetEnvs(env),
 		ConfEnvVars:    configs_settings.GetEnvs(env),
-		TractorTabName: env.GetStrOr("DARKSTAT_TRACTOR_TAB_NAME", "Tractors"),
-		SiteRoot:       env.GetStrOr("SITE_ROOT", "/"),
-		AppHeading:     env.GetStrOr("FLDARKSTAT_HEADING", ""),
+		TractorTabName: env.GetStr("DARKSTAT_TRACTOR_TAB_NAME", enverant.OrStr("Tractors")),
+		SiteRoot:       env.GetStr("SITE_ROOT", enverant.OrStr("/")),
+		AppHeading:     env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr("")),
 		AppVersion:     getAppVersion(),
 	}
 	fmt.Sprintln("conf=", Env)
