@@ -6,7 +6,7 @@ import (
 )
 
 func RegenerativeTest(callback func() error) error {
-	if !utils_settings.Envs.AreTestsRegenerating.ToBool() {
+	if !utils_settings.Envs.AreTestsRegenerating {
 		utils_logus.Log.Debug("Skipping test data regenerative code")
 		return nil
 	}

@@ -3,8 +3,8 @@ package utils_settings
 import "github.com/darklab8/go-utils/utils/utils_env"
 
 type UtilsEnvs struct {
-	IsDevEnv             utils_env.EnvBool
-	AreTestsRegenerating utils_env.EnvBool
+	IsDevEnv             bool
+	AreTestsRegenerating bool
 }
 
 var Envs UtilsEnvs

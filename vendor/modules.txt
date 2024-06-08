@@ -44,7 +44,7 @@ github.com/darklab8/fl-configs/configs/tests
 # github.com/darklab8/go-typelog v0.6.0
 ## explicit; go 1.21.1
 github.com/darklab8/go-typelog/typelog
-# github.com/darklab8/go-utils v0.14.1
+# github.com/darklab8/go-utils v0.14.2
 ## explicit; go 1.21.1
 github.com/darklab8/go-utils/utils
 github.com/darklab8/go-utils/utils/timeit
