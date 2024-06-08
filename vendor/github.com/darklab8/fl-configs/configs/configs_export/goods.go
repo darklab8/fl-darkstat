@@ -3,7 +3,7 @@ package configs_export
 import (
 	"math"
 
-	"github.com/darklab8/go-utils/utils"
+	"github.com/darklab8/go-utils/utils/ptr"
 )
 
 type MarketGood struct {
@@ -107,7 +107,7 @@ func (e *Exporter) getMarketGoods() map[string][]MarketGood {
 			if category == "commodity" {
 
 				if e.configs.Discovery != nil {
-					good_to_add.PriceToSell = utils.Ptr(market_good.BaseSellsIPositiveAndDiscoSellPrice.Get())
+					good_to_add.PriceToSell = ptr.Ptr(market_good.BaseSellsIPositiveAndDiscoSellPrice.Get())
 				} else {
 					good_to_add.PriceToSell = &good_to_add.PriceToBuy
 				}

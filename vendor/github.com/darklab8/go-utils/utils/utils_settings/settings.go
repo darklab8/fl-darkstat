@@ -1,6 +1,6 @@
 package utils_settings
 
-import "github.com/darklab8/go-utils/utils/utils_env"
+import "github.com/darklab8/go-utils/utils/enverant"
 
 type UtilsEnvs struct {
 	IsDevEnv             bool
@@ -10,9 +10,14 @@ type UtilsEnvs struct {
 var Envs UtilsEnvs
 
 func init() {
-	envs := utils_env.NewEnvConfig()
+	envs := enverant.NewEnverant()
+	GetEnvs(envs)
+}
+
+func GetEnvs(envs *enverant.Enverant) UtilsEnvs {
 	Envs = UtilsEnvs{
-		IsDevEnv:             envs.GetEnvBool("DEV_ENV"),
-		AreTestsRegenerating: envs.GetEnvBool("DARK_TEST_REGENERATE"),
+		IsDevEnv:             envs.GetBoolOr("DEV_ENV", false),
+		AreTestsRegenerating: envs.GetBoolOr("DARK_TEST_REGENERATE", false),
 	}
+	return Envs
 }
