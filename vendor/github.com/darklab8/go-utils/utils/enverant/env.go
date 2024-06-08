@@ -10,9 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
-	"github.com/darklab8/go-utils/utils/utils_logus"
 )
 
 type Enverant struct {
@@ -42,6 +40,13 @@ func WithValidate(validate bool) EnverantOption {
 	return func(m *Enverant) {
 		m.validate_missing = validate
 	}
+}
+
+func (m *Enverant) GetValidating() *Enverant {
+	var clone *Enverant = &Enverant{}
+	*clone = *m
+	clone.validate_missing = true
+	return clone
 }
 
 func EnrichStr(value string) string {
@@ -75,6 +80,11 @@ func OrBool(default_ bool) ValueOption {
 	}
 }
 
+func (e *Enverant) GetStrOr(key string, default_ string, opts ...ValueOption) string {
+	value, _ := e.GetString(key, append([]ValueOption{OrStr(default_)}, opts...)...)
+	return value
+}
+
 func (e *Enverant) GetStr(key string, opts ...ValueOption) string {
 	if value, ok := e.GetString(key, opts...); ok {
 		return value
@@ -96,11 +106,7 @@ func (e *Enverant) GetString(key string, opts ...ValueOption) (string, bool) {
 	}
 
 	if value, ok := os.LookupEnv(key); ok {
-		return value, true
-	}
-
-	if value, ok := e.file_envs[key]; ok {
-		return EnrichStr(value.(string)), true
+		return EnrichStr(value), true
 	}
 
 	if params.default_ != nil {
@@ -108,10 +114,15 @@ func (e *Enverant) GetString(key string, opts ...ValueOption) (string, bool) {
 	}
 
 	if e.validate_missing {
-		utils_logus.Log.Panic("enverant value is not defined", typelog.String("key", key))
+		panic(fmt.Sprintln("enverant value is not defined, key=", key))
 	}
 
 	return "", false
+}
+
+func (e *Enverant) GetBoolOr(key string, default_ bool, opts ...ValueOption) bool {
+	value, _ := e.GetBoolean(key, append([]ValueOption{OrBool(default_)}, opts...)...)
+	return value
 }
 
 func (e *Enverant) GetBool(key string, opts ...ValueOption) bool {
@@ -138,26 +149,20 @@ func (e *Enverant) GetBoolean(key string, opts ...ValueOption) (bool, bool) {
 		return value == "true", true
 	}
 
-	if value, ok := e.file_envs[key]; ok {
-		switch v := value.(type) {
-		case bool:
-			return v, true
-		case string:
-			return v == "true", true
-		default:
-			panic(fmt.Sprintln("unrecognized type for value", v, " in GetBoolOr"))
-		}
-	}
-
 	if params.default_ != nil {
 		return params.default_.(bool), true
 	}
 
 	if e.validate_missing {
-		utils_logus.Log.Panic("enverant value is not defined", typelog.String("key", key))
+		panic(fmt.Sprintln("enverant value is not defined, key=", key))
 	}
 
 	return false, false
+}
+
+func (e *Enverant) GetIntOr(key string, default_ int, opts ...ValueOption) int {
+	value, _ := e.GetInteger(key, append([]ValueOption{OrInt(default_)}, opts...)...)
+	return value
 }
 
 func (e *Enverant) GetInt(key string, opts ...ValueOption) int {
@@ -182,23 +187,10 @@ func (e *Enverant) GetInteger(key string, opts ...ValueOption) (int, bool) {
 
 	if value, ok := os.LookupEnv(key); ok {
 		int_value, err := strconv.Atoi(value)
-		utils_logus.Log.CheckPanic(err, "expected to be int", typelog.String("key", key))
-		return int_value, true
-	}
-
-	if value, ok := e.file_envs[key]; ok {
-		switch v := value.(type) {
-		case int:
-			return v, true
-		case float64:
-			return int(v), true
-		case string:
-			int_value, err := strconv.Atoi(v)
-			utils_logus.Log.CheckPanic(err, "expected to be int", typelog.String("key", key))
-			return int_value, true
-		default:
-			panic(fmt.Sprintln("unrecognized type for value", v, " in GetIntOr"))
+		if err != nil {
+			panic(fmt.Sprintln(err, "expected to be int, key=", key))
 		}
+		return int_value, true
 	}
 
 	if params.default_ != nil {
@@ -206,7 +198,7 @@ func (e *Enverant) GetInteger(key string, opts ...ValueOption) (int, bool) {
 	}
 
 	if e.validate_missing {
-		utils_logus.Log.Panic("enverant value is not defined", typelog.String("key", key))
+		panic(fmt.Sprintln("enverant value is not defined, key=", key))
 	}
 
 	return 0, false

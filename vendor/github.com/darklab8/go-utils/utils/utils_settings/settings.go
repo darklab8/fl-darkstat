@@ -1,6 +1,8 @@
 package utils_settings
 
-import "github.com/darklab8/go-utils/utils/enverant"
+import (
+	"github.com/darklab8/go-utils/utils/enverant"
+)
 
 type UtilsEnvs struct {
 	IsDevEnv             bool

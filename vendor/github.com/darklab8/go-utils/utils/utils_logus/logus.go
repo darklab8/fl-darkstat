@@ -6,6 +6,8 @@ import (
 
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/utils_types"
+
+	_ "github.com/darklab8/go-utils/utils/utils_settings"
 )
 
 var Log *typelog.Logger = typelog.NewLogger("utils")
