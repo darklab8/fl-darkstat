@@ -7,9 +7,9 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
-	"github.com/darklab8/go-utils/goutils/utils/time_measure"
-	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils/timeit"
+	"github.com/darklab8/go-utils/utils/utils_filepath"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type Builder struct {
@@ -37,7 +37,7 @@ func (b *Builder) RegDark(components ...*Component) {
 
 func (b *Builder) build(components []*Component, params types.GlobalParams, filesystem *Filesystem) {
 
-	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+	timeit.NewTimerF(func(m *timeit.Timer) {
 		results := make(chan WriteResult)
 		for _, comp := range components {
 			go func(comp *Component) {
@@ -48,16 +48,16 @@ func (b *Builder) build(components []*Component, params types.GlobalParams, file
 			result := <-results
 			filesystem.WriteToMem(result.realpath, result.bytes)
 		}
-	}, time_measure.WithMsg("wrote components"))
+	}, timeit.WithMsg("wrote components"))
 
-	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+	timeit.NewTimerF(func(m *timeit.Timer) {
 		target_folder := utils_filepath.Join(utils_types.FilePath(params.Buildpath.ToString()), "static")
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "htmx.js"), []byte(static_front.HtmxJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "preload.js"), []byte(static_front.PreloadJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "sortable.js"), []byte(static_front.SortableJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "custom.js"), []byte(static_front.CustomJS))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "common", "favicon.ico"), []byte(static_common.FaviconIco))
-	}, time_measure.WithMsg("gathered static assets"))
+	}, timeit.WithMsg("gathered static assets"))
 }
 
 func (b *Builder) BuildAll() *Filesystem {

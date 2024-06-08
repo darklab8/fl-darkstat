@@ -11,7 +11,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/web"
 	"github.com/darklab8/go-typelog/typelog"
-	"github.com/darklab8/go-utils/goutils/utils/time_measure"
+	"github.com/darklab8/go-utils/utils/timeit"
 )
 
 type Action string
@@ -46,15 +46,18 @@ func main() {
 
 	web := func() {
 		var fs *builder.Filesystem
-		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
-			var linked_build *builder.Builder
-			time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
-				linked_build = linker.NewLinker().Link()
-			}, time_measure.WithMsg("linking stuff linker.NewLinker().Link()"))
-			time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
-				fs = linked_build.BuildAll()
-			}, time_measure.WithMsg("building stuff linked_build.BuildAll()"))
-		}, time_measure.WithMsg("total time for web web := func()"))
+		timeit.NewTimerMF("total time for web web := func()",
+			func(m *timeit.Timer) {
+				var linked_build *builder.Builder
+				timeit.NewTimerMF("linking stuff linker.NewLinker().Link()",
+					func(m *timeit.Timer) {
+						linked_build = linker.NewLinker().Link()
+					})
+				timeit.NewTimerMF("building stuff linked_build.BuildAll()",
+					func(m *timeit.Timer) {
+						fs = linked_build.BuildAll()
+					})
+			})
 		web.NewWeb(fs).Serve()
 	}
 

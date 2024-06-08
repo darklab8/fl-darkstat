@@ -18,9 +18,9 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
-	"github.com/darklab8/go-utils/goutils/utils/time_measure"
-	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils/timeit"
+	"github.com/darklab8/go-utils/utils/utils_logus"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type Linker struct {
@@ -36,7 +36,7 @@ func NewLinker(opts ...LinkOption) *Linker {
 		opt(l)
 	}
 
-	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+	timeit.NewTimerF(func(m *timeit.Timer) {
 		freelancer_folder := settings.Env.FreelancerFolder
 		if l.configs == nil {
 			l.mapped = configs_mapped.NewMappedConfigs()
@@ -44,23 +44,23 @@ func NewLinker(opts ...LinkOption) *Linker {
 			l.mapped.Read(freelancer_folder)
 			l.configs = configs_export.NewExporter(l.mapped)
 		}
-	}, time_measure.WithMsg("MappedConfigs creation"))
+	}, timeit.WithMsg("MappedConfigs creation"))
 	return l
 }
 
 func (l *Linker) Link() *builder.Builder {
 	var build *builder.Builder
-	time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
-		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+	timeit.NewTimerF(func(m *timeit.Timer) {
+		timeit.NewTimerF(func(m *timeit.Timer) {
 			build = builder.NewBuilder()
-		}, time_measure.WithMsg("building creation"))
+		}, timeit.WithMsg("building creation"))
 
 		var data *configs_export.Exporter
-		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+		timeit.NewTimerF(func(m *timeit.Timer) {
 			data = l.configs.Export()
-		}, time_measure.WithMsg("exporting data"))
+		}, timeit.WithMsg("exporting data"))
 
-		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+		timeit.NewTimerF(func(m *timeit.Timer) {
 			sort.Slice(data.Bases, func(i, j int) bool {
 				return data.Bases[i].Name < data.Bases[j].Name
 			})
@@ -231,7 +231,7 @@ func (l *Linker) Link() *builder.Builder {
 				})
 			}
 
-		}, time_measure.WithMsg("sorting completed"))
+		}, timeit.WithMsg("sorting completed"))
 
 		var useful_factions []configs_export.Faction
 		var useful_ships []configs_export.Ship
@@ -241,7 +241,7 @@ func (l *Linker) Link() *builder.Builder {
 
 		var disco_ids fronttypes.DiscoveryIDs
 
-		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+		timeit.NewTimerF(func(m *timeit.Timer) {
 			useful_factions = configs_export.FilterToUsefulFactions(data.Factions)
 			useful_ships = data.FilterToUsefulShips(data.Ships)
 			useful_guns = data.FilterToUsefulGun(data.Guns)
@@ -254,9 +254,9 @@ func (l *Linker) Link() *builder.Builder {
 					Config: l.mapped.Discovery.Techcompat,
 				}
 			}
-		}, time_measure.WithMsg("filtering to useful stuff"))
+		}, timeit.WithMsg("filtering to useful stuff"))
 
-		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+		timeit.NewTimerF(func(m *timeit.Timer) {
 
 			build.RegComps(
 				builder.NewComponent(
@@ -443,9 +443,9 @@ func (l *Linker) Link() *builder.Builder {
 					),
 				)
 			}
-		}, time_measure.WithMsg("linking main stuff"))
+		}, timeit.WithMsg("linking main stuff"))
 
-		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+		timeit.NewTimerF(func(m *timeit.Timer) {
 			for _, faction := range data.Factions {
 				build.RegComps(
 					builder.NewComponent(
@@ -458,9 +458,9 @@ func (l *Linker) Link() *builder.Builder {
 					),
 				)
 			}
-		}, time_measure.WithMsg("linking faction stuff"))
+		}, timeit.WithMsg("linking faction stuff"))
 
-		time_measure.TimeMeasure(func(m *time_measure.TimeMeasurer) {
+		timeit.NewTimerF(func(m *timeit.Timer) {
 			for nickname, infocard := range data.Infocards {
 				build.RegComps(
 					builder.NewComponent(
@@ -618,9 +618,9 @@ func (l *Linker) Link() *builder.Builder {
 					),
 				)
 			}
-		}, time_measure.WithMsg("linking most of stuff"))
+		}, timeit.WithMsg("linking most of stuff"))
 
-	}, time_measure.WithMsg("link, internal measure"))
+	}, timeit.WithMsg("link, internal measure"))
 
 	return build
 }
