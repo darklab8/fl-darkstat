@@ -24,16 +24,13 @@ func NewEnverant(opts ...EnverantOption) *Enverant {
 	e := &Enverant{
 		file_envs: map[string]interface{}{},
 	}
+	if path, ok := os.LookupEnv("ENVERANT_ENV_FILE"); ok {
+		e.file_envs = ReadJson(path)
+	}
 	for _, opt := range opts {
 		opt(e)
 	}
 	return e
-}
-
-func WithEnvFile(path string) EnverantOption {
-	return func(m *Enverant) {
-		m.file_envs = ReadJson(path)
-	}
 }
 
 func WithValidate(validate bool) EnverantOption {

@@ -19,8 +19,14 @@ func init() {
 	regexy.InitRegexExpression(&regexConfiglines, `^(.*)(?:// .*)$`)
 }
 
+var EnverantDebug = os.Getenv("ENVERANT_PRINT_JSON") == "true"
+
 func ReadJson(path string) map[string]interface{} {
 	env_map := make(map[string]interface{})
+
+	if EnverantDebug {
+		fmt.Println("enverant path=", path)
+	}
 
 	file, err := os.Open(path)
 	if err != nil {
@@ -39,7 +45,7 @@ func ReadJson(path string) map[string]interface{} {
 		if len(match) > 0 {
 			input_line = match[1]
 		}
-		if os.Getenv("ENVERANT_PRINT_JSON") == "true" {
+		if EnverantDebug {
 			fmt.Println(input_line)
 		}
 		cleaned_json.WriteString(input_line)

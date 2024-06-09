@@ -3,10 +3,10 @@
         "-v"
     ],
     "go.testEnvVars": {
-        "ENVERANT_PRINT_JSON": "true"
+        "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"
     },
     "editor.formatOnSave": true,
     "terminal.integrated.env.linux": {
-        "ENVERANT_PRINT_JSON": "true"
+        "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"
     }
 }

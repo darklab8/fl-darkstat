@@ -2,7 +2,7 @@
 ## explicit; go 1.20
 github.com/a-h/templ
 github.com/a-h/templ/safehtml
-# github.com/darklab8/fl-configs v0.62.8
+# github.com/darklab8/fl-configs v0.62.9
 ## explicit; go 1.21.1
 github.com/darklab8/fl-configs/configs/config_consts
 github.com/darklab8/fl-configs/configs/configs_export
@@ -44,7 +44,7 @@ github.com/darklab8/fl-configs/configs/tests
 # github.com/darklab8/go-typelog v0.6.0
 ## explicit; go 1.21.1
 github.com/darklab8/go-typelog/typelog
-# github.com/darklab8/go-utils v0.17.4
+# github.com/darklab8/go-utils v0.17.5
 ## explicit; go 1.21.1
 github.com/darklab8/go-utils/utils
 github.com/darklab8/go-utils/utils/enverant

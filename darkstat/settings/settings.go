@@ -8,7 +8,6 @@ import (
 
 	"github.com/darklab8/fl-configs/configs/configs_settings"
 	"github.com/darklab8/go-utils/utils/enverant"
-	"github.com/darklab8/go-utils/utils/utils_os"
 	"github.com/darklab8/go-utils/utils/utils_settings"
 )
 
@@ -27,9 +26,7 @@ type DarkstatEnvVars struct {
 var Env DarkstatEnvVars
 
 func init() {
-	env := enverant.NewEnverant(
-		enverant.WithEnvFile(utils_os.GetCurrentFolder().Dir().Dir().Join(".enverant", "enverant.json").ToString()),
-	)
+	env := enverant.NewEnverant()
 	Env = DarkstatEnvVars{
 		UtilsEnvs:      utils_settings.GetEnvs(env),
 		ConfEnvVars:    configs_settings.GetEnvs(env),

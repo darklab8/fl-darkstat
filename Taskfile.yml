@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 tasks:
   test:
@@ -41,13 +41,12 @@ tasks:
     cmds:
       - task: build-version
       # pip install watchdog[watchmedo]
-      - > 
+      - >
         ~/venv/bin/watchmedo auto-restart 
-        --patterns "*.templ;*.go;*.css;*.js" 
+        --patterns "*.templ;*.go;*.css;*.js;enverant.json" 
         -i "*_templ.go"
         --recursive
         -- sh -c "task web; sleep infinity"
-
 
   build:test:
     cmds:
@@ -75,7 +74,7 @@ tasks:
       # - GOOS=linux GOARCH=386 go build -v -o dist/darkstat-linux-386 main.go
       # - GOOS=linux GOARCH=arm go build -v -o dist/darkstat-linux-arm main.go
       # - GOOS=windows GOARCH=386 go build -v -o dist/darkstat-windows-386.exe main.go
-      # - GOOS=windows GOARCH=arm go build -v -o dist/darkstat-windows-arm.exe main.go      
+      # - GOOS=windows GOARCH=arm go build -v -o dist/darkstat-windows-arm.exe main.go
       # - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkstat-macos-amd64 main.go
       # - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkstat-macos-arm64 main.go
 

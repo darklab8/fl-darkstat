@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/darklab8/go-utils/utils/enverant"
-	"github.com/darklab8/go-utils/utils/utils_os"
 	"github.com/darklab8/go-utils/utils/utils_settings"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -19,10 +18,7 @@ type ConfEnvVars struct {
 var Env ConfEnvVars
 
 func init() {
-	env := enverant.NewEnverant(
-		enverant.WithEnvFile(utils_os.GetCurrentFolder().Dir().Dir().Join(".enverant", "enverant.json").ToString()),
-	)
-	Env = GetEnvs(env)
+	Env = GetEnvs(enverant.NewEnverant())
 }
 
 func GetEnvs(envs *enverant.Enverant) ConfEnvVars {
