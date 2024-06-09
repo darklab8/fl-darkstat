@@ -2,7 +2,11 @@
     "go.testFlags": [
         "-v"
     ],
-    // "go.testEnvVars": {},
+    "go.testEnvVars": {
+        "ENVERANT_PRINT_JSON": "true"
+    },
     "editor.formatOnSave": true,
-    // "terminal.integrated.env.linux": {}
+    "terminal.integrated.env.linux": {
+        "ENVERANT_PRINT_JSON": "true"
+    }
 }
