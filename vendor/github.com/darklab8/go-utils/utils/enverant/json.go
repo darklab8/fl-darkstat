@@ -39,6 +39,9 @@ func ReadJson(path string) map[string]interface{} {
 		if len(match) > 0 {
 			input_line = match[1]
 		}
+		if os.Getenv("ENVERANT_PRINT_JSON") == "true" {
+			fmt.Println(input_line)
+		}
 		cleaned_json.WriteString(input_line)
 	}
 

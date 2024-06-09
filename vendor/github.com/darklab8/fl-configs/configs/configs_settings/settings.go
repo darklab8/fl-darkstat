@@ -20,7 +20,7 @@ var Env ConfEnvVars
 
 func init() {
 	env := enverant.NewEnverant(
-		enverant.WithEnvFile(utils_os.GetCurrentFolder().Dir().Dir().Join(".vscode", "enverant.json").ToString()),
+		enverant.WithEnvFile(utils_os.GetCurrentFolder().Dir().Dir().Join(".enverant", "enverant.json").ToString()),
 	)
 	Env = GetEnvs(env)
 }
