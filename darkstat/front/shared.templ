@@ -211,7 +211,7 @@ templ Heading(disco fronttypes.DiscoveryIDs) {
 		<div class="right">
 			if disco.Show {
 				<div id="patch">
-					Patch: { disco.LatestPatch.Name }
+					Patch: <a href="https://patch.discoverygc.com/patchlist.xml">{ disco.LatestPatch.Name }</a>
 				</div>
 			}
 			<div id="time">
