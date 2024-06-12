@@ -106,3 +106,4 @@ So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery f
 - or open [Pull Request here](https://github.com/darklab8/fl-darkstat/issues) and write there
 
 See anouncements at [Discovery Freelancer forum thread](https://discoverygc.com/forums/showthread.php?tid=187294)
+
