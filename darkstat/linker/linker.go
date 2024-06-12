@@ -249,9 +249,10 @@ func (l *Linker) Link() *builder.Builder {
 
 			if l.mapped.Discovery != nil {
 				disco_ids = fronttypes.DiscoveryIDs{
-					Show:   true,
-					Ids:    l.configs.Tractors,
-					Config: l.mapped.Discovery.Techcompat,
+					Show:        true,
+					Ids:         l.configs.Tractors,
+					Config:      l.mapped.Discovery.Techcompat,
+					LatestPatch: l.mapped.Discovery.LatestPatch,
 				}
 			}
 		}, timeit.WithMsg("filtering to useful stuff"))

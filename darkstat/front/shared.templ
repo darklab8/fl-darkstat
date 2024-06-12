@@ -178,7 +178,7 @@ templ TabContent() {
 	</style>
 }
 
-templ Heading() {
+templ Heading(disco fronttypes.DiscoveryIDs) {
 	<style>
 		.heading {
 			display: flex;
@@ -195,9 +195,12 @@ templ Heading() {
 			align-self: stretch;
 
 		}
-		#time {
+		#time, #patch {
 			color: var(--color_time);
-			font-size: 0.9em;
+			font-size: 0.8em;
+			align-self: flex-end;
+		}
+		#heading_string {
 			align-self: flex-end;
 		}
 	</style>
@@ -206,8 +209,15 @@ templ Heading() {
 			{ children... }
 		</div>
 		<div class="right">
-			<div id="time">Refreshed at { types.GetCtx(ctx).Timestamp.Format("02 Jan 2006 15:04:05") } UTC</div>
-			<div>
+			if disco.Show {
+				<div id="patch">
+					Patch: { disco.LatestPatch.Name }
+				</div>
+			}
+			<div id="time">
+				Refreshed at { types.GetCtx(ctx).Timestamp.Format("02 Jan 2006 15:04:05") } UTC
+			</div>
+			<div id="heading_string">
 				@templ.Raw(types.GetCtx(ctx).Heading)
 			</div>
 		</div>
@@ -258,7 +268,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco fronttypes.Discove
 		}
 	}
 	</style>
-	@Heading() {
+	@Heading(disco) {
 		<div class="tab-list" role="tablist">
 			if mode == false {
 				@Button("Bases", urls.Bases, urls.Bases == url)
