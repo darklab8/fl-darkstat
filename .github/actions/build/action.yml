@@ -28,6 +28,7 @@ runs:
         git clone --depth 1 --branch $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/https:\/\/github.com\/darklab8\/fl-darkstat\/releases\/tag\///") https://github.com/darklab8/fl-darkstat.git
         go install github.com/a-h/templ/cmd/templ@v0.2.543
         cd fl-darkstat
+        echo $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/https:\/\/github.com\/darklab8\/fl-darkstat\/releases\/tag\///") > darkstat/settings/version.txt
         templ generate
         GOOS=linux go build -v -o main main.go
         install -m 777 main /usr/local/bin/darkstat
