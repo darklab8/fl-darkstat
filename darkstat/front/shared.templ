@@ -215,7 +215,7 @@ templ Heading(disco fronttypes.DiscoveryIDs) {
 				</div>
 			}
 			<div id="time">
-				Refreshed at { types.GetCtx(ctx).Timestamp.Format("02 Jan 2006 15:04:05") } UTC
+				Darkstat { settings.Env.AppVersion } refreshed at { types.GetCtx(ctx).Timestamp.Format("02 Jan 2006 15:04:05") } UTC
 			</div>
 			<div id="heading_string">
 				@templ.Raw(types.GetCtx(ctx).Heading)
