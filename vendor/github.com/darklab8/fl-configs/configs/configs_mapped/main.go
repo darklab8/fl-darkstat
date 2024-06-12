@@ -4,6 +4,9 @@ Tool to parse freelancer configs
 package configs_mapped
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
 	"sync"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/const_mapped"
@@ -27,6 +30,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
+	"github.com/darklab8/fl-data-discovery/autopatcher"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/market_mapped"
@@ -41,8 +45,9 @@ import (
 )
 
 type DiscoveryConfig struct {
-	Techcompat *techcompat.Config
-	Prices     *discoprices.Config
+	Techcompat  *techcompat.Config
+	Prices      *discoprices.Config
+	LatestPatch autopatcher.Patch
 }
 
 type MappedConfigs struct {
@@ -130,6 +135,16 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
 		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
 		all_files = append(all_files, file_techcompat, file_prices)
+
+		if latest_patch_file := filesystem.GetFile(autopatcher.AutopatherFilename); latest_patch_file != nil {
+			fmt.Println("latest_patch_file=", latest_patch_file)
+			latest_patch_file_fp := latest_patch_file.GetFilepath()
+			patch_data, err := os.ReadFile(latest_patch_file_fp.ToString())
+			if !logus.Log.CheckError(err, "failed to unmarshal patch") {
+				json.Unmarshal(patch_data, &p.Discovery.LatestPatch)
+			}
+			fmt.Println("p.Discovery.LatestPatch=", p.Discovery.LatestPatch)
+		}
 	}
 
 	var infocards_override *file.File
