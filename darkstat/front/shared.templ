@@ -410,7 +410,7 @@ templ GoodAtBaseInfoT(name string, base_infos []configs_export.GoodAtBase, is_co
 				<td>{ strconv.Itoa(base_info.PriceBaseSellsFor) }</td>
 				if is_commodity {
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
-					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
+					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseSellsFor, base_info.Volume)) }</td>
 				}
 				<td>{ strconv.FormatBool(base_info.BaseSells) }</td>
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
