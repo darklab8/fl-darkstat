@@ -1,6 +1,11 @@
+/**
+ * Calculate count of visible elements in Table.
+ * You should probably account elements with `tr[i].style.display = "none";` too may be here.
+ * @param {HTMLTableElement} table
+ */
 function TableLen(table) {
-    var count = 0;
-    for (var i = 0, row; row = table.rows[i]; i++) {
+    let count = 0;
+    for (let i = 0, row; row = table.rows[i]; i++) {
 
         if (!row.classList.contains(HIDDEN_CLS)) {
             count = count + 1;
@@ -12,22 +17,34 @@ function TableLen(table) {
 
 var HIDDEN_CLS = "hidden";
 
+/**
+ * hide, row or table or anything else
+ * @param {string} id
+ */
 function Hide(id) {
-    var element = document.getElementById(id);
+    let element = document.getElementById(id);
     // console.log("Hide.id=" + id)
     if (!element.classList.contains(HIDDEN_CLS)) {
         element.classList.add(HIDDEN_CLS);
     }
 }
 
+/**
+ * unhide, row or table or anything else
+ * @param {string} id
+ */
 function Unhide(id) {
-    var element = document.getElementById(id);
+    let element = document.getElementById(id);
     // console.log("Unhide.id=" + id)
     if (element.classList.contains(HIDDEN_CLS)) {
         element.classList.remove(HIDDEN_CLS);
     }
 }
 
+/**
+ * Function helping to persist selected ID
+ * when user moves across different tabs
+ */
 function LoadSelectedTractorID() {
     // console.log("triggered LoadSelectedTractorID")
     let selected_index = sessionStorage.getItem("tractor_id_selected_index");
@@ -39,17 +56,21 @@ function LoadSelectedTractorID() {
     }
 }
 
+/**
+ * Implements functionality for filtering search bar
+ * For table that has also filtering by selected ID tech compatibility, which is needed for Freelancer Discovery
+ */
 function FilteringFunction() {
     // Declare variables
     // console.log("triggered FilteringFunction")
-    var input, filter, table, tr, td, i, txtValue;
+    let input, filter, table, tr, i, txtValue;
     input = document.getElementById("filterinput");
     filter = input.value.toUpperCase();
     table = document.querySelector("#table-top table");
     tr = table.getElementsByTagName("tr");
 
     // Select current ID tractor
-    var tractor_id_elem, tractor_id_selected;
+    let tractor_id_elem, tractor_id_selected;
     tractor_id_selected = "";
     tractor_id_elem = document.getElementById("tractor_id_selector");
     if (typeof (tractor_id_elem) != 'undefined' && tractor_id_elem != null) {
@@ -83,7 +104,7 @@ function FilteringFunction() {
         txtValue = row.textContent || row.innerText;
 
         // Refresh tech compat value
-        var techcompat_visible = true;
+        let techcompat_visible = true;
         cell = row.getElementsByClassName("tech_compat")[0];
         if (typeof (cell) != 'undefined') {
             techcompats = JSON.parse(cell.attributes["techcompats"].textContent);
@@ -113,10 +134,15 @@ function FilteringFunction() {
     }
 }
 
+/**
+ * Implements functionality for filtering search bar
+ * @param {string} table_selector
+ * @param {string} input_selector
+ */
 function FilteringForAnyTable(table_selector, input_selector) {
     // Declare variables
     // console.log("triggered FilteringFunction")
-    var input, filter, table, tr, td, i, txtValue;
+    let input, filter, table, tr, i, txtValue;
     input = document.getElementById(input_selector); // "filterinput"
     filter = input.value.toUpperCase();
     table = document.querySelector(table_selector); // "#table-top table"
@@ -138,15 +164,19 @@ function FilteringForAnyTable(table_selector, input_selector) {
     }
 }
 
+/**
+ * Highlights clicked table row
+ * @param {HTMLTableRowElement} row
+ */
 function RowHighlighter(row) {
-    var table = row.parentElement.parentElement;
+    let table = row.parentElement.parentElement;
 
-    var selected_row_id = row.rowIndex;
+    let selected_row_id = row.rowIndex;
 
-    var rowsNotSelected = table.getElementsByTagName('tr');
-    for (var row = 0; row < rowsNotSelected.length; row++) {
+    let rowsNotSelected = table.getElementsByTagName('tr');
+    for (let row = 0; row < rowsNotSelected.length; row++) {
         rowsNotSelected[row].classList.remove('selected_row');
     }
-    var rowSelected = table.getElementsByTagName('tr')[selected_row_id];
+    let rowSelected = table.getElementsByTagName('tr')[selected_row_id];
     rowSelected.classList.add("selected_row");
 }
