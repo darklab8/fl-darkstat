@@ -138,6 +138,7 @@ templ FactionRepsBase() {
 }
 
 templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputation) {
+	@BottomFilterBar()
 	<div class="bottom_name">{ faction.Name }</div>
 	@FactionRepsBase() {
 		for _, rep := range reps {

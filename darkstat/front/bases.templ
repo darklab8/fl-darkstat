@@ -173,6 +173,7 @@ templ BaseMarketGoodsBase() {
 }
 
 templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode BaseMode) {
+	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMarketGoodsBase() {
 		for _, good := range goods {
@@ -230,6 +231,7 @@ templ BaseMissionsBase() {
 }
 
 templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_mode BaseMode) {
+	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMissionsBase() {
 		for _, msn_giver := range mission_givers.Factions {

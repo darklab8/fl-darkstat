@@ -211,6 +211,7 @@ templ ShipDetailsShared(ship configs_export.Ship) {
 }
 
 templ ShipDetails(ship configs_export.Ship) {
+	@BottomFilterBar()
 	<div class="bottom_name">{ ship.Name }</div>
 	@ShipDetailsShared(ship) {
 		for _, slot := range ship.Slots {
@@ -242,7 +243,7 @@ templ ShipsIDsShared(ship configs_export.Ship) {
 }
 
 templ ShipsIDsDetailed(ship configs_export.Ship) {
-	<input style="width: 100%;" type="text" id="bottom_input" onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')" placeholder="Search rows by any content: name, nickname etc.."/>
+	@BottomFilterBar()
 	<div class="bottom_name">{ ship.Name }</div>
 	@ShipsIDsShared(ship) {
 		for _, disco_id := range ship.DiscoIDsCompatsOrdered {

@@ -390,6 +390,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 type ShowAsCommodity bool
 
 templ GoodAtBaseInfoT(name string, base_infos []configs_export.GoodAtBase, is_commodity ShowAsCommodity) {
+	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@GoodAtBaseSharedT(is_commodity) {
 		for _, base_info := range base_infos {
@@ -629,4 +630,8 @@ func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.Inf
 
 templ EmbedInfocardForSearch(infocards configs_export.Infocards, infokey configs_export.InfocardKey) {
 	<span style="display:none;">{ GetFirstLine(infocards, infokey) }</span>
+}
+
+templ BottomFilterBar() {
+	<input style="width: 100%;" type="text" id="bottom_input" onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')" placeholder="Search rows by any content: name, nickname etc.."/>
 }

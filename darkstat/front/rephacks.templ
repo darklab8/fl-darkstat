@@ -25,6 +25,7 @@ templ RephacksBottomBase() {
 }
 
 templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Rephack) {
+	@BottomFilterBar()
 	<div class="bottom_name">{ faction.Name }</div>
 	@RephacksBottomBase() {
 		for _, rep := range rephacks {
