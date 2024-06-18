@@ -70,6 +70,7 @@ If u have problems with configuring development environment, then seek my contac
 # Usage locally
 
 - build latest [according to instruction](<https://github.com/darklab8/fl-darkstat/blob/550b40a49ec4f5dd1113457e4c96eee161296b7b/.github/actions/build/action.yml#L25>)
+  - if it is not forgotten, then recent version has it built as binaries already https://github.com/darklab8/fl-darkstat/releases
 - put file into root of Freelancer folder and start
   - optionally launch from anywhere, just add env variable FREELANCER_FOLDER with location to freelancer folder root.
 - visit http://localhost:8000/ as printed in console to see web site locally
