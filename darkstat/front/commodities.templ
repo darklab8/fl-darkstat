@@ -9,11 +9,11 @@ import (
 	"strings"
 )
 
-func GoodAtBaseInfoTUrl(commodity configs_export.Commodity) string {
+func GoodAtBaseInfoTUrl(commodity *configs_export.Commodity) string {
 	return "commodities/comm_base_" + strings.ToLower(commodity.Nickname)
 }
 
-templ CommodityTable(commodities []configs_export.Commodity, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -59,7 +59,7 @@ templ CommodityTable(commodities []configs_export.Commodity, pinm PinMod, disco 
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CommoditiesT(commodities []configs_export.Commodity, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ CommoditiesT(commodities []*configs_export.Commodity, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	@TabMenu(urls.Commodities, mode, disco)
 	@TabContent() {
 		<div class="splitter">

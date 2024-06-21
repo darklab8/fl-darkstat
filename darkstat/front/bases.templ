@@ -14,12 +14,14 @@ func InfocardURL(infocard_key configs_export.InfocardKey) string {
 	return "infocards/info_" + strings.ToLower(string(infocard_key))
 }
 
-func BaseDetailedUrl(base configs_export.Base, tab_mode BaseMode) string {
+func BaseDetailedUrl(base *configs_export.Base, tab_mode BaseMode) string {
 
 	if tab_mode == BaseShowShops {
 		return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname)
 	} else if tab_mode == BaseShowMissions {
 		return "bases/missions/msns_" + strings.ToLower(base.Nickname)
+	} else if tab_mode == BaseTabTrades {
+		return "bases/trades/trades_" + strings.ToLower(base.Nickname)
 	}
 
 	panic("not supported mode for base")
@@ -30,9 +32,10 @@ type BaseMode int64
 const (
 	BaseShowShops BaseMode = iota
 	BaseShowMissions
+	BaseTabTrades
 )
 
-templ BasesTable(bases []configs_export.Base, tab_mode BaseMode, pinm PinMod) {
+templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -53,6 +56,10 @@ templ BasesTable(bases []configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					<th style="min-width:50px;">Enemies</th>
 					<th style="min-width:50px;">Error</th>
 				}
+				if tab_mode == BaseTabTrades {
+					<th style="min-width:50px;">Best Tr.Proffit/V/t(¢/sec)</th>
+					<th style="min-width:50px;">Best Fr.Proffit/V/t(¢/sec)</th>
+				}
 				<th style="min-width:200px;">Base Nickname</th>
 				<th style="min-width:50px;">System Nickname</th>
 				<th style="min-width:50px;">Pos X</th>
@@ -71,7 +78,7 @@ templ BasesTable(bases []configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 	</table>
 }
 
-templ BaseRow(base configs_export.Base, tab_mode BaseMode, pinm PinMod) {
+templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 	@TrFromMainTb(base.Nickname, BaseDetailedUrl(base, tab_mode), pinm) {
 		@PinTd(base.Nickname, base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
@@ -93,6 +100,22 @@ templ BaseRow(base configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				}
 			</td>
 		}
+		if tab_mode == BaseTabTrades {
+			<td>
+				if base.BestTransportRoute != nil {
+					{ fmt.Sprintf("%2.2f", base.BestTransportRoute.TransportProffitPerTime * 100) }
+				} else {
+					0
+				}
+			</td>
+			<td>
+				if base.BestFreighterRoute != nil {
+					{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.FreighterProffitPerTime * 100) }
+				} else {
+					0
+				}
+			</td>
+		}
 		<td>{ base.Nickname }</td>
 		<td>{ base.SystemNickname }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
@@ -106,11 +129,13 @@ templ BaseRow(base configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []configs_export.Base, tab_mode BaseMode, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	if tab_mode == BaseShowShops {
 		@TabMenu(urls.Bases, mode, disco)
 	} else if tab_mode == BaseShowMissions {
 		@TabMenu(urls.Missions, mode, disco)
+	} else if tab_mode == BaseTabTrades {
+		@TabMenu(urls.Trades, mode, disco)
 	}
 	@TabContent() {
 		<div class="splitter">
@@ -130,6 +155,8 @@ templ BasesT(bases []configs_export.Base, tab_mode BaseMode, mode ShowEmpty, dis
 							@BaseMarketGoodsBase()
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
+						} else if tab_mode == BaseTabTrades {
+							@BaseTradesShared()
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
@@ -137,6 +164,8 @@ templ BasesT(bases []configs_export.Base, tab_mode BaseMode, mode ShowEmpty, dis
 							@BaseMarketGoodsBase()
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
+						} else if tab_mode == BaseTabTrades {
+							@BaseTradesShared()
 						}
 					</div>
 				</div>
@@ -244,8 +273,8 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 				onclick="RowHighlighter(this)"
 			>
 				<td>{ msn_giver.FactionName }</td>
-				<td>{ fmt.Sprintf("%.2f", msn_giver.MinDifficulty) }</td>
-				<td>{ fmt.Sprintf("%.2f", msn_giver.MaxDifficulty) }</td>
+				<td>{ fmt.Sprintf("%2.2f", msn_giver.MinDifficulty) }</td>
+				<td>{ fmt.Sprintf("%2.2f", msn_giver.MaxDifficulty) }</td>
 				<td>{ strconv.Itoa(msn_giver.Weight) }</td>
 				<td>{ strconv.Itoa(msn_giver.MinAward) }</td>
 				<td>{ strconv.Itoa(msn_giver.MaxAward) }</td>
@@ -281,6 +310,62 @@ templ PrintEnemies(enemies []configs_export.EnemyFaction) {
 		{ enemy.Name } ( { enemy.Nickname }, { strconv.FormatBool(enemy.NpcExist) } )
 		if enemy_index != len(enemies) - 1 {
 			{ ", " }
+		}
+	}
+}
+
+templ BaseTradesShared() {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="min-width:100px;">Commodity</th>
+				<th style="min-width:100px;">Transport Proffit/V/t(¢/sec)</th>
+				<th style="min-width:50px;">Freighter Proffit/V/t(¢/sec)</th>
+				<th style="min-width:50px;">System</th>
+				<th style="min-width:50px;">Dest. Name</th>
+				<th style="min-width:50px;">Dest. Nickname</th>
+				<th style="min-width:50px;">Price To Buy</th>
+				<th style="min-width:50px;">Price To sell</th>
+				<th style="min-width:50px;">Proffit</th>
+				<th style="min-width:50px;">Tr. Dist.</th>
+				<th style="min-width:50px;">Fr. Dist.</th>
+				<th style="min-width:50px;">Commodity Nick</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ BaseTrades(name string, trades configs_export.Trades, tab_mode BaseMode) {
+	@BottomFilterBar()
+	<div class="bottom_name">{ name }</div>
+	@BaseTradesShared() {
+		for _, trade_route := range trades.TradeRoutes {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(trade_route.Commodity.Nickname)) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+				preload="mouseover"
+				onclick="RowHighlighter(this)"
+			>
+				<td>{ trade_route.Commodity.Name }</td>
+				<td>{ fmt.Sprintf("%.2f", trade_route.TransportProffitPerTime * 100) }</td>
+				<td>{ fmt.Sprintf("%.2f", trade_route.FreighterProffitPerTime * 100) }</td>
+				<td>{ trade_route.SellingGood.SystemName }</td>
+				<td>{ trade_route.SellingGood.BaseName }</td>
+				<td>{ trade_route.SellingGood.BaseNickname }</td>
+				<td>{ strconv.Itoa(trade_route.BuyingGood.PriceBaseSellsFor) }</td>
+				<td>{ strconv.Itoa(trade_route.SellingGood.PriceBaseBuysFor) }</td>
+				<td>{ strconv.Itoa(trade_route.SellingGood.PriceBaseBuysFor - trade_route.BuyingGood.PriceBaseSellsFor) }</td>
+				<td>{ strconv.Itoa(trade_route.TransportDistance) }</td>
+				<td>{ strconv.Itoa(trade_route.FreighterDistance) }</td>
+				<td>{ trade_route.Commodity.Nickname }</td>
+				<td></td>
+			</tr>
 		}
 	}
 }

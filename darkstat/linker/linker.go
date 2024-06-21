@@ -72,6 +72,10 @@ func (l *Linker) Link() *builder.Builder {
 					}
 					return base.MarketGoods[i].Name < base.MarketGoods[j].Name
 				})
+
+				sort.Slice(base.TradeRoutes, func(i, j int) bool {
+					return base.TradeRoutes[i].TransportProffitPerTime > base.TradeRoutes[j].TransportProffitPerTime
+				})
 			}
 
 			sort.Slice(data.Factions, func(i, j int) bool {
@@ -305,6 +309,14 @@ func (l *Linker) Link() *builder.Builder {
 					front.BasesT(data.Bases, front.BaseShowMissions, front.ShowEmpty(true), disco_ids),
 				),
 				builder.NewComponent(
+					urls.Trades,
+					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseTabTrades, front.ShowEmpty(false), disco_ids),
+				),
+				builder.NewComponent(
+					front.AllItemsUrl(urls.Missions),
+					front.BasesT(data.Bases, front.BaseTabTrades, front.ShowEmpty(true), disco_ids),
+				),
+				builder.NewComponent(
 					urls.Factions,
 					front.FactionsT(useful_factions, front.FactionShowBases, front.ShowEmpty(false), disco_ids),
 				),
@@ -441,6 +453,10 @@ func (l *Linker) Link() *builder.Builder {
 					builder.NewComponent(
 						utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseShowMissions)),
 						front.BaseMissions(base.Name, base.Missions, front.BaseShowMissions),
+					),
+					builder.NewComponent(
+						utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
+						front.BaseTrades(base.Name, base.Trades, front.BaseTabTrades),
 					),
 				)
 			}

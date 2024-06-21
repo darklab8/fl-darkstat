@@ -274,6 +274,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco fronttypes.Discove
 				@Button("Bases", urls.Bases, urls.Bases == url)
 				@Button("Missions", urls.Missions, urls.Missions == url)
 				@Button("Factions", urls.Factions, urls.Factions == url)
+				@Button("Trades", urls.Trades, urls.Trades == url)
 				@Button("Bribes", urls.Rephacks, urls.Rephacks == url)
 				@Button("Commodities", urls.Commodities, urls.Commodities == url)
 				@Button("Guns", urls.Guns, urls.Guns == url)
@@ -298,6 +299,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco fronttypes.Discove
 				@Button("Missions", AllItemsUrl(urls.Missions), urls.Missions == url)
 				@Button("Factions", AllItemsUrl(urls.Factions), urls.Factions == url)
 				@Button("Bribes", AllItemsUrl(urls.Rephacks), urls.Rephacks == url)
+				@Button("Trades", AllItemsUrl(urls.Trades), urls.Trades == url)
 				@Button("Commodities", AllItemsUrl(urls.Commodities), urls.Commodities == url)
 				@Button("Guns", AllItemsUrl(urls.Guns), urls.Guns == url)
 				@Button("Guns Mods", AllItemsUrl(urls.GunModifiers), urls.GunModifiers == url)
@@ -389,7 +391,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 
 type ShowAsCommodity bool
 
-templ GoodAtBaseInfoT(name string, base_infos []configs_export.GoodAtBase, is_commodity ShowAsCommodity) {
+templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_commodity ShowAsCommodity) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@GoodAtBaseSharedT(is_commodity) {
