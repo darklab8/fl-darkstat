@@ -74,7 +74,7 @@ func (l *Linker) Link() *builder.Builder {
 				})
 
 				sort.Slice(base.TradeRoutes, func(i, j int) bool {
-					return base.TradeRoutes[i].TransportProffitPerTime > base.TradeRoutes[j].TransportProffitPerTime
+					return base.TradeRoutes[i].Transport.GetProffitPerTime() > base.TradeRoutes[j].Transport.GetProffitPerTime()
 				})
 			}
 

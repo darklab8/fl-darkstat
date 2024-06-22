@@ -103,14 +103,14 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 		if tab_mode == BaseTabTrades {
 			<td>
 				if base.BestTransportRoute != nil {
-					{ fmt.Sprintf("%2.2f", base.BestTransportRoute.TransportProffitPerTime * 100) }
+					{ fmt.Sprintf("%2.2f", base.BestTransportRoute.GetProffitPerTime() * 100) }
 				} else {
 					0
 				}
 			</td>
 			<td>
 				if base.BestFreighterRoute != nil {
-					{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.FreighterProffitPerTime * 100) }
+					{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.GetProffitPerTime() * 100) }
 				} else {
 					0
 				}
@@ -349,29 +349,29 @@ templ BaseTrades(name string, trades configs_export.Trades, tab_mode BaseMode) {
 	@BaseTradesShared() {
 		for _, trade_route := range trades.TradeRoutes {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(trade_route.Commodity.Nickname)) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(trade_route.Transport.Commodity.Nickname)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
 			>
-				<td>{ trade_route.Commodity.Name }</td>
-				<td>{ fmt.Sprintf("%.2f", trade_route.TransportProffitPerTime * 100) }</td>
-				<td>{ fmt.Sprintf("%.2f", trade_route.FreighterProffitPerTime * 100) }</td>
-				<td>{ trade_route.SellingGood.SystemName }</td>
-				<td>{ trade_route.SellingGood.BaseName }</td>
-				<td>{ trade_route.SellingGood.Faction }</td>
-				<td>{ strconv.Itoa(trade_route.BuyingGood.PriceBaseSellsFor) }</td>
-				<td>{ strconv.Itoa(trade_route.SellingGood.PriceBaseBuysFor) }</td>
-				<td>{ strconv.Itoa(trade_route.SellingGood.PriceBaseBuysFor - trade_route.BuyingGood.PriceBaseSellsFor) }</td>
-				<td>{ strconv.Itoa(trade_route.TransportDistance) }</td>
-				<td>{ strconv.Itoa(trade_route.FreighterDistance) }</td>
-				<td>{ trade_route.Commodity.Nickname }</td>
-				<td>{ trade_route.SellingGood.BaseNickname }</td>
-				<td>{ fmt.Sprintf("%.0f", trade_route.SellingGood.BasePos.X) }</td>
-				<td>{ fmt.Sprintf("%.0f", trade_route.SellingGood.BasePos.Y) }</td>
-				<td>{ fmt.Sprintf("%.0f", trade_route.SellingGood.BasePos.Z) }</td>
+				<td>{ trade_route.Transport.Commodity.Name }</td>
+				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
+				<td>{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+				<td>{ trade_route.Transport.SellingGood.SystemName }</td>
+				<td>{ trade_route.Transport.SellingGood.BaseName }</td>
+				<td>{ trade_route.Transport.SellingGood.Faction }</td>
+				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
+				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>
+				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
+				<td>{ strconv.Itoa(trade_route.Transport.GetDist()) }</td>
+				<td>{ strconv.Itoa(trade_route.Freighter.GetDist()) }</td>
+				<td>{ trade_route.Transport.Commodity.Nickname }</td>
+				<td>{ trade_route.Transport.SellingGood.BaseNickname }</td>
+				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>
+				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Y) }</td>
+				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Z) }</td>
 				<td></td>
 			</tr>
 		}
