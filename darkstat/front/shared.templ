@@ -380,6 +380,9 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				<th style="width:50px;min-width:50px;">Level Req'd</th>
 				<th style="width:50px;min-width:50px;">Reputation Req'd</th>
 				<th style="width:50px;min-width:50px;">Base Nickname</th>
+				<th style="width:50px;min-width:10px;">Pos X</th>
+				<th style="width:50px;min-width:10px;">Pos Y</th>
+				<th style="width:50px;min-width:10px;">Pos Z</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -419,6 +422,9 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", base_info.RepRequired) }</td>
 				<td>{ base_info.BaseNickname }</td>
+				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.X) }</td>
+				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Y) }</td>
+				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Z) }</td>
 				<td></td>
 			</tr>
 		}

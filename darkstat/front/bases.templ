@@ -57,8 +57,8 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					<th style="min-width:50px;">Error</th>
 				}
 				if tab_mode == BaseTabTrades {
-					<th style="min-width:50px;">Best Tr.Proffit/V/t(¢/sec)</th>
-					<th style="min-width:50px;">Best Fr.Proffit/V/t(¢/sec)</th>
+					<th style="min-width:50px;">Best Tr.Profit/V/t(¢/sec)</th>
+					<th style="min-width:50px;">Best Fr.Profit/V/t(¢/sec)</th>
 				}
 				<th style="min-width:200px;">Base Nickname</th>
 				<th style="min-width:50px;">System Nickname</th>
@@ -319,17 +319,21 @@ templ BaseTradesShared() {
 		<thead>
 			<tr class="flexed-tr">
 				<th style="min-width:100px;">Commodity</th>
-				<th style="min-width:100px;">Transport Proffit/V/t(¢/sec)</th>
-				<th style="min-width:50px;">Freighter Proffit/V/t(¢/sec)</th>
+				<th style="min-width:100px;">Tr.Profit/V/t(¢/sec)</th>
+				<th style="min-width:50px;">Fr.Profit/V/t(¢/sec)</th>
 				<th style="min-width:50px;">System</th>
 				<th style="min-width:50px;">Dest. Name</th>
-				<th style="min-width:50px;">Dest. Nickname</th>
+				<th style="min-width:50px;">Dest. Faction</th>
 				<th style="min-width:50px;">Price To Buy</th>
 				<th style="min-width:50px;">Price To sell</th>
-				<th style="min-width:50px;">Proffit</th>
+				<th style="min-width:50px;">Profit</th>
 				<th style="min-width:50px;">Tr. Dist.</th>
 				<th style="min-width:50px;">Fr. Dist.</th>
 				<th style="min-width:50px;">Commodity Nick</th>
+				<th style="min-width:50px;">Dest. Nickname</th>
+				<th style="min-width:50px;">Dest.X</th>
+				<th style="min-width:50px;">Dest.Y</th>
+				<th style="min-width:50px;">Dest.Z</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -357,13 +361,17 @@ templ BaseTrades(name string, trades configs_export.Trades, tab_mode BaseMode) {
 				<td>{ fmt.Sprintf("%.2f", trade_route.FreighterProffitPerTime * 100) }</td>
 				<td>{ trade_route.SellingGood.SystemName }</td>
 				<td>{ trade_route.SellingGood.BaseName }</td>
-				<td>{ trade_route.SellingGood.BaseNickname }</td>
+				<td>{ trade_route.SellingGood.Faction }</td>
 				<td>{ strconv.Itoa(trade_route.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.SellingGood.PriceBaseBuysFor) }</td>
 				<td>{ strconv.Itoa(trade_route.SellingGood.PriceBaseBuysFor - trade_route.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.TransportDistance) }</td>
 				<td>{ strconv.Itoa(trade_route.FreighterDistance) }</td>
 				<td>{ trade_route.Commodity.Nickname }</td>
+				<td>{ trade_route.SellingGood.BaseNickname }</td>
+				<td>{ fmt.Sprintf("%.0f", trade_route.SellingGood.BasePos.X) }</td>
+				<td>{ fmt.Sprintf("%.0f", trade_route.SellingGood.BasePos.Y) }</td>
+				<td>{ fmt.Sprintf("%.0f", trade_route.SellingGood.BasePos.Z) }</td>
 				<td></td>
 			</tr>
 		}
