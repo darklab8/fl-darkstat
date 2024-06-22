@@ -9,8 +9,8 @@ import (
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
-func (e *Exporter) GetBases() []Base {
-	results := make([]Base, 0, len(e.configs.Universe_config.Bases))
+func (e *Exporter) GetBases() []*Base {
+	results := make([]*Base, 0, len(e.configs.Universe_config.Bases))
 
 	commodities_per_base := e.getMarketGoods()
 
@@ -63,7 +63,7 @@ func (e *Exporter) GetBases() []Base {
 
 		e.exportInfocards(InfocardKey(nickname), infocard_ids...)
 
-		base := Base{
+		base := &Base{
 			Name:             name,
 			Nickname:         nickname,
 			FactionName:      factionName,
@@ -85,8 +85,8 @@ func (e *Exporter) GetBases() []Base {
 	return results
 }
 
-func FilterToUserfulBases(bases []Base) []Base {
-	var useful_bases []Base = make([]Base, 0, len(bases))
+func FilterToUserfulBases(bases []*Base) []*Base {
+	var useful_bases []*Base = make([]*Base, 0, len(bases))
 	for _, item := range bases {
 		if (item.Name == "Object Unknown" || item.Name == "") && len(item.MarketGoods) == 0 {
 			continue
@@ -127,4 +127,5 @@ type Base struct {
 	Pos              conftypes.Vector
 
 	Missions BaseMissions
+	Trades
 }

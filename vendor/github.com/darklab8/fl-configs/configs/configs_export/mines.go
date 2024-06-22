@@ -30,7 +30,7 @@ type Mine struct {
 	HitPts   int
 	Lootable bool
 
-	Bases []GoodAtBase
+	Bases []*GoodAtBase
 
 	*DiscoveryTechCompat
 }

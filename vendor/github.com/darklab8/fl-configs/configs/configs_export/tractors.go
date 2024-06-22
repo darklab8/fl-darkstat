@@ -17,7 +17,7 @@ type Tractor struct {
 	NameID   int
 	InfoID   int
 
-	Bases []GoodAtBase
+	Bases []*GoodAtBase
 }
 
 func (e *Exporter) GetTractors() []Tractor {

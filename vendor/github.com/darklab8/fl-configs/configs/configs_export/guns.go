@@ -36,7 +36,7 @@ type Gun struct {
 
 	RequiredAmmo bool
 	// AmmoPrice     int
-	// AmmoBases     []GoodAtBase
+	// AmmoBases     []*GoodAtBase
 	// AmmoName      string
 	HullDamage    int
 	EnergyDamange int
@@ -54,7 +54,7 @@ type Gun struct {
 	Value              float64
 	Rating             float64
 
-	Bases          []GoodAtBase
+	Bases          []*GoodAtBase
 	DamangeBonuses []DamageBonus
 
 	Missile

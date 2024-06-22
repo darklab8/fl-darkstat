@@ -11,6 +11,10 @@ func (i *Infocard) XmlToText() ([]string, error) {
 	return XmlToText(i.content)
 }
 
+func (i *Infocard) GetContent() string {
+	return i.content
+}
+
 func XmlToText(raw string) ([]string, error) {
 	prepared := strings.ReplaceAll(string(raw), `<?xml version="1.0" encoding="UTF-16"?>`, "")
 	decoder := xml.NewDecoder(bytes.NewBufferString(prepared))

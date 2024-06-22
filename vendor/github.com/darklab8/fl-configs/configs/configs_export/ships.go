@@ -40,7 +40,7 @@ type Ship struct {
 	NameID      int
 	InfoID      int
 
-	Bases            []GoodAtBase
+	Bases            []*GoodAtBase
 	Slots            []EquipmentSlot
 	BiggestHardpoint []string
 

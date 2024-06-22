@@ -2,10 +2,11 @@
 ## explicit; go 1.20
 github.com/a-h/templ
 github.com/a-h/templ/safehtml
-# github.com/darklab8/fl-configs v0.63.0
+# github.com/darklab8/fl-configs v0.64.0
 ## explicit; go 1.21.1
 github.com/darklab8/fl-configs/configs/config_consts
 github.com/darklab8/fl-configs/configs/configs_export
+github.com/darklab8/fl-configs/configs/configs_export/trades
 github.com/darklab8/fl-configs/configs/configs_mapped
 github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/const_mapped
 github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped

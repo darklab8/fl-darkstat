@@ -40,10 +40,10 @@ type Rephack struct {
 	Chance       float64
 }
 
-func (e *Exporter) GetFactions(bases []Base) []Faction {
+func (e *Exporter) GetFactions(bases []*Base) []Faction {
 	var factions []Faction = make([]Faction, 0, 100)
 
-	var basemap map[string]Base = make(map[string]Base)
+	var basemap map[string]*Base = make(map[string]*Base)
 	for _, base := range bases {
 		basemap[base.Nickname] = base
 	}

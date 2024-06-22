@@ -101,7 +101,7 @@ type DiffToMoney struct {
 	MoneyAward int
 }
 
-func (e *Exporter) GetMissions(bases []Base, factions []Faction) []Base {
+func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 
 	var factions_map map[string]Faction = make(map[string]Faction)
 	for _, faction := range factions {

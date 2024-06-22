@@ -12,7 +12,7 @@ type Scanner struct {
 	NameID   int
 	InfoID   int
 
-	Bases []GoodAtBase
+	Bases []*GoodAtBase
 
 	*DiscoveryTechCompat
 }

@@ -27,10 +27,11 @@ type Commodity struct {
 	NameID                int
 	InfocardID            int
 	Infocard              InfocardKey
-	Bases                 []GoodAtBase
+	Bases                 []*GoodAtBase
 	PriceBestBaseBuysFor  int
 	PriceBestBaseSellsFor int
 	ProffitMargin         int
+	Trades
 }
 
 func GetPricePerVoume(price int, volume float64) float64 {
@@ -40,11 +41,11 @@ func GetPricePerVoume(price int, volume float64) float64 {
 	return float64(price) / float64(volume)
 }
 
-func (e *Exporter) GetCommodities() []Commodity {
-	commodities := make([]Commodity, 0, 100)
+func (e *Exporter) GetCommodities() []*Commodity {
+	commodities := make([]*Commodity, 0, 100)
 
 	for _, comm := range e.configs.Goods.Commodities {
-		commodity := Commodity{}
+		commodity := &Commodity{}
 		commodity.Nickname = comm.Nickname.Get()
 		commodity.Combinable = comm.Combinable.Get()
 
@@ -96,13 +97,13 @@ type GetAtBasesInput struct {
 	Volume   float64
 }
 
-func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
-	var bases_list []GoodAtBase
+func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []*GoodAtBase {
+	var bases_list []*GoodAtBase
 	var bases_already_found map[string]bool = make(map[string]bool)
 
 	if e.configs.Discovery != nil {
 		for _, base_market := range e.configs.Discovery.Prices.BasesPerGood[commodity.Nickname] {
-			var base_info GoodAtBase
+			var base_info *GoodAtBase
 			base_nickname := base_market.BaseNickname.Get()
 
 			defer func() {
@@ -114,7 +115,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 				}
 			}()
 
-			base_info = GoodAtBase{
+			base_info = &GoodAtBase{
 				BaseNickname:      base_nickname,
 				BaseSells:         !base_market.SellOnly.Get(),
 				PriceBaseBuysFor:  base_market.PriceBaseBuysFor.Get(),
@@ -149,7 +150,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []GoodAtBase {
 		}
 
 		market_good := base_market.MarketGood
-		base_info := GoodAtBase{}
+		base_info := &GoodAtBase{}
 		base_info.Volume = commodity.Volume
 		base_info.BaseSells = market_good.BaseSells()
 
@@ -217,8 +218,8 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 	return result
 }
 
-func (e *Exporter) FilterToUsefulCommodities(commodities []Commodity) []Commodity {
-	var items []Commodity = make([]Commodity, 0, len(commodities))
+func (e *Exporter) FilterToUsefulCommodities(commodities []*Commodity) []*Commodity {
+	var items []*Commodity = make([]*Commodity, 0, len(commodities))
 	for _, item := range commodities {
 		if !e.Buyable(item.Bases) {
 			continue

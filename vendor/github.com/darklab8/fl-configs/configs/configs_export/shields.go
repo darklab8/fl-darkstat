@@ -32,7 +32,7 @@ type Shield struct {
 	IdsName  int
 	IdsInfo  int
 
-	Bases []GoodAtBase
+	Bases []*GoodAtBase
 
 	*DiscoveryTechCompat
 }
