@@ -38,10 +38,8 @@ type Exporter struct {
 	Bases                []*Base
 	useful_bases_by_nick map[string]*Base
 
-	transport_graph *trades.GameGraph
-	transport_dists [][]int
-	freighter_graph *trades.GameGraph
-	freighter_dists [][]int
+	transport *GraphResults
+	freighter *GraphResults
 
 	Factions    []Faction
 	Infocards   Infocards
@@ -73,21 +71,37 @@ func NewExporter(configs *configs_mapped.MappedConfigs, opts ...OptExport) *Expo
 	return e
 }
 
+type GraphResults struct {
+	e       *Exporter
+	graph   *trades.GameGraph
+	dists   [][]int
+	parents [][]int
+}
+
+func NewGraphResults(e *Exporter, avgCruiserSpeed int, with_writer_paths trades.WithFreighterPaths) *GraphResults {
+	graph := trades.MapConfigsToFGraph(e.configs, avgCruiserSpeed, with_writer_paths)
+	dijkstra_apsp := trades.NewDijkstraApspFromGraph(graph)
+	dists, parents := dijkstra_apsp.DijkstraApsp()
+
+	return &GraphResults{
+		e:       e,
+		graph:   graph,
+		dists:   dists,
+		parents: parents,
+	}
+}
+
 func (e *Exporter) Export() *Exporter {
 	var wg sync.WaitGroup
 
 	wg.Add(1)
 	go func() {
-		e.transport_graph = trades.MapConfigsToFloyder(e.configs, trades.WithFreighterPaths(false))
-		johnson := trades.NewDijkstraApspFromGraph(e.transport_graph)
-		e.transport_dists = johnson.DijkstraApsp()
+		e.transport = NewGraphResults(e, trades.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false))
 		wg.Done()
 	}()
 	wg.Add(1)
 	go func() {
-		e.freighter_graph = trades.MapConfigsToFloyder(e.configs, trades.WithFreighterPaths(true))
-		johnson := trades.NewDijkstraApspFromGraph(e.freighter_graph)
-		e.freighter_dists = johnson.DijkstraApsp()
+		e.freighter = NewGraphResults(e, trades.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true))
 		wg.Done()
 	}()
 	e.Bases = e.GetBases()

@@ -26,10 +26,12 @@ type DijkstraAPSP struct {
 	allowed_base_ids map[int]bool
 }
 
+const INF = math.MaxInt
+
 // On using the below constructor,
 // edges must be added manually
 // to the graph using addEdge()
-func NewJohnson(vertices int) *DijkstraAPSP {
+func NewDijkstraApsp(vertices int) *DijkstraAPSP {
 	g := &DijkstraAPSP{
 		vertices:         vertices,
 		allowed_base_ids: make(map[int]bool),
@@ -47,7 +49,7 @@ func NewJohnson(vertices int) *DijkstraAPSP {
 // // edges will be added automatically
 // // to the graph using the adjacency matrix
 func NewDijkstraApspFromMatrix(vertices int, adjacencyMatrix [][]int) *DijkstraAPSP {
-	g := NewJohnson(vertices)
+	g := NewDijkstraApsp(vertices)
 
 	for i := 0; i < vertices; i++ {
 		for j := 0; j < vertices; j++ {
@@ -59,34 +61,49 @@ func NewDijkstraApspFromMatrix(vertices int, adjacencyMatrix [][]int) *DijkstraA
 	return g
 }
 
-func NewDijkstraApspFromGraph(graph *GameGraph) *DijkstraAPSP {
+type DijkstraOption func(graph *DijkstraAPSP)
+
+func WithPathDistsForAllNodes() DijkstraOption {
+	return func(graph *DijkstraAPSP) {
+		graph.allowed_base_ids = make(map[int]bool)
+	}
+}
+
+func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *DijkstraAPSP {
 	vertices := len(graph.matrix)
-	g := NewJohnson(vertices)
+	g := NewDijkstraApsp(vertices)
 
 	index := 0
 	for vertex, _ := range graph.matrix {
-		graph.index_by_nickname[vertex] = index
+		graph.IndexByNick[vertex] = index
+		graph.NicknameByIndex[index] = vertex
 		index++
 	}
 
-	for base_nick, _ := range graph.vertex_to_calculate_paths_for {
-		g.allowed_base_ids[graph.index_by_nickname[base_nick]] = true
-	}
+	// We need calculating for everything if we wish detailed path
+	// regretfully disabling potentially for forever. TODO delete if not in use
+	// for base_nick, _ := range graph.vertex_to_calculate_paths_for {
+	// 	g.allowed_base_ids[graph.Index_by_nickname[base_nick]] = true
+	// }
 
 	for vertex_name, vertex := range graph.matrix {
 		for vertex_target, weight := range vertex {
-			i := graph.index_by_nickname[vertex_name]
-			j := graph.index_by_nickname[vertex_target]
+			i := graph.IndexByNick[vertex_name]
+			j := graph.IndexByNick[vertex_target]
 
 			g.addEdge(i, j, int(weight))
 		}
 	}
+
+	for _, opt := range opts {
+		opt(g)
+	}
+
 	return g
 }
 
 func (g *DijkstraAPSP) addEdge(source int, destination int, weight int) {
 	g.adjacencyList[source] = append(g.adjacencyList[source], NewNeighbour(destination, weight))
-	g.adjacencyList[destination] = append(g.adjacencyList[destination], NewNeighbour(source, weight))
 }
 
 func ArraysFill[T any](array []T, value T) {
@@ -97,34 +114,42 @@ func ArraysFill[T any](array []T, value T) {
 
 // // Time complexity of this
 // // implementation of dijkstra is O(V^2).
-func (g *DijkstraAPSP) dijkstra(source int) []int {
-	var isVisited []bool = make([]bool, g.vertices)
+func (g *DijkstraAPSP) dijkstra(source int) ([]int, []int) {
 	var distance []int = make([]int, g.vertices)
+
+	// this page https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+	// helped to modify algorithm so it would return reconstructed paths.
+	// Parent array to store shortest
+	// path tree
+	var parents []int = make([]int, g.vertices)
+	// The starting vertex does not
+	// have a parent
+	for s := 0; s < g.vertices; s++ {
+		parents[s] = NO_PARENT
+	}
 
 	pq := make(PriorityQueue, 0)
 	item := &Item{
-		value:    0,
-		priority: source,
+		value_weight: 0,
+		priority:     source,
 	}
 	pq.Push(item)
 
-	ArraysFill(distance, math.MaxInt)
+	ArraysFill(distance, INF)
 	distance[source] = 0
 
 	for pq.Len() > 0 {
 		item := heap.Pop(&pq).(*Item)
 		node := item.priority
-		dist := item.value
-		if isVisited[node] {
-			continue
-		}
+		dist := item.value_weight
 
 		for _, neighbour := range g.adjacencyList[node] {
-			if !isVisited[neighbour.destination] && dist+neighbour.weight < distance[neighbour.destination] {
+			if dist+neighbour.weight < distance[neighbour.destination] {
+				parents[neighbour.destination] = node
 				distance[neighbour.destination] = dist + neighbour.weight
 				pq.Push(&Item{
-					value:    distance[neighbour.destination],
-					priority: neighbour.destination,
+					value_weight: distance[neighbour.destination],
+					priority:     neighbour.destination,
 				})
 			}
 
@@ -132,16 +157,20 @@ func (g *DijkstraAPSP) dijkstra(source int) []int {
 
 	}
 
-	return distance
+	return distance, parents
 }
 
 type DijkstraResult struct {
-	source      int
-	dist_result []int
+	source         int
+	dist_result    []int
+	parents_result []int
 }
 
-func (g *DijkstraAPSP) DijkstraApsp() [][]int {
+const NO_PARENT = -1
+
+func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]int) {
 	var distances [][]int = make([][]int, g.vertices)
+	var parents [][]int = make([][]int, g.vertices)
 
 	// Performance optimization of the algorithm
 	// By skipping heaviest calculations for all shortest paths
@@ -152,7 +181,7 @@ func (g *DijkstraAPSP) DijkstraApsp() [][]int {
 			_, is_base := g.allowed_base_ids[source]
 			if !is_base {
 				dist := make([]int, g.vertices)
-				ArraysFill(dist, math.MaxInt)
+				ArraysFill(dist, INF)
 				dist[source] = 0
 				return dist, true
 			}
@@ -169,8 +198,10 @@ func (g *DijkstraAPSP) DijkstraApsp() [][]int {
 				distances[s] = dist_result
 				continue
 			}
+			dist_result, parents_result := g.dijkstra(s)
 
-			distances[s] = g.dijkstra(s)
+			distances[s] = dist_result
+			parents[s] = parents_result
 		}
 	} else {
 		dijkstra_results := make(chan *DijkstraResult)
@@ -184,17 +215,19 @@ func (g *DijkstraAPSP) DijkstraApsp() [][]int {
 
 			awaited += 1
 			go func(s int) {
-				dist_result := g.dijkstra(s)
+				dist_result, parents_result := g.dijkstra(s)
 				dijkstra_results <- &DijkstraResult{
-					source:      s,
-					dist_result: dist_result,
+					source:         s,
+					dist_result:    dist_result,
+					parents_result: parents_result,
 				}
 			}(s)
 		}
 		for s := 0; s < awaited; s++ {
 			result := <-dijkstra_results
 			distances[result.source] = result.dist_result
+			parents[result.source] = result.parents_result
 		}
 	}
-	return distances
+	return distances, parents
 }

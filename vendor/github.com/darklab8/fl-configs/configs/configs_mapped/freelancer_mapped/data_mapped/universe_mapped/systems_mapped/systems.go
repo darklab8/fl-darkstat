@@ -117,6 +117,7 @@ type Jumphole struct {
 	GotoHole  *semantic.String
 	Archetype *semantic.String
 	Pos       *semantic.Vect
+	IdsName   *semantic.Int
 }
 
 type System struct {
@@ -231,6 +232,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							Nickname:  semantic.NewString(obj, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							GotoHole:  semantic.NewString(obj, "goto", semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Order(1))),
 							Pos:       semantic.NewVector(obj, "pos", semantic.Precision(0)),
+							IdsName:   semantic.NewInt(obj, "ids_name", semantic.Optional()),
 						}
 
 						system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)

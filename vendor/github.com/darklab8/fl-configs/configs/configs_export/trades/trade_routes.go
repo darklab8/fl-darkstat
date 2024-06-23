@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/conftypes"
 )
 
@@ -30,6 +31,21 @@ func DistanceForVecs(Pos1 conftypes.Vector, Pos2 conftypes.Vector) float64 {
 
 type WithFreighterPaths bool
 
+const (
+	// already accounted for
+	AvgTransportCruiseSpeed = 350
+	AvgFreighterCruiseSpeed = 500
+	// already accounted for
+	AvgTradeLaneSpeed = 1900
+
+	// Add for every pair of jumphole in path
+	JumpHoleDelaySec = 15 // and jump gate
+	// add for every tradelane vertex pair in path
+	TradeLaneDockingDelaySec = 10
+	// add just once
+	BaseDockingDelay = 20
+)
+
 /*
 Algorithm should be like this:
 We iterate through list of Systems:
@@ -51,8 +67,8 @@ And on click we show proffits of delivery to some location. With time of deliver
 ====
 Optionally print sum of two best routes that can be started within close range from each other.
 */
-func MapConfigsToFloyder(configs *configs_mapped.MappedConfigs, with_freighter_paths WithFreighterPaths) *GameGraph {
-	graph := NewGameGraph()
+func MapConfigsToFGraph(configs *configs_mapped.MappedConfigs, avgCruiseSpeed int, with_freighter_paths WithFreighterPaths) *GameGraph {
+	graph := NewGameGraph(avgCruiseSpeed)
 	for _, system := range configs.Systems.Systems {
 
 		var system_objects []SystemObject = make([]SystemObject, 0, 50)
@@ -62,17 +78,19 @@ func MapConfigsToFloyder(configs *configs_mapped.MappedConfigs, with_freighter_p
 				nickname: system_obj.Base.Get(),
 				pos:      system_obj.Pos.Get(),
 			}
-
-			for _, existing_object := range system_objects {
-				distance := DistanceForVecs(object.pos, existing_object.pos)
-				graph.SetEdge(object.nickname, existing_object.nickname, distance)
-			}
+			graph.SetIdsName(object.nickname, system_obj.IdsName.Get())
 
 			if strings.Contains(object.nickname, "proxy_") {
 				continue
 			}
 
-			graph.vertex_to_calculate_paths_for[VertexName(object.nickname)] = true
+			for _, existing_object := range system_objects {
+				distance := DistanceForVecs(object.pos, existing_object.pos) + graph.GetDistForTime(BaseDockingDelay)
+				graph.SetEdge(object.nickname, existing_object.nickname, distance)
+				graph.SetEdge(existing_object.nickname, object.nickname, distance)
+			}
+
+			graph.AllowedVertixesForCalcs[VertexName(object.nickname)] = true
 
 			system_objects = append(system_objects, object)
 		}
@@ -82,21 +100,36 @@ func MapConfigsToFloyder(configs *configs_mapped.MappedConfigs, with_freighter_p
 				nickname: jumphole.Nickname.Get(),
 				pos:      jumphole.Pos.Get(),
 			}
+			graph.SetIdsName(object.nickname, jumphole.IdsName.Get())
+
+			// if strings.Contains(object.nickname, strings.ToLower("Rh02_to_Iw02_hole")) {
+			// 	fmt.Println()
+			// }
 
 			jh_archetype := jumphole.Archetype.Get()
+
+			// TODO Check Solar if this is Dockable
+			if jh_archetype == "jumphole_noentry" { // hardcoded for now
+				continue
+			}
+			// TODO Check locked_gate if it is enterable.
 
 			// Condition is taken from FLCompanion
 			// https://github.com/Corran-Raisu/FLCompanion/blob/021159e3b3a1b40188c93064f1db136780424ea9/Datas.cpp#L585
 			// Check Aingar Fork for Disco version if necessary.
-			if strings.Contains(jh_archetype, "_fighter") || strings.Contains(jh_archetype, "_notransport") || jh_archetype == "dsy_comsat_planetdock" {
+			if strings.Contains(jh_archetype, "_fighter") ||
+				strings.Contains(jh_archetype, "_notransport") ||
+				jh_archetype == "dsy_comsat_planetdock" ||
+				jh_archetype == "dsy_hypergate_all" {
 				if !with_freighter_paths {
 					continue
 				}
 			}
 
 			for _, existing_object := range system_objects {
-				distance := DistanceForVecs(object.pos, existing_object.pos)
+				distance := DistanceForVecs(object.pos, existing_object.pos) + graph.GetDistForTime(JumpHoleDelaySec)
 				graph.SetEdge(object.nickname, existing_object.nickname, distance)
+				graph.SetEdge(existing_object.nickname, object.nickname, distance)
 			}
 
 			jumphole_target_hole := jumphole.GotoHole.Get()
@@ -112,28 +145,60 @@ func MapConfigsToFloyder(configs *configs_mapped.MappedConfigs, with_freighter_p
 
 			next_tradelane, next_exists := tradelane.NextRing.GetValue()
 			prev_tradelane, prev_exists := tradelane.PrevRing.GetValue()
-
-			speed := 350
-			tradelane_speed := 2250
-
-			if another_tradelane, ok := system.TradelaneByNick[next_tradelane]; ok {
-				distance := DistanceForVecs(object.pos, another_tradelane.Pos.Get())
-				graph.SetEdge(object.nickname, another_tradelane.Nickname.Get(), distance*float64(speed)/float64(tradelane_speed))
-			}
-			if another_tradelane, ok := system.TradelaneByNick[prev_tradelane]; ok {
-				distance := DistanceForVecs(object.pos, another_tradelane.Pos.Get())
-				graph.SetEdge(object.nickname, another_tradelane.Nickname.Get(), distance*float64(speed)/float64(tradelane_speed))
+			if next_exists && prev_exists {
+				continue
 			}
 
-			if !(next_exists && prev_exists) {
-				for _, existing_object := range system_objects {
-					distance := DistanceForVecs(object.pos, existing_object.pos)
-					graph.SetEdge(object.nickname, existing_object.nickname, distance)
+			// next or previous tradelane
+			chained_tradelane := ""
+			if next_exists {
+				chained_tradelane = next_tradelane
+			} else {
+				chained_tradelane = prev_tradelane
+			}
+			var last_tradelane *systems_mapped.TradeLaneRing
+			// iterate to last in a chain
+			for {
+				another_tradelane, ok := system.TradelaneByNick[chained_tradelane]
+				if !ok {
+					break
 				}
+				last_tradelane = another_tradelane
 
-				system_objects = append(system_objects, object)
+				if next_exists {
+					chained_tradelane, _ = another_tradelane.NextRing.GetValue()
+				} else {
+					chained_tradelane, _ = another_tradelane.PrevRing.GetValue()
+				}
+				if chained_tradelane == "" {
+					break
+				}
 			}
+
+			if last_tradelane == nil {
+				continue
+			}
+
+			distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
+			distance_inside_tradelane := distance * float64(graph.AvgCruiseSpeed) / float64(AvgTradeLaneSpeed)
+			graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
+
+			for _, existing_object := range system_objects {
+				distance := DistanceForVecs(object.pos, existing_object.pos) + graph.GetDistForTime(TradeLaneDockingDelaySec)
+				graph.SetEdge(object.nickname, existing_object.nickname, distance)
+				graph.SetEdge(existing_object.nickname, object.nickname, distance)
+			}
+
+			system_objects = append(system_objects, object)
 		}
 	}
 	return graph
+}
+
+func (graph *GameGraph) GetDistForTime(time int) float64 {
+	return float64(time * graph.AvgCruiseSpeed)
+}
+
+func (graph *GameGraph) GetTimeForDist(dist float64) int {
+	return int(dist / float64(graph.AvgCruiseSpeed))
 }

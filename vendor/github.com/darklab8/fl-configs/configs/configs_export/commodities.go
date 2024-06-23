@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-configs/configs/conftypes"
 )
 
 type GoodAtBase struct {
@@ -17,6 +18,7 @@ type GoodAtBase struct {
 	RepRequired       float64
 	SystemName        string
 	Faction           string
+	BasePos           conftypes.Vector
 }
 
 type Commodity struct {
@@ -127,6 +129,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []*GoodAtBase {
 			base_info.SystemName = more_info.SystemName
 			base_info.Faction = more_info.Faction
 			base_info.Volume = commodity.Volume
+			base_info.BasePos = more_info.Pos
 
 			if e.useful_bases_by_nick != nil {
 				if _, ok := e.useful_bases_by_nick[base_info.BaseNickname]; !ok {
@@ -171,6 +174,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []*GoodAtBase {
 		base_info.BaseName = more_info.BaseName
 		base_info.SystemName = more_info.SystemName
 		base_info.Faction = more_info.Faction
+		base_info.BasePos = more_info.Pos
 
 		if e.useful_bases_by_nick != nil {
 			if _, ok := e.useful_bases_by_nick[base_info.BaseNickname]; !ok {
@@ -187,34 +191,44 @@ type BaseInfo struct {
 	BaseName   string
 	SystemName string
 	Faction    string
+	Pos        conftypes.Vector
 }
 
 func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseInfo {
 	var result BaseInfo
-	if universe_base, ok := e.configs.Universe_config.BasesMap[universe_mapped.BaseNickname(base_nickname)]; ok {
-		result.BaseName = e.GetInfocardName(universe_base.StridName.Get(), string(base_nickname))
-		system_nickname := universe_base.System.Get()
+	universe_base, found_universe_base := e.configs.Universe_config.BasesMap[universe_mapped.BaseNickname(base_nickname)]
 
-		if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(system_nickname)]; ok {
-			result.SystemName = e.GetInfocardName(system.Strid_name.Get(), system_nickname)
-		}
-
-		var reputation_nickname string
-		if system, ok := e.configs.Systems.SystemsMap[universe_base.System.Get()]; ok {
-			for _, system_base := range system.Bases {
-				if system_base.IdsName.Get() == universe_base.StridName.Get() {
-					reputation_nickname = system_base.RepNickname.Get()
-				}
-			}
-		}
-
-		var factionName string
-		if group, exists := e.configs.InitialWorld.GroupsMap[reputation_nickname]; exists {
-			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
-		}
-
-		result.Faction = factionName
+	if !found_universe_base {
+		return result
 	}
+
+	result.BaseName = e.GetInfocardName(universe_base.StridName.Get(), string(base_nickname))
+	system_nickname := universe_base.System.Get()
+
+	if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(system_nickname)]; ok {
+		result.SystemName = e.GetInfocardName(system.Strid_name.Get(), system_nickname)
+	}
+
+	var reputation_nickname string
+	if system, ok := e.configs.Systems.SystemsMap[universe_base.System.Get()]; ok {
+		for _, system_base := range system.Bases {
+			if system_base.IdsName.Get() != universe_base.StridName.Get() {
+				continue
+			}
+
+			reputation_nickname = system_base.RepNickname.Get()
+			result.Pos = system_base.Pos.Get()
+		}
+
+	}
+
+	var factionName string
+	if group, exists := e.configs.InitialWorld.GroupsMap[reputation_nickname]; exists {
+		factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
+	}
+
+	result.Faction = factionName
+
 	return result
 }
 
