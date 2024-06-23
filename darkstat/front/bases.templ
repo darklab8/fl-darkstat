@@ -410,14 +410,14 @@ templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute) {
 		<p class="infocard_p">Transport Route:</p>
 		for _, path := range combo_route.Transport.GetPaths() {
 			if path.NextName != "" {
-				<p class="infocard_p">{ path.NextName } - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
+				<p class="infocard_p">{ combo_route.Transport.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
 			}
 		}
 		<br/>
 		<p class="infocard_p">Freighter Route:</p>
 		for _, path := range combo_route.Freighter.GetPaths() {
 			if path.NextName != "" {
-				<p class="infocard_p">{ path.NextName } - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
+				<p class="infocard_p">{ combo_route.Transport.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
 			}
 		}
 	}
