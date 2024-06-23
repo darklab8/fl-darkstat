@@ -6,8 +6,11 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/configs_export/trades"
+
 	"strings"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"math"
 )
 
 func InfocardURL(infocard_key configs_export.InfocardKey) string {
@@ -327,8 +330,9 @@ templ BaseTradesShared() {
 				<th style="min-width:50px;">Price To Buy</th>
 				<th style="min-width:50px;">Price To sell</th>
 				<th style="min-width:50px;">Profit</th>
-				<th style="min-width:50px;">Tr. Dist.</th>
-				<th style="min-width:50px;">Fr. Dist.</th>
+				<th style="min-width:50px;">Tr.Time(sec).</th>
+				<th style="min-width:50px;">Tr.Time(min+sec).</th>
+				<th style="min-width:50px;">Fr.Time(sec).</th>
 				<th style="min-width:50px;">Commodity Nick</th>
 				<th style="min-width:50px;">Dest. Nickname</th>
 				<th style="min-width:50px;">Dest.X</th>
@@ -343,11 +347,11 @@ templ BaseTradesShared() {
 	</table>
 }
 
-templ BaseTrades(name string, trades configs_export.Trades, tab_mode BaseMode) {
+templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseMode) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseTradesShared() {
-		for _, trade_route := range trades.TradeRoutes {
+		for _, trade_route := range trade_routes.TradeRoutes {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(trade_route.Transport.Commodity.Nickname)) }
 				hx-trigger="click"
@@ -365,8 +369,27 @@ templ BaseTrades(name string, trades configs_export.Trades, tab_mode BaseMode) {
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
-				<td>{ strconv.Itoa(trade_route.Transport.GetDist()) }</td>
-				<td>{ strconv.Itoa(trade_route.Freighter.GetDist()) }</td>
+				<td>
+					if trade_route.Transport.GetDist() < trades.INF/2 {
+						{ fmt.Sprintf("%.0f", trade_route.Transport.GetTime()) }
+					} else {
+						INF
+					}
+				</td>
+				<td>
+					if trade_route.Transport.GetDist() < trades.INF/2 {
+						{ fmt.Sprintf("%.0f", trade_route.Transport.GetTime()/60) } - { fmt.Sprintf("%.0f", trade_route.Transport.GetTime() - 60*math.Floor(trade_route.Transport.GetTime()/60)) }
+					} else {
+						INF
+					}
+				</td>
+				<td>
+					if trade_route.Freighter.GetDist() < trades.INF/2 {
+						{ fmt.Sprintf("%.0f", trade_route.Freighter.GetTime()) }
+					} else {
+						INF
+					}
+				</td>
 				<td>{ trade_route.Transport.Commodity.Nickname }</td>
 				<td>{ trade_route.Transport.SellingGood.BaseNickname }</td>
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>
