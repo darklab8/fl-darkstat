@@ -353,7 +353,7 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 	@BaseTradesShared() {
 		for _, trade_route := range trade_routes.TradeRoutes {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(trade_route.Transport.Commodity.Nickname)) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + TradeRouteUrl(trade_route) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
@@ -397,6 +397,28 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Z) }</td>
 				<td></td>
 			</tr>
+		}
+	}
+}
+
+func TradeRouteUrl(combo_route *configs_export.ComboTradeRoute) string {
+	return "trade_routes/trade_route_" + combo_route.GetID()
+}
+
+templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute) {
+	@InfocardShared() {
+		<p class="infocard_p">Transport Route:</p>
+		for _, path := range combo_route.Transport.GetPaths() {
+			if path.NextName != "" {
+				<p class="infocard_p">{ path.NextName } - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
+			}
+		}
+		<br/>
+		<p class="infocard_p">Freighter Route:</p>
+		for _, path := range combo_route.Freighter.GetPaths() {
+			if path.NextName != "" {
+				<p class="infocard_p">{ path.NextName } - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
+			}
 		}
 	}
 }

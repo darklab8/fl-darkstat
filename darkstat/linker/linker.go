@@ -459,6 +459,17 @@ func (l *Linker) Link() *builder.Builder {
 						front.BaseTrades(base.Name, base.Trades, front.BaseTabTrades),
 					),
 				)
+
+				for _, combo_route := range base.TradeRoutes {
+
+					build.RegComps(
+						builder.NewComponent(
+							utils_types.FilePath(front.TradeRouteUrl(combo_route)),
+							front.TradeRouteInfo(combo_route),
+						),
+					)
+
+				}
 			}
 		}, timeit.WithMsg("linking main stuff"))
 
