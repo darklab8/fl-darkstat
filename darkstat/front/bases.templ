@@ -430,6 +430,11 @@ templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute) {
 				font-size: 1.0em;
 			}
 		</style>
+		<p class="infocard_p">{ ">" } AvgTradeLaneSpeed: { strconv.Itoa(trades.AvgTradeLaneSpeed) }</p>
+		<p class="infocard_p">{ ">" } JumpHoleDelaySec: { strconv.Itoa(trades.JumpHoleDelaySec) }</p>
+		<p class="infocard_p">{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
+		<p class="infocard_p">{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>
+		<br/>
 		<p class="infocard_p">Transport Route:</p>
 		<p class="infocard_p">{ ">" } Avg Cruise Speed: { strconv.Itoa(trades.AvgTransportCruiseSpeed) }</p>
 		<p class="infocard_p">{ ">" } Can't Visit Freighter only jumpholes</p>

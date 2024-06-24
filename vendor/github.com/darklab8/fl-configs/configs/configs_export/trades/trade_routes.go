@@ -37,14 +37,14 @@ const (
 	AvgTransportCruiseSpeed = 350
 	AvgFreighterCruiseSpeed = 500
 	// already accounted for
-	AvgTradeLaneSpeed = 1900
+	AvgTradeLaneSpeed = 2250
 
 	// Add for every pair of jumphole in path
 	JumpHoleDelaySec = 15 // and jump gate
 	// add for every tradelane vertex pair in path
 	TradeLaneDockingDelaySec = 10
 	// add just once
-	BaseDockingDelay = 20
+	BaseDockingDelay = 10
 )
 
 /*
