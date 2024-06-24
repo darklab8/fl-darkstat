@@ -309,14 +309,6 @@ func (l *Linker) Link() *builder.Builder {
 					front.BasesT(data.Bases, front.BaseShowMissions, front.ShowEmpty(true), disco_ids),
 				),
 				builder.NewComponent(
-					urls.Trades,
-					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseTabTrades, front.ShowEmpty(false), disco_ids),
-				),
-				builder.NewComponent(
-					front.AllItemsUrl(urls.Missions),
-					front.BasesT(data.Bases, front.BaseTabTrades, front.ShowEmpty(true), disco_ids),
-				),
-				builder.NewComponent(
 					urls.Factions,
 					front.FactionsT(useful_factions, front.FactionShowBases, front.ShowEmpty(false), disco_ids),
 				),
@@ -646,6 +638,27 @@ func (l *Linker) Link() *builder.Builder {
 					),
 				)
 			}
+
+			sort.Slice(data.Bases, func(i, j int) bool {
+				if data.Bases[j].BestTransportRoute == nil {
+					return true
+				}
+				if data.Bases[i].BestTransportRoute == nil {
+					return false
+				}
+				return data.Bases[i].BestTransportRoute.GetProffitPerTime() > data.Bases[j].BestTransportRoute.GetProffitPerTime()
+			})
+
+			build.RegComps(
+				builder.NewComponent(
+					urls.Trades,
+					front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseTabTrades, front.ShowEmpty(false), disco_ids),
+				),
+				builder.NewComponent(
+					front.AllItemsUrl(urls.Trades),
+					front.BasesT(data.Bases, front.BaseTabTrades, front.ShowEmpty(true), disco_ids),
+				),
+			)
 		}, timeit.WithMsg("linking most of stuff"))
 
 	}, timeit.WithMsg("link, internal measure"))
