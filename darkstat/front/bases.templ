@@ -334,7 +334,7 @@ templ BaseTradesShared() {
 				<th style="min-width:50px;"><div class="vertical_th"><span>Fr.Profit/v/t</span><span>¢ents/sec</span></div></th>
 				<th style="min-width:50px;">Tr.Time(s).</th>
 				<th style="min-width:50px;">Fr.Time(s).</th>
-				<th style="min-width:50px;">Profit</th>
+				<th style="min-width:50px;">Profit/v</th>
 				<th style="min-width:50px;">System</th>
 				<th style="min-width:50px;">Dest. Name</th>
 				<th style="min-width:50px;">Dest. Faction</th>
@@ -402,7 +402,7 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 						</span>
 					</span>
 				</td>
-				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
+				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.Commodity.Volume)) }</td>
 				<td>{ trade_route.Transport.SellingGood.SystemName }</td>
 				<td>{ trade_route.Transport.SellingGood.BaseName }</td>
 				<td>{ trade_route.Transport.SellingGood.Faction }</td>
