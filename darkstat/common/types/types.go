@@ -29,6 +29,7 @@ type GlobalParams struct {
 	Pagepath          string
 	Heading           string
 	Timestamp         time.Time
+	TractorTabName    string
 }
 
 func GetCtx(ctx context.Context) GlobalParams {

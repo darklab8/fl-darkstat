@@ -52,7 +52,11 @@ func (l *Linker) Link() *builder.Builder {
 	var build *builder.Builder
 	timeit.NewTimerF(func(m *timeit.Timer) {
 		timeit.NewTimerF(func(m *timeit.Timer) {
-			build = builder.NewBuilder()
+			tractor_tab_name := settings.Env.TractorTabName
+			if l.mapped.Discovery != nil {
+				tractor_tab_name = "IDs"
+			}
+			build = builder.NewBuilder(builder.WithTractorTabName(tractor_tab_name))
 		}, timeit.WithMsg("building creation"))
 
 		var data *configs_export.Exporter

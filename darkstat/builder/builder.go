@@ -13,18 +13,27 @@ import (
 )
 
 type Builder struct {
-	components []*Component
-	dark_pages []*Component
+	components     []*Component
+	darkPages      []*Component
+	TractorTabName string
 }
 
 type BuilderOption func(b *Builder)
 
 func NewBuilder(opts ...BuilderOption) *Builder {
-	b := &Builder{}
+	b := &Builder{
+		TractorTabName: settings.Env.TractorTabName,
+	}
 	for _, opt := range opts {
 		opt(b)
 	}
 	return b
+}
+
+func WithTractorTabName(tractor_tab_name string) BuilderOption {
+	return func(b *Builder) {
+		b.TractorTabName = tractor_tab_name
+	}
 }
 
 func (b *Builder) RegComps(components ...*Component) {
@@ -32,7 +41,7 @@ func (b *Builder) RegComps(components ...*Component) {
 }
 
 func (b *Builder) RegDark(components ...*Component) {
-	b.dark_pages = append(b.dark_pages, components...)
+	b.darkPages = append(b.darkPages, components...)
 }
 
 func (b *Builder) build(components []*Component, params types.GlobalParams, filesystem *Filesystem) {
@@ -70,6 +79,7 @@ func (b *Builder) BuildAll() *Filesystem {
 	b.build(b.components, types.GlobalParams{
 		Buildpath:         "",
 		Theme:             types.ThemeLight,
+		TractorTabName:    b.TractorTabName,
 		SiteRoot:          siteRoot,
 		StaticRoot:        siteRoot + staticPrefix,
 		OppositeThemeRoot: siteRoot + "dark.html",

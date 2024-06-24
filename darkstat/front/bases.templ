@@ -318,21 +318,28 @@ templ PrintEnemies(enemies []configs_export.EnemyFaction) {
 }
 
 templ BaseTradesShared() {
+	<style>
+		.vertical_th {
+			display: flex;
+			flex-direction: column;
+		}
+	</style>
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="min-width:100px;">Commodity</th>
-				<th style="min-width:100px;">Tr.Profit/V/t(¢/sec)</th>
-				<th style="min-width:50px;">Fr.Profit/V/t(¢/sec)</th>
+				<th style="min-width:100px;">
+					<div class="vertical_th"><span>Tr.Profit/v/t</span><span>¢ents/sec</span></div>
+				</th>
+				<th style="min-width:50px;"><div class="vertical_th"><span>Fr.Profit/v/t</span><span>¢ents/sec</span></div></th>
+				<th style="min-width:50px;">Tr.Time(s).</th>
+				<th style="min-width:50px;">Fr.Time(s).</th>
+				<th style="min-width:50px;">Profit</th>
 				<th style="min-width:50px;">System</th>
 				<th style="min-width:50px;">Dest. Name</th>
 				<th style="min-width:50px;">Dest. Faction</th>
 				<th style="min-width:50px;">Price To Buy</th>
 				<th style="min-width:50px;">Price To sell</th>
-				<th style="min-width:50px;">Profit</th>
-				<th style="min-width:50px;">Tr.Time(sec).</th>
-				<th style="min-width:50px;">Tr.Time(min+sec).</th>
-				<th style="min-width:50px;">Fr.Time(sec).</th>
 				<th style="min-width:50px;">Commodity Nick</th>
 				<th style="min-width:50px;">Dest. Nickname</th>
 				<th style="min-width:50px;">Dest.X</th>
@@ -345,6 +352,14 @@ templ BaseTradesShared() {
 			{ children... }
 		</tbody>
 	</table>
+}
+
+templ TradeRouteHumanTime(route *configs_export.TradeRoute) {
+	if route.GetDist() < trades.INF/2 {
+		{ fmt.Sprintf("%2.0f", route.GetTime()/60) } min - { fmt.Sprintf("%2.0f", route.GetTime() - 60*math.Floor(route.GetTime()/60)) } sec
+	} else {
+		INF
+	}
 }
 
 templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseMode) {
@@ -363,33 +378,36 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 				<td>{ trade_route.Transport.Commodity.Name }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+				<td>
+					<span class="tooltip">
+						@TradeRouteHumanTime(trade_route.Transport)
+						<span class="tooltiptext">
+							if trade_route.Transport.GetDist() < trades.INF/2 {
+								{ fmt.Sprintf("%.0f", trade_route.Transport.GetTime()) } secs
+							} else {
+								INF secs
+							}
+						</span>
+					</span>
+				</td>
+				<td>
+					<span class="tooltip">
+						@TradeRouteHumanTime(trade_route.Freighter)
+						<span class="tooltiptext">
+							if trade_route.Freighter.GetDist() < trades.INF/2 {
+								{ fmt.Sprintf("%.0f", trade_route.Freighter.GetTime()) } secs
+							} else {
+								INF secs
+							}
+						</span>
+					</span>
+				</td>
+				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ trade_route.Transport.SellingGood.SystemName }</td>
 				<td>{ trade_route.Transport.SellingGood.BaseName }</td>
 				<td>{ trade_route.Transport.SellingGood.Faction }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>
-				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
-				<td>
-					if trade_route.Transport.GetDist() < trades.INF/2 {
-						{ fmt.Sprintf("%.0f", trade_route.Transport.GetTime()) }
-					} else {
-						INF
-					}
-				</td>
-				<td>
-					if trade_route.Transport.GetDist() < trades.INF/2 {
-						{ fmt.Sprintf("%.0f", trade_route.Transport.GetTime()/60) } - { fmt.Sprintf("%.0f", trade_route.Transport.GetTime() - 60*math.Floor(trade_route.Transport.GetTime()/60)) }
-					} else {
-						INF
-					}
-				</td>
-				<td>
-					if trade_route.Freighter.GetDist() < trades.INF/2 {
-						{ fmt.Sprintf("%.0f", trade_route.Freighter.GetTime()) }
-					} else {
-						INF
-					}
-				</td>
 				<td>{ trade_route.Transport.Commodity.Nickname }</td>
 				<td>{ trade_route.Transport.SellingGood.BaseNickname }</td>
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>
@@ -413,6 +431,8 @@ templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute) {
 			}
 		</style>
 		<p class="infocard_p">Transport Route:</p>
+		<p class="infocard_p">{ ">" } Avg Cruise Speed: { strconv.Itoa(trades.AvgTransportCruiseSpeed) }</p>
+		<p class="infocard_p">{ ">" } Can't Visit Freighter only jumpholes</p>
 		for _, path := range combo_route.Transport.GetPaths() {
 			if path.NextName != "" {
 				if path.Dist != 0 {
@@ -422,6 +442,8 @@ templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute) {
 		}
 		<br/>
 		<p class="infocard_p">Freighter Route:</p>
+		<p class="infocard_p">{ ">" } Avg Cruise Speed: { strconv.Itoa(trades.AvgFreighterCruiseSpeed) }</p>
+		<p class="infocard_p">{ ">" } Can visit Freighter only jumpholes (650 cargo restriction)</p>
 		for _, path := range combo_route.Freighter.GetPaths() {
 			if path.NextName != "" {
 				if path.Dist != 0 {
