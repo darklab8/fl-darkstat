@@ -20,6 +20,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/rnd_msns_mapped/diff2money"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/rnd_msns_mapped/npcranktodiff"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/ship_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/exe_mapped"
@@ -74,6 +75,7 @@ type MappedConfigs struct {
 
 	FactionProps *faction_props_mapped.Config
 	NpcShips     *npc_ships.Config
+	Solararch    *solar_mapped.Config
 
 	Discovery *DiscoveryConfig
 }
@@ -110,6 +112,7 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 
 	file_faction_props := iniload.NewLoader(filesystem.GetFile(faction_props_mapped.FILENAME))
 	file_npc_ships := iniload.NewLoader(filesystem.GetFile(npc_ships.FILENAME))
+	file_solararch := iniload.NewLoader(filesystem.GetFile(solar_mapped.FILENAME))
 
 	all_files := append(files_goods, files_market...)
 	all_files = append(all_files, files_equip...)
@@ -126,6 +129,7 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		file_npcranktodiff,
 		file_faction_props,
 		file_npc_ships,
+		file_solararch,
 	)
 
 	var file_techcompat *iniload.IniLoader
@@ -242,6 +246,12 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		go func() {
 			p.FactionProps = faction_props_mapped.Read(file_faction_props)
 			p.NpcShips = npc_ships.Read(file_npc_ships)
+			wg.Done()
+		}()
+
+		wg.Add(1)
+		go func() {
+			p.Solararch = solar_mapped.Read(file_solararch)
 			wg.Done()
 		}()
 

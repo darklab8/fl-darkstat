@@ -7,7 +7,6 @@ Game graph simplifies for us conversion of data from Freelancer space simulator 
 import (
 	"math"
 	"reflect"
-	"strings"
 )
 
 type VertexName string
@@ -19,6 +18,7 @@ type GameGraph struct {
 	AllowedVertixesForCalcs map[VertexName]bool // Consider deleting this
 	AvgCruiseSpeed          int
 	idsNamesByNick          map[VertexName]int
+	IsTradelane             map[VertexName]bool
 }
 
 func NewGameGraph(avgCruiseSpeed int) *GameGraph {
@@ -29,6 +29,7 @@ func NewGameGraph(avgCruiseSpeed int) *GameGraph {
 		AllowedVertixesForCalcs: make(map[VertexName]bool),
 		AvgCruiseSpeed:          avgCruiseSpeed,
 		idsNamesByNick:          make(map[VertexName]int),
+		IsTradelane:             make(map[VertexName]bool),
 	}
 }
 
@@ -55,8 +56,18 @@ func (f *GameGraph) SetIdsName(keya string, ids_name int) {
 	f.idsNamesByNick[VertexName(keya)] = ids_name
 }
 
-func GetDist[T any](f *GameGraph, dist [][]T, keya string, keyb string) T {
-	return dist[f.IndexByNick[VertexName(keya)]][f.IndexByNick[VertexName(keyb)]]
+func (f *GameGraph) SetIstRadelane(keya string) {
+	f.IsTradelane[VertexName(keya)] = true
+}
+
+func GetDist(f *GameGraph, dist [][]int, keya string, keyb string) int {
+	sourse_index, source_found := f.IndexByNick[VertexName(keya)]
+	target_index, target_found := f.IndexByNick[VertexName(keyb)]
+	_ = source_found
+	if !source_found || !target_found {
+		return INF
+	}
+	return dist[sourse_index][target_index]
 }
 
 type Path struct {
@@ -68,7 +79,11 @@ type Path struct {
 func GetPath(graph *GameGraph, parents [][]int, dist [][]int, source_key string, target_key string) []Path {
 	// fmt.Println("get_path", source_key, target_key)
 	S := []Path{}
-	u := graph.IndexByNick[VertexName(target_key)] // target
+	u, found_u := graph.IndexByNick[VertexName(target_key)] // target
+	if !found_u {
+		return []Path{}
+	}
+	_ = found_u
 	source := graph.IndexByNick[VertexName(source_key)]
 
 	add_node := func(u int) {
@@ -84,12 +99,6 @@ func GetPath(graph *GameGraph, parents [][]int, dist [][]int, source_key string,
 			path_to_add.Dist = dist[path_to_add.Node][path_to_add.NextNode]
 		}
 
-		// Merge JumpHoles dist to previous one
-		// Works buggy
-		// if path_to_add.Dist == int(graph.GetDistForTime(JumpHoleDelaySec)) {
-		// 	return
-		// }
-
 		S = append(S, path_to_add)
 	}
 	add_node(u)
@@ -99,7 +108,7 @@ func GetPath(graph *GameGraph, parents [][]int, dist [][]int, source_key string,
 			u = parents[source][u]
 
 			nickname := graph.NicknameByIndex[u]
-			if strings.Contains(string(nickname), "trade_lane") {
+			if _, ok := graph.IsTradelane[nickname]; ok {
 				continue
 			}
 

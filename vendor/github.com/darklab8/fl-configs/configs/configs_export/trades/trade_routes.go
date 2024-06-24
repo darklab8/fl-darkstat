@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/conftypes"
 )
@@ -102,17 +103,22 @@ func MapConfigsToFGraph(configs *configs_mapped.MappedConfigs, avgCruiseSpeed in
 			}
 			graph.SetIdsName(object.nickname, jumphole.IdsName.Get())
 
-			// if strings.Contains(object.nickname, strings.ToLower("Rh02_to_Iw02_hole")) {
-			// 	fmt.Println()
-			// }
-
 			jh_archetype := jumphole.Archetype.Get()
 
-			// TODO Check Solar if this is Dockable
-			if jh_archetype == "jumphole_noentry" { // hardcoded for now
+			// Check Solar if this is Dockable
+			if solar, ok := configs.Solararch.SolarsByNick[jh_archetype]; ok {
+				_, dockable := solar.DockingSphere.GetValue()
+
+				if !dockable {
+					continue
+				}
+			}
+
+			// Check locked_gate if it is enterable.
+			hash_id := flhash.HashNickname(object.nickname)
+			if _, ok := configs.InitialWorld.LockedGates[hash_id]; ok {
 				continue
 			}
-			// TODO Check locked_gate if it is enterable.
 
 			// Condition is taken from FLCompanion
 			// https://github.com/Corran-Raisu/FLCompanion/blob/021159e3b3a1b40188c93064f1db136780424ea9/Datas.cpp#L585
@@ -142,6 +148,7 @@ func MapConfigsToFGraph(configs *configs_mapped.MappedConfigs, avgCruiseSpeed in
 				nickname: tradelane.Nickname.Get(),
 				pos:      tradelane.Pos.Get(),
 			}
+			graph.SetIstRadelane(object.nickname)
 
 			next_tradelane, next_exists := tradelane.NextRing.GetValue()
 			prev_tradelane, prev_exists := tradelane.PrevRing.GetValue()

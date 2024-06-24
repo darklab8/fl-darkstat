@@ -1,9 +1,13 @@
 package initialworld
 
 import (
+	"strconv"
+
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
+	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
 )
 
 const (
@@ -33,16 +37,31 @@ type Config struct {
 
 	Groups    []*Group
 	GroupsMap map[string]*Group
+
+	LockedGates map[flhash.HashCode]bool
 }
 
 func Read(input_file *iniload.IniLoader) *Config {
-	frelconfig := &Config{
-		IniLoader: input_file,
-		Groups:    make([]*Group, 0, 100),
-		GroupsMap: make(map[string]*Group),
+	config := &Config{
+		IniLoader:   input_file,
+		Groups:      make([]*Group, 0, 100),
+		GroupsMap:   make(map[string]*Group),
+		LockedGates: make(map[flhash.HashCode]bool),
 	}
 
-	if groups, ok := frelconfig.SectionMap["[Group]"]; ok {
+	if locked_gates, ok := config.SectionMap["[locked_gates]"]; ok {
+
+		for _, values := range locked_gates[0].ParamMap["locked_gate"] {
+
+			int_hash, err := strconv.Atoi(values.First.AsString())
+
+			logus.Log.CheckPanic(err, "failed to parse locked_gate")
+
+			config.LockedGates[flhash.HashCode(int_hash)] = true
+		}
+	}
+
+	if groups, ok := config.SectionMap["[Group]"]; ok {
 
 		for _, group_res := range groups {
 			group := &Group{}
@@ -64,12 +83,12 @@ func Read(input_file *iniload.IniLoader) *Config {
 				group.Relationships = append(group.Relationships, rep)
 			}
 
-			frelconfig.Groups = append(frelconfig.Groups, group)
-			frelconfig.GroupsMap[group.Nickname.Get()] = group
+			config.Groups = append(config.Groups, group)
+			config.GroupsMap[group.Nickname.Get()] = group
 		}
 	}
 
-	return frelconfig
+	return config
 }
 
 func (frelconfig *Config) Write() *file.File {

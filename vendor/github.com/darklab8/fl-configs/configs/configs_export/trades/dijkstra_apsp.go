@@ -21,9 +21,8 @@ func NewNeighbour(destination int, weight int) *Neighbour {
 }
 
 type DijkstraAPSP struct {
-	vertices         int
-	adjacencyList    [][]*Neighbour
-	allowed_base_ids map[int]bool
+	vertices      int
+	adjacencyList [][]*Neighbour
 }
 
 const INF = math.MaxInt
@@ -33,8 +32,7 @@ const INF = math.MaxInt
 // to the graph using addEdge()
 func NewDijkstraApsp(vertices int) *DijkstraAPSP {
 	g := &DijkstraAPSP{
-		vertices:         vertices,
-		allowed_base_ids: make(map[int]bool),
+		vertices: vertices,
 	}
 
 	g.adjacencyList = make([][]*Neighbour, vertices)
@@ -63,12 +61,6 @@ func NewDijkstraApspFromMatrix(vertices int, adjacencyMatrix [][]int) *DijkstraA
 
 type DijkstraOption func(graph *DijkstraAPSP)
 
-func WithPathDistsForAllNodes() DijkstraOption {
-	return func(graph *DijkstraAPSP) {
-		graph.allowed_base_ids = make(map[int]bool)
-	}
-}
-
 func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *DijkstraAPSP {
 	vertices := len(graph.matrix)
 	g := NewDijkstraApsp(vertices)
@@ -79,12 +71,6 @@ func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *Dijkstr
 		graph.NicknameByIndex[index] = vertex
 		index++
 	}
-
-	// We need calculating for everything if we wish detailed path
-	// regretfully disabling potentially for forever. TODO delete if not in use
-	// for base_nick, _ := range graph.vertex_to_calculate_paths_for {
-	// 	g.allowed_base_ids[graph.Index_by_nickname[base_nick]] = true
-	// }
 
 	for vertex_name, vertex := range graph.matrix {
 		for vertex_target, weight := range vertex {
@@ -172,34 +158,12 @@ func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]int) {
 	var distances [][]int = make([][]int, g.vertices)
 	var parents [][]int = make([][]int, g.vertices)
 
-	// Performance optimization of the algorithm
-	// By skipping heaviest calculations for all shortest paths
-	// originiating from vertexes not needed.
-	// As those vertex are important only as intermediate travel point.
-	skip_not_allowed_vertex := func(source int) ([]int, bool) {
-		if len(g.allowed_base_ids) > 0 {
-			_, is_base := g.allowed_base_ids[source]
-			if !is_base {
-				dist := make([]int, g.vertices)
-				ArraysFill(dist, INF)
-				dist[source] = 0
-				return dist, true
-			}
-		}
-		return nil, false
-	}
-
 	// it is nice to keep sanity by keeping optional switch removing parallelism
 	is_sequential := false
 
 	if is_sequential {
 		for s := 0; s < g.vertices; s++ {
-			if dist_result, is_skipped := skip_not_allowed_vertex(s); is_skipped {
-				distances[s] = dist_result
-				continue
-			}
 			dist_result, parents_result := g.dijkstra(s)
-
 			distances[s] = dist_result
 			parents[s] = parents_result
 		}
@@ -207,12 +171,6 @@ func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]int) {
 		dijkstra_results := make(chan *DijkstraResult)
 		awaited := 0
 		for s := 0; s < g.vertices; s++ {
-
-			if dist_result, is_skipped := skip_not_allowed_vertex(s); is_skipped {
-				distances[s] = dist_result
-				continue
-			}
-
 			awaited += 1
 			go func(s int) {
 				dist_result, parents_result := g.dijkstra(s)

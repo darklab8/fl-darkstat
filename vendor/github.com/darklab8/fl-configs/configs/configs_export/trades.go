@@ -11,11 +11,10 @@ type Trades struct {
 }
 
 type TradeRoute struct {
-	g              *GraphResults
-	Commodity      *Commodity
-	BuyingGood     *GoodAtBase
-	SellingGood    *GoodAtBase
-	is_broken_path bool
+	g           *GraphResults
+	Commodity   *Commodity
+	BuyingGood  *GoodAtBase
+	SellingGood *GoodAtBase
 }
 
 type ComboTradeRoute struct {
@@ -35,33 +34,14 @@ func NewTradeRoute(g *GraphResults, buying_good *GoodAtBase, selling_good *GoodA
 		Commodity:   commodity,
 	}
 
-	// TODO fix a bug that u get returned random route here
-	// BUG ID: ghost_broken_path_out_of_bounds
-	paths := route.GetPaths()
-	if len(paths) == 0 {
-		route.is_broken_path = true
-	}
-	destination := paths[len(paths)-1]
-	if destination.NextName != selling_good.BaseNickname && destination.PrevName != selling_good.BaseNickname {
-		route.is_broken_path = true
-	}
-
 	return route
 }
 
 func (t *TradeRoute) GetProffitPerV() float64 {
-	// BUG ID: ghost_broken_path_out_of_bounds
-	if t.is_broken_path {
-		return 0
-	}
 	return float64(t.SellingGood.PriceBaseBuysFor-t.BuyingGood.PriceBaseSellsFor) / float64(t.Commodity.Volume)
 }
 
 func (t *TradeRoute) GetPaths() []trades.DetailedPath {
-	// BUG ID: ghost_broken_path_out_of_bounds
-	if t.is_broken_path {
-		return []trades.DetailedPath{}
-	}
 	return t.g.graph.GetPaths(t.g.parents, t.g.dists, t.BuyingGood.BaseNickname, t.SellingGood.BaseNickname)
 }
 
@@ -70,10 +50,6 @@ func (t *TradeRoute) GetNameByIdsName(ids_name int) string {
 }
 
 func (t *TradeRoute) GetDist() int {
-	// BUG ID: ghost_broken_path_out_of_bounds
-	if t.is_broken_path {
-		return 0
-	}
 	return trades.GetDist(t.g.graph, t.g.dists, t.BuyingGood.BaseNickname, t.SellingGood.BaseNickname)
 }
 
