@@ -18,9 +18,12 @@ func (e *Exporter) GetBases() []*Base {
 		var name string = e.GetInfocardName(base.StridName.Get(), base.Nickname.Get())
 
 		var system_name infocard.Infoname
+		var Region string
 		if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(base.System.Get())]; ok {
 
 			system_name = infocard.Infoname(e.GetInfocardName(system.Strid_name.Get(), system.Nickname.Get()))
+
+			Region = e.GetRegionName(system)
 		}
 
 		var infocard_id int
@@ -36,8 +39,11 @@ func (e *Exporter) GetBases() []*Base {
 					pos, _ = system_base.Pos.GetValue()
 					archetype, _ := system_base.Archetype.GetValue()
 					archetypes = append(archetypes, archetype)
+
 				}
+
 			}
+
 		}
 
 		var infocard_ids []int = make([]int, 0)
@@ -77,6 +83,7 @@ func (e *Exporter) GetBases() []*Base {
 			MarketGoods:      market_goods,
 			Pos:              pos,
 			Archetypes:       archetypes,
+			Region:           Region,
 		}
 
 		results = append(results, base)
@@ -118,6 +125,7 @@ type Base struct {
 	FactionName      string
 	System           string
 	SystemNickname   string
+	Region           string
 	StridName        int
 	InfocardID       int
 	Infocard         InfocardKey

@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/conftypes"
@@ -19,6 +20,7 @@ type GoodAtBase struct {
 	SystemName        string
 	Faction           string
 	BasePos           conftypes.Vector
+	Region            string
 }
 
 type Commodity struct {
@@ -175,6 +177,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []*GoodAtBase {
 		base_info.SystemName = more_info.SystemName
 		base_info.Faction = more_info.Faction
 		base_info.BasePos = more_info.Pos
+		base_info.Region = more_info.Region
 
 		if e.useful_bases_by_nick != nil {
 			if _, ok := e.useful_bases_by_nick[base_info.BaseNickname]; !ok {
@@ -190,8 +193,24 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []*GoodAtBase {
 type BaseInfo struct {
 	BaseName   string
 	SystemName string
+	Region     string
 	Faction    string
 	Pos        conftypes.Vector
+}
+
+func (e *Exporter) GetRegionName(system *universe_mapped.System) string {
+	var Region string
+	system_infocard_Id := system.Ids_info.Get()
+	if value, ok := e.configs.Infocards.Infocards[system_infocard_Id]; ok {
+		if len(value.Lines) > 0 {
+			Region = value.Lines[0]
+		}
+	}
+
+	if strings.Contains(Region, "Sometimes limbo") && len(Region) > 11 {
+		Region = Region[:20] + "..."
+	}
+	return Region
 }
 
 func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseInfo {
@@ -207,6 +226,7 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 
 	if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(system_nickname)]; ok {
 		result.SystemName = e.GetInfocardName(system.Strid_name.Get(), system_nickname)
+		result.Region = e.GetRegionName(system)
 	}
 
 	var reputation_nickname string

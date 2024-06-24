@@ -49,6 +49,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				}
 				<th style="min-width:200px;">Owner - Faction</th>
 				<th style="min-width:100px;">System</th>
+				<th style="min-width:100px;">Region</th>
 				if tab_mode == BaseShowMissions {
 					<th style="min-width:50px;">Min Award</th>
 					<th style="min-width:50px;">Max Award</th>
@@ -87,6 +88,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		<td>{ base.FactionName }</td>
 		<td>{ base.System }</td>
+		<td>{ base.Region }</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
@@ -338,6 +340,7 @@ templ BaseTradesShared() {
 				<th style="min-width:50px;">System</th>
 				<th style="min-width:50px;">Dest. Name</th>
 				<th style="min-width:50px;">Dest. Faction</th>
+				<th style="min-width:50px;">Dest. Region</th>
 				<th style="min-width:50px;">Price To Buy</th>
 				<th style="min-width:50px;">Price To sell</th>
 				<th style="min-width:50px;">Commodity Nick</th>
@@ -406,6 +409,7 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 				<td>{ trade_route.Transport.SellingGood.SystemName }</td>
 				<td>{ trade_route.Transport.SellingGood.BaseName }</td>
 				<td>{ trade_route.Transport.SellingGood.Faction }</td>
+				<td>{ trade_route.Transport.SellingGood.Region }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>
 				<td>{ trade_route.Transport.Commodity.Nickname }</td>
