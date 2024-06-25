@@ -75,7 +75,7 @@ type GraphResults struct {
 	e       *Exporter
 	graph   *trades.GameGraph
 	dists   [][]int
-	parents [][]int
+	parents [][]trades.Parent
 }
 
 func NewGraphResults(e *Exporter, avgCruiserSpeed int, with_writer_paths trades.WithFreighterPaths) *GraphResults {

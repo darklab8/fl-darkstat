@@ -2,6 +2,7 @@ package configs_settings
 
 import (
 	"os"
+	"runtime"
 
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
@@ -13,6 +14,7 @@ type ConfEnvVars struct {
 	FallbackInfonamesToNickname bool
 	Strict                      bool
 	FreelancerFolder            utils_types.FilePath
+	MaxCores                    *int
 }
 
 var Env ConfEnvVars
@@ -27,8 +29,22 @@ func GetEnvs(envs *enverant.Enverant) ConfEnvVars {
 		FallbackInfonamesToNickname: envs.GetBool("CONFIGS_FALLBACK_TO_NICKNAMES", enverant.OrBool(false)),
 		Strict:                      envs.GetBool("CONFIGS_STRICT", enverant.OrBool(true)),
 		FreelancerFolder:            getGameLocation(envs),
+		MaxCores:                    envs.GetPtrInt("CONFIGS_MAX_CORES"),
 	}
 	return Env
+}
+
+func GetMaxCores() int {
+	numCPUs := runtime.NumCPU()
+	if Env.MaxCores == nil {
+		return numCPUs
+	}
+
+	if *Env.MaxCores > numCPUs {
+		return numCPUs
+	}
+
+	return *Env.MaxCores
 }
 
 func getGameLocation(envs *enverant.Enverant) utils_types.FilePath {

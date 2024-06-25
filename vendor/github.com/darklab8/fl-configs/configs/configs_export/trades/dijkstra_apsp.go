@@ -21,8 +21,9 @@ func NewNeighbour(destination int, weight int) *Neighbour {
 }
 
 type DijkstraAPSP struct {
-	vertices      int
-	adjacencyList [][]*Neighbour
+	vertices         int
+	adjacencyList    [][]*Neighbour
+	allowed_base_ids map[int]bool
 }
 
 const INF = math.MaxInt
@@ -32,7 +33,8 @@ const INF = math.MaxInt
 // to the graph using addEdge()
 func NewDijkstraApsp(vertices int) *DijkstraAPSP {
 	g := &DijkstraAPSP{
-		vertices: vertices,
+		vertices:         vertices,
+		allowed_base_ids: make(map[int]bool),
 	}
 
 	g.adjacencyList = make([][]*Neighbour, vertices)
@@ -61,6 +63,12 @@ func NewDijkstraApspFromMatrix(vertices int, adjacencyMatrix [][]int) *DijkstraA
 
 type DijkstraOption func(graph *DijkstraAPSP)
 
+func WithPathDistsForAllNodes() DijkstraOption {
+	return func(graph *DijkstraAPSP) {
+		graph.allowed_base_ids = make(map[int]bool)
+	}
+}
+
 func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *DijkstraAPSP {
 	vertices := len(graph.matrix)
 	g := NewDijkstraApsp(vertices)
@@ -70,6 +78,11 @@ func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *Dijkstr
 		graph.IndexByNick[vertex] = index
 		graph.NicknameByIndex[index] = vertex
 		index++
+	}
+
+	// TODO make path reconstructions working with it
+	for base_nick, _ := range graph.AllowedVertixesForCalcs {
+		g.allowed_base_ids[graph.IndexByNick[base_nick]] = true
 	}
 
 	for vertex_name, vertex := range graph.matrix {
@@ -98,20 +111,25 @@ func ArraysFill[T any](array []T, value T) {
 	}
 }
 
+type Parent struct {
+	node   int
+	weight int
+}
+
 // // Time complexity of this
 // // implementation of dijkstra is O(V^2).
-func (g *DijkstraAPSP) dijkstra(source int) ([]int, []int) {
+func (g *DijkstraAPSP) dijkstra(source int) ([]int, []Parent) {
 	var distance []int = make([]int, g.vertices)
 
 	// this page https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
 	// helped to modify algorithm so it would return reconstructed paths.
 	// Parent array to store shortest
 	// path tree
-	var parents []int = make([]int, g.vertices)
+	var parents []Parent = make([]Parent, g.vertices)
 	// The starting vertex does not
 	// have a parent
 	for s := 0; s < g.vertices; s++ {
-		parents[s] = NO_PARENT
+		parents[s].node = NO_PARENT
 	}
 
 	pq := make(PriorityQueue, 0)
@@ -131,7 +149,8 @@ func (g *DijkstraAPSP) dijkstra(source int) ([]int, []int) {
 
 		for _, neighbour := range g.adjacencyList[node] {
 			if dist+neighbour.weight < distance[neighbour.destination] {
-				parents[neighbour.destination] = node
+				parents[neighbour.destination].node = node
+				parents[neighbour.destination].weight = neighbour.weight
 				distance[neighbour.destination] = dist + neighbour.weight
 				pq.Push(&Item{
 					value_weight: distance[neighbour.destination],
@@ -149,20 +168,41 @@ func (g *DijkstraAPSP) dijkstra(source int) ([]int, []int) {
 type DijkstraResult struct {
 	source         int
 	dist_result    []int
-	parents_result []int
+	parents_result []Parent
 }
 
 const NO_PARENT = -1
 
-func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]int) {
+func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]Parent) {
 	var distances [][]int = make([][]int, g.vertices)
-	var parents [][]int = make([][]int, g.vertices)
+	var parents [][]Parent = make([][]Parent, g.vertices)
+
+	// Performance optimization of the algorithm
+	// By skipping heaviest calculations for all shortest paths
+	// originiating from vertexes not needed.
+	// As those vertex are important only as intermediate travel point.
+	skip_not_allowed_vertex := func(source int) ([]int, bool) {
+		if len(g.allowed_base_ids) > 0 {
+			_, is_base := g.allowed_base_ids[source]
+			if !is_base {
+				dist := make([]int, g.vertices)
+				ArraysFill(dist, INF)
+				dist[source] = 0
+				return dist, true
+			}
+		}
+		return nil, false
+	}
 
 	// it is nice to keep sanity by keeping optional switch removing parallelism
 	is_sequential := false
 
 	if is_sequential {
 		for s := 0; s < g.vertices; s++ {
+			if dist_result, is_skipped := skip_not_allowed_vertex(s); is_skipped {
+				distances[s] = dist_result
+				continue
+			}
 			dist_result, parents_result := g.dijkstra(s)
 			distances[s] = dist_result
 			parents[s] = parents_result
@@ -171,6 +211,10 @@ func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]int) {
 		dijkstra_results := make(chan *DijkstraResult)
 		awaited := 0
 		for s := 0; s < g.vertices; s++ {
+			if dist_result, is_skipped := skip_not_allowed_vertex(s); is_skipped {
+				distances[s] = dist_result
+				continue
+			}
 			awaited += 1
 			go func(s int) {
 				dist_result, parents_result := g.dijkstra(s)

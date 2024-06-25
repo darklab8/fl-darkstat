@@ -76,7 +76,7 @@ type Path struct {
 	Dist     int
 }
 
-func GetPath(graph *GameGraph, parents [][]int, dist [][]int, source_key string, target_key string) []Path {
+func GetPath(graph *GameGraph, parents [][]Parent, dist [][]int, source_key string, target_key string) []Path {
 	// fmt.Println("get_path", source_key, target_key)
 	S := []Path{}
 	u, found_u := graph.IndexByNick[VertexName(target_key)] // target
@@ -86,7 +86,9 @@ func GetPath(graph *GameGraph, parents [][]int, dist [][]int, source_key string,
 	_ = found_u
 	source := graph.IndexByNick[VertexName(source_key)]
 
-	add_node := func(u int) {
+	distance_skipped_buffer := 0
+
+	add_node := func(parent Parent) {
 		path_to_add := Path{
 			Node: u,
 		}
@@ -96,23 +98,26 @@ func GetPath(graph *GameGraph, parents [][]int, dist [][]int, source_key string,
 			path_to_add.NextNode = NO_PARENT
 		}
 		if path_to_add.Node != NO_PARENT && path_to_add.NextNode != NO_PARENT {
-			path_to_add.Dist = dist[path_to_add.Node][path_to_add.NextNode]
+			path_to_add.Dist = parent.weight + distance_skipped_buffer //  dist[path_to_add.Node][path_to_add.NextNode]
+			distance_skipped_buffer = 0
 		}
 
 		S = append(S, path_to_add)
 	}
-	add_node(u)
+	add_node(Parent{node: u})
 
-	if parents[source][u] != NO_PARENT || u == source {
+	if parents[source][u].node != NO_PARENT || u == source {
 		for {
-			u = parents[source][u]
+			parent := parents[source][u]
+			u = parent.node
 
 			nickname := graph.NicknameByIndex[u]
 			if _, ok := graph.IsTradelane[nickname]; ok {
+				distance_skipped_buffer += parent.weight
 				continue
 			}
 
-			add_node(u)
+			add_node(parent)
 
 			if u == NO_PARENT {
 				break
@@ -144,7 +149,7 @@ type DetailedPath struct {
 	TimeSeconds int
 }
 
-func (graph *GameGraph) GetPaths(parents [][]int, dist [][]int, source_key string, target_key string) []DetailedPath {
+func (graph *GameGraph) GetPaths(parents [][]Parent, dist [][]int, source_key string, target_key string) []DetailedPath {
 	var detailed_paths []DetailedPath
 
 	paths := GetPath(graph, parents, dist, source_key, target_key)
