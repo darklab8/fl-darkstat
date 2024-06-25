@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
 	"github.com/darklab8/fl-configs/configs/conftypes"
 	"github.com/darklab8/go-utils/utils/utils_types"
@@ -105,7 +106,7 @@ func FilterToUserfulBases(bases []*Base) []*Base {
 
 		is_invisible := true
 		for _, archetype := range item.Archetypes {
-			if archetype != "invisible_base" {
+			if archetype != systems_mapped.BaseArchetypeInvisible {
 				is_invisible = false
 			}
 		}

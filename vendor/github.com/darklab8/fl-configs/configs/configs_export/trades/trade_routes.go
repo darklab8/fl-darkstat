@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_settings"
 	"github.com/darklab8/fl-configs/configs/conftypes"
 )
 
@@ -81,7 +82,16 @@ func MapConfigsToFGraph(configs *configs_mapped.MappedConfigs, avgCruiseSpeed in
 			}
 			graph.SetIdsName(object.nickname, system_obj.IdsName.Get())
 
-			if strings.Contains(object.nickname, "proxy_") {
+			if system_obj.Archetype.Get() == systems_mapped.BaseArchetypeInvisible {
+				continue
+			}
+
+			goods, goods_defined := configs.Market.GoodsPerBase[object.nickname]
+			if !goods_defined {
+				continue
+			}
+
+			if len(goods.MarketGoods) == 0 {
 				continue
 			}
 
@@ -152,43 +162,64 @@ func MapConfigsToFGraph(configs *configs_mapped.MappedConfigs, avgCruiseSpeed in
 
 			next_tradelane, next_exists := tradelane.NextRing.GetValue()
 			prev_tradelane, prev_exists := tradelane.PrevRing.GetValue()
-			if next_exists && prev_exists {
-				continue
-			}
 
-			// next or previous tradelane
-			chained_tradelane := ""
-			if next_exists {
-				chained_tradelane = next_tradelane
-			} else {
-				chained_tradelane = prev_tradelane
-			}
-			var last_tradelane *systems_mapped.TradeLaneRing
-			// iterate to last in a chain
-			for {
-				another_tradelane, ok := system.TradelaneByNick[chained_tradelane]
-				if !ok {
-					break
+			if configs_settings.Env.IsDevEnv {
+				// for dev env purposes to speed up test execution, we treat tradelanes as single entity
+				if next_exists && prev_exists {
+					continue
 				}
-				last_tradelane = another_tradelane
 
+				// next or previous tradelane
+				chained_tradelane := ""
 				if next_exists {
-					chained_tradelane, _ = another_tradelane.NextRing.GetValue()
+					chained_tradelane = next_tradelane
 				} else {
-					chained_tradelane, _ = another_tradelane.PrevRing.GetValue()
+					chained_tradelane = prev_tradelane
 				}
-				if chained_tradelane == "" {
-					break
+				var last_tradelane *systems_mapped.TradeLaneRing
+				// iterate to last in a chain
+				for {
+					another_tradelane, ok := system.TradelaneByNick[chained_tradelane]
+					if !ok {
+						break
+					}
+					last_tradelane = another_tradelane
+
+					if next_exists {
+						chained_tradelane, _ = another_tradelane.NextRing.GetValue()
+					} else {
+						chained_tradelane, _ = another_tradelane.PrevRing.GetValue()
+					}
+					if chained_tradelane == "" {
+						break
+					}
+				}
+
+				if last_tradelane == nil {
+					continue
+				}
+
+				distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
+				distance_inside_tradelane := distance * float64(graph.AvgCruiseSpeed) / float64(AvgTradeLaneSpeed)
+				graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
+			} else {
+				// in production every trade lane ring will work as separate entity
+				if next_exists {
+					if last_tradelane, ok := system.TradelaneByNick[next_tradelane]; ok {
+						distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
+						distance_inside_tradelane := distance * float64(graph.AvgCruiseSpeed) / float64(AvgTradeLaneSpeed)
+						graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
+					}
+				}
+
+				if prev_exists {
+					if last_tradelane, ok := system.TradelaneByNick[prev_tradelane]; ok {
+						distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
+						distance_inside_tradelane := distance * float64(graph.AvgCruiseSpeed) / float64(AvgTradeLaneSpeed)
+						graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
+					}
 				}
 			}
-
-			if last_tradelane == nil {
-				continue
-			}
-
-			distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
-			distance_inside_tradelane := distance * float64(graph.AvgCruiseSpeed) / float64(AvgTradeLaneSpeed)
-			graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
 
 			for _, existing_object := range system_objects {
 				distance := DistanceForVecs(object.pos, existing_object.pos) + graph.GetDistForTime(TradeLaneDockingDelaySec)

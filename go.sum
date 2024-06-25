@@ -1,9 +1,7 @@
 github.com/a-h/templ v0.2.543 h1:8YyLvyUtf0/IE2nIwZ62Z/m2o2NqwhnMynzOL78Lzbk=
 github.com/a-h/templ v0.2.543/go.mod h1:jP908DQCwI08IrnTalhzSEH9WJqG/Q94+EODQcJGFUA=
-github.com/darklab8/fl-configs v0.67.0 h1:ADBof1YKY50V2anTe01/HRe7KAxw0LcAnbmvp8EqdRY=
-github.com/darklab8/fl-configs v0.67.0/go.mod h1:tmhFrMlTKVh2JeHmd+3Phq/sWDYdA294c8sMj48YhoE=
-github.com/darklab8/fl-configs v0.67.1 h1:56h5SpbZ4kWPWGWU9rTQ0AS+YvnOBkuOSEg+eNDMt44=
-github.com/darklab8/fl-configs v0.67.1/go.mod h1:tmhFrMlTKVh2JeHmd+3Phq/sWDYdA294c8sMj48YhoE=
+github.com/darklab8/fl-configs v0.67.2 h1:fhuj0WATgBr/n6WzWsJYVi0KUwEiS5bOXKp33la3Kok=
+github.com/darklab8/fl-configs v0.67.2/go.mod h1:tmhFrMlTKVh2JeHmd+3Phq/sWDYdA294c8sMj48YhoE=
 github.com/darklab8/fl-data-discovery v0.2.1 h1:iMBnEs1gN/nJN4szZqo5OSfow8nj9sceHOh8g+K8WR4=
 github.com/darklab8/fl-data-discovery v0.2.1/go.mod h1:SgRh0N3cWrhslXVkc5LJXK52Mw4+Fdsbmv+0qkNJ6QI=
 github.com/darklab8/go-typelog v0.6.0 h1:Ci8imc7ScXiy5e1qMgf46NyJjrqNLPoIE1gbVe7bxl4=

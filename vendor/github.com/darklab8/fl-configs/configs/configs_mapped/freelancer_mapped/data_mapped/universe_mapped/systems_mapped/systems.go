@@ -111,6 +111,10 @@ type Base struct {
 	Pos         *semantic.Vect
 }
 
+const (
+	BaseArchetypeInvisible = "invisible_base"
+)
+
 type Jumphole struct {
 	semantic.Model
 	Nickname  *semantic.String

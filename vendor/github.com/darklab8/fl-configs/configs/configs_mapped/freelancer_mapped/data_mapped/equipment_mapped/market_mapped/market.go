@@ -44,6 +44,7 @@ type Config struct {
 
 	BaseGoods    []*BaseGood
 	BasesPerGood map[string][]*MarketGoodAtBase
+	GoodsPerBase map[string]*BaseGood
 }
 
 const (
@@ -57,7 +58,10 @@ const (
 )
 
 func Read(files []*iniload.IniLoader) *Config {
-	frelconfig := &Config{Files: files}
+	frelconfig := &Config{
+		Files:        files,
+		GoodsPerBase: make(map[string]*BaseGood),
+	}
 	frelconfig.BaseGoods = make([]*BaseGood, 0)
 	frelconfig.BasesPerGood = make(map[string][]*MarketGoodAtBase)
 
@@ -91,6 +95,7 @@ func Read(files []*iniload.IniLoader) *Config {
 			}
 
 			frelconfig.BaseGoods = append(frelconfig.BaseGoods, base_to_add)
+			frelconfig.GoodsPerBase[base_nickname] = base_to_add
 		}
 	}
 
