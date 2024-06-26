@@ -12,24 +12,26 @@ import (
 type VertexName string
 
 type GameGraph struct {
-	matrix                  map[VertexName]map[VertexName]float64
-	IndexByNick             map[VertexName]int
-	NicknameByIndex         map[int]VertexName
-	AllowedVertixesForCalcs map[VertexName]bool // Consider deleting this
-	AvgCruiseSpeed          int
-	idsNamesByNick          map[VertexName]int
-	IsTradelane             map[VertexName]bool
+	matrix                    map[VertexName]map[VertexName]float64
+	IndexByNick               map[VertexName]int
+	NicknameByIndex           map[int]VertexName
+	AllowedVertixesForCalcs   map[VertexName]bool // Consider deleting this
+	AvgCruiseSpeed            int
+	idsNamesByNick            map[VertexName]int
+	IsTradelane               map[VertexName]bool
+	CanVisitFreightersOnlyJHs WithFreighterPaths
 }
 
-func NewGameGraph(avgCruiseSpeed int) *GameGraph {
+func NewGameGraph(avgCruiseSpeed int, canVisitFreighterOnlyJHs WithFreighterPaths) *GameGraph {
 	return &GameGraph{
-		matrix:                  make(map[VertexName]map[VertexName]float64),
-		IndexByNick:             map[VertexName]int{},
-		NicknameByIndex:         make(map[int]VertexName),
-		AllowedVertixesForCalcs: make(map[VertexName]bool),
-		AvgCruiseSpeed:          avgCruiseSpeed,
-		idsNamesByNick:          make(map[VertexName]int),
-		IsTradelane:             make(map[VertexName]bool),
+		matrix:                    make(map[VertexName]map[VertexName]float64),
+		IndexByNick:               map[VertexName]int{},
+		NicknameByIndex:           make(map[int]VertexName),
+		AllowedVertixesForCalcs:   make(map[VertexName]bool),
+		AvgCruiseSpeed:            avgCruiseSpeed,
+		idsNamesByNick:            make(map[VertexName]int),
+		IsTradelane:               make(map[VertexName]bool),
+		CanVisitFreightersOnlyJHs: canVisitFreighterOnlyJHs,
 	}
 }
 

@@ -35,8 +35,9 @@ type WithFreighterPaths bool
 
 const (
 	// already accounted for
-	AvgTransportCruiseSpeed = 350
-	AvgFreighterCruiseSpeed = 500
+	AvgTransportCruiseSpeed = 350 // TODO You should grab those speeds from some ship example
+	AvgFrigateCruiseSpeed   = 500 // TODO You should grab those speeds from some ship example
+	AvgFreighterCruiseSpeed = 500 // TODO You should grab those speeds from some ship example
 	// already accounted for
 	AvgTradeLaneSpeed = 2250
 
@@ -70,7 +71,7 @@ And on click we show proffits of delivery to some location. With time of deliver
 Optionally print sum of two best routes that can be started within close range from each other.
 */
 func MapConfigsToFGraph(configs *configs_mapped.MappedConfigs, avgCruiseSpeed int, with_freighter_paths WithFreighterPaths) *GameGraph {
-	graph := NewGameGraph(avgCruiseSpeed)
+	graph := NewGameGraph(avgCruiseSpeed, with_freighter_paths)
 	for _, system := range configs.Systems.Systems {
 
 		var system_objects []SystemObject = make([]SystemObject, 0, 50)

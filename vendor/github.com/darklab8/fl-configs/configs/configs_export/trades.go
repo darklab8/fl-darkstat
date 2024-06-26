@@ -7,6 +7,7 @@ import (
 type Trades struct {
 	TradeRoutes        []*ComboTradeRoute
 	BestTransportRoute *TradeRoute
+	BestFrigateRoute   *TradeRoute
 	BestFreighterRoute *TradeRoute
 }
 
@@ -19,6 +20,7 @@ type TradeRoute struct {
 
 type ComboTradeRoute struct {
 	Transport *TradeRoute
+	Frigate   *TradeRoute
 	Freighter *TradeRoute
 }
 
@@ -35,6 +37,14 @@ func NewTradeRoute(g *GraphResults, buying_good *GoodAtBase, selling_good *GoodA
 	}
 
 	return route
+}
+
+func (t *TradeRoute) GetCruiseSpeed() int {
+	return t.g.graph.AvgCruiseSpeed
+}
+
+func (t *TradeRoute) GetCanVisitFreighterOnlyJH() bool {
+	return bool(t.g.graph.CanVisitFreightersOnlyJHs)
 }
 
 func (t *TradeRoute) GetProffitPerV() float64 {
@@ -98,6 +108,7 @@ func (e *Exporter) TradePaths(
 			for _, selling_good_at_base := range commodity.Bases {
 				trade_route := &ComboTradeRoute{
 					Transport: NewTradeRoute(e.transport, buying_good, selling_good_at_base, commodity),
+					Frigate:   NewTradeRoute(e.frigate, buying_good, selling_good_at_base, commodity),
 					Freighter: NewTradeRoute(e.freighter, buying_good, selling_good_at_base, commodity),
 				}
 
@@ -127,6 +138,12 @@ func (e *Exporter) TradePaths(
 			} else if trade_route.Freighter.GetProffitPerTime() > commodity.BestFreighterRoute.GetProffitPerTime() {
 				commodity.BestFreighterRoute = trade_route.Freighter
 			}
+
+			if commodity.BestFrigateRoute == nil {
+				commodity.BestFrigateRoute = trade_route.Frigate
+			} else if trade_route.Frigate.GetProffitPerTime() > commodity.BestFrigateRoute.GetProffitPerTime() {
+				commodity.BestFrigateRoute = trade_route.Frigate
+			}
 		}
 	}
 
@@ -142,6 +159,12 @@ func (e *Exporter) TradePaths(
 				base.BestFreighterRoute = trade_route.Freighter
 			} else if trade_route.Freighter.GetProffitPerTime() > base.BestFreighterRoute.GetProffitPerTime() {
 				base.BestFreighterRoute = trade_route.Freighter
+			}
+
+			if base.BestFrigateRoute == nil {
+				base.BestFrigateRoute = trade_route.Frigate
+			} else if trade_route.Frigate.GetProffitPerTime() > base.BestFrigateRoute.GetProffitPerTime() {
+				base.BestFrigateRoute = trade_route.Frigate
 			}
 		}
 	}

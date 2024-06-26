@@ -49,7 +49,6 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				}
 				<th style="min-width:200px;">Owner - Faction</th>
 				<th style="min-width:100px;">System</th>
-				<th style="min-width:100px;">Region</th>
 				if tab_mode == BaseShowMissions {
 					<th style="min-width:50px;">Min Award</th>
 					<th style="min-width:50px;">Max Award</th>
@@ -61,9 +60,11 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					<th style="min-width:50px;">Error</th>
 				}
 				if tab_mode == BaseTabTrades {
-					<th style="min-width:50px;">Best Tr.Profit/V/t(¢/sec)</th>
-					<th style="min-width:50px;">Best Fr.Profit/V/t(¢/sec)</th>
+					<th style="min-width:50px;"><div class="vertical_th"><span>Best Transport</span><span>profit/v ¢/sec</span></div></th>
+					<th style="min-width:50px;"><div class="vertical_th"><span>Best Frigate</span><span>profit/v ¢/sec</span></div></th>
+					<th style="min-width:50px;"><div class="vertical_th"><span>Best Freighter</span><span>profit/v ¢/sec</span></div></th>
 				}
+				<th style="min-width:100px;">Region</th>
 				<th style="min-width:200px;">Base Nickname</th>
 				<th style="min-width:50px;">System Nickname</th>
 				<th style="min-width:50px;">Pos X</th>
@@ -88,7 +89,6 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		<td>{ base.FactionName }</td>
 		<td>{ base.System }</td>
-		<td>{ base.Region }</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
@@ -114,6 +114,13 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				}
 			</td>
 			<td>
+				if base.BestFrigateRoute != nil {
+					{ fmt.Sprintf("%2.2f", base.BestFrigateRoute.GetProffitPerTime() * 100) }
+				} else {
+					0
+				}
+			</td>
+			<td>
 				if base.BestFreighterRoute != nil {
 					{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.GetProffitPerTime() * 100) }
 				} else {
@@ -121,6 +128,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				}
 			</td>
 		}
+		<td>{ base.Region }</td>
 		<td>{ base.Nickname }</td>
 		<td>{ base.SystemNickname }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
@@ -330,12 +338,12 @@ templ BaseTradesShared() {
 		<thead>
 			<tr class="flexed-tr">
 				<th style="min-width:100px;">Commodity</th>
-				<th style="min-width:100px;">
-					<div class="vertical_th"><span>Tr.Profit/v/t</span><span>¢ents/sec</span></div>
-				</th>
-				<th style="min-width:50px;"><div class="vertical_th"><span>Fr.Profit/v/t</span><span>¢ents/sec</span></div></th>
-				<th style="min-width:50px;">Tr.Time(s).</th>
-				<th style="min-width:50px;">Fr.Time(s).</th>
+				<th style="min-width:100px;"><div class="vertical_th"><span>Transport</span><span>Profit/v/t/</span><span>¢ents/sec</span></div></th>
+				<th style="min-width:50px;"><div class="vertical_th"><span>Frigate</span><span>Profit/v/t/</span><span>¢ents/sec</span></div></th>
+				<th style="min-width:50px;"><div class="vertical_th"><span>Freighter</span><span>Profit/v/t/</span><span>¢ents/sec</span></div></th>
+				<th style="min-width:50px;"><div class="vertical_th"><span>Transport</span><span>Time(sec)</span></div></th>
+				<th style="min-width:50px;"><div class="vertical_th"><span>Frigate</span><span>Time(sec)</span></div></th>
+				<th style="min-width:50px;"><div class="vertical_th"><span>Freighter</span><span>Time(sec)</span></div></th>
 				<th style="min-width:50px;">Profit/v</th>
 				<th style="min-width:50px;">System</th>
 				<th style="min-width:50px;">Dest. Name</th>
@@ -380,6 +388,7 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 			>
 				<td>{ trade_route.Transport.Commodity.Name }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
+				<td>{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
 				<td>
 					<span class="tooltip">
@@ -387,6 +396,18 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 						<span class="tooltiptext">
 							if trade_route.Transport.GetDist() < trades.INF/2 {
 								{ fmt.Sprintf("%.0f", trade_route.Transport.GetTime()) } secs
+							} else {
+								INF secs
+							}
+						</span>
+					</span>
+				</td>
+				<td>
+					<span class="tooltip">
+						@TradeRouteHumanTime(trade_route.Frigate)
+						<span class="tooltiptext">
+							if trade_route.Frigate.GetDist() < trades.INF/2 {
+								{ fmt.Sprintf("%.0f", trade_route.Frigate.GetTime()) } secs
 							} else {
 								INF secs
 							}
@@ -439,25 +460,22 @@ templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute) {
 		<p class="infocard_p">{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
 		<p class="infocard_p">{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>
 		<br/>
-		<p class="infocard_p">Transport Route:</p>
-		<p class="infocard_p">{ ">" } Avg Cruise Speed: { strconv.Itoa(trades.AvgTransportCruiseSpeed) }</p>
-		<p class="infocard_p">{ ">" } Can't Visit Freighter only jumpholes</p>
-		for _, path := range combo_route.Transport.GetPaths() {
-			if path.NextName != "" {
-				if path.Dist != 0 {
-					<p class="infocard_p">{ combo_route.Transport.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
-				}
-			}
-		}
+		@RouteInfo("Transport", combo_route.Transport)
 		<br/>
-		<p class="infocard_p">Freighter Route:</p>
-		<p class="infocard_p">{ ">" } Avg Cruise Speed: { strconv.Itoa(trades.AvgFreighterCruiseSpeed) }</p>
-		<p class="infocard_p">{ ">" } Can visit Freighter only jumpholes (650 cargo restriction)</p>
-		for _, path := range combo_route.Freighter.GetPaths() {
-			if path.NextName != "" {
-				if path.Dist != 0 {
-					<p class="infocard_p">{ combo_route.Transport.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
-				}
+		@RouteInfo("Frigate", combo_route.Frigate)
+		<br/>
+		@RouteInfo("Freighter", combo_route.Freighter)
+	}
+}
+
+templ RouteInfo(name string, route *configs_export.TradeRoute) {
+	<p class="infocard_p">{ name } Route:</p>
+	<p class="infocard_p">{ ">" } Avg Cruise Speed: { strconv.Itoa(route.GetCruiseSpeed()) }</p>
+	<p class="infocard_p">{ ">" } Visit Freighter Only JHs: { strconv.FormatBool(route.GetCanVisitFreighterOnlyJH()) }</p>
+	for _, path := range route.GetPaths() {
+		if path.NextName != "" {
+			if path.Dist != 0 {
+				<p class="infocard_p">{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
 			}
 		}
 	}

@@ -40,6 +40,7 @@ type Exporter struct {
 
 	transport *GraphResults
 	freighter *GraphResults
+	frigate   *GraphResults
 
 	Factions    []Faction
 	Infocards   Infocards
@@ -78,8 +79,8 @@ type GraphResults struct {
 	parents [][]trades.Parent
 }
 
-func NewGraphResults(e *Exporter, avgCruiserSpeed int, with_writer_paths trades.WithFreighterPaths) *GraphResults {
-	graph := trades.MapConfigsToFGraph(e.configs, avgCruiserSpeed, with_writer_paths)
+func NewGraphResults(e *Exporter, avgCruiserSpeed int, can_visit_freighter_only_jhs trades.WithFreighterPaths) *GraphResults {
+	graph := trades.MapConfigsToFGraph(e.configs, avgCruiserSpeed, can_visit_freighter_only_jhs)
 	dijkstra_apsp := trades.NewDijkstraApspFromGraph(graph)
 	dists, parents := dijkstra_apsp.DijkstraApsp()
 
@@ -102,6 +103,11 @@ func (e *Exporter) Export() *Exporter {
 	wg.Add(1)
 	go func() {
 		e.freighter = NewGraphResults(e, trades.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true))
+		wg.Done()
+	}()
+	wg.Add(1)
+	go func() {
+		e.frigate = NewGraphResults(e, trades.AvgFrigateCruiseSpeed, trades.WithFreighterPaths(false))
 		wg.Done()
 	}()
 	e.Bases = e.GetBases()
