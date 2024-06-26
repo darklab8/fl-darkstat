@@ -410,8 +410,8 @@ templ BaseTradesShared() {
 				</th>
 				<th style="width:50px;">Profit/v</th>
 				<th style="width:100px;">System</th>
-				<th style="width:100px;">Dest. Name</th>
 				<th style="width:100px;">Dest. Faction</th>
+				<th style="width:100px;">Dest. Name</th>
 				<th style="width:100px;">Dest. Region</th>
 				<th style="width:50px;">Price To Buy</th>
 				<th style="width:50px;">Price To sell</th>
@@ -499,10 +499,10 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 					@WriteSystemName(trade_route.Transport.SellingGood.SystemName)
 				</td>
 				<td>
-					@WriteBaseName(trade_route.Transport.SellingGood.BaseName)
+					@WriteFactioName(trade_route.Transport.SellingGood.Faction)
 				</td>
 				<td>
-					@WriteFactioName(trade_route.Transport.SellingGood.Faction)
+					@WriteBaseName(trade_route.Transport.SellingGood.BaseName)
 				</td>
 				<td>
 					@WriteRegionName(trade_route.Transport.SellingGood.Region)
