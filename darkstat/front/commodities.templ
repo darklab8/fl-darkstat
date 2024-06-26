@@ -17,29 +17,29 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 	<table class="sortable">
 		<thead>
 			<tr>
-				<th style="min-width:200px;">Commodity</th>
+				<th style="width:200px;">Commodity</th>
 				if pinm == PinMode {
-					<th style="min-width:25px;">Select</th>
-					<th style="min-width:25px;">Select</th>
+					<th style="width:25px;">Select</th>
+					<th style="width:25px;">Select</th>
 				}
-				<th style="min-width:25px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Best Price", "To Buy"})
 				</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Best Price", "To Sell"})
 				</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Best Buy ", "Per Vol"})
 				</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Best Sell ", "Per Vol"})
 				</th>
-				<th style="min-width:25px;">Volume</th>
-				<th style="min-width:25px;">Profit</th>
-				<th style="min-width:25px;">Profit / V</th>
-				<th style="min-width:25px;">Nickname</th>
-				<th style="min-width:25px;">Name ID</th>
-				<th style="min-width:25px;">Infocard ID</th>
+				<th style="width:25px;">Volume</th>
+				<th style="width:25px;">Profit</th>
+				<th style="width:25px;">Profit / V</th>
+				<th style="width:25px;">Nickname</th>
+				<th style="width:25px;">Name ID</th>
+				<th style="width:25px;">Infocard ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>

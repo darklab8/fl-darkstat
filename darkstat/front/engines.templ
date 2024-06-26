@@ -17,35 +17,35 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttype
 	<table class="sortable">
 		<thead>
 			<tr>
-				<th style="min-width:200px;">Engine</th>
+				<th style="width:200px;">Engine</th>
 				if pinm == PinMode {
-					<th style="min-width:25px;">Select</th>
-					<th style="min-width:25px;">Select</th>
+					<th style="width:25px;">Select</th>
+					<th style="width:25px;">Select</th>
 				}
 				@ThDisco(disco)
-				<th style="min-width:25px;">Price</th>
-				<th style="min-width:25px;">Buyable</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">Price</th>
+				<th style="width:25px;">Buyable</th>
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Impulse", "Speed"})
 				</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Cruise", "Speed"})
 				</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Cruise", "Charge Time"})
 				</th>
-				<th style="min-width:25px;">Class</th>
-				<th style="min-width:25px;">Flame Effect</th>
-				<th style="min-width:25px;">Trail Effect</th>
-				<th style="min-width:25px;">Linear Drag</th>
-				<th style="min-width:25px;">Max Force</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">Class</th>
+				<th style="width:25px;">Flame Effect</th>
+				<th style="width:25px;">Trail Effect</th>
+				<th style="width:25px;">Linear Drag</th>
+				<th style="width:25px;">Max Force</th>
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Reverse", "Fraction"})
 				</th>
-				<th style="min-width:25px;">Nickname</th>
-				<th style="min-width:25px;">HpType</th>
-				<th style="min-width:25px;">Name ID</th>
-				<th style="min-width:25px;">Info ID</th>
+				<th style="width:25px;">Nickname</th>
+				<th style="width:25px;">HpType</th>
+				<th style="width:25px;">Name ID</th>
+				<th style="width:25px;">Info ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>

@@ -45,49 +45,49 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 	<table class="sortable">
 		<thead>
 			<tr>
-				<th style="min-width:200px;">Gun</th>
+				<th style="width:200px;">Gun</th>
 				if pinm == PinMode {
-					<th style="min-width:50px;">Select</th>
-					<th style="min-width:50px;">Select</th>
+					<th style="width:50px;">Select</th>
+					<th style="width:50px;">Select</th>
 				}
 				@ThDisco(disco)
-				<th style="min-width:5px;">Class</th>
-				<th style="min-width:5px;">Type</th>
-				<th style="min-width:5px;">Price</th>
-				<th style="min-width:5px;">Buyable</th>
-				<th style="min-width:5px;">Hull Dmg</th>
-				<th style="min-width:5px;">Shield Dmg</th>
-				<th style="min-width:5px;">Power Usage</th>
-				<th style="min-width:5px;">Refire</th>
+				<th style="width:5px;">Class</th>
+				<th style="width:5px;">Type</th>
+				<th style="width:5px;">Price</th>
+				<th style="width:5px;">Buyable</th>
+				<th style="width:5px;">Hull Dmg</th>
+				<th style="width:5px;">Shield Dmg</th>
+				<th style="width:5px;">Power Usage</th>
+				<th style="width:5px;">Refire</th>
 				if mode == GunsMissiles {
-					<th style="min-width:50px;">
+					<th style="width:50px;">
 						@MultiLinestring([]string{"Max Angular", "Velocity"})
 					</th>
 				}
-				<th style="min-width:5px;">Hull Dmg/s</th>
-				<th style="min-width:5px;">Sheld Dmg/s</th>
-				<th style="min-width:5px;">Power/s</th>
-				<th style="min-width:5px;">
+				<th style="width:5px;">Hull Dmg/s</th>
+				<th style="width:5px;">Sheld Dmg/s</th>
+				<th style="width:5px;">Power/s</th>
+				<th style="width:5px;">
 					@MultiLinestring([]string{"Average", "Efficiency"})
 				</th>
-				<th style="min-width:5px;">
+				<th style="width:5px;">
 					@MultiLinestring([]string{"Anti Hull", "Efficiency"})
 				</th>
-				<th style="min-width:5px;">
+				<th style="width:5px;">
 					@MultiLinestring([]string{"Anti Shield", "Efficiency"})
 				</th>
-				<th style="min-width:5px;">Value</th>
-				<th style="min-width:5px;">Rating</th>
-				<th style="min-width:5px;">Speed</th>
-				<th style="min-width:5px;">Range</th>
-				<th style="min-width:5px;">Toughness</th>
-				<th style="min-width:5px;">Hit Pts</th>
-				<th style="min-width:5px;">Lootable</th>
-				<th style="min-width:50px;">Technology</th>
-				<th style="min-width:50px;">Nickname</th>
-				<th style="min-width:50px;">HpType</th>
-				<th style="min-width:50px;">Name ID</th>
-				<th style="min-width:50px;">Info ID</th>
+				<th style="width:5px;">Value</th>
+				<th style="width:5px;">Rating</th>
+				<th style="width:5px;">Speed</th>
+				<th style="width:5px;">Range</th>
+				<th style="width:5px;">Toughness</th>
+				<th style="width:5px;">Hit Pts</th>
+				<th style="width:5px;">Lootable</th>
+				<th style="width:50px;">Technology</th>
+				<th style="width:50px;">Nickname</th>
+				<th style="width:50px;">HpType</th>
+				<th style="width:50px;">Name ID</th>
+				<th style="width:50px;">Info ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -190,11 +190,11 @@ templ GunShowModifiersShared() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="min-width:50px;width:50px;">Technology</th>
-				<th style="min-width:50px;width:50px;">Target Type</th>
-				<th style="min-width:50px;width:50px;">Damage Modifier</th>
-				<th style="min-width:50px;width:50px;">Hull Dmg</th>
-				<th style="min-width:50px;width:50px;">Shield Dmg</th>
+				<th style="width:150px;">Technology</th>
+				<th style="width:150px;">Target Type</th>
+				<th style="width:100px;">Damage Modifier</th>
+				<th style="width:100px;">Hull Dmg</th>
+				<th style="width:100px;">Shield Dmg</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>

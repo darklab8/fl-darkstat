@@ -363,40 +363,40 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="min-width:50px;">Base</th>
-				<th style="min-width:25px;">Faction</th>
-				<th style="min-width:10px;">System</th>
+				<th style="width:200px;">Base</th>
+				<th style="width:200px;">Faction</th>
+				<th style="width:200px;">System</th>
 				if is_commodity {
-					<th style="min-width:10px;">
+					<th style="width:25px;">
 						@MultiLinestring([]string{"Price", "To Sell"})
 					</th>
-					<th style="min-width:10px;">
+					<th style="width:25px;">
 						@MultiLinestring([]string{"Price", "To Buy"})
 					</th>
 				} else {
-					<th style="min-width:10px;">Price</th>
+					<th style="width:50px;">Price</th>
 				}
 				if is_commodity {
-					<th style="min-width:10px;">
+					<th style="width:25px;">
 						@MultiLinestring([]string{"Price", "To Sell", "Per Vol"})
 					</th>
-					<th style="min-width:10px;">
+					<th style="width:25px;">
 						@MultiLinestring([]string{"Price", "To Buy", "Per Vol"})
 					</th>
 				}
-				<th style="min-width:10px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Base", "Sells"})
 				</th>
-				<th style="min-width:10px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Level", "Required"})
 				</th>
-				<th style="min-width:10px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Reputation", "Required"})
 				</th>
-				<th style="min-width:10px;">Base Nickname</th>
-				<th style="min-width:10px;">Pos X</th>
-				<th style="min-width:10px;">Pos Y</th>
-				<th style="min-width:10px;">Pos Z</th>
+				<th style="width:100px;">Base Nickname</th>
+				<th style="width:60px;">Pos X</th>
+				<th style="width:60px;">Pos Y</th>
+				<th style="width:60px;">Pos Z</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -588,8 +588,8 @@ templ PinSelectLeftRight(pinm PinMod, url string) {
 
 templ ThDisco(disco fronttypes.DiscoveryIDs) {
 	if disco.Show {
-		<th style="min-width:50px;display:none;" class="tech_compat">ID Compat.</th>
-		<th style="min-width:50px;">TechCell</th>
+		<th style="width:50px;display:none;" class="tech_compat">ID Compat.</th>
+		<th style="width:50px;">TechCell</th>
 	}
 }
 

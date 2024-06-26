@@ -42,50 +42,50 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 	<table class="sortable">
 		<thead>
 			<tr>
-				<th style="min-width:200px;">Base</th>
+				<th style="width:200px;">Base</th>
 				if pinm == PinMode {
-					<th style="min-width:50px;">Select</th>
-					<th style="min-width:50px;">Select</th>
+					<th style="width:50px;">Select</th>
+					<th style="width:50px;">Select</th>
 				}
-				<th style="min-width:50px;">Owner - Faction</th>
-				<th style="min-width:50px;">System</th>
+				<th style="width:50px;">Owner - Faction</th>
+				<th style="width:50px;">System</th>
 				if tab_mode == BaseShowMissions {
-					<th style="min-width:50px;">
+					<th style="width:50px;">
 						@MultiLinestring([]string{"Min", "Award"})
 					</th>
-					<th style="min-width:50px;">
+					<th style="width:50px;">
 						@MultiLinestring([]string{"Max", "Award"})
 					</th>
-					<th style="min-width:50px;">
+					<th style="width:50px;">
 						@MultiLinestring([]string{"Min", "Offers"})
 					</th>
-					<th style="min-width:50px;">
+					<th style="width:50px;">
 						@MultiLinestring([]string{"Max", "Offers"})
 					</th>
-					<th style="min-width:50px;">
+					<th style="width:50px;">
 						@MultiLinestring([]string{"Vingettes", "Offers Limit"})
 					</th>
 				}
 				if tab_mode == BaseTabTrades {
-					<th style="min-width:50px;"><div class="vertical_th"><span>Best Transport</span><span>profit/v ¢/sec</span></div></th>
-					<th style="min-width:50px;"><div class="vertical_th"><span>Best Frigate</span><span>profit/v ¢/sec</span></div></th>
-					<th style="min-width:50px;"><div class="vertical_th"><span>Best Freighter</span><span>profit/v ¢/sec</span></div></th>
+					<th style="width:50px;"><div class="vertical_th"><span>Best Transport</span><span>profit/v ¢/sec</span></div></th>
+					<th style="width:50px;"><div class="vertical_th"><span>Best Frigate</span><span>profit/v ¢/sec</span></div></th>
+					<th style="width:50px;"><div class="vertical_th"><span>Best Freighter</span><span>profit/v ¢/sec</span></div></th>
 				}
-				<th style="min-width:100px;">Region</th>
+				<th style="width:100px;">Region</th>
 				if tab_mode == BaseShowMissions {
-					<th style="min-width:50px;">Ship Ranks</th>
-					<th style="min-width:50px;">Enemies</th>
-					<th style="min-width:50px;">Error</th>
+					<th style="width:50px;">Ship Ranks</th>
+					<th style="width:50px;">Enemies</th>
+					<th style="width:50px;">Error</th>
 				}
-				<th style="min-width:50px;">Base Nickname</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">Base Nickname</th>
+				<th style="width:50px;">
 					@MultiLinestring([]string{"System", "Nickname"})
 				</th>
-				<th style="min-width:50px;">Pos X</th>
-				<th style="min-width:50px;">Pos Y</th>
-				<th style="min-width:10px;">Pos Z</th>
-				<th style="min-width:100px;">Base Name ID</th>
-				<th style="min-width:100px;">Infocard ID</th>
+				<th style="width:50px;">Pos X</th>
+				<th style="width:50px;">Pos Y</th>
+				<th style="width:10px;">Pos Z</th>
+				<th style="width:100px;">Base Name ID</th>
+				<th style="width:100px;">Infocard ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -210,25 +210,25 @@ templ BaseMarketGoodsBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="min-width:150px;">Good</th>
-				<th style="min-width:10px;">Type</th>
-				<th style="min-width:10px;">
+				<th style="width:150px;">Good</th>
+				<th style="width:10px;">Type</th>
+				<th style="width:10px;">
 					@MultiLinestring([]string{"Price", "To Sell"})
 				</th>
-				<th style="min-width:10px;">
+				<th style="width:10px;">
 					@MultiLinestring([]string{"Price", "To Buy"})
 				</th>
-				<th style="min-width:10px;">
+				<th style="width:10px;">
 					@MultiLinestring([]string{"Level", "Required"})
 				</th>
-				<th style="min-width:10px;">
+				<th style="width:10px;">
 					@MultiLinestring([]string{"Reputation", "Required"})
 				</th>
-				<th style="min-width:10px;">Base Sells</th>
-				<th style="min-width:10px;">Price Modifier</th>
-				<th style="min-width:10px;">Price Base</th>
-				<th style="min-width:10px;">Nickname</th>
-				<th style="min-width:10px;">HpType</th>
+				<th style="width:10px;">Base Sells</th>
+				<th style="width:10px;">Price Modifier</th>
+				<th style="width:10px;">Price Base</th>
+				<th style="width:10px;">Nickname</th>
+				<th style="width:10px;">HpType</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -276,25 +276,25 @@ templ BaseMissionsBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="min-width:100px;">Faction</th>
-				<th style="min-width:25px;">
+				<th style="width:200px;">Faction</th>
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Min", "Difficulty"})
 				</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Max", "Difficulty"})
 				</th>
-				<th style="min-width:25px;">Chance</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">Chance</th>
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Min", "Money", "Award"})
 				</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Max", "Money", "Award"})
 				</th>
-				<th style="min-width:25px;">NpcRanks</th>
-				<th style="min-width:25px;">Enemies: Faction Name ( Faction Nickname, NPcs exist for NpcRanks)</th>
-				// <th style="min-width:50px;">Rep Req</th> // can it be used?
-				<th style="min-width:25px;">Error</th>
-				<th style="min-width:25px;">Faction Nickname</th>
+				<th style="width:25px;">NpcRanks</th>
+				<th style="width:25px;">Enemies: Faction Name ( Faction Nickname, NPcs exist for NpcRanks)</th>
+				// <th style="width:50px;">Rep Req</th> // can it be used?
+				<th style="width:25px;">Error</th>
+				<th style="width:25px;">Faction Nickname</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -371,37 +371,37 @@ templ BaseTradesShared() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="min-width:100px;">Commodity</th>
-				<th style="min-width:50px;">
+				<th style="width:200px;">Commodity</th>
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
 				</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
 				</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
 				</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Frigate", "Time(sec)"})
 				</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Freighter", "Time(sec)"})
 				</th>
-				<th style="min-width:50px;">Profit/v</th>
-				<th style="min-width:50px;">System</th>
-				<th style="min-width:50px;">Dest. Name</th>
-				<th style="min-width:50px;">Dest. Faction</th>
-				<th style="min-width:50px;">Dest. Region</th>
-				<th style="min-width:50px;">Price To Buy</th>
-				<th style="min-width:50px;">Price To sell</th>
-				<th style="min-width:50px;">Commodity Nick</th>
-				<th style="min-width:50px;">Dest. Nickname</th>
-				<th style="min-width:50px;">Dest.X</th>
-				<th style="min-width:50px;">Dest.Y</th>
-				<th style="min-width:50px;">Dest.Z</th>
+				<th style="width:50px;">Profit/v</th>
+				<th style="width:100px;">System</th>
+				<th style="width:120px;">Dest. Name</th>
+				<th style="width:120px;">Dest. Faction</th>
+				<th style="width:100px;">Dest. Region</th>
+				<th style="width:50px;">Price To Buy</th>
+				<th style="width:50px;">Price To sell</th>
+				<th style="width:50px;">Commodity Nick</th>
+				<th style="width:50px;">Dest. Nickname</th>
+				<th style="width:50px;">Dest.X</th>
+				<th style="width:50px;">Dest.Y</th>
+				<th style="width:50px;">Dest.Z</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -473,9 +473,9 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 					</span>
 				</td>
 				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.Commodity.Volume)) }</td>
-				<td>{ trade_route.Transport.SellingGood.SystemName }</td>
+				<td>{ WriteSystemName(trade_route.Transport.SellingGood.SystemName) }</td>
 				<td>{ trade_route.Transport.SellingGood.BaseName }</td>
-				<td>{ trade_route.Transport.SellingGood.Faction }</td>
+				<td>{ WriteFactioName(trade_route.Transport.SellingGood.Faction) }</td>
 				<td>{ trade_route.Transport.SellingGood.Region }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>

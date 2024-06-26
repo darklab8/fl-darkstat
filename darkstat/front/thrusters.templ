@@ -17,26 +17,26 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco fro
 	<table class="sortable">
 		<thead>
 			<tr>
-				<th style="min-width:200px;">Thruster</th>
+				<th style="width:200px;">Thruster</th>
 				@ThDisco(disco)
 				if pinm == PinMode {
-					<th style="min-width:25px;">Select</th>
-					<th style="min-width:25px;">Select</th>
+					<th style="width:25px;">Select</th>
+					<th style="width:25px;">Select</th>
 				}
-				<th style="min-width:25px;">Price</th>
-				<th style="min-width:25px;">Buyable</th>
-				<th style="min-width:25px;">Max Force</th>
-				<th style="min-width:25px;">
+				<th style="width:25px;">Price</th>
+				<th style="width:25px;">Buyable</th>
+				<th style="width:25px;">Max Force</th>
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Power", "Usage"})
 				</th>
-				<th style="min-width:25px;">Efficiency</th>
-				<th style="min-width:25px;">Value</th>
-				<th style="min-width:25px;">Rating</th>
-				<th style="min-width:25px;">Hit Pts</th>
-				<th style="min-width:25px;">Lootable</th>
-				<th style="min-width:25px;">Nickname</th>
-				<th style="min-width:25px;">Name ID</th>
-				<th style="min-width:25px;">Info ID</th>
+				<th style="width:25px;">Efficiency</th>
+				<th style="width:25px;">Value</th>
+				<th style="width:25px;">Rating</th>
+				<th style="width:25px;">Hit Pts</th>
+				<th style="width:25px;">Lootable</th>
+				<th style="width:25px;">Nickname</th>
+				<th style="width:25px;">Name ID</th>
+				<th style="width:25px;">Info ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>

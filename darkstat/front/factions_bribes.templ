@@ -6,14 +6,14 @@ import (
 	"fmt"
 )
 
-templ RephacksBottomBase() {
+templ BriberyBottomBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:250px;">Base Selling Rep Hack</th>
-				<th style="width:200px;">Owner Faction</th>
+				<th style="width:250px;">Owner Faction</th>
 				<th style="width:50px;">Probability %</th>
-				<th style="width:100px;">System</th>
+				<th style="width:150px;">System</th>
 				<th style="width:150px;">Base Nickname</th>
 				<th style="max-width:100%;"></th>
 			</tr>
@@ -27,7 +27,7 @@ templ RephacksBottomBase() {
 templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Rephack) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ faction.Name }</div>
-	@RephacksBottomBase() {
+	@BriberyBottomBase() {
 		for _, rep := range rephacks {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(rep.BaseNickname)) }

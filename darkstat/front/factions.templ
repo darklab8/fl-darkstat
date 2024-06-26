@@ -33,30 +33,30 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 	<table class="sortable">
 		<thead>
 			<tr>
-				<th style="min-width:10px;">Name</th>
+				<th style="width:200px;">Name</th>
 				if pinm == PinMode {
-					<th style="min-width:50px;">Select</th>
-					<th style="min-width:50px;">Select</th>
+					<th style="width:50px;">Select</th>
+					<th style="width:50px;">Select</th>
 				}
-				<th style="min-width:50px;">Short Name</th>
-				<th style="min-width:50px;">Nickname</th>
+				<th style="width:50px;">Short Name</th>
+				<th style="width:50px;">Nickname</th>
 				if mode == FactionShowRephacks {
-					<th style="min-width:50px;">Has Rephacks</th>
+					<th style="width:50px;">Has Rephacks</th>
 				}
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Obj. Destr.", "Rep.Cng."})
 				</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Mission Win", "Rep.Cng."})
 				</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Mission Fail", "Rep.Cng."})
 				</th>
-				<th style="min-width:50px;">
+				<th style="width:50px;">
 					@MultiLinestring([]string{"Mission Abort", "Rep.Cng."})
 				</th>
-				<th style="min-width:50px;">InfonameID</th>
-				<th style="min-width:50px;">InfocardID</th>
+				<th style="width:50px;">InfonameID</th>
+				<th style="width:50px;">InfocardID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -108,14 +108,14 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 						if mode == FactionShowBases {
 							@FactionRepsBase()
 						} else if mode == FactionShowRephacks {
-							@RephacksBottomBase()
+							@BriberyBottomBase()
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						if mode == FactionShowBases {
 							@FactionRepsBase()
 						} else if mode == FactionShowRephacks {
-							@RephacksBottomBase()
+							@BriberyBottomBase()
 						}
 					</div>
 				</div>
