@@ -158,7 +158,9 @@ templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputati
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
 			>
-				<td>{ rep.Name }</td>
+				<td>
+					@WriteRepName(rep.Name)
+				</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Rep) }</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Empathy) }</td>
 				<td>{ config_consts.GetRelationshipStatus(rep.Rep).ToStr() }</td>

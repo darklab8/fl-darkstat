@@ -32,16 +32,16 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttype
 					@MultiLinestring([]string{"Cruise", "Speed"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Cruise", "Charge Time"})
+					@MultiLinestring([]string{"Cruise", "Charge", "Time"})
 				</th>
-				<th style="width:25px;">Class</th>
-				<th style="width:25px;">Flame Effect</th>
-				<th style="width:25px;">Trail Effect</th>
 				<th style="width:25px;">Linear Drag</th>
 				<th style="width:25px;">Max Force</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Reverse", "Fraction"})
 				</th>
+				<th style="width:25px;">Class</th>
+				<th style="width:25px;">Flame Effect</th>
+				<th style="width:25px;">Trail Effect</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">HpType</th>
 				<th style="width:25px;">Name ID</th>
@@ -60,12 +60,12 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttype
 					<td>{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
 					<td>{ strconv.Itoa(engine.CruiseSpeed) }</td>
 					<td>{ strconv.Itoa(engine.CruiseChargeTime) }</td>
-					<td>{ engine.HpType }</td>
-					<td>{ engine.FlameEffect }</td>
-					<td>{ engine.TrailEffect }</td>
 					<td>{ strconv.Itoa(engine.LinearDrag) }</td>
 					<td>{ strconv.Itoa(engine.MaxForce) }</td>
 					<td>{ fmt.Sprintf("%.2f", engine.ReverseFraction) }</td>
+					<td>{ engine.HpType }</td>
+					<td>{ engine.FlameEffect }</td>
+					<td>{ engine.TrailEffect }</td>
 					<td>{ engine.Nickname } </td>
 					<td>{ engine.HpType } </td>
 					<td>{ strconv.Itoa(engine.NameID) } </td>

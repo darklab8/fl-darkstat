@@ -101,8 +101,12 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 	@TrFromMainTb(base.Nickname, BaseDetailedUrl(base, tab_mode), pinm) {
 		@PinTd(base.Nickname, base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
-		<td>{ WriteFactioName(base.FactionName) }</td>
-		<td>{ WriteSystemName(base.System) }</td>
+		<td>
+			@WriteFactioName(base.FactionName)
+		</td>
+		<td>
+			@WriteSystemName(base.System)
+		</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
@@ -133,7 +137,9 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				}
 			</td>
 		}
-		<td>{ base.Region }</td>
+		<td>
+			@WriteRegionName(base.Region)
+		</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
 			<td>
@@ -210,7 +216,7 @@ templ BaseMarketGoodsBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:150px;">Good</th>
+				<th style="width:200px;">Good</th>
 				<th style="width:10px;">Type</th>
 				<th style="width:10px;">
 					@MultiLinestring([]string{"Price", "To Sell"})
@@ -251,8 +257,14 @@ templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode B
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
 			>
-				<td>{ good.Name }</td>
-				<td>{ WriteGoodType(string(good.Type)) }</td>
+				<td>
+					@WriteLimit(200) {
+						{ good.Name }
+					}
+				</td>
+				<td>
+					@WriteGoodType(string(good.Type))
+				</td>
 				<td>
 					if good.PriceToSell != nil {
 						{ strconv.Itoa(*good.PriceToSell) }
@@ -264,7 +276,11 @@ templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode B
 				<td>{ strconv.FormatBool(good.BaseSells) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
 				<td>{ strconv.Itoa(good.PriceBase) }</td>
-				<td>{ good.Nickname }</td>
+				<td>
+					@WriteLimit(200) {
+						{ good.Nickname }
+					}
+				</td>
 				<td>{ good.HpType }</td>
 				<td></td>
 			</tr>
@@ -276,7 +292,7 @@ templ BaseMissionsBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:200px;">Faction</th>
+				<th style="width:165px;">Faction</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Min", "Difficulty"})
 				</th>
@@ -317,7 +333,9 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
 			>
-				<td>{ msn_giver.FactionName }</td>
+				<td>
+					@WriteFactioName(msn_giver.FactionName)
+				</td>
 				<td>{ fmt.Sprintf("%2.2f", msn_giver.MinDifficulty) }</td>
 				<td>{ fmt.Sprintf("%2.2f", msn_giver.MaxDifficulty) }</td>
 				<td>{ strconv.Itoa(msn_giver.Weight) }</td>
@@ -371,7 +389,7 @@ templ BaseTradesShared() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:200px;">Commodity</th>
+				<th style="width:150px;">Commodity</th>
 				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
 				</th>
@@ -392,8 +410,8 @@ templ BaseTradesShared() {
 				</th>
 				<th style="width:50px;">Profit/v</th>
 				<th style="width:100px;">System</th>
-				<th style="width:120px;">Dest. Name</th>
-				<th style="width:120px;">Dest. Faction</th>
+				<th style="width:100px;">Dest. Name</th>
+				<th style="width:100px;">Dest. Faction</th>
 				<th style="width:100px;">Dest. Region</th>
 				<th style="width:50px;">Price To Buy</th>
 				<th style="width:50px;">Price To sell</th>
@@ -432,7 +450,11 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
 			>
-				<td>{ trade_route.Transport.Commodity.Name }</td>
+				<td>
+					@WriteLimit(150) {
+						{ trade_route.Transport.Commodity.Name }
+					}
+				</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
@@ -473,14 +495,26 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 					</span>
 				</td>
 				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.Commodity.Volume)) }</td>
-				<td>{ WriteSystemName(trade_route.Transport.SellingGood.SystemName) }</td>
-				<td>{ trade_route.Transport.SellingGood.BaseName }</td>
-				<td>{ WriteFactioName(trade_route.Transport.SellingGood.Faction) }</td>
-				<td>{ trade_route.Transport.SellingGood.Region }</td>
+				<td>
+					@WriteSystemName(trade_route.Transport.SellingGood.SystemName)
+				</td>
+				<td>
+					@WriteBaseName(trade_route.Transport.SellingGood.BaseName)
+				</td>
+				<td>
+					@WriteFactioName(trade_route.Transport.SellingGood.Faction)
+				</td>
+				<td>
+					@WriteRegionName(trade_route.Transport.SellingGood.Region)
+				</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>
 				<td>{ trade_route.Transport.Commodity.Nickname }</td>
-				<td>{ trade_route.Transport.SellingGood.BaseNickname }</td>
+				<td>
+					@WriteLimit(100) {
+						{ trade_route.Transport.SellingGood.BaseNickname }
+					}
+				</td>
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Y) }</td>
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Z) }</td>

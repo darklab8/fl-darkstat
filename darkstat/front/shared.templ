@@ -363,9 +363,9 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:200px;">Base</th>
-				<th style="width:200px;">Faction</th>
-				<th style="width:200px;">System</th>
+				<th style="width:150px;">Base</th>
+				<th style="width:150px;">Faction</th>
+				<th style="width:100px;">System</th>
 				if is_commodity {
 					<th style="width:25px;">
 						@MultiLinestring([]string{"Price", "To Sell"})
@@ -421,9 +421,15 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
 			>
-				<td>{ base_info.BaseName }</td>
-				<td>{ WriteFactioName(base_info.Faction) }</td>
-				<td>{ WriteSystemName(base_info.SystemName) }</td>
+				<td>
+					@WriteBaseName(base_info.BaseName)
+				</td>
+				<td>
+					@WriteFactioName(base_info.Faction)
+				</td>
+				<td>
+					@WriteSystemName(base_info.SystemName)
+				</td>
 				if is_commodity {
 					<td>{ strconv.Itoa(base_info.PriceBaseBuysFor) }</td>
 				}
@@ -435,7 +441,11 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 				<td>{ strconv.FormatBool(base_info.BaseSells) }</td>
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", base_info.RepRequired) }</td>
-				<td>{ base_info.BaseNickname }</td>
+				<td>
+					@WriteLimit(100) {
+						{ base_info.BaseNickname }
+					}
+				</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.X) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Y) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Z) }</td>
@@ -500,8 +510,14 @@ script Pin2(id string) {
 }
 
 templ PinTd(nickname string, name string, pinm PinMod) {
+	<style>
+	</style>
 	<td style="display:flex;justify-content:space-between;min-width:50px;">
-		<span>{ name }</span>
+		<span>
+			@WriteLimit(200) {
+				{ name }
+			}
+		</span>
 		if pinm==MainMode {
 			<span style="cursor:copy;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>pin</span>
 		} else {
@@ -658,14 +674,50 @@ templ BottomFilterBar() {
 	<input style="width: 100%;" type="text" id="bottom_input" onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')" placeholder="Search rows by any content: name, nickname etc.."/>
 }
 
-func WriteFactioName(FactionName string) string {
-	return strings.ReplaceAll(FactionName, "Manufacturing", "M.")
+templ WriteBaseName(BaseName string) {
+	@WriteLimit(150) {
+		{ BaseName }
+	}
 }
 
-func WriteSystemName(System string) string {
-	return strings.ReplaceAll(System, "Atmosphere", "Atm.")
+templ WriteFactioName(FactionName string) {
+	@WriteLimit(165) {
+		{ FactionName }
+	}
 }
 
-func WriteGoodType(GoodType string) string {
-	return strings.ReplaceAll(GoodType, "countermeasuredropper", "cm")
+templ WriteRepName(RepName string) {
+	@WriteLimit(200) {
+		{ RepName }
+	}
+}
+
+templ WriteTractorID(Name string) {
+	@WriteLimit(200) {
+		{ Name }
+	}
+}
+
+templ WriteSystemName(System string) {
+	@WriteLimit(120) {
+		{ System }
+	}
+}
+
+templ WriteGoodType(GoodType string) {
+	@WriteLimit(100) {
+		{ GoodType }
+	}
+}
+
+templ WriteRegionName(RegionName string) {
+	@WriteLimit(170) {
+		{ RegionName }
+	}
+}
+
+templ WriteLimit(limit int) {
+	@templ.Raw("<div style=\"width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;\">")
+	{ children... }
+	@templ.Raw("</div>")
 }

@@ -280,7 +280,9 @@ templ ShipsIDsDetailed(ship configs_export.Ship) {
 				hx-swap="innerHTML"
 				onclick="RowHighlighter(this)"
 			>
-				<td>{ disco_id.Tractor.Name }</td>
+				<td>
+					@WriteTractorID(disco_id.Tractor.Name)
+				</td>
 				<td>{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) }</td>
 				@TractorValues(disco_id.Tractor)
 				<td></td>

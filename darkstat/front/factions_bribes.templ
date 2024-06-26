@@ -37,10 +37,16 @@ templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Re
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
 			>
-				<td>{ rep.BaseName }</td>
-				<td>{ rep.BaseOwner }</td>
+				<td>
+					@WriteBaseName(rep.BaseName)
+				</td>
+				<td>
+					@WriteFactioName(rep.BaseOwner)
+				</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Chance * 100) }</td>
-				<td>{ rep.BaseSystem }</td>
+				<td>
+					@WriteSystemName(rep.BaseSystem)
+				</td>
 				<td>{ rep.BaseNickname }</td>
 				<td></td>
 			</tr>
