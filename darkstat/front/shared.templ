@@ -717,7 +717,7 @@ templ WriteRegionName(RegionName string) {
 }
 
 templ WriteLimit(limit int) {
-	@templ.Raw("<div style=\"width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;\">")
+	@templ.Raw("<div style=\"width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;overflow-y:hidden;\">")
 	{ children... }
 	@templ.Raw("</div>")
 }
