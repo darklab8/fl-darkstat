@@ -13,14 +13,18 @@ func TractorDetailedUrl(tractor configs_export.Tractor) string {
 }
 
 templ TractorHeaders() {
-	<th style="width:50px;">Price</th>
-	<th style="width:50px;">Buyable</th>
-	<th style="width:50px;">Max Length</th>
-	<th style="width:50px;">Reach Speed</th>
-	<th style="width:50px;">Lootable</th>
-	<th style="width:50px;">Nickname</th>
-	<th style="width:100px;">Name ID</th>
-	<th style="width:100px;">Info ID</th>
+	<th style="width:25px;">Price</th>
+	<th style="width:25px;">Buyable</th>
+	<th style="width:25px;">
+		@MultiLinestring([]string{"Max", "Length"})
+	</th>
+	<th style="width:25px;">
+		@MultiLinestring([]string{"Reach", "Speed"})
+	</th>
+	<th style="width:25px;">Lootable</th>
+	<th style="width:25px;">Nickname</th>
+	<th style="width:25px;">Name ID</th>
+	<th style="width:25px;">Info ID</th>
 	<th style="max-width:100%;"></th>
 }
 

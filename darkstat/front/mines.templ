@@ -17,33 +17,39 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco fronttypes.Disc
 	<table class="sortable">
 		<thead>
 			<tr>
-				<th style="width:200px;">Mine</th>
+				<th style="width:100px;">Mine</th>
 				if pinm == PinMode {
-					<th style="min-width:50px;">Select</th>
-					<th style="min-width:50px;">Select</th>
+					<th style="min-width:25px;">Select</th>
+					<th style="min-width:25px;">Select</th>
 				}
 				@ThDisco(disco)
-				<th style="width:50px;">Price</th>
-				<th style="width:50px;">Buyable</th>
-				<th style="width:50px;">Ammo Price</th>
-				<th style="width:50px;">Hull Dmg</th>
-				<th style="width:50px;">Shield Dmg</th>
-				<th style="width:100px;">Value</th>
-				<th style="width:100px;">Refire</th>
-				<th style="width:50px;">Detonation Dist.</th>
-				<th style="width:50px;">Radius</th>
-				<th style="width:50px;">Seek Dist.</th>
-				<th style="width:50px;">Top Speed</th>
-				<th style="width:50px;">Acceleration</th>
-				<th style="width:50px;">Linear Drag</th>
-				<th style="width:50px;">Lifetime</th>
-				<th style="width:50px;">Owner Safe</th>
-				<th style="width:50px;">Toughness</th>
-				<th style="width:50px;">Hit Pts</th>
-				<th style="width:50px;">Lootable</th>
-				<th style="width:50px;">Nickname</th>
-				<th style="width:100px;">Name ID</th>
-				<th style="width:100px;">Info ID</th>
+				<th style="min-width:25px;">Price</th>
+				<th style="min-width:25px;">Buyable</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Ammo", "Price"})
+				</th>
+				<th style="min-width:25px;">Hull Dmg</th>
+				<th style="min-width:25px;">Shield Dmg</th>
+				<th style="min-width:25px;">Value</th>
+				<th style="min-width:25px;">Refire</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Detonation", "Distance"})
+				</th>
+				<th style="min-width:25px;">Radius</th>
+				<th style="min-width:25px;">Seek Dist.</th>
+				<th style="min-width:25px;">Top Speed</th>
+				<th style="min-width:25px;">Acceleration</th>
+				<th style="min-width:25px;">Linear Drag</th>
+				<th style="min-width:25px;">Lifetime</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Owner", "Safe"})
+				</th>
+				<th style="min-width:25px;">Toughness</th>
+				<th style="min-width:25px;">Hit Pts</th>
+				<th style="min-width:25px;">Lootable</th>
+				<th style="min-width:25px;">Nickname</th>
+				<th style="min-width:25px;">Name ID</th>
+				<th style="min-width:25px;">Info ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>

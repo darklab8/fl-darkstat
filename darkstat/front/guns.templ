@@ -51,35 +51,43 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 					<th style="min-width:50px;">Select</th>
 				}
 				@ThDisco(disco)
-				<th style="min-width:50px;">Class</th>
-				<th style="min-width:50px;">Type</th>
-				<th style="min-width:50px;">Technology</th>
-				<th style="min-width:50px;">Price</th>
-				<th style="min-width:50px;">Buyable</th>
-				<th style="min-width:50px;">Hull Dmg</th>
-				<th style="min-width:50px;">Shield Dmg</th>
-				<th style="min-width:50px;">Power Usage</th>
-				<th style="min-width:100px;">Refire</th>
+				<th style="min-width:5px;">Class</th>
+				<th style="min-width:5px;">Type</th>
+				<th style="min-width:5px;">Price</th>
+				<th style="min-width:5px;">Buyable</th>
+				<th style="min-width:5px;">Hull Dmg</th>
+				<th style="min-width:5px;">Shield Dmg</th>
+				<th style="min-width:5px;">Power Usage</th>
+				<th style="min-width:5px;">Refire</th>
 				if mode == GunsMissiles {
-					<th style="min-width:100px;">Max Angular Vel</th>
+					<th style="min-width:50px;">
+						@MultiLinestring([]string{"Max Angular", "Velocity"})
+					</th>
 				}
-				<th style="min-width:100px;">Hull Dmg/s</th>
-				<th style="min-width:100px;">Sheld Dmg/s</th>
-				<th style="min-width:100px;">Power/s</th>
-				<th style="min-width:100px;">Avg. Efficiency</th>
-				<th style="min-width:100px;">Anti Hull Eff.</th>
-				<th style="min-width:100px;">Anti Shield Eff.</th>
-				<th style="min-width:100px;">Value</th>
-				<th style="min-width:100px;">Rating</th>
-				<th style="min-width:100px;">Speed</th>
-				<th style="min-width:100px;">Range</th>
-				<th style="min-width:100px;">Toughness</th>
-				<th style="min-width:100px;">Hit Pts</th>
-				<th style="min-width:100px;">Lootable</th>
-				<th style="min-width:100px;">Nickname</th>
-				<th style="min-width:100px;">HpType</th>
-				<th style="min-width:100px;">Name ID</th>
-				<th style="min-width:100px;">Info ID</th>
+				<th style="min-width:5px;">Hull Dmg/s</th>
+				<th style="min-width:5px;">Sheld Dmg/s</th>
+				<th style="min-width:5px;">Power/s</th>
+				<th style="min-width:5px;">
+					@MultiLinestring([]string{"Average", "Efficiency"})
+				</th>
+				<th style="min-width:5px;">
+					@MultiLinestring([]string{"Anti Hull", "Efficiency"})
+				</th>
+				<th style="min-width:5px;">
+					@MultiLinestring([]string{"Anti Shield", "Efficiency"})
+				</th>
+				<th style="min-width:5px;">Value</th>
+				<th style="min-width:5px;">Rating</th>
+				<th style="min-width:5px;">Speed</th>
+				<th style="min-width:5px;">Range</th>
+				<th style="min-width:5px;">Toughness</th>
+				<th style="min-width:5px;">Hit Pts</th>
+				<th style="min-width:5px;">Lootable</th>
+				<th style="min-width:50px;">Technology</th>
+				<th style="min-width:50px;">Nickname</th>
+				<th style="min-width:50px;">HpType</th>
+				<th style="min-width:50px;">Name ID</th>
+				<th style="min-width:50px;">Info ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -98,7 +106,6 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 		@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
 		<td>{ gun.Class }</td>
 		<td>{ gun.Type }</td>
-		<td>{ gun.DamageType }</td>
 		<td>{ strconv.Itoa(gun.Price) } </td>
 		<td>{ strconv.FormatBool(configs_export.Buyable(gun.Bases)) }</td>
 		<td>{ strconv.Itoa(gun.HullDamage) }</td>
@@ -121,6 +128,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 		<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
 		<td>{ gun.HitPts }</td>
 		<td>{ strconv.FormatBool(gun.Lootable) }</td>
+		<td>{ gun.DamageType }</td>
 		<td>
 			{ gun.Nickname }
 			@EmbedInfocardForSearch(infocards, configs_export.InfocardKey(gun.Nickname))

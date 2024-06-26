@@ -363,26 +363,40 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:250px;min-width:250px;">Base</th>
-				<th style="width:100px;min-width:100px;">Faction</th>
-				<th style="width:50px;min-width:50px;">System</th>
+				<th style="min-width:50px;">Base</th>
+				<th style="min-width:25px;">Faction</th>
+				<th style="min-width:10px;">System</th>
 				if is_commodity {
-					<th style="width:50px;min-width:50px;">Price To Sell</th>
-					<th style="width:50px;min-width:50px;">Price To Buy</th>
+					<th style="min-width:10px;">
+						@MultiLinestring([]string{"Price", "To Sell"})
+					</th>
+					<th style="min-width:10px;">
+						@MultiLinestring([]string{"Price", "To Buy"})
+					</th>
 				} else {
-					<th style="width:50px;min-width:50px;">Price</th>
+					<th style="min-width:10px;">Price</th>
 				}
 				if is_commodity {
-					<th style="width:50px;min-width:50px;">Price To Sell Per Vol</th>
-					<th style="width:50px;min-width:50px;">Price To Buy Per Vol</th>
+					<th style="min-width:10px;">
+						@MultiLinestring([]string{"Price", "To Sell", "Per Vol"})
+					</th>
+					<th style="min-width:10px;">
+						@MultiLinestring([]string{"Price", "To Buy", "Per Vol"})
+					</th>
 				}
-				<th style="width:50px;min-width:50px;">Base Sells</th>
-				<th style="width:50px;min-width:50px;">Level Req'd</th>
-				<th style="width:50px;min-width:50px;">Reputation Req'd</th>
-				<th style="width:50px;min-width:50px;">Base Nickname</th>
-				<th style="width:50px;min-width:10px;">Pos X</th>
-				<th style="width:50px;min-width:10px;">Pos Y</th>
-				<th style="width:50px;min-width:10px;">Pos Z</th>
+				<th style="min-width:10px;">
+					@MultiLinestring([]string{"Base", "Sells"})
+				</th>
+				<th style="min-width:10px;">
+					@MultiLinestring([]string{"Level", "Required"})
+				</th>
+				<th style="min-width:10px;">
+					@MultiLinestring([]string{"Reputation", "Required"})
+				</th>
+				<th style="min-width:10px;">Base Nickname</th>
+				<th style="min-width:10px;">Pos X</th>
+				<th style="min-width:10px;">Pos Y</th>
+				<th style="min-width:10px;">Pos Z</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -408,8 +422,8 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 				onclick="RowHighlighter(this)"
 			>
 				<td>{ base_info.BaseName }</td>
-				<td>{ base_info.Faction }</td>
-				<td>{ base_info.SystemName }</td>
+				<td>{ WriteFactioName(base_info.Faction) }</td>
+				<td>{ WriteSystemName(base_info.SystemName) }</td>
 				if is_commodity {
 					<td>{ strconv.Itoa(base_info.PriceBaseBuysFor) }</td>
 				}
@@ -642,4 +656,16 @@ templ EmbedInfocardForSearch(infocards configs_export.Infocards, infokey configs
 
 templ BottomFilterBar() {
 	<input style="width: 100%;" type="text" id="bottom_input" onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')" placeholder="Search rows by any content: name, nickname etc.."/>
+}
+
+func WriteFactioName(FactionName string) string {
+	return strings.ReplaceAll(FactionName, "Manufacturing", "M.")
+}
+
+func WriteSystemName(System string) string {
+	return strings.ReplaceAll(System, "Atmosphere", "Atm.")
+}
+
+func WriteGoodType(GoodType string) string {
+	return strings.ReplaceAll(GoodType, "countermeasuredropper", "cm")
 }

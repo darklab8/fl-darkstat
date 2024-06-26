@@ -47,17 +47,24 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					<th style="min-width:50px;">Select</th>
 					<th style="min-width:50px;">Select</th>
 				}
-				<th style="min-width:200px;">Owner - Faction</th>
-				<th style="min-width:100px;">System</th>
+				<th style="min-width:50px;">Owner - Faction</th>
+				<th style="min-width:50px;">System</th>
 				if tab_mode == BaseShowMissions {
-					<th style="min-width:50px;">Min Award</th>
-					<th style="min-width:50px;">Max Award</th>
-					<th style="min-width:50px;">Min Offers</th>
-					<th style="min-width:50px;">Max Offers</th>
-					<th style="min-width:50px;">Vingettes - Offers Limit</th>
-					<th style="min-width:50px;">Ship Ranks</th>
-					<th style="min-width:50px;">Enemies</th>
-					<th style="min-width:50px;">Error</th>
+					<th style="min-width:50px;">
+						@MultiLinestring([]string{"Min", "Award"})
+					</th>
+					<th style="min-width:50px;">
+						@MultiLinestring([]string{"Max", "Award"})
+					</th>
+					<th style="min-width:50px;">
+						@MultiLinestring([]string{"Min", "Offers"})
+					</th>
+					<th style="min-width:50px;">
+						@MultiLinestring([]string{"Max", "Offers"})
+					</th>
+					<th style="min-width:50px;">
+						@MultiLinestring([]string{"Vingettes", "Offers Limit"})
+					</th>
 				}
 				if tab_mode == BaseTabTrades {
 					<th style="min-width:50px;"><div class="vertical_th"><span>Best Transport</span><span>profit/v ¢/sec</span></div></th>
@@ -65,11 +72,18 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					<th style="min-width:50px;"><div class="vertical_th"><span>Best Freighter</span><span>profit/v ¢/sec</span></div></th>
 				}
 				<th style="min-width:100px;">Region</th>
-				<th style="min-width:200px;">Base Nickname</th>
-				<th style="min-width:50px;">System Nickname</th>
+				if tab_mode == BaseShowMissions {
+					<th style="min-width:50px;">Ship Ranks</th>
+					<th style="min-width:50px;">Enemies</th>
+					<th style="min-width:50px;">Error</th>
+				}
+				<th style="min-width:50px;">Base Nickname</th>
+				<th style="min-width:50px;">
+					@MultiLinestring([]string{"System", "Nickname"})
+				</th>
 				<th style="min-width:50px;">Pos X</th>
 				<th style="min-width:50px;">Pos Y</th>
-				<th style="min-width:50px;">Pos Z</th>
+				<th style="min-width:10px;">Pos Z</th>
 				<th style="min-width:100px;">Base Name ID</th>
 				<th style="min-width:100px;">Infocard ID</th>
 				<th style="max-width:100%;"></th>
@@ -87,23 +101,14 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 	@TrFromMainTb(base.Nickname, BaseDetailedUrl(base, tab_mode), pinm) {
 		@PinTd(base.Nickname, base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
-		<td>{ base.FactionName }</td>
-		<td>{ base.System }</td>
+		<td>{ WriteFactioName(base.FactionName) }</td>
+		<td>{ WriteSystemName(base.System) }</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MinOffers) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>
 			<td>{ strconv.Itoa(base.Missions.Vignettes) }</td>
-			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
-			<td>
-				@PrintEnemies(EnemistToList(base.Missions.EnemiesAtBaseMap))
-			</td>
-			<td>
-				if base.Missions.Err != nil {
-					{ base.Missions.Err.Error() }
-				}
-			</td>
 		}
 		if tab_mode == BaseTabTrades {
 			<td>
@@ -129,6 +134,17 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 			</td>
 		}
 		<td>{ base.Region }</td>
+		if tab_mode == BaseShowMissions {
+			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
+			<td>
+				@PrintEnemies(EnemistToList(base.Missions.EnemiesAtBaseMap))
+			</td>
+			<td>
+				if base.Missions.Err != nil {
+					{ base.Missions.Err.Error() }
+				}
+			</td>
+		}
 		<td>{ base.Nickname }</td>
 		<td>{ base.SystemNickname }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
@@ -194,17 +210,25 @@ templ BaseMarketGoodsBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="min-width:200px;">Good</th>
-				<th style="min-width:100px;">Type</th>
-				<th style="min-width:50px;">Price To Sell</th>
-				<th style="min-width:50px;">Price To Buy</th>
-				<th style="min-width:50px;">Level Req'd</th>
-				<th style="min-width:50px;">Reputation Req'd</th>
-				<th style="min-width:50px;">Base Sells</th>
-				<th style="min-width:50px;">Price Modifier</th>
-				<th style="min-width:50px;">Price Base</th>
-				<th style="min-width:300px;">Nickname</th>
-				<th style="min-width:300px;">HpType</th>
+				<th style="min-width:150px;">Good</th>
+				<th style="min-width:10px;">Type</th>
+				<th style="min-width:10px;">
+					@MultiLinestring([]string{"Price", "To Sell"})
+				</th>
+				<th style="min-width:10px;">
+					@MultiLinestring([]string{"Price", "To Buy"})
+				</th>
+				<th style="min-width:10px;">
+					@MultiLinestring([]string{"Level", "Required"})
+				</th>
+				<th style="min-width:10px;">
+					@MultiLinestring([]string{"Reputation", "Required"})
+				</th>
+				<th style="min-width:10px;">Base Sells</th>
+				<th style="min-width:10px;">Price Modifier</th>
+				<th style="min-width:10px;">Price Base</th>
+				<th style="min-width:10px;">Nickname</th>
+				<th style="min-width:10px;">HpType</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -228,7 +252,7 @@ templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode B
 				onclick="RowHighlighter(this)"
 			>
 				<td>{ good.Name }</td>
-				<td>{ string(good.Type) }</td>
+				<td>{ WriteGoodType(string(good.Type)) }</td>
 				<td>
 					if good.PriceToSell != nil {
 						{ strconv.Itoa(*good.PriceToSell) }
@@ -252,17 +276,25 @@ templ BaseMissionsBase() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="min-width:200px;">Faction</th>
-				<th style="min-width:100px;">Min Difficulty</th>
-				<th style="min-width:50px;">Max Difficulty</th>
-				<th style="min-width:50px;">Chance</th>
-				<th style="min-width:50px;">Min Money Award</th>
-				<th style="min-width:50px;">Max Money Award</th>
-				<th style="min-width:50px;">Enemies: Faction Name ( Faction Nickname, NPcs exist for NpcRanks)</th>
+				<th style="min-width:100px;">Faction</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Min", "Difficulty"})
+				</th>
+				<th style="min-width:50px;">
+					@MultiLinestring([]string{"Max", "Difficulty"})
+				</th>
+				<th style="min-width:25px;">Chance</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Min", "Money", "Award"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Max", "Money", "Award"})
+				</th>
+				<th style="min-width:25px;">NpcRanks</th>
+				<th style="min-width:25px;">Enemies: Faction Name ( Faction Nickname, NPcs exist for NpcRanks)</th>
 				// <th style="min-width:50px;">Rep Req</th> // can it be used?
-				<th style="min-width:50px;">NpcRanks</th>
-				<th style="min-width:300px;">Error</th>
-				<th style="min-width:300px;">Faction Nickname</th>
+				<th style="min-width:25px;">Error</th>
+				<th style="min-width:25px;">Faction Nickname</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -291,10 +323,10 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 				<td>{ strconv.Itoa(msn_giver.Weight) }</td>
 				<td>{ strconv.Itoa(msn_giver.MinAward) }</td>
 				<td>{ strconv.Itoa(msn_giver.MaxAward) }</td>
+				<td>{ strings.Join(strings.Fields(fmt.Sprint(msn_giver.NpcRanks)), ",") }</td>
 				<td>
 					@PrintEnemies(msn_giver.Enemies)
 				</td>
-				<td>{ strings.Join(strings.Fields(fmt.Sprint(msn_giver.NpcRanks)), ",") }</td>
 				<td>
 					if msn_giver.Err != nil {
 						{ msn_giver.Err.Error() }
@@ -327,23 +359,37 @@ templ PrintEnemies(enemies []configs_export.EnemyFaction) {
 	}
 }
 
-templ BaseTradesShared() {
-	<style>
-		.vertical_th {
-			display: flex;
-			flex-direction: column;
+templ MultiLinestring(lines []string) {
+	<div class="vertical_th">
+		for _, line := range lines {
+			<span>{ line }</span>
 		}
-	</style>
+	</div>
+}
+
+templ BaseTradesShared() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="min-width:100px;">Commodity</th>
-				<th style="min-width:100px;"><div class="vertical_th"><span>Transport</span><span>Profit/v/t/</span><span>¢ents/sec</span></div></th>
-				<th style="min-width:50px;"><div class="vertical_th"><span>Frigate</span><span>Profit/v/t/</span><span>¢ents/sec</span></div></th>
-				<th style="min-width:50px;"><div class="vertical_th"><span>Freighter</span><span>Profit/v/t/</span><span>¢ents/sec</span></div></th>
-				<th style="min-width:50px;"><div class="vertical_th"><span>Transport</span><span>Time(sec)</span></div></th>
-				<th style="min-width:50px;"><div class="vertical_th"><span>Frigate</span><span>Time(sec)</span></div></th>
-				<th style="min-width:50px;"><div class="vertical_th"><span>Freighter</span><span>Time(sec)</span></div></th>
+				<th style="min-width:50px;">
+					@MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
+				</th>
+				<th style="min-width:50px;">
+					@MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
+				</th>
+				<th style="min-width:50px;">
+					@MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
+				</th>
+				<th style="min-width:50px;">
+					@MultiLinestring([]string{"Transport", "Time(sec)"})
+				</th>
+				<th style="min-width:50px;">
+					@MultiLinestring([]string{"Frigate", "Time(sec)"})
+				</th>
+				<th style="min-width:50px;">
+					@MultiLinestring([]string{"Freighter", "Time(sec)"})
+				</th>
 				<th style="min-width:50px;">Profit/v</th>
 				<th style="min-width:50px;">System</th>
 				<th style="min-width:50px;">Dest. Name</th>

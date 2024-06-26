@@ -16,24 +16,28 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco fronttypes
 	<table class="sortable">
 		<thead>
 			<tr>
-				<th style="width:200px;">CM</th>
+				<th style="min-width:200px;">CM</th>
 				if pinm == PinMode {
-					<th style="min-width:50px;">Select</th>
-					<th style="min-width:50px;">Select</th>
+					<th style="min-width:25px;">Select</th>
+					<th style="min-width:25px;">Select</th>
 				}
 				@ThDisco(disco)
-				<th style="width:50px;">Price</th>
-				<th style="width:50px;">Buyable</th>
-				<th style="width:50px;">Diversion Chance</th>
-				<th style="width:100px;">Ammo Limit</th>
-				<th style="width:100px;">Lifetime</th>
-				<th style="width:50px;">Range</th>
-				<th style="width:50px;">AI Range</th>
-				<th style="width:50px;">Hit Pts</th>
-				<th style="width:50px;">Lootable</th>
-				<th style="width:50px;">Nickname</th>
-				<th style="width:100px;">Name ID</th>
-				<th style="width:100px;">Info ID</th>
+				<th style="min-width:25px;">Price</th>
+				<th style="min-width:25px;">Buyable</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Diversion", "Chance"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Ammo", "Limit"})
+				</th>
+				<th style="min-width:25px;">Lifetime</th>
+				<th style="min-width:25px;">Range</th>
+				<th style="min-width:25px;">AI Range</th>
+				<th style="min-width:25px;">Hit Pts</th>
+				<th style="min-width:25px;">Lootable</th>
+				<th style="min-width:25px;">Nickname</th>
+				<th style="min-width:25px;">Name ID</th>
+				<th style="min-width:25px;">Info ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>

@@ -62,35 +62,61 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 			<tr>
 				<th style="min-width:200px;">Ship</th>
 				if pinm == PinMode {
-					<th style="min-width:50px;">Select</th>
-					<th style="min-width:50px;">Select</th>
+					<th style="min-width:25px;">Select</th>
+					<th style="min-width:25px;">Select</th>
 				}
 				@ThDisco(disco)
-				<th style="min-width:50px;">Class</th>
-				<th style="min-width:50px;">Type</th>
-				<th style="min-width:50px;">Price</th>
-				<th style="min-width:50px;">Buyable</th>
+				<th style="min-width:25px;">Class</th>
+				<th style="min-width:25px;">Type</th>
+				<th style="min-width:25px;">Price</th>
+				<th style="min-width:25px;">Buyable</th>
 				if disco.Show {
-					<th>CruiseSpeed</th>
+					<th style="min-width:25px;">
+						@MultiLinestring([]string{"Cruise", "Speed"})
+					</th>
 				}
-				<th style="min-width:50px;">Armor</th>
-				<th style="min-width:50px;">Hold Size</th>
-				<th style="min-width:50px;">Nanobots</th>
-				<th style="min-width:50px;">Batteries</th>
-				<th style="min-width:100px;">Max Angular Speed (deg/s)</th>
-				<th style="min-width:100px;">Ang Dist. from 0 to 0.5 sec (deg)</th>
-				<th style="min-width:50px;">Time to 90% Max Angular Speed (s)</th>
-				<th style="min-width:50px;">Power Capacity</th>
-				<th style="min-width:50px;">Power Recharge Rate</th>
-				<th style="min-width:50px;">Thrust Capacity</th>
-				<th style="min-width:50px;">Thrust Recharge Rate</th>
-				<th style="min-width:50px;">Impulse Speed</th>
-				<th style="min-width:50px;">Reverse Fraction</th>
-				<th style="min-width:50px;">Nudge Force</th>
-				<th style="min-width:50px;">Strafe Forece</th>
-				<th style="min-width:50px;">Nickname</th>
-				<th style="min-width:100px;">Name ID</th>
-				<th style="min-width:100px;">Info ID</th>
+				<th style="min-width:25px;">Armor</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Hold", "Size"})
+				</th>
+				<th style="min-width:25px;">Nanobots</th>
+				<th style="min-width:25px;">Batteries</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Max Angular", "Speed (deg/s)"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Ang Dist.", "from 0 to 0.5", "sec (deg)"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Time to 90%", "Max Angular", "Speed(s)"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Power", "Capacity"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Power", "Recharge", "Rate"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Thrust", "Capacity"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Thrust", "Recharge", "Rate"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Impulse", "Speed"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Reverse", "Fraction"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Nudge", "Force"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Strafe", "Forece"})
+				</th>
+				<th style="min-width:25px;">Nickname</th>
+				<th style="min-width:25px;">Name ID</th>
+				<th style="min-width:25px;">Info ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>

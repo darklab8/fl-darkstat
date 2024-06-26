@@ -19,19 +19,27 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 			<tr>
 				<th style="min-width:200px;">Commodity</th>
 				if pinm == PinMode {
-					<th style="min-width:50px;">Select</th>
-					<th style="min-width:50px;">Select</th>
+					<th style="min-width:25px;">Select</th>
+					<th style="min-width:25px;">Select</th>
 				}
-				<th style="min-width:50px;">Best Price To Buy</th>
-				<th style="min-width:50px;">Best Price To Sell</th>
-				<th style="min-width:50px;">Best Buy Per Vol</th>
-				<th style="min-width:50px;">Best Sell Per Vol</th>
-				<th style="min-width:50px;">Volume</th>
-				<th style="min-width:50px;">Profit</th>
-				<th style="min-width:50px;">Profit / V</th>
-				<th style="min-width:100px;">Nickname</th>
-				<th style="min-width:100px;">Name ID</th>
-				<th style="min-width:100px;">Infocard ID</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Best Price", "To Buy"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Best Price", "To Sell"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Best Buy ", "Per Vol"})
+				</th>
+				<th style="min-width:25px;">
+					@MultiLinestring([]string{"Best Sell ", "Per Vol"})
+				</th>
+				<th style="min-width:25px;">Volume</th>
+				<th style="min-width:25px;">Profit</th>
+				<th style="min-width:25px;">Profit / V</th>
+				<th style="min-width:25px;">Nickname</th>
+				<th style="min-width:25px;">Name ID</th>
+				<th style="min-width:25px;">Infocard ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -44,7 +52,7 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 					<td>{ strconv.Itoa(commodity.PriceBestBaseBuysFor) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseSellsFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseBuysFor, commodity.Volume)) }</td>
-					<td>{ fmt.Sprintf("%.6f", commodity.Volume) }</td>
+					<td>{ fmt.Sprintf("%.2f", commodity.Volume) }</td>
 					<td>{ strconv.Itoa(commodity.ProffitMargin) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.ProffitMargin, commodity.Volume)) }</td>
 					<td>{ commodity.Nickname }</td>
