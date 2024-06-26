@@ -389,7 +389,7 @@ templ BaseTradesShared() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:150px;">Commodity</th>
+				<th style="width:100px;">Commodity</th>
 				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
 				</th>
@@ -431,7 +431,7 @@ templ BaseTradesShared() {
 
 templ TradeRouteHumanTime(route *configs_export.TradeRoute) {
 	if route.GetDist() < trades.INF/2 {
-		{ fmt.Sprintf("%2.0f", route.GetTime()/60) } min - { fmt.Sprintf("%2.0f", route.GetTime() - 60*math.Floor(route.GetTime()/60)) } sec
+		{ fmt.Sprintf("%2.0f", route.GetTime()/60) }m-{ fmt.Sprintf("%2.0f", route.GetTime() - 60*math.Floor(route.GetTime()/60)) }s
 	} else {
 		INF
 	}
@@ -451,7 +451,7 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteLimit(150) {
+					@WriteLimit(100) {
 						{ trade_route.Transport.Commodity.Name }
 					}
 				</td>
