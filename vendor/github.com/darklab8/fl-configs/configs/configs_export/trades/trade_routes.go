@@ -93,29 +93,31 @@ func MapConfigsToFGraph(
 	configs *configs_mapped.MappedConfigs,
 	avgCruiseSpeed int,
 	with_freighter_paths WithFreighterPaths,
-	extra_bases_by_system map[string]ExtraBase,
+	extra_bases_by_system map[string][]ExtraBase,
 ) *GameGraph {
 	graph := NewGameGraph(avgCruiseSpeed, with_freighter_paths)
 	for _, system := range configs.Systems.Systems {
 
 		var system_objects []SystemObject = make([]SystemObject, 0, 50)
 
-		if base, ok := extra_bases_by_system[system.Nickname]; ok {
-			object := SystemObject{
-				nickname: base.Nickname,
-				pos:      base.Pos,
+		if bases, ok := extra_bases_by_system[system.Nickname]; ok {
+			for _, base := range bases {
+				object := SystemObject{
+					nickname: base.Nickname,
+					pos:      base.Pos,
+				}
+				graph.SetIdsName(object.nickname, 0)
+
+				for _, existing_object := range system_objects {
+					distance := DistanceForVecs(object.pos, existing_object.pos) + graph.GetDistForTime(BaseDockingDelay)
+					graph.SetEdge(object.nickname, existing_object.nickname, distance)
+					graph.SetEdge(existing_object.nickname, object.nickname, distance)
+				}
+
+				graph.AllowedVertixesForCalcs[VertexName(object.nickname)] = true
+
+				system_objects = append(system_objects, object)
 			}
-			graph.SetIdsName(object.nickname, 0)
-
-			for _, existing_object := range system_objects {
-				distance := DistanceForVecs(object.pos, existing_object.pos) + graph.GetDistForTime(BaseDockingDelay)
-				graph.SetEdge(object.nickname, existing_object.nickname, distance)
-				graph.SetEdge(existing_object.nickname, object.nickname, distance)
-			}
-
-			graph.AllowedVertixesForCalcs[VertexName(object.nickname)] = true
-
-			system_objects = append(system_objects, object)
 		}
 
 		for _, system_obj := range system.Bases {

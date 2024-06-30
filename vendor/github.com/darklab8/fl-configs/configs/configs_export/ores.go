@@ -121,6 +121,10 @@ It is a mining field with droppable ores`)
 
 			e.Infocards[InfocardKey(base.Nickname)] = sb
 
+			if base.Nickname == "zone_br05_gold_dummy_field" {
+				fmt.Println()
+			}
+
 			bases = append(bases, base)
 
 		}

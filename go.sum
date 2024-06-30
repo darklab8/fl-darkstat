@@ -6,6 +6,8 @@ github.com/darklab8/fl-configs v0.69.0 h1:D1tfkQARkth7j7KV9q5bgUSPj66Eu0/F25LJQ/
 github.com/darklab8/fl-configs v0.69.0/go.mod h1:tmhFrMlTKVh2JeHmd+3Phq/sWDYdA294c8sMj48YhoE=
 github.com/darklab8/fl-configs v0.69.1 h1:LCCYvsfM9Me8KoP6OeHvp1F+uvMRDxAcqmBSq8cIyns=
 github.com/darklab8/fl-configs v0.69.1/go.mod h1:tmhFrMlTKVh2JeHmd+3Phq/sWDYdA294c8sMj48YhoE=
+github.com/darklab8/fl-configs v0.69.2 h1:UC5gakXecbaSbHqaxN/RM8PU+FVeQwG5z4E2rcwntVU=
+github.com/darklab8/fl-configs v0.69.2/go.mod h1:tmhFrMlTKVh2JeHmd+3Phq/sWDYdA294c8sMj48YhoE=
 github.com/darklab8/fl-data-discovery v0.2.1 h1:iMBnEs1gN/nJN4szZqo5OSfow8nj9sceHOh8g+K8WR4=
 github.com/darklab8/fl-data-discovery v0.2.1/go.mod h1:SgRh0N3cWrhslXVkc5LJXK52Mw4+Fdsbmv+0qkNJ6QI=
 github.com/darklab8/go-typelog v0.6.0 h1:Ci8imc7ScXiy5e1qMgf46NyJjrqNLPoIE1gbVe7bxl4=

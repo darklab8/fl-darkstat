@@ -86,7 +86,7 @@ func NewGraphResults(
 	e *Exporter,
 	avgCruiserSpeed int,
 	can_visit_freighter_only_jhs trades.WithFreighterPaths,
-	mining_bases_by_system map[string]trades.ExtraBase,
+	mining_bases_by_system map[string][]trades.ExtraBase,
 ) *GraphResults {
 	graph := trades.MapConfigsToFGraph(e.configs, avgCruiserSpeed, can_visit_freighter_only_jhs, mining_bases_by_system)
 	dijkstra_apsp := trades.NewDijkstraApspFromGraph(graph)
@@ -105,12 +105,12 @@ func (e *Exporter) Export() *Exporter {
 
 	e.Commodities = e.GetCommodities()
 	e.MiningOperations = e.GetOres(e.Commodities)
-	mining_bases_by_system := make(map[string]trades.ExtraBase)
+	mining_bases_by_system := make(map[string][]trades.ExtraBase)
 	for _, base := range e.MiningOperations {
-		mining_bases_by_system[base.SystemNickname] = trades.ExtraBase{
+		mining_bases_by_system[base.SystemNickname] = append(mining_bases_by_system[base.SystemNickname], trades.ExtraBase{
 			Pos:      base.Pos,
 			Nickname: base.Nickname,
-		}
+		})
 	}
 	if e.configs.Discovery != nil {
 		e.ship_speeds = trades.DiscoverySpeeds
