@@ -60,7 +60,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			base.Infocard = InfocardKey(base.Nickname)
 
 			base.Archetypes = append(base.Archetypes, "mining_operation")
-			base.FactionName = "neutral"
+			base.FactionName = "Mining Field"
 
 			base.SystemNickname = system.Nickname
 			if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(base.SystemNickname)]; ok {
@@ -101,6 +101,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 					SystemName: base.System,
 					BasePos:    base.Pos,
 					Region:     base.Region,
+					Faction:    "Mining Field",
 				}
 				commodity.Bases = append(commodity.Bases, good_at_base)
 			}
@@ -155,6 +156,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 										SystemName: base.System,
 										BasePos:    base.Pos,
 										Region:     base.Region,
+										Faction:    "Mining Field",
 									}
 									commodity.Bases = append(commodity.Bases, good_at_base)
 								}
