@@ -33,11 +33,25 @@ func DistanceForVecs(Pos1 conftypes.Vector, Pos2 conftypes.Vector) float64 {
 
 type WithFreighterPaths bool
 
+type ShipSpeeds struct {
+	AvgTransportCruiseSpeed int
+	AvgFrigateCruiseSpeed   int
+	AvgFreighterCruiseSpeed int
+}
+
+var VanillaSpeeds ShipSpeeds = ShipSpeeds{
+	AvgTransportCruiseSpeed: 350,
+	AvgFrigateCruiseSpeed:   350,
+	AvgFreighterCruiseSpeed: 350,
+}
+
+var DiscoverySpeeds ShipSpeeds = ShipSpeeds{
+	AvgTransportCruiseSpeed: 350, // TODO You should grab those speeds from some ship example
+	AvgFrigateCruiseSpeed:   500, // TODO You should grab those speeds from some ship example
+	AvgFreighterCruiseSpeed: 500, // TODO You should grab those speeds from some ship example
+}
+
 const (
-	// already accounted for
-	AvgTransportCruiseSpeed = 350 // TODO You should grab those speeds from some ship example
-	AvgFrigateCruiseSpeed   = 500 // TODO You should grab those speeds from some ship example
-	AvgFreighterCruiseSpeed = 500 // TODO You should grab those speeds from some ship example
 	// already accounted for
 	AvgTradeLaneSpeed = 2250
 
@@ -48,6 +62,11 @@ const (
 	// add just once
 	BaseDockingDelay = 10
 )
+
+type ExtraBase struct {
+	Pos      conftypes.Vector
+	Nickname string
+}
 
 /*
 Algorithm should be like this:
@@ -70,11 +89,34 @@ And on click we show proffits of delivery to some location. With time of deliver
 ====
 Optionally print sum of two best routes that can be started within close range from each other.
 */
-func MapConfigsToFGraph(configs *configs_mapped.MappedConfigs, avgCruiseSpeed int, with_freighter_paths WithFreighterPaths) *GameGraph {
+func MapConfigsToFGraph(
+	configs *configs_mapped.MappedConfigs,
+	avgCruiseSpeed int,
+	with_freighter_paths WithFreighterPaths,
+	extra_bases_by_system map[string]ExtraBase,
+) *GameGraph {
 	graph := NewGameGraph(avgCruiseSpeed, with_freighter_paths)
 	for _, system := range configs.Systems.Systems {
 
 		var system_objects []SystemObject = make([]SystemObject, 0, 50)
+
+		if base, ok := extra_bases_by_system[system.Nickname]; ok {
+			object := SystemObject{
+				nickname: base.Nickname,
+				pos:      base.Pos,
+			}
+			graph.SetIdsName(object.nickname, 0)
+
+			for _, existing_object := range system_objects {
+				distance := DistanceForVecs(object.pos, existing_object.pos) + graph.GetDistForTime(BaseDockingDelay)
+				graph.SetEdge(object.nickname, existing_object.nickname, distance)
+				graph.SetEdge(existing_object.nickname, object.nickname, distance)
+			}
+
+			graph.AllowedVertixesForCalcs[VertexName(object.nickname)] = true
+
+			system_objects = append(system_objects, object)
+		}
 
 		for _, system_obj := range system.Bases {
 			object := SystemObject{

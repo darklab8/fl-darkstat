@@ -1,12 +1,17 @@
 package systems_mapped
 
 import (
+	"fmt"
+	"strings"
+	"sync"
+
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
 	"github.com/darklab8/go-utils/utils/timeit"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 const (
@@ -124,6 +129,26 @@ type Jumphole struct {
 	IdsName   *semantic.Int
 }
 
+type Asteroids struct {
+	semantic.Model
+	File         *semantic.Path
+	Zone         *semantic.String
+	LootableZone *LootableZone
+}
+
+type LootableZone struct {
+	semantic.Model
+	AsteroidLootCommodity *semantic.String
+}
+
+type Zone struct {
+	semantic.Model
+	Nickname *semantic.String
+	Pos      *semantic.Vect
+	IDsInfo  *semantic.Int
+	IdsName  *semantic.Int
+}
+
 type System struct {
 	semantic.ConfigModel
 	Nickname        string
@@ -138,6 +163,9 @@ type System struct {
 
 	MissionsSpawnZone           []*MissionPatrolZone
 	MissionsSpawnZonesByFaction map[string][]*MissionPatrolZone
+
+	Asteroids   []*Asteroids
+	ZonesByNick map[string]*Zone
 }
 
 type Config struct {
@@ -153,8 +181,10 @@ type FileRead struct {
 
 func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesystem) *Config {
 	frelconfig := &Config{}
+	var wg sync.WaitGroup
 
 	var system_files map[string]*file.File = make(map[string]*file.File)
+
 	timeit.NewTimerF(func(m *timeit.Timer) {
 		for _, base := range universe_config.Bases {
 			base_system := base.System.Get()
@@ -195,6 +225,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 			system_to_add := &System{
 				MissionsSpawnZonesByFaction: make(map[string][]*MissionPatrolZone),
 				TradelaneByNick:             make(map[string]*TradeLaneRing),
+				ZonesByNick:                 make(map[string]*Zone),
 			}
 			system_to_add.Init(sysiniconf.Sections, sysiniconf.Comments, sysiniconf.File.GetFilepath())
 
@@ -205,6 +236,41 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 			frelconfig.SystemsMap[system_key] = system_to_add
 			frelconfig.Systems = append(frelconfig.Systems, system_to_add)
 
+			if asteroids, ok := sysiniconf.SectionMap["[Asteroids]"]; ok {
+				for _, obj := range asteroids {
+					asteroids_to_add := &Asteroids{
+						File: semantic.NewPath(obj, "file"),
+						Zone: semantic.NewString(obj, "zone", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+					}
+					asteroids_to_add.Map(obj)
+
+					system_to_add.Asteroids = append(system_to_add.Asteroids, asteroids_to_add)
+
+					wg.Add(1)
+					go func(ast *Asteroids) {
+						filename := ast.File.FileName()
+
+						file_to_read := filesystem.GetFile(utils_types.FilePath(strings.ToLower(filename.ToString())))
+						if file_to_read == nil {
+							fmt.Println("not able to find mining file for asteroids zone", filename)
+							wg.Done()
+							return
+						}
+						config := inireader.Read(file_to_read)
+
+						if lootable_zones, ok := config.SectionMap["[LootableZone]"]; ok {
+							obj := lootable_zones[0]
+							lootable_zone := &LootableZone{
+								AsteroidLootCommodity: semantic.NewString(obj, "asteroid_loot_commodity", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							}
+							lootable_zone.Map(obj)
+							ast.LootableZone = lootable_zone
+						}
+						wg.Done()
+
+					}(asteroids_to_add)
+				}
+			}
 			if objects, ok := sysiniconf.SectionMap[KEY_OBJECT]; ok {
 				for _, obj := range objects {
 
@@ -262,6 +328,14 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 			if zones, ok := sysiniconf.SectionMap["[zone]"]; ok {
 				for _, zone_info := range zones {
 
+					zone_to_add := &Zone{
+						Nickname: semantic.NewString(zone_info, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						Pos:      semantic.NewVector(zone_info, "pos", semantic.Precision(0)),
+						IdsName:  semantic.NewInt(zone_info, "ids_name"),
+						IDsInfo:  semantic.NewInt(zone_info, "ids_info"),
+					}
+					system_to_add.ZonesByNick[zone_to_add.Nickname.Get()] = zone_to_add
+
 					if vignette_type, ok := zone_info.ParamMap["vignette_type"]; ok && len(vignette_type) > 0 {
 						vignette := &MissionVignetteZone{
 							Nickname:     semantic.NewString(zone_info, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -308,6 +382,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 		}
 	}, timeit.WithMsg("Map universe itself"))
 
+	wg.Wait()
 	return frelconfig
 }
 

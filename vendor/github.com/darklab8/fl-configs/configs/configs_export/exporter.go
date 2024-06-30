@@ -36,11 +36,13 @@ type Exporter struct {
 	configs *configs_mapped.MappedConfigs
 
 	Bases                []*Base
+	MiningOperations     []*Base
 	useful_bases_by_nick map[string]*Base
 
-	transport *GraphResults
-	freighter *GraphResults
-	frigate   *GraphResults
+	ship_speeds trades.ShipSpeeds
+	transport   *GraphResults
+	freighter   *GraphResults
+	frigate     *GraphResults
 
 	Factions    []Faction
 	Infocards   Infocards
@@ -62,8 +64,9 @@ type OptExport func(e *Exporter)
 
 func NewExporter(configs *configs_mapped.MappedConfigs, opts ...OptExport) *Exporter {
 	e := &Exporter{
-		configs:   configs,
-		Infocards: map[InfocardKey]Infocard{},
+		configs:     configs,
+		Infocards:   map[InfocardKey]Infocard{},
+		ship_speeds: trades.VanillaSpeeds,
 	}
 
 	for _, opt := range opts {
@@ -79,8 +82,13 @@ type GraphResults struct {
 	parents [][]trades.Parent
 }
 
-func NewGraphResults(e *Exporter, avgCruiserSpeed int, can_visit_freighter_only_jhs trades.WithFreighterPaths) *GraphResults {
-	graph := trades.MapConfigsToFGraph(e.configs, avgCruiserSpeed, can_visit_freighter_only_jhs)
+func NewGraphResults(
+	e *Exporter,
+	avgCruiserSpeed int,
+	can_visit_freighter_only_jhs trades.WithFreighterPaths,
+	mining_bases_by_system map[string]trades.ExtraBase,
+) *GraphResults {
+	graph := trades.MapConfigsToFGraph(e.configs, avgCruiserSpeed, can_visit_freighter_only_jhs, mining_bases_by_system)
 	dijkstra_apsp := trades.NewDijkstraApspFromGraph(graph)
 	dists, parents := dijkstra_apsp.DijkstraApsp()
 
@@ -95,19 +103,32 @@ func NewGraphResults(e *Exporter, avgCruiserSpeed int, can_visit_freighter_only_
 func (e *Exporter) Export() *Exporter {
 	var wg sync.WaitGroup
 
+	e.Commodities = e.GetCommodities()
+	e.MiningOperations = e.GetOres(e.Commodities)
+	mining_bases_by_system := make(map[string]trades.ExtraBase)
+	for _, base := range e.MiningOperations {
+		mining_bases_by_system[base.SystemNickname] = trades.ExtraBase{
+			Pos:      base.Pos,
+			Nickname: base.Nickname,
+		}
+	}
+	if e.configs.Discovery != nil {
+		e.ship_speeds = trades.DiscoverySpeeds
+	}
+
 	wg.Add(1)
 	go func() {
-		e.transport = NewGraphResults(e, trades.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false))
+		e.transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false), mining_bases_by_system)
 		wg.Done()
 	}()
 	wg.Add(1)
 	go func() {
-		e.freighter = NewGraphResults(e, trades.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true))
+		e.freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true), mining_bases_by_system)
 		wg.Done()
 	}()
 	wg.Add(1)
 	go func() {
-		e.frigate = NewGraphResults(e, trades.AvgFrigateCruiseSpeed, trades.WithFreighterPaths(false))
+		e.frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed, trades.WithFreighterPaths(false), mining_bases_by_system)
 		wg.Done()
 	}()
 	e.Bases = e.GetBases()
@@ -120,7 +141,7 @@ func (e *Exporter) Export() *Exporter {
 	e.Tractors = e.GetTractors()
 	e.Factions = e.GetFactions(e.Bases)
 	e.Bases = e.GetMissions(e.Bases, e.Factions)
-	e.Commodities = e.GetCommodities()
+
 	e.Guns = e.GetGuns(e.Tractors)
 	e.Missiles = e.GetMissiles(e.Tractors)
 	e.Mines = e.GetMines(e.Tractors)
@@ -132,7 +153,9 @@ func (e *Exporter) Export() *Exporter {
 	e.Scanners = e.GetScanners(e.Tractors)
 	e.Ammos = e.GetAmmo(e.Tractors)
 	wg.Wait()
+
 	e.Bases, e.Commodities = e.TradePaths(e.Bases, e.Commodities)
+	e.MiningOperations, e.Commodities = e.TradePaths(e.MiningOperations, e.Commodities)
 	return e
 }
 
