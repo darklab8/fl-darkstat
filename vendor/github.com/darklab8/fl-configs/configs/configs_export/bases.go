@@ -137,4 +137,5 @@ type Base struct {
 
 	Missions BaseMissions
 	Trades
+	MiningInfo
 }

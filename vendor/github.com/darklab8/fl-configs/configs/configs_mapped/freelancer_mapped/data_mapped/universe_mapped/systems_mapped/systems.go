@@ -138,7 +138,13 @@ type Asteroids struct {
 
 type LootableZone struct {
 	semantic.Model
-	AsteroidLootCommodity *semantic.String
+	AsteroidLootCommodity  *semantic.String
+	AsteroidLootMin        *semantic.Int
+	AsteroidLootMax        *semantic.Int
+	DynamicLootMin         *semantic.Int
+	DynamicLootMax         *semantic.Int
+	AsteroidLootDifficulty *semantic.Int
+	DynamicLootDifficulty  *semantic.Int
 }
 
 type Zone struct {
@@ -262,6 +268,13 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							obj := lootable_zones[0]
 							lootable_zone := &LootableZone{
 								AsteroidLootCommodity: semantic.NewString(obj, "asteroid_loot_commodity", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+
+								AsteroidLootMin:        semantic.NewInt(obj, "asteroid_loot_count", semantic.Optional(), semantic.Order(0)),
+								AsteroidLootMax:        semantic.NewInt(obj, "asteroid_loot_count", semantic.Optional(), semantic.Order(1)),
+								DynamicLootMin:         semantic.NewInt(obj, "dynamic_loot_count", semantic.Optional(), semantic.Order(0)),
+								DynamicLootMax:         semantic.NewInt(obj, "dynamic_loot_count", semantic.Optional(), semantic.Order(1)),
+								AsteroidLootDifficulty: semantic.NewInt(obj, "asteroid_loot_difficulty", semantic.Optional()),
+								DynamicLootDifficulty:  semantic.NewInt(obj, "dynamic_loot_difficulty", semantic.Optional()),
 							}
 							lootable_zone.Map(obj)
 							ast.LootableZone = lootable_zone

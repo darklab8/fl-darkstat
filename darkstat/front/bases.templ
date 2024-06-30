@@ -45,13 +45,22 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 	<table class="sortable">
 		<thead>
 			<tr>
-				<th style="width:200px;">Base</th>
+				if tab_mode != BaseTabOres {
+					<th style="width:200px;">Base</th>
+				} else {
+					<th style="width:200px;">Mining Zone</th>
+				}
 				if pinm == PinMode {
 					<th style="width:50px;">Select</th>
 					<th style="width:50px;">Select</th>
 				}
 				if tab_mode != BaseTabOres {
 					<th style="width:50px;">Owner - Faction</th>
+				}
+				if tab_mode == BaseTabOres {
+					<th style="width:50px;">
+						@MultiLinestring([]string{"Dynamic Loot", "Min-Max", "(Difficulty)"})
+					</th>
 				}
 				<th style="width:50px;">System</th>
 				if tab_mode == BaseShowMissions {
@@ -114,6 +123,9 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 			<td>
 				@WriteFactioName(base.FactionName)
 			</td>
+		}
+		if tab_mode == BaseTabOres {
+			<td>{ strconv.Itoa(base.DynamicLootMin) } - { strconv.Itoa(base.DynamicLootMax) } ( { strconv.Itoa(base.DynamicLootDifficulty) } ) </td>
 		}
 		<td>
 			@WriteSystemName(base.System)
