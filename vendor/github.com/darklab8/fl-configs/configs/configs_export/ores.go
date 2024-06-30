@@ -139,7 +139,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 									PriceToSell:   ptr.Ptr(0),
 									Type:          "commodity",
 								}
-								if equipment, ok := e.configs.Equip.CommoditiesMap[commodity]; ok {
+								if equipment, ok := e.configs.Equip.CommoditiesMap[commodity_produced]; ok {
 									market_good.Name = e.GetInfocardName(equipment.IdsName.Get(), market_good.Nickname)
 								}
 								base.MarketGoods = append(base.MarketGoods, market_good)
