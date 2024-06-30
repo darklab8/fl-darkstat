@@ -36,6 +36,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/market_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/weaponmoddb"
+	"github.com/darklab8/fl-configs/configs/discovery/base_recipe_items"
 	"github.com/darklab8/fl-configs/configs/discovery/discoprices"
 	"github.com/darklab8/fl-configs/configs/discovery/techcompat"
 
@@ -46,9 +47,10 @@ import (
 )
 
 type DiscoveryConfig struct {
-	Techcompat  *techcompat.Config
-	Prices      *discoprices.Config
-	LatestPatch autopatcher.Patch
+	Techcompat      *techcompat.Config
+	Prices          *discoprices.Config
+	BaseRecipeItems *base_recipe_items.Config
+	LatestPatch     autopatcher.Patch
 }
 
 type MappedConfigs struct {
@@ -134,11 +136,18 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 
 	var file_techcompat *iniload.IniLoader
 	var file_prices *iniload.IniLoader
+	var file_base_recipe_items *iniload.IniLoader
 	if techcom := filesystem.GetFile("launcherconfig.xml"); techcom != nil {
 		p.Discovery = &DiscoveryConfig{}
 		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
 		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
-		all_files = append(all_files, file_techcompat, file_prices)
+		file_base_recipe_items = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_items.cfg"))
+		all_files = append(
+			all_files,
+			file_techcompat,
+			file_prices,
+			file_base_recipe_items,
+		)
 
 		if latest_patch_file := filesystem.GetFile(autopatcher.AutopatherFilename); latest_patch_file != nil {
 			fmt.Println("latest_patch_file=", latest_patch_file)
@@ -256,13 +265,17 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		}()
 
 		if p.Discovery != nil {
-			wg.Add(2)
+			wg.Add(3)
 			go func() {
 				p.Discovery.Techcompat = techcompat.Read(file_techcompat)
 				wg.Done()
 			}()
 			go func() {
 				p.Discovery.Prices = discoprices.Read(file_prices)
+				wg.Done()
+			}()
+			go func() {
+				p.Discovery.BaseRecipeItems = base_recipe_items.Read(file_base_recipe_items)
 				wg.Done()
 			}()
 		}
