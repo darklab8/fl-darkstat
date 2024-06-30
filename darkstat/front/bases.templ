@@ -25,6 +25,8 @@ func BaseDetailedUrl(base *configs_export.Base, tab_mode BaseMode) string {
 		return "bases/missions/msns_" + strings.ToLower(base.Nickname)
 	} else if tab_mode == BaseTabTrades {
 		return "bases/trades/trades_" + strings.ToLower(base.Nickname)
+	} else if tab_mode == BaseTabOres {
+		return "bases/ores/ore_" + strings.ToLower(base.Nickname)
 	}
 
 	panic("not supported mode for base")
@@ -36,6 +38,7 @@ const (
 	BaseShowShops BaseMode = iota
 	BaseShowMissions
 	BaseTabTrades
+	BaseTabOres
 )
 
 templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
@@ -47,7 +50,9 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					<th style="width:50px;">Select</th>
 					<th style="width:50px;">Select</th>
 				}
-				<th style="width:50px;">Owner - Faction</th>
+				if tab_mode != BaseTabOres {
+					<th style="width:50px;">Owner - Faction</th>
+				}
 				<th style="width:50px;">System</th>
 				if tab_mode == BaseShowMissions {
 					<th style="width:50px;">
@@ -66,7 +71,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 						@MultiLinestring([]string{"Vingettes", "Offers Limit"})
 					</th>
 				}
-				if tab_mode == BaseTabTrades {
+				if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 					<th style="width:50px;"><div class="vertical_th"><span>Best Transport</span><span>profit/v ¢/sec</span></div></th>
 					<th style="width:50px;"><div class="vertical_th"><span>Best Frigate</span><span>profit/v ¢/sec</span></div></th>
 					<th style="width:50px;"><div class="vertical_th"><span>Best Freighter</span><span>profit/v ¢/sec</span></div></th>
@@ -77,7 +82,11 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					<th style="width:50px;">Enemies</th>
 					<th style="width:50px;">Error</th>
 				}
-				<th style="width:50px;">Base Nickname</th>
+				if tab_mode != BaseTabOres {
+					<th style="width:50px;">Base Nickname</th>
+				} else {
+					<th style="width:50px;">Zone Nickname</th>
+				}
 				<th style="width:50px;">
 					@MultiLinestring([]string{"System", "Nickname"})
 				</th>
@@ -101,9 +110,11 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 	@TrFromMainTb(base.Nickname, BaseDetailedUrl(base, tab_mode), pinm) {
 		@PinTd(base.Nickname, base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
-		<td>
-			@WriteFactioName(base.FactionName)
-		</td>
+		if tab_mode != BaseTabOres {
+			<td>
+				@WriteFactioName(base.FactionName)
+			</td>
+		}
 		<td>
 			@WriteSystemName(base.System)
 		</td>
@@ -114,7 +125,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 			<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>
 			<td>{ strconv.Itoa(base.Missions.Vignettes) }</td>
 		}
-		if tab_mode == BaseTabTrades {
+		if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 			<td>
 				if base.BestTransportRoute != nil {
 					{ fmt.Sprintf("%2.2f", base.BestTransportRoute.GetProffitPerTime() * 100) }
@@ -171,6 +182,8 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 		@TabMenu(urls.Missions, mode, disco)
 	} else if tab_mode == BaseTabTrades {
 		@TabMenu(urls.Trades, mode, disco)
+	} else if tab_mode == BaseTabOres {
+		@TabMenu(urls.Asteroids, mode, disco)
 	}
 	@TabContent() {
 		<div class="splitter">
@@ -192,6 +205,8 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 							@BaseMissionsBase()
 						} else if tab_mode == BaseTabTrades {
 							@BaseTradesShared()
+						} else if tab_mode == BaseTabOres {
+							@BaseTradesShared()
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
@@ -200,6 +215,8 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
 						} else if tab_mode == BaseTabTrades {
+							@BaseTradesShared()
+						} else if tab_mode == BaseTabOres {
 							@BaseTradesShared()
 						}
 					</div>

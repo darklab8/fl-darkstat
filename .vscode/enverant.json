@@ -1,6 +1,6 @@
 {
     "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-discovery", // Define path to Freelancer Folder root
-    // "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
+    // "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla"
     "DEV_ENV": "true",
     "DARKSTAT_LOG_LEVEL": "DEBUG",
     "UTILS_LOG_LEVEL": "DEBUG",

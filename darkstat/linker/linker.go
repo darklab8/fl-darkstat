@@ -464,8 +464,27 @@ func (l *Linker) Link() *builder.Builder {
 							front.TradeRouteInfo(combo_route),
 						),
 					)
-
 				}
+			}
+
+			for _, base := range data.MiningOperations {
+				build.RegComps(
+					builder.NewComponent(
+						utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOres)),
+						front.BaseTrades(base.Name, base.Trades, front.BaseTabOres),
+					),
+				)
+
+				for _, combo_route := range base.TradeRoutes {
+
+					build.RegComps(
+						builder.NewComponent(
+							utils_types.FilePath(front.TradeRouteUrl(combo_route)),
+							front.TradeRouteInfo(combo_route),
+						),
+					)
+				}
+
 			}
 		}, timeit.WithMsg("linking main stuff"))
 
@@ -661,6 +680,14 @@ func (l *Linker) Link() *builder.Builder {
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Trades),
 					front.BasesT(data.Bases, front.BaseTabTrades, front.ShowEmpty(true), disco_ids),
+				),
+				builder.NewComponent(
+					urls.Asteroids,
+					front.BasesT(configs_export.FitlerToUsefulOres(data.MiningOperations), front.BaseTabOres, front.ShowEmpty(false), disco_ids),
+				),
+				builder.NewComponent(
+					front.AllItemsUrl(urls.Asteroids),
+					front.BasesT(data.MiningOperations, front.BaseTabOres, front.ShowEmpty(true), disco_ids),
 				),
 			)
 		}, timeit.WithMsg("linking most of stuff"))
