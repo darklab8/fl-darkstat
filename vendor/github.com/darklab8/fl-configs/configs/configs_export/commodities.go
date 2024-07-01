@@ -10,17 +10,14 @@ import (
 
 type GoodAtBase struct {
 	BaseNickname      string
-	BaseName          string
 	BaseSells         bool
 	PriceBaseBuysFor  int
 	PriceBaseSellsFor int
 	Volume            float64
 	LevelRequired     int
 	RepRequired       float64
-	SystemName        string
-	Faction           string
-	BasePos           conftypes.Vector
-	Region            string
+
+	BaseInfo
 }
 
 type Commodity struct {
@@ -126,12 +123,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []*GoodAtBase {
 				PriceBaseSellsFor: base_market.PriceBaseSellsFor.Get(),
 			}
 
-			more_info := e.GetBaseInfo(universe_mapped.BaseNickname(base_info.BaseNickname))
-			base_info.BaseName = more_info.BaseName
-			base_info.SystemName = more_info.SystemName
-			base_info.Faction = more_info.Faction
-			base_info.Volume = commodity.Volume
-			base_info.BasePos = more_info.Pos
+			base_info.BaseInfo = e.GetBaseInfo(universe_mapped.BaseNickname(base_info.BaseNickname))
 
 			if e.useful_bases_by_nick != nil {
 				if _, ok := e.useful_bases_by_nick[base_info.BaseNickname]; !ok {
@@ -172,12 +164,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []*GoodAtBase {
 		base_info.LevelRequired = market_good.LevelRequired.Get()
 		base_info.RepRequired = market_good.RepRequired.Get()
 
-		more_info := e.GetBaseInfo(universe_mapped.BaseNickname(base_info.BaseNickname))
-		base_info.BaseName = more_info.BaseName
-		base_info.SystemName = more_info.SystemName
-		base_info.Faction = more_info.Faction
-		base_info.BasePos = more_info.Pos
-		base_info.Region = more_info.Region
+		base_info.BaseInfo = e.GetBaseInfo(universe_mapped.BaseNickname(base_info.BaseNickname))
 
 		if e.useful_bases_by_nick != nil {
 			if _, ok := e.useful_bases_by_nick[base_info.BaseNickname]; !ok {
@@ -191,11 +178,12 @@ func (e *Exporter) GetAtBasesSold(commodity GetAtBasesInput) []*GoodAtBase {
 }
 
 type BaseInfo struct {
-	BaseName   string
-	SystemName string
-	Region     string
-	Faction    string
-	Pos        conftypes.Vector
+	BaseName    string
+	SystemName  string
+	Region      string
+	FactionName string
+	BasePos     conftypes.Vector
+	SectorCoord string
 }
 
 func (e *Exporter) GetRegionName(system *universe_mapped.System) string {
@@ -224,7 +212,8 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 	result.BaseName = e.GetInfocardName(universe_base.StridName.Get(), string(base_nickname))
 	system_nickname := universe_base.System.Get()
 
-	if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(system_nickname)]; ok {
+	system, system_ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(system_nickname)]
+	if system_ok {
 		result.SystemName = e.GetInfocardName(system.Strid_name.Get(), system_nickname)
 		result.Region = e.GetRegionName(system)
 	}
@@ -237,17 +226,19 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 			}
 
 			reputation_nickname = system_base.RepNickname.Get()
-			result.Pos = system_base.Pos.Get()
+			result.BasePos = system_base.Pos.Get()
 		}
 
 	}
+
+	result.SectorCoord = VectorToSectorCoord(system, result.BasePos)
 
 	var factionName string
 	if group, exists := e.configs.InitialWorld.GroupsMap[reputation_nickname]; exists {
 		factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
 	}
 
-	result.Faction = factionName
+	result.FactionName = factionName
 
 	return result
 }

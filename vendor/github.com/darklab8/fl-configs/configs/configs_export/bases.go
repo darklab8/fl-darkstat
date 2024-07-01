@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
@@ -9,6 +10,23 @@ import (
 	"github.com/darklab8/fl-configs/configs/conftypes"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
+
+func VectorToSectorCoord(system *universe_mapped.System, pos conftypes.Vector) string {
+	var scale float64 = 1.0
+	if value, ok := system.NavMapScale.GetValue(); ok {
+		scale = value
+	}
+
+	var fGridSize float64 = 34000.0 / scale // 34000 suspiciously looks like math.MaxInt16
+	var gridRefX = int((pos.X+(fGridSize*5))/fGridSize) - 1
+	var gridRefZ = int((pos.Z+(fGridSize*5))/fGridSize) - 1
+	gridRefX = min(max(gridRefX, 0), 7)
+	scXPos := rune('A' + gridRefX)
+	gridRefZ = min(max(gridRefZ, 0), 7)
+	scZPos := rune('1' + gridRefZ)
+	return fmt.Sprintf("%c-%c", scXPos, scZPos)
+
+}
 
 func (e *Exporter) GetBases() []*Base {
 	results := make([]*Base, 0, len(e.configs.Universe_config.Bases))
@@ -20,7 +38,9 @@ func (e *Exporter) GetBases() []*Base {
 
 		var system_name infocard.Infoname
 		var Region string
-		if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(base.System.Get())]; ok {
+		system, found_system := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(base.System.Get())]
+
+		if found_system {
 
 			system_name = infocard.Infoname(e.GetInfocardName(system.Strid_name.Get(), system.Nickname.Get()))
 
@@ -87,6 +107,13 @@ func (e *Exporter) GetBases() []*Base {
 			Region:           Region,
 		}
 
+		if found_system {
+			if base.Nickname == "hi03_03_base" {
+				fmt.Println()
+			}
+			base.SectorCoord = VectorToSectorCoord(system, base.Pos)
+		}
+
 		results = append(results, base)
 	}
 
@@ -134,6 +161,7 @@ type Base struct {
 	BGCS_base_run_by string
 	MarketGoods      []MarketGood
 	Pos              conftypes.Vector
+	SectorCoord      string
 
 	Missions BaseMissions
 	Trades

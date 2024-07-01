@@ -406,6 +406,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 					@MultiLinestring([]string{"Reputation", "Required"})
 				</th>
 				<th style="width:100px;">Base Nickname</th>
+				<th style="width:60px;">Navmap</th>
 				<th style="width:60px;">Pos X</th>
 				<th style="width:60px;">Pos Y</th>
 				<th style="width:60px;">Pos Z</th>
@@ -437,7 +438,7 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 					@WriteBaseName(base_info.BaseName)
 				</td>
 				<td>
-					@WriteFactioName(base_info.Faction)
+					@WriteFactioName(base_info.FactionName)
 				</td>
 				<td>
 					@WriteSystemName(base_info.SystemName)
@@ -458,6 +459,7 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 						{ base_info.BaseNickname }
 					}
 				</td>
+				<td>{ base_info.SectorCoord }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.X) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Y) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Z) }</td>

@@ -25,6 +25,8 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 
 	for _, system := range e.configs.Systems.Systems {
 
+		system_uni, system_uni_ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(system.Nickname)]
+
 		for _, asteroids := range system.Asteroids {
 			asteroid_zone_nick := asteroids.Zone.Get()
 
@@ -91,17 +93,22 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 
 			if commodity, ok := comm_by_nick[market_good.Nickname]; ok {
 				good_at_base := &GoodAtBase{
-					BaseNickname:      base.Nickname,
-					BaseName:          base.Name,
+					BaseNickname: base.Nickname,
+
 					BaseSells:         true,
 					PriceBaseBuysFor:  0,
 					PriceBaseSellsFor: 0,
 					Volume:            commodity.Volume,
-
-					SystemName: base.System,
-					BasePos:    base.Pos,
-					Region:     base.Region,
-					Faction:    "Mining Field",
+					BaseInfo: BaseInfo{
+						BaseName:    base.Name,
+						SystemName:  base.System,
+						BasePos:     base.Pos,
+						Region:      base.Region,
+						FactionName: "Mining Field",
+					},
+				}
+				if system_uni_ok {
+					good_at_base.SectorCoord = VectorToSectorCoord(system_uni, good_at_base.BasePos)
 				}
 				commodity.Bases = append(commodity.Bases, good_at_base)
 			}
@@ -146,18 +153,24 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 
 								if commodity, ok := comm_by_nick[market_good.Nickname]; ok {
 									good_at_base := &GoodAtBase{
-										BaseNickname:      base.Nickname,
-										BaseName:          base.Name,
+										BaseNickname: base.Nickname,
+
 										BaseSells:         true,
 										PriceBaseBuysFor:  0,
 										PriceBaseSellsFor: 0,
 										Volume:            commodity.Volume,
-
-										SystemName: base.System,
-										BasePos:    base.Pos,
-										Region:     base.Region,
-										Faction:    "Mining Field",
+										BaseInfo: BaseInfo{
+											BaseName:    base.Name,
+											SystemName:  base.System,
+											BasePos:     base.Pos,
+											Region:      base.Region,
+											FactionName: "Mining Field",
+										},
 									}
+									if system_uni_ok {
+										good_at_base.SectorCoord = VectorToSectorCoord(system_uni, good_at_base.BasePos)
+									}
+
 									commodity.Bases = append(commodity.Bases, good_at_base)
 								}
 								added_goods[commodity_produced] = true

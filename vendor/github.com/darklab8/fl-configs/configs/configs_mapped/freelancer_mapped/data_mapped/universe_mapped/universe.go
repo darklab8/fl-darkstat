@@ -64,7 +64,7 @@ type System struct {
 	Strid_name    *semantic.Int
 	Ids_info      *semantic.Int
 	File          *semantic.Path
-	// NavMapScale   *semantic.Float
+	NavMapScale   *semantic.Float
 }
 
 type Config struct {
@@ -104,13 +104,14 @@ func Read(ini *iniload.IniLoader) *Config {
 
 	if systems, ok := ini.SectionMap[KEY_SYSTEM_TAG]; ok {
 		for _, system := range systems {
-			system_to_add := System{}
+			system_to_add := System{
+				NavMapScale: semantic.NewFloat(system, "NavMapScale", semantic.Precision(2)),
+			}
 			system_to_add.Map(system)
 
 			system_to_add.Visit = semantic.NewInt(system, KEY_SYSTEM_VISIT, semantic.Optional())
 			system_to_add.Strid_name = semantic.NewInt(system, KEY_STRIDNAME, semantic.Optional())
 			system_to_add.Ids_info = semantic.NewInt(system, KEY_SYSTEM_IDS_INFO, semantic.Optional())
-			// system_to_add.NavMapScale = system.GetParamNumber(KEY_SYSTEM_NAVMAPSCALE, inireader.OPTIONAL_p)
 			system_to_add.Nickname = semantic.NewString(system, KEY_NICKNAME, semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 			system_to_add.File = semantic.NewPath(system, KEY_FILE, semantic.WithLowercaseP())
 			system_to_add.Msg_id_prefix = semantic.NewString(system, KEY_SYSTEM_MSG_ID_PREFIX, semantic.OptsS(semantic.Optional()))
