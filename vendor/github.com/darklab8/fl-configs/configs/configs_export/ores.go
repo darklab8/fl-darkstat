@@ -68,6 +68,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			if system, ok := e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(base.SystemNickname)]; ok {
 				base.System = e.GetInfocardName(system.Strid_name.Get(), base.SystemNickname)
 				base.Region = e.GetRegionName(system)
+				base.SectorCoord = VectorToSectorCoord(system_uni, base.Pos)
 			}
 
 			fmt.Println("commodity=", commodity)
@@ -105,11 +106,10 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 						BasePos:     base.Pos,
 						Region:      base.Region,
 						FactionName: "Mining Field",
+						SectorCoord: base.SectorCoord,
 					},
 				}
-				if system_uni_ok {
-					good_at_base.SectorCoord = VectorToSectorCoord(system_uni, good_at_base.BasePos)
-				}
+
 				commodity.Bases = append(commodity.Bases, good_at_base)
 			}
 
