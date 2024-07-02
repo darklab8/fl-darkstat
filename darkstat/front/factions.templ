@@ -68,7 +68,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					<td>{ faction.ShortName }</td>
 					<td>{ faction.Nickname }</td>
 					if mode == FactionShowRephacks {
-						<td>{ strconv.FormatBool(len(faction.Rephacks) > 0) }</td>
+						<td>{ strconv.FormatBool(len(faction.Bribes) > 0) }</td>
 					}
 					<td>{ fmt.Sprintf("%.2f", faction.ObjectDestruction) }</td>
 					<td>{ fmt.Sprintf("%.2f", faction.MissionSuccess) }</td>

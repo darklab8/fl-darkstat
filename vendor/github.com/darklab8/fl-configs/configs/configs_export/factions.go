@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/mbases_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 )
 
 type Reputation struct {
@@ -28,16 +29,13 @@ type Faction struct {
 	InfocardID  int
 	Infocard    InfocardKey
 	Reputations []Reputation
-	Rephacks    []Rephack
+	Bribes      []Bribe
 }
 
-type Rephack struct {
-	BaseName   string
-	BaseOwner  string
-	BaseSystem string
-
+type Bribe struct {
 	BaseNickname string
-	Chance       float64
+	BaseInfo
+	Chance float64
 }
 
 func (e *Exporter) GetFactions(bases []*Base) []Faction {
@@ -49,7 +47,7 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 	}
 
 	// for faction, at base, chance
-	faction_rephacks := mbases_mapped.FactionRephacks(e.configs.MBases)
+	faction_rephacks := mbases_mapped.FactionBribes(e.configs.MBases)
 
 	for _, group := range e.configs.InitialWorld.Groups {
 		var nickname string = group.Nickname.Get()
@@ -63,18 +61,13 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 		if rephacks, ok := faction_rephacks[nickname]; ok {
 
 			for base, chance := range rephacks {
-				rephack := Rephack{
+				rephack := Bribe{
 					BaseNickname: base,
 					Chance:       chance,
+					BaseInfo:     e.GetBaseInfo(universe_mapped.BaseNickname(base)),
 				}
 
-				if base_info, ok := basemap[base]; ok {
-					rephack.BaseName = base_info.Name
-					rephack.BaseOwner = base_info.FactionName
-					rephack.BaseSystem = base_info.System
-				}
-
-				faction.Rephacks = append(faction.Rephacks, rephack)
+				faction.Bribes = append(faction.Bribes, rephack)
 			}
 		}
 		faction.Name = e.GetInfocardName(group.IdsName.Get(), faction.Nickname)

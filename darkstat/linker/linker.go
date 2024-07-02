@@ -452,7 +452,7 @@ func (l *Linker) Link() *builder.Builder {
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
-						front.BaseTrades(base.Name, base.Trades, front.BaseTabTrades),
+						front.BaseTrades(base.Name, base.Trades, front.BaseTabTrades, disco_ids),
 					),
 				)
 
@@ -461,7 +461,7 @@ func (l *Linker) Link() *builder.Builder {
 					build.RegComps(
 						builder.NewComponent(
 							utils_types.FilePath(front.TradeRouteUrl(combo_route)),
-							front.TradeRouteInfo(combo_route),
+							front.TradeRouteInfo(combo_route, disco_ids),
 						),
 					)
 				}
@@ -471,7 +471,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOres)),
-						front.BaseTrades(base.Name, base.Trades, front.BaseTabOres),
+						front.BaseTrades(base.Name, base.Trades, front.BaseTabOres, disco_ids),
 					),
 				)
 
@@ -480,7 +480,7 @@ func (l *Linker) Link() *builder.Builder {
 					build.RegComps(
 						builder.NewComponent(
 							utils_types.FilePath(front.TradeRouteUrl(combo_route)),
-							front.TradeRouteInfo(combo_route),
+							front.TradeRouteInfo(combo_route, disco_ids),
 						),
 					)
 				}
@@ -497,7 +497,7 @@ func (l *Linker) Link() *builder.Builder {
 					),
 					builder.NewComponent(
 						utils_types.FilePath(front.FactionRepUrl(faction, front.FactionShowRephacks)),
-						front.RephackBottom(faction, faction.Rephacks),
+						front.RephackBottom(faction, faction.Bribes),
 					),
 				)
 			}

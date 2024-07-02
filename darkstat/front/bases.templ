@@ -41,7 +41,7 @@ const (
 	BaseTabOres
 )
 
-templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
+templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -85,8 +85,10 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				}
 				if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 					<th style="width:50px;"><div class="vertical_th"><span>Best Transport</span><span>profit/v ¢/sec</span></div></th>
-					<th style="width:50px;"><div class="vertical_th"><span>Best Frigate</span><span>profit/v ¢/sec</span></div></th>
-					<th style="width:50px;"><div class="vertical_th"><span>Best Freighter</span><span>profit/v ¢/sec</span></div></th>
+					if disco.Show {
+						<th style="width:50px;"><div class="vertical_th"><span>Best Frigate</span><span>profit/v ¢/sec</span></div></th>
+						<th style="width:50px;"><div class="vertical_th"><span>Best Freighter</span><span>profit/v ¢/sec</span></div></th>
+					}
 				}
 				<th style="width:100px;">Region</th>
 				if tab_mode == BaseShowMissions {
@@ -112,13 +114,13 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 		</thead>
 		<tbody>
 			for _, base := range bases {
-				@BaseRow(base, tab_mode, pinm)
+				@BaseRow(base, tab_mode, pinm, disco)
 			}
 		</tbody>
 	</table>
 }
 
-templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
+templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
 	@TrFromMainTb(base.Nickname, BaseDetailedUrl(base, tab_mode), pinm) {
 		@PinTd(base.Nickname, base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
@@ -149,20 +151,22 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					0
 				}
 			</td>
-			<td>
-				if base.BestFrigateRoute != nil {
-					{ fmt.Sprintf("%2.2f", base.BestFrigateRoute.GetProffitPerTime() * 100) }
-				} else {
-					0
-				}
-			</td>
-			<td>
-				if base.BestFreighterRoute != nil {
-					{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.GetProffitPerTime() * 100) }
-				} else {
-					0
-				}
-			</td>
+			if disco.Show {
+				<td>
+					if base.BestFrigateRoute != nil {
+						{ fmt.Sprintf("%2.2f", base.BestFrigateRoute.GetProffitPerTime() * 100) }
+					} else {
+						0
+					}
+				</td>
+				<td>
+					if base.BestFreighterRoute != nil {
+						{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.GetProffitPerTime() * 100) }
+					} else {
+						0
+					}
+				</td>
+			}
 		}
 		<td>
 			@WriteRegionName(base.Region)
@@ -207,10 +211,10 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 				<div id="table-top">
 					@FilterBar(fronttypes.DiscoveryIDs{})
 					<div id="table-top-main">
-						@BasesTable(bases, tab_mode, MainMode)
+						@BasesTable(bases, tab_mode, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@BasesTable(bases, tab_mode, PinMode)
+						@BasesTable(bases, tab_mode, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">
@@ -220,9 +224,9 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
 						} else if tab_mode == BaseTabTrades {
-							@BaseTradesShared()
+							@BaseTradesShared(disco)
 						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared()
+							@BaseTradesShared(disco)
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
@@ -231,9 +235,9 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
 						} else if tab_mode == BaseTabTrades {
-							@BaseTradesShared()
+							@BaseTradesShared(disco)
 						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared()
+							@BaseTradesShared(disco)
 						}
 					</div>
 				</div>
@@ -418,7 +422,7 @@ templ MultiLinestring(lines []string) {
 	</div>
 }
 
-templ BaseTradesShared() {
+templ BaseTradesShared(disco fronttypes.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -426,21 +430,25 @@ templ BaseTradesShared() {
 				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
 				</th>
-				<th style="width:50px;">
-					@MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
-				</th>
-				<th style="width:50px;">
-					@MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
-				</th>
+				if disco.Show {
+					<th style="width:50px;">
+						@MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
+					</th>
+					<th style="width:50px;">
+						@MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
+					</th>
+				}
 				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
-				<th style="width:50px;">
-					@MultiLinestring([]string{"Frigate", "Time(sec)"})
-				</th>
-				<th style="width:50px;">
-					@MultiLinestring([]string{"Freighter", "Time(sec)"})
-				</th>
+				if disco.Show {
+					<th style="width:50px;">
+						@MultiLinestring([]string{"Frigate", "Time(sec)"})
+					</th>
+					<th style="width:50px;">
+						@MultiLinestring([]string{"Freighter", "Time(sec)"})
+					</th>
+				}
 				<th style="width:50px;">Profit/v</th>
 				<th style="width:100px;">System</th>
 				<th style="width:25px;">
@@ -473,10 +481,10 @@ templ TradeRouteHumanTime(route *configs_export.TradeRoute) {
 	}
 }
 
-templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseMode) {
+templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseMode, disco fronttypes.DiscoveryIDs) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
-	@BaseTradesShared() {
+	@BaseTradesShared(disco) {
 		for _, trade_route := range trade_routes.TradeRoutes {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + TradeRouteUrl(trade_route) }
@@ -492,8 +500,10 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 					}
 				</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
-				<td>{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
-				<td>{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+				if disco.Show {
+					<td>{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
+					<td>{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+				}
 				<td>
 					<span class="tooltip">
 						@TradeRouteHumanTime(trade_route.Transport)
@@ -506,30 +516,32 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 						</span>
 					</span>
 				</td>
-				<td>
-					<span class="tooltip">
-						@TradeRouteHumanTime(trade_route.Frigate)
-						<span class="tooltiptext">
-							if trade_route.Frigate.GetDist() < trades.INF/2 {
-								{ fmt.Sprintf("%.0f", trade_route.Frigate.GetTime()) } secs
-							} else {
-								INF secs
-							}
+				if disco.Show {
+					<td>
+						<span class="tooltip">
+							@TradeRouteHumanTime(trade_route.Frigate)
+							<span class="tooltiptext">
+								if trade_route.Frigate.GetDist() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", trade_route.Frigate.GetTime()) } secs
+								} else {
+									INF secs
+								}
+							</span>
 						</span>
-					</span>
-				</td>
-				<td>
-					<span class="tooltip">
-						@TradeRouteHumanTime(trade_route.Freighter)
-						<span class="tooltiptext">
-							if trade_route.Freighter.GetDist() < trades.INF/2 {
-								{ fmt.Sprintf("%.0f", trade_route.Freighter.GetTime()) } secs
-							} else {
-								INF secs
-							}
+					</td>
+					<td>
+						<span class="tooltip">
+							@TradeRouteHumanTime(trade_route.Freighter)
+							<span class="tooltiptext">
+								if trade_route.Freighter.GetDist() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", trade_route.Freighter.GetTime()) } secs
+								} else {
+									INF secs
+								}
+							</span>
 						</span>
-					</span>
-				</td>
+					</td>
+				}
 				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.Commodity.Volume)) }</td>
 				<td>
 					@WriteSystemName(trade_route.Transport.SellingGood.SystemName)
@@ -565,7 +577,7 @@ func TradeRouteUrl(combo_route *configs_export.ComboTradeRoute) string {
 	return "trade_routes/trade_route_" + combo_route.GetID()
 }
 
-templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute) {
+templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute, disco fronttypes.DiscoveryIDs) {
 	@InfocardShared() {
 		<style>
 			.infocard_p {
@@ -578,10 +590,12 @@ templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute) {
 		<p class="infocard_p">{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>
 		<br/>
 		@RouteInfo("Transport", combo_route.Transport)
-		<br/>
-		@RouteInfo("Frigate", combo_route.Frigate)
-		<br/>
-		@RouteInfo("Freighter", combo_route.Freighter)
+		if disco.Show {
+			<br/>
+			@RouteInfo("Frigate", combo_route.Frigate)
+			<br/>
+			@RouteInfo("Freighter", combo_route.Freighter)
+		}
 	}
 }
 
