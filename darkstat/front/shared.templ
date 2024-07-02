@@ -378,6 +378,9 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				<th style="width:150px;">Base</th>
 				<th style="width:150px;">Faction</th>
 				<th style="width:100px;">System</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Nav", "Map"})
+				</th>
 				if is_commodity {
 					<th style="width:25px;">
 						@MultiLinestring([]string{"Price", "To Sell"})
@@ -406,7 +409,6 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 					@MultiLinestring([]string{"Reputation", "Required"})
 				</th>
 				<th style="width:100px;">Base Nickname</th>
-				<th style="width:60px;">Navmap</th>
 				<th style="width:60px;">Pos X</th>
 				<th style="width:60px;">Pos Y</th>
 				<th style="width:60px;">Pos Z</th>
@@ -443,6 +445,7 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 				<td>
 					@WriteSystemName(base_info.SystemName)
 				</td>
+				<td>{ base_info.SectorCoord }</td>
 				if is_commodity {
 					<td>{ strconv.Itoa(base_info.PriceBaseBuysFor) }</td>
 				}
@@ -459,7 +462,6 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 						{ base_info.BaseNickname }
 					}
 				</td>
-				<td>{ base_info.SectorCoord }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.X) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Y) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Z) }</td>

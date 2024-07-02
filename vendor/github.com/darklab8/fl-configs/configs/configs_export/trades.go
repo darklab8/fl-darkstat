@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 )
 
 type Trades struct {
@@ -51,8 +52,38 @@ func (t *TradeRoute) GetProffitPerV() float64 {
 	return float64(t.SellingGood.PriceBaseBuysFor-t.BuyingGood.PriceBaseSellsFor) / float64(t.Commodity.Volume)
 }
 
-func (t *TradeRoute) GetPaths() []trades.DetailedPath {
-	return t.g.graph.GetPaths(t.g.parents, t.g.dists, t.BuyingGood.BaseNickname, t.SellingGood.BaseNickname)
+type PathWithNavmap struct {
+	trades.DetailedPath
+	SectorCoord string
+}
+
+func (t *TradeRoute) GetPaths() []PathWithNavmap {
+	var results []PathWithNavmap
+	paths := t.g.graph.GetPaths(t.g.parents, t.g.dists, t.BuyingGood.BaseNickname, t.SellingGood.BaseNickname)
+
+	for _, path := range paths {
+		// path.NextName // nickname of object
+
+		augmented_path := PathWithNavmap{
+			DetailedPath: path,
+		}
+
+		if jh, ok := t.g.e.configs.Systems.JumpholesByNick[path.NextName]; ok {
+			pos := jh.Pos.Get()
+
+			system_uni := t.g.e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(jh.System.Nickname)]
+			augmented_path.SectorCoord = VectorToSectorCoord(system_uni, pos)
+		}
+		if base, ok := t.g.e.configs.Systems.BasesByBases[path.NextName]; ok {
+			pos := base.Pos.Get()
+
+			system_uni := t.g.e.configs.Universe_config.SystemMap[universe_mapped.SystemNickname(base.System.Nickname)]
+			augmented_path.SectorCoord = VectorToSectorCoord(system_uni, pos)
+		}
+
+		results = append(results, augmented_path)
+	}
+	return results
 }
 
 func (t *TradeRoute) GetNameByIdsName(ids_name int) string {

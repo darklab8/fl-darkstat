@@ -63,6 +63,9 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 					</th>
 				}
 				<th style="width:50px;">System</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Nav", "Map"})
+				</th>
 				if tab_mode == BaseShowMissions {
 					<th style="width:50px;">
 						@MultiLinestring([]string{"Min", "Award"})
@@ -99,7 +102,6 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 				<th style="width:50px;">
 					@MultiLinestring([]string{"System", "Nickname"})
 				</th>
-				<th style="width:50px;">Navmap</th>
 				<th style="width:50px;">Pos X</th>
 				<th style="width:50px;">Pos Y</th>
 				<th style="width:10px;">Pos Z</th>
@@ -131,6 +133,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 		<td>
 			@WriteSystemName(base.System)
 		</td>
+		<td>{ base.SectorCoord }</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
 			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
@@ -177,7 +180,6 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod) {
 		}
 		<td>{ base.Nickname }</td>
 		<td>{ base.SystemNickname }</td>
-		<td>{ base.SectorCoord }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.Y) }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.Z) }</td>
@@ -441,6 +443,9 @@ templ BaseTradesShared() {
 				</th>
 				<th style="width:50px;">Profit/v</th>
 				<th style="width:100px;">System</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Nav", "Map"})
+				</th>
 				<th style="width:100px;">Dest. Faction</th>
 				<th style="width:100px;">Dest. Name</th>
 				<th style="width:100px;">Dest. Region</th>
@@ -448,7 +453,6 @@ templ BaseTradesShared() {
 				<th style="width:50px;">Price To sell</th>
 				<th style="width:50px;">Commodity Nick</th>
 				<th style="width:50px;">Dest. Nickname</th>
-				<th style="width:50px;">Navmap</th>
 				<th style="width:50px;">Dest.X</th>
 				<th style="width:50px;">Dest.Y</th>
 				<th style="width:50px;">Dest.Z</th>
@@ -530,6 +534,7 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 				<td>
 					@WriteSystemName(trade_route.Transport.SellingGood.SystemName)
 				</td>
+				<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
 				<td>
 					@WriteFactioName(trade_route.Transport.SellingGood.FactionName)
 				</td>
@@ -547,7 +552,6 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 						{ trade_route.Transport.SellingGood.BaseNickname }
 					}
 				</td>
-				<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Y) }</td>
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Z) }</td>
@@ -588,7 +592,7 @@ templ RouteInfo(name string, route *configs_export.TradeRoute) {
 	for _, path := range route.GetPaths() {
 		if path.NextName != "" {
 			if path.Dist != 0 {
-				<p class="infocard_p">{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
+				<p class="infocard_p">{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) [ { path.SectorCoord } ] - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
 			}
 		}
 	}

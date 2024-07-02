@@ -114,6 +114,7 @@ type Base struct {
 	IdsName     *semantic.Int
 	RepNickname *semantic.String
 	Pos         *semantic.Vect
+	System      *System
 }
 
 const (
@@ -127,6 +128,8 @@ type Jumphole struct {
 	Archetype *semantic.String
 	Pos       *semantic.Vect
 	IdsName   *semantic.Int
+
+	System *System
 }
 
 type Asteroids struct {
@@ -177,6 +180,10 @@ type System struct {
 type Config struct {
 	SystemsMap map[string]*System
 	Systems    []*System
+
+	// it can contain more than one base meeting condition.
+	BasesByBases    map[string]*Base
+	JumpholesByNick map[string]*Jumphole
 }
 
 type FileRead struct {
@@ -186,7 +193,10 @@ type FileRead struct {
 }
 
 func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesystem) *Config {
-	frelconfig := &Config{}
+	frelconfig := &Config{
+		BasesByBases:    make(map[string]*Base),
+		JumpholesByNick: make(map[string]*Jumphole),
+	}
 	var wg sync.WaitGroup
 
 	var system_files map[string]*file.File = make(map[string]*file.File)
@@ -291,6 +301,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					if _, ok := obj.ParamMap[KEY_BASE]; ok {
 						base_to_add := &Base{
 							Archetype: semantic.NewString(obj, "archetype", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							System:    system_to_add,
 						}
 						base_to_add.Map(obj)
 
@@ -307,6 +318,8 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						system_to_add.BasesByNick[base_to_add.Nickname.Get()] = base_to_add
 						system_to_add.BasesByBases[base_to_add.Base.Get()] = append(system_to_add.BasesByBases[base_to_add.Base.Get()], base_to_add)
 						system_to_add.Bases = append(system_to_add.Bases, base_to_add)
+
+						frelconfig.BasesByBases[base_to_add.Base.Get()] = base_to_add
 					}
 
 					if _, ok := obj.ParamMap["jump_effect"]; ok {
@@ -316,9 +329,11 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							GotoHole:  semantic.NewString(obj, "goto", semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Order(1))),
 							Pos:       semantic.NewVector(obj, "pos", semantic.Precision(0)),
 							IdsName:   semantic.NewInt(obj, "ids_name", semantic.Optional()),
+							System:    system_to_add,
 						}
 
 						system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)
+						frelconfig.JumpholesByNick[jumphole.Nickname.Get()] = jumphole
 					}
 
 					_, is_trade_lane1 := obj.ParamMap["next_ring"]
