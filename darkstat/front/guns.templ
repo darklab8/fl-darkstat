@@ -201,11 +201,7 @@ templ GunShowModifiersShared() {
 				<th style="width:150px;">Technology</th>
 				<th style="width:150px;">Target Type</th>
 				<th style="width:100px;">Damage Modifier</th>
-				<th style="width:100px;">Hull Dmg</th>
 				<th style="width:100px;">Shield Dmg</th>
-				<th style="width:100px;">
-					@MultiLinestring([]string{"Moded", "Hull Dmg"})
-				</th>
 				<th style="width:100px;">
 					@MultiLinestring([]string{"Moded", "Shield Dmg"})
 				</th>
@@ -229,9 +225,7 @@ templ GunShowModifiers(gun configs_export.Gun) {
 				<td>{ gun.DamageType }</td>
 				<td>{ bonus.Type }</td>
 				<td>{ fmt.Sprintf("%.2f", bonus.Modifier) }</td>
-				<td>{ strconv.Itoa(int(gun.HullDamage)) }</td>
 				<td>{ strconv.Itoa(int(gun.ShieldDamage)) }</td>
-				<td>{ strconv.Itoa(int(float64(gun.HullDamage)*bonus.Modifier)) }</td>
 				<td>{ strconv.Itoa(int(float64(gun.ShieldDamage)*bonus.Modifier)) }</td>
 				<td></td>
 			</tr>
