@@ -108,9 +108,6 @@ func (e *Exporter) GetBases() []*Base {
 		}
 
 		if found_system {
-			if base.Nickname == "hi03_03_base" {
-				fmt.Println()
-			}
 			base.SectorCoord = VectorToSectorCoord(system, base.Pos)
 		}
 

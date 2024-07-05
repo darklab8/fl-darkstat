@@ -142,10 +142,12 @@ func (e *Exporter) Export() *Exporter {
 	e.Factions = e.GetFactions(e.Bases)
 	e.Bases = e.GetMissions(e.Bases, e.Factions)
 
-	e.Guns = e.GetGuns(e.Tractors)
-	e.Missiles = e.GetMissiles(e.Tractors)
-	e.Mines = e.GetMines(e.Tractors)
 	e.Shields = e.GetShields(e.Tractors)
+	buyable_shield_tech := e.GetBuyableShields(e.Shields)
+	e.Guns = e.GetGuns(e.Tractors, buyable_shield_tech)
+	e.Missiles = e.GetMissiles(e.Tractors, buyable_shield_tech)
+	e.Mines = e.GetMines(e.Tractors)
+
 	e.Thrusters = e.GetThrusters(e.Tractors)
 	e.Ships = e.GetShips(e.Tractors)
 	e.Engines = e.GetEngines(e.Tractors)

@@ -38,24 +38,25 @@ type Gun struct {
 	// AmmoPrice     int
 	// AmmoBases     []*GoodAtBase
 	// AmmoName      string
-	HullDamage    int
-	EnergyDamange int
-	ShieldDamage  int
-	DamageType    string
-	LifeTime      float64
-	Speed         float64
+	HullDamage      int
+	EnergyDamange   int
+	ShieldDamage    int
+	AvgShieldDamage int
+	DamageType      string
+	LifeTime        float64
+	Speed           float64
 
-	HullDamagePerSec   float64
-	ShieldDamagePerSec float64
-	PowerUsagePerSec   float64
-	AvgEfficiency      float64
-	HullEfficiency     float64
-	ShieldEfficiency   float64
-	Value              float64
-	Rating             float64
+	HullDamagePerSec      float64
+	AvgShieldDamagePerSec float64
+	PowerUsagePerSec      float64
+	AvgEfficiency         float64
+	HullEfficiency        float64
+	ShieldEfficiency      float64
+	Value                 float64
+	Rating                float64
 
-	Bases          []*GoodAtBase
-	DamangeBonuses []DamageBonus
+	Bases         []*GoodAtBase
+	DamageBonuses []DamageBonus
 
 	Missile
 	*DiscoveryTechCompat
@@ -75,7 +76,7 @@ func getGunClass(gun_info *equip_mapped.Gun) string {
 	return gun_class
 }
 
-func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
+func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor, buyable_ship_tech map[string]bool) Gun {
 	gun_nickname := gun_info.Nickname.Get()
 	defer func() {
 		if r := recover(); r != nil {
@@ -123,12 +124,6 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 
 	}
 
-	// if gun.Nickname == "dsy_snova_ai" {
-	// 	fmt.Println()
-	// }
-
-	gun.ShieldDamage = int(float64(gun.HullDamage)*float64(e.configs.Consts.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get()) + float64(gun.EnergyDamange))
-
 	if required_ammo, ok := munition.RequiredAmmo.GetValue(); ok {
 		gun.RequiredAmmo = required_ammo
 	}
@@ -147,7 +142,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 
 	if weapon_type, ok := e.configs.WeaponMods.WeaponTypesMap[gun.DamageType]; ok {
 		for _, weapon_modifier := range weapon_type.ShieldMods {
-			gun.DamangeBonuses = append(gun.DamangeBonuses,
+			gun.DamageBonuses = append(gun.DamageBonuses,
 				DamageBonus{
 					Type:     weapon_modifier.ShieldType.Get(),
 					Modifier: weapon_modifier.DamageModifier.Get(),
@@ -175,13 +170,31 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 
 	e.exportInfocards(InfocardKey(gun.Nickname), gun.IdsInfo)
 
+	gun.ShieldDamage = int(float64(gun.HullDamage)*float64(e.configs.Consts.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get()) + float64(gun.EnergyDamange))
+
+	avg_shield_modifier := 0.0
+	shield_modifier_count := 0
+	for _, damage_bonus := range gun.DamageBonuses {
+		if _, ok := buyable_ship_tech[damage_bonus.Type]; !ok {
+			continue
+		}
+		avg_shield_modifier += damage_bonus.Modifier
+		shield_modifier_count += 1
+	}
+	if shield_modifier_count == 0 {
+		shield_modifier_count += 1
+	}
+
+	avgShieldModifier := avg_shield_modifier / float64(shield_modifier_count)
+	gun.AvgShieldDamage = int(float64(gun.ShieldDamage) * avgShieldModifier)
+
 	gun.HullDamagePerSec = float64(gun.HullDamage) * gun.Refire
-	gun.ShieldDamagePerSec = float64(gun.ShieldDamage) * gun.Refire
+	gun.AvgShieldDamagePerSec = float64(gun.AvgShieldDamage) * gun.Refire
 	gun.PowerUsagePerSec = float64(gun.PowerUsage) * gun.Refire
-	gun.AvgEfficiency = (float64(gun.HullDamage) + float64(gun.ShieldDamage)) / (gun.PowerUsage * 2)
+	gun.AvgEfficiency = (float64(gun.HullDamage) + float64(gun.AvgShieldDamage)) / (gun.PowerUsage * 2)
 	gun.HullEfficiency = float64(gun.HullDamage) / gun.PowerUsage
-	gun.ShieldEfficiency = float64(gun.ShieldDamage) / gun.PowerUsage
-	gun.Value = math.Max(float64(gun.HullDamagePerSec), float64(gun.ShieldDamagePerSec)) / float64(gun.Price) * 1000
+	gun.ShieldEfficiency = float64(gun.AvgShieldDamage) / gun.PowerUsage
+	gun.Value = math.Max(float64(gun.HullDamagePerSec), float64(gun.AvgShieldDamagePerSec)) / float64(gun.Price) * 1000
 	gun.Rating = gun.AvgEfficiency * gun.Value
 
 	if gun.IsAutoTurret {
@@ -195,11 +208,22 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor) Gun {
 	return gun
 }
 
-func (e *Exporter) GetGuns(ids []Tractor) []Gun {
+func (e *Exporter) GetBuyableShields(shields []Shield) map[string]bool {
+	var buyable_ship_tech map[string]bool = make(map[string]bool)
+	for _, shield := range shields {
+		if !e.Buyable(shield.Bases) {
+			continue
+		}
+		buyable_ship_tech[shield.Technology] = true
+	}
+	return buyable_ship_tech
+}
+
+func (e *Exporter) GetGuns(ids []Tractor, buyable_ship_tech map[string]bool) []Gun {
 	var guns []Gun
 
 	for _, gun_info := range e.configs.Equip.Guns {
-		gun := e.getGunInfo(gun_info, ids)
+		gun := e.getGunInfo(gun_info, ids, buyable_ship_tech)
 
 		munition := e.configs.Equip.MunitionMap[gun_info.ProjectileArchetype.Get()]
 		if _, ok := munition.Motor.GetValue(); ok {

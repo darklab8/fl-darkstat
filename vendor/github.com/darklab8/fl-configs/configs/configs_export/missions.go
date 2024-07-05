@@ -2,10 +2,8 @@ package configs_export
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 	"strconv"
-	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 )
@@ -122,10 +120,6 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 	for base_index, base := range bases {
 		base.Missions.NpcRanksAtBaseMap = make(map[int]bool)
 		base.Missions.EnemiesAtBaseMap = make(map[string]EnemyFaction)
-
-		if strings.Contains(base.Name, "Brixt") {
-			fmt.Println()
-		}
 
 		base_info, ok := e.configs.MBases.BaseMap[base.Nickname]
 		if !ok {

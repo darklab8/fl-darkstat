@@ -737,3 +737,12 @@ templ WriteLimit(limit int) {
 	{ children... }
 	@templ.Raw("</div>")
 }
+
+templ Tooltip(tooltip string) {
+	<span class="tooltip">
+		{ children... }
+		<span class="tooltiptext">
+			{ tooltip }
+		</span>
+	</span>
+}

@@ -56,7 +56,11 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 				<th style="width:5px;">Price</th>
 				<th style="width:5px;">Buyable</th>
 				<th style="width:5px;">Hull Dmg</th>
-				<th style="width:5px;">Shield Dmg</th>
+				<th style="width:5px;">
+					@Tooltip("(Hull Dmg * HullDmgFactor + Energy Dmg) * Avg Shield Dmg Modifier") {
+						@MultiLinestring([]string{"Avg", "Shield", "Dmg"})
+					}
+				</th>
 				<th style="width:5px;">Power Usage</th>
 				<th style="width:5px;">Refire</th>
 				if mode == GunsMissiles {
@@ -65,7 +69,9 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 					</th>
 				}
 				<th style="width:5px;">Hull Dmg/s</th>
-				<th style="width:5px;">Sheld Dmg/s</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Avg", "Sheld", "Dmg/s"})
+				</th>
 				<th style="width:5px;">Power/s</th>
 				<th style="width:5px;">
 					@MultiLinestring([]string{"Average", "Efficiency"})
@@ -109,14 +115,16 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 		<td>{ strconv.Itoa(gun.Price) } </td>
 		<td>{ strconv.FormatBool(configs_export.Buyable(gun.Bases)) }</td>
 		<td>{ strconv.Itoa(gun.HullDamage) }</td>
-		<td>{ strconv.Itoa(gun.ShieldDamage) }</td>
+		<td>
+			{ strconv.Itoa(gun.AvgShieldDamage) }
+		</td>
 		<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>
 		<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
 		if mode == GunsMissiles {
 			<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
 		}
 		<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.ShieldDamagePerSec) }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.AvgShieldDamagePerSec) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
@@ -195,6 +203,12 @@ templ GunShowModifiersShared() {
 				<th style="width:100px;">Damage Modifier</th>
 				<th style="width:100px;">Hull Dmg</th>
 				<th style="width:100px;">Shield Dmg</th>
+				<th style="width:100px;">
+					@MultiLinestring([]string{"Moded", "Hull Dmg"})
+				</th>
+				<th style="width:100px;">
+					@MultiLinestring([]string{"Moded", "Shield Dmg"})
+				</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -208,13 +222,15 @@ templ GunShowModifiers(gun configs_export.Gun) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ gun.Name }</div>
 	@GunShowModifiersShared() {
-		for _, bonus := range gun.DamangeBonuses {
+		for _, bonus := range gun.DamageBonuses {
 			<tr
 				onclick="RowHighlighter(this)"
 			>
 				<td>{ gun.DamageType }</td>
 				<td>{ bonus.Type }</td>
 				<td>{ fmt.Sprintf("%.2f", bonus.Modifier) }</td>
+				<td>{ strconv.Itoa(int(gun.HullDamage)) }</td>
+				<td>{ strconv.Itoa(int(gun.ShieldDamage)) }</td>
 				<td>{ strconv.Itoa(int(float64(gun.HullDamage)*bonus.Modifier)) }</td>
 				<td>{ strconv.Itoa(int(float64(gun.ShieldDamage)*bonus.Modifier)) }</td>
 				<td></td>
