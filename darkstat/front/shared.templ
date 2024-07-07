@@ -294,6 +294,9 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco fronttypes.Discove
 					@Button([]string{"Ships", "IDs"}, urls.ShipsIDs, urls.ShipsIDs == url)
 				}
 				@Button([]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, urls.Tractors == url)
+				if disco.Show {
+					@Button([]string{"ID Rep", "hacks"}, urls.IDRephacks, urls.IDRephacks == url)
+				}
 				@Button([]string{"Engines"}, urls.Engines, urls.Engines == url)
 				@Button([]string{"Scanners"}, urls.Scanners, urls.Scanners == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:50px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
@@ -321,6 +324,9 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco fronttypes.Discove
 					@Button([]string{"Ships", "IDs"}, AllItemsUrl(urls.ShipsIDs), urls.ShipsIDs == url)
 				}
 				@Button([]string{types.GetCtx(ctx).TractorTabName}, AllItemsUrl(urls.Tractors), urls.Tractors == url)
+				if disco.Show {
+					@Button([]string{"ID Rep", "hacks"}, AllItemsUrl(urls.IDRephacks), urls.IDRephacks == url)
+				}
 				@Button([]string{"Engines"}, AllItemsUrl(urls.Engines), urls.Engines == url)
 				@Button([]string{"Scanners"}, AllItemsUrl(urls.Scanners), urls.Scanners == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">

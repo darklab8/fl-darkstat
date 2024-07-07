@@ -5,12 +5,27 @@ import (
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"strings"
+	"fmt"
 )
 
-func TractorDetailedUrl(tractor configs_export.Tractor) string {
-	return "tractor/tractor_base_" + strings.ToLower(string(tractor.Nickname))
+func TractorDetailedUrl(tractor configs_export.Tractor, tab_mode TractorMode) string {
+	if tab_mode == TractorModShop {
+		return "tractor/tractor_base_" + strings.ToLower(string(tractor.Nickname))
+	} else if tab_mode == TractorIDRephacks {
+		return "id_rephacks/id_rephacks_" + strings.ToLower(string(tractor.Nickname))
+	}
+
+	panic("not supported mode for tractor")
 }
+
+type TractorMode int64
+
+const (
+	TractorModShop TractorMode = iota
+	TractorIDRephacks
+)
 
 templ TractorHeaders() {
 	<th style="width:25px;">Price</th>
@@ -41,8 +56,12 @@ templ TractorValues(tractor configs_export.Tractor) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
-	@TabMenu(urls.Tractors, mode2, disco)
+templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode TractorMode, disco fronttypes.DiscoveryIDs) {
+	if tab_mode == TractorModShop {
+		@TabMenu(urls.Tractors, mode2, disco)
+	} else if tab_mode == TractorIDRephacks {
+		@TabMenu(urls.IDRephacks, mode2, disco)
+	}
 	@TabContent() {
 		<div class="splitter">
 			<div id="table-wrapper">
@@ -58,7 +77,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, disco frontt
 							</thead>
 							<tbody>
 								for _, tractor := range tractors {
-									@TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor), "") {
+									@TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor, tab_mode), "") {
 										<td>{ tractor.Name }</td>
 										@TractorValues(tractor)
 										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "")
@@ -70,7 +89,11 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, disco frontt
 				</div>
 				<div id="table-bottom">
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						if tab_mode == TractorModShop {
+							@GoodAtBaseSharedT(ShowAsCommodity(false))
+						} else if tab_mode == TractorIDRephacks {
+							@IDRephacksShared()
+						}
 					</div>
 				</div>
 			</div>
@@ -78,5 +101,49 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, disco frontt
 				@InfocardShared()
 			</div>
 		</div>
+	}
+}
+
+templ IDRephacksShared() {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:150px;">Faction</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Faction", "Nickname"})
+				</th>
+				<th style="width:25px;">Reputation</th>
+				<th style="width:25px;">Rep Type</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ IDRephacksT(rephack configs_export.Tractor) {
+	@BottomFilterBar()
+	<div class="bottom_name">{ rephack.Name }</div>
+	@IDRephacksShared() {
+		for _, rep := range rephack.GetRephacksList() {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(rep.FactionNick)) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+				preload="mouseover"
+				onclick="RowHighlighter(this)"
+			>
+				<td>
+					@WriteRepName(rep.FactionName)
+				</td>
+				<td>{ string(rep.FactionNick) }</td>
+				<td>{ fmt.Sprintf("%.2f", rep.Reputation) }</td>
+				<td>{ rep.RepType.ToStr() }</td>
+				<td></td>
+			</tr>
+		}
 	}
 }

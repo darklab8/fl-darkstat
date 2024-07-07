@@ -8,9 +8,9 @@ into stuff rendered by fl-darkstat
 import (
 	"sort"
 
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
-	"github.com/darklab8/fl-configs/configs/conftypes"
 	"github.com/darklab8/fl-darkstat/darkstat/builder"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
@@ -245,7 +245,7 @@ func (l *Linker) Link() *builder.Builder {
 		var useful_ships []configs_export.Ship
 		var useful_guns []configs_export.Gun
 		var useful_missiles []configs_export.Gun
-		tractor_id := conftypes.TractorID("")
+		tractor_id := cfgtype.TractorID("")
 
 		var disco_ids fronttypes.DiscoveryIDs
 
@@ -394,13 +394,20 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					urls.Tractors,
-					front.TractorsT(data.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), disco_ids),
+					front.TractorsT(data.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), front.TractorModShop, disco_ids),
 				),
 				builder.NewComponent(
 					front.AllItemsUrl(urls.Tractors),
-					front.TractorsT(data.Tractors, front.ShowEmpty(true), disco_ids),
+					front.TractorsT(data.Tractors, front.ShowEmpty(true), front.TractorModShop, disco_ids),
 				),
-
+				builder.NewComponent(
+					urls.IDRephacks,
+					front.TractorsT(data.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), front.TractorIDRephacks, disco_ids),
+				),
+				builder.NewComponent(
+					front.AllItemsUrl(urls.IDRephacks),
+					front.TractorsT(data.Tractors, front.ShowEmpty(true), front.TractorIDRephacks, disco_ids),
+				),
 				builder.NewComponent(
 					urls.Engines,
 					front.Engines(data.FilterToUsefulEngines(data.Engines), front.ShowEmpty(false), disco_ids),
@@ -629,8 +636,12 @@ func (l *Linker) Link() *builder.Builder {
 			for _, tractor := range data.Tractors {
 				build.RegComps(
 					builder.NewComponent(
-						utils_types.FilePath(front.TractorDetailedUrl(tractor)),
+						utils_types.FilePath(front.TractorDetailedUrl(tractor, front.TractorModShop)),
 						front.GoodAtBaseInfoT(tractor.Name, tractor.Bases, front.ShowAsCommodity(false)),
+					),
+					builder.NewComponent(
+						utils_types.FilePath(front.TractorDetailedUrl(tractor, front.TractorIDRephacks)),
+						front.IDRephacksT(tractor),
 					),
 				)
 			}
