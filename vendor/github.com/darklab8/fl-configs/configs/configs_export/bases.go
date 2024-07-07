@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
-	"github.com/darklab8/fl-configs/configs/conftypes"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
-func VectorToSectorCoord(system *universe_mapped.System, pos conftypes.Vector) string {
+func VectorToSectorCoord(system *universe_mapped.System, pos cfgtype.Vector) string {
 	var scale float64 = 1.0
 	if value, ok := system.NavMapScale.GetValue(); ok {
 		scale = value
@@ -49,7 +49,7 @@ func (e *Exporter) GetBases() []*Base {
 
 		var infocard_id int
 		var reputation_nickname string
-		var pos conftypes.Vector
+		var pos cfgtype.Vector
 
 		var archetypes []string
 		if system, ok := e.configs.Systems.SystemsMap[base.System.Get()]; ok {
@@ -157,7 +157,7 @@ type Base struct {
 	File             utils_types.FilePath
 	BGCS_base_run_by string
 	MarketGoods      []MarketGood
-	Pos              conftypes.Vector
+	Pos              cfgtype.Vector
 	SectorCoord      string
 
 	Missions BaseMissions

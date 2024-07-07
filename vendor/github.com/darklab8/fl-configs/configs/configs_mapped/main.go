@@ -38,6 +38,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/weaponmoddb"
 	"github.com/darklab8/fl-configs/configs/discovery/base_recipe_items"
 	"github.com/darklab8/fl-configs/configs/discovery/discoprices"
+	"github.com/darklab8/fl-configs/configs/discovery/playercntl_rephacks"
 	"github.com/darklab8/fl-configs/configs/discovery/techcompat"
 
 	"github.com/darklab8/go-utils/utils"
@@ -47,10 +48,11 @@ import (
 )
 
 type DiscoveryConfig struct {
-	Techcompat      *techcompat.Config
-	Prices          *discoprices.Config
-	BaseRecipeItems *base_recipe_items.Config
-	LatestPatch     autopatcher.Patch
+	Techcompat         *techcompat.Config
+	Prices             *discoprices.Config
+	BaseRecipeItems    *base_recipe_items.Config
+	LatestPatch        autopatcher.Patch
+	PlayercntlRephacks *playercntl_rephacks.Config
 }
 
 type MappedConfigs struct {
@@ -137,16 +139,20 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 	var file_techcompat *iniload.IniLoader
 	var file_prices *iniload.IniLoader
 	var file_base_recipe_items *iniload.IniLoader
+	var file_playercntl_rephacks *iniload.IniLoader
 	if techcom := filesystem.GetFile("launcherconfig.xml"); techcom != nil {
 		p.Discovery = &DiscoveryConfig{}
 		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
 		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
 		file_base_recipe_items = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_items.cfg"))
+		file_playercntl_rephacks = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/playercntl_rephacks.cfg"))
+
 		all_files = append(
 			all_files,
 			file_techcompat,
 			file_prices,
 			file_base_recipe_items,
+			file_playercntl_rephacks,
 		)
 
 		if latest_patch_file := filesystem.GetFile(autopatcher.AutopatherFilename); latest_patch_file != nil {
@@ -265,7 +271,7 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		}()
 
 		if p.Discovery != nil {
-			wg.Add(3)
+			wg.Add(4)
 			go func() {
 				p.Discovery.Techcompat = techcompat.Read(file_techcompat)
 				wg.Done()
@@ -276,6 +282,10 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 			}()
 			go func() {
 				p.Discovery.BaseRecipeItems = base_recipe_items.Read(file_base_recipe_items)
+				wg.Done()
+			}()
+			go func() {
+				p.Discovery.PlayercntlRephacks = playercntl_rephacks.Read(file_playercntl_rephacks)
 				wg.Done()
 			}()
 		}

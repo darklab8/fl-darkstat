@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
-	"github.com/darklab8/fl-configs/configs/conftypes"
 )
 
 type GoodAtBase struct {
@@ -182,7 +182,7 @@ type BaseInfo struct {
 	SystemName  string
 	Region      string
 	FactionName string
-	BasePos     conftypes.Vector
+	BasePos     cfgtype.Vector
 	SectorCoord string
 }
 

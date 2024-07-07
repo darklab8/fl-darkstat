@@ -5,8 +5,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
-	"github.com/darklab8/fl-configs/configs/conftypes"
 	"github.com/darklab8/go-typelog/typelog"
 )
 
@@ -199,7 +199,7 @@ func (e *Exporter) GetShips(ids []Tractor) []Ship {
 	}
 
 	if e.configs.Discovery != nil {
-		var TractorsByID map[conftypes.TractorID]Tractor = make(map[conftypes.TractorID]Tractor)
+		var TractorsByID map[cfgtype.TractorID]Tractor = make(map[cfgtype.TractorID]Tractor)
 		for _, tractor := range ids {
 			TractorsByID[tractor.Nickname] = tractor
 		}

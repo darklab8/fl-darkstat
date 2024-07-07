@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_settings"
-	"github.com/darklab8/fl-configs/configs/conftypes"
 )
 
 type InfocardKey string
@@ -192,7 +192,7 @@ func Buyable(Bases []*GoodAtBase) bool {
 }
 
 type DiscoveryTechCompat struct {
-	TechcompatByID map[conftypes.TractorID]float64
+	TechcompatByID map[cfgtype.TractorID]float64
 	TechCell       string
 }
 
@@ -202,7 +202,7 @@ func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []Tracto
 	}
 
 	techcompat := &DiscoveryTechCompat{
-		TechcompatByID: make(map[conftypes.TractorID]float64),
+		TechcompatByID: make(map[cfgtype.TractorID]float64),
 	}
 	techcompat.TechcompatByID[""] = Discovery.Techcompat.GetCompatibilty(nickname, "")
 

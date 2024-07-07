@@ -1,4 +1,4 @@
-package conftypes
+package cfgtype
 
 type Vector struct {
 	X float64
@@ -7,3 +7,5 @@ type Vector struct {
 }
 
 type TractorID string
+
+type FactionNick string

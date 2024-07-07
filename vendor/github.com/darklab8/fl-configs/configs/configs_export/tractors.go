@@ -1,10 +1,37 @@
 package configs_export
 
 import (
+	"sort"
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/conftypes"
+	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/discovery/playercntl_rephacks"
 )
+
+type Rephack struct {
+	FactionName string
+	FactionNick cfgtype.FactionNick
+	Reputation  float64
+	RepType     playercntl_rephacks.RepType
+}
+
+type DiscoveryIDRephacks struct {
+	Rephacks map[cfgtype.FactionNick]Rephack
+}
+
+func (r DiscoveryIDRephacks) GetRephacksList() []Rephack {
+
+	var result []Rephack
+	for _, rephack := range r.Rephacks {
+
+		result = append(result, rephack)
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].Reputation > result[j].Reputation
+	})
+	return result
+
+}
 
 type Tractor struct {
 	Name       string
@@ -13,19 +40,31 @@ type Tractor struct {
 	ReachSpeed int
 
 	Lootable bool
-	Nickname conftypes.TractorID
+	Nickname cfgtype.TractorID
 	NameID   int
 	InfoID   int
 
 	Bases []*GoodAtBase
+	DiscoveryIDRephacks
+}
+
+func (e *Exporter) GetFactionName(nickname cfgtype.FactionNick) string {
+	if group, ok := e.configs.InitialWorld.GroupsMap[string(nickname)]; ok {
+		return e.GetInfocardName(group.IdsName.Get(), string(nickname))
+	}
+	return ""
 }
 
 func (e *Exporter) GetTractors() []Tractor {
 	var tractors []Tractor
 
 	for _, tractor_info := range e.configs.Equip.Tractors {
-		tractor := Tractor{}
-		tractor.Nickname = conftypes.TractorID(tractor_info.Nickname.Get())
+		tractor := Tractor{
+			DiscoveryIDRephacks: DiscoveryIDRephacks{
+				Rephacks: make(map[cfgtype.FactionNick]Rephack),
+			},
+		}
+		tractor.Nickname = cfgtype.TractorID(tractor_info.Nickname.Get())
 		tractor.MaxLength = tractor_info.MaxLength.Get()
 		tractor.ReachSpeed = tractor_info.ReachSpeed.Get()
 		tractor.Lootable = tractor_info.Lootable.Get()
@@ -45,6 +84,44 @@ func (e *Exporter) GetTractors() []Tractor {
 		tractor.Name = e.GetInfocardName(tractor.NameID, string(tractor.Nickname))
 
 		e.exportInfocards(InfocardKey(tractor.Nickname), tractor.InfoID)
+
+		if e.configs.Discovery != nil {
+
+			for faction_nick, faction := range e.configs.Discovery.PlayercntlRephacks.DefaultReps {
+				tractor.Rephacks[faction_nick] = Rephack{
+					Reputation:  faction.Rep.Get(),
+					RepType:     faction.GetRepType(),
+					FactionNick: faction_nick,
+					FactionName: e.GetFactionName(faction_nick),
+				}
+			}
+
+			if faction, ok := e.configs.Discovery.PlayercntlRephacks.RephacksByID[tractor.Nickname]; ok {
+
+				if inherited_id, ok := faction.Inherits.GetValue(); ok {
+					if faction, ok := e.configs.Discovery.PlayercntlRephacks.RephacksByID[cfgtype.TractorID(inherited_id)]; ok {
+						for faction_nick, rep := range faction.Reps {
+							tractor.Rephacks[faction_nick] = Rephack{
+								Reputation:  rep.Rep.Get(),
+								RepType:     rep.GetRepType(),
+								FactionNick: faction_nick,
+								FactionName: e.GetFactionName(faction_nick),
+							}
+						}
+					}
+				}
+
+				for faction_nick, rep := range faction.Reps {
+					tractor.Rephacks[faction_nick] = Rephack{
+						Reputation:  rep.Rep.Get(),
+						RepType:     rep.GetRepType(),
+						FactionNick: faction_nick,
+						FactionName: e.GetFactionName(faction_nick),
+					}
+				}
+			}
+		}
+
 		tractors = append(tractors, tractor)
 	}
 	return tractors

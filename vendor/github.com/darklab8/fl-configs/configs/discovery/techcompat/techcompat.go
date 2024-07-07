@@ -1,10 +1,10 @@
 package techcompat
 
 import (
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
-	"github.com/darklab8/fl-configs/configs/conftypes"
 )
 
 type General struct {
@@ -48,10 +48,10 @@ type Config struct {
 type ItemCompat struct {
 	Default    *float64
 	TechCell   string
-	CompatByID map[conftypes.TractorID]float64
+	CompatByID map[cfgtype.TractorID]float64
 }
 
-func (conf *Config) GetCompatibilty(item_nickname string, id_nickname conftypes.TractorID) float64 {
+func (conf *Config) GetCompatibilty(item_nickname string, id_nickname cfgtype.TractorID) float64 {
 
 	if id_nickname == "" {
 		// ; If the ship does not have a control item (in discovery this is the ID) then this
@@ -139,7 +139,7 @@ func Read(input_file *iniload.IniLoader) *Config {
 			compat, found_compat := conf.CompatByItem[item_nickname]
 
 			if !found_compat {
-				compat = &ItemCompat{CompatByID: make(map[conftypes.TractorID]float64)}
+				compat = &ItemCompat{CompatByID: make(map[cfgtype.TractorID]float64)}
 				conf.CompatByItem[item_nickname] = compat
 
 				if value, ok := techgroup.Default.GetValue(); ok {
@@ -155,7 +155,7 @@ func Read(input_file *iniload.IniLoader) *Config {
 						continue
 					}
 
-					id_nickname := conftypes.TractorID(faction.ID.Get())
+					id_nickname := cfgtype.TractorID(faction.ID.Get())
 					compat.CompatByID[id_nickname] = faction_compat.Percentage.Get()
 
 				}

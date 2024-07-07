@@ -1,9 +1,9 @@
 package semantic
 
 import (
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
-	"github.com/darklab8/fl-configs/configs/conftypes"
 	"github.com/darklab8/go-typelog/typelog"
 )
 
@@ -24,16 +24,16 @@ func NewVector(section *inireader.Section, key string, precision Precision, opts
 	return v
 }
 
-func (s *Vect) Get() conftypes.Vector {
-	return conftypes.Vector{
+func (s *Vect) Get() cfgtype.Vector {
+	return cfgtype.Vector{
 		X: s.X.Get(),
 		Y: s.Y.Get(),
 		Z: s.Z.Get(),
 	}
 }
 
-func (s *Vect) GetValue() (conftypes.Vector, bool) {
-	var value conftypes.Vector
+func (s *Vect) GetValue() (cfgtype.Vector, bool) {
+	var value cfgtype.Vector
 	var ok bool = true
 	func() {
 		defer func() {

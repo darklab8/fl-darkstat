@@ -4,19 +4,19 @@ import (
 	"math"
 	"strings"
 
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_settings"
-	"github.com/darklab8/fl-configs/configs/conftypes"
 )
 
 type SystemObject struct {
 	nickname string
-	pos      conftypes.Vector
+	pos      cfgtype.Vector
 }
 
-func DistanceForVecs(Pos1 conftypes.Vector, Pos2 conftypes.Vector) float64 {
+func DistanceForVecs(Pos1 cfgtype.Vector, Pos2 cfgtype.Vector) float64 {
 	// if _, ok := Pos1.X.GetValue(); !ok {
 	// 	return 0, errors.New("no x")
 	// }
@@ -64,7 +64,7 @@ const (
 )
 
 type ExtraBase struct {
-	Pos      conftypes.Vector
+	Pos      cfgtype.Vector
 	Nickname string
 }
 
