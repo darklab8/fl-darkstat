@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-configs/configs/config_consts"
 	"strings"
 	"fmt"
 )
@@ -113,6 +114,7 @@ templ IDRephacksShared() {
 					@MultiLinestring([]string{"Faction", "Nickname"})
 				</th>
 				<th style="width:25px;">Reputation</th>
+				<th style="width:25px;">Relationship</th>
 				<th style="width:25px;">Rep Type</th>
 				<th style="max-width:100%;"></th>
 			</tr>
@@ -141,6 +143,7 @@ templ IDRephacksT(rephack configs_export.Tractor) {
 				</td>
 				<td>{ string(rep.FactionNick) }</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Reputation) }</td>
+				<td>{ config_consts.GetRelationshipStatus(rep.Reputation).ToStr() }</td>
 				<td>{ rep.RepType.ToStr() }</td>
 				<td></td>
 			</tr>
