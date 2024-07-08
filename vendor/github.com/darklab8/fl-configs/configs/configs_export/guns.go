@@ -194,7 +194,8 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor, buyable
 		shield_modifier_count += 1
 	}
 	if shield_modifier_count == 0 {
-		shield_modifier_count += 1
+		shield_modifier_count = 1
+		avg_shield_modifier = 1
 	}
 
 	avgShieldModifier := avg_shield_modifier / float64(shield_modifier_count)
