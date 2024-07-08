@@ -45,6 +45,9 @@ jobs:
       - name: Build templ file to go
         run: templ generate
 
+      - name: Add versions
+        run: task build-version
+        
       - name: Patch to latest
         run: go run ${{ github.workspace }}/main.go patch 
         working-directory: ${{ github.workspace }}/fl-data
