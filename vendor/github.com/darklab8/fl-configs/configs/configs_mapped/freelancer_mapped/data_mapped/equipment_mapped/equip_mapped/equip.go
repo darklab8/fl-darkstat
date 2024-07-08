@@ -52,6 +52,9 @@ type Munition struct {
 
 	IdsName *semantic.Int
 	IdsInfo *semantic.Int
+
+	ConstEffect       *semantic.String
+	MunitionHitEffect *semantic.String
 }
 
 type Explosion struct {
@@ -77,6 +80,8 @@ type Gun struct {
 	ProjectileArchetype *semantic.String
 	HPGunType           *semantic.String
 	Lootable            *semantic.Bool
+
+	FlashParticleName *semantic.String
 }
 
 type Mine struct {
@@ -307,7 +312,9 @@ func Read(files []*iniload.IniLoader) *Config {
 				frelconfig.Commodities = append(frelconfig.Commodities, commodity)
 				frelconfig.CommoditiesMap[commodity.Nickname.Get()] = commodity
 			case "[Gun]":
-				gun := &Gun{}
+				gun := &Gun{
+					FlashParticleName: semantic.NewString(section, "flash_particle_name", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+				}
 				gun.Map(section)
 
 				gun.Nickname = semantic.NewString(section, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS())
@@ -326,7 +333,10 @@ func Read(files []*iniload.IniLoader) *Config {
 				frelconfig.Guns = append(frelconfig.Guns, gun)
 				frelconfig.GunMap[gun.Nickname.Get()] = gun
 			case "[Munition]":
-				munition := &Munition{}
+				munition := &Munition{
+					ConstEffect:       semantic.NewString(section, "const_effect", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+					MunitionHitEffect: semantic.NewString(section, "munition_hit_effect", semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+				}
 				munition.Nickname = semantic.NewString(section, "nickname", semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				munition.IdsName = semantic.NewInt(section, "ids_name")
 				munition.IdsInfo = semantic.NewInt(section, "ids_info")

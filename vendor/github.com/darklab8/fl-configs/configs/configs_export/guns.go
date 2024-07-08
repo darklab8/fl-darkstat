@@ -14,6 +14,12 @@ type DamageBonus struct {
 	Modifier float64
 }
 
+type GunDetailed struct {
+	FlashParticleName string
+	ConstEffect       string
+	MunitionHitEffect string
+}
+
 type Gun struct {
 	Nickname string
 	Name     string
@@ -60,6 +66,7 @@ type Gun struct {
 
 	Missile
 	*DiscoveryTechCompat
+	GunDetailed
 }
 
 func getGunClass(gun_info *equip_mapped.Gun) string {
@@ -99,12 +106,17 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor, buyable
 		TurnRate:   gun_info.TurnRate.Get(),
 		Lootable:   gun_info.Lootable.Get(),
 	}
+
 	gun.IsAutoTurret, _ = gun_info.IsAutoTurret.GetValue()
 
 	gun.HpType, _ = gun_info.HPGunType.GetValue()
 
 	gun.PowerPerSec = gun.PowerUsage * gun.Refire
 	munition := e.configs.Equip.MunitionMap[gun_info.ProjectileArchetype.Get()]
+
+	gun.FlashParticleName, _ = gun_info.FlashParticleName.GetValue()
+	gun.ConstEffect, _ = munition.ConstEffect.GetValue()
+	gun.MunitionHitEffect, _ = munition.MunitionHitEffect.GetValue()
 
 	if hull_damange, ok := munition.HullDamage.GetValue(); ok {
 		// regular gun or turret

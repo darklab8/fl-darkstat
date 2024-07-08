@@ -5,6 +5,8 @@ on:
     branches:
     - "master"
     - "dev"
+  schedule:
+    - cron: '0 10,15,20 * * *'
 
 jobs:
   github-pages:
@@ -33,6 +35,10 @@ jobs:
         with:
             go-version: 1.21
 
+      - name: Patch to latest
+        run: go run ${{ github.workspace }}/main.go patch 
+        working-directory: ${{ github.workspace }}/freelancer_folder
+
       - name: Install Task
         run: |
             sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
@@ -54,6 +60,7 @@ jobs:
             SITE_ROOT: "/fl-darkstat/"
             FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
             FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
+            DARKSTAT_DETAILED: "true"
 
       - uses: actions/upload-pages-artifact@v1
         with:

@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"fmt"
 	"strings"
 )
@@ -92,6 +93,11 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 				<th style="width:50px;">Technology</th>
 				<th style="width:50px;">Nickname</th>
 				<th style="width:50px;">HpType</th>
+				if settings.Env.IsDetailed {
+					<th style="width:50px;">Flash particle name</th>
+					<th style="width:50px;">Const effect</th>
+					<th style="width:50px;">Munition hit effect</th>
+				}
 				<th style="width:50px;">Name ID</th>
 				<th style="width:50px;">Info ID</th>
 				<th style="max-width:100%;"></th>
@@ -142,6 +148,11 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 			@EmbedInfocardForSearch(infocards, configs_export.InfocardKey(gun.Nickname))
 		</td>
 		<td>{ gun.HpType } </td>
+		if settings.Env.IsDetailed {
+			<td>{ gun.FlashParticleName } </td>
+			<td>{ gun.ConstEffect } </td>
+			<td>{ gun.MunitionHitEffect } </td>
+		}
 		<td>{ strconv.Itoa(gun.IdsName) } </td>
 		<td>{ strconv.Itoa(gun.IdsInfo) } </td>
 		@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm)

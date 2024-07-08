@@ -21,6 +21,7 @@ type DarkstatEnvVars struct {
 	SiteRoot       string
 	AppHeading     string
 	AppVersion     string
+	IsDetailed     bool
 }
 
 var Env DarkstatEnvVars
@@ -34,6 +35,7 @@ func init() {
 		SiteRoot:       env.GetStr("SITE_ROOT", enverant.OrStr("/")),
 		AppHeading:     env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr("")),
 		AppVersion:     getAppVersion(),
+		IsDetailed:     env.GetBoolOr("DARKSTAT_DETAILED", false),
 	}
 	fmt.Sprintln("conf=", Env)
 }
