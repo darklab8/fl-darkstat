@@ -37,7 +37,7 @@ jobs:
 
       - name: Patch to latest
         run: go run ${{ github.workspace }}/main.go patch 
-        working-directory: ${{ github.workspace }}/freelancer_folder
+        working-directory: ${{ github.workspace }}/fl-data
 
       - name: Install Task
         run: |
