@@ -31,6 +31,7 @@ See demos:
   - set your own environment variable FREELANCER_FOLDER to Freelancer Folder
   - ensure it was set. `echo $FREELANCER_FOLDER` at Linux or `echo %FREELANCER_FOLDER%` at windows
     - optionally is enough to change value in [enverant.json](.vscode/enverant.json) for that
+    - Check to have set other values from [enverant.json](.vscode/enverant.json) ! Some options make development way more pleasant by speeding up rerender by disabling unnecessary features!
 
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
 
