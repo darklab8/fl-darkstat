@@ -17,6 +17,7 @@ type TradeRoute struct {
 	Commodity   *Commodity
 	BuyingGood  *GoodAtBase
 	SellingGood *GoodAtBase
+	is_disabled bool
 }
 
 type ComboTradeRoute struct {
@@ -26,10 +27,17 @@ type ComboTradeRoute struct {
 }
 
 func (c *ComboTradeRoute) GetID() string {
+	if c.Transport.is_disabled {
+		return ""
+	}
 	return c.Transport.Commodity.Nickname + c.Transport.BuyingGood.BaseNickname + c.Transport.SellingGood.BaseNickname
 }
 
 func NewTradeRoute(g *GraphResults, buying_good *GoodAtBase, selling_good *GoodAtBase, commodity *Commodity) *TradeRoute {
+	if g == nil {
+		return &TradeRoute{is_disabled: true}
+	}
+
 	route := &TradeRoute{
 		g:           g,
 		BuyingGood:  buying_good,
@@ -41,14 +49,23 @@ func NewTradeRoute(g *GraphResults, buying_good *GoodAtBase, selling_good *GoodA
 }
 
 func (t *TradeRoute) GetCruiseSpeed() int {
+	if t.is_disabled {
+		return 0
+	}
 	return t.g.graph.AvgCruiseSpeed
 }
 
 func (t *TradeRoute) GetCanVisitFreighterOnlyJH() bool {
+	if t.is_disabled {
+		return false
+	}
 	return bool(t.g.graph.CanVisitFreightersOnlyJHs)
 }
 
 func (t *TradeRoute) GetProffitPerV() float64 {
+	if t.is_disabled {
+		return 0
+	}
 	return float64(t.SellingGood.PriceBaseBuysFor-t.BuyingGood.PriceBaseSellsFor) / float64(t.Commodity.Volume)
 }
 

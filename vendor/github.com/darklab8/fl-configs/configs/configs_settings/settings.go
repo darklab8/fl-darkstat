@@ -15,6 +15,7 @@ type ConfEnvVars struct {
 	Strict                      bool
 	FreelancerFolder            utils_types.FilePath
 	MaxCores                    *int
+	IsDisabledTradeRouting      bool
 }
 
 var Env ConfEnvVars
@@ -30,6 +31,7 @@ func GetEnvs(envs *enverant.Enverant) ConfEnvVars {
 		Strict:                      envs.GetBool("CONFIGS_STRICT", enverant.OrBool(true)),
 		FreelancerFolder:            getGameLocation(envs),
 		MaxCores:                    envs.GetPtrInt("CONFIGS_MAX_CORES"),
+		IsDisabledTradeRouting:      envs.GetBoolOr("CONFIGS_DISABLE_TRADE_ROUTES", false),
 	}
 	return Env
 }

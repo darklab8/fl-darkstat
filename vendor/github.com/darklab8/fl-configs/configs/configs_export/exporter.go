@@ -116,21 +116,24 @@ func (e *Exporter) Export() *Exporter {
 		e.ship_speeds = trades.DiscoverySpeeds
 	}
 
-	wg.Add(1)
-	go func() {
-		e.transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false), mining_bases_by_system)
-		wg.Done()
-	}()
-	wg.Add(1)
-	go func() {
-		e.freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true), mining_bases_by_system)
-		wg.Done()
-	}()
-	wg.Add(1)
-	go func() {
-		e.frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed, trades.WithFreighterPaths(false), mining_bases_by_system)
-		wg.Done()
-	}()
+	if !configs_settings.Env.IsDisabledTradeRouting {
+		wg.Add(1)
+		go func() {
+			e.transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false), mining_bases_by_system)
+			wg.Done()
+		}()
+		wg.Add(1)
+		go func() {
+			e.freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true), mining_bases_by_system)
+			wg.Done()
+		}()
+		wg.Add(1)
+		go func() {
+			e.frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed, trades.WithFreighterPaths(false), mining_bases_by_system)
+			wg.Done()
+		}()
+	}
+
 	e.Bases = e.GetBases()
 	useful_bases := FilterToUserfulBases(e.Bases)
 	e.useful_bases_by_nick = make(map[string]*Base)

@@ -80,6 +80,30 @@ type MissionPatrolZone struct {
 	// faction = fc_m_grp, 1.0
 }
 
+// TODO finish coding stuff with them
+type PvEEncounter struct {
+	semantic.Model
+	Nickname *semantic.String
+	Pos      *semantic.Vect
+	Size     *semantic.Vect
+	Shape    *semantic.String
+
+	Density       *semantic.Int // Max enemies spawned
+	MaxBattleSize *semantic.Int // Max enemies spawn in battle
+	RepopTime     *semantic.Int // respawn speed
+	ReliefTime    *semantic.Int
+
+	Encounter []*Encounter
+}
+
+// TODO finish coding stuff with them
+type Encounter struct {
+	semantic.Model
+	Nickname      *semantic.String
+	Difficulty    *semantic.Float
+	ChanceToSpawn *semantic.Float
+}
+
 type TradeLaneRing struct {
 	// [Object]
 	// nickname = BR07_Trade_Lane_Ring_3_1
