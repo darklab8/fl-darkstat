@@ -383,6 +383,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 			<tr class="flexed-tr">
 				<th style="width:150px;">Base</th>
 				<th style="width:150px;">Faction</th>
+				<th style="width:50px;">Region</th>
 				<th style="width:100px;">System</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Nav", "Map"})
@@ -447,6 +448,9 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 				</td>
 				<td>
 					@WriteFactioName(base_info.FactionName)
+				</td>
+				<td>
+					@WriteRegionName(base_info.Region)
 				</td>
 				<td>
 					@WriteSystemName(base_info.SystemName)
