@@ -475,7 +475,7 @@ templ BaseTradesShared(disco fronttypes.DiscoveryIDs) {
 
 templ TradeRouteHumanTime(route *configs_export.TradeRoute) {
 	if route.GetDist() < trades.INF/2 {
-		{ fmt.Sprintf("%2.0f", route.GetTime()/60) }m-{ fmt.Sprintf("%2.0f", route.GetTime() - 60*math.Floor(route.GetTime()/60)) }s
+		{ fmt.Sprintf("%2.0f", math.Floor(route.GetTime()/60)) }m-{ fmt.Sprintf("%2.0f", route.GetTime() - 60*math.Floor(route.GetTime()/60)) }s
 	} else {
 		INF
 	}
