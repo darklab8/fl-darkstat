@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
+	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -71,7 +73,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 				base.SectorCoord = VectorToSectorCoord(system_uni, base.Pos)
 			}
 
-			fmt.Println("commodity=", commodity)
+			logus.Log.Debug("GetOres", typelog.String("commodity=", commodity))
 
 			market_good := MarketGood{
 				Nickname:      commodity,
