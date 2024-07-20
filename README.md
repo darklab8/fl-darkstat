@@ -110,3 +110,8 @@ So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery f
 
 See anouncements at [Discovery Freelancer forum thread](https://discoverygc.com/forums/showthread.php?tid=187294)
 
+# License
+
+fl-darkstat was originally created by Andrei Novoselov (aka darkwind, aka dd84ai)
+The work is released under AGPL license, free to modify, copy and etc. as long as you keep code open source and mentioned original author.
+See [LICENSE](./LICENSE) file for details.
