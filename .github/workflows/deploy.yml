@@ -4,9 +4,8 @@ on:
   push:
     branches:
     - "master"
-    - "dev"
   schedule:
-    - cron: '0 10,15,20 * * *'
+    - cron: '0 9 * * *'
 
 jobs:
   github-pages:
