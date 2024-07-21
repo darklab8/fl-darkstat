@@ -47,10 +47,19 @@ github.com/darklab8/fl-configs/configs/discovery/discoprices
 github.com/darklab8/fl-configs/configs/discovery/playercntl_rephacks
 github.com/darklab8/fl-configs/configs/discovery/techcompat
 github.com/darklab8/fl-configs/configs/tests
+# github.com/darklab8/fl-darkcore v0.1.1
+## explicit; go 1.21.1
+github.com/darklab8/fl-darkcore/darkcore/builder
+github.com/darklab8/fl-darkcore/darkcore/core_static
+github.com/darklab8/fl-darkcore/darkcore/core_types
+github.com/darklab8/fl-darkcore/darkcore/settings
+github.com/darklab8/fl-darkcore/darkcore/settings/logus
+github.com/darklab8/fl-darkcore/darkcore/web
+github.com/darklab8/fl-darkcore/darkcore/web/registry
 # github.com/darklab8/fl-data-discovery v0.2.1
 ## explicit; go 1.21.1
 github.com/darklab8/fl-data-discovery/autopatcher
-# github.com/darklab8/go-typelog v0.6.0
+# github.com/darklab8/go-typelog v0.6.1
 ## explicit; go 1.21.1
 github.com/darklab8/go-typelog/typelog
 # github.com/darklab8/go-utils v0.17.5

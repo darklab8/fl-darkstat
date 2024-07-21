@@ -89,8 +89,8 @@ func NewLogger(
 	}
 	RegisteredLoggers = append(RegisteredLoggers, logger)
 
-	WithJsonFormat(bool(EnvTurnJSON))(logger)
-	WithFileShowing(EnvTurnFileShowing)(logger)
+	WithJsonFormat(Env.EnableJson)(logger)
+	WithFileShowing(Env.EnableFileShowing)(logger)
 	WithLogLevelStr(os.Getenv(strings.ToUpper(name) + "_LOG_LEVEL"))(logger)
 
 	for _, opt := range options {
