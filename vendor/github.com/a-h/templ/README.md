@@ -1,6 +1,6 @@
 ![templ](https://github.com/a-h/templ/raw/main/templ.png)
 
-## A HTML templating language for Go that has great developer tooling.
+## An HTML templating language for Go that has great developer tooling.
 
 ![templ](ide-demo.gif)
 
@@ -26,6 +26,12 @@ Build a local version.
 go run ./get-version > .version
 cd cmd/templ
 go build
+```
+
+### nix-update-gomod2nix
+
+```sh
+gomod2nix
 ```
 
 ### install-snapshot
@@ -70,6 +76,16 @@ go run ./cmd/templ generate -include-version=false
 go test ./...
 ```
 
+### test-short
+
+Run Go tests.
+
+```sh
+go run ./get-version > .version
+go run ./cmd/templ generate -include-version=false
+go test ./... -short
+```
+
 ### test-cover
 
 Run Go tests.
@@ -87,13 +103,19 @@ GOCOVERDIR=coverage/fmt ./coverage/templ-cover fmt .
 GOCOVERDIR=coverage/generate ./coverage/templ-cover generate -include-version=false
 GOCOVERDIR=coverage/version ./coverage/templ-cover version
 # Run the unit tests.
-go test -cover ./... -args -test.gocoverdir="$PWD/coverage/unit"
+go test -cover ./... -coverpkg ./... -args -test.gocoverdir="$PWD/coverage/unit"
 # Display the combined percentage.
 go tool covdata percent -i=./coverage/fmt,./coverage/generate,./coverage/version,./coverage/unit
 # Generate a text coverage profile for tooling to use.
 go tool covdata textfmt -i=./coverage/fmt,./coverage/generate,./coverage/version,./coverage/unit -o coverage.out
 # Print total
 go tool cover -func coverage.out | grep total
+```
+
+### test-cover-watch
+
+```sh
+gotestsum --watch -- -coverprofile=coverage.out
 ```
 
 ### benchmark
@@ -119,14 +141,12 @@ go run ./cmd/templ fmt .
 golangci-lint run --verbose
 ```
 
-### release
+### push-release-tag
 
-Create production build with goreleaser.
+Push a semantic version number to Github to trigger the release process.
 
 ```sh
-if [ "${GITHUB_TOKEN}" == "" ]; then echo "No github token, run:"; echo "export GITHUB_TOKEN=`pass github.com/goreleaser_access_token`"; exit 1; fi
 ./push-tag.sh
-goreleaser --clean
 ```
 
 ### docs-run

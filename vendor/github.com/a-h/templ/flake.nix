@@ -2,7 +2,11 @@
   description = "templ";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
+    gomod2nix = {
+      url = "github:nix-community/gomod2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     gitignore = {
       url = "github:hercules-ci/gitignore.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -13,7 +17,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, gitignore, xc }:
+  outputs = { self, nixpkgs, gomod2nix, gitignore, xc }:
     let
       allSystems = [
         "x86_64-linux" # 64-bit Intel/AMD Linux
@@ -27,44 +31,47 @@
       });
     in
     {
-      packages = forAllSystems ({ pkgs, ... }: rec {
-        default = templ;
+      packages = forAllSystems ({ system, pkgs, ... }:
+        let
+          buildGoApplication = gomod2nix.legacyPackages.${system}.buildGoApplication;
+        in
+        rec {
+          default = templ;
 
-        templ = pkgs.buildGo121Module {
-          name = "templ";
-          src = gitignore.lib.gitignoreSource ./.;
-          subPackages = [ "cmd/templ" ];
-          vendorHash = "sha256-4tHofTnSNI/MBmrGdGsLNoXjxUC0+Gwp3PzzUwfUkQU=";
-          CGO_ENABLED = 0;
-          flags = [
-            "-trimpath"
-          ];
-          ldflags = [
-            "-s"
-            "-w"
-            "-extldflags -static"
-          ];
-        };
-
-        templ-docs = pkgs.buildNpmPackage {
-          name = "templ-docs";
-          src = gitignore.lib.gitignoreSource ./docs;
-          npmDepsHash = "sha256-i6clvSyHtQEGl2C/wcCXonl1W/Kxq7WPTYH46AhUvDM=";
-          installPhase = ''
-            mkdir -p $out/share
-            cp -r build/ $out/share/docs
-          '';
-        };
-      });
+          templ = buildGoApplication {
+            name = "templ";
+            src = gitignore.lib.gitignoreSource ./.;
+            # Update to latest Go version when https://nixpk.gs/pr-tracker.html?pr=324123 is backported to release-24.05.
+            go = pkgs.go;
+            # Must be added due to bug https://github.com/nix-community/gomod2nix/issues/120
+            pwd = ./.;
+            subPackages = [ "cmd/templ" ];
+            CGO_ENABLED = 0;
+            flags = [
+              "-trimpath"
+            ];
+            ldflags = [
+              "-s"
+              "-w"
+              "-extldflags -static"
+            ];
+          };
+        });
 
       # `nix develop` provides a shell containing development tools.
       devShell = forAllSystems ({ system, pkgs }:
         pkgs.mkShell {
           buildInputs = with pkgs; [
             (golangci-lint.override { buildGoModule = buildGo121Module; })
+            cosign # Used to sign container images.
+            esbuild # Used to package JS examples.
             go_1_21
+            gomod2nix.legacyPackages.${system}.gomod2nix
+            gopls
             goreleaser
-            nodejs
+            gotestsum
+            ko # Used to build Docker images.
+            nodejs # Used to build templ-docs.
             xc.packages.${system}.xc
           ];
         });

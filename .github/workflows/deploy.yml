@@ -39,7 +39,7 @@ jobs:
             sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
 
       - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@v0.2.543
+        run: go install github.com/a-h/templ/cmd/templ@v0.2.747
       
       - name: Build templ file to go
         run: templ generate

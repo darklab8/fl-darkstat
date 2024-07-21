@@ -1,6 +1,7 @@
-# github.com/a-h/templ v0.2.543
-## explicit; go 1.20
+# github.com/a-h/templ v0.2.747
+## explicit; go 1.21
 github.com/a-h/templ
+github.com/a-h/templ/runtime
 github.com/a-h/templ/safehtml
 # github.com/darklab8/fl-configs v0.72.3
 ## explicit; go 1.21.1
