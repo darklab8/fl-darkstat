@@ -22,15 +22,6 @@ func (w *Web) NewEndpointStatic() *registry.Endpoint {
 			switch req.Method {
 			case http.MethodGet:
 
-				// var log_files []typelog.LogType = make([]typelog.LogType, len(w.filesystem.Files))
-
-				// i := 0
-				// for path, _ := range w.filesystem.Files {
-				// 	log_files[i] = typelog.String(strconv.Itoa(i), path.ToString())
-				// 	i++
-				// }
-				// logus.Log.Info("acquired files", log_files...)
-
 				requested := req.URL.Path[1:]
 				if requested == "" {
 					requested = "index.html"
