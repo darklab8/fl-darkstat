@@ -1,16 +1,14 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
-	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
-
-	"strings"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"math"
+	"strconv"
+	"strings"
 )
 
 func InfocardURL(infocard_key configs_export.InfocardKey) string {
@@ -41,7 +39,7 @@ const (
 	BaseTabOres
 )
 
-templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -120,7 +118,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 	</table>
 }
 
-templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco types.DiscoveryIDs) {
 	@TrFromMainTb(base.Nickname, BaseDetailedUrl(base, tab_mode), pinm) {
 		@PinTd(base.Nickname, base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
@@ -195,7 +193,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco f
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, disco types.DiscoveryIDs) {
 	if tab_mode == BaseShowShops {
 		@TabMenu(urls.Bases, mode, disco)
 	} else if tab_mode == BaseShowMissions {
@@ -209,7 +207,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					@FilterBar(fronttypes.DiscoveryIDs{})
+					@FilterBar(types.DiscoveryIDs{})
 					<div id="table-top-main">
 						@BasesTable(bases, tab_mode, MainMode, disco)
 					</div>
@@ -422,7 +420,7 @@ templ MultiLinestring(lines []string) {
 	</div>
 }
 
-templ BaseTradesShared(disco fronttypes.DiscoveryIDs) {
+templ BaseTradesShared(disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -481,7 +479,7 @@ templ TradeRouteHumanTime(route *configs_export.TradeRoute) {
 	}
 }
 
-templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseMode, disco fronttypes.DiscoveryIDs) {
+templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseMode, disco types.DiscoveryIDs) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseTradesShared(disco) {
@@ -577,7 +575,7 @@ func TradeRouteUrl(combo_route *configs_export.ComboTradeRoute) string {
 	return "trade_routes/trade_route_" + combo_route.GetID()
 }
 
-templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute, disco fronttypes.DiscoveryIDs) {
+templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute, disco types.DiscoveryIDs) {
 	@InfocardShared() {
 		<style>
 			.infocard_p {

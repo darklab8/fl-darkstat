@@ -1,12 +1,12 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-configs/configs/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"strconv"
 	"strings"
 )
 
@@ -42,7 +42,7 @@ const (
 	GunsMissiles
 )
 
-templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards) {
+templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -111,7 +111,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco fr
 	</table>
 }
 
-templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
+templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
 	@TrFromMainTb2(gun.Nickname, GunDetailedUrl(gun, mode), pinm, prerender) {
 		@PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
 		@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
@@ -136,7 +136,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 		<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.Rating)  }</td>
+		<td>{ fmt.Sprintf("%.2f",gun.Rating) }</td>
 		<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
 		<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
 		<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
@@ -161,7 +161,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco frontty
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards) {
+templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
 	if mode == GunsShowBases {
 		@TabMenu(urls.Guns, mode2, disco)
 	} else if mode == GunsShowDamageBonuses {

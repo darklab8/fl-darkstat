@@ -1,13 +1,12 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
-	"github.com/darklab8/fl-configs/configs/configs_export"
-	"github.com/darklab8/fl-configs/configs/config_consts"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/config_consts"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
 	"strings"
 )
 
@@ -85,7 +84,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ShowEmpty, disco types.DiscoveryIDs) {
 	if mode == FactionShowBases {
 		@TabMenu(urls.Factions, mode2, disco)
 	} else if mode == FactionShowRephacks {
@@ -95,7 +94,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					@FilterBar(fronttypes.DiscoveryIDs{})
+					@FilterBar(types.DiscoveryIDs{})
 					<div id="table-top-main">
 						@FactionTable(factions, mode, MainMode)
 					</div>

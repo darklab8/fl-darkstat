@@ -1,11 +1,11 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
 	"strings"
 )
 
@@ -13,7 +13,7 @@ func MineDetailedUrl(mine configs_export.Mine) string {
 	return "mines/mines_base_" + strings.ToLower(mine.Nickname)
 }
 
-templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -89,7 +89,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco fronttypes.Disc
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, disco types.DiscoveryIDs) {
 	@TabMenu(urls.Mines, mode2, disco)
 	@TabContent() {
 		<div class="splitter">

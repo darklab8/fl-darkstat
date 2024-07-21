@@ -1,11 +1,33 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
-
-	"github.com/darklab8/fl-darkstat/darkstat/common"
+	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 )
+
+templ Html5() {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<link rel="icon" type="image/x-icon" href={ types.GetCtx(ctx).StaticRoot + "common/favicon.ico" }/>
+			<title>{ "darkstat" }</title>
+			@static_front.CommonCSS()
+			@static_front.CustomCSS()
+			<link link rel="stylesheet" href={ types.GetCtx(ctx).StaticRoot + "reset.css" }/>
+			<script src={ types.GetCtx(ctx).StaticRoot + "sortable.js" }></script>
+			<script src={ types.GetCtx(ctx).StaticRoot + "htmx.js" }></script>
+			<script src={ types.GetCtx(ctx).StaticRoot + "preload.js" }></script>
+			<script src={ types.GetCtx(ctx).StaticRoot + "custom.js" }></script>
+			<script>
+
+			</script>
+		</head>
+		<body hx-ext="preload">
+			{ children... }
+		</body>
+	</html>
+}
 
 templ Index(theme types.Theme) {
 	// For loading https://htmx.org/examples/tabs-hateoas/
@@ -89,7 +111,7 @@ templ Index(theme types.Theme) {
 			FilteringFunction()
 		});
 	</script>
-	@common.Html5() {
+	@Html5() {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
 	}
 }

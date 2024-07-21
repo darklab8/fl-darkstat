@@ -5,11 +5,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/darklab8/fl-darkstat/darkstat/builder"
+	"github.com/darklab8/fl-darkcore/darkcore/builder"
+	"github.com/darklab8/fl-darkcore/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkstat/linker"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
-	"github.com/darklab8/fl-darkstat/darkstat/web"
 	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/timeit"

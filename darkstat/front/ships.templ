@@ -1,15 +1,14 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-configs/configs/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"encoding/json"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
 	"strings"
 	// "github.com/darklab8/fl-configs/configs/conftypes"
-	"encoding/json"
 )
 
 func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
@@ -43,7 +42,7 @@ const (
 	ShipShowIDs
 )
 
-func marshalIDs(data fronttypes.DiscoveryIDs, item_nickname string) string {
+func marshalIDs(data types.DiscoveryIDs, item_nickname string) string {
 
 	var compat_by_id map[string]float64 = make(map[string]float64)
 
@@ -56,7 +55,7 @@ func marshalIDs(data fronttypes.DiscoveryIDs, item_nickname string) string {
 	return string(bytes)
 }
 
-templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards) {
+templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
 	<table class={ "sortable", templ.KV("top-main", pinm==MainMode), templ.KV("top-pinned", pinm==PinMode) }>
 		<thead>
 			<tr>
@@ -128,7 +127,7 @@ templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disc
 	</table>
 }
 
-templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
+templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
 	@TrFromMainTb2(ship.Nickname, ShipDetailedUrl(ship, mode), pinm, prerender) {
 		if mode != ShipShowIDs {
 			@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
@@ -171,7 +170,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco fro
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs, infocards configs_export.Infocards) {
+templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
 	if mode == ShipShowBases {
 		@TabMenu(urls.Ships, mode2, disco)
 	} else if mode == ShipShowDetails {

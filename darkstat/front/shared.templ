@@ -1,15 +1,13 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
-	"github.com/darklab8/go-utils/utils/utils_types"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
-
-	"github.com/darklab8/fl-configs/configs/configs_export"
-	"strconv"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/go-utils/utils/utils_types"
+	"strconv"
 	"strings"
 )
 
@@ -178,7 +176,7 @@ templ TabContent() {
 	</style>
 }
 
-templ Heading(disco fronttypes.DiscoveryIDs) {
+templ Heading(disco types.DiscoveryIDs) {
 	<style>
 		.heading {
 			display: flex;
@@ -242,7 +240,7 @@ templ Button(text []string, get_url utils_types.FilePath, is_selected bool) {
 	</button>
 }
 
-templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs) {
 	<style>
 	.tab-list {
 		height: 100%;
@@ -572,7 +570,7 @@ templ PinTd2(nickname string, name string, pinm PinMod, url string) {
 	</td>
 }
 
-templ FilterBar(disco fronttypes.DiscoveryIDs) {
+templ FilterBar(disco types.DiscoveryIDs) {
 	<style>
 	
 
@@ -628,14 +626,14 @@ templ PinSelectLeftRight(pinm PinMod, url string) {
 	}
 }
 
-templ ThDisco(disco fronttypes.DiscoveryIDs) {
+templ ThDisco(disco types.DiscoveryIDs) {
 	if disco.Show {
 		<th style="width:50px;display:none;" class="tech_compat">ID Compat.</th>
 		<th style="width:50px;">TechCell</th>
 	}
 }
 
-templ TdDisco(disco fronttypes.DiscoveryIDs, nickname string, data *configs_export.DiscoveryTechCompat) {
+templ TdDisco(disco types.DiscoveryIDs, nickname string, data *configs_export.DiscoveryTechCompat) {
 	if disco.Show {
 		<td style="display:none;" class="tech_compat" techcompats={ marshalIDs(disco, nickname) }>
 			{ fmt.Sprintf("%.0f%%",(data.TechcompatByID[""]*100)) }

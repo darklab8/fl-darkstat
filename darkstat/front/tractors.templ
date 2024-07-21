@@ -1,14 +1,13 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-configs/configs/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
-	"github.com/darklab8/fl-configs/configs/config_consts"
-	"strings"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/config_consts"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
+	"strings"
 )
 
 func TractorDetailedUrl(tractor configs_export.Tractor, tab_mode TractorMode) string {
@@ -57,7 +56,7 @@ templ TractorValues(tractor configs_export.Tractor) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode TractorMode, disco fronttypes.DiscoveryIDs) {
+templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode TractorMode, disco types.DiscoveryIDs) {
 	if tab_mode == TractorModShop {
 		@TabMenu(urls.Tractors, mode2, disco)
 	} else if tab_mode == TractorIDRephacks {
@@ -67,7 +66,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 		<div class="splitter">
 			<div id="table-wrapper">
 				<div id="table-top">
-					@FilterBar(fronttypes.DiscoveryIDs{})
+					@FilterBar(types.DiscoveryIDs{})
 					<div id="table-top-main">
 						<table class="sortable">
 							<thead>

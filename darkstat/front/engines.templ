@@ -1,11 +1,11 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
 	"strings"
 )
 
@@ -13,7 +13,7 @@ func EngineDetailedUrl(engine configs_export.Engine) string {
 	return "engines/engines_base_" + strings.ToLower(engine.Nickname)
 }
 
-templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -79,7 +79,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco fronttype
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco types.DiscoveryIDs) {
 	@TabMenu(urls.Engines, mode, disco)
 	@TabContent() {
 		<div class="splitter">

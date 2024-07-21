@@ -12,10 +12,11 @@ import (
 	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
-	"github.com/darklab8/fl-darkstat/darkstat/builder"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
+	"github.com/darklab8/fl-darkcore/darkcore/builder"
+	"github.com/darklab8/fl-darkcore/darkcore/core_static"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
+	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -70,7 +71,17 @@ func (l *Linker) Link() *builder.Builder {
 				Timestamp:         time.Now().UTC(),
 			}
 
-			build = builder.NewBuilder(params)
+			static_files := []builder.StaticFile{
+				builder.NewStaticFile("htmx.js", []byte(core_static.HtmxJs)),
+				builder.NewStaticFile("htmx.js", []byte(core_static.HtmxJs)),
+				builder.NewStaticFile("preload.js", []byte(core_static.PreloadJs)),
+				builder.NewStaticFile("sortable.js", []byte(core_static.SortableJs)),
+				builder.NewStaticFile("custom.js", []byte(static_front.CustomJS)),
+				builder.NewStaticFile("reset.css", []byte(core_static.ResetCSS)),
+				builder.NewStaticFile(utils_types.FilePath("common").Join("favicon.ico"), []byte(static_front.FaviconIco)),
+			}
+
+			build = builder.NewBuilder(params, static_files)
 		}, timeit.WithMsg("building creation"))
 
 		var data *configs_export.Exporter
@@ -261,7 +272,7 @@ func (l *Linker) Link() *builder.Builder {
 		var useful_missiles []configs_export.Gun
 		tractor_id := cfgtype.TractorID("")
 
-		var disco_ids fronttypes.DiscoveryIDs
+		var disco_ids types.DiscoveryIDs
 
 		timeit.NewTimerF(func(m *timeit.Timer) {
 			useful_factions = configs_export.FilterToUsefulFactions(data.Factions)
@@ -270,7 +281,7 @@ func (l *Linker) Link() *builder.Builder {
 			useful_missiles = data.FilterToUsefulGun(data.Missiles)
 
 			if l.mapped.Discovery != nil {
-				disco_ids = fronttypes.DiscoveryIDs{
+				disco_ids = types.DiscoveryIDs{
 					Show:        true,
 					Ids:         l.configs.Tractors,
 					Config:      l.mapped.Discovery.Techcompat,

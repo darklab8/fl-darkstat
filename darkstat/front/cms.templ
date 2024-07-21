@@ -1,10 +1,10 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
 	"strings"
 )
 
@@ -12,7 +12,7 @@ func CounterMeasreDetailedUrl(cm configs_export.CounterMeasure) string {
 	return "cm/cm_base_" + strings.ToLower(cm.Nickname)
 }
 
-templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -68,7 +68,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco fronttypes
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CounterMeasureT(cms []configs_export.CounterMeasure,mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, disco types.DiscoveryIDs) {
 	@TabMenu(urls.CounterMeasures, mode2, disco)
 	@TabContent() {
 		<div class="splitter">

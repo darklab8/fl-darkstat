@@ -4,21 +4,19 @@ import (
 	"context"
 	"time"
 
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-configs/configs/discovery/techcompat"
+	"github.com/darklab8/fl-darkcore/darkcore/core_types"
+	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
-type Url string
-
 type Theme int64
-
-type CtxKey string
 
 const (
 	ThemeDark Theme = iota
 	ThemeLight
 )
-
-const GlobalParamsCtxKey CtxKey = "global_params"
 
 type GlobalParams struct {
 	Buildpath         utils_types.FilePath
@@ -36,5 +34,12 @@ func (g GlobalParams) GetBuildPath() utils_types.FilePath {
 }
 
 func GetCtx(ctx context.Context) GlobalParams {
-	return ctx.Value(GlobalParamsCtxKey).(GlobalParams)
+	return ctx.Value(core_types.GlobalParamsCtxKey).(GlobalParams)
+}
+
+type DiscoveryIDs struct {
+	Show        bool
+	Ids         []configs_export.Tractor
+	Config      *techcompat.Config
+	LatestPatch autopatcher.Patch
 }

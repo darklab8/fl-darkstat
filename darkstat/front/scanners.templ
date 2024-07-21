@@ -1,10 +1,10 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
 	"strings"
 )
 
@@ -12,7 +12,7 @@ func ScannerDetailedUrl(item configs_export.Scanner) string {
 	return "scanner/scanner_bases_" + strings.ToLower(item.Nickname)
 }
 
-templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -56,7 +56,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco frontty
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ScannersT(scanners []configs_export.Scanner,mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ ScannersT(scanners []configs_export.Scanner, mode2 ShowEmpty, disco types.DiscoveryIDs) {
 	@TabMenu(urls.Scanners, mode2, disco)
 	@TabContent() {
 		<div class="splitter">

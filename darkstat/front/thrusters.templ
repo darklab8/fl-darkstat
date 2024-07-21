@@ -1,11 +1,11 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-configs/configs/configs_export"
 	"fmt"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
 	"strings"
 )
 
@@ -13,7 +13,7 @@ func ThrusterDetailedUrl(thruster configs_export.Thruster) string {
 	return "thrusters/thruster_base_" + strings.ToLower(thruster.Nickname)
 }
 
-templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco fronttypes.DiscoveryIDs) {
+templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -67,7 +67,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco fro
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, disco types.DiscoveryIDs) {
 	@TabMenu(urls.Thrusters, mode2, disco)
 	@TabContent() {
 		<div class="splitter">
