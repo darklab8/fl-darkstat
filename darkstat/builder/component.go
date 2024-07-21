@@ -31,12 +31,12 @@ type WriteResult struct {
 	bytes    []byte
 }
 
-func (h *Component) Write(gp types.GlobalParams) WriteResult {
+func (h *Component) Write(gp Params) WriteResult {
 	buf := bytes.NewBuffer([]byte{})
 
-	gp.Pagepath = string(h.pagepath)
+	// gp.Pagepath = string(h.pagepath)
 
-	realpath := utils_filepath.Join(gp.Buildpath, h.pagepath)
+	realpath := utils_filepath.Join(gp.GetBuildPath(), h.pagepath)
 
 	h.templ_comp.Render(context.WithValue(context.Background(), types.GlobalParamsCtxKey, gp), buf)
 

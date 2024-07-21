@@ -26,10 +26,13 @@ type GlobalParams struct {
 	SiteRoot          string
 	StaticRoot        string
 	OppositeThemeRoot string
-	Pagepath          string
 	Heading           string
 	Timestamp         time.Time
 	TractorTabName    string
+}
+
+func (g GlobalParams) GetBuildPath() utils_types.FilePath {
+	return g.Buildpath
 }
 
 func GetCtx(ctx context.Context) GlobalParams {

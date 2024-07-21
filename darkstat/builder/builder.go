@@ -1,28 +1,27 @@
 package builder
 
 import (
-	"time"
-
 	"github.com/darklab8/fl-darkstat/darkstat/common/static_common"
-	"github.com/darklab8/fl-darkstat/darkstat/common/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type Builder struct {
-	components     []*Component
-	darkPages      []*Component
-	TractorTabName string
+	components []*Component
+	params     Params
 }
 
 type BuilderOption func(b *Builder)
 
-func NewBuilder(opts ...BuilderOption) *Builder {
+type Params interface {
+	GetBuildPath() utils_types.FilePath
+}
+
+func NewBuilder(params Params, opts ...BuilderOption) *Builder {
 	b := &Builder{
-		TractorTabName: settings.Env.TractorTabName,
+		params: params,
 	}
 	for _, opt := range opts {
 		opt(b)
@@ -30,21 +29,11 @@ func NewBuilder(opts ...BuilderOption) *Builder {
 	return b
 }
 
-func WithTractorTabName(tractor_tab_name string) BuilderOption {
-	return func(b *Builder) {
-		b.TractorTabName = tractor_tab_name
-	}
-}
-
 func (b *Builder) RegComps(components ...*Component) {
 	b.components = append(b.components, components...)
 }
 
-func (b *Builder) RegDark(components ...*Component) {
-	b.darkPages = append(b.darkPages, components...)
-}
-
-func (b *Builder) build(components []*Component, params types.GlobalParams, filesystem *Filesystem) {
+func (b *Builder) build(components []*Component, params Params, filesystem *Filesystem) {
 
 	timeit.NewTimerF(func(m *timeit.Timer) {
 		results := make(chan WriteResult)
@@ -60,7 +49,7 @@ func (b *Builder) build(components []*Component, params types.GlobalParams, file
 	}, timeit.WithMsg("wrote components"))
 
 	timeit.NewTimerF(func(m *timeit.Timer) {
-		target_folder := utils_filepath.Join(utils_types.FilePath(params.Buildpath.ToString()), "static")
+		target_folder := params.GetBuildPath().Join("static")
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "htmx.js"), []byte(static_front.HtmxJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "preload.js"), []byte(static_front.PreloadJs))
 		filesystem.WriteToMem(utils_filepath.Join(target_folder, "sortable.js"), []byte(static_front.SortableJs))
@@ -73,30 +62,7 @@ func (b *Builder) BuildAll() *Filesystem {
 	build_root := utils_types.FilePath("build")
 	filesystem := NewFileystem(build_root)
 
-	staticPrefix := "static/"
-
-	siteRoot := settings.Env.SiteRoot
-	b.build(b.components, types.GlobalParams{
-		Buildpath:         "",
-		Theme:             types.ThemeLight,
-		TractorTabName:    b.TractorTabName,
-		SiteRoot:          siteRoot,
-		StaticRoot:        siteRoot + staticPrefix,
-		OppositeThemeRoot: siteRoot + "dark.html",
-		Heading:           settings.Env.AppHeading,
-		Timestamp:         time.Now().UTC(),
-	}, filesystem)
-
-	// // Implement dark theme later
-	// // u need only Index page rebuilded, not all of them ^_^
-	// b.build(b.dark_pages, types.GlobalParams{
-	// 	Buildpath:         "",
-	// 	Theme:             types.ThemeDark,
-	// 	SiteRoot:          siteRoot,
-	// 	StaticRoot:        siteRoot + staticPrefix,
-	// 	OppositeThemeRoot: siteRoot,
-	// 	Heading:           settings.Conf.AppHeading,
-	// }, filesystem)
+	b.build(b.components, b.params, filesystem)
 
 	return filesystem
 }

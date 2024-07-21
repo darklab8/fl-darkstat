@@ -1,10 +1,10 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
-	"strconv"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/fronttypes"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
 	"strings"
 )
 
@@ -56,7 +56,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco fronttypes.Disco
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ AmmoT(ammos []configs_export.Ammo,mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
+templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, disco fronttypes.DiscoveryIDs) {
 	@TabMenu(urls.Ammo, mode2, disco)
 	@TabContent() {
 		<div class="splitter">

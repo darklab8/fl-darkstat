@@ -7,6 +7,7 @@ into stuff rendered by fl-darkstat
 
 import (
 	"sort"
+	"time"
 
 	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_export"
@@ -56,7 +57,20 @@ func (l *Linker) Link() *builder.Builder {
 			if l.mapped.Discovery != nil {
 				tractor_tab_name = "IDs"
 			}
-			build = builder.NewBuilder(builder.WithTractorTabName(tractor_tab_name))
+			staticPrefix := "static/"
+			siteRoot := settings.Env.SiteRoot
+			params := types.GlobalParams{
+				Buildpath:         "",
+				Theme:             types.ThemeLight,
+				TractorTabName:    tractor_tab_name,
+				SiteRoot:          siteRoot,
+				StaticRoot:        siteRoot + staticPrefix,
+				OppositeThemeRoot: siteRoot + "dark.html",
+				Heading:           settings.Env.AppHeading,
+				Timestamp:         time.Now().UTC(),
+			}
+
+			build = builder.NewBuilder(params)
 		}, timeit.WithMsg("building creation"))
 
 		var data *configs_export.Exporter
