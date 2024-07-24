@@ -74,6 +74,8 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 					@MultiLinestring([]string{"Avg", "Sheld", "Dmg/s"})
 				</th>
 				<th style="width:5px;">Power/s</th>
+				<th style="width:5px;">Range</th>
+				<th style="width:5px;">Speed</th>
 				<th style="width:5px;">
 					@MultiLinestring([]string{"Average", "Efficiency"})
 				</th>
@@ -85,8 +87,6 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 				</th>
 				<th style="width:5px;">Value</th>
 				<th style="width:5px;">Rating</th>
-				<th style="width:5px;">Speed</th>
-				<th style="width:5px;">Range</th>
 				<th style="width:5px;">Toughness</th>
 				<th style="width:5px;">Hit Pts</th>
 				<th style="width:5px;">Lootable</th>
@@ -132,13 +132,13 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.AvgShieldDamagePerSec) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
+		<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.Rating) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
 		<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
 		<td>{ gun.HitPts }</td>
 		<td>{ strconv.FormatBool(gun.Lootable) }</td>
