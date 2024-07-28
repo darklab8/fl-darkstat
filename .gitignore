@@ -9,3 +9,4 @@ dist/*
 ruby_home/
 gems/
 !.vscode/
+!vendor/**
