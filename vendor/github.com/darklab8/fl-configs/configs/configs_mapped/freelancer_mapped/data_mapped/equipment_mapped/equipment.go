@@ -1,1 +1,0 @@
-package equipment_mapped

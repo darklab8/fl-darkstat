@@ -1,4 +1,0 @@
-language: golang
-golang: 1.7.1
-script:
-  - "go test -v -race ./..."

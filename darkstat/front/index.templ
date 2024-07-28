@@ -1,8 +1,8 @@
 package front
 
 import (
+	"github.com/darklab8/fl-darkcore/darkcore/core_front"
 	"github.com/darklab8/fl-darkcore/darkcore/core_static"
-	"github.com/darklab8/fl-darkcore/darkcore/core_templ"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
@@ -12,15 +12,15 @@ templ Html5() {
 	<!DOCTYPE html>
 	<html>
 		<head>
-			@core_templ.StaticFile(core_static.FaviconIco)
+			@core_front.StaticFile(core_static.FaviconIco)
 			<title>{ "darkstat" }</title>
-			@core_templ.StaticFile(core_static.ResetCSS)
-			@core_templ.StaticFile(core_static.SortableJS)
-			@core_templ.StaticFile(core_static.HtmxJS)
-			@core_templ.StaticFile(core_static.HtmxPreloadJS)
-			@core_templ.StaticFile(static_front.CommonCSS)
-			@core_templ.StaticFile(static_front.CustomCSS)
-			@core_templ.StaticFile(static_front.CustomJS)
+			@core_front.StaticFile(core_static.ResetCSS)
+			@core_front.StaticFile(core_static.SortableJS)
+			@core_front.StaticFile(core_static.HtmxJS)
+			@core_front.StaticFile(core_static.HtmxPreloadJS)
+			@core_front.StaticFile(static_front.CommonCSS)
+			@core_front.StaticFile(static_front.CustomCSS)
+			@core_front.StaticFile(static_front.CustomJS)
 		</head>
 		<body hx-ext="preload">
 			{ children... }
