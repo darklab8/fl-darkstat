@@ -48,18 +48,17 @@ func main() {
 
 	web := func() {
 		var fs *builder.Filesystem
-		timeit.NewTimerMF("total time for web web := func()",
-			func(m *timeit.Timer) {
-				var linked_build *builder.Builder
-				timeit.NewTimerMF("linking stuff linker.NewLinker().Link()",
-					func(m *timeit.Timer) {
-						linked_build = linker.NewLinker().Link()
-					})
-				timeit.NewTimerMF("building stuff linked_build.BuildAll()",
-					func(m *timeit.Timer) {
-						fs = linked_build.BuildAll()
-					})
-			})
+		timer_web := timeit.NewTimer("total time for web web := func()")
+
+		var linked_build *builder.Builder
+		timer_linker := timeit.NewTimer("linking stuff linker.NewLinker().Link()")
+		linked_build = linker.NewLinker().Link()
+		timer_linker.Close()
+
+		timer_buildall := timeit.NewTimer("building stuff linked_build.BuildAll()")
+		fs = linked_build.BuildAll()
+		timer_buildall.Close()
+		timer_web.Close()
 		web.NewWeb(fs).Serve()
 	}
 
