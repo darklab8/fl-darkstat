@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"github.com/darklab8/fl-darkcore/darkcore/core_types"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/utils/utils_types"
@@ -22,6 +23,10 @@ func NewStaticFile(path utils_types.FilePath, content []byte) StaticFile {
 		path:    path,
 		content: content,
 	}
+}
+
+func NewStaticFileFromCore(s core_types.StaticFile) StaticFile {
+	return NewStaticFile(utils_types.FilePath(s.Filename), []byte(s.Content))
 }
 
 type BuilderOption func(b *Builder)

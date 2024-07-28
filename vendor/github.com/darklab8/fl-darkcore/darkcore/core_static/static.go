@@ -2,6 +2,8 @@ package core_static
 
 import (
 	_ "embed"
+
+	"github.com/darklab8/fl-darkcore/darkcore/core_types"
 )
 
 // Commented out IE stuff as it makes things slow
@@ -15,14 +17,48 @@ import (
 // also commented out  //   handleAttributes(parentNode, fragment, settleInfo);
 // because we don't need CSS transitions and they are hurtful https://htmx.org/docs/#css_transitions
 //
+
 //go:embed htmx.1.9.11.js
-var HtmxJs string
+var HtmxJsContent string
+
+var HtmxJS core_types.StaticFile = core_types.StaticFile{
+	Content:  HtmxJsContent,
+	Filename: "htmx.js",
+	Kind:     core_types.StaticFileJS,
+}
 
 //go:embed htmx.1.9.11.preload.js
-var PreloadJs string
+var PreloadJsContent string
+
+var HtmxPreloadJS core_types.StaticFile = core_types.StaticFile{
+	Content:  PreloadJsContent,
+	Filename: "htmx_preload.js",
+	Kind:     core_types.StaticFileJS,
+}
 
 //go:embed sortable.js
-var SortableJs string
+var SortableJsContent string
+
+var SortableJS core_types.StaticFile = core_types.StaticFile{
+	Content:  SortableJsContent,
+	Filename: "sortable.js",
+	Kind:     core_types.StaticFileJS,
+}
 
 //go:embed reset.css
-var ResetCSS string
+var ResetCSSContent string
+
+var ResetCSS core_types.StaticFile = core_types.StaticFile{
+	Content:  ResetCSSContent,
+	Filename: "reset.css",
+	Kind:     core_types.StaticFileCSS,
+}
+
+//go:embed favicon.ico
+var FaviconIcoContent string
+
+var FaviconIco core_types.StaticFile = core_types.StaticFile{
+	Content:  FaviconIcoContent,
+	Filename: "favicon.ico",
+	Kind:     core_types.StaticFileIco,
+}
