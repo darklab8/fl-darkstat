@@ -1,6 +1,8 @@
 package front
 
 import (
+	"github.com/darklab8/fl-darkcore/darkcore/core_static"
+	"github.com/darklab8/fl-darkcore/darkcore/core_templ"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
@@ -10,18 +12,15 @@ templ Html5() {
 	<!DOCTYPE html>
 	<html>
 		<head>
-			<link rel="icon" type="image/x-icon" href={ types.GetCtx(ctx).StaticRoot + "common/favicon.ico" }/>
+			@core_templ.StaticFile(core_static.FaviconIco)
 			<title>{ "darkstat" }</title>
-			@static_front.CommonCSS()
-			@static_front.CustomCSS()
-			<link link rel="stylesheet" href={ types.GetCtx(ctx).StaticRoot + "reset.css" }/>
-			<script src={ types.GetCtx(ctx).StaticRoot + "sortable.js" }></script>
-			<script src={ types.GetCtx(ctx).StaticRoot + "htmx.js" }></script>
-			<script src={ types.GetCtx(ctx).StaticRoot + "preload.js" }></script>
-			<script src={ types.GetCtx(ctx).StaticRoot + "custom.js" }></script>
-			<script>
-
-			</script>
+			@core_templ.StaticFile(core_static.ResetCSS)
+			@core_templ.StaticFile(core_static.SortableJS)
+			@core_templ.StaticFile(core_static.HtmxJS)
+			@core_templ.StaticFile(core_static.HtmxPreloadJS)
+			@core_templ.StaticFile(static_front.CommonCSS)
+			@core_templ.StaticFile(static_front.CustomCSS)
+			@core_templ.StaticFile(static_front.CustomJS)
 		</head>
 		<body hx-ext="preload">
 			{ children... }

@@ -72,13 +72,15 @@ func (l *Linker) Link() *builder.Builder {
 			}
 
 			static_files := []builder.StaticFile{
-				builder.NewStaticFile("htmx.js", []byte(core_static.HtmxJs)),
-				builder.NewStaticFile("htmx.js", []byte(core_static.HtmxJs)),
-				builder.NewStaticFile("preload.js", []byte(core_static.PreloadJs)),
-				builder.NewStaticFile("sortable.js", []byte(core_static.SortableJs)),
-				builder.NewStaticFile("custom.js", []byte(static_front.CustomJS)),
-				builder.NewStaticFile("reset.css", []byte(core_static.ResetCSS)),
-				builder.NewStaticFile(utils_types.FilePath("common").Join("favicon.ico"), []byte(static_front.FaviconIco)),
+				builder.NewStaticFileFromCore(core_static.HtmxJS),
+				builder.NewStaticFileFromCore(core_static.HtmxPreloadJS),
+				builder.NewStaticFileFromCore(core_static.SortableJS),
+				builder.NewStaticFileFromCore(core_static.ResetCSS),
+				builder.NewStaticFileFromCore(core_static.FaviconIco),
+
+				builder.NewStaticFileFromCore(static_front.CommonCSS),
+				builder.NewStaticFileFromCore(static_front.CustomCSS),
+				builder.NewStaticFileFromCore(static_front.CustomJS),
 			}
 
 			build = builder.NewBuilder(params, static_files)

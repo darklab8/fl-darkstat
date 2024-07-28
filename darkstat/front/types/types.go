@@ -33,6 +33,12 @@ func (g GlobalParams) GetBuildPath() utils_types.FilePath {
 	return g.Buildpath
 }
 
+func (g GlobalParams) GetStaticRoot() string {
+	return g.StaticRoot
+}
+
+var check core_types.GlobalParamsI = GlobalParams{}
+
 func GetCtx(ctx context.Context) GlobalParams {
 	return ctx.Value(core_types.GlobalParamsCtxKey).(GlobalParams)
 }
