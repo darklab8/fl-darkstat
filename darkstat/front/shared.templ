@@ -645,7 +645,7 @@ templ TdDisco(
 		<td>
 			<span class="tooltip">
 				{ data.TechCell }
-				<span class="tooltiptext" style="font-size: 0.85em;">
+				<span class="tooltiptext" style="font-size: 0.85em; max-height: 250px; overflow-y: scroll;">
 					for _, disco_id := range configs_export.GetOrederedTechCompat(disco.TractorsByID, data) {
 						{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) } - { disco_id.Tractor.Name }
 						<br/>
