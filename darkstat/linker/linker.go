@@ -283,10 +283,11 @@ func (l *Linker) Link() *builder.Builder {
 
 		if l.mapped.Discovery != nil {
 			disco_ids = types.DiscoveryIDs{
-				Show:        true,
-				Ids:         l.configs.Tractors,
-				Config:      l.mapped.Discovery.Techcompat,
-				LatestPatch: l.mapped.Discovery.LatestPatch,
+				Show:         true,
+				Ids:          l.configs.Tractors,
+				TractorsByID: l.configs.TractorsByID,
+				Config:       l.mapped.Discovery.Techcompat,
+				LatestPatch:  l.mapped.Discovery.LatestPatch,
 			}
 		}
 	})
@@ -653,7 +654,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowIDs)),
-						front.ShipsIDsDetailed(ship),
+						front.ShipsIDsDetailed(ship, configs_export.GetOrederedTechCompat(data.TractorsByID, ship.DiscoveryTechCompat)),
 					),
 				)
 			}

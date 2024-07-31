@@ -24,7 +24,7 @@
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
-    z-index: 3;
+    z-index: 30;
 }
 
 .vertical_th {

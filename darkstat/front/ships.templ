@@ -55,7 +55,10 @@ func marshalIDs(data types.DiscoveryIDs, item_nickname string) string {
 	return string(bytes)
 }
 
-templ ShipTable(ships []configs_export.Ship, mode ShipTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
+templ ShipTable(
+	ships []configs_export.Ship,
+	mode ShipTabMode,
+	pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
 	<table class={ "sortable", templ.KV("top-main", pinm==MainMode), templ.KV("top-pinned", pinm==PinMode) }>
 		<thead>
 			<tr>
@@ -267,11 +270,11 @@ templ ShipsIDsShared(ship configs_export.Ship) {
 	</table>
 }
 
-templ ShipsIDsDetailed(ship configs_export.Ship) {
+templ ShipsIDsDetailed(ship configs_export.Ship, DiscoIDsCompatsOrdered []configs_export.CompatibleIDsForTractor) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ ship.Name }</div>
 	@ShipsIDsShared(ship) {
-		for _, disco_id := range ship.DiscoIDsCompatsOrdered {
+		for _, disco_id := range DiscoIDsCompatsOrdered {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(disco_id.Tractor.Nickname)) }
 				hx-trigger={ "mousedown" }

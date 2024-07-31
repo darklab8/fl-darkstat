@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/discovery/techcompat"
 	"github.com/darklab8/fl-darkcore/darkcore/core_types"
@@ -44,8 +45,9 @@ func GetCtx(ctx context.Context) GlobalParams {
 }
 
 type DiscoveryIDs struct {
-	Show        bool
-	Ids         []configs_export.Tractor
-	Config      *techcompat.Config
-	LatestPatch autopatcher.Patch
+	Show         bool
+	Ids          []configs_export.Tractor
+	TractorsByID map[cfgtype.TractorID]configs_export.Tractor
+	Config       *techcompat.Config
+	LatestPatch  autopatcher.Patch
 }

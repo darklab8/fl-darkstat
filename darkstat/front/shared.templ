@@ -633,12 +633,26 @@ templ ThDisco(disco types.DiscoveryIDs) {
 	}
 }
 
-templ TdDisco(disco types.DiscoveryIDs, nickname string, data *configs_export.DiscoveryTechCompat) {
+templ TdDisco(
+	disco types.DiscoveryIDs,
+	nickname string,
+	data *configs_export.DiscoveryTechCompat,
+) {
 	if disco.Show {
 		<td style="display:none;" class="tech_compat" techcompats={ marshalIDs(disco, nickname) }>
 			{ fmt.Sprintf("%.0f%%",(data.TechcompatByID[""]*100)) }
 		</td>
-		<td>{ data.TechCell }</td>
+		<td>
+			<span class="tooltip">
+				{ data.TechCell }
+				<span class="tooltiptext" style="font-size: 0.85em;">
+					for _, disco_id := range configs_export.GetOrederedTechCompat(disco.TractorsByID, data) {
+						{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) } - { disco_id.Tractor.Name }
+						<br/>
+					}
+				</span>
+			</span>
+		</td>
 	}
 }
 
