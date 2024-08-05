@@ -44,9 +44,9 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					<td>{ strconv.Itoa(ammo.HitPts) } </td>
 					<td>{ strconv.Itoa(ammo.AmmoLimit) }</td>
 					<td>{ strconv.Itoa(ammo.Volume) }</td>
-					<td>{ ammo.Nickname } </td>
-					<td>{ strconv.Itoa(ammo.NameID) } </td>
-					<td>{ strconv.Itoa(ammo.InfoID) } </td>
+					<td class="search-included">{ ammo.Nickname } </td>
+					<td class="search-included">{ strconv.Itoa(ammo.NameID) } </td>
+					<td class="search-included">{ strconv.Itoa(ammo.InfoID) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm)
 				}
 			}

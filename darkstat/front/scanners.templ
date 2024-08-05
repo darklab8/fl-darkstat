@@ -44,9 +44,9 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco types.D
 					<td>{ strconv.Itoa(scanner.Range) }</td>
 					<td>{ strconv.Itoa(scanner.CargoScanRange) }</td>
 					<td>{ strconv.FormatBool(scanner.Lootable) }</td>
-					<td>{ scanner.Nickname } </td>
-					<td>{ strconv.Itoa(scanner.NameID) } </td>
-					<td>{ strconv.Itoa(scanner.InfoID) } </td>
+					<td class="search-included">{ scanner.Nickname } </td>
+					<td class="search-included">{ strconv.Itoa(scanner.NameID) } </td>
+					<td class="search-included">{ strconv.Itoa(scanner.InfoID) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm)
 				}
 			}

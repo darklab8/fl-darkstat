@@ -64,8 +64,8 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 				@TrFromMainTb(faction.Nickname, FactionRepUrl(faction, mode), pinm) {
 					@PinTd(faction.Nickname, faction.Name, pinm)
 					@PinSelectLeftRight(pinm, FactionRepUrl(faction, mode))
-					<td>{ faction.ShortName }</td>
-					<td>{ faction.Nickname }</td>
+					<td class="search-included">{ faction.ShortName }</td>
+					<td class="search-included">{ faction.Nickname }</td>
 					if mode == FactionShowRephacks {
 						<td>{ strconv.FormatBool(len(faction.Bribes) > 0) }</td>
 					}
@@ -73,8 +73,8 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					<td>{ fmt.Sprintf("%.2f", faction.MissionSuccess) }</td>
 					<td>{ fmt.Sprintf("%.2f", faction.MissionFailure) }</td>
 					<td>{ fmt.Sprintf("%.2f", faction.MissionAbort) }</td>
-					<td>{ strconv.Itoa(faction.InfonameID) }</td>
-					<td>{ strconv.Itoa(faction.InfocardID) }</td>
+					<td class="search-included">{ strconv.Itoa(faction.InfonameID) }</td>
+					<td class="search-included">{ strconv.Itoa(faction.InfocardID) }</td>
 					@TdInfoCardClick(faction.Infocard, faction.Nickname, pinm)
 				}
 			}

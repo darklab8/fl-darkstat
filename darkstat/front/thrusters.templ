@@ -55,9 +55,9 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco typ
 					<td>{ fmt.Sprintf("%.2f", thruster.Rating) }</td>
 					<td>{ strconv.Itoa(thruster.HitPts) }</td>
 					<td>{ strconv.FormatBool(thruster.Lootable) }</td>
-					<td>{ thruster.Nickname } </td>
-					<td>{ strconv.Itoa(thruster.NameID) } </td>
-					<td>{ strconv.Itoa(thruster.InfoID) } </td>
+					<td class="search-included">{ thruster.Nickname } </td>
+					<td class="search-included">{ strconv.Itoa(thruster.NameID) } </td>
+					<td class="search-included">{ strconv.Itoa(thruster.InfoID) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(thruster.Nickname), thruster.Nickname, pinm)
 				}
 			}

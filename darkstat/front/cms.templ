@@ -56,9 +56,9 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 					<td>{ strconv.Itoa(cm.AIRange) }</td>
 					<td>{ strconv.Itoa(cm.HitPts) }</td>
 					<td>{ strconv.FormatBool(cm.Lootable) }</td>
-					<td>{ cm.Nickname } </td>
-					<td>{ strconv.Itoa(cm.NameID) } </td>
-					<td>{ strconv.Itoa(cm.InfoID) } </td>
+					<td class="search-included">{ cm.Nickname } </td>
+					<td class="search-included">{ strconv.Itoa(cm.NameID) } </td>
+					<td class="search-included">{ strconv.Itoa(cm.InfoID) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm)
 				}
 			}

@@ -552,7 +552,7 @@ templ PinTd(nickname string, name string, pinm PinMod) {
 
 templ PinTd2(nickname string, name string, pinm PinMod, url string) {
 	// htmx adding row to table version for performance
-	<td style="display:flex;justify-content:space-between;min-width:50px;">
+	<td style="display:flex;justify-content:space-between;min-width:50px;" class="search-included">
 		<span>{ name }</span>
 		if pinm==MainMode {
 			<span
@@ -644,7 +644,7 @@ templ TdDisco(
 		</td>
 		<td>
 			<span class="tooltip">
-				{ data.TechCell }
+				<span class="search-included">{ data.TechCell }</span>
 				<span class="tooltiptext" style="font-size: 0.85em; max-height: 250px; overflow-y: scroll;">
 					for _, disco_id := range configs_export.GetOrederedTechCompat(disco.TractorsByID, data) {
 						{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) } - { disco_id.Tractor.Name }
@@ -755,7 +755,7 @@ templ WriteRegionName(RegionName string) {
 }
 
 templ WriteLimit(limit int) {
-	@templ.Raw("<div style=\"width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;overflow-y:hidden;\">")
+	@templ.Raw("<div class=\"search-included\" style=\"width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;overflow-y:hidden;\">")
 	{ children... }
 	@templ.Raw("</div>")
 }

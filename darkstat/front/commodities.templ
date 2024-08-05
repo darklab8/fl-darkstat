@@ -55,9 +55,9 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 					<td>{ fmt.Sprintf("%.2f", commodity.Volume) }</td>
 					<td>{ strconv.Itoa(commodity.ProffitMargin) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.ProffitMargin, commodity.Volume)) }</td>
-					<td>{ commodity.Nickname }</td>
-					<td>{ strconv.Itoa(commodity.NameID) }</td>
-					<td>{ strconv.Itoa(commodity.InfocardID) }</td>
+					<td class="search-included">{ commodity.Nickname }</td>
+					<td class="search-included">{ strconv.Itoa(commodity.NameID) }</td>
+					<td class="search-included">{ strconv.Itoa(commodity.InfocardID) }</td>
 					@TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm)
 				}
 			}

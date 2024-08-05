@@ -171,22 +171,22 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
-			<td>
+			<td class="search-included">
 				@PrintEnemies(EnemistToList(base.Missions.EnemiesAtBaseMap))
 			</td>
-			<td>
+			<td class="search-included">
 				if base.Missions.Err != nil {
 					{ base.Missions.Err.Error() }
 				}
 			</td>
 		}
-		<td>{ base.Nickname }</td>
-		<td>{ base.SystemNickname }</td>
+		<td class="search-included">{ base.Nickname }</td>
+		<td class="search-included">{ base.SystemNickname }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.Y) }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.Z) }</td>
-		<td>{ strconv.Itoa(base.StridName) }</td>
-		<td>{ strconv.Itoa(base.InfocardID) }</td>
+		<td class="search-included">{ strconv.Itoa(base.StridName) }</td>
+		<td class="search-included">{ strconv.Itoa(base.InfocardID) }</td>
 		@TdInfoCardClick(base.Infocard, base.Nickname, pinm)
 	}
 }

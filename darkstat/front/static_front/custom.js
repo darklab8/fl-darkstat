@@ -101,7 +101,14 @@ function FilteringFunction() {
     for (i = 1; i < tr.length; i++) {
         // row = document.getElementById("bottominfo_dsy_councilhf")
         row = tr[i];
-        txtValue = row.textContent || row.innerText;
+
+        let txtValues = []
+        let tds = row.getElementsByClassName("search-included")
+        for (let elem of tds) {
+            value = elem.textContent || elem.innerText;
+            txtValues.push(value)
+        }
+        txtValue = txtValues.join('');
 
         // Refresh tech compat value
         let techcompat_visible = true;

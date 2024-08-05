@@ -58,8 +58,8 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					@PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
 					@TdDisco(disco, shield.Nickname, shield.DiscoveryTechCompat)
 					<td>{ shield.Class }</td>
-					<td>{ shield.Type }</td>
-					<td>{ shield.Technology }</td>
+					<td class="search-included">{ shield.Type }</td>
+					<td class="search-included">{ shield.Technology }</td>
 					<td>{ strconv.Itoa(shield.Price) } </td>
 					<td>{ strconv.FormatBool(configs_export.Buyable(shield.Bases)) }</td>
 					<td>{ strconv.Itoa(shield.Capacity) } </td>
@@ -70,10 +70,10 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					<td>{ fmt.Sprintf("%.2f",shield.Toughness) }</td>
 					<td>{ strconv.Itoa(shield.HitPts) }</td>
 					<td>{ strconv.FormatBool(shield.Lootable) }</td>
-					<td>{ shield.Nickname } </td>
-					<td>{ shield.HpType } </td>
-					<td>{ strconv.Itoa(shield.IdsName) } </td>
-					<td>{ strconv.Itoa(shield.IdsInfo) } </td>
+					<td class="search-included">{ shield.Nickname } </td>
+					<td class="search-included">{ shield.HpType } </td>
+					<td class="search-included">{ strconv.Itoa(shield.IdsName) } </td>
+					<td class="search-included">{ strconv.Itoa(shield.IdsInfo) } </td>
 					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm)
 				}
 			}
