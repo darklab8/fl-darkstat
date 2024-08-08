@@ -134,9 +134,9 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
 		<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
 		<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.AvgEfficiency) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.HullEfficiency) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.ShieldEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.4f",gun.AvgEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.4f",gun.HullEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.4f",gun.ShieldEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
 		<td>{ fmt.Sprintf("%.2f",gun.Rating) }</td>
 		<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
