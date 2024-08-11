@@ -56,50 +56,67 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 				<th style="width:5px;">Type</th>
 				<th style="width:5px;">Price</th>
 				<th style="width:5px;">Buyable</th>
-				<th style="width:5px;">Hull Dmg</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Hull","dmg"})
+				</th>
 				<th style="width:5px;">
 					@Tooltip("(Hull Dmg * HullDmgFactor + Energy Dmg) * Avg Shield Dmg Modifier") {
 						@MultiLinestring([]string{"Avg", "Shield", "Dmg"})
 					}
 				</th>
-				<th style="width:5px;">Power Usage</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Energy", "Dmg"})
+				</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Power","Usage"})
+				</th>
 				<th style="width:5px;">Refire</th>
 				if mode == GunsMissiles {
 					<th style="width:50px;">
 						@MultiLinestring([]string{"Max Angular", "Velocity"})
 					</th>
 				}
-				<th style="width:5px;">Hull Dmg/s</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Hull", "Dmg/s"})
+				</th>
 				<th style="width:5px;">
 					@MultiLinestring([]string{"Avg", "Sheld", "Dmg/s"})
+				</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Energy", "Dmg/s"})
 				</th>
 				<th style="width:5px;">Power/s</th>
 				<th style="width:5px;">Range</th>
 				<th style="width:5px;">Speed</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Average", "Efficiency"})
+					@MultiLinestring([]string{"Avg", "Effic."})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Anti Hull", "Efficiency"})
+					@MultiLinestring([]string{"Anti", "Hull", "Effic."})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Anti Shield", "Efficiency"})
+					@MultiLinestring([]string{"Anti", "Shield", "Effic."})
+				</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Anti", "Energy", "Effic."})
 				</th>
 				<th style="width:5px;">Value</th>
 				<th style="width:5px;">Rating</th>
-				<th style="width:5px;">Toughness</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Tough","ness"})
+				</th>
 				<th style="width:5px;">Hit Pts</th>
 				<th style="width:5px;">Lootable</th>
-				<th style="width:50px;">Technology</th>
-				<th style="width:50px;">Nickname</th>
-				<th style="width:50px;">HpType</th>
+				<th style="width:25px;">Technology</th>
+				<th style="width:25px;">Nickname</th>
+				<th style="width:25px;">HpType</th>
 				if settings.Env.IsDetailed {
-					<th style="width:50px;">Flash particle name</th>
-					<th style="width:50px;">Const effect</th>
-					<th style="width:50px;">Munition hit effect</th>
+					<th style="width:25px;">Flash particle name</th>
+					<th style="width:25px;">Const effect</th>
+					<th style="width:25px;">Munition hit effect</th>
 				}
-				<th style="width:50px;">Name ID</th>
-				<th style="width:50px;">Info ID</th>
+				<th style="width:25px;">Name ID</th>
+				<th style="width:25px;">Info ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -124,22 +141,25 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		<td>
 			{ strconv.Itoa(gun.AvgShieldDamage) }
 		</td>
-		<td>{ fmt.Sprintf("%.2f", gun.PowerUsage) }</td>
+		<td>{ strconv.Itoa(gun.EnergyDamage) }</td>
+		<td>{ fmt.Sprintf("%.1f", gun.PowerUsage) }</td>
 		<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
 		if mode == GunsMissiles {
 			<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
 		}
-		<td>{ fmt.Sprintf("%.2f",gun.HullDamagePerSec) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.AvgShieldDamagePerSec) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.PowerPerSec) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Range) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Speed) }</td>
+		<td>{ fmt.Sprintf("%.0f",gun.HullDamagePerSec) }</td>
+		<td>{ fmt.Sprintf("%.0f",gun.AvgShieldDamagePerSec) }</td>
+		<td>{ fmt.Sprintf("%.0f",gun.EnergyDamagePerSec) }</td>
+		<td>{ fmt.Sprintf("%.0f",gun.PowerPerSec) }</td>
+		<td>{ fmt.Sprintf("%.0f", gun.Range) }</td>
+		<td>{ fmt.Sprintf("%.0f", gun.Speed) }</td>
 		<td>{ fmt.Sprintf("%.4f",gun.AvgEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.4f",gun.HullEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.4f",gun.ShieldEfficiency) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.Value) }</td>
-		<td>{ fmt.Sprintf("%.2f",gun.Rating) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Toughness) }</td>
+		<td>{ fmt.Sprintf("%.4f",gun.EnergyDamageEfficiency) }</td>
+		<td>{ fmt.Sprintf("%.0f",gun.Value) }</td>
+		<td>{ fmt.Sprintf("%.0f",gun.Rating) }</td>
+		<td>{ fmt.Sprintf("%.0f", gun.Toughness) }</td>
 		<td>{ gun.HitPts }</td>
 		<td>{ strconv.FormatBool(gun.Lootable) }</td>
 		<td class="search-included">{ gun.DamageType }</td>
