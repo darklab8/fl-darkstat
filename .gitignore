@@ -10,3 +10,4 @@ ruby_home/
 gems/
 !.vscode/
 !vendor/**
+.terraform/
