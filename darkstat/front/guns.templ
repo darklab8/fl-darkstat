@@ -57,7 +57,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 				<th style="width:5px;">Price</th>
 				<th style="width:5px;">Buyable</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Hull","dmg"})
+					@MultiLinestring([]string{"Hull", "dmg"})
 				</th>
 				<th style="width:5px;">
 					@Tooltip("(Hull Dmg * HullDmgFactor + Energy Dmg) * Avg Shield Dmg Modifier") {
@@ -68,7 +68,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 					@MultiLinestring([]string{"Energy", "Dmg"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Power","Usage"})
+					@MultiLinestring([]string{"Power", "Usage"})
 				</th>
 				<th style="width:5px;">Refire</th>
 				if mode == GunsMissiles {
@@ -103,7 +103,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 				<th style="width:5px;">Value</th>
 				<th style="width:5px;">Rating</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Tough","ness"})
+					@MultiLinestring([]string{"Tough", "ness"})
 				</th>
 				<th style="width:5px;">Hit Pts</th>
 				<th style="width:5px;">Lootable</th>

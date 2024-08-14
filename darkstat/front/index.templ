@@ -8,19 +8,101 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 )
 
-templ Html5() {
+templ Html5(theme types.Theme) {
 	<!DOCTYPE html>
-	<html>
+	<html lang="en">
 		<head>
+			<meta charset="UTF-8"/>
 			@core_front.StaticFile(core_static.FaviconIco)
 			<title>{ "darkstat" }</title>
+			<style></style>
+			// For loading https://htmx.org/examples/tabs-hateoas/
+			switch theme {
+				case types.ThemeDark:
+					<style>
+						:root {
+							--color_background: #141414;
+							--color_alternate_row: #1C1C1C;
+							--color_border: #474747;
+							--color_th_border: #8B8B8B;
+							--color_hover: #323131;
+							--color_scrollbar_thing: #888;
+							--color_scrollbar_background: #353535;
+							--color_text: #ddd;
+							--selected: #474747;
+							--color_link: #4D8ED0;
+							--color_hover_link: #57A5F2;
+							--color_time: #4b4b4b;
+						}
+					</style>
+				case types.ThemeLight:
+					<style>
+						:root {
+							--color_background: #EFEFEF;
+							--color_alternate_row: #E6E6E6;
+							--color_border: #D7D7D7;
+							--color_th_border: #D7D7D7;
+							--color_hover: #CCC;
+							--color_scrollbar_thing: #999;
+							--color_scrollbar_background: #E1E1E1;
+							--color_text: #000;
+							--selected: #D7D7D7;
+							--color_link: #2A4E73;
+							--color_hover_link: #152B41;
+							--color_time: #a9a9a9;
+						}
+					</style>
+			}
+			<style>
+				body, input {
+					background: var(--color_background);
+				}
+				input {
+					background: var(--color_background);
+					color: var(--color_text);
+					border-color: var(--color_border);
+				}
+				* {
+					color: var(--color_text);
+				}
+
+				// scrollbars
+				html {
+					scrollbar-color: var(--color_scrollbar_thing) var(--color_scrollbar_background);
+				}
+				::-webkit-scrollbar {
+					background-color: var(--color_scrollbar_background);
+				}
+				::-webkit-scrollbar-thumb {
+					background: var(--color_scrollbar_thing);
+					border-radius: 5px;
+				}
+				::-webkit-scrollbar-corner { 
+					background: var(--color_scrollbar_background);
+				}
+			</style>
+			<style>
+				a {
+					color: var(--color_link);
+				}
+				a:hover {
+					color: var(--color_hover_link);
+				}
+			</style>
 			@core_front.StaticFile(core_static.ResetCSS)
-			@core_front.StaticFile(core_static.SortableJS)
-			@core_front.StaticFile(core_static.HtmxJS)
-			@core_front.StaticFile(core_static.HtmxPreloadJS)
 			@core_front.StaticFile(static_front.CommonCSS)
 			@core_front.StaticFile(static_front.CustomCSS)
 			@core_front.StaticFile(static_front.CustomJS)
+			@core_front.StaticFile(core_static.SortableJS)
+			@core_front.StaticFile(core_static.HtmxJS)
+			@core_front.StaticFile(core_static.HtmxPreloadJS)
+			<script>
+				document.addEventListener('htmx:afterSettle',(event) => {
+					// console.log("htmx:afterSettle");
+					LoadSelectedTractorID()
+					FilteringFunction()
+				});
+			</script>
 		</head>
 		<body hx-ext="preload">
 			{ children... }
@@ -29,88 +111,7 @@ templ Html5() {
 }
 
 templ Index(theme types.Theme) {
-	// For loading https://htmx.org/examples/tabs-hateoas/
-	switch theme {
-		case types.ThemeDark:
-			<style>
-			:root {
-				--color_background: #141414;
-				--color_alternate_row: #1C1C1C;
-				--color_border: #474747;
-				--color_th_border: #8B8B8B;
-				--color_hover: #323131;
-				--color_scrollbar_thing: #888;
-				--color_scrollbar_background: #353535;
-				--color_text: #ddd;
-				--selected: #474747;
-				--color_link: #4D8ED0;
-				--color_hover_link: #57A5F2;
-				--color_time: #4b4b4b;
-			}
-			</style>
-		case types.ThemeLight:
-			<style>
-			:root {
-				--color_background: #EFEFEF;
-				--color_alternate_row: #E6E6E6;
-				--color_border: #D7D7D7;
-				--color_th_border: #D7D7D7;
-				--color_hover: #CCC;
-				--color_scrollbar_thing: #999;
-				--color_scrollbar_background: #E1E1E1;
-				--color_text: #000;
-				--selected: #D7D7D7;
-				--color_link: #2A4E73;
-				--color_hover_link: #152B41;
-				--color_time: #a9a9a9;
-			}
-			</style>
-	}
-	<style>
-	body, input {
-		background: var(--color_background);
-	}
-	input {
-		background: var(--color_background);
-		color: var(--color_text);
-		border-color: var(--color_border);
-	}
-	* {
-		color: var(--color_text);
-	}
-
-	// scrollbars
-	html {
-		scrollbar-color: var(--color_scrollbar_thing) var(--color_scrollbar_background);
-	}
-	::-webkit-scrollbar {
-		background-color: var(--color_scrollbar_background);
-	}
-	::-webkit-scrollbar-thumb {
-		background: var(--color_scrollbar_thing);
-		border-radius: 5px;
-	}
-	::-webkit-scrollbar-corner { 
-		background: var(--color_scrollbar_background);
-	}
-	</style>
-	<style>
-	
-		a {
-			color: var(--color_link);
-		}
-		a:hover {
-			color: var(--color_hover_link);
-		}
-	</style>
-	<script>
-		document.addEventListener('htmx:afterSettle',(event) => {
-			// console.log("htmx:afterSettle");
-			LoadSelectedTractorID()
-			FilteringFunction()
-		});
-	</script>
-	@Html5() {
+	@Html5(theme) {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
 	}
 }
