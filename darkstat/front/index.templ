@@ -97,11 +97,14 @@ templ Html5(theme types.Theme) {
 			@core_front.StaticFile(core_static.HtmxJS)
 			@core_front.StaticFile(core_static.HtmxPreloadJS)
 			<script>
-				document.addEventListener('htmx:afterSettle',(event) => {
-					// console.log("htmx:afterSettle");
-					LoadSelectedTractorID()
-					FilteringFunction()
+				document.addEventListener("DOMContentLoaded", (event) => {
+					document.addEventListener('htmx:afterSettle',(event) => {
+						// console.log("htmx:afterSettle");
+						LoadSelectedTractorID()
+						FilteringFunction()
+					});
 				});
+				
 			</script>
 		</head>
 		<body hx-ext="preload">
