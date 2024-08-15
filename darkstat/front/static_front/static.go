@@ -15,20 +15,20 @@ var CustomJS core_types.StaticFile = core_types.StaticFile{
 	Kind:     core_types.StaticFileJS,
 }
 
-//go:embed common.html
+//go:embed common.css
 var CommonCSSContent string
 
 var CommonCSS core_types.StaticFile = core_types.StaticFile{
 	Content:  CommonCSSContent,
-	Filename: "common.html",
+	Filename: "common.css",
 	Kind:     core_types.StaticFileCSS,
 }
 
-//go:embed custom.html
+//go:embed custom.css
 var CustomCSSContent string
 
 var CustomCSS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomCSSContent,
-	Filename: "custom.html",
+	Filename: "custom.css",
 	Kind:     core_types.StaticFileCSS,
 }
