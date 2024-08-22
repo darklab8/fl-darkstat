@@ -16,8 +16,6 @@ func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 		return "ships/ships_base_" + strings.ToLower(ship.Nickname)
 	} else if mode == ShipShowDetails {
 		return "ships/ships_details_" + strings.ToLower(ship.Nickname)
-	} else if mode == ShipShowIDs {
-		return "ships/ships_ids" + strings.ToLower(ship.Nickname)
 	}
 
 	panic("unsupported ship mode")
@@ -28,8 +26,6 @@ func ShipPinnedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 		return "ships/pinned/ships_base_" + strings.ToLower(ship.Nickname)
 	} else if mode == ShipShowDetails {
 		return "ships/pinned/ships_details_" + strings.ToLower(ship.Nickname)
-	} else if mode == ShipShowIDs {
-		return "ships/pinned/ships_ids" + strings.ToLower(ship.Nickname)
 	}
 	panic("unsupported ship mode")
 }
@@ -39,7 +35,6 @@ type ShipTabMode int64
 const (
 	ShipShowBases ShipTabMode = iota
 	ShipShowDetails
-	ShipShowIDs
 )
 
 func marshalIDs(data types.DiscoveryIDs, item_nickname string) string {
@@ -132,11 +127,7 @@ templ ShipTable(
 
 templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
 	@TrFromMainTb2(ship.Nickname, ShipDetailedUrl(ship, mode), pinm, prerender) {
-		if mode != ShipShowIDs {
-			@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
-		} else {
-			<td>{ ship.Name }</td>
-		}
+		@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
 		@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
 		@TdDisco(disco, ship.Nickname, ship.DiscoveryTechCompat)
 		<td>{ strconv.Itoa(ship.Class) }</td>
@@ -178,8 +169,6 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 		@TabMenu(urls.Ships, mode2, disco)
 	} else if mode == ShipShowDetails {
 		@TabMenu(urls.ShipDetails, mode2, disco)
-	} else if mode == ShipShowIDs {
-		@TabMenu(urls.ShipsIDs, mode2, disco)
 	}
 	@TabContent() {
 		<div class="splitter">
@@ -199,8 +188,6 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 							@GoodAtBaseSharedT(ShowAsCommodity(false))
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
-						} else if mode == ShipShowIDs {
-							@ShipsIDsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
@@ -208,8 +195,6 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 							@GoodAtBaseSharedT(ShowAsCommodity(false))
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
-						} else if mode == ShipShowIDs {
-							@ShipsIDsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 				</div>
@@ -253,42 +238,6 @@ templ ShipDetails(ship configs_export.Ship) {
 				}
 				<td></td>
 			}
-		}
-	}
-}
-
-templ ShipsIDsShared(ship configs_export.Ship) {
-	<table class="sortable">
-		<thead>
-			<th style="width:200px;">Tractor</th>
-			<th style="width:50px;">Tech Compat</th>
-			@TractorHeaders()
-		</thead>
-		<tbody>
-			{ children... }
-		</tbody>
-	</table>
-}
-
-templ ShipsIDsDetailed(ship configs_export.Ship, DiscoIDsCompatsOrdered []configs_export.CompatibleIDsForTractor) {
-	@BottomFilterBar()
-	<div class="bottom_name">{ ship.Name }</div>
-	@ShipsIDsShared(ship) {
-		for _, disco_id := range DiscoIDsCompatsOrdered {
-			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(disco_id.Tractor.Nickname)) }
-				hx-trigger={ "mousedown" }
-				hx-target="#infocard_view"
-				hx-swap="innerHTML"
-				onclick="RowHighlighter(this)"
-			>
-				<td>
-					@WriteTractorID(disco_id.Tractor.Name)
-				</td>
-				<td>{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) }</td>
-				@TractorValues(disco_id.Tractor)
-				<td></td>
-			</tr>
 		}
 	}
 }

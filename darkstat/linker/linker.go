@@ -469,19 +469,6 @@ func (l *Linker) Link() *builder.Builder {
 			),
 		)
 
-		if disco_ids.Show {
-			build.RegComps(
-				builder.NewComponent(
-					urls.ShipsIDs,
-					front.ShipsT(useful_ships, front.ShipShowIDs, front.ShowEmpty(false), disco_ids, data.Infocards),
-				),
-				builder.NewComponent(
-					front.AllItemsUrl(urls.ShipsIDs),
-					front.ShipsT(data.Ships, front.ShipShowIDs, front.ShowEmpty(true), disco_ids, data.Infocards),
-				),
-			)
-		}
-
 		for _, base := range data.Bases {
 			build.RegComps(
 				builder.NewComponent(
@@ -652,20 +639,7 @@ func (l *Linker) Link() *builder.Builder {
 					utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowDetails)),
 					front.ShipRow(ship, front.ShipShowDetails, front.PinMode, disco_ids, data.Infocards, true),
 				),
-				builder.NewComponent(
-					utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowIDs)),
-					front.ShipRow(ship, front.ShipShowIDs, front.PinMode, disco_ids, data.Infocards, true),
-				),
 			)
-
-			if disco_ids.Show {
-				build.RegComps(
-					builder.NewComponent(
-						utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowIDs)),
-						front.ShipsIDsDetailed(ship, configs_export.GetOrederedTechCompat(data.TractorsByID, ship.DiscoveryTechCompat)),
-					),
-				)
-			}
 		}
 
 		for _, tractor := range data.Tractors {

@@ -287,9 +287,6 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				@Button([]string{"Thrusters"}, urls.Thrusters, urls.Thrusters == url)
 				@Button([]string{"Ships"}, urls.Ships, urls.Ships == url)
 				@Button([]string{"Ship", "Details"}, urls.ShipDetails, urls.ShipDetails == url)
-				if disco.Show {
-					@Button([]string{"Ships", "IDs"}, urls.ShipsIDs, urls.ShipsIDs == url)
-				}
 				@Button([]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, urls.Tractors == url)
 				if disco.Show {
 					@Button([]string{"ID Rep", "hacks"}, urls.IDRephacks, urls.IDRephacks == url)
@@ -317,9 +314,6 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				@Button([]string{"Thrusters"}, AllItemsUrl(urls.Thrusters), urls.Thrusters == url)
 				@Button([]string{"Ships"}, AllItemsUrl(urls.Ships), urls.Ships == url)
 				@Button([]string{"Ship", "Details"}, AllItemsUrl(urls.ShipDetails), urls.ShipDetails == url)
-				if disco.Show {
-					@Button([]string{"Ships", "IDs"}, AllItemsUrl(urls.ShipsIDs), urls.ShipsIDs == url)
-				}
 				@Button([]string{types.GetCtx(ctx).TractorTabName}, AllItemsUrl(urls.Tractors), urls.Tractors == url)
 				if disco.Show {
 					@Button([]string{"ID Rep", "hacks"}, AllItemsUrl(urls.IDRephacks), urls.IDRephacks == url)
