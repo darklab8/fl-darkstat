@@ -10,7 +10,9 @@
             "host": "127.0.0.1",
             "program": "${workspaceFolder}",
             "args": [],
-            // "env": {},
+            "env": {
+                "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"
+            },
             "showLog": true
         }
     ]

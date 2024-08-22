@@ -253,7 +253,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 		background-color: var(--selected);
 	}
 	.tab-list button {
-		font-size: 0.75em;
+		font-size: 0.90em;
 		background-color: var(--color_background);
 		color: var(--color_text);
 		border-color: var(--color_border);
@@ -296,7 +296,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				}
 				@Button([]string{"Engines"}, urls.Engines, urls.Engines == url)
 				@Button([]string{"Scanners"}, urls.Scanners, urls.Scanners == url)
-				<button preload="mouseover" hx-trigger="mousedown" style="width:50px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
+				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@MultiLinestring([]string{"Show", "All"})
 				</button>
 			} else {
@@ -330,20 +330,37 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 					@MultiLinestring([]string{"Don't", "Show All"})
 				</button>
 			}
-			<button style="width:50px; border-radius: 20px;" onClick={ GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).OppositeThemeRoot) } type="button">
-				@MultiLinestring([]string{"Light", "Dark"})
+			<button style="width:60px; border-radius: 20px;" onClick={ GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).Themes) } type="button">
+				@MultiLinestring([]string{"Color", "Scheme"})
 			</button>
 		</div>
 	}
 	<hr/>
 }
 
-script GoToUrl(current string, opposite string) {
-	if (location.pathname == current) {
-		location.href=opposite;
-	} else {
-		location.href=current;
+script GoToUrl(current string, themes []string) {
+	let index = 0; 
+
+	for (var i=0, item; item = themes[i]; i++) {
+	// Look no need to do list[i] in the body of the loop
+		console.log("Looping: index ", i, "item" + item);
+		if (location.pathname == item) {
+			index = i;
+		}
 	}
+
+	index = index + 1;
+	if (index > themes.length -1) {
+		index = 0;
+	}
+
+	location.href=themes[index];
+
+	// if (location.pathname == current) {
+	// 	location.href=opposite;
+	// } else {
+	// 	location.href=current;
+	// }
 	
 }
 

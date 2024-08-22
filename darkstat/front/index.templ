@@ -21,18 +21,36 @@ templ Html5(theme types.Theme) {
 				case types.ThemeDark:
 					<style>
 						:root {
-							--color_background: #141414;
-							--color_alternate_row: #1C1C1C;
+							--color_background: #1D1D1D;
+							--color_alternate_row: #1F1F1F;
 							--color_border: #474747;
 							--color_th_border: #8B8B8B;
-							--color_hover: #323131;
+							--color_hover: #303030;
 							--color_scrollbar_thing: #888;
 							--color_scrollbar_background: #353535;
-							--color_text: #ddd;
-							--selected: #474747;
+							--color_text: #e5e5e5;
+							--selected: #404040;
 							--color_link: #4D8ED0;
 							--color_hover_link: #57A5F2;
 							--color_time: #4b4b4b;
+
+						}
+					</style>
+				case types.ThemeVanilla:
+					<style>
+						:root {
+							--color_background: #F6ECDA;
+							--color_alternate_row: #F5EaDA;
+							--color_border: #A68E64;
+							--color_th_border: #A68E64;
+							--color_hover: #f3d195;
+							--color_scrollbar_thing: #6e5d40;
+							--color_scrollbar_background: #ddbe87;
+							--color_text: #000;
+							--selected: #eecc91;
+							--color_link: #65471d;
+							--color_hover_link: #453013;
+							--color_time: #a9a9a9;
 						}
 					</style>
 				case types.ThemeLight:

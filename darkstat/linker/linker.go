@@ -60,15 +60,19 @@ func (l *Linker) Link() *builder.Builder {
 	}
 	staticPrefix := "static/"
 	siteRoot := settings.Env.SiteRoot
-	params := types.GlobalParams{
-		Buildpath:         "",
-		Theme:             types.ThemeLight,
-		TractorTabName:    tractor_tab_name,
-		SiteRoot:          siteRoot,
-		StaticRoot:        siteRoot + staticPrefix,
-		OppositeThemeRoot: siteRoot + "dark.html",
-		Heading:           settings.Env.AppHeading,
-		Timestamp:         time.Now().UTC(),
+	params := &types.GlobalParams{
+		Buildpath: "",
+		Theme:     types.ThemeLight,
+		Themes: []string{
+			siteRoot + urls.Index.ToString(),
+			siteRoot + urls.DarkIndex.ToString(),
+			siteRoot + urls.VanillaIndex.ToString(),
+		},
+		TractorTabName: tractor_tab_name,
+		SiteRoot:       siteRoot,
+		StaticRoot:     siteRoot + staticPrefix,
+		Heading:        settings.Env.AppHeading,
+		Timestamp:      time.Now().UTC(),
 	}
 
 	static_files := []builder.StaticFile{
@@ -318,10 +322,17 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				urls.Index,
 				front.Index(types.ThemeLight),
+				builder.WithTheme(types.ThemeLight),
 			),
 			builder.NewComponent(
-				"dark.html",
+				urls.DarkIndex,
 				front.Index(types.ThemeDark),
+				builder.WithTheme(types.ThemeDark),
+			),
+			builder.NewComponent(
+				urls.VanillaIndex,
+				front.Index(types.ThemeVanilla),
+				builder.WithTheme(types.ThemeVanilla),
 			),
 			builder.NewComponent(
 				urls.Bases,

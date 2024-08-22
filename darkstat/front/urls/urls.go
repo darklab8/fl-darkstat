@@ -6,6 +6,8 @@ import (
 
 const (
 	Index           utils_types.FilePath = "index.html"
+	DarkIndex       utils_types.FilePath = "dark.html"
+	VanillaIndex    utils_types.FilePath = "vanilla.html"
 	Bases           utils_types.FilePath = "bases.html"
 	Trades          utils_types.FilePath = "trades.html"
 	Asteroids       utils_types.FilePath = "Asteroids.html"

@@ -15,33 +15,35 @@ import (
 type Theme int64
 
 const (
-	ThemeDark Theme = iota
+	ThemeNotSet Theme = iota
 	ThemeLight
+	ThemeDark
+	ThemeVanilla
 )
 
 type GlobalParams struct {
-	Buildpath         utils_types.FilePath
-	Theme             Theme
-	SiteRoot          string
-	StaticRoot        string
-	OppositeThemeRoot string
-	Heading           string
-	Timestamp         time.Time
-	TractorTabName    string
+	Buildpath      utils_types.FilePath
+	Theme          Theme
+	Themes         []string
+	SiteRoot       string
+	StaticRoot     string
+	Heading        string
+	Timestamp      time.Time
+	TractorTabName string
 }
 
-func (g GlobalParams) GetBuildPath() utils_types.FilePath {
+func (g *GlobalParams) GetBuildPath() utils_types.FilePath {
 	return g.Buildpath
 }
 
-func (g GlobalParams) GetStaticRoot() string {
+func (g *GlobalParams) GetStaticRoot() string {
 	return g.StaticRoot
 }
 
-var check core_types.GlobalParamsI = GlobalParams{}
+var check core_types.GlobalParamsI = &GlobalParams{}
 
-func GetCtx(ctx context.Context) GlobalParams {
-	return ctx.Value(core_types.GlobalParamsCtxKey).(GlobalParams)
+func GetCtx(ctx context.Context) *GlobalParams {
+	return ctx.Value(core_types.GlobalParamsCtxKey).(*GlobalParams)
 }
 
 type DiscoveryIDs struct {
