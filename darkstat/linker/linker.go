@@ -322,17 +322,14 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				urls.Index,
 				front.Index(types.ThemeLight),
-				builder.WithTheme(types.ThemeLight),
 			),
 			builder.NewComponent(
 				urls.DarkIndex,
 				front.Index(types.ThemeDark),
-				builder.WithTheme(types.ThemeDark),
 			),
 			builder.NewComponent(
 				urls.VanillaIndex,
 				front.Index(types.ThemeVanilla),
-				builder.WithTheme(types.ThemeVanilla),
 			),
 			builder.NewComponent(
 				urls.Bases,
