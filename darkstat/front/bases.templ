@@ -82,10 +82,10 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 					</th>
 				}
 				if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
-					<th style="width:50px;"><div class="vertical_th"><span>Best Transport</span><span>profit/v ¢/sec</span></div></th>
+					<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Transport</span><span>profit/v</span><span>¢/sec</span></div></th>
 					if disco.Show {
-						<th style="width:50px;"><div class="vertical_th"><span>Best Frigate</span><span>profit/v ¢/sec</span></div></th>
-						<th style="width:50px;"><div class="vertical_th"><span>Best Freighter</span><span>profit/v ¢/sec</span></div></th>
+						<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Frigate</span><span>profit/v</span><span>¢/sec</span></div></th>
+						<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Freighter</span><span>profit/v</span><span>¢/sec</span></div></th>
 					}
 				}
 				<th style="width:100px;">Region</th>
@@ -100,12 +100,14 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 					<th style="width:50px;">Zone Nickname</th>
 				}
 				<th style="width:50px;">
-					@MultiLinestring([]string{"System", "Nickname"})
+					@MultiLinestring([]string{"System", "Nick."})
 				</th>
 				<th style="width:50px;">Pos X</th>
 				<th style="width:50px;">Pos Y</th>
 				<th style="width:10px;">Pos Z</th>
-				<th style="width:100px;">Base Name ID</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Base", "Name ID"})
+				</th>
 				<th style="width:100px;">Infocard ID</th>
 				<th style="max-width:100%;"></th>
 			</tr>
@@ -455,8 +457,12 @@ templ BaseTradesShared(disco types.DiscoveryIDs) {
 				<th style="width:100px;">Dest. Faction</th>
 				<th style="width:100px;">Dest. Name</th>
 				<th style="width:100px;">Dest. Region</th>
-				<th style="width:50px;">Price To Buy</th>
-				<th style="width:50px;">Price To sell</th>
+				<th style="width:50px;">
+					@MultiLinestring([]string{"Price", "To Buy"})
+				</th>
+				<th style="width:50px;">
+					@MultiLinestring([]string{"Price", "To sell"})
+				</th>
 				<th style="width:50px;">Commodity Nick</th>
 				<th style="width:50px;">Dest. Nickname</th>
 				<th style="width:50px;">Dest.X</th>

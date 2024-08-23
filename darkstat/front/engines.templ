@@ -34,8 +34,12 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Cruise", "Charge", "Time"})
 				</th>
-				<th style="width:25px;">Linear Drag</th>
-				<th style="width:25px;">Max Force</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Linear", "Drag"})
+				</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Max", "Force"})
+				</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Reverse", "Fraction"})
 				</th>

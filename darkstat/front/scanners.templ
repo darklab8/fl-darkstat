@@ -25,7 +25,9 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco types.D
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Range</th>
-				<th style="width:25px;">Cargo Range</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Cargo", "Range"})
+				</th>
 				<th style="width:25px;">Lootable</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>

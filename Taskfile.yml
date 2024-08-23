@@ -69,14 +69,14 @@ tasks:
       - GOOS=linux GOARCH=arm64 go build -v -o dist/darkstat-linux-arm64 main.go
       - GOOS=windows GOARCH=amd64 go build -v -o dist/darkstat-windows-amd64.exe main.go
       - GOOS=windows GOARCH=arm64 go build -v -o dist/darkstat-windows-arm64.exe main.go
+      - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkstat-macos-amd64 main.go
+      - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkstat-macos-arm64 main.go
 
       # We can build for those too, but i don't think they are needed
       # - GOOS=linux GOARCH=386 go build -v -o dist/darkstat-linux-386 main.go
       # - GOOS=linux GOARCH=arm go build -v -o dist/darkstat-linux-arm main.go
       # - GOOS=windows GOARCH=386 go build -v -o dist/darkstat-windows-386.exe main.go
       # - GOOS=windows GOARCH=arm go build -v -o dist/darkstat-windows-arm.exe main.go
-      # - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkstat-macos-amd64 main.go
-      # - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkstat-macos-arm64 main.go
 
   hook:prod:
     cmds:
