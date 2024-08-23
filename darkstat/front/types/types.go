@@ -52,4 +52,6 @@ type DiscoveryIDs struct {
 	TractorsByID map[cfgtype.TractorID]configs_export.Tractor
 	Config       *techcompat.Config
 	LatestPatch  autopatcher.Patch
+
+	Infocards configs_export.Infocards
 }

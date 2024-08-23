@@ -294,6 +294,7 @@ func (l *Linker) Link() *builder.Builder {
 				LatestPatch:  l.mapped.Discovery.LatestPatch,
 			}
 		}
+		disco_ids.Infocards = l.configs.Infocards
 	})
 
 	timeit.NewTimerMF("linking main stuff", func() {

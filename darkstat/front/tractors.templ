@@ -80,7 +80,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 									@TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor, tab_mode), "") {
 										<td class="search-included">{ tractor.Name }</td>
 										@TractorValues(tractor)
-										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "")
+										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "", disco)
 									}
 								}
 							</tbody>

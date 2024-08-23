@@ -28,7 +28,7 @@ const (
 	FactionShowRephacks
 )
 
-templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm PinMod) {
+templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm PinMod, disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -42,7 +42,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 				if mode == FactionShowRephacks {
 					<th style="width:50px;">
 						@MultiLinestring([]string{"Has", "Rephacks"})
-						</th>
+					</th>
 				}
 				<th style="width:50px;">
 					@MultiLinestring([]string{"Obj. Destr.", "Rep.Cng."})
@@ -77,7 +77,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					<td>{ fmt.Sprintf("%.2f", faction.MissionAbort) }</td>
 					<td class="search-included">{ strconv.Itoa(faction.InfonameID) }</td>
 					<td class="search-included">{ strconv.Itoa(faction.InfocardID) }</td>
-					@TdInfoCardClick(faction.Infocard, faction.Nickname, pinm)
+					@TdInfoCardClick(faction.Infocard, faction.Nickname, pinm, disco)
 				}
 			}
 		</tbody>
@@ -98,10 +98,10 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 				<div id="table-top">
 					@FilterBar(types.DiscoveryIDs{})
 					<div id="table-top-main">
-						@FactionTable(factions, mode, MainMode)
+						@FactionTable(factions, mode, MainMode, disco)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@FactionTable(factions, mode, PinMode)
+						@FactionTable(factions, mode, PinMode, disco)
 					</div>
 				</div>
 				<div id="table-bottom">

@@ -94,7 +94,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 					<td class="search-included">{ mine.Nickname } </td>
 					<td class="search-included">{ strconv.Itoa(mine.IdsName) } </td>
 					<td class="search-included">{ strconv.Itoa(mine.IdsInfo) } </td>
-					@TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm)
+					@TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, disco)
 				}
 			}
 		</tbody>

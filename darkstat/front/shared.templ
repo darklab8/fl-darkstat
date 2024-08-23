@@ -397,10 +397,10 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				</th>
 				if is_commodity {
 					<th style="width:25px;">
-						@MultiLinestring([]string{"Price", "To","Sell"})
+						@MultiLinestring([]string{"Price", "To", "Sell"})
 					</th>
 					<th style="width:25px;">
-						@MultiLinestring([]string{"Price", "To","Buy"})
+						@MultiLinestring([]string{"Price", "To", "Buy"})
 					</th>
 				} else {
 					<th style="width:50px;">Price</th>
@@ -588,16 +588,17 @@ templ FilterBar(disco types.DiscoveryIDs) {
 			background: var(--color_background);
 		}
 
-		#table-top-panel #filterinput {
+		#table-top-panel #filterinput, #filterinput_infocard {
 			width:100%;
 		}
 
-		#table-top-panel #filterinput:focus {
+		#table-top-panel #filterinput:focus, #filterinput_infocard:focus {
 			outline: none;
 		}
 	</style>
 	<div id="table-top-panel">
 		<input type="text" id="filterinput" onkeyup="FilteringFunction()" placeholder="Search rows by any content: name, faction, system and etc.."/>
+		<input type="text" id="filterinput_infocard" onkeyup="FilteringFunction()" placeholder="Search rows by infocards content"/>
 		if bool(disco.Show) {
 			<select name="IDs" id="tractor_id_selector" onchange="FilteringFunction()">
 				<option value="">Tech compatibility by Tractor ID </option>
@@ -661,7 +662,8 @@ templ TdDisco(
 	}
 }
 
-templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod) {
+templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, disco types.DiscoveryIDs) {
+	@EmbedInfocardForSearch(disco.Infocards, infocardKey)
 	if pinm == PinMode {
 		<td
 			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
@@ -709,8 +711,18 @@ func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.Inf
 	return ""
 }
 
+func GetInfocard(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
+	if infocard_lines, ok := infocards[infokey]; ok {
+		return strings.Join(infocard_lines, "")
+	}
+	return ""
+}
+
 templ EmbedInfocardForSearch(infocards configs_export.Infocards, infokey configs_export.InfocardKey) {
-	<span style="display:none;">{ GetFirstLine(infocards, infokey) }</span>
+	<td style="display:none;">
+		<span style="display:none;" class="search-included">{ GetFirstLine(infocards, infokey) }</span>
+		<span style="display:none;" class="search-infocard">{ GetInfocard(infocards, infokey) }</span>
+	</td>
 }
 
 templ BottomFilterBar() {

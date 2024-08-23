@@ -63,8 +63,10 @@ function LoadSelectedTractorID() {
 function FilteringFunction() {
     // Declare variables
     // console.log("triggered FilteringFunction")
-    let input, filter, table, tr, i, txtValue;
+    let input, filter, filter_infocard, table, tr, i, txtValue, txtValue_infocard;
     input = document.getElementById("filterinput");
+    input_infocard = document.getElementById("filterinput_infocard");
+    filter_infocard = input_infocard.value.toUpperCase();
     filter = input.value.toUpperCase();
     table = document.querySelector("#table-top table");
     tr = table.getElementsByTagName("tr");
@@ -110,6 +112,12 @@ function FilteringFunction() {
         }
         txtValue = txtValues.join('');
 
+        let infocards = row.getElementsByClassName("search-infocard");
+        txtValue_infocard = '';
+        if (infocards.length > 0) {
+            txtValue_infocard = infocards[0].textContent || infocards[0].innerText
+        }
+
         // Refresh tech compat value
         let techcompat_visible = true;
         cell = row.getElementsByClassName("tech_compat")[0];
@@ -131,7 +139,7 @@ function FilteringFunction() {
             // console.log("compatibility=", compatibility, "tractor_id_selected=", tractor_id_selected, "techcompat_visible=", techcompat_visible)
         }
 
-        if (txtValue.toUpperCase().indexOf(filter) > -1 && techcompat_visible === true) {
+        if ((txtValue.toUpperCase().indexOf(filter) > -1 && txtValue_infocard.toUpperCase().indexOf(filter_infocard) > -1) && techcompat_visible === true) {
             tr[i].style.display = "";
             // console.log("row-i", i, "is made visible");
         } else {

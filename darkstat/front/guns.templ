@@ -73,7 +73,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 				<th style="width:5px;">Refire</th>
 				if mode == GunsMissiles {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Max","Angular", "Velocity"})
+						@MultiLinestring([]string{"Max", "Angular", "Velocity"})
 					</th>
 				}
 				<th style="width:5px;">
@@ -165,7 +165,6 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		<td class="search-included">{ gun.DamageType }</td>
 		<td class="search-included">
 			{ gun.Nickname }
-			@EmbedInfocardForSearch(infocards, configs_export.InfocardKey(gun.Nickname))
 		</td>
 		<td class="search-included">{ gun.HpType } </td>
 		if settings.Env.IsDetailed {
@@ -175,7 +174,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		}
 		<td class="search-included">{ strconv.Itoa(gun.IdsName) } </td>
 		<td class="search-included">{ strconv.Itoa(gun.IdsInfo) } </td>
-		@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm)
+		@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, disco)
 	}
 }
 

@@ -36,10 +36,10 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					@MultiLinestring([]string{"Constant", "Power", "Draw"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Rebuild", "Power","Draw"})
+					@MultiLinestring([]string{"Rebuild", "Power", "Draw"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Off", "Power","Draw"})
+					@MultiLinestring([]string{"Off", "Power", "Draw"})
 				</th>
 				<th style="width:25px;">Toughness</th>
 				<th style="width:25px;">Hit Pts</th>
@@ -74,7 +74,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					<td class="search-included">{ shield.HpType } </td>
 					<td class="search-included">{ strconv.Itoa(shield.IdsName) } </td>
 					<td class="search-included">{ strconv.Itoa(shield.IdsInfo) } </td>
-					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm)
+					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, disco)
 				}
 			}
 		</tbody>
