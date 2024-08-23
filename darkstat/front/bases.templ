@@ -590,14 +590,14 @@ func TradeRouteUrl(combo_route *configs_export.ComboTradeRoute) string {
 templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute, disco types.DiscoveryIDs) {
 	@InfocardShared() {
 		<style>
-			.infocard_p {
+			.infocard p {
 				font-size: 1.0em;
 			}
 		</style>
-		<p class="infocard_p">{ ">" } AvgTradeLaneSpeed: { strconv.Itoa(trades.AvgTradeLaneSpeed) }</p>
-		<p class="infocard_p">{ ">" } JumpHoleDelaySec: { strconv.Itoa(trades.JumpHoleDelaySec) }</p>
-		<p class="infocard_p">{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
-		<p class="infocard_p">{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>
+		<p>{ ">" } AvgTradeLaneSpeed: { strconv.Itoa(trades.AvgTradeLaneSpeed) }</p>
+		<p>{ ">" } JumpHoleDelaySec: { strconv.Itoa(trades.JumpHoleDelaySec) }</p>
+		<p>{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
+		<p>{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>
 		<br/>
 		@RouteInfo("Transport", combo_route.Transport)
 		if disco.Show {
@@ -610,13 +610,13 @@ templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute, disco types.Di
 }
 
 templ RouteInfo(name string, route *configs_export.TradeRoute) {
-	<p class="infocard_p">{ name } Route:</p>
-	<p class="infocard_p">{ ">" } Avg Cruise Speed: { strconv.Itoa(route.GetCruiseSpeed()) }</p>
-	<p class="infocard_p">{ ">" } Visit Freighter Only JHs: { strconv.FormatBool(route.GetCanVisitFreighterOnlyJH()) }</p>
+	<p>{ name } Route:</p>
+	<p>{ ">" } Avg Cruise Speed: { strconv.Itoa(route.GetCruiseSpeed()) }</p>
+	<p>{ ">" } Visit Freighter Only JHs: { strconv.FormatBool(route.GetCanVisitFreighterOnlyJH()) }</p>
 	for _, path := range route.GetPaths() {
 		if path.NextName != "" {
 			if path.Dist != 0 {
-				<p class="infocard_p">{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) [ { path.SectorCoord } ] - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
+				<p>{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) [ { path.SectorCoord } ] - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
 			}
 		}
 	}

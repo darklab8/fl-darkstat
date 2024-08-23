@@ -363,7 +363,7 @@ templ InfocardShared() {
 		.infocard {
 			margin: 10px;
 		}
-		.infocard_p {
+		.infocard p {
 			margin-top: 10px;
 			margin-bottom: 10px;
 		}
@@ -377,7 +377,7 @@ templ InfocardShared() {
 templ Infocard(info configs_export.Infocard) {
 	@InfocardShared() {
 		for _, line := range info {
-			<p class="infocard_p">
+			<p>
 				@templ.Raw(line)
 			</p>
 		}

@@ -147,6 +147,38 @@ function FilteringFunction() {
             // console.log("row-i", i, "is made invisible");
         }
     }
+
+    let infocards = document.getElementsByClassName("infocard")
+    if (infocards.length > 0) {
+        let infocard = infocards[0]
+        highlight(input_infocard, infocard)
+    }
+}
+
+
+/**
+ * Useful to highlight searched text in an infocard
+ * @param {HTMLElement} inputText
+ * @param {HTMLElement} text
+ */
+function highlight(input_infocard, infocard) {
+    let innerHTML = infocard.innerHTML;
+
+    innerHTML = innerHTML.replaceAll("<highlight>", "");
+    innerHTML = innerHTML.replaceAll("</highlight>", "");
+    document.getElementsByClassName("infocard")[0].innerHTML = innerHTML
+
+    // let index = infocard.innerHTML.toUpperCase().indexOf(input_infocard.value.toUpperCase());
+
+    if (input_infocard.value.length < 2) {
+        return
+    }
+
+    var searchMask = input_infocard.value;
+    var regEx = new RegExp(searchMask, "ig");
+    var replaceMask = "<highlight>" + input_infocard.value + "</highlight>";
+    innerHTML = innerHTML.replace(regEx, replaceMask);
+    document.getElementsByClassName("infocard")[0].innerHTML = innerHTML
 }
 
 /**
