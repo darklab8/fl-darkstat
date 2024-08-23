@@ -28,19 +28,33 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Ammo", "Price"})
 				</th>
-				<th style="width:25px;">Hull Dmg</th>
-				<th style="width:25px;">Shield Dmg</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Hull", "Dmg"})
+				</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Shield", "Dmg"})
+				</th>
 				<th style="width:25px;">Value</th>
 				<th style="width:25px;">Refire</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Detonation", "Distance"})
 				</th>
 				<th style="width:25px;">Radius</th>
-				<th style="width:25px;">Seek Dist.</th>
-				<th style="width:25px;">Top Speed</th>
-				<th style="width:25px;">Acceleration</th>
-				<th style="width:25px;">Linear Drag</th>
-				<th style="width:25px;">Lifetime</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Seek", "Dist."})
+				</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Top", "Speed"})
+				</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Accele", "ration"})
+				</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Linear", "Drag"})
+				</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Life", "time"})
+				</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Owner", "Safe"})
 				</th>
@@ -71,8 +85,8 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 					<td>{ strconv.Itoa(mine.SeekDistance) }</td>
 					<td>{ strconv.Itoa(mine.TopSpeed) }</td>
 					<td>{ strconv.Itoa(mine.Acceleration) }</td>
-					<td>{ fmt.Sprintf("%.6f",mine.LinearDrag) }</td>
-					<td>{ fmt.Sprintf("%.2f",mine.LifeTime) }</td>
+					<td>{ fmt.Sprintf("%.1f",mine.LinearDrag) }</td>
+					<td>{ fmt.Sprintf("%.1f",mine.LifeTime) }</td>
 					<td>{ strconv.Itoa(mine.OwnerSafe) }</td>
 					<td>{ fmt.Sprintf("%.2f",mine.Toughness) }</td>
 					<td>{ strconv.Itoa(mine.HitPts) }</td>

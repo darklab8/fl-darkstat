@@ -102,9 +102,9 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 				<th style="width:50px;">
 					@MultiLinestring([]string{"System", "Nick."})
 				</th>
-				<th style="width:50px;">Pos X</th>
-				<th style="width:50px;">Pos Y</th>
-				<th style="width:10px;">Pos Z</th>
+				<th style="width:20px;">Pos X</th>
+				<th style="width:20px;">Pos Y</th>
+				<th style="width:20px;">Pos Z</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Base", "Name ID"})
 				</th>
@@ -262,14 +262,20 @@ templ BaseMarketGoodsBase() {
 					@MultiLinestring([]string{"Price", "To Buy"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Level", "Required"})
+					@MultiLinestring([]string{"Lev.", "Req."})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Reputation", "Required"})
+					@MultiLinestring([]string{"Rep.", "Req."})
 				</th>
-				<th style="width:10px;">Base Sells</th>
-				<th style="width:10px;">Price Modifier</th>
-				<th style="width:10px;">Price Base</th>
+				<th style="width:10px;">
+					@MultiLinestring([]string{"Base", "Sells"})
+				</th>
+				<th style="width:10px;">
+					@MultiLinestring([]string{"Price", "Modifier"})
+				</th>
+				<th style="width:10px;">
+					@MultiLinestring([]string{"Price", "Base"})
+				</th>
 				<th style="width:10px;">Nickname</th>
 				<th style="width:10px;">HpType</th>
 				<th style="max-width:100%;"></th>

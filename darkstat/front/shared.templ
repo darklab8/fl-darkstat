@@ -397,10 +397,10 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				</th>
 				if is_commodity {
 					<th style="width:25px;">
-						@MultiLinestring([]string{"Price", "To Sell"})
+						@MultiLinestring([]string{"Price", "To","Sell"})
 					</th>
 					<th style="width:25px;">
-						@MultiLinestring([]string{"Price", "To Buy"})
+						@MultiLinestring([]string{"Price", "To","Buy"})
 					</th>
 				} else {
 					<th style="width:50px;">Price</th>
@@ -417,15 +417,15 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 					@MultiLinestring([]string{"Base", "Sells"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Level", "Required"})
+					@MultiLinestring([]string{"Lev.", "Req."})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Reputation", "Required"})
+					@MultiLinestring([]string{"Rep.", "Req."})
 				</th>
 				<th style="width:100px;">Base Nickname</th>
-				<th style="width:60px;">Pos X</th>
-				<th style="width:60px;">Pos Y</th>
-				<th style="width:60px;">Pos Z</th>
+				<th style="width:20px;">Pos X</th>
+				<th style="width:20px;">Pos Y</th>
+				<th style="width:20px;">Pos Z</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
