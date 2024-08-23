@@ -34,5 +34,5 @@
 }
 
 highlight {
-    background-color: yellow;
+    background-color: var(--infocard_text_highlight);
 }
