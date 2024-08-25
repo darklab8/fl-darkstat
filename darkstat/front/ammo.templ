@@ -1,6 +1,7 @@
 package front
 
 import (
+	"fmt"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
@@ -29,6 +30,15 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					@MultiLinestring([]string{"Ammo", "Limit"})
 				</th>
 				<th style="width:25px;">Volume</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Seeker", "Type"})
+				</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Seeker", "Range"})
+				</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Seeker", "Fov Deg"})
+				</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
@@ -45,7 +55,11 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					<td>{ strconv.FormatBool(configs_export.Buyable(ammo.Bases)) }</td>
 					<td>{ strconv.Itoa(ammo.HitPts) } </td>
 					<td>{ strconv.Itoa(ammo.AmmoLimit) }</td>
-					<td>{ strconv.Itoa(ammo.Volume) }</td>
+					<td>{ fmt.Sprintf("%.4f",ammo.Volume) }</td>
+					<td>{ fmt.Sprintf("%.2f",ammo.MunitionLifetime) }</td>
+					<td>{ ammo.SeekerType }</td>
+					<td>{ strconv.Itoa(ammo.SeekerRange) }</td>
+					<td>{ strconv.Itoa(ammo.SeekerFovDeg) }</td>
 					<td class="search-included">{ ammo.Nickname } </td>
 					<td class="search-included">{ strconv.Itoa(ammo.NameID) } </td>
 					<td class="search-included">{ strconv.Itoa(ammo.InfoID) } </td>

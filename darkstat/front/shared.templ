@@ -258,7 +258,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 		color: var(--color_text);
 		border-color: var(--color_border);
 
-		min-width: 50px;
+		min-width: 45px;
 		cursor: pointer;
 		min-height: 36px;
 	}
@@ -274,9 +274,9 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				@Button([]string{"Missions"}, urls.Missions, urls.Missions == url)
 				@Button([]string{"Factions"}, urls.Factions, urls.Factions == url)
 				@Button([]string{"Bribes"}, urls.Rephacks, urls.Rephacks == url)
-				@Button([]string{"Trades"}, urls.Trades, urls.Trades == url)
-				@Button([]string{"Ores"}, urls.Asteroids, urls.Asteroids == url)
-				@Button([]string{"Commodities"}, urls.Commodities, urls.Commodities == url)
+				@Button([]string{"Trade", "routes"}, urls.Trades, urls.Trades == url)
+				@Button([]string{"Ore", "routes"}, urls.Asteroids, urls.Asteroids == url)
+				@Button([]string{"Trade", "goods"}, urls.Commodities, urls.Commodities == url)
 				@Button([]string{"Guns"}, urls.Guns, urls.Guns == url)
 				@Button([]string{"Guns", "Mods"}, urls.GunModifiers, urls.GunModifiers == url)
 				@Button([]string{"Missiles"}, urls.Missiles, urls.Missiles == url)
@@ -301,9 +301,9 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				@Button([]string{"Missions"}, AllItemsUrl(urls.Missions), urls.Missions == url)
 				@Button([]string{"Factions"}, AllItemsUrl(urls.Factions), urls.Factions == url)
 				@Button([]string{"Bribes"}, AllItemsUrl(urls.Rephacks), urls.Rephacks == url)
-				@Button([]string{"Trades"}, AllItemsUrl(urls.Trades), urls.Trades == url)
+				@Button([]string{"Trade", "routes"}, AllItemsUrl(urls.Trades), urls.Trades == url)
 				@Button([]string{"Ores"}, AllItemsUrl(urls.Asteroids), urls.Asteroids == url)
-				@Button([]string{"Commodities"}, AllItemsUrl(urls.Commodities), urls.Commodities == url)
+				@Button([]string{"Trade", "goods"}, AllItemsUrl(urls.Commodities), urls.Commodities == url)
 				@Button([]string{"Guns"}, AllItemsUrl(urls.Guns), urls.Guns == url)
 				@Button([]string{"Guns", "Mods"}, AllItemsUrl(urls.GunModifiers), urls.GunModifiers == url)
 				@Button([]string{"Missiles"}, AllItemsUrl(urls.Missiles), urls.Missiles == url)
