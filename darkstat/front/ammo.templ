@@ -31,13 +31,16 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 				</th>
 				<th style="width:25px;">Volume</th>
 				<th style="width:25px;">
+					@MultiLinestring([]string{"Ammo", "Life","Time"})
+				</th>
+				<th style="width:25px;">
 					@MultiLinestring([]string{"Seeker", "Type"})
 				</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Seeker", "Range"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Seeker", "Fov Deg"})
+					@MultiLinestring([]string{"Seeker", "Fov","Deg"})
 				</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
