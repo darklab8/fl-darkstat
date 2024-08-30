@@ -55,7 +55,7 @@ function makeLeftRightTablesResizable() {
     let left_rect_left = 0;
     let right_rect_right = 0;
 
-    currentResizer.addEventListener('mousedown', function (e) {
+    function resize_start(e) {
         e.preventDefault()
         left_width_perc = element_left.style.width.replace('%', '');
         right_width_perc = element_right.style.width.replace('%', '');
@@ -68,7 +68,12 @@ function makeLeftRightTablesResizable() {
 
         window.addEventListener('mousemove', resize)
         window.addEventListener('mouseup', stopResize)
-    })
+        window.addEventListener('touchmove', resize)
+        window.addEventListener('touchup', stopResize)
+    }
+
+    currentResizer.addEventListener('mousedown', resize_start)
+    currentResizer.addEventListener('touchdown', resize_start)
 
     function resize(e) {
 
