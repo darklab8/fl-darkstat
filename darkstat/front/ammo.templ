@@ -79,8 +79,8 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, disco types.DiscoveryI
 	@TabMenu(urls.Ammo, mode2, disco)
 	@TabContent() {
 		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
+			@LeftTable(){
+				@TableTop(){
 					@FilterBar(disco)
 					<div id="table-top-main">
 						@AmmoTable(ammos, MainMode, disco)
@@ -88,19 +88,19 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, disco types.DiscoveryI
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@AmmoTable(ammos, PinMode, disco)
 					</div>
-				</div>
-				<div id="table-bottom">
+				}
+				@TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
-				</div>
-			</div>
-			<div id="infocard_view">
+				}
+			}
+			@InfocardTable(){
 				@InfocardShared()
-			</div>
+			}
 		</div>
 	}
 }

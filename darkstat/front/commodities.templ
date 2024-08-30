@@ -71,8 +71,8 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode ShowEmpty, disc
 	@TabMenu(urls.Commodities, mode, disco)
 	@TabContent() {
 		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
+			@LeftTable(){
+				@TableTop(){
 					@FilterBar(types.DiscoveryIDs{})
 					<div id="table-top-main">
 						@CommodityTable(commodities, MainMode, disco)
@@ -80,19 +80,19 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode ShowEmpty, disc
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@CommodityTable(commodities, PinMode, disco)
 					</div>
-				</div>
-				<div id="table-bottom">
+				}
+				@TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(true))
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(true))
 					</div>
-				</div>
-			</div>
-			<div id="infocard_view">
+				}
+			}
+			@InfocardTable(){
 				@InfocardShared()
-			</div>
+			}
 		</div>
 	}
 }

@@ -175,8 +175,8 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 	}
 	@TabContent() {
 		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
+			@LeftTable(){
+				@TableTop(){
 					@FilterBar(disco)
 					<div id="table-top-main">
 						@ShipTable(ships, mode, MainMode, disco, infocards)
@@ -184,8 +184,8 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@ShipTable([]configs_export.Ship{}, mode, PinMode, disco, infocards)
 					</div>
-				</div>
-				<div id="table-bottom">
+				}
+				@TableBottom(){
 					<div id="table-bottom-main">
 						if mode == ShipShowBases {
 							@GoodAtBaseSharedT(ShowAsCommodity(false))
@@ -200,11 +200,11 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
-				</div>
-			</div>
-			<div id="infocard_view">
+				}
+			}
+			@InfocardTable(){
 				@InfocardShared()
-			</div>
+			}
 		</div>
 	}
 }

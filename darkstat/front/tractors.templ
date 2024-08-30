@@ -64,8 +64,8 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 	}
 	@TabContent() {
 		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
+			@LeftTable(){
+				@TableTop(){
 					@FilterBar(types.DiscoveryIDs{})
 					<div id="table-top-main">
 						<table class="sortable">
@@ -86,8 +86,8 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 							</tbody>
 						</table>
 					</div>
-				</div>
-				<div id="table-bottom">
+				}
+				@TableBottom(){
 					<div id="table-bottom-main">
 						if tab_mode == TractorModShop {
 							@GoodAtBaseSharedT(ShowAsCommodity(false))
@@ -95,11 +95,11 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 							@IDRephacksShared()
 						}
 					</div>
-				</div>
-			</div>
-			<div id="infocard_view">
+				}
+			}
+			@InfocardTable(){
 				@InfocardShared()
-			</div>
+			}
 		</div>
 	}
 }

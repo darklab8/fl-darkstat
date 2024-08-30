@@ -1,0 +1,104 @@
+package front
+
+templ TableTop() {
+    <style>
+        #table-top {
+			height: 65%;
+			overflow: hidden;
+			border-style: solid;
+			border-width: 1px;
+			border-color: var(--color_border);
+			box-sizing: border-box;
+
+			display: flex;
+			flex-direction: column;
+		}
+    </style>
+    <div id="table-top" style="height: 65%;">
+        { children... }
+    </div>
+}
+templ TopBottomResizer() {
+    <style>
+        .resizer-top-bottom {
+            width: 100%;
+            height: 10px;
+            cursor: n-resize;
+            background-color: var(--color_border);
+        }
+    </style>
+    <div class="resizer-top-bottom"></div>
+    <script type="text/javascript">
+        (() => {
+            makeTopBottomTablesResizable()
+        })()
+    </script>
+}
+
+templ TableBottom(){
+    @TopBottomResizer()
+    <style>
+        #table-bottom {
+			overflow: hidden;
+			height: 35%;
+			border-style: solid;
+			border-width: 1px;
+			border-color: var(--color_border);
+			box-sizing: border-box;
+
+			display: flex;
+			flex-direction: row;
+		}
+    </style>
+    <div id="table-bottom" style="height: 35%;">
+        { children... }
+    </div>
+}
+
+templ LeftRightResizer() {
+    <style>
+        .resizer-left-right {
+            height: 100%;
+            width: 10px;
+            cursor: e-resize;
+            background-color: var(--color_border);
+        }
+    </style>
+    <div class="resizer-left-right"></div>
+    <script type="text/javascript">
+        (() => {
+            makeLeftRightTablesResizable()
+        })()
+    </script>
+}
+
+templ LeftTable() {
+    <style>
+        #table-wrapper {
+			width: 75%;
+			height: 100%;
+			box-sizing: border-box;
+		}
+    </style>
+    <div id="table-wrapper" style="width: 75%;">
+        { children... }
+    </div>
+}
+
+templ InfocardTable() {
+    @LeftRightResizer()
+    <style>
+        #infocard_view {
+			width: 25%;
+			overflow-y: scroll;
+			height: 100%;
+			border-style: solid;
+			border-width: 1px;
+			border-color: var(--color_border);
+			box-sizing: border-box;
+		}
+    </style>
+    <div id="infocard_view" style="width: 25%;">
+        { children... }
+    </div>
+}

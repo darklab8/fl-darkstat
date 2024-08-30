@@ -94,8 +94,8 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 	}
 	@TabContent() {
 		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
+			@LeftTable(){
+				@TableTop(){
 					@FilterBar(types.DiscoveryIDs{})
 					<div id="table-top-main">
 						@FactionTable(factions, mode, MainMode, disco)
@@ -103,8 +103,8 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@FactionTable(factions, mode, PinMode, disco)
 					</div>
-				</div>
-				<div id="table-bottom">
+				}
+				@TableBottom(){
 					<div id="table-bottom-main">
 						if mode == FactionShowBases {
 							@FactionRepsBase()
@@ -119,11 +119,11 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 							@BriberyBottomBase()
 						}
 					</div>
-				</div>
-			</div>
-			<div id="infocard_view">
+				}
+			}
+			@InfocardTable(){
 				@InfocardShared()
-			</div>
+			}
 		</div>
 	}
 }

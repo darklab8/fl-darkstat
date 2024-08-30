@@ -192,8 +192,8 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco t
 	}
 	@TabContent() {
 		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
+			@LeftTable(){
+				@TableTop(){
 					@FilterBar(disco)
 					<div id="table-top-main">
 						@GunTable(guns, mode, MainMode, disco, infocards)
@@ -201,8 +201,8 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco t
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@GunTable([]configs_export.Gun{}, mode, PinMode, disco, infocards)
 					</div>
-				</div>
-				<div id="table-bottom">
+				}
+				@TableBottom(){
 					<div id="table-bottom-main">
 						if mode == GunsShowBases || mode == GunsMissiles {
 							@GoodAtBaseSharedT(ShowAsCommodity(false))
@@ -217,11 +217,11 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco t
 							@GunShowModifiersShared()
 						}
 					</div>
-				</div>
-			</div>
-			<div id="infocard_view">
+				}
+			}
+			@InfocardTable(){
 				@InfocardShared()
-			</div>
+			}
 		</div>
 	}
 }

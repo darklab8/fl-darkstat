@@ -6,12 +6,21 @@ import (
 	"github.com/darklab8/fl-darkcore/darkcore/core_types"
 )
 
-//go:embed custom.js
+//go:embed custom/custom.js
 var CustomJSContent string
 
 var CustomJS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomJSContent,
 	Filename: "custom.js",
+	Kind:     core_types.StaticFileJS,
+}
+
+//go:embed custom/table_resizer.js
+var CustomResizerJSContent string
+
+var CustomJSResizer core_types.StaticFile = core_types.StaticFile{
+	Content:  CustomResizerJSContent,
+	Filename: "table_resizer.js",
 	Kind:     core_types.StaticFileJS,
 }
 

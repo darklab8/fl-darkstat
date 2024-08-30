@@ -207,8 +207,8 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 	}
 	@TabContent() {
 		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
+			@LeftTable(){
+				@TableTop(){
 					@FilterBar(types.DiscoveryIDs{})
 					<div id="table-top-main">
 						@BasesTable(bases, tab_mode, MainMode, disco)
@@ -216,8 +216,8 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@BasesTable(bases, tab_mode, PinMode, disco)
 					</div>
-				</div>
-				<div id="table-bottom">
+				}
+				@TableBottom(){
 					<div id="table-bottom-main">
 						if tab_mode == BaseShowShops {
 							@BaseMarketGoodsBase()
@@ -230,6 +230,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					
 						if tab_mode == BaseShowShops {
 							@BaseMarketGoodsBase()
 						} else if tab_mode == BaseShowMissions {
@@ -240,11 +241,11 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 							@BaseTradesShared(disco)
 						}
 					</div>
-				</div>
-			</div>
-			<div id="infocard_view">
+				}
+			}
+			@InfocardTable(){
 				@InfocardShared()
-			</div>
+			}
 		</div>
 	}
 }

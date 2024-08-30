@@ -85,8 +85,8 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco types.Disco
 	@TabMenu(urls.Engines, mode, disco)
 	@TabContent() {
 		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
+			@LeftTable(){
+				@TableTop(){
 					@FilterBar(disco)
 					<div id="table-top-main">
 						@EnginesTable(engines, MainMode, disco)
@@ -94,19 +94,19 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco types.Disco
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@EnginesTable(engines, PinMode, disco)
 					</div>
-				</div>
-				<div id="table-bottom">
+				}
+				@TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
-				</div>
-			</div>
-			<div id="infocard_view">
+				}
+			}
+			@InfocardTable(){
 				@InfocardShared()
-			</div>
+			}
 		</div>
 	}
 }

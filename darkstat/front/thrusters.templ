@@ -71,8 +71,8 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, disco type
 	@TabMenu(urls.Thrusters, mode2, disco)
 	@TabContent() {
 		<div class="splitter">
-			<div id="table-wrapper">
-				<div id="table-top">
+			@LeftTable(){
+				@TableTop(){
 					@FilterBar(disco)
 					<div id="table-top-main">
 						@ThrustersTable(thrusters, MainMode, disco)
@@ -80,19 +80,19 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, disco type
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
 						@ThrustersTable(thrusters, PinMode, disco)
 					</div>
-				</div>
-				<div id="table-bottom">
+				}
+				@TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false))
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(true))
 					</div>
-				</div>
-			</div>
-			<div id="infocard_view">
+				}
+			}
+			@InfocardTable(){
 				@InfocardShared()
-			</div>
+			}
 		</div>
 	}
 }
