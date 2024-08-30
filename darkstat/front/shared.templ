@@ -568,6 +568,11 @@ templ FilterBar(disco types.DiscoveryIDs) {
 			</select>
 		}
 	</div>
+	<script type="text/javascript">
+        (() => {
+            FilteringHook()
+        })()
+    </script>
 }
 
 templ PinSelectLeftRight(pinm PinMod, url string) {

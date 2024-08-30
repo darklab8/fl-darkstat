@@ -24,6 +24,15 @@ var CustomJSResizer core_types.StaticFile = core_types.StaticFile{
 	Kind:     core_types.StaticFileJS,
 }
 
+//go:embed custom/filtering.js
+var CustomFilteringJS string
+
+var CustomJSFiltering core_types.StaticFile = core_types.StaticFile{
+	Content:  CustomFilteringJS,
+	Filename: "filtering.js",
+	Kind:     core_types.StaticFileJS,
+}
+
 //go:embed common.css
 var CommonCSSContent string
 
