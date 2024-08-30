@@ -14,7 +14,7 @@ templ TableTop() {
 			flex-direction: column;
 		}
     </style>
-    <div id="table-top" style="height: 65%;">
+    <div id="table-top" style="height: calc(65% - 7px);">
         { children... }
     </div>
 }
@@ -50,7 +50,7 @@ templ TableBottom(){
 			flex-direction: row;
 		}
     </style>
-    <div id="table-bottom" style="height: 35%;">
+    <div id="table-bottom" style="height: calc(35% - 7px);">
         { children... }
     </div>
 }

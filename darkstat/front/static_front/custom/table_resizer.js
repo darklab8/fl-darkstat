@@ -32,8 +32,8 @@ function makeTopBottomTablesResizable() {
         var new_top_height = (e.pageY - top_rect_top) / original_top_height * top_height_perc
         var new_bottom_height = (bottom_rect_bottom - e.pageY) / original_botttom_height * botttom_height_perc
 
-        element_top.style.height = new_top_height + "%";
-        element_bottom.style.height = new_bottom_height + "%";
+        element_top.style.height = "calc(" + new_top_height + "% - 7px)";
+        element_bottom.style.height = "calc(" + new_bottom_height + "% - 7px)";
     }
 
     function stopResize() {
