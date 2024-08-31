@@ -1,6 +1,7 @@
 /* Tooltip container */
 .tooltip {
     display: inline-block;
+    position: relative;
 }
 
 /* Tooltip text */

@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"math"
 	"strconv"
 	"strings"
@@ -600,25 +601,47 @@ templ TradeRouteInfo(combo_route *configs_export.ComboTradeRoute, disco types.Di
 		<p>{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
 		<p>{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>
 		<br/>
-		@RouteInfo("Transport", combo_route.Transport)
+		@RouteInfo("Transport", combo_route.Transport, disco)
 		if disco.Show {
 			<br/>
-			@RouteInfo("Frigate", combo_route.Frigate)
+			@RouteInfo("Frigate", combo_route.Frigate, disco)
 			<br/>
-			@RouteInfo("Freighter", combo_route.Freighter)
+			@RouteInfo("Freighter", combo_route.Freighter, disco)
 		}
 	}
 }
 
-templ RouteInfo(name string, route *configs_export.TradeRoute) {
+templ RouteInfo(name string, route *configs_export.TradeRoute, disco types.DiscoveryIDs) {
 	<p>{ name } Route:</p>
 	<p>{ ">" } Avg Cruise Speed: { strconv.Itoa(route.GetCruiseSpeed()) }</p>
 	<p>{ ">" } Visit Freighter Only JHs: { strconv.FormatBool(route.GetCanVisitFreighterOnlyJH()) }</p>
 	for _, path := range route.GetPaths() {
 		if path.NextName != "" {
 			if path.Dist != 0 {
-				<p>{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) [ { path.SectorCoord } ] - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s</p>
+				<p>
+				@TooltipDestination(path.Pos, disco)
+				{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) [ { path.SectorCoord }] - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s
+				</p>
 			}
 		}
 	}
+}
+
+templ TooltipDestination(Pos cfgtype.Vector, disco types.DiscoveryIDs) {
+	<span class="tooltip">
+		@MagnifyingGlass()
+		<span class="tooltiptext" style="left: 0px; top: 30px;">
+			if disco.Show {
+				{ fmt.Sprintf("/wp %.0f %.0f %.0f",Pos.X,Pos.Y,Pos.Z) } <br/>
+				command to create waypoint
+			} else {
+				coordinates:
+				{ fmt.Sprintf("X %.0f,Y %.0f,Z %.0f",Pos.X,Pos.Y,Pos.Z) }
+			}
+		</span>
+	</span>
+}
+
+templ MagnifyingGlass() {
+	&#x1F50D;
 }
