@@ -14,8 +14,16 @@ function makeTopBottomTablesResizable() {
 
     currentResizer.addEventListener('mousedown', function (e) {
         e.preventDefault()
-        top_height_perc = element_top.style.height.replace('%', '');
-        botttom_height_perc = element_bottom.style.height.replace('%', '');
+
+        top_height_perc = 65
+        if (element_top.hasOwnProperty("height_perc")) {
+            top_height_perc = element_top.height_perc
+        }
+
+        botttom_height_perc = 35
+        if (element_bottom.hasOwnProperty("height_perc")) {
+            botttom_height_perc = element_bottom.height_perc
+        }
 
         original_top_height = parseFloat(getComputedStyle(element_top, null).getPropertyValue('height').replace('px', ''));
         original_botttom_height = parseFloat(getComputedStyle(element_bottom, null).getPropertyValue('height').replace('px', ''));
@@ -23,28 +31,30 @@ function makeTopBottomTablesResizable() {
         top_rect_top = element_top.getBoundingClientRect().top;
         bottom_rect_bottom = element_bottom.getBoundingClientRect().bottom;
 
-        window.addEventListener('mousemove', resize)
-        window.addEventListener('mouseup', stopResize)
+        window.addEventListener('mousemove', resize1)
+        window.addEventListener('mouseup', stopResize1)
     })
 
-    function resize(e) {
-
+    function resize1(e) {
         var new_top_height = (e.pageY - top_rect_top) / original_top_height * top_height_perc
         var new_bottom_height = (bottom_rect_bottom - e.pageY) / original_botttom_height * botttom_height_perc
 
         element_top.style.height = "calc(" + new_top_height + "% - 7px)";
         element_bottom.style.height = "calc(" + new_bottom_height + "% - 7px)";
+
+        element_top.height_perc = new_top_height
+        element_bottom.height_perc = new_bottom_height
     }
 
-    function stopResize() {
-        window.removeEventListener('mousemove', resize)
+    function stopResize1() {
+        window.removeEventListener('mousemove', resize1)
     }
 }
 
 function makeLeftRightTablesResizable() {
+    const currentResizer = document.querySelector('.resizer-left-right')
     const element_left = document.querySelector("#table-wrapper")
     const element_right = document.querySelector("#infocard_view")
-    const currentResizer = document.querySelector('.resizer-left-right')
 
     let left_width_perc = 0;
     let right_width_perc = 0;
@@ -71,7 +81,6 @@ function makeLeftRightTablesResizable() {
     })
 
     function resize(e) {
-
         var new_left_width = (e.pageX - left_rect_left) / original_left_width * left_width_perc
         var new_right_width = (right_rect_right - e.pageX) / original_right_width * right_width_perc
 
