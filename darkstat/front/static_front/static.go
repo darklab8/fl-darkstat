@@ -6,12 +6,12 @@ import (
 	"github.com/darklab8/fl-darkcore/darkcore/core_types"
 )
 
-//go:embed custom/custom.js
+//go:embed custom/main.js
 var CustomJSContent string
 
 var CustomJS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomJSContent,
-	Filename: "custom.js",
+	Filename: "custom_main.js",
 	Kind:     core_types.StaticFileJS,
 }
 
@@ -30,6 +30,15 @@ var CustomFilteringJS string
 var CustomJSFiltering core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomFilteringJS,
 	Filename: "filtering.js",
+	Kind:     core_types.StaticFileJS,
+}
+
+//go:embed custom/filter_route_min_dists.js
+var CustomFilteringRoutesJS string
+
+var CustomJSFilteringRoutes core_types.StaticFile = core_types.StaticFile{
+	Content:  CustomFilteringRoutesJS,
+	Filename: "filter_route_min_dists.js",
 	Kind:     core_types.StaticFileJS,
 }
 

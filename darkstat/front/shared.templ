@@ -548,17 +548,17 @@ templ FilterBar(disco types.DiscoveryIDs) {
 			background: var(--color_background);
 		}
 
-		#table-top-panel #filterinput, #filterinput_infocard {
+		.filter_input {
 			width:100%;
 		}
 
-		#table-top-panel #filterinput:focus, #filterinput_infocard:focus {
+		.filter_input:focus {
 			outline: none;
 		}
 	</style>
 	<div id="table-top-panel">
-		<input type="text" id="filterinput" onkeyup="FilteringFunction()" placeholder="Search rows by any content: name, faction, system and etc.."/>
-		<input type="text" id="filterinput_infocard" onkeyup="FilteringFunction()" placeholder="Search rows by infocards content"/>
+		<input type="text" id="filterinput" class="filter_input" onkeyup="FilteringFunction()" placeholder="Search rows by any content: name, faction, system and etc.."/>
+		<input type="text" id="filterinput_infocard" class="filter_input"  onkeyup="FilteringFunction()" placeholder="Search rows by infocards content"/>
 		if bool(disco.Show) {
 			<select name="IDs" id="tractor_id_selector" onchange="FilteringFunction()">
 				<option value="">Tech compatibility by Tractor ID </option>
@@ -567,12 +567,8 @@ templ FilterBar(disco types.DiscoveryIDs) {
 				}
 			</select>
 		}
+		{ children... }
 	</div>
-	<script type="text/javascript">
-        (() => {
-            FilteringHook()
-        })()
-    </script>
 }
 
 templ PinSelectLeftRight(pinm PinMod, url string) {

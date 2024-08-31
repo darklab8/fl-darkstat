@@ -87,6 +87,7 @@ func (l *Linker) Link() *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.CustomJS),
 		builder.NewStaticFileFromCore(static_front.CustomJSResizer),
 		builder.NewStaticFileFromCore(static_front.CustomJSFiltering),
+		builder.NewStaticFileFromCore(static_front.CustomJSFilteringRoutes),
 	}
 
 	build = builder.NewBuilder(params, static_files)

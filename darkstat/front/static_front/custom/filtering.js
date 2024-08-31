@@ -90,15 +90,6 @@ function FilteringFunction() {
     }
 }
 
-
-function FilteringHook() {
-    const filter1 = document.querySelector('#filterinput')
-    const filter2 = document.querySelector('#filterinput_infocard')
-
-    filter1.addEventListener('change', FilteringFunction)
-    filter2.addEventListener('change', FilteringFunction)
-}
-
 /**
  * Implements functionality for filtering search bar
  * @param {string} table_selector

@@ -10,6 +10,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"encoding/json"
 )
 
 func InfocardURL(infocard_key configs_export.InfocardKey) string {
@@ -145,7 +146,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 			<td>{ strconv.Itoa(base.Missions.Vignettes) }</td>
 		}
 		if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
-			<td>
+			<td class="route_transport" routesinfo={ RoutesInfoJSON(base.Trades, disco, trades.RouteTransport) } >
 				if base.BestTransportRoute != nil {
 					{ fmt.Sprintf("%2.2f", base.BestTransportRoute.GetProffitPerTime() * 100) }
 				} else {
@@ -153,14 +154,14 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 				}
 			</td>
 			if disco.Show {
-				<td>
+				<td class="route_frigate" routesinfo={ RoutesInfoJSON(base.Trades, disco, trades.RouteFrigate) }>
 					if base.BestFrigateRoute != nil {
 						{ fmt.Sprintf("%2.2f", base.BestFrigateRoute.GetProffitPerTime() * 100) }
 					} else {
 						0
 					}
 				</td>
-				<td>
+				<td class="route_freighter" routesinfo={ RoutesInfoJSON(base.Trades, disco, trades.RouteFreighter) }>
 					if base.BestFreighterRoute != nil {
 						{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.GetProffitPerTime() * 100) }
 					} else {
@@ -210,7 +211,17 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-					@FilterBar(types.DiscoveryIDs{})
+					@FilterBar(types.DiscoveryIDs{}) {
+						if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
+							<input
+								type="text"
+								id="input_route_min_dist"
+								class="filter_input" 
+								placeholder="Trading route minimal distance (in seconds)"
+								onkeyup="FilteringForDistances()"
+							/>
+						}
+					}
 					<div id="table-top-main">
 						@BasesTable(bases, tab_mode, MainMode, disco)
 					</div>
@@ -491,6 +502,37 @@ templ TradeRouteHumanTime(route *configs_export.TradeRoute) {
 	} else {
 		INF
 	}
+}
+
+
+type Path struct{
+	ProffitPetTime float64
+	TotalSeconds float64
+}
+
+func RoutesInfoJSON(trade_routes configs_export.Trades, disco types.DiscoveryIDs, route_type trades.RouteShipType) string {
+	var result []Path
+	for _, trade_route := range trade_routes.TradeRoutes {
+		switch route_type {
+			case trades.RouteTransport:
+				result = append(result, Path{
+					ProffitPetTime: trade_route.Transport.GetProffitPerTime(),
+					TotalSeconds: trade_route.Transport.GetTime(),
+				})
+			case trades.RouteFrigate:
+				result = append(result, Path{
+					ProffitPetTime: trade_route.Frigate.GetProffitPerTime(),
+					TotalSeconds: trade_route.Frigate.GetTime(),
+				})
+			case trades.RouteFreighter:
+				result = append(result, Path{
+					ProffitPetTime: trade_route.Freighter.GetProffitPerTime(),
+					TotalSeconds: trade_route.Freighter.GetTime(),
+				})
+			}
+	}
+	bytes, _ := json.Marshal(result)
+	return string(bytes)
 }
 
 templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseMode, disco types.DiscoveryIDs) {
