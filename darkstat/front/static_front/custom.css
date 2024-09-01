@@ -41,3 +41,7 @@ highlight {
 .magni_glass {
     opacity: 0.45;
 }
+
+th {
+    z-index: 1;
+}
