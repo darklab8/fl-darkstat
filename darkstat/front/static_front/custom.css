@@ -37,3 +37,7 @@
 highlight {
     background-color: var(--infocard_text_highlight);
 }
+
+.magni_glass {
+    opacity: 0.45;
+}
