@@ -41,7 +41,7 @@ function FilteringFunction() {
     }
 
     // Loop through all table rows, and hide those who don't match the search query
-    for (i = 1; i < tr.length; i++) {
+    for (let i = 1; i < tr.length; i++) {
         // row = document.getElementById("bottominfo_dsy_councilhf")
         row = tr[i];
 
@@ -98,7 +98,7 @@ function FilteringFunction() {
 function FilteringForAnyTable(table_selector, input_selector) {
     // Declare variables
     // console.log("triggered FilteringFunction")
-    let input, filter, table, tr, i, txtValue;
+    let input, filter, table, tr, txtValue;
     input = document.getElementById(input_selector); // "filterinput"
     filter = input.value.toUpperCase();
     table = document.querySelector(table_selector); // "#table-top table"
@@ -106,15 +106,23 @@ function FilteringForAnyTable(table_selector, input_selector) {
 
 
     // Loop through all table rows, and hide those who don't match the search query
-    for (i = 1; i < tr.length; i++) {
+    for (let i = 1; i < tr.length; i++) {
         row = tr[i];
         txtValue = row.textContent || row.innerText;
 
+        if (IsHavingLocksFromOtherFilters(row, 'darkstat_filtering1')) {
+            continue
+        }
+
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
             tr[i].style.display = "";
+            if ('darkstat_filtering1' in row) {
+                delete row.darkstat_filtering1
+            }
             // console.log("row-i", i, "is made visible");
         } else {
             tr[i].style.display = "none";
+            row.darkstat_filtering1 = true
             // console.log("row-i", i, "is made invisible");
         }
     }

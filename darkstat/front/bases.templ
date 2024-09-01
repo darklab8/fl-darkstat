@@ -553,10 +553,10 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 						{ trade_route.Transport.Commodity.Name }
 					}
 				</td>
-				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
+				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
 				if disco.Show {
-					<td>{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
-					<td>{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+					<td class="route_frigate" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
+					<td class="route_freighter" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
 				}
 				<td>
 					<span class="tooltip">
@@ -624,6 +624,17 @@ templ BaseTrades(name string, trade_routes configs_export.Trades, tab_mode BaseM
 				<td></td>
 			</tr>
 		}
+	}
+	if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
+		<script type="text/javascript">
+			// To prevent the variables from leaking into the global scope,
+		// this script is wrapped in an IIFE (Immediately Invoked Function Expression).
+			(() => {
+				FilteringForDistAfterRender()
+				const input_field = document.querySelector('#input_route_min_dist')
+				input_field.addEventListener('keyup', FilteringForDistAfterRender)
+			})()
+		</script>
 	}
 }
 

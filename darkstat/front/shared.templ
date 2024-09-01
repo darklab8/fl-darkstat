@@ -295,7 +295,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 script GoToUrl(current string, themes []string) {
 	let index = 0; 
 
-	for (var i=0, item; item = themes[i]; i++) {
+	for (let i=0, item; item = themes[i]; i++) {
 	// Look no need to do list[i] in the body of the loop
 		console.log("Looping: index ", i, "item" + item);
 		if (location.pathname == item) {
@@ -495,7 +495,7 @@ script Pin2(id string) {
 
 	rows = document.querySelectorAll("#pin"+id)
 	if (rows.length >= 1) {
-		for (i = 1; i < rows.length; i++) {
+		for (let i = 0; i < rows.length; i++) {
 			rows[i].remove()
 		}
 	}

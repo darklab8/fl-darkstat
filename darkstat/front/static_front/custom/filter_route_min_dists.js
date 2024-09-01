@@ -18,9 +18,11 @@ P.S. how to make it playing nice with other filters? mm... check some flag if it
 U can https://stackoverflow.com/questions/4258466/can-i-add-arbitrary-properties-to-dom-objects
 */
 
+const route_types = ["route_transport", "route_frigate", "route_freighter"];
+
 function FilteringForDistances() {
     // Declare variables
-    let input, filter, filter_infocard, table, tr, i, max_profit;
+    let input, filter, filter_infocard, table, tr, max_profit;
 
     input = document.getElementById("input_route_min_dist");
     min_distance_threshold = input.value;
@@ -33,13 +35,11 @@ function FilteringForDistances() {
     table = document.querySelector("#table-top table");
     tr = table.getElementsByTagName("tr");
 
-    const route_types = ["route_transport", "route_frigate", "route_freighter"];
-
     // Loop through all table rows, and hide those who don't match the search query
-    for (i = 1; i < tr.length; i++) {
+    for (let i = 1; i < tr.length; i++) {
         row = tr[i];
 
-        for (r = 0; r < route_types.length; r++) {
+        for (let r = 0; r < route_types.length; r++) {
             cell = row.getElementsByClassName(route_types[r])[0];
 
             routesinfo = JSON.parse(cell.attributes["routesinfo"].textContent);
@@ -49,7 +49,7 @@ function FilteringForDistances() {
             }
             // list of { ProffitPetTime TotalSeconds } number values
             max_profit = 0
-            for (j = 0; j < routesinfo.length; j++) {
+            for (let j = 0; j < routesinfo.length; j++) {
                 if (routesinfo[j].TotalSeconds > min_distance_threshold) {
                     if (routesinfo[j].ProffitPetTime > max_profit) {
                         max_profit = routesinfo[j].ProffitPetTime
@@ -58,6 +58,49 @@ function FilteringForDistances() {
             }
 
             cell.innerHTML = (100 * max_profit).toFixed(2);
+        }
+    }
+}
+
+function FilteringForDistAfterRender() {
+    let maximum_time_for_row, table, tr
+
+    table = document.querySelector("#table-bottom-main")
+    if (table === null || typeof (table) == 'undefined') {
+        return
+    }
+    tr = table.getElementsByTagName("tr");
+    input = document.getElementById("input_route_min_dist");
+    min_distance_threshold = input.value;
+    if (min_distance_threshold === '') {
+        min_distance_threshold = 0
+    }
+
+    for (let i = 1; i < tr.length; i++) {
+        row = tr[i];
+
+        if (IsHavingLocksFromOtherFilters(row, 'darkstat_filtering2')) {
+            continue
+        }
+
+        maximum_time_for_row = 0
+        // Find maximum time
+        for (let r = 0; r < route_types.length; r++) {
+            cell = row.getElementsByClassName(route_types[r])[0];
+
+            if (Number(cell.attributes["routetime"].textContent) > Number(maximum_time_for_row)) {
+                maximum_time_for_row = cell.attributes["routetime"].textContent
+            }
+        }
+
+        if (Number(maximum_time_for_row) < Number(min_distance_threshold)) {
+            tr[i].style.display = "none";
+            row.darkstat_filtering2 = true
+        } else {
+            tr[i].style.display = "";
+            if ('darkstat_filtering2' in row) {
+                delete row.darkstat_filtering2
+            }
         }
     }
 }
