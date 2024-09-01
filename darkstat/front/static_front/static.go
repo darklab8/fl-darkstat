@@ -6,6 +6,24 @@ import (
 	"github.com/darklab8/fl-darkcore/darkcore/core_types"
 )
 
+//go:embed custom/shared_vanilla.js
+var CustomJSCSharedVanilla string
+
+var CustomJSSharedVanilla core_types.StaticFile = core_types.StaticFile{
+	Content:  CustomJSCSharedVanilla,
+	Filename: "custom_shared_vanilla.js",
+	Kind:     core_types.StaticFileJS,
+}
+
+//go:embed custom/shared_discovery.js
+var CustomJSCSharedDiscovery string
+
+var CustomJSSharedDiscovery core_types.StaticFile = core_types.StaticFile{
+	Content:  CustomJSCSharedDiscovery,
+	Filename: "custom_shared_discovery.js",
+	Kind:     core_types.StaticFileJS,
+}
+
 //go:embed custom/shared.js
 var CustomJSCShared string
 

@@ -89,6 +89,8 @@ func (l *Linker) Link() *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.CustomJSFiltering),
 		builder.NewStaticFileFromCore(static_front.CustomJSFilteringRoutes),
 		builder.NewStaticFileFromCore(static_front.CustomJSShared),
+		builder.NewStaticFileFromCore(static_front.CustomJSSharedDiscovery),
+		builder.NewStaticFileFromCore(static_front.CustomJSSharedVanilla),
 	}
 
 	build = builder.NewBuilder(params, static_files)
@@ -326,15 +328,15 @@ func (l *Linker) Link() *builder.Builder {
 
 			builder.NewComponent(
 				urls.Index,
-				front.Index(types.ThemeLight),
+				front.Index(types.ThemeLight, disco_ids),
 			),
 			builder.NewComponent(
 				urls.DarkIndex,
-				front.Index(types.ThemeDark),
+				front.Index(types.ThemeDark, disco_ids),
 			),
 			builder.NewComponent(
 				urls.VanillaIndex,
-				front.Index(types.ThemeVanilla),
+				front.Index(types.ThemeVanilla, disco_ids),
 			),
 			builder.NewComponent(
 				urls.Bases,

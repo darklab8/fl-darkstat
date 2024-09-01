@@ -18,7 +18,6 @@ P.S. how to make it playing nice with other filters? mm... check some flag if it
 U can https://stackoverflow.com/questions/4258466/can-i-add-arbitrary-properties-to-dom-objects
 */
 
-const route_types = ["route_transport", "route_frigate", "route_freighter"];
 
 function FilteringForDistances() {
     // Declare variables
