@@ -1,7 +1,11 @@
 name: CI
 
 on:
-  workflow_dispatch: {}
+  push:
+    branches:
+    - "master"
+  schedule:
+    - cron: '0 9 * * *'
 
 jobs:
   github-pages:
@@ -59,12 +63,3 @@ jobs:
             FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
             FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
             DARKSTAT_DETAILED: "true"
-
-      - uses: actions/upload-pages-artifact@v1
-        with:
-            name: github-pages
-            path: ./build
-
-      - name: Deploy to pages
-        uses: actions/deploy-pages@v1
-        id: deployment
