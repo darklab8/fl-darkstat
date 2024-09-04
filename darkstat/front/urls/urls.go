@@ -11,7 +11,7 @@ const (
 	Bases           utils_types.FilePath = "bases.html"
 	Trades          utils_types.FilePath = "trades.html"
 	Asteroids       utils_types.FilePath = "Asteroids.html"
-	AllRoutes       utils_types.FilePath = "AllRoutes.html"
+	TravelRoutes    utils_types.FilePath = "TravelRoutes.html"
 	Missions        utils_types.FilePath = "missions.html"
 	Factions        utils_types.FilePath = "factions.html"
 	Rephacks        utils_types.FilePath = "rephacks.html"

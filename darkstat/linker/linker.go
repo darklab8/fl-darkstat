@@ -730,11 +730,11 @@ func (l *Linker) Link() *builder.Builder {
 				front.BasesT(data.MiningOperations, front.BaseTabOres, front.ShowEmpty(true), disco_ids),
 			),
 			builder.NewComponent(
-				urls.AllRoutes,
+				urls.TravelRoutes,
 				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseAllRoutes, front.ShowEmpty(false), disco_ids),
 			),
 			builder.NewComponent(
-				front.AllItemsUrl(urls.AllRoutes),
+				front.AllItemsUrl(urls.TravelRoutes),
 				front.BasesT(data.Bases, front.BaseAllRoutes, front.ShowEmpty(true), disco_ids),
 			),
 		)
