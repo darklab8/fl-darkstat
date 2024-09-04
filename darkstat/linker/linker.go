@@ -488,7 +488,11 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
-					front.BaseTrades(base.Name, base.Trades, front.BaseTabTrades, disco_ids),
+					front.BaseTrades(base.Name, base.BaseAllTradeRoutes, front.BaseTabTrades, disco_ids),
+				),
+				builder.NewComponent(
+					utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseAllRoutes)),
+					front.BaseRoutes(base.Name, base.BaseAllRoutes, front.BaseAllRoutes, disco_ids),
 				),
 			)
 
@@ -497,7 +501,16 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.TradeRouteUrl(combo_route)),
-						front.TradeRouteInfo(combo_route, disco_ids),
+						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, disco_ids),
+					),
+				)
+			}
+
+			for _, combo_route := range base.AllRoutes {
+				build.RegComps(
+					builder.NewComponent(
+						utils_types.FilePath(front.RouteUrl(combo_route)),
+						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, disco_ids),
 					),
 				)
 			}
@@ -507,7 +520,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOres)),
-					front.BaseTrades(base.Name, base.Trades, front.BaseTabOres, disco_ids),
+					front.BaseTrades(base.Name, base.BaseAllTradeRoutes, front.BaseTabOres, disco_ids),
 				),
 			)
 
@@ -516,7 +529,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.TradeRouteUrl(combo_route)),
-						front.TradeRouteInfo(combo_route, disco_ids),
+						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, disco_ids),
 					),
 				)
 			}
@@ -715,6 +728,14 @@ func (l *Linker) Link() *builder.Builder {
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Asteroids),
 				front.BasesT(data.MiningOperations, front.BaseTabOres, front.ShowEmpty(true), disco_ids),
+			),
+			builder.NewComponent(
+				urls.AllRoutes,
+				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseAllRoutes, front.ShowEmpty(false), disco_ids),
+			),
+			builder.NewComponent(
+				front.AllItemsUrl(urls.AllRoutes),
+				front.BasesT(data.Bases, front.BaseAllRoutes, front.ShowEmpty(true), disco_ids),
 			),
 		)
 	})

@@ -1,0 +1,141 @@
+package front
+
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-configs/configs/configs_export/trades"
+    "fmt"
+)
+
+
+templ BasesRoutesShared(disco types.DiscoveryIDs) {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:100px;">Base</th>
+				<th style="width:50px;">
+					@MultiLinestring([]string{"Transport", "Time(sec)"})
+				</th>
+				if disco.Show {
+					<th style="width:50px;">
+						@MultiLinestring([]string{"Frigate", "Time(sec)"})
+					</th>
+					<th style="width:50px;">
+						@MultiLinestring([]string{"Freighter", "Time(sec)"})
+					</th>
+				}
+				<th style="width:100px;">System</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Nav", "Map"})
+				</th>
+				<th style="width:100px;">Dest. Faction</th>
+				<th style="width:100px;">Dest. Region</th>
+				<th style="width:50px;">Dest. Nickname</th>
+				<th style="width:50px;">Dest.X</th>
+				<th style="width:50px;">Dest.Y</th>
+				<th style="width:50px;">Dest.Z</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+func RouteUrl(combo_route *configs_export.ComboRoute) string {
+	return "routes/route_" + combo_route.GetID()
+}
+
+templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode BaseMode, disco types.DiscoveryIDs) {
+	@BottomFilterBar()
+	<div class="bottom_name">{ name }</div>
+	@BasesRoutesShared(disco) {
+		for _, route := range routes.AllRoutes {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(route) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+				preload="mouseover"
+				onclick="RowHighlighter(this)"
+			>
+				<td>
+					@WriteLimit(200) {
+						{ route.Transport.ToBase.Name }
+					}
+				</td>
+				<td>
+					<span class="tooltip">
+						@TradeRouteHumanTime(route.Transport.Route)
+						<span class="tooltiptext">
+							if route.Transport.Route.GetDist() < trades.INF/2 {
+								{ fmt.Sprintf("%.0f", route.Transport.Route.GetTime()) } secs
+							} else {
+								INF secs
+							}
+						</span>
+					</span>
+				</td>
+				if disco.Show {
+					<td>
+						<span class="tooltip">
+							@TradeRouteHumanTime(route.Frigate.Route)
+							<span class="tooltiptext">
+								if route.Frigate.Route.GetDist() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", route.Frigate.Route.GetTime()) } secs
+								} else {
+									INF secs
+								}
+							</span>
+						</span>
+					</td>
+					<td>
+						<span class="tooltip">
+							@TradeRouteHumanTime(route.Freighter.Route)
+							<span class="tooltiptext">
+								if route.Freighter.Route.GetDist() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", route.Freighter.Route.GetTime()) } secs
+								} else {
+									INF secs
+								}
+							</span>
+						</span>
+					</td>
+				}
+				<td>
+					@WriteSystemName(route.Transport.ToBase.System)
+				</td>
+				<td>{ route.Transport.ToBase.SectorCoord }</td>
+				<td>
+					@WriteFactioName(route.Transport.ToBase.FactionName)
+				</td>
+
+				<td>
+					@WriteRegionName(route.Transport.ToBase.Region)
+				</td>
+
+				<td>
+					@WriteLimit(100) {
+						{ route.Transport.ToBase.Nickname }
+					}
+				</td>
+				<td>{ fmt.Sprintf("%.0f", route.Transport.ToBase.Pos.X) }</td>
+				<td>{ fmt.Sprintf("%.0f", route.Transport.ToBase.Pos.Y) }</td>
+				<td>{ fmt.Sprintf("%.0f", route.Transport.ToBase.Pos.Z) }</td>
+				<td></td>
+			</tr>
+		}
+	}
+	if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
+		<script type="text/javascript">
+			// To prevent the variables from leaking into the global scope,
+		// this script is wrapped in an IIFE (Immediately Invoked Function Expression).
+			(() => {
+				FilteringForDistAfterRender()
+				const input_field = document.querySelector('#input_route_min_dist')
+				input_field.addEventListener('keyup', FilteringForDistAfterRender)
+			})()
+		</script>
+	}
+}

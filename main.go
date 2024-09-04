@@ -56,7 +56,7 @@ func main() {
 		timer_linker.Close()
 
 		timer_buildall := timeit.NewTimer("building stuff linked_build.BuildAll()")
-		fs = linked_build.BuildAll()
+		fs = linked_build.BuildAll(true)
 		timer_buildall.Close()
 		timer_web.Close()
 		web.NewWeb(fs).Serve()
@@ -65,7 +65,7 @@ func main() {
 	switch Action(action) {
 
 	case Build:
-		linker.NewLinker().Link().BuildAll().RenderToLocal()
+		linker.NewLinker().Link().BuildAll(false)
 	case Web:
 		web()
 	case Version:
