@@ -496,20 +496,10 @@ func (l *Linker) Link() *builder.Builder {
 				),
 			)
 
-			for _, combo_route := range base.TradeRoutes {
-
-				build.RegComps(
-					builder.NewComponent(
-						utils_types.FilePath(front.TradeRouteUrl(combo_route)),
-						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, disco_ids),
-					),
-				)
-			}
-
 			for _, combo_route := range base.AllRoutes {
 				build.RegComps(
 					builder.NewComponent(
-						utils_types.FilePath(front.RouteUrl(combo_route)),
+						utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
 						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, disco_ids),
 					),
 				)
@@ -528,7 +518,7 @@ func (l *Linker) Link() *builder.Builder {
 
 				build.RegComps(
 					builder.NewComponent(
-						utils_types.FilePath(front.TradeRouteUrl(combo_route)),
+						utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
 						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, disco_ids),
 					),
 				)

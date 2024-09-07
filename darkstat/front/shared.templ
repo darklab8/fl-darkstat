@@ -245,7 +245,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				@Button([]string{"Mines"}, urls.Mines, urls.Mines == url)
 				@Button([]string{"CMs"}, urls.CounterMeasures, urls.CounterMeasures == url)
 				@Button([]string{"Shields"}, urls.Shields, urls.Shields == url)
-				@Button([]string{"Thrusters"}, urls.Thrusters, urls.Thrusters == url)
+				@Button([]string{"Thru","sters"}, urls.Thrusters, urls.Thrusters == url)
 				@Button([]string{"Ships"}, urls.Ships, urls.Ships == url)
 				@Button([]string{"Ship", "Details"}, urls.ShipDetails, urls.ShipDetails == url)
 				@Button([]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, urls.Tractors == url)
@@ -253,7 +253,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 					@Button([]string{"ID Rep", "hacks"}, urls.IDRephacks, urls.IDRephacks == url)
 				}
 				@Button([]string{"Engines"}, urls.Engines, urls.Engines == url)
-				@Button([]string{"Scanners"}, urls.Scanners, urls.Scanners == url)
+				@Button([]string{"Scan","ners"}, urls.Scanners, urls.Scanners == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@MultiLinestring([]string{"Show", "All"})
 				</button>
@@ -273,7 +273,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				@Button([]string{"Mines"}, AllItemsUrl(urls.Mines), urls.Mines == url)
 				@Button([]string{"CMs"}, AllItemsUrl(urls.CounterMeasures), urls.CounterMeasures == url)
 				@Button([]string{"Shields"}, AllItemsUrl(urls.Shields), urls.Shields == url)
-				@Button([]string{"Thrusters"}, AllItemsUrl(urls.Thrusters), urls.Thrusters == url)
+				@Button([]string{"Thru","sters"}, AllItemsUrl(urls.Thrusters), urls.Thrusters == url)
 				@Button([]string{"Ships"}, AllItemsUrl(urls.Ships), urls.Ships == url)
 				@Button([]string{"Ship", "Details"}, AllItemsUrl(urls.ShipDetails), urls.ShipDetails == url)
 				@Button([]string{types.GetCtx(ctx).TractorTabName}, AllItemsUrl(urls.Tractors), urls.Tractors == url)
@@ -281,7 +281,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 					@Button([]string{"ID Rep", "hacks"}, AllItemsUrl(urls.IDRephacks), urls.IDRephacks == url)
 				}
 				@Button([]string{"Engines"}, AllItemsUrl(urls.Engines), urls.Engines == url)
-				@Button([]string{"Scanners"}, AllItemsUrl(urls.Scanners), urls.Scanners == url)
+				@Button([]string{"Scan","ners"}, AllItemsUrl(urls.Scanners), urls.Scanners == url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@MultiLinestring([]string{"Don't", "Show All"})
 				</button>

@@ -43,8 +43,8 @@ templ BasesRoutesShared(disco types.DiscoveryIDs) {
 	</table>
 }
 
-func RouteUrl(combo_route *configs_export.ComboRoute) string {
-	return "routes/route_" + combo_route.GetID()
+func RouteUrl(route *configs_export.Route) string {
+	return "routes/route_" + route.GetID()
 }
 
 templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode BaseMode, disco types.DiscoveryIDs) {
@@ -53,7 +53,7 @@ templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode Base
 	@BasesRoutesShared(disco) {
 		for _, route := range routes.AllRoutes {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(route) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(route.Transport.Route) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"

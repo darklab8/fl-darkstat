@@ -550,7 +550,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 	@BaseTradesShared(disco) {
 		for _, trade_route := range trade_routes.TradeRoutes {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + TradeRouteUrl(trade_route) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
@@ -645,10 +645,6 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 			})()
 		</script>
 	}
-}
-
-func TradeRouteUrl(combo_route *configs_export.ComboTradeRoute) string {
-	return "trade_routes/trade_route_" + combo_route.GetID()
 }
 
 templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs_export.Route, FreighterRoute *configs_export.Route, disco types.DiscoveryIDs) {
