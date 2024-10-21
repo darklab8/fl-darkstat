@@ -44,7 +44,14 @@ func marshalIDs(data types.DiscoveryIDs, item_nickname string) string {
 	compat_by_id[""] = data.Config.GetCompatibilty(item_nickname, "")
 
 	for _, id := range data.Ids {
-		compat_by_id[string(id.Nickname)] = data.Config.GetCompatibilty(item_nickname, id.Nickname)
+		compat := data.Config.GetCompatibilty(item_nickname, id.Nickname)
+
+		// data size saving
+		if compat <= 0.1 {
+			continue
+		}
+
+		compat_by_id[string(id.Nickname)] = compat
 	}
 	bytes, _ := json.Marshal(compat_by_id)
 	return string(bytes)
