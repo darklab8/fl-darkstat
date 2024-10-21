@@ -47,11 +47,12 @@ function FilteringForDistances() {
                 continue
             }
             // list of { ProffitPetTime TotalSeconds } number values
+            // renamed to { p s } for client side not overloading reasons. otherwise html was taking 155mb
             max_profit = 0
             for (let j = 0; j < routesinfo.length; j++) {
-                if (routesinfo[j].TotalSeconds > min_distance_threshold) {
-                    if (routesinfo[j].ProffitPetTime > max_profit) {
-                        max_profit = routesinfo[j].ProffitPetTime
+                if (routesinfo[j].S > min_distance_threshold) {
+                    if (routesinfo[j].P > max_profit) {
+                        max_profit = routesinfo[j].P
                     }
                 }
             }

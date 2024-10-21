@@ -149,7 +149,10 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 			<td>{ strconv.Itoa(base.Missions.Vignettes) }</td>
 		}
 		if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
-			<td class="route_transport" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, disco, trades.RouteTransport) } >
+			<td
+				class="route_transport"
+				routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, disco, trades.RouteTransport) }
+			>
 				if base.BestTransportRoute != nil {
 					{ fmt.Sprintf("%2.2f", base.BestTransportRoute.GetProffitPerTime() * 100) }
 				} else {
@@ -217,15 +220,16 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 			@LeftTable(){
 				@TableTop(){
 					@FilterBar(types.DiscoveryIDs{}) {
-						if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
-							<input
-								type="text"
-								id="input_route_min_dist"
-								class="filter_input" 
-								placeholder="Trading route minimal distance (in seconds)"
-								onkeyup="FilteringForDistances()"
-							/>
-						}
+						// Turning off this feature because it has 170+mb bug size increasig for trades.html
+						// if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
+						// 	<input
+						// 		type="text"
+						// 		id="input_route_min_dist"
+						// 		class="filter_input" 
+						// 		placeholder="Trading route minimal distance (in seconds)"
+						// 		onkeyup="FilteringForDistances()"
+						// 	/>
+						// }
 					}
 					<div id="table-top-main">
 						@BasesTable(bases, tab_mode, MainMode, disco)
@@ -515,28 +519,36 @@ templ TradeRouteHumanTime(route *configs_export.Route) {
 
 
 type Path struct{
-	ProffitPetTime float64
-	TotalSeconds float64
+	P RoundedFloat // Proffit per time. Has to be Short named
+	S int // Total seconds
 }
 
+type RoundedFloat float64
+func (r RoundedFloat) MarshalJSON() ([]byte, error) {
+	return []byte(strconv.FormatFloat(float64(r), 'f', 5, 32)), nil
+}
+
+
 func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, disco types.DiscoveryIDs, route_type trades.RouteShipType) string {
+	return "" // turning on this feature because it is bugged
+
 	var result []Path
 	for _, trade_route := range trade_routes.TradeRoutes {
 		switch route_type {
 			case trades.RouteTransport:
 				result = append(result, Path{
-					ProffitPetTime: trade_route.Transport.GetProffitPerTime(),
-					TotalSeconds: trade_route.Transport.Route.GetTime(),
+					P: RoundedFloat(trade_route.Transport.GetProffitPerTime()),
+					S: int(trade_route.Transport.Route.GetTime()),
 				})
 			case trades.RouteFrigate:
 				result = append(result, Path{
-					ProffitPetTime: trade_route.Frigate.GetProffitPerTime(),
-					TotalSeconds: trade_route.Frigate.Route.GetTime(),
+					P: RoundedFloat(trade_route.Frigate.GetProffitPerTime()),
+					S: int(trade_route.Frigate.Route.GetTime()),
 				})
 			case trades.RouteFreighter:
 				result = append(result, Path{
-					ProffitPetTime: trade_route.Freighter.GetProffitPerTime(),
-					TotalSeconds: trade_route.Freighter.Route.GetTime(),
+					P: RoundedFloat(trade_route.Freighter.GetProffitPerTime()),
+					S: int(trade_route.Freighter.Route.GetTime()),
 				})
 			}
 	}
