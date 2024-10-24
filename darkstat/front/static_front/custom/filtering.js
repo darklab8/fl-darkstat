@@ -64,7 +64,12 @@ function FilteringFunction() {
         cell = row.getElementsByClassName("tech_compat")[0];
         if (typeof (cell) != 'undefined') {
             techcompats = JSON.parse(cell.attributes["techcompats"].textContent);
-            compatibility = techcompats[tractor_id_selected] * 100;
+
+            if (tractor_id_selected in techcompats) {
+                compatibility = techcompats[tractor_id_selected] * 100;
+            } else {
+                compatibility = 0;
+            }
             cell.innerHTML = compatibility + "%";
 
 
