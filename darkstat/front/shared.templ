@@ -545,6 +545,7 @@ templ FilterBar(disco types.DiscoveryIDs) {
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
+			min-height: 45px;
 		}
 		#table-top-panel select {
 			background: var(--color_background);
@@ -563,7 +564,7 @@ templ FilterBar(disco types.DiscoveryIDs) {
 		<input type="text" id="filterinput_infocard" class="filter_input"  onkeyup="FilteringFunction()" placeholder="Search rows by infocards content"/>
 		if bool(disco.Show) {
 			<select name="IDs" id="tractor_id_selector" onchange="FilteringFunction()">
-				<option value="">Tech compatibility by Tractor ID </option>
+				<option value="">Filter tech compatibility by Tractor ID</option>
 				for _, id := range disco.Ids {
 					<option value={ string(id.Nickname) }><span>{ id.Name }</span> <span>( { string(id.Nickname) } )</span></option>
 				}
