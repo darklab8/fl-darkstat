@@ -106,6 +106,9 @@ templ TabContent() {
 			border-color: var(--color_border);
 			box-sizing: border-box;
 		}
+		#table-bottom-main input {
+			background: var(--color_background_filter_bars);
+		}
 		#table-bottom-mainpin {
 			min-width: 50%;
 			flex-shrink: 1;
@@ -545,8 +548,11 @@ templ FilterBar(disco types.DiscoveryIDs) {
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
-			min-height: 45px;
 		}
+		#table-top-panel * {
+			background: var(--color_background_filter_bars);
+		}
+
 		#table-top-panel select {
 			background: var(--color_background);
 		}
