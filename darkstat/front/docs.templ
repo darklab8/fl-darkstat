@@ -130,7 +130,10 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
                 <li>Guns
                     <ul>
                         <li>All guns information and where to buy them, but some information about them in Missiles tab (including flaks)</li>
-                        <li>Some parameters show extra information for sustained usage of burst firing guns</li>
+                        if disco.Show {
+                            <li>Some parameters show extra information for sustained usage of burst firing guns</li>
+                            <li>Some guns have increased number of barrels affecting their DPS. This is visible in one of columns in square brackets (in same column where other burst params)</li>
+                        }
                     </ul>
                 </li>
                 <li>Guns Mods - Guns modifiers against specific shields. Shield average damage already accounts for using average shield modifiers and uses only obtainable shields.</li>
