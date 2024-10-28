@@ -74,8 +74,23 @@ func GetEnergyPerSec(gun configs_export.Gun) []string {
 	return []string{regular_value, fmt.Sprintf("( %6.0f )",gun.BurstFire.SustainedEnergyDamagePerSec)}
 }
 
+func GetBurstParams(gun configs_export.Gun) []string {
+	burst_ammo := ""
+	if gun.BurstFire != nil {
+		burst_ammo += strconv.Itoa(gun.BurstFire.Ammo)
+	}
+	if gun.NumBarrels != nil {
+		burst_ammo += fmt.Sprintf(" [%d]", *gun.NumBarrels)
+	}
+	if gun.BurstFire == nil {
+		return []string{burst_ammo}
+	}
+
+	return []string{burst_ammo, fmt.Sprintf("(%.2f)", gun.BurstFire.ReloadTime)}
+}
+
 func GetPowerPerSec(gun configs_export.Gun) []string {
-	regular_value := fmt.Sprintf("%6.0f",gun.PowerPerSec)
+	regular_value := fmt.Sprintf("%6.0f",gun.PowerUsagePerSec)
 	if gun.BurstFire == nil {
 		return []string{regular_value}
 	}
@@ -115,7 +130,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 				</th>
 				if disco.Show {
 					<th style="width:5px;">
-						@MultiLinestring([]string{"Burst", "Ammo", "(+Relo.)"})
+						@MultiLinestring([]string{"Burst", "Ammo","[Barrels]" ,"(+Relo.)"})
 					</th>
 				}
 				if mode == GunsMissiles {
@@ -199,10 +214,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		</td>
 		if disco.Show {
 			<td>
-				if gun.BurstFire != nil {
-					@MultiLinestring([]string{strconv.Itoa(gun.BurstFire.Ammo), fmt.Sprintf("(%.2f)", gun.BurstFire.ReloadTime)})
-				}
-				
+				@MultiLinestring(GetBurstParams(gun))
 			</td>
 		}
 		if mode == GunsMissiles {
