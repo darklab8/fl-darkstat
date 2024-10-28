@@ -8,13 +8,8 @@ import (
 
 const CommandWp string = "/wp x y z"
 
-templ DocsEntry(theme types.Theme, disco types.DiscoveryIDs) {
-    @Html5(theme, disco) {
-		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
-    }
-}
 
-templ DocsT(theme types.Theme, mode2 ShowEmpty, disco types.DiscoveryIDs) {
+templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
     @TabMenu(urls.Docs, mode2, disco)
     @TabContent() {
         <style>
@@ -117,6 +112,9 @@ templ DocsT(theme types.Theme, mode2 ShowEmpty, disco types.DiscoveryIDs) {
                     <li>On specific route at bottom table row click, it will show exact path to show. On hover to magnifying glass it will tell waypoint coordinates</li>
                     if disco.Show {
                         <li>Trade routes are preshown fo<span></span>r Transport, Frigate and Freighter parameters of Discovey</li>
+                        <li>Transports have 350 top speed. Too large for freighter's jump holes</li>
+                        <li>Frigates 500 top speed. Too large for freighter's jump holes</li> 
+                        <li>Freighters 500 top speed and have ability to use freighter only jump holes, which are limited to 650 cargo size</li>
                     }
                 </ul>
                 </li>
@@ -132,7 +130,7 @@ templ DocsT(theme types.Theme, mode2 ShowEmpty, disco types.DiscoveryIDs) {
                 <li>Guns - All guns information and where to buy them, but some information about them in Missiles tab (including flaks)</li>
                 <li>Guns Mods - Guns modifiers against specific shields. Shield average damage already accounts for using average shield modifiers and uses only obtainable shields.</li>
                 <li>Missiles - tab with missiles and flak guns</li>
-                <li>Ammo - ammo and where to buy it. Convinient to find Amomaly Scanner Batteries </li>
+                <li>Ammo - ammo and where to buy it. Convinient place to find Anomaly Scanner Batteries </li>
                 <li>Mines - mine launchers. For their ammo see "Ammo" tab ;)</li>
                 <li>CMs - Countermeasures and where to find them</li>
                 <li>Shields - Shields and where to buy them</li>

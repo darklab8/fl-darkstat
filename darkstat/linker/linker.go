@@ -335,12 +335,16 @@ func (l *Linker) Link() *builder.Builder {
 
 		build.RegComps(
 			builder.NewComponent(
+				"index_"+"docs.html",
+				front.DocsEntry(types.ThemeLight, disco_ids),
+			),
+			builder.NewComponent(
 				front.AllItemsUrl(urls.Docs),
-				front.DocsT(types.ThemeLight, front.ShowEmpty(true), disco_ids),
+				front.DocsT(front.ShowEmpty(true), disco_ids),
 			),
 			builder.NewComponent(
 				urls.Docs,
-				front.DocsT(types.ThemeLight, front.ShowEmpty(false), disco_ids),
+				front.DocsT(front.ShowEmpty(false), disco_ids),
 			),
 			builder.NewComponent(
 				urls.Index,

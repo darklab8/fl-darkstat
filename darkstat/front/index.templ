@@ -152,3 +152,9 @@ templ Index(theme types.Theme, disco types.DiscoveryIDs) {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
 	}
 }
+
+templ DocsEntry(theme types.Theme, disco types.DiscoveryIDs) {
+    @Html5(theme, disco) {
+		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Docs.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
+    }
+}
