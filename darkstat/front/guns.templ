@@ -42,6 +42,46 @@ const (
 	GunsMissiles
 )
 
+func GetRefire(gun configs_export.Gun) []string {
+	regular_value := fmt.Sprintf("%6.2f", gun.Refire)
+	if gun.BurstFire == nil {
+		return []string{regular_value}
+	}
+	return []string{regular_value, fmt.Sprintf("( %6.2f )", gun.BurstFire.SustainedRefire)}
+}
+
+func GetHullPerSec(gun configs_export.Gun) []string {
+	regular_value := fmt.Sprintf("%6.0f",gun.HullDamagePerSec)
+	if gun.BurstFire == nil {
+		return []string{regular_value}
+	}
+	return []string{regular_value, fmt.Sprintf("( %6.0f )",gun.BurstFire.SustainedHullDamagePerSec)}
+}
+
+func GetShieldPerSec(gun configs_export.Gun) []string {
+	regular_value := fmt.Sprintf("%6.0f",gun.AvgShieldDamagePerSec)
+	if gun.BurstFire == nil {
+		return []string{regular_value}
+	}
+	return []string{regular_value, fmt.Sprintf("( %6.0f )",gun.BurstFire.SustainedAvgShieldDamagePerSec)}
+}
+
+func GetEnergyPerSec(gun configs_export.Gun) []string {
+	regular_value := fmt.Sprintf("%6.0f",gun.EnergyDamagePerSec)
+	if gun.BurstFire == nil {
+		return []string{regular_value}
+	}
+	return []string{regular_value, fmt.Sprintf("( %6.0f )",gun.BurstFire.SustainedEnergyDamagePerSec)}
+}
+
+func GetPowerPerSec(gun configs_export.Gun) []string {
+	regular_value := fmt.Sprintf("%6.0f",gun.PowerPerSec)
+	if gun.BurstFire == nil {
+		return []string{regular_value}
+	}
+	return []string{regular_value, fmt.Sprintf("( %6.0f )",gun.BurstFire.SustainedPowerUsagePerSec)}
+}
+
 templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
 	<table class="sortable">
 		<thead>
@@ -70,22 +110,31 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 				<th style="width:5px;">
 					@MultiLinestring([]string{"Power", "Usage"})
 				</th>
-				<th style="width:5px;">Refire</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Refire", "(+Sust.)"})
+				</th>
+				if disco.Show {
+					<th style="width:5px;">
+						@MultiLinestring([]string{"Burst", "Ammo", "(+Relo.)"})
+					</th>
+				}
 				if mode == GunsMissiles {
 					<th style="width:50px;">
 						@MultiLinestring([]string{"Max", "Angular", "Velocity"})
 					</th>
 				}
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Hull", "Dmg/s"})
+					@MultiLinestring([]string{"Hull", "Dmg/s", "(+Sust.)"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Avg", "Sheld", "Dmg/s"})
+					@MultiLinestring([]string{"Avg", "Sheld", "Dmg/s", "(+Sust.)"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Energy", "Dmg/s"})
+					@MultiLinestring([]string{"Energy", "Dmg/s", "(+Sust.)"})
 				</th>
-				<th style="width:5px;">Power/s</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Power/s", "(+Sust.)"})
+				</th>
 				<th style="width:5px;">Range</th>
 				<th style="width:5px;">Speed</th>
 				<th style="width:5px;">
@@ -145,14 +194,32 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		</td>
 		<td>{ strconv.Itoa(gun.EnergyDamage) }</td>
 		<td>{ fmt.Sprintf("%.1f", gun.PowerUsage) }</td>
-		<td>{ fmt.Sprintf("%.2f", gun.Refire) }</td>
+		<td>
+			@MultiLinestring(GetRefire(gun))
+		</td>
+		if disco.Show {
+			<td>
+				if gun.BurstFire != nil {
+					@MultiLinestring([]string{strconv.Itoa(gun.BurstFire.Ammo), fmt.Sprintf("(%.2f)", gun.BurstFire.ReloadTime)})
+				}
+				
+			</td>
+		}
 		if mode == GunsMissiles {
 			<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
 		}
-		<td>{ fmt.Sprintf("%.0f",gun.HullDamagePerSec) }</td>
-		<td>{ fmt.Sprintf("%.0f",gun.AvgShieldDamagePerSec) }</td>
-		<td>{ fmt.Sprintf("%.0f",gun.EnergyDamagePerSec) }</td>
-		<td>{ fmt.Sprintf("%.0f",gun.PowerPerSec) }</td>
+		<td>
+			@MultiLinestring(GetHullPerSec(gun))
+		</td>
+		<td>
+			@MultiLinestring(GetShieldPerSec(gun))
+		</td>
+		<td>
+			@MultiLinestring(GetEnergyPerSec(gun))
+		</td>
+		<td>
+			@MultiLinestring(GetPowerPerSec(gun))
+		</td>
 		<td>{ fmt.Sprintf("%.0f", gun.Range) }</td>
 		<td>{ fmt.Sprintf("%.0f", gun.Speed) }</td>
 		<td>{ fmt.Sprintf("%.4f",gun.AvgEfficiency) }</td>
