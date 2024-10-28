@@ -189,12 +189,12 @@ type ShowEmpty bool
 
 type ShowAllMode bool
 
-templ Button(text []string, get_url utils_types.FilePath, is_selected bool) {
+templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePath) {
 	<button
 		preload="mouseover"
 		hx-trigger="mousedown"
 		hx-get={ types.GetCtx(ctx).SiteRoot + get_url.ToString() }
-		class={ templ.KV("selected", is_selected), "button" }
+		class={ templ.KV("selected", get_url == url), "button", strings.Join(text,"") }
 		role="tab"
 		aria-selected="false"
 		aria-controls="tab-content"
@@ -229,71 +229,78 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 		background-color: var(--color_hover);
 	}
 
+	button.Docs {
+  		border-radius: 25px;
+	}
+
 	</style>
 	@Heading(disco) {
 		<div class="tab-list" role="tablist">
 			if mode == false {
-				@Button([]string{"Docs"}, urls.Docs, urls.Docs == url)
-				@Button([]string{"Bases"}, urls.Bases, urls.Bases == url)
-				@Button([]string{"Missions"}, urls.Missions, urls.Missions == url)
-				@Button([]string{"Factions"}, urls.Factions, urls.Factions == url)
-				@Button([]string{"Bribes"}, urls.Rephacks, urls.Rephacks == url)
-				@Button([]string{"Trade", "routes"}, urls.Trades, urls.Trades == url)
-				@Button([]string{"Ore", "routes"}, urls.Asteroids, urls.Asteroids == url)
-				@Button([]string{"Travel", "routes"}, urls.TravelRoutes, urls.TravelRoutes == url)
-				@Button([]string{"Comm", "odities"}, urls.Commodities, urls.Commodities == url)
-				@Button([]string{"Guns"}, urls.Guns, urls.Guns == url)
-				@Button([]string{"Guns", "Mods"}, urls.GunModifiers, urls.GunModifiers == url)
-				@Button([]string{"Missiles"}, urls.Missiles, urls.Missiles == url)
-				@Button([]string{"Ammo"}, urls.Ammo, urls.Ammo == url)
-				@Button([]string{"Mines"}, urls.Mines, urls.Mines == url)
-				@Button([]string{"CMs"}, urls.CounterMeasures, urls.CounterMeasures == url)
-				@Button([]string{"Shields"}, urls.Shields, urls.Shields == url)
-				@Button([]string{"Thru","sters"}, urls.Thrusters, urls.Thrusters == url)
-				@Button([]string{"Ships"}, urls.Ships, urls.Ships == url)
-				@Button([]string{"Ship", "Details"}, urls.ShipDetails, urls.ShipDetails == url)
-				@Button([]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, urls.Tractors == url)
+				
+				@Button([]string{"Bases"}, urls.Bases, url)
+				@Button([]string{"Missions"}, urls.Missions, url)
+				@Button([]string{"Factions"}, urls.Factions, url)
+				@Button([]string{"Bribes"}, urls.Rephacks, url)
+				@Button([]string{"Trade", "routes"}, urls.Trades, url)
+				@Button([]string{"Ore", "routes"}, urls.Asteroids, url)
+				@Button([]string{"Travel", "routes"}, urls.TravelRoutes, url)
+				@Button([]string{"Comm", "odities"}, urls.Commodities, url)
+				@Button([]string{"Guns"}, urls.Guns, url)
+				@Button([]string{"Guns", "Mods"}, urls.GunModifiers, url)
+				@Button([]string{"Missiles"}, urls.Missiles, url)
+				@Button([]string{"Ammo"}, urls.Ammo, url)
+				@Button([]string{"Mines"}, urls.Mines, url)
+				@Button([]string{"CMs"}, urls.CounterMeasures, url)
+				@Button([]string{"Shields"}, urls.Shields, url)
+				@Button([]string{"Thru","sters"}, urls.Thrusters, url)
+				@Button([]string{"Ships"}, urls.Ships, url)
+				@Button([]string{"Ship", "Details"}, urls.ShipDetails, url)
+				@Button([]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, url)
 				if disco.Show {
-					@Button([]string{"ID Rep", "hacks"}, urls.IDRephacks, urls.IDRephacks == url)
+					@Button([]string{"ID Rep", "hacks"}, urls.IDRephacks, url)
 				}
-				@Button([]string{"Engines"}, urls.Engines, urls.Engines == url)
-				@Button([]string{"Scan","ners"}, urls.Scanners, urls.Scanners == url)
+				@Button([]string{"Engines"}, urls.Engines, url)
+				@Button([]string{"Scan","ners"}, urls.Scanners, url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@MultiLinestring([]string{"Show", "All"})
 				</button>
+				@Button([]string{"Docs"}, urls.Docs, url)
 			} else {
-				@Button([]string{"Docs"}, urls.Docs, urls.Docs == url)
-				@Button([]string{"Bases"}, AllItemsUrl(urls.Bases), urls.Bases == url)
-				@Button([]string{"Missions"}, AllItemsUrl(urls.Missions), urls.Missions == url)
-				@Button([]string{"Factions"}, AllItemsUrl(urls.Factions), urls.Factions == url)
-				@Button([]string{"Bribes"}, AllItemsUrl(urls.Rephacks), urls.Rephacks == url)
-				@Button([]string{"Trade", "routes"}, AllItemsUrl(urls.Trades), urls.Trades == url)
-				@Button([]string{"Ores"}, AllItemsUrl(urls.Asteroids), urls.Asteroids == url)
-				@Button([]string{"Travel", "routes"}, AllItemsUrl(urls.TravelRoutes), urls.TravelRoutes == url)
-				@Button([]string{"Comm", "odities"}, AllItemsUrl(urls.Commodities), urls.Commodities == url)
-				@Button([]string{"Guns"}, AllItemsUrl(urls.Guns), urls.Guns == url)
-				@Button([]string{"Guns", "Mods"}, AllItemsUrl(urls.GunModifiers), urls.GunModifiers == url)
-				@Button([]string{"Missiles"}, AllItemsUrl(urls.Missiles), urls.Missiles == url)
-				@Button([]string{"Ammo"}, AllItemsUrl(urls.Ammo), urls.Ammo == url)
-				@Button([]string{"Mines"}, AllItemsUrl(urls.Mines), urls.Mines == url)
-				@Button([]string{"CMs"}, AllItemsUrl(urls.CounterMeasures), urls.CounterMeasures == url)
-				@Button([]string{"Shields"}, AllItemsUrl(urls.Shields), urls.Shields == url)
-				@Button([]string{"Thru","sters"}, AllItemsUrl(urls.Thrusters), urls.Thrusters == url)
-				@Button([]string{"Ships"}, AllItemsUrl(urls.Ships), urls.Ships == url)
-				@Button([]string{"Ship", "Details"}, AllItemsUrl(urls.ShipDetails), urls.ShipDetails == url)
-				@Button([]string{types.GetCtx(ctx).TractorTabName}, AllItemsUrl(urls.Tractors), urls.Tractors == url)
+				
+				@Button([]string{"Bases"}, AllItemsUrl(urls.Bases), url)
+				@Button([]string{"Missions"}, AllItemsUrl(urls.Missions), url)
+				@Button([]string{"Factions"}, AllItemsUrl(urls.Factions), url)
+				@Button([]string{"Bribes"}, AllItemsUrl(urls.Rephacks), url)
+				@Button([]string{"Trade", "routes"}, AllItemsUrl(urls.Trades), url)
+				@Button([]string{"Ores"}, AllItemsUrl(urls.Asteroids), url)
+				@Button([]string{"Travel", "routes"}, AllItemsUrl(urls.TravelRoutes), url)
+				@Button([]string{"Comm", "odities"}, AllItemsUrl(urls.Commodities), url)
+				@Button([]string{"Guns"}, AllItemsUrl(urls.Guns), url)
+				@Button([]string{"Guns", "Mods"}, AllItemsUrl(urls.GunModifiers), url)
+				@Button([]string{"Missiles"}, AllItemsUrl(urls.Missiles), url)
+				@Button([]string{"Ammo"}, AllItemsUrl(urls.Ammo), url)
+				@Button([]string{"Mines"}, AllItemsUrl(urls.Mines), url)
+				@Button([]string{"CMs"}, AllItemsUrl(urls.CounterMeasures), url)
+				@Button([]string{"Shields"}, AllItemsUrl(urls.Shields), url)
+				@Button([]string{"Thru","sters"}, AllItemsUrl(urls.Thrusters), url)
+				@Button([]string{"Ships"}, AllItemsUrl(urls.Ships), url)
+				@Button([]string{"Ship", "Details"}, AllItemsUrl(urls.ShipDetails), url)
+				@Button([]string{types.GetCtx(ctx).TractorTabName}, AllItemsUrl(urls.Tractors), url)
 				if disco.Show {
-					@Button([]string{"ID Rep", "hacks"}, AllItemsUrl(urls.IDRephacks), urls.IDRephacks == url)
+					@Button([]string{"ID Rep", "hacks"}, AllItemsUrl(urls.IDRephacks), url)
 				}
-				@Button([]string{"Engines"}, AllItemsUrl(urls.Engines), urls.Engines == url)
-				@Button([]string{"Scan","ners"}, AllItemsUrl(urls.Scanners), urls.Scanners == url)
+				@Button([]string{"Engines"}, AllItemsUrl(urls.Engines), url)
+				@Button([]string{"Scan","ners"}, AllItemsUrl(urls.Scanners), url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@MultiLinestring([]string{"Don't", "Show All"})
 				</button>
+				@Button([]string{"Docs"}, AllItemsUrl(urls.Docs), url)
 			}
 			<button style="width:60px; border-radius: 20px;" onClick={ GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).Themes) } type="button">
 				@MultiLinestring([]string{"Color", "Scheme"})
 			</button>
+			
 		</div>
 	}
 	<hr/>
