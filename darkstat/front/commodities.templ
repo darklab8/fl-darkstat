@@ -36,7 +36,9 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 				</th>
 				<th style="width:25px;">Volume</th>
 				<th style="width:25px;">Profit</th>
-				<th style="width:25px;">Profit / V</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Profit", "per v. "})
+				</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Infocard ID</th>
