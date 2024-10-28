@@ -1,0 +1,228 @@
+package front
+
+import (
+    "github.com/darklab8/fl-darkstat/darkstat/front/types"
+
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+)
+
+const CommandWp string = "/wp x y z"
+
+templ DocsEntry(theme types.Theme, disco types.DiscoveryIDs) {
+    @Html5(theme, disco) {
+		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
+    }
+}
+
+templ DocsT(theme types.Theme, mode2 ShowEmpty, disco types.DiscoveryIDs) {
+    @TabMenu(urls.Docs, mode2, disco)
+    @TabContent() {
+        <style>
+            img {
+                max-width: 800px;
+                border: 5px solid #555;
+                margin: 10px;
+            }
+            #tab-content {
+                padding: 10px;
+            }
+            h1 { 
+                display: block;
+                font-size: 2em;
+                margin-top: 0.67em;
+                margin-bottom: 0.67em;
+                margin-left: 0;
+                margin-right: 0;
+                font-weight: bold;
+            }
+            h2 {
+                display: block;
+                font-size: 1.5em;
+                margin-top: 0.83em;
+                margin-bottom: 0.83em;
+                margin-left: 0;
+                margin-right: 0;
+                font-weight: bold;
+            }
+            h3 { 
+                display: block;
+                font-size: 1.17em;
+                margin-top: 1em;
+                margin-bottom: 1em;
+                margin-left: 0;
+                margin-right: 0;
+                font-weight: bold;
+            }
+            h4 { 
+                display: block;
+                margin-top: 1.33em;
+                margin-bottom: 1.33em;
+                margin-left: 0;
+                margin-right: 0;
+                font-weight: bold;
+            }
+            h5 { 
+                display: block;
+                font-size: .83em;
+                margin-top: 1.67em;
+                margin-bottom: 1.67em;
+                margin-left: 0;
+                margin-right: 0;
+                font-weight: bold;
+            }
+            h6 { 
+                display: block;
+                font-size: .67em;
+                margin-top: 2.33em;
+                margin-bottom: 2.33em;
+                margin-left: 0;
+                margin-right: 0;
+                font-weight: bold;
+            }
+            p {
+                margin: 10px;
+            }
+            ul { 
+                list-style-type: disc; 
+                list-style-position: inside; 
+            }
+            ol { 
+                list-style-type: decimal; 
+                list-style-position: inside; 
+            }
+            ul ul, ol ul { 
+                list-style-type: circle; 
+                list-style-position: inside; 
+                margin-left: 15px; 
+            }
+            ol ol, ul ol { 
+                list-style-type: lower-latin; 
+                list-style-position: inside; 
+                margin-left: 15px; 
+            }
+        </style>
+        <h1>Documentation to <a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>darkstat</a></h1>
+
+       
+        <h2>Available tabs</h2>
+        <p>
+            <ul>
+                <li>Bases - shows their location, name and etc and on click what they sell (completely everything that is sold).</li>
+                <li>Missions - Instrument to find bar missions. U should look with good numbers of Min offers (high vengettes number) preferably.</li>
+                <li>Factions - info about them, reputation and empathy stuff</li>
+                <li>Bribes - same factions on click show where is the chance to find a bribe to increase repuration fo<span></span>r them at specific locations</li>
+                <li>Trade Routes
+                <ul>
+                    <li>Shows trade routes between bases. On click at main table shows all routes originiating from specific base</li>
+                    <li>On specific route at bottom table row click, it will show exact path to show. On hover to magnifying glass it will tell waypoint coordinates</li>
+                    if disco.Show {
+                        <li>Trade routes are preshown fo<span></span>r Transport, Frigate and Freighter parameters of Discovey</li>
+                    }
+                </ul>
+                </li>
+                <li>Ore routes
+                <ul>
+                    <li>Shows trade routes between ore fields to bases. On click at main table shows all routes originiating from specific ore field</li>
+                    <li>In addition also shows trading routes for items received from using the ore in one of pob processing recipes.
+                    Convinient for showing trade routes for refined gold for example. The information about it is added into "Commodities" tab too</li>
+                </ul>
+                </li>
+                <li>Travel Routes - routes between all bases. Convinient to lay path for travel for combat oriented ships not following specific trading events.</li>
+                <li>Commodities - Where to buy and where to sell all commodities</li>
+                <li>Guns - All guns information and where to buy them, but some information about them in Missiles tab (including flaks)</li>
+                <li>Guns Mods - Guns modifiers against specific shields. Shield average damage already accounts for using average shield modifiers and uses only obtainable shields.</li>
+                <li>Missiles - tab with missiles and flak guns</li>
+                <li>Ammo - ammo and where to buy it. Convinient to find Amomaly Scanner Batteries </li>
+                <li>Mines - mine launchers. For their ammo see "Ammo" tab ;)</li>
+                <li>CMs - Countermeasures and where to find them</li>
+                <li>Shields - Shields and where to buy them</li>
+                <li>Thrusters - thrusters and where to buy them</li>
+                <li>Ships - ship and where to buy them</li>
+                <li>Ship Details
+                    <ul>
+                        <li>shows ship internal hardpoints. The hardpoint nickname is HpType that is shown in all relevant tabs like guns, shields and etc.</li>
+                        <li>Use found HpType in searching bar of relevant tabs to find all compatible items, just insert it into search bar</li>
+                    </ul>
+                </li>
+                <li>IDs/Tractors - Tractors in vanilla, IDs in Discovery Freelancer containing rules. Note, the server side overrides from public configs are applied for showing</li>
+                if disco.Show {
+                    <li>ID Rep hacks - Reputation conditions applied to Discover Freelancer character when equipped with specific ID. Exactly this reputation u get after <strong>represet</strong> command</li>
+                }
+                <li>Engines - Engines and where to buy them</li>
+                <li>Scanners - Scanners and where to buy them</li>
+                <li>Show all - button making sure to show all items, including potentially not very useful.
+                in 95%+ cases, not useful items are the ones which can't be bought. Sometimes it is admin or npc only related items.
+                </li>
+                <li>Color schemes switch - Available themes are Light, Dark and Vanilla</li>
+            </ul>
+        </p>   
+        if disco.Show {
+            <h2>Coordinates for waypoint creations</h2> 
+            <p>
+                Hint: All coordinates shown for Discovery Freelancer can be used to create waypoint to find them in current system.
+                <strong>{ CommandWp }</strong>
+                Use this command for that
+            </p>
+            <p>
+                You can find coordinates on hover in Trade/Ore/Travel routes tab after clicking specific route at the bottom table and then hovering mouse over magnifying glass.
+                Also coordinates are shown in main top table in Bases tab for all base locations. And in every bottom table that tells item selling location for some tab.
+            </p>
+            <img src={ types.GetCtx(ctx).StaticRoot + "docs_coordinates_in_trade_routes.png" }>
+
+             <h2>Tech compatibility</h2> 
+             <p>
+                For Freelancer Discovery you can find tech compatibility of specific items. The information is avilable in two ways.
+                <ul>
+                    <li>For tables having "TechCell" column, hover your mouse On magnifying glass and you will see tech compatibility (with which IDs they are compatible) for specific items
+                    </li>
+                    <li><img src={ types.GetCtx(ctx).StaticRoot + "docs_techcompat_hover.png" }></li>
+                    <li>On top right in tabs having tech compatible items, you have selector of ID. Once you chose specific ID, all items in tabs will be automatically filtered to compatible with chosen ID
+                    </li>
+                    <li><img src={ types.GetCtx(ctx).StaticRoot + "docs_tech_compat_id_selector.png" }></li>
+                </ul>
+                
+             </p>
+
+             <h2>Auto updating features</h2>
+             <p>
+                Darkstat tries its best to auto update itself according to latest patch. The time of lastet update and patch version are shown at top right.
+                It also applies all latest server configs at the moment of its autoupdate. The darkstat update happens 3 times per day.
+             </p>
+             <img src={ types.GetCtx(ctx).StaticRoot + "docs_timestamp.png" }>
+        }
+
+        <h2>Pinning feature</h2>
+        <p>
+            Items in top table can be pinned on gray text "pin". This convinient feature is for item comparison.
+            The pinned items have buttons to be reselected to one of two bottom tables, to the left or the right.
+        </p>
+        <p>
+            Find gray text "pin" on the left of rows at top table.
+        </p>
+        <img src={ types.GetCtx(ctx).StaticRoot + "docs_pinning.png" }>
+
+        <h2>Searching/filtering bars</h2>
+        <p>
+            Searching bar on the left is capable to search by most of avilable in the row content, plus it is able to search by first line in infocard in order to capture infocard ship names in addition for searches like "Hegemon" and etc.
+            Note that this search bar is capable to find multiple rows matching your query.
+        </p>
+        <p>
+            Searching filtering bar is a powerful feature, as you could use it to find all routes orginiating from some specific region like Liberty, and then use it at bottom table to find all routes leading to lets say Omicrons.
+        </p>
+        <img src={ types.GetCtx(ctx).StaticRoot + "docs_search_bar.png" }>
+        <p>
+            Extra searching bar at the more right is available for infocard content search only.
+            This extra searching bar has convinient special feature of auto highlighting searched content with yellow colloration in opened infocards.
+        </p>
+        <img src={ types.GetCtx(ctx).StaticRoot + "docs_infocard_search.png" }>
+        <p>
+            Additionally, bottom table has searching/filtering bar as well.
+        </p>
+
+        <h2>Movable border size</h2>
+        <p>
+            Darkstat is splitted by three main window sections. Top, bottom tables and infocard section. Borders between them are movable by mouse.
+        </p>
+        <img src={ types.GetCtx(ctx).StaticRoot + "docs_movable_borders.png" }>
+    }
+}

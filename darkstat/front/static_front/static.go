@@ -86,3 +86,70 @@ var CustomCSS core_types.StaticFile = core_types.StaticFile{
 	Filename: "custom.css",
 	Kind:     core_types.StaticFileCSS,
 }
+
+//go:embed docs/docs_tech_compat_id_selector.png
+var PictureTechCompatIDSelector string
+
+//go:embed docs/docs_techcompat_hover.png
+var PictureTechCompatHover string
+
+//go:embed docs/docs_coordinates_in_trade_routes.png
+var PictureCoordinatesTradeRoutes string
+
+//go:embed docs/docs_timestamp.png
+var Picture4 string
+
+//go:embed docs/docs_pinning.png
+var Picture5 string
+
+//go:embed docs/docs_movable_borders.png
+var Picture6 string
+
+//go:embed docs/docs_search_bar.png
+var Picture7 string
+
+//go:embed docs/docs_infocard_search.png
+var Picture8 string
+
+var Pictures []core_types.StaticFile = []core_types.StaticFile{
+	{
+		Content:  PictureTechCompatIDSelector,
+		Filename: "docs_tech_compat_id_selector.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+	{
+		Content:  PictureTechCompatHover,
+		Filename: "docs_techcompat_hover.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+	{
+		Content:  PictureCoordinatesTradeRoutes,
+		Filename: "docs_coordinates_in_trade_routes.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+	{
+		Content:  Picture4,
+		Filename: "docs_timestamp.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+	{
+		Content:  Picture5,
+		Filename: "docs_pinning.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+	{
+		Content:  Picture6,
+		Filename: "docs_movable_borders.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+	{
+		Content:  Picture7,
+		Filename: "docs_search_bar.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+	{
+		Content:  Picture8,
+		Filename: "docs_infocard_search.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+}

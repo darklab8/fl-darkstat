@@ -233,6 +233,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 	@Heading(disco) {
 		<div class="tab-list" role="tablist">
 			if mode == false {
+				@Button([]string{"Docs"}, urls.Docs, urls.Docs == url)
 				@Button([]string{"Bases"}, urls.Bases, urls.Bases == url)
 				@Button([]string{"Missions"}, urls.Missions, urls.Missions == url)
 				@Button([]string{"Factions"}, urls.Factions, urls.Factions == url)
@@ -261,6 +262,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 					@MultiLinestring([]string{"Show", "All"})
 				</button>
 			} else {
+				@Button([]string{"Docs"}, urls.Docs, urls.Docs == url)
 				@Button([]string{"Bases"}, AllItemsUrl(urls.Bases), urls.Bases == url)
 				@Button([]string{"Missions"}, AllItemsUrl(urls.Missions), urls.Missions == url)
 				@Button([]string{"Factions"}, AllItemsUrl(urls.Factions), urls.Factions == url)
