@@ -7,6 +7,9 @@ function FilteringFunction() {
     // console.log("triggered FilteringFunction")
     let input, filter, filter_infocard, table, tr, i, txtValue, txtValue_infocard;
     input = document.getElementById("filterinput");
+    if (typeof (input) === 'undefined' || input === null) {
+        return;
+    }
     filter_infocard = input_infocard.value.toUpperCase();
     filter = input.value.toUpperCase();
     table = document.querySelector("#table-top table");

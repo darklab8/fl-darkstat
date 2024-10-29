@@ -137,6 +137,8 @@ templ Html5(theme types.Theme, disco types.DiscoveryIDs) {
 						LoadSelectedTractorID()
 						highlightInfocardHook()
 						FilteringFunction()
+
+						if (location.hash) location.href = location.hash;
 					});
 				});
 			</script>
