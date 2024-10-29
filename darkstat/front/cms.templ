@@ -27,8 +27,8 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Diversion", "Chance"})
 				</th>
-				<th style="width:25px;">
-					@MultiLinestring([]string{"Ammo", "Limit"})
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Catr.)"})
 				</th>
 				<th style="width:25px;">Lifetime</th>
 				<th style="width:25px;">Range</th>
@@ -50,7 +50,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 					<td>{ strconv.Itoa(cm.Price) } </td>
 					<td>{ strconv.FormatBool(configs_export.Buyable(cm.Bases)) }</td>
 					<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
-					<td>{ strconv.Itoa(cm.AmmoLimit) }</td>
+					<td>{ GetAmmoLimitFormatted(cm.AmmoLimit) }</td>
 					<td>{ strconv.Itoa(cm.Lifetime) }</td>
 					<td>{ strconv.Itoa(cm.Range) }</td>
 					<td>{ strconv.Itoa(cm.AIRange) }</td>
@@ -65,6 +65,9 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 		</tbody>
 	</table>
 }
+
+
+
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/

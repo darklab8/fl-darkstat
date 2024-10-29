@@ -159,7 +159,14 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
                 </li>
                 <li>Guns Mods - Guns modifiers against specific shields. Shield average damage already accounts for using average shield modifiers and uses only obtainable shields.</li>
                 <li>Missiles - tab with missiles and flak guns (some can be with sustained burst fire stuff)</li>
-                <li>Ammo - ammo and where to buy it. Convinient place to find Anomaly Scanner Batteries </li>
+                <li>Ammo
+                    <ul>
+                        <li>ammo and where to buy it. Convinient place to find Anomaly Scanner Batteries</li>
+                        if disco.Show {
+                            <li>Tabs ammo, guns, missiles and mines have specified Ammo limit amount, and possible max amount of catridges if u have installed multiple same type weapons</li>
+                        }
+                    </ul>
+                </li>
                 <li>Mines - mine launchers. For their ammo see "Ammo" tab ;)</li>
                 <li>CMs - Countermeasures and where to find them</li>
                 <li>Shields - Shields and where to buy them</li>

@@ -26,8 +26,8 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Hit Pts</th>
-				<th style="width:25px;">
-					@MultiLinestring([]string{"Ammo", "Limit"})
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Catr.)"})
 				</th>
 				<th style="width:25px;">Volume</th>
 				<th style="width:25px;">
@@ -57,7 +57,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					<td>{ strconv.Itoa(ammo.Price) } </td>
 					<td>{ strconv.FormatBool(configs_export.Buyable(ammo.Bases)) }</td>
 					<td>{ strconv.Itoa(ammo.HitPts) } </td>
-					<td>{ strconv.Itoa(ammo.AmmoLimit) }</td>
+					<td>{ GetAmmoLimitFormatted(ammo.AmmoLimit) }</td>
 					<td>{ fmt.Sprintf("%.4f",ammo.Volume) }</td>
 					<td>{ fmt.Sprintf("%.2f",ammo.MunitionLifetime) }</td>
 					<td>{ ammo.SeekerType }</td>

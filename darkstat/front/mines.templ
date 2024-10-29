@@ -36,6 +36,9 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 				</th>
 				<th style="width:25px;">Value</th>
 				<th style="width:25px;">Refire</th>
+				<th style="width:5px;">
+						@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Catr.)"})
+				</th>	
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Detonation", "Distance"})
 				</th>
@@ -80,6 +83,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 					<td>{ strconv.Itoa(mine.ShieldDamage) }</td>
 					<td>{ fmt.Sprintf("%.2f",mine.Value) }</td>
 					<td>{ fmt.Sprintf("%.2f", mine.Refire) }</td>
+					<td>{ GetAmmoLimitFormatted(mine.AmmoLimit) }</td>
 					<td>{ fmt.Sprintf("%.2f", mine.DetonationDistance) }</td>
 					<td>{ fmt.Sprintf("%.2f",mine.Radius) }</td>
 					<td>{ strconv.Itoa(mine.SeekDistance) }</td>
