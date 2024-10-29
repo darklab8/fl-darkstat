@@ -5,7 +5,9 @@ import (
 )
 
 const (
-	Docs            utils_types.FilePath = "docs.html"
+	Docs      utils_types.FilePath = "docs.html"
+	IndexDocs utils_types.FilePath = "index_docs.html"
+
 	Index           utils_types.FilePath = "index.html"
 	DarkIndex       utils_types.FilePath = "dark.html"
 	VanillaIndex    utils_types.FilePath = "vanilla.html"
