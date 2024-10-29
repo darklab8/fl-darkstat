@@ -4,10 +4,31 @@ import (
     "github.com/darklab8/fl-darkstat/darkstat/front/types"
 
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"unicode"
+	"bytes"
 )
 
 const CommandWp string = "/wp x y z"
 
+func TurnToAnchor(text string) string {
+	var buffer bytes.Buffer
+
+	for _, letter := range text {
+		if !unicode.IsLetter(letter) {
+			continue
+		}
+		buffer.WriteString(string(letter))
+	}
+    
+	return buffer.String()
+}
+templ SectionHeader(name string) {
+	<a href={  templ.URL(types.GetCtx(ctx).SiteRoot + urls.Docs.ToString() + "#" + TurnToAnchor(name))}>
+        <h2 id={ TurnToAnchor(name) }  class="section_header">
+            { name }
+        </h2>
+    </a>
+}
 
 templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
     @TabMenu(urls.Docs, mode2, disco)
@@ -163,7 +184,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
             </ul>
         </p>   
         if disco.Show {
-            <h2>Coordinates for waypoint creations</h2> 
+            @SectionHeader("Coordinates for waypoint creations")
             <p>
                 Hint: All coordinates shown for Discovery Freelancer can be used to create waypoint to find them in current system.
                 <strong>{ CommandWp }</strong>
@@ -175,7 +196,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
             </p>
             <img src={ types.GetCtx(ctx).StaticRoot + "docs_coordinates_in_trade_routes.png" }>
 
-             <h2>Tech compatibility</h2> 
+             @SectionHeader("Tech compatibility")
              <p>
                 For Freelancer Discovery you can find tech compatibility of specific items. The information is avilable in two ways.
                 <ul>
@@ -189,7 +210,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
                 
              </p>
 
-             <h2>Auto updating features</h2>
+             @SectionHeader("Auto updating features")
              <p>
                 Darkstat tries its best to auto update itself according to latest patch. The time of lastet update and patch version are shown at top right.
                 It also applies all latest server configs at the moment of its autoupdate. The darkstat update happens 3 times per day.
@@ -197,7 +218,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
              <img src={ types.GetCtx(ctx).StaticRoot + "docs_timestamp.png" }>
         }
 
-        <h2>Pinning feature</h2>
+        @SectionHeader("Pinning feature")
         <p>
             Items in top table can be pinned on gray text "pin". This convinient feature is for item comparison.
             The pinned items have buttons to be reselected to one of two bottom tables, to the left or the right.
@@ -207,7 +228,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
         </p>
         <img src={ types.GetCtx(ctx).StaticRoot + "docs_pinning.png" }>
 
-        <h2>Searching/filtering bars</h2>
+        @SectionHeader("Searching/filtering bars")
         <p>
             Searching bar on the left is capable to search by most of avilable in the row content, plus it is able to search by first line in infocard in order to capture infocard ship names in addition for searches like "Hegemon" and etc.
             Note that this search bar is capable to find multiple rows matching your query.
@@ -225,7 +246,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
             Additionally, bottom table has searching/filtering bar as well.
         </p>
 
-        <h2>Movable border size</h2>
+        @SectionHeader("Movable border size")
         <p>
             Darkstat is splitted by three main window sections. Top, bottom tables and infocard section. Borders between them are movable by mouse.
         </p>
