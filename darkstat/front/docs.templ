@@ -251,5 +251,15 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
             Darkstat is splitted by three main window sections. Top, bottom tables and infocard section. Borders between them are movable by mouse.
         </p>
         <img src={ types.GetCtx(ctx).StaticRoot + "docs_movable_borders.png" }>
+
+        @SectionHeader("Finding equipment compatible with specific hardpoint")
+        <p>
+            Grab exact HPType in Ship Details, for example <strong>hp_turret_special_6</strong> as seen on the picture below
+        </p>
+        <img src={ types.GetCtx(ctx).StaticRoot + "docs_grabbing_hptype.png" }>
+        <p>
+            Then insert the nickname of hardpoint into tab "Guns", or "Missiles", or "Shields", "Engines" and etc, it will filter for compatible equipment.
+        </p>
+        <img src={ types.GetCtx(ctx).StaticRoot + "docs_seaching_for_hp_type.png" }>
     }
 }

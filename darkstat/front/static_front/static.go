@@ -111,6 +111,12 @@ var Picture7 string
 //go:embed docs/docs_infocard_search.png
 var Picture8 string
 
+//go:embed docs/docs_grabbing_hptype.png
+var Picture9 string
+
+//go:embed docs/docs_seaching_for_hp_type.png
+var Picture10 string
+
 var Pictures []core_types.StaticFile = []core_types.StaticFile{
 	{
 		Content:  PictureTechCompatIDSelector,
@@ -150,6 +156,16 @@ var Pictures []core_types.StaticFile = []core_types.StaticFile{
 	{
 		Content:  Picture8,
 		Filename: "docs_infocard_search.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+	{
+		Content:  Picture9,
+		Filename: "docs_grabbing_hptype.png",
+		Kind:     core_types.StaticFilePicture,
+	},
+	{
+		Content:  Picture10,
+		Filename: "docs_seaching_for_hp_type.png",
 		Kind:     core_types.StaticFilePicture,
 	},
 }
