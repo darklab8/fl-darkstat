@@ -1,4 +1,4 @@
-![how it looks](docs/howitlooks.png)
+![how it looks](docs/v1.30_all_routes.png)
 
 # Description
 
