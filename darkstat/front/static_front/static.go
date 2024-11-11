@@ -11,7 +11,7 @@ var CustomJSCSharedVanilla string
 
 var CustomJSSharedVanilla core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomJSCSharedVanilla,
-	Filename: "custom_shared_vanilla.js",
+	Filename: "custom/shared_vanilla.js",
 	Kind:     core_types.StaticFileJS,
 }
 
@@ -20,7 +20,7 @@ var CustomJSCSharedDiscovery string
 
 var CustomJSSharedDiscovery core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomJSCSharedDiscovery,
-	Filename: "custom_shared_discovery.js",
+	Filename: "custom/shared_discovery.js",
 	Kind:     core_types.StaticFileJS,
 }
 
@@ -29,7 +29,7 @@ var CustomJSCShared string
 
 var CustomJSShared core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomJSCShared,
-	Filename: "custom_shared.js",
+	Filename: "custom/shared.js",
 	Kind:     core_types.StaticFileJS,
 }
 
@@ -38,7 +38,7 @@ var CustomJSContent string
 
 var CustomJS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomJSContent,
-	Filename: "custom_main.js",
+	Filename: "custom/main.js",
 	Kind:     core_types.StaticFileJS,
 }
 
@@ -85,87 +85,4 @@ var CustomCSS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomCSSContent,
 	Filename: "custom.css",
 	Kind:     core_types.StaticFileCSS,
-}
-
-//go:embed docs/docs_tech_compat_id_selector.png
-var PictureTechCompatIDSelector string
-
-//go:embed docs/docs_techcompat_hover.png
-var PictureTechCompatHover string
-
-//go:embed docs/docs_coordinates_in_trade_routes.png
-var PictureCoordinatesTradeRoutes string
-
-//go:embed docs/docs_timestamp.png
-var Picture4 string
-
-//go:embed docs/docs_pinning.png
-var Picture5 string
-
-//go:embed docs/docs_movable_borders.png
-var Picture6 string
-
-//go:embed docs/docs_search_bar.png
-var Picture7 string
-
-//go:embed docs/docs_infocard_search.png
-var Picture8 string
-
-//go:embed docs/docs_grabbing_hptype.png
-var Picture9 string
-
-//go:embed docs/docs_seaching_for_hp_type.png
-var Picture10 string
-
-var Pictures []core_types.StaticFile = []core_types.StaticFile{
-	{
-		Content:  PictureTechCompatIDSelector,
-		Filename: "docs_tech_compat_id_selector.png",
-		Kind:     core_types.StaticFilePicture,
-	},
-	{
-		Content:  PictureTechCompatHover,
-		Filename: "docs_techcompat_hover.png",
-		Kind:     core_types.StaticFilePicture,
-	},
-	{
-		Content:  PictureCoordinatesTradeRoutes,
-		Filename: "docs_coordinates_in_trade_routes.png",
-		Kind:     core_types.StaticFilePicture,
-	},
-	{
-		Content:  Picture4,
-		Filename: "docs_timestamp.png",
-		Kind:     core_types.StaticFilePicture,
-	},
-	{
-		Content:  Picture5,
-		Filename: "docs_pinning.png",
-		Kind:     core_types.StaticFilePicture,
-	},
-	{
-		Content:  Picture6,
-		Filename: "docs_movable_borders.png",
-		Kind:     core_types.StaticFilePicture,
-	},
-	{
-		Content:  Picture7,
-		Filename: "docs_search_bar.png",
-		Kind:     core_types.StaticFilePicture,
-	},
-	{
-		Content:  Picture8,
-		Filename: "docs_infocard_search.png",
-		Kind:     core_types.StaticFilePicture,
-	},
-	{
-		Content:  Picture9,
-		Filename: "docs_grabbing_hptype.png",
-		Kind:     core_types.StaticFilePicture,
-	},
-	{
-		Content:  Picture10,
-		Filename: "docs_seaching_for_hp_type.png",
-		Kind:     core_types.StaticFilePicture,
-	},
 }

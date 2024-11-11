@@ -14,14 +14,13 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
 	"github.com/darklab8/fl-darkcore/darkcore/core_static"
-	"github.com/darklab8/fl-darkcore/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
+	"github.com/darklab8/fl-darkstat/darkstat/front/static"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
-	"github.com/darklab8/go-utils/utils"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_logus"
 	"github.com/darklab8/go-utils/utils/utils_types"
@@ -95,12 +94,9 @@ func (l *Linker) Link() *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.CustomJSSharedVanilla),
 	}
 
-	static_files = append(static_files, utils.CompL(
-		static_front.Pictures,
-		func(static_file core_types.StaticFile) builder.StaticFile {
-			return builder.NewStaticFileFromCore(static_file)
-		},
-	)...)
+	for _, file := range static.StaticFilesystem.Files {
+		static_files = append(static_files, builder.NewStaticFileFromCore(file))
+	}
 
 	build = builder.NewBuilder(params, static_files)
 
