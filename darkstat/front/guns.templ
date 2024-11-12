@@ -135,6 +135,9 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 					<th style="width:5px;">
 							@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
 					</th>
+					<th style="width:5px;">
+							@MultiLinestring([]string{"Armor", "Pen.",})
+					</th>
 				}
 				if mode == GunsMissiles {
 					<th style="width:50px;">
@@ -220,6 +223,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 				@MultiLinestring(GetBurstParams(gun))
 			</td>
 			<td>{ GetAmmoLimitFormatted(gun.AmmoLimit) }</td>
+			<td>{ fmt.Sprintf("%.2f", gun.DiscoGun.ArmorPen) }</td>
 		}
 		if mode == GunsMissiles {
 			<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>

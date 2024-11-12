@@ -80,6 +80,11 @@ templ ShipTable(
 					</th>
 				}
 				<th style="width:25px;">Armor</th>
+				if disco.Show {
+					<th style="width:5px;">
+							@MultiLinestring([]string{"Armor", "Mult.",})
+					</th>
+				}
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Hold", "Size"})
 				</th>
@@ -149,6 +154,9 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco typ
 			<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
 		}
 		<td>{ strconv.Itoa(ship.Armor) } </td>
+		if disco.Show {
+			<td>{ fmt.Sprintf("%.2f", ship.DiscoShip.ArmorMult) }</td>
+		}
 		<td>{ strconv.Itoa(ship.HoldSize) } </td>
 		<td>{ strconv.Itoa(ship.Nanobots) }</td>
 		<td>{ strconv.Itoa(ship.Batteries) }</td>
