@@ -77,7 +77,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 					@PinSelectLeftRight(pinm, MineDetailedUrl(mine))
 					@TdDisco(disco, mine.Nickname, mine.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(mine.Price) } </td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(mine.Bases)) }</td>
+					<td>{ FormatBoolAsYesNo(configs_export.Buyable(mine.Bases)) }</td>
 					<td>{ strconv.Itoa(mine.AmmoPrice) } </td>
 					<td>{ strconv.Itoa(mine.HullDamage) }</td>
 					<td>{ strconv.Itoa(mine.ShieldDamage) }</td>

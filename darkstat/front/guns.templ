@@ -208,7 +208,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		<td>{ gun.Class }</td>
 		<td>{ gun.Type }</td>
 		<td>{ strconv.Itoa(gun.Price) } </td>
-		<td>{ strconv.FormatBool(configs_export.Buyable(gun.Bases)) }</td>
+		<td>{ FormatBoolAsYesNo(configs_export.Buyable(gun.Bases)) }</td>
 		<td>{ strconv.Itoa(gun.HullDamage) }</td>
 		<td>
 			{ strconv.Itoa(gun.AvgShieldDamage) }

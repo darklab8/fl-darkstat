@@ -42,7 +42,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco types.D
 					@PinSelectLeftRight(pinm, ScannerDetailedUrl(scanner))
 					@TdDisco(disco, scanner.Nickname, scanner.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(scanner.Price) } </td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(scanner.Bases)) }</td>
+					<td>{ FormatBoolAsYesNo(configs_export.Buyable(scanner.Bases)) }</td>
 					<td>{ strconv.Itoa(scanner.Range) }</td>
 					<td>{ strconv.Itoa(scanner.CargoScanRange) }</td>
 					<td>{ strconv.FormatBool(scanner.Lootable) }</td>

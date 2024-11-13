@@ -47,7 +47,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco typ
 					@PinSelectLeftRight(pinm, ThrusterDetailedUrl(thruster))
 					@TdDisco(disco, thruster.Nickname, thruster.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(thruster.Price) } </td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(thruster.Bases)) }</td>
+					<td>{ FormatBoolAsYesNo(configs_export.Buyable(thruster.Bases)) }</td>
 					<td>{ strconv.Itoa(thruster.MaxForce) } </td>
 					<td>{ strconv.Itoa(thruster.PowerUsage) }</td>
 					<td>{ fmt.Sprintf("%.2f",thruster.Efficiency) }</td>

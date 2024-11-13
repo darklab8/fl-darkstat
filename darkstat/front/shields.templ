@@ -61,7 +61,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					<td class="search-included">{ shield.Type }</td>
 					<td class="search-included">{ shield.Technology }</td>
 					<td>{ strconv.Itoa(shield.Price) } </td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(shield.Bases)) }</td>
+					<td>{ FormatBoolAsYesNo(configs_export.Buyable(shield.Bases)) }</td>
 					<td>{ strconv.Itoa(shield.Capacity) } </td>
 					<td>{ strconv.Itoa(shield.RegenerationRate) }</td>
 					<td>{ strconv.Itoa(shield.ConstantPowerDraw) }</td>

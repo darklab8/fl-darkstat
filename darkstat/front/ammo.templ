@@ -55,7 +55,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					@PinSelectLeftRight(pinm, AmmoDetailedUrl(ammo))
 					@TdDisco(disco, ammo.Nickname, ammo.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(ammo.Price) } </td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(ammo.Bases)) }</td>
+					<td>{ FormatBoolAsYesNo(configs_export.Buyable(ammo.Bases)) }</td>
 					<td>{ strconv.Itoa(ammo.HitPts) } </td>
 					<td>{ GetAmmoLimitFormatted(ammo.AmmoLimit) }</td>
 					<td>{ fmt.Sprintf("%.4f",ammo.Volume) }</td>

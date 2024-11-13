@@ -48,7 +48,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 					@PinSelectLeftRight(pinm, CounterMeasreDetailedUrl(cm))
 					@TdDisco(disco, cm.Nickname, cm.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(cm.Price) } </td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(cm.Bases)) }</td>
+					<td>{ FormatBoolAsYesNo(configs_export.Buyable(cm.Bases)) }</td>
 					<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
 					<td>{ GetAmmoLimitFormatted(cm.AmmoLimit) }</td>
 					<td>{ strconv.Itoa(cm.Lifetime) }</td>

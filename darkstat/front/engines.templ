@@ -59,7 +59,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 					@PinSelectLeftRight(pinm, EngineDetailedUrl(engine))
 					@TdDisco(disco, engine.Nickname, engine.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(engine.Price) } </td>
-					<td>{ strconv.FormatBool(configs_export.Buyable(engine.Bases)) }</td>
+					<td>{ FormatBoolAsYesNo(configs_export.Buyable(engine.Bases)) }</td>
 					<td>{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
 					<td>{ strconv.Itoa(engine.CruiseSpeed) }</td>
 					<td>{ strconv.Itoa(engine.CruiseChargeTime) }</td>
