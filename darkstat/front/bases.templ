@@ -348,7 +348,7 @@ templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode B
 				<td>{ strconv.Itoa(good.PriceToBuy) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
-				<td>{ strconv.FormatBool(good.BaseSells) }</td>
+				<td>{ FormatBaseSells(good.BaseSells) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
 				<td>{ strconv.Itoa(good.PriceBase) }</td>
 				<td>
