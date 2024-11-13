@@ -400,7 +400,9 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				<th style="width:20px;">Pos X</th>
 				<th style="width:20px;">Pos Y</th>
 				<th style="width:20px;">Pos Z</th>
-				<th style="width:5px;">Buyable</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Base is", "Reachable"})
+				</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -477,7 +479,7 @@ func FormatBaseSells(value bool) string {
 	if value {
 		return "sells" 
 	} else {
-		return "nosell"
+		return "buyonly"
 	}
 }
 
