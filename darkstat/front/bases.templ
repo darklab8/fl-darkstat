@@ -113,7 +113,12 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Base", "Name ID"})
 				</th>
-				<th style="width:100px;">Infocard ID</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Infocard", "ID"})
+				</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Rech", "able"})
+				</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -197,6 +202,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		<td>{ fmt.Sprintf("%.0f", base.Pos.Z) }</td>
 		<td class="search-included">{ strconv.Itoa(base.StridName) }</td>
 		<td class="search-included">{ strconv.Itoa(base.InfocardID) }</td>
+		<td>{ strconv.FormatBool(base.Reachable) }</td>
 		@TdInfoCardClick(base.Infocard, base.Nickname, pinm, disco)
 	}
 }
