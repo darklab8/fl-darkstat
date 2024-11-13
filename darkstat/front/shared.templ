@@ -400,6 +400,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				<th style="width:20px;">Pos X</th>
 				<th style="width:20px;">Pos Y</th>
 				<th style="width:20px;">Pos Z</th>
+				<th style="width:5px;">Buyable</th>
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -423,6 +424,7 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 				hx-swap="innerHTML"
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
+				class={ templ.KV("line_through", base_info.NotBuyable) }
 			>
 				<td>
 					@WriteBaseName(base_info.BaseName)
@@ -456,6 +458,7 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.X) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Y) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Z) }</td>
+				<td>{ strconv.FormatBool(!base_info.NotBuyable) }</td>
 				<td></td>
 			</tr>
 		}

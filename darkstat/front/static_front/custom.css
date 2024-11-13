@@ -45,3 +45,7 @@ highlight {
 th {
     z-index: 1;
 }
+
+.line_through {
+    text-decoration: line-through;
+}
