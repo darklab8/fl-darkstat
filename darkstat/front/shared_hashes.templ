@@ -40,17 +40,16 @@ templ HashTable(hashes map[string]flhash.HashCode) {
                 <th style="width:10px;">
                     @MultiLinestring([]string{"hash hex"})
                 </th>
-				<th style="max-width:100%;"></th>
+                <th style="max-width:100%;"></th>
 			</tr>
 		</thead>
 		<tbody>
 			for nickname, value := range hashes {
                 <tr>
-                    <td class="search-included">{ nickname }</td>
-                    <td class="search-included">{ value.ToIntStr() }</td>
-                    <td class="search-included">{ value.ToUintStr() }</td>
-                    <td class="search-included">{ value.ToHexStr() }</td>
-                    <td style="max-width:100%;"></td>
+                    <td>{ nickname }</td>
+                    <td>{ value.ToIntStr() }</td>
+                    <td>{ value.ToUintStr() }</td>
+                    <td>{ value.ToHexStr() }</td>
                 </tr>
 			}
 		</tbody>
@@ -64,7 +63,7 @@ templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, disco types.Di
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-                    @FilterBar(types.DiscoveryIDs{})
+                    <input style="width: 100%;" type="text" id="hash_search" onkeyup="FilteringForAnyTable('#table-top-main', 'hash_search')" placeholder="Search rows by any content: name, nickname etc.."/>
 					<div id="table-top-main">
 						@HashTable(hashes)
 					</div>
