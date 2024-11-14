@@ -48,6 +48,8 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 				<th style="width:25px;">HpType</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
+				@HashTh("Nickname")
+				@HashTh("HpType")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -74,6 +76,8 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					<td class="search-included">{ shield.HpType } </td>
 					<td class="search-included">{ strconv.Itoa(shield.IdsName) } </td>
 					<td class="search-included">{ strconv.Itoa(shield.IdsInfo) } </td>
+					@HashTd(shield.NicknameHash)
+					@HashTd(shield.HpTypeHash)
 					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, disco)
 				}
 			}

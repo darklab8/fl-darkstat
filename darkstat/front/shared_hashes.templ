@@ -1,0 +1,23 @@
+package front
+
+import (
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
+)
+
+templ HashTd(value flhash.HashCode) {
+    <td class="search-included">{ value.ToIntStr() }</td>
+    <td class="search-included">{ value.ToUintStr() }</td>
+    <td class="search-included">{ value.ToHexStr() }</td>
+}
+
+templ HashTh(name string) {
+    <th style="width:10px;">
+        @MultiLinestring([]string{name,"hash int"})
+    </th>
+    <th style="width:10px;">
+        @MultiLinestring([]string{name,"hash uint"})
+    </th>
+    <th style="width:10px;">
+        @MultiLinestring([]string{name,"hash hex"})
+    </th>
+}

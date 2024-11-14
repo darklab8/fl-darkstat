@@ -38,6 +38,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
+				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -59,6 +60,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 					<td class="search-included">{ cm.Nickname } </td>
 					<td class="search-included">{ strconv.Itoa(cm.NameID) } </td>
 					<td class="search-included">{ strconv.Itoa(cm.InfoID) } </td>
+					@HashTd(cm.NicknameHash)
 					@TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm, disco)
 				}
 			}

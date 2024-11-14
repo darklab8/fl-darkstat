@@ -67,6 +67,11 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Projectile", "Archetype"})
+				</th>
+				@HashTh("Mine Dropper")
+				@HashTh("Mine")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -98,6 +103,9 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 					<td class="search-included">{ mine.Nickname } </td>
 					<td class="search-included">{ strconv.Itoa(mine.IdsName) } </td>
 					<td class="search-included">{ strconv.Itoa(mine.IdsInfo) } </td>
+					<td class="search-included">{ mine.ProjectileArchetype } </td>
+					@HashTd(mine.MineDropperHash)
+					@HashTd(mine.MineHash)
 					@TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, disco)
 				}
 			}

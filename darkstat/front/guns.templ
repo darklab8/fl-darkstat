@@ -189,6 +189,9 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 				}
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
+				@HashTh("Gun Nick")
+				@HashTh("Munition")
+				@HashTh("HpType")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -263,6 +266,9 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		}
 		<td class="search-included">{ strconv.Itoa(gun.IdsName) } </td>
 		<td class="search-included">{ strconv.Itoa(gun.IdsInfo) } </td>
+		@HashTd(gun.NicknameHash)
+		@HashTd(gun.MunitionHash)
+		@HashTd(gun.HpTypeHash)
 		@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, disco)
 	}
 }

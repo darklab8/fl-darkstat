@@ -49,6 +49,10 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 				<th style="width:25px;">HpType</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
+				@HashTh("Nickname")
+				@HashTh("HPType")
+				@HashTh("Flame Eff")
+				@HashTh("Trail Eff")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -72,6 +76,10 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 					<td class="search-included">{ engine.HpType } </td>
 					<td class="search-included">{ strconv.Itoa(engine.NameID) } </td>
 					<td class="search-included">{ strconv.Itoa(engine.InfoID) } </td>
+					@HashTd(engine.NicknameHash)
+					@HashTd(engine.HpTypeHash)
+					@HashTd(engine.FlameEffectHash)
+					@HashTd(engine.TrailEffectHash)
 					@TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, disco)
 				}
 			}

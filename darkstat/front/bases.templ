@@ -119,6 +119,12 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 				<th style="width:5px;">
 					@MultiLinestring([]string{"Rech", "able"})
 				</th>
+				if tab_mode != BaseTabOres {
+					@HashTh("Base nick")
+				} else {
+					@HashTh("Zone nick")
+				}
+				@HashTh("System nick")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -203,6 +209,8 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		<td class="search-included">{ strconv.Itoa(base.StridName) }</td>
 		<td class="search-included">{ strconv.Itoa(base.InfocardID) }</td>
 		<td>{ FormatBoolAsYesNo(base.Reachable) }</td>
+		@HashTd(base.NicknameHash)
+		@HashTd(base.SystemNicknameHash)
 		@TdInfoCardClick(base.Infocard, base.Nickname, pinm, disco)
 	}
 }
@@ -310,6 +318,7 @@ templ BaseMarketGoodsBase() {
 				</th>
 				<th style="width:10px;">Nickname</th>
 				<th style="width:10px;">HpType</th>
+				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -357,6 +366,7 @@ templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode B
 					}
 				</td>
 				<td>{ good.HpType }</td>
+				@HashTd(good.NicknameHash)
 				<td></td>
 			</tr>
 		}
