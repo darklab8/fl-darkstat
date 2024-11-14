@@ -2,22 +2,88 @@ package front
 
 import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 )
 
 templ HashTd(value flhash.HashCode) {
-    <td class="search-included">{ value.ToIntStr() }</td>
+    // <td class="search-included">{ value.ToIntStr() }</td>
     <td class="search-included">{ value.ToUintStr() }</td>
-    <td class="search-included">{ value.ToHexStr() }</td>
+    // <td class="search-included">{ value.ToHexStr() }</td>
 }
 
 templ HashTh(name string) {
+    // <th style="width:10px;">
+    //     @MultiLinestring([]string{name,"hash int32"})
+    // </th>
     <th style="width:10px;">
-        @MultiLinestring([]string{name,"hash int"})
+        @MultiLinestring([]string{name,"hash uint32"})
     </th>
-    <th style="width:10px;">
-        @MultiLinestring([]string{name,"hash uint"})
-    </th>
-    <th style="width:10px;">
-        @MultiLinestring([]string{name,"hash hex"})
-    </th>
+    // <th style="width:10px;">
+    //     @MultiLinestring([]string{name,"hash hex"})
+    // </th>
+}
+
+templ HashTable(hashes map[string]flhash.HashCode) {
+	<table class="sortable">
+		<thead>
+			<tr>
+                <th style="width:200px;">
+                    @MultiLinestring([]string{"Nickname"})
+                </th>
+                <th style="width:10px;">
+                    @MultiLinestring([]string{"hash int32"})
+                </th>
+                <th style="width:10px;">
+                    @MultiLinestring([]string{"hash uint32"})
+                </th>
+                <th style="width:10px;">
+                    @MultiLinestring([]string{"hash hex"})
+                </th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for nickname, value := range hashes {
+                <tr>
+                    <td class="search-included">{ nickname }</td>
+                    <td class="search-included">{ value.ToIntStr() }</td>
+                    <td class="search-included">{ value.ToUintStr() }</td>
+                    <td class="search-included">{ value.ToHexStr() }</td>
+                    <td style="max-width:100%;"></td>
+                </tr>
+			}
+		</tbody>
+	</table>
+}
+
+
+templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, disco types.DiscoveryIDs) {
+	@TabMenu(urls.Hashes, mode2, disco)
+	@TabContent() {
+		<div class="splitter">
+			@LeftTable(){
+				@TableTop(){
+                    @FilterBar(types.DiscoveryIDs{})
+					<div id="table-top-main">
+						@HashTable(hashes)
+					</div>
+					<div id={ "table-top-main" + string(PinMode) } class="hidden">
+						@HashTable(hashes)
+					</div>
+				}
+				@TableBottom(){
+					<div id="table-bottom-main">
+						@GoodAtBaseSharedT(ShowAsCommodity(false))
+					</div>
+					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+						@GoodAtBaseSharedT(ShowAsCommodity(false))
+					</div>
+				}
+			}
+			@InfocardTable(){
+				@InfocardShared()
+			}
+		</div>
+	}
 }

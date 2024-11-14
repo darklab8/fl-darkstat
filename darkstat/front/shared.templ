@@ -190,17 +190,35 @@ type ShowEmpty bool
 type ShowAllMode bool
 
 templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePath) {
-	<button
-		preload="mouseover"
-		hx-trigger="mousedown"
-		hx-get={ types.GetCtx(ctx).SiteRoot + get_url.ToString() }
-		class={ templ.KV("selected", get_url == url), "button", strings.Join(text,"") }
-		role="tab"
-		aria-selected="false"
-		aria-controls="tab-content"
-	>
-		@MultiLinestring(text)
-	</button>
+	if get_url == urls.HashesIndex {
+		<a 
+			href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + get_url.ToString()) }
+			style="display: block;"
+		>
+			<button
+				class={ templ.KV("selected", get_url == url), "button", strings.Join(text,"") }
+				role="tab"
+				aria-selected="false"
+				aria-controls="tab-content"
+				style="height: 100%;"
+			>
+				@MultiLinestring(text)
+			</button>
+		</a>
+
+	} else {
+		<button
+			preload="mouseover"
+			hx-trigger="mousedown"
+			hx-get={ types.GetCtx(ctx).SiteRoot + get_url.ToString() }
+			class={ templ.KV("selected", get_url == url), "button", strings.Join(text,"") }
+			role="tab"
+			aria-selected="false"
+			aria-controls="tab-content"
+		>
+			@MultiLinestring(text)
+		</button>
+	}
 }
 
 templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs) {
@@ -262,6 +280,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				}
 				@Button([]string{"Engines"}, urls.Engines, url)
 				@Button([]string{"Scan","ners"}, urls.Scanners, url)
+				@Button([]string{"Hash"}, urls.HashesIndex, url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@MultiLinestring([]string{"Show", "All"})
 				</button>
@@ -292,6 +311,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				}
 				@Button([]string{"Engines"}, AllItemsUrl(urls.Engines), url)
 				@Button([]string{"Scan","ners"}, AllItemsUrl(urls.Scanners), url)
+				@Button([]string{"Hash"}, AllItemsUrl(urls.HashesIndex), url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@MultiLinestring([]string{"Don't", "Show All"})
 				</button>

@@ -22,6 +22,8 @@ const (
 	Guns            utils_types.FilePath = "guns.html"
 	GunModifiers    utils_types.FilePath = "gun_modifiers.html"
 	Ammo            utils_types.FilePath = "ammo.html"
+	Hashes          utils_types.FilePath = "hashes.html"
+	HashesIndex     utils_types.FilePath = "hashes_index.html"
 	Missiles        utils_types.FilePath = "missiles.html"
 	Mines           utils_types.FilePath = "mines.html"
 	Shields         utils_types.FilePath = "shields.html"
