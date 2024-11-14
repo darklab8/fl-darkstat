@@ -477,7 +477,7 @@ templ GoodAtBaseInfoT(name string, base_infos []*configs_export.GoodAtBase, is_c
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseSellsFor, base_info.Volume)) }</td>
 				}
-				<td>{ FormatBaseSells(!base_info.BaseBuysOnly) }</td>
+				<td>{ FormatBaseSells(base_info.BaseSells) }</td>
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", base_info.RepRequired) }</td>
 				<td>
