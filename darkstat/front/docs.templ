@@ -234,7 +234,13 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
             Find gray text "pin" on the left of rows at top table.
         </p>
         <img src={ types.GetCtx(ctx).StaticRoot + "docs_pinning.png" }>
-
+        @SectionHeader("Ordering content by columns")
+        <p>
+            Clicking on a column makes the rows ordered by it.
+            Clicking again orders in reverse order.
+            You can even order by several columns at the same time if u click them in a sequence.
+        </p>
+        <img src={ types.GetCtx(ctx).StaticRoot + "docs_ordering.png" }>
         @SectionHeader("Searching/filtering bars")
         <p>
             Searching bar on the left is capable to search by most of avilable in the row content, plus it is able to search by first line in infocard in order to capture infocard ship names in addition for searches like "Hegemon" and etc.
