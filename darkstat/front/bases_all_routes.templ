@@ -117,7 +117,7 @@ templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode Base
 
 				<td>
 					@WriteLimit(100) {
-						{ route.Transport.ToBase.Nickname }
+						{ route.Transport.ToBase.Nickname.ToStr() }
 					}
 				</td>
 				<td>{ fmt.Sprintf("%.0f", route.Transport.ToBase.Pos.X) }</td>

@@ -20,15 +20,15 @@ func InfocardURL(infocard_key configs_export.InfocardKey) string {
 func BaseDetailedUrl(base *configs_export.Base, tab_mode BaseMode) string {
 
 	if tab_mode == BaseShowShops {
-		return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname)
+		return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseShowMissions {
-		return "bases/missions/msns_" + strings.ToLower(base.Nickname)
+		return "bases/missions/msns_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseTabTrades {
-		return "bases/trades/trades_" + strings.ToLower(base.Nickname)
+		return "bases/trades/trades_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseTabOres {
-		return "bases/ores/ore_" + strings.ToLower(base.Nickname)
+		return "bases/ores/ore_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseAllRoutes {
-		return "bases/routes/route_" + strings.ToLower(base.Nickname)
+		return "bases/routes/route_" + strings.ToLower(base.Nickname.ToStr())
 	}
 
 	panic("not supported mode for base")
@@ -137,8 +137,8 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 }
 
 templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco types.DiscoveryIDs) {
-	@TrFromMainTb(base.Nickname, BaseDetailedUrl(base, tab_mode), pinm) {
-		@PinTd(base.Nickname, base.Name, pinm)
+	@TrFromMainTb(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm) {
+		@PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		if tab_mode != BaseTabOres {
 			<td>
@@ -201,7 +201,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 				}
 			</td>
 		}
-		<td class="search-included">{ base.Nickname }</td>
+		<td class="search-included">{ base.Nickname.ToStr() }</td>
 		<td class="search-included">{ base.SystemNickname }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.Y) }</td>
@@ -211,7 +211,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		<td>{ FormatBoolAsYesNo(base.Reachable) }</td>
 		@HashTd(base.NicknameHash)
 		@HashTd(base.SystemNicknameHash)
-		@TdInfoCardClick(base.Infocard, base.Nickname, pinm, disco)
+		@TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, disco)
 	}
 }
 
@@ -318,6 +318,9 @@ templ BaseMarketGoodsBase() {
 				</th>
 				<th style="width:10px;">Nickname</th>
 				<th style="width:10px;">HpType</th>
+				<th style="width:10px;">
+					@MultiLinestring([]string{"Server", "Override"})
+				</th>
 				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
 			</tr>
@@ -328,11 +331,11 @@ templ BaseMarketGoodsBase() {
 	</table>
 }
 
-templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode BaseMode) {
+templ BaseMarketGoods(name string, goods map[string]configs_export.MarketGood, tab_mode BaseMode) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMarketGoodsBase() {
-		for _, good := range goods {
+		for _, good := range SortedMarketGoods(goods) {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(good.Infocard) }
 				hx-trigger="click"
@@ -366,6 +369,7 @@ templ BaseMarketGoods(name string, goods []configs_export.MarketGood, tab_mode B
 					}
 				</td>
 				<td>{ good.HpType }</td>
+				<td>{ strconv.FormatBool(good.IsServerSideOverride) }</td>
 				@HashTd(good.NicknameHash)
 				<td></td>
 			</tr>
@@ -652,7 +656,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 				<td>{ trade_route.Transport.Commodity.Nickname }</td>
 				<td>
 					@WriteLimit(100) {
-						{ trade_route.Transport.SellingGood.BaseNickname }
+						{ trade_route.Transport.SellingGood.BaseNickname.ToStr() }
 					}
 				</td>
 				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>

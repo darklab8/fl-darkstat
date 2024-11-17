@@ -111,13 +111,6 @@ func (l *Linker) Link() *builder.Builder {
 		})
 
 		for _, base := range data.Bases {
-			sort.Slice(base.MarketGoods, func(i, j int) bool {
-				if base.MarketGoods[i].Name != "" && base.MarketGoods[j].Name == "" {
-					return true
-				}
-				return base.MarketGoods[i].Name < base.MarketGoods[j].Name
-			})
-
 			sort.Slice(base.TradeRoutes, func(i, j int) bool {
 				return base.TradeRoutes[i].Transport.GetProffitPerTime() > base.TradeRoutes[j].Transport.GetProffitPerTime()
 			})
@@ -150,39 +143,12 @@ func (l *Linker) Link() *builder.Builder {
 			return data.Commodities[i].Name < data.Commodities[j].Name
 		})
 
-		for _, base_info := range data.Commodities {
-			sort.Slice(base_info.Bases, func(i, j int) bool {
-				if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
-					return true
-				}
-				return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
-			})
-		}
-
 		sort.Slice(data.Guns, func(i, j int) bool {
 			if data.Guns[i].Name != "" && data.Guns[j].Name == "" {
 				return true
 			}
 			return data.Guns[i].Name < data.Guns[j].Name
 		})
-
-		for _, base_info := range data.Guns {
-			sort.Slice(base_info.Bases, func(i, j int) bool {
-				if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
-					return true
-				}
-				return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
-			})
-		}
-
-		for _, base_info := range data.Mines {
-			sort.Slice(base_info.Bases, func(i, j int) bool {
-				if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
-					return true
-				}
-				return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
-			})
-		}
 
 		sort.Slice(data.Shields, func(i, j int) bool {
 			if data.Shields[i].Name != "" && data.Shields[j].Name == "" {
@@ -191,30 +157,12 @@ func (l *Linker) Link() *builder.Builder {
 			return data.Shields[i].Name < data.Shields[j].Name
 		})
 
-		for _, base_info := range data.Shields {
-			sort.Slice(base_info.Bases, func(i, j int) bool {
-				if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
-					return true
-				}
-				return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
-			})
-		}
-
 		sort.Slice(data.Thrusters, func(i, j int) bool {
 			if data.Thrusters[i].Name != "" && data.Thrusters[j].Name == "" {
 				return true
 			}
 			return data.Thrusters[i].Name < data.Thrusters[j].Name
 		})
-
-		for _, base_info := range data.Thrusters {
-			sort.Slice(base_info.Bases, func(i, j int) bool {
-				if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
-					return true
-				}
-				return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
-			})
-		}
 
 		sort.Slice(data.Ships, func(i, j int) bool {
 			if data.Ships[i].Name != "" && data.Ships[j].Name == "" {
@@ -223,30 +171,12 @@ func (l *Linker) Link() *builder.Builder {
 			return data.Ships[i].Name < data.Ships[j].Name
 		})
 
-		for _, base_info := range data.Ships {
-			sort.Slice(base_info.Bases, func(i, j int) bool {
-				if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
-					return true
-				}
-				return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
-			})
-		}
-
 		sort.Slice(data.Tractors, func(i, j int) bool {
 			if data.Tractors[i].Name != "" && data.Tractors[j].Name == "" {
 				return true
 			}
 			return data.Tractors[i].Name < data.Tractors[j].Name
 		})
-
-		for _, base_info := range data.Tractors {
-			sort.Slice(base_info.Bases, func(i, j int) bool {
-				if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
-					return true
-				}
-				return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
-			})
-		}
 
 		sort.Slice(data.Engines, func(i, j int) bool {
 			if data.Engines[i].Name != "" && data.Engines[j].Name == "" {
@@ -255,31 +185,12 @@ func (l *Linker) Link() *builder.Builder {
 			return data.Engines[i].Name < data.Engines[j].Name
 		})
 
-		for _, base_info := range data.Engines {
-			sort.Slice(base_info.Bases, func(i, j int) bool {
-				if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
-					return true
-				}
-				return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
-			})
-		}
-
 		sort.Slice(data.Scanners, func(i, j int) bool {
 			if data.Scanners[i].Name != "" && data.Scanners[j].Name == "" {
 				return true
 			}
 			return data.Scanners[i].Name < data.Scanners[j].Name
 		})
-
-		for _, base_info := range data.Scanners {
-			sort.Slice(base_info.Bases, func(i, j int) bool {
-				if base_info.Bases[i].BaseName != "" && base_info.Bases[j].BaseName == "" {
-					return true
-				}
-				return base_info.Bases[i].BaseName < base_info.Bases[j].BaseName
-			})
-		}
-
 	})
 
 	var useful_factions []configs_export.Faction
@@ -512,7 +423,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseShowShops)),
-					front.BaseMarketGoods(base.Name, base.MarketGoods, front.BaseShowShops),
+					front.BaseMarketGoods(base.Name, base.MarketGoodsPerNick, front.BaseShowShops),
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseShowMissions)),
