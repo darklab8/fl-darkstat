@@ -417,15 +417,15 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Rep.", "Req."})
 				</th>
+				<th style="width:10px;">
+					@MultiLinestring([]string{"Server", "Override"})
+				</th>
 				<th style="width:100px;">Base Nickname</th>
 				<th style="width:20px;">Pos X</th>
 				<th style="width:20px;">Pos Y</th>
 				<th style="width:20px;">Pos Z</th>
 				<th style="width:5px;">
 					@MultiLinestring([]string{"Base is", "Reachable"})
-				</th>
-				<th style="width:10px;">
-					@MultiLinestring([]string{"Server", "Override"})
 				</th>
 				<th style="max-width:100%;"></th>
 			</tr>
@@ -484,6 +484,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 				<td>{ FormatBaseSells(base_info.BaseSells) }</td>
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", base_info.RepRequired) }</td>
+				<td>{ strconv.FormatBool(base_info.IsServerSideOverride) }</td>
 				<td>
 					@WriteLimit(100) {
 						{ base_info.BaseNickname.ToStr() }
@@ -493,7 +494,6 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Y) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Z) }</td>
 				<td>{ FormatBoolAsYesNo(!base_info.NotBuyable) }</td>
-				<td>{ strconv.FormatBool(base_info.IsServerSideOverride) }</td>
 				<td></td>
 			</tr>
 		}
