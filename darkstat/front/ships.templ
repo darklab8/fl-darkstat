@@ -143,7 +143,7 @@ templ ShipTable(
 }
 
 templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
-	@TrFromMainTb2(ship.Nickname, ShipDetailedUrl(ship, mode), pinm, prerender) {
+	@TrFromMainTb2(NewTr(ship.Nickname, ShipDetailedUrl(ship, mode), pinm), prerender) {
 		@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
 		@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
 		@TdDisco(disco, ship.Nickname, ship.DiscoveryTechCompat)

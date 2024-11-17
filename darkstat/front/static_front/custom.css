@@ -49,3 +49,7 @@ th {
 .line_through {
     text-decoration: line-through;
 }
+
+.line_underline {
+    text-decoration: underline;
+}

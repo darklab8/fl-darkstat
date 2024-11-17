@@ -274,5 +274,23 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
             Then insert the nickname of hardpoint into tab "Guns", or "Missiles", or "Shields", "Engines" and etc, it will filter for compatible equipment.
         </p>
         <img src={ types.GetCtx(ctx).StaticRoot + "docs_seaching_for_hp_type.png" }>
+
+        @SectionHeader("Legend for extra markings")
+        <img src={ types.GetCtx(ctx).StaticRoot + "docs_not_for_transports.png" }>
+        <p>
+            row underlined, means transports can't reach this base location because
+            <ul>
+            </ul>
+            if disco.Show {
+            <li>jump holes are not allowing tranposrts</li>
+            <li>or jump holes can't be jumped with cargo more than 650 units</li>
+            <li>or there are no transporting docking spheres "jump" type</li> 
+            }
+            <li>base could be in a system that just has no jump holes leading to it</li>
+        </p>
+
+        <li>
+            rows crossed out with line through means the base is invisible and not dockable at all
+        </li>
     }
 }

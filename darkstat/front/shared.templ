@@ -387,6 +387,9 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				<th style="width:150px;">Faction</th>
 				<th style="width:50px;">Region</th>
 				<th style="width:100px;">System</th>
+				<th style="width:5px;">
+					@MultiLinestring([]string{"Not for", "tran", "sports"})
+				</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Nav", "Map"})
 				</th>
@@ -458,7 +461,9 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 				hx-swap="innerHTML"
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
-				class={ templ.KV("line_through", base_info.NotBuyable) }
+				class={ 
+					templ.KV("line_through", base_info.NotBuyable),
+					templ.KV("line_underline", base_info.IsTransportUnreachable), }
 			>
 				<td>
 					@WriteBaseName(base_info.BaseName)
@@ -471,6 +476,9 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 				</td>
 				<td>
 					@WriteSystemName(base_info.SystemName)
+				</td>
+				<td>
+					{ strconv.FormatBool(base_info.IsTransportUnreachable) }
 				</td>
 				<td>{ base_info.SectorCoord }</td>
 				if is_commodity {
@@ -709,22 +717,60 @@ templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, p
 	}
 }
 
-templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
-	@TrFromMainTb2(nickname, detailed_url, pinm, false) {
+type Tr struct {
+	nickname string
+	detailed_url string
+	pinm PinMod
+	is_tranport_unreachable bool
+}
+type TrOpt func(t *Tr)
+
+func WithTransportUnreachable(is_tranport_unreachable bool) TrOpt {
+	return func(t *Tr) {
+		t.is_tranport_unreachable = is_tranport_unreachable
+	}
+}
+
+func NewTr(nickname string, detailed_url string, pinm PinMod, opts ...TrOpt) *Tr {
+	t := &Tr{
+		nickname: nickname,
+		detailed_url: detailed_url,
+		pinm: pinm,
+	}
+
+	for _, opt := range opts {
+		opt(t)
+	}
+
+	return t
+}
+
+templ TrFromMain(tr *Tr) {
+	@TrFromMainTb2(tr, false) {
 		{ children... }
 	}
 }
 
-templ TrFromMainTb2(nickname string, detailed_url string, pinm PinMod, prerender bool) {
+templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
+	@TrFromMainTb2(NewTr(nickname, detailed_url, pinm), false) {
+		{ children... }
+	}
+}
+
+templ TrFromMainTb2(tr *Tr, prerender bool) {
 	<tr
-		id={ string(pinm) + "bottominfo_" + nickname }
-		hx-get={ types.GetCtx(ctx).SiteRoot + detailed_url }
+		id={ string(tr.pinm) + "bottominfo_" + tr.nickname }
+		hx-get={ types.GetCtx(ctx).SiteRoot + tr.detailed_url }
 		hx-trigger="mousedown"
-		hx-target={ "#table-bottom-main" + string(pinm) }
+		hx-target={ "#table-bottom-main" + string(tr.pinm) }
 		hx-swap="innerHTML"
 		preload="mouseover"
-		class={ templ.KV("hidden", pinm == PinMode && !prerender) }
+		class={
+			templ.KV("hidden", tr.pinm == PinMode && !prerender),
+			templ.KV("line_underline", tr.is_tranport_unreachable),
+		}
 		onclick="RowHighlighter(this)"
+
 	>
 		{ children... }
 	</tr>

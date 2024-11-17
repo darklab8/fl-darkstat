@@ -66,6 +66,11 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 					</th>
 				}
 				<th style="width:50px;">System</th>
+				if disco.Show {
+					<th style="width:5px;">
+						@MultiLinestring([]string{"Not for", "tran", "sports"})
+					</th>
+				}
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Nav", "Map"})
 				</th>
@@ -137,7 +142,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 }
 
 templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco types.DiscoveryIDs) {
-	@TrFromMainTb(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm) {
+	@TrFromMain(NewTr(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm, WithTransportUnreachable(base.IsTransportUnreachable))) {
 		@PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		if tab_mode != BaseTabOres {
@@ -151,6 +156,11 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		<td>
 			@WriteSystemName(base.System)
 		</td>
+		if disco.Show {
+			<td>
+			{ strconv.FormatBool(base.IsTransportUnreachable) }
+			</td>
+		}
 		<td>{ base.SectorCoord }</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>

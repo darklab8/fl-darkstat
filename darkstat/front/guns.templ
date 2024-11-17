@@ -204,7 +204,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 }
 
 templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
-	@TrFromMainTb2(gun.Nickname, GunDetailedUrl(gun, mode), pinm, prerender) {
+	@TrFromMainTb2(NewTr(gun.Nickname, GunDetailedUrl(gun, mode), pinm), prerender) {
 		@PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
 		@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
 		@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
