@@ -223,6 +223,11 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
                 It also applies all latest server configs at the moment of its autoupdate. The darkstat update happens 3 times per day.
              </p>
              <img src={ types.GetCtx(ctx).StaticRoot + "docs_timestamp.png" }>
+             @SectionHeader("Discovery commoditity volumes changing per ship class")
+             <p>
+                Addressed by having commodity duplicates with different volume/ship class parameter. Accordingly adjusts other shown parameters about them.
+                Also added suffix to their name end with ship class name.
+             </p>
         }
 
         @SectionHeader("Pinning feature")
