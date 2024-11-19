@@ -312,8 +312,15 @@ templ BaseMarketGoodsBase() {
 					@MultiLinestring([]string{"Price", "To Buy"})
 				</th>
 				<th style="width:10px;">
+					@MultiLinestring([]string{"Volume"})
+				</th>
+				<th style="width:10px;">
+					@MultiLinestring([]string{"comm.","ship", "class"})
+				</th>
+				<th style="width:10px;">
 					@MultiLinestring([]string{"Lev.", "Req."})
 				</th>
+				
 				<th style="width:10px;">
 					@MultiLinestring([]string{"Rep.", "Req."})
 				</th>
@@ -341,7 +348,7 @@ templ BaseMarketGoodsBase() {
 	</table>
 }
 
-templ BaseMarketGoods(name string, goods map[string]configs_export.MarketGood, tab_mode BaseMode) {
+templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs_export.MarketGood, tab_mode BaseMode) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMarketGoodsBase() {
@@ -356,7 +363,7 @@ templ BaseMarketGoods(name string, goods map[string]configs_export.MarketGood, t
 			>
 				<td>
 					@WriteLimit(200) {
-						{ good.Name }
+						{ good.Name + FormattedShipClassOfCommodity(good.ShipClass) }
 					}
 				</td>
 				<td>
@@ -368,6 +375,8 @@ templ BaseMarketGoods(name string, goods map[string]configs_export.MarketGood, t
 					}
 				</td>
 				<td>{ strconv.Itoa(good.PriceToBuy) }</td>
+				<td>{ fmt.Sprintf("%.0f", good.Volume) }</td>
+				<td>{ FormattedShipClassOfCommodity2(good.ShipClass) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
 				<td>{ FormatBaseSells(good.BaseSells) }</td>
@@ -488,7 +497,7 @@ templ BaseTradesShared(disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:100px;">Commodity</th>
+				<th style="width:200px;">Commodity</th>
 				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
 				</th>
@@ -512,6 +521,8 @@ templ BaseTradesShared(disco types.DiscoveryIDs) {
 					</th>
 				}
 				<th style="width:50px;">Profit/v</th>
+				<th style="width:5px;">Vol.</th>
+				<th style="width:5px;">@MultiLinestring([]string{"Ship", "cl."})</th>
 				<th style="width:100px;">System</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Nav", "Map"})
@@ -600,8 +611,8 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteLimit(100) {
-						{ trade_route.Transport.Commodity.Name }
+					@WriteLimit(200) {
+						{ trade_route.Transport.Commodity.Name + FormattedShipClassOfCommodity(trade_route.Transport.Commodity.ShipClass) }
 					}
 				</td>
 				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
@@ -647,7 +658,9 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 						</span>
 					</td>
 				}
-				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.Commodity.Volume)) }</td>
+				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
+				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.Commodity.Volume) }</td>
+				<td>{ FormattedShipClassOfCommodity2(trade_route.Transport.Commodity.ShipClass) }</td>
 				<td>
 					@WriteSystemName(trade_route.Transport.SellingGood.SystemName)
 				</td>

@@ -10,7 +10,7 @@ import (
 )
 
 func GoodAtBaseInfoTUrl(commodity *configs_export.Commodity) string {
-	return "commodities/comm_base_" + strings.ToLower(commodity.Nickname)
+	return "commodities/comm_base_" + strings.ToLower(string(configs_export.GetCommodityKey(commodity.Nickname, commodity.ShipClass)))
 }
 
 templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco types.DiscoveryIDs) {
@@ -35,6 +35,7 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 					@MultiLinestring([]string{"Best", "Sell ", "per vol"})
 				</th>
 				<th style="width:25px;">Volume</th>
+				<th style="width:5px;">@MultiLinestring([]string{"Ship", "Class"})</th>
 				<th style="width:25px;">Profit</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Profit", "per v. "})
@@ -49,13 +50,14 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 		<tbody>
 			for _, commodity := range commodities {
 				@TrFromMainTb(commodity.Nickname, GoodAtBaseInfoTUrl(commodity), pinm) {
-					@PinTd(commodity.Nickname, commodity.Name, pinm)
+					@PinTd(commodity.Nickname, commodity.Name + FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
 					@PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
 					<td>{ strconv.Itoa(commodity.PriceBestBaseSellsFor) }</td>
 					<td>{ strconv.Itoa(commodity.PriceBestBaseBuysFor) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseSellsFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseBuysFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.2f", commodity.Volume) }</td>
+					<td>{ FormattedShipClassOfCommodity2(commodity.ShipClass) }</td>
 					<td>{ strconv.Itoa(commodity.ProffitMargin) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.ProffitMargin, commodity.Volume)) }</td>
 					<td class="search-included">{ commodity.Nickname }</td>

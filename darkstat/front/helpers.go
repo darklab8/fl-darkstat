@@ -43,7 +43,7 @@ func SortedBases(bases_map map[cfgtype.BaseUniNick]*configs_export.GoodAtBase) [
 	return bases
 }
 
-func SortedMarketGoods(goods_per_nick map[string]configs_export.MarketGood) []configs_export.MarketGood {
+func SortedMarketGoods(goods_per_nick map[configs_export.CommodityKey]configs_export.MarketGood) []configs_export.MarketGood {
 	var market_goods []configs_export.MarketGood = make([]configs_export.MarketGood, 0, 10)
 
 	for _, good := range goods_per_nick {
@@ -58,4 +58,20 @@ func SortedMarketGoods(goods_per_nick map[string]configs_export.MarketGood) []co
 	})
 
 	return market_goods
+}
+
+func FormattedShipClassOfCommodity(ship_class cfgtype.ShipClass) string {
+	if ship_class >= 0 {
+		return " (" + ship_class.ToStr() + ")"
+	} else {
+		return ""
+	}
+}
+
+func FormattedShipClassOfCommodity2(ship_class cfgtype.ShipClass) string {
+	if ship_class >= 0 {
+		return fmt.Sprintf("%d,%s", ship_class, ship_class.ToStr())
+	} else {
+		return "nil"
+	}
 }
