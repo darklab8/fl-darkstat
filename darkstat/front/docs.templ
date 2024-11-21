@@ -230,11 +230,15 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
              </p>
 
              @SectionHeader("PoB Crafts")
-
              <p>
-                Pseudo base "PoB Crafts" is added into "Bases" tab for convinience of discovery of all craftable items.
-                All tabs are enhanced with ability to show if item can be bought or craftable (If craftable, then PoB crafts location will be seen)
+                <ul>
+                    <li>Pseudo base "PoB Crafts" is added into "Bases" tab for convinience of discovery of all craftable items.</li>
+                    <li>All tabs are enhanced with ability to show if item can be bought or craftable (If craftable, then PoB crafts location will be seen)</li>
+                    <li>At the infocard bottom you can see crafting recipes</li>
+                </ul>                
              </p>
+             <img src={ types.GetCtx(ctx).StaticRoot + "pob_crafts_base.png" }>
+             <img src={ types.GetCtx(ctx).StaticRoot + "pob_craft_enhanced_infocard.png" }>
         }
 
         @SectionHeader("Pinning feature")

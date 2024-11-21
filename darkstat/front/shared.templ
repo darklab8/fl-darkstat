@@ -359,8 +359,8 @@ templ InfocardShared() {
 			margin: 10px;
 		}
 		.infocard p {
-			margin-top: 10px;
-			margin-bottom: 10px;
+			margin-top: 5px;
+			margin-bottom: 0px;
 		}
 	</style>
 	<div class="infocard">
@@ -372,9 +372,13 @@ templ InfocardShared() {
 templ Infocard(info configs_export.Infocard) {
 	@InfocardShared() {
 		for _, line := range info {
-			<p>
+			if strings.ReplaceAll(line," ", "") == "" {
+				<p><br></p>
+			} else {
+				<p>
 				@templ.Raw(line)
-			</p>
+				</p>
+			}
 		}
 	}
 }
