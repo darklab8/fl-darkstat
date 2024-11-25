@@ -23,16 +23,16 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 					<th style="width:25px;">Select</th>
 				}
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best", "Price", "to Buy"})
+					@MultiLinestring([]string{"Best price", "to buy", "from base"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best", "Price", "to Sell"})
+					@MultiLinestring([]string{"Best price", "to sell", "to base"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best", "Buy ", "per vol"})
+					@MultiLinestring([]string{"Best buy", "per vol", "from base"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best", "Sell ", "per vol"})
+					@MultiLinestring([]string{"Best sell ", "per vol", "to base"})
 				</th>
 				<th style="width:25px;">Volume</th>
 				<th style="width:5px;">@MultiLinestring([]string{"Ship", "Class"})</th>

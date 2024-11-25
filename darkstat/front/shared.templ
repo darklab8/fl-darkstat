@@ -399,27 +399,27 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				</th>
 				if is_commodity {
 					<th style="width:25px;">
-						@MultiLinestring([]string{"Price", "To", "Sell"})
+						@MultiLinestring([]string{"Price", "to sell", "to base"})
 					</th>
 					<th style="width:25px;">
-						@MultiLinestring([]string{"Price", "To", "Buy"})
+						@MultiLinestring([]string{"Price", "to buy", "from base"})
 					</th>
 				} else {
 					<th style="width:50px;">Price</th>
 				}
 				if is_commodity {
 					<th style="width:25px;">
-						@MultiLinestring([]string{"Price", "To Sell", "Per Vol"})
+						@MultiLinestring([]string{"price","to sell", "per vol", "to base"})
 					</th>
 					<th style="width:25px;">
-						@MultiLinestring([]string{"Price", "To Buy", "Per Vol"})
+						@MultiLinestring([]string{"price","to buy", "per vol", "from base"})
 					</th>
 					<th style="width:5px;">
 						@MultiLinestring([]string{"Ship", "class"})
 					</th>
 				}
 				<th style="width:5px;">
-						@MultiLinestring([]string{"Vol."})
+						@MultiLinestring([]string{"Vol", "ume"})
 					</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Base", "Sells"})

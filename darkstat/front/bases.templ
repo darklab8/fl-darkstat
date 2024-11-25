@@ -306,10 +306,10 @@ templ BaseMarketGoodsBase() {
 				<th style="width:200px;">Good</th>
 				<th style="width:10px;">Type</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "To Sell"})
+					@MultiLinestring([]string{"Price", "to sell", "to base"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "To Buy"})
+					@MultiLinestring([]string{"Price", "to buy", "from base"})
 				</th>
 				<th style="width:10px;">
 					@MultiLinestring([]string{"Volume"})
@@ -531,10 +531,10 @@ templ BaseTradesShared(disco types.DiscoveryIDs) {
 				<th style="width:100px;">Dest. Name</th>
 				<th style="width:100px;">Dest. Region</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Price", "To Buy"})
+					@MultiLinestring([]string{"Price", "to buy", "from base"})
 				</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Price", "To sell"})
+					@MultiLinestring([]string{"Price", "to sell", "to base"})
 				</th>
 				<th style="width:50px;">Commodity Nick</th>
 				<th style="width:50px;">Dest. Nickname</th>
