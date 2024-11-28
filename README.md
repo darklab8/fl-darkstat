@@ -7,8 +7,8 @@ online version of the [flstat](https://discoverygc.com/forums/showthread.php?tid
 See demos:
 
 - [development version](https://darklab8.github.io/fl-darkstat/)
-- [Freelancer Discovery version](https://darklab8.github.io/fl-data-discovery/)
-- [Freelancer Vanilla version](https://darklab8.github.io/fl-data-vanilla/)
+- [Freelancer Discovery version](https://darklab8.github.io/fl-data-discovery/) [(action)](<https://github.com/darklab8/fl-data-discovery/actions>)
+- [Freelancer Vanilla version](https://darklab8.github.io/fl-data-vanilla/) [(action)](<https://github.com/darklab8/fl-data-vanilla/actions>)
 
 # Support
 
