@@ -697,7 +697,11 @@ templ TdDisco(
 			<span class="tooltip">
 				<span class="search-included">
 				@MagnifyingGlass()
-				{ data.TechCell }
+				if data.TechCell == "" {
+					nil
+				} else {
+					{ data.TechCell }
+				}
 				</span>
 				<span class="tooltiptext" style="font-size: 0.85em; max-height: 250px; overflow-y: scroll;">
 					for _, disco_id := range configs_export.GetOrederedTechCompat(disco.TractorsByID, data) {
