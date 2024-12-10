@@ -704,7 +704,7 @@ templ TdDisco(
 				}
 				</span>
 				<span class="tooltiptext" style="font-size: 0.85em; max-height: 250px; overflow-y: scroll;">
-					for _, disco_id := range configs_export.GetOrederedTechCompat(disco.TractorsByID, data) {
+					for _, disco_id := range disco.OrderedTechcompat.GetOrederedTechCompat(data) {
 						{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) } - { disco_id.Tractor.Name }
 						<br/>
 					}

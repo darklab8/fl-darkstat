@@ -209,11 +209,12 @@ func (l *Linker) Link() *builder.Builder {
 
 		if l.mapped.Discovery != nil {
 			disco_ids = types.DiscoveryIDs{
-				Show:         true,
-				Ids:          l.configs.Tractors,
-				TractorsByID: l.configs.TractorsByID,
-				Config:       l.mapped.Discovery.Techcompat,
-				LatestPatch:  l.mapped.Discovery.LatestPatch,
+				Show:              true,
+				Ids:               l.configs.Tractors,
+				TractorsByID:      l.configs.TractorsByID,
+				Config:            l.mapped.Discovery.Techcompat,
+				LatestPatch:       l.mapped.Discovery.LatestPatch,
+				OrderedTechcompat: *configs_export.NewOrderedTechCompat(data),
 			}
 		}
 		disco_ids.Infocards = l.configs.Infocards

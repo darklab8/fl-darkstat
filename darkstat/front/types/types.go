@@ -54,4 +54,6 @@ type DiscoveryIDs struct {
 	LatestPatch  autopatcher.Patch
 
 	Infocards configs_export.Infocards
+
+	OrderedTechcompat configs_export.TechCompatOrderer
 }
