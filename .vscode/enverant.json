@@ -1,14 +1,14 @@
 {
-    // Define path to Freelancer Folder root
-    "FREELANCER_FOLDER": "/home/naa/apps/freelancer_related/wine_prefix_freelancer_online/drive_c/Discovery",
-    // "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
+    # Define path to Freelancer Folder root
+    "FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_online/drive_c/Discovery",
+    # "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
     "DEV_ENV": "true",
     "DARKSTAT_LOG_LEVEL": "DEBUG",
     "UTILS_LOG_LEVEL": "DEBUG",
-    // if u wish to speed up rerender by magnitude, then keep uncommended trade route calculations disabling
+    # if u wish to speed up rerender by magnitude, then keep uncommended trade route calculations disabling
     "CONFIGS_DISABLE_TRADE_ROUTES": "false",
-    "FLDARKSTAT_HEADING": "Dev server for fl-darkstat | <a href=\"https://github.com/darklab8/fl-darkstat\">Github</a>"
-    // "DARKSTAT_DETAILED": "true"
-    // "CONFIGS_FALLBACK_TO_NICKNAMES": "true",
-    // "CONFIGS_STRICT": "false",
+    "FLDARKSTAT_HEADING": 'Dev server for fl-darkstat | <a href="https://github.com/darklab8/fl-darkstat">Github</a>',
+    # "DARKSTAT_DETAILED": "true"
+    # "CONFIGS_FALLBACK_TO_NICKNAMES": "true",
+    # "CONFIGS_STRICT": "false",
 }
