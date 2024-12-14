@@ -335,16 +335,16 @@ func (l *Linker) Link() *builder.Builder {
 				front.AmmoT(data.FilterToUsefulAmmo(data.Ammos), front.ShowEmpty(false), disco_ids),
 			),
 			builder.NewComponent(
+				front.AllItemsUrl(urls.Ammo),
+				front.AmmoT(data.Ammos, front.ShowEmpty(true), disco_ids),
+			),
+			builder.NewComponent(
 				urls.Hashes,
 				front.HashesT(data.Hashes, front.ShowEmpty(false), disco_ids),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Hashes),
 				front.HashesT(data.Hashes, front.ShowEmpty(true), disco_ids),
-			),
-			builder.NewComponent(
-				front.AllItemsUrl(urls.Ammo),
-				front.AmmoT(data.Ammos, front.ShowEmpty(true), disco_ids),
 			),
 			builder.NewComponent(
 				urls.Missiles,

@@ -55,7 +55,7 @@ func marshalIDs(data types.DiscoveryIDs, item_nickname string) string {
 	}
 
 	bytes, _ := json.Marshal(compat_by_id)
-	return string(bytes)
+	return strings.ReplaceAll(string(bytes), "\"","'")
 }
 
 templ ShipTable(

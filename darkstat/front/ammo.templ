@@ -22,7 +22,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				// @ThDisco(disco) // techcompat is not active for ammo
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Hit Pts</th>
@@ -54,7 +54,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 				@TrFromMainTb(ammo.Nickname, AmmoDetailedUrl(ammo), pinm) {
 					@PinTd(ammo.Nickname, ammo.Name, pinm)
 					@PinSelectLeftRight(pinm, AmmoDetailedUrl(ammo))
-					@TdDisco(disco, ammo.Nickname, ammo.DiscoveryTechCompat)
+					// @TdDisco(disco, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					<td>{ strconv.Itoa(ammo.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(ammo.Bases)) }</td>
 					<td>{ strconv.Itoa(ammo.HitPts) } </td>
@@ -83,7 +83,7 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, disco types.DiscoveryI
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-					@FilterBar(disco)
+					@FilterBar(types.DiscoveryIDs{})
 					<div id="table-top-main">
 						@AmmoTable(ammos, MainMode, disco)
 					</div>
