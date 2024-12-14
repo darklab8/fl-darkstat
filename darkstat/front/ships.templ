@@ -51,8 +51,9 @@ func marshalIDs(data types.DiscoveryIDs, item_nickname string) string {
 			continue
 		}
 
-		compat_by_id[string(id.Nickname)] = compat
+		compat_by_id[string(id.ShortNickname)] = compat
 	}
+
 	bytes, _ := json.Marshal(compat_by_id)
 	return string(bytes)
 }

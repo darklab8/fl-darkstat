@@ -197,7 +197,7 @@ templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePa
 			style="display: block;"
 		>
 			<button
-				class={ templ.KV("selected", get_url == url), "button", strings.Join(text,"") }
+				class={ templ.KV("selected", strings.Contains(get_url.ToString(), url.ToString())), "button", strings.Join(text,"") }
 				role="tab"
 				aria-selected="false"
 				aria-controls="tab-content"
@@ -212,7 +212,7 @@ templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePa
 			preload="mouseover"
 			hx-trigger="mousedown"
 			hx-get={ types.GetCtx(ctx).SiteRoot + get_url.ToString() }
-			class={ templ.KV("selected", get_url == url), "button", strings.Join(text,"") }
+			class={ templ.KV("selected", strings.Contains(get_url.ToString(), url.ToString())), "button", strings.Join(text,"") }
 			role="tab"
 			aria-selected="false"
 			aria-controls="tab-content"
@@ -647,7 +647,7 @@ templ FilterBar(disco types.DiscoveryIDs) {
 			<select name="IDs" id="tractor_id_selector" onchange="FilteringFunction()">
 				<option value="">Filter items by tech compatible ID</option>
 				for _, id := range disco.Ids {
-					<option value={ string(id.Nickname) }><span>{ id.Name }</span> <span>( { string(id.Nickname) } )</span></option>
+					<option value={ string(id.ShortNickname) }><span>{ id.Name }</span> <span>( { string(id.Nickname) } )</span></option>
 				}
 			</select>
 		}
