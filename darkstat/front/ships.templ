@@ -224,7 +224,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 				@InfocardShared()
 			}
 		</div>
-		@CacheTable(disco, utils.CompL(ships, func(x configs_export.Ship) Item { return x }))
+		@CacheTechCompatTable(disco, utils.CompL(ships, func(x configs_export.Ship) Item { return x }))
 	}
 }
 

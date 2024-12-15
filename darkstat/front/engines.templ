@@ -117,6 +117,6 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco types.Disco
 				@InfocardShared()
 			}
 		</div>
-		@CacheTable(disco, utils.CompL(engines, func(x configs_export.Engine) Item { return x }))
+		@CacheTechCompatTable(disco, utils.CompL(engines, func(x configs_export.Engine) Item { return x }))
 	}
 }

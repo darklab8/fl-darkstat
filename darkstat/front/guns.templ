@@ -317,7 +317,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco t
 				@InfocardShared()
 			}
 		</div>
-		@CacheTable(disco, utils.CompL(guns, func(x configs_export.Gun) Item { return x }))
+		@CacheTechCompatTable(disco, utils.CompL(guns, func(x configs_export.Gun) Item { return x }))
 	}
 }
 
