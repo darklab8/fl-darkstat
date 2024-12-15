@@ -22,6 +22,9 @@ type Item interface {
 }
 
 func GetTdDiscoCacheKey(disco types.DiscoveryIDs, nickname string) TdCacheKey {
+	if !disco.Show {
+		return ""
+	}
 	cache_key_data := marshalIDs(disco, nickname)
 	h := md5.New()
 	io.WriteString(h, cache_key_data)
@@ -30,6 +33,10 @@ func GetTdDiscoCacheKey(disco types.DiscoveryIDs, nickname string) TdCacheKey {
 
 func GetDiscoCacheMap(items []Item, disco types.DiscoveryIDs) map[TdCacheKey]DiscoCompat {
 	var cache map[TdCacheKey]DiscoCompat = map[TdCacheKey]DiscoCompat{}
+
+	if !disco.Show {
+		return cache
+	}
 	for _, item := range items {
 		nickname := item.GetNickname()
 		cache_key := GetTdDiscoCacheKey(disco, nickname)
