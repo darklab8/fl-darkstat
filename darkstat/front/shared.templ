@@ -677,43 +677,6 @@ templ PinSelectLeftRight(pinm PinMod, url string) {
 	}
 }
 
-templ ThDisco(disco types.DiscoveryIDs) {
-	if disco.Show {
-		<th style="width:50px;display:none;" class="tech_compat">ID Compat.</th>
-		<th style="width:50px;">TechCell</th>
-	}
-}
-
-templ TdDisco(
-	disco types.DiscoveryIDs,
-	nickname string,
-	data *configs_export.DiscoveryTechCompat,
-) {
-	if disco.Show {
-		<td style="display:none;" class="tech_compat" techcompats={ marshalIDs(disco, nickname) }>
-			{ fmt.Sprintf("%.0f%%",(data.TechcompatByID[""]*100)) }
-		</td>
-		<td>
-			<span class="tooltip">
-				<span class="search-included">
-				@MagnifyingGlass()
-				if data.TechCell == "" {
-					nil
-				} else {
-					{ data.TechCell }
-				}
-				</span>
-				<span class="tooltiptext" style="font-size: 0.85em; max-height: 250px; overflow-y: scroll;">
-					for _, disco_id := range disco.OrderedTechcompat.GetOrederedTechCompat(data) {
-						{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) } - { disco_id.Tractor.Name }
-						<br/>
-					}
-				</span>
-			</span>
-		</td>
-	}
-}
-
 templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, disco types.DiscoveryIDs) {
 	@EmbedInfocardForSearch(disco.Infocards, infocardKey)
 	if pinm == PinMode {

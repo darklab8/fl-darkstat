@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
 )
@@ -58,7 +59,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 				@TrFromMainTb(shield.Nickname, ShieldDetailedUrl(shield), pinm) {
 					@PinTd(shield.Nickname, shield.Name, pinm)
 					@PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
-					@TdDisco(disco, shield.Nickname, shield.DiscoveryTechCompat)
+					@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, shield.Nickname))
 					<td>{ shield.Class }</td>
 					<td class="search-included">{ shield.Type }</td>
 					<td class="search-included">{ shield.Technology }</td>
@@ -114,6 +115,7 @@ templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, disco types.Disc
 				@InfocardShared()
 			}
 		</div>
+		@CacheTable(disco, utils.CompL(shields, func(x configs_export.Shield) Item { return x }))
 	}
 }
 

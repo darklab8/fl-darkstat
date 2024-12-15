@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
 )
@@ -207,7 +208,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 	@TrFromMainTb2(NewTr(gun.Nickname, GunDetailedUrl(gun, mode), pinm), prerender) {
 		@PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
 		@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
-		@TdDisco(disco, gun.Nickname, gun.DiscoveryTechCompat)
+		@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, gun.Nickname))
 		<td>{ gun.Class }</td>
 		<td>{ gun.Type }</td>
 		<td>{ strconv.Itoa(gun.Price) } </td>
@@ -316,6 +317,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco t
 				@InfocardShared()
 			}
 		</div>
+		@CacheTable(disco, utils.CompL(guns, func(x configs_export.Gun) Item { return x }))
 	}
 }
 

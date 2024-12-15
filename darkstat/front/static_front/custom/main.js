@@ -74,3 +74,30 @@ function RowHighlighter(row) {
     let rowSelected = table.getElementsByTagName('tr')[selected_row_id];
     rowSelected.classList.add("selected_row");
 }
+
+function cloneAttributes(target, source) {
+    [...source.attributes].forEach(attr => { target.setAttribute(attr.nodeName, attr.nodeValue) })
+}
+
+function LoadTechCompat() {
+    console.log("loading tech compat attempt")
+    let targets1 = document.querySelectorAll("[data-target-1]")
+    for (let i = 0; i < targets1.length; i++) {
+        let target = targets1[i]
+        let cache_key = target.attributes["data-target-1"].value
+        let source = document.querySelector("[data-source-1='" + cache_key + "']")
+        target.innerHTML = source.innerHTML
+        cloneAttributes(target, source)
+        target.removeAttribute("data-target-1")
+    }
+
+    let targets2 = document.querySelectorAll("[data-target-2]")
+    for (let i = 0; i < targets2.length; i++) {
+        let target = targets2[i]
+        let cache_key = target.attributes["data-target-2"].value
+        let source = document.querySelector("[data-source-2='" + cache_key + "']")
+        target.innerHTML = source.innerHTML
+        cloneAttributes(target, source)
+        target.removeAttribute("data-target-2")
+    }
+}

@@ -6,9 +6,9 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
-	// "github.com/darklab8/fl-configs/configs/conftypes"
 )
 
 func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
@@ -147,7 +147,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco typ
 	@TrFromMainTb2(NewTr(ship.Nickname, ShipDetailedUrl(ship, mode), pinm), prerender) {
 		@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
 		@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
-		@TdDisco(disco, ship.Nickname, ship.DiscoveryTechCompat)
+		@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, ship.Nickname))
 		<td>{ strconv.Itoa(ship.Class) }</td>
 		<td class="search-included">{ ship.Type }</td>
 		<td>{ strconv.Itoa(ship.Price) }</td>
@@ -224,6 +224,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 				@InfocardShared()
 			}
 		</div>
+		@CacheTable(disco, utils.CompL(ships, func(x configs_export.Ship) Item { return x }))
 	}
 }
 

@@ -134,6 +134,7 @@ templ Html5(theme types.Theme, disco types.DiscoveryIDs) {
 				document.addEventListener("DOMContentLoaded", (event) => {
 					document.addEventListener('htmx:afterSettle',(event) => {
 						// console.log("htmx:afterSettle");
+						LoadTechCompat()
 						LoadSelectedTractorID()
 						highlightInfocardHook()
 						FilteringFunction()

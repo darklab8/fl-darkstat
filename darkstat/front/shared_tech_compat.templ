@@ -1,0 +1,99 @@
+package front
+
+import (
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-configs/configs/cfgtype"
+    "fmt"
+)
+
+templ ThDisco(disco types.DiscoveryIDs) {
+	if disco.Show {
+		<th style="width:50px;display:none;" class="tech_compat">ID Compat.</th>
+		<th style="width:50px;">TechCell</th>
+	}
+}
+
+templ TdDisco(
+	disco types.DiscoveryIDs,
+	nickname string,
+	data *configs_export.DiscoveryTechCompat,
+) {
+	if disco.Show {
+		<td style="display:none;" class="tech_compat" techcompats={ marshalIDs(disco, nickname) }>
+			{ fmt.Sprintf("%.0f%%",(data.TechcompatByID[""]*100)) }
+		</td>
+		<td>
+			<span class="tooltip">
+				<span class="search-included">
+				@MagnifyingGlass()
+				if data.TechCell == "" {
+					nil
+				} else {
+					{ data.TechCell }
+				}
+				</span>
+				<span class="tooltiptext" style="font-size: 0.85em; max-height: 250px; overflow-y: scroll;">
+					for _, disco_id := range disco.OrderedTechcompat.GetOrederedTechCompat(data) {
+						{ fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) } - { disco_id.Tractor.Name }
+						<br/>
+					}
+				</span>
+			</span>
+		</td>
+	}
+}
+
+templ TdDiscoTarget(
+	disco types.DiscoveryIDs,
+    cache_key TdCacheKey,
+) {
+    if disco.Show {
+        <td data-target-1={ string(cache_key)} style="display:none;"></td>
+        <td data-target-2={ string(cache_key)}></td>
+    }
+}
+
+templ TdDiscoSource(
+	disco types.DiscoveryIDs,
+	nickname string,
+	data *configs_export.DiscoveryTechCompat,
+    cache_key TdCacheKey,
+) {
+	if disco.Show {
+        <td data-source-1={ string(cache_key) } style="display:none;" class="tech_compat" techcompats={ marshalIDs(disco, nickname) }>
+            { fmt.Sprintf("%.0f%%",(data.TechcompatByID[cfgtype.TractorID(data.TechCell)]*100)) }
+        </td>
+        <td data-source-2={ string(cache_key) }>
+            <span class="tooltip">
+                <span class="search-included">
+                @MagnifyingGlass()
+                if data.TechCell == "" {
+                    nil
+                } else {
+                    { data.TechCell }
+                }
+                </span>
+                <span class="tooltiptext" style="font-size: 0.85em; max-height: 250px; overflow-y: scroll;">
+                    for _, disco_id := range disco.OrderedTechcompat.GetOrederedTechCompat(data) {
+                        { fmt.Sprintf("%.0f%%",disco_id.TechCompat*100) } - { disco_id.Tractor.Name }
+                        <br/>
+                    }
+                </span>
+            </span>
+        </td>
+    }
+}
+
+templ CacheTable(disco types.DiscoveryIDs, items []Item) {
+	<div style="display: none;" data-td-disco-cache>
+		<table>
+			<tr><th></th><th></th></tr>
+			for _, item := range GetDiscoCacheMap(items, disco) {
+				<tr>
+					@TdDiscoSource(disco, item.Nickname, item.Data, GetTdDiscoCacheKey(disco, item.Nickname))
+				</tr>
+			}
+		</table>
+	</div>
+}
