@@ -50,9 +50,9 @@ templ TractorValues(tractor configs_export.Tractor) {
 	<td>{ strconv.Itoa(tractor.MaxLength) } </td>
 	<td>{ strconv.Itoa(tractor.ReachSpeed) }</td>
 	<td>{ strconv.FormatBool(tractor.Lootable) }</td>
-	<td class="search-included">{ string(tractor.Nickname) } </td>
-	<td class="search-included">{ strconv.Itoa(tractor.NameID) } </td>
-	<td class="search-included">{ strconv.Itoa(tractor.InfoID) } </td>
+	<td class="seo">{ string(tractor.Nickname) } </td>
+	<td class="seo">{ strconv.Itoa(tractor.NameID) } </td>
+	<td class="seo">{ strconv.Itoa(tractor.InfoID) } </td>
 	@HashTd(tractor.NicknameHash)
 }
 
@@ -80,7 +80,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 							<tbody>
 								for _, tractor := range tractors {
 									@TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor, tab_mode), "") {
-										<td class="search-included">{ tractor.Name }</td>
+										<td class="seo">{ tractor.Name }</td>
 										@TractorValues(tractor)
 										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "", disco)
 									}

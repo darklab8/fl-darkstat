@@ -49,7 +49,7 @@ function FilteringFunction() {
         row = tr[i];
 
         let txtValues = []
-        let tds = row.getElementsByClassName("search-included")
+        let tds = row.getElementsByClassName("seo")
         for (let elem of tds) {
             value = elem.textContent || elem.innerText;
             txtValues.push(value)

@@ -255,18 +255,18 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		<td>{ fmt.Sprintf("%.2f",gun.Volume) }</td>
 		<td>{ gun.HitPts }</td>
 		<td>{ strconv.FormatBool(gun.Lootable) }</td>
-		<td class="search-included">{ gun.DamageType }</td>
-		<td class="search-included">
+		<td class="seo">{ gun.DamageType }</td>
+		<td class="seo">
 			{ gun.Nickname }
 		</td>
-		<td class="search-included">{ gun.HpType } </td>
+		<td class="seo">{ gun.HpType } </td>
 		if settings.Env.IsDetailed {
-			<td class="search-included">{ gun.FlashParticleName } </td>
-			<td class="search-included">{ gun.ConstEffect } </td>
-			<td class="search-included">{ gun.MunitionHitEffect } </td>
+			<td class="seo">{ gun.FlashParticleName } </td>
+			<td class="seo">{ gun.ConstEffect } </td>
+			<td class="seo">{ gun.MunitionHitEffect } </td>
 		}
-		<td class="search-included">{ strconv.Itoa(gun.IdsName) } </td>
-		<td class="search-included">{ strconv.Itoa(gun.IdsInfo) } </td>
+		<td class="seo">{ strconv.Itoa(gun.IdsName) } </td>
+		<td class="seo">{ strconv.Itoa(gun.IdsInfo) } </td>
 		@HashTd(gun.NicknameHash)
 		@HashTd(gun.MunitionHash)
 		@HashTd(gun.HpTypeHash)

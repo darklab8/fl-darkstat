@@ -71,12 +71,12 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 					<td>{ strconv.Itoa(engine.LinearDrag) }</td>
 					<td>{ strconv.Itoa(engine.MaxForce) }</td>
 					<td>{ fmt.Sprintf("%.2f", engine.ReverseFraction) }</td>
-					<td class="search-included">{ engine.FlameEffect }</td>
-					<td class="search-included">{ engine.TrailEffect }</td>
-					<td class="search-included">{ engine.Nickname } </td>
-					<td class="search-included">{ engine.HpType } </td>
-					<td class="search-included">{ strconv.Itoa(engine.NameID) } </td>
-					<td class="search-included">{ strconv.Itoa(engine.InfoID) } </td>
+					<td class="seo">{ engine.FlameEffect }</td>
+					<td class="seo">{ engine.TrailEffect }</td>
+					<td class="seo">{ engine.Nickname } </td>
+					<td class="seo">{ engine.HpType } </td>
+					<td class="seo">{ strconv.Itoa(engine.NameID) } </td>
+					<td class="seo">{ strconv.Itoa(engine.InfoID) } </td>
 					@HashTd(engine.NicknameHash)
 					@HashTd(engine.HpTypeHash)
 					@HashTd(engine.FlameEffectHash)

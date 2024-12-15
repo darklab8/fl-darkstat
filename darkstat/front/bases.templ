@@ -202,22 +202,22 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
-			<td class="search-included">
+			<td class="seo">
 				@PrintEnemies(EnemistToList(base.Missions.EnemiesAtBaseMap))
 			</td>
-			<td class="search-included">
+			<td class="seo">
 				if base.Missions.Err != nil {
 					{ base.Missions.Err.Error() }
 				}
 			</td>
 		}
-		<td class="search-included">{ base.Nickname.ToStr() }</td>
-		<td class="search-included">{ base.SystemNickname }</td>
+		<td class="seo">{ base.Nickname.ToStr() }</td>
+		<td class="seo">{ base.SystemNickname }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.X) }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.Y) }</td>
 		<td>{ fmt.Sprintf("%.0f", base.Pos.Z) }</td>
-		<td class="search-included">{ strconv.Itoa(base.StridName) }</td>
-		<td class="search-included">{ strconv.Itoa(base.InfocardID) }</td>
+		<td class="seo">{ strconv.Itoa(base.StridName) }</td>
+		<td class="seo">{ strconv.Itoa(base.InfocardID) }</td>
 		<td>{ FormatBoolAsYesNo(base.Reachable) }</td>
 		@HashTd(base.NicknameHash)
 		@HashTd(base.SystemNicknameHash)

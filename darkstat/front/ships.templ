@@ -149,7 +149,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco typ
 		@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
 		@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, ship.Nickname))
 		<td>{ strconv.Itoa(ship.Class) }</td>
-		<td class="search-included">{ ship.Type }</td>
+		<td class="seo">{ ship.Type }</td>
 		<td>{ strconv.Itoa(ship.Price) }</td>
 		<td>{ FormatBoolAsYesNo(configs_export.Buyable(ship.Bases)) }</td>
 		if disco.Show {
@@ -173,11 +173,11 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco typ
 		<td>{ fmt.Sprintf("%.2f",ship.ReverseFraction) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.NudgeForce) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.StrafeForce) }</td>
-		<td class="search-included">
+		<td class="seo">
 			{ ship.Nickname }
 		</td>
-		<td class="search-included">{ strconv.Itoa(ship.NameID) } </td>
-		<td class="search-included">{ strconv.Itoa(ship.InfoID) } </td>
+		<td class="seo">{ strconv.Itoa(ship.NameID) } </td>
+		<td class="seo">{ strconv.Itoa(ship.InfoID) } </td>
 		@HashTd(ship.NicknameHash)
 		@TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm, disco)
 	}

@@ -599,7 +599,7 @@ templ PinTd(nickname string, name string, pinm PinMod) {
 
 templ PinTd2(nickname string, name string, pinm PinMod, url string) {
 	// htmx adding row to table version for performance
-	<td style="display:flex;justify-content:space-between;min-width:50px;" class="search-included">
+	<td style="display:flex;justify-content:space-between;min-width:50px;" class="seo">
 		<span>{ name }</span>
 		if pinm==MainMode {
 			<span
@@ -773,7 +773,7 @@ func GetInfocard(infocards configs_export.Infocards, infokey configs_export.Info
 
 templ EmbedInfocardForSearch(infocards configs_export.Infocards, infokey configs_export.InfocardKey) {
 	<td style="display:none;">
-		<span style="display:none;" class="search-included">{ GetFirstLine(infocards, infokey) }</span>
+		<span style="display:none;" class="seo">{ GetFirstLine(infocards, infokey) }</span>
 		<span style="display:none;" class="search-infocard">{ GetInfocard(infocards, infokey) }</span>
 	</td>
 }
@@ -825,7 +825,7 @@ templ WriteRegionName(RegionName string) {
 }
 
 templ WriteLimit(limit int) {
-	@templ.Raw("<div class=\"search-included\" style=\"width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;overflow-y:hidden;\">")
+	@templ.Raw("<div class=\"seo\" style=\"width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;overflow-y:hidden;\">")
 	{ children... }
 	@templ.Raw("</div>")
 }

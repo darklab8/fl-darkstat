@@ -64,9 +64,9 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					<td>{ ammo.SeekerType }</td>
 					<td>{ strconv.Itoa(ammo.SeekerRange) }</td>
 					<td>{ strconv.Itoa(ammo.SeekerFovDeg) }</td>
-					<td class="search-included">{ ammo.Nickname } </td>
-					<td class="search-included">{ strconv.Itoa(ammo.NameID) } </td>
-					<td class="search-included">{ strconv.Itoa(ammo.InfoID) } </td>
+					<td class="seo">{ ammo.Nickname } </td>
+					<td class="seo">{ strconv.Itoa(ammo.NameID) } </td>
+					<td class="seo">{ strconv.Itoa(ammo.InfoID) } </td>
 					@HashTd(ammo.NicknameHash)
 					@TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, disco)
 				}
