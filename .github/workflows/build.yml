@@ -28,7 +28,10 @@ jobs:
         with:
           fetch-depth: 0
         
-      - run: templ generate
+      - name: Install templ
+        run: go install github.com/a-h/templ/cmd/templ@v0.2.747  
+      - name: Build templ file to go
+        run: templ generate
       - name: build
         run: task build:bins
 
