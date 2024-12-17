@@ -50,3 +50,15 @@ jobs:
             dist/darkstat-macos-arm64
             dist/darkstat-windows-amd64.exe
             dist/darkstat-windows-arm64.exe
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.FL_DATA_KEY }}
+          repository: darklab8/fl-data-vanilla
+          event-type: publish
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.FL_DATA_KEY }}
+          repository: darklab8/fl-data-discovery
+          event-type: publish
