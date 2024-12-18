@@ -22,3 +22,7 @@ table {
     margin: 0px;
     padding: 0px;
 }
+
+b {
+    font-weight: bold;
+}
