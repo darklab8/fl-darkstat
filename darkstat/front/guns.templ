@@ -44,36 +44,40 @@ const (
 )
 
 func GetRefire(gun configs_export.Gun) []string {
-	regular_value := fmt.Sprintf("%6.2f", gun.Refire)
 	if gun.BurstFire == nil {
-		return []string{regular_value}
+		return []string{fmt.Sprintf("%8.2f", gun.Refire)}
 	}
-	return []string{regular_value, fmt.Sprintf("( %6.2f )", gun.BurstFire.SustainedRefire)}
+	return []string{fmt.Sprintf("%8.2f",gun.BurstFire.SustainedRefire), fmt.Sprintf("( %8.2f )", gun.Refire)}
 }
 
 func GetHullPerSec(gun configs_export.Gun) []string {
-	regular_value := fmt.Sprintf("%6.0f",gun.HullDamagePerSec)
 	if gun.BurstFire == nil {
-		return []string{regular_value}
+		return []string{fmt.Sprintf("%8.0f", gun.HullDamagePerSec)}
 	}
-	return []string{regular_value, fmt.Sprintf("( %6.0f )",gun.BurstFire.SustainedHullDamagePerSec)}
+	return []string{fmt.Sprintf("%8.0f",gun.BurstFire.SustainedHullDamagePerSec), fmt.Sprintf("( %8.0f )",gun.HullDamagePerSec)}
 }
 
 func GetShieldPerSec(gun configs_export.Gun) []string {
-	regular_value := fmt.Sprintf("%6.0f",gun.AvgShieldDamagePerSec)
 	if gun.BurstFire == nil {
-		return []string{regular_value}
+		return []string{fmt.Sprintf("%8.0f",gun.AvgShieldDamagePerSec)}
 	}
-	return []string{regular_value, fmt.Sprintf("( %6.0f )",gun.BurstFire.SustainedAvgShieldDamagePerSec)}
+	return []string{fmt.Sprintf("%8.0f",gun.BurstFire.SustainedAvgShieldDamagePerSec), fmt.Sprintf("( %8.0f )",gun.AvgShieldDamagePerSec)}
 }
 
 func GetEnergyPerSec(gun configs_export.Gun) []string {
-	regular_value := fmt.Sprintf("%6.0f",gun.EnergyDamagePerSec)
 	if gun.BurstFire == nil {
-		return []string{regular_value}
+		return []string{fmt.Sprintf("%8.0f",gun.EnergyDamagePerSec)}
 	}
-	return []string{regular_value, fmt.Sprintf("( %6.0f )",gun.BurstFire.SustainedEnergyDamagePerSec)}
+	return []string{fmt.Sprintf("%8.0f",gun.BurstFire.SustainedEnergyDamagePerSec), fmt.Sprintf("( %8.0f )",gun.EnergyDamagePerSec)}
 }
+
+func GetPowerPerSec(gun configs_export.Gun) []string {
+	if gun.BurstFire == nil {
+		return []string{fmt.Sprintf("%6.0f",gun.PowerUsagePerSec)}
+	}
+	return []string{fmt.Sprintf("%6.0f",gun.BurstFire.SustainedPowerUsagePerSec), fmt.Sprintf("( %6.0f )", gun.PowerUsagePerSec)}
+}
+
 
 func GetBurstParams(gun configs_export.Gun) []string {
 	burst_ammo := ""
@@ -88,14 +92,6 @@ func GetBurstParams(gun configs_export.Gun) []string {
 	}
 
 	return []string{burst_ammo, fmt.Sprintf("(%.2f)", gun.BurstFire.ReloadTime)}
-}
-
-func GetPowerPerSec(gun configs_export.Gun) []string {
-	regular_value := fmt.Sprintf("%6.0f",gun.PowerUsagePerSec)
-	if gun.BurstFire == nil {
-		return []string{regular_value}
-	}
-	return []string{regular_value, fmt.Sprintf("( %6.0f )",gun.BurstFire.SustainedPowerUsagePerSec)}
 }
 
 templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
@@ -127,7 +123,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 					@MultiLinestring([]string{"Power", "Usage"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Refire", "(+Sust.)"})
+					@MultiLinestring([]string{"Refire", "(+Burst.)"})
 				</th>
 				if disco.Show {
 					<th style="width:5px;">
@@ -146,16 +142,16 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 					</th>
 				}
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Hull", "Dmg/s", "(+Sust.)"})
+					@MultiLinestring([]string{"Hull", "Dmg/s", "(+Burst.)"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Avg", "Sheld", "Dmg/s", "(+Sust.)"})
+					@MultiLinestring([]string{"Avg", "Sheld", "Dmg/s", "(+Burst.)"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Energy", "Dmg/s", "(+Sust.)"})
+					@MultiLinestring([]string{"Energy", "Dmg/s", "(+Burst.)"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Power/s", "(+Sust.)"})
+					@MultiLinestring([]string{"Power/s", "(+Burst.)"})
 				</th>
 				<th style="width:5px;">Range</th>
 				<th style="width:5px;">Speed</th>
