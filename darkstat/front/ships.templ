@@ -80,6 +80,12 @@ templ ShipTable(
 						@MultiLinestring([]string{"Cruise", "Speed"})
 					</th>
 				}
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Impulse", "Speed"})
+				</th>
+				<th style="width:25px;">
+						@MultiLinestring([]string{"Thrust", "Speed"})
+				</th>
 				<th style="width:25px;">Armor</th>
 				if disco.Show {
 					<th style="width:5px;">
@@ -117,9 +123,6 @@ templ ShipTable(
 					@MultiLinestring([]string{"Thrust", "Recharge", "Rate"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Impulse", "Speed"})
-				</th>
-				<th style="width:25px;">
 					@MultiLinestring([]string{"Reverse", "Fraction"})
 				</th>
 				<th style="width:25px;">
@@ -143,6 +146,14 @@ templ ShipTable(
 	</table>
 }
 
+func thruster_speeds_to_str(thrust_speeds []int) string {
+	var as_str []string
+	for _, speed := range thrust_speeds{
+		as_str = append(as_str, strconv.Itoa(speed))
+	}
+	return strings.Join(as_str, ",")
+}
+
 templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
 	@TrFromMainTb2(NewTr(ship.Nickname, ShipDetailedUrl(ship, mode), pinm), prerender) {
 		@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
@@ -155,6 +166,8 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco typ
 		if disco.Show {
 			<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
 		}
+		<td>{ fmt.Sprintf("%.0f",ship.ImpulseSpeed) }</td>
+		<td>{ thruster_speeds_to_str(ship.ThrusterSpeed) }</td>
 		<td>{ strconv.Itoa(ship.Armor) } </td>
 		if disco.Show {
 			<td>{ fmt.Sprintf("%4.0f(%.0f%%)", ship.DiscoShip.ArmorMult, 100*ship.DiscoShip.ArmorMult/(100+ship.DiscoShip.ArmorMult ))}</td>
@@ -169,7 +182,6 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco typ
 		<td>{ strconv.Itoa(ship.PowerRechargeRate) }</td>
 		<td>{ strconv.Itoa(ship.ThrustCapacity) }</td>
 		<td>{ strconv.Itoa(ship.ThrustRecharge) }</td>
-		<td>{ fmt.Sprintf("%.2f",ship.ImpulseSpeed) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.ReverseFraction) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.NudgeForce) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.StrafeForce) }</td>
