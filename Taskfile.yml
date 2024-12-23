@@ -81,4 +81,5 @@ tasks:
   hook:prod:
     cmds:
       - sudo rm /usr/local/bin/darkstat | true
+      - GOOS=linux GOARCH=amd64 go build -v -o dist/darkstat-linux-amd64 main.go
       - sudo ln -s {{.PWD}}/dist/darkstat-linux-amd64 /usr/local/bin/darkstat
