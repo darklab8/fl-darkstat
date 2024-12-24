@@ -69,7 +69,7 @@ templ ScannersT(scanners []configs_export.Scanner, mode2 tab.ShowEmpty, shared t
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(shared)
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@ScannerTable(scanners, MainMode, shared)
 					</div>

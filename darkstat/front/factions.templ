@@ -100,7 +100,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(types.SharedData{})
+					@tab.FilterBar(types.SharedData{})
 					<div id="table-top-main">
 						@FactionTable(factions, mode, MainMode, shared)
 					</div>
@@ -151,7 +151,7 @@ templ FactionRepsBase() {
 }
 
 templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputation) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ faction.Name }</div>
 	@FactionRepsBase() {
 		for _, rep := range reps {

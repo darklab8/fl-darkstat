@@ -81,7 +81,7 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, 
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(types.SharedData{})
+					@tab.FilterBar(types.SharedData{})
 					<div id="table-top-main">
 						@CommodityTable(commodities, MainMode, shared)
 					</div>

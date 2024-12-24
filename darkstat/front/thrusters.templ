@@ -78,7 +78,7 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 tab.ShowEmpty, shared
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(shared)
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@ThrustersTable(thrusters, MainMode, shared)
 					</div>

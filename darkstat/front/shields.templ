@@ -97,7 +97,7 @@ templ ShieldT(shields []configs_export.Shield, mode2 tab.ShowEmpty, shared types
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(shared)
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@ShieldTable(shields, MainMode, shared)
 					</div>

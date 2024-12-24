@@ -82,7 +82,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 tab.ShowEmpty, 
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(shared)
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@CmTable(cms, MainMode, shared)
 					</div>

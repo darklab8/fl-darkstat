@@ -99,7 +99,7 @@ templ Engines(engines []configs_export.Engine, mode tab.ShowEmpty, shared types.
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(shared)
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@EnginesTable(engines, MainMode, shared)
 					</div>

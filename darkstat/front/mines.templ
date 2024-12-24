@@ -124,7 +124,7 @@ templ MinesT(mines []configs_export.Mine, mode2 tab.ShowEmpty, shared types.Shar
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(shared)
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@MinesTable(mines, MainMode, shared)
 					</div>

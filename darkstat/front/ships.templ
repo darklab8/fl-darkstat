@@ -185,7 +185,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(shared)
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@ShipTable(ships, mode, MainMode, shared, infocards)
 					</div>
@@ -236,7 +236,7 @@ templ ShipDetailsShared(ship configs_export.Ship) {
 }
 
 templ ShipDetails(ship configs_export.Ship) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ ship.Name }</div>
 	@ShipDetailsShared(ship) {
 		for _, slot := range ship.Slots {

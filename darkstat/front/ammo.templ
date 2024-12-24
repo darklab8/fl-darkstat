@@ -85,7 +85,7 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 tab.ShowEmpty, shared types.Share
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(types.SharedData{})
+					@tab.FilterBar(types.SharedData{})
 					<div id="table-top-main">
 						@AmmoTable(ammos, MainMode, shared)
 					</div>

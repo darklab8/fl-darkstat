@@ -246,7 +246,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@FilterBar(types.SharedData{}) {
+					@tab.FilterBar(types.SharedData{}) {
 						// Turning off this feature because it has 170+mb bug size increasig for trades.html
 						// if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 						// 	<input
@@ -352,7 +352,7 @@ templ BaseMarketGoodsBase() {
 }
 
 templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs_export.MarketGood, tab_mode BaseMode) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMarketGoodsBase() {
 		for _, good := range frmt.SortedMarketGoods(goods) {
@@ -382,7 +382,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
-				<td>{ FormatBaseSells(good.BaseSells) }</td>
+				<td>{ frmt.FormatBaseSells(good.BaseSells) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
 				<td>{ strconv.Itoa(good.PriceBase) }</td>
 				<td>
@@ -432,7 +432,7 @@ templ BaseMissionsBase() {
 }
 
 templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_mode BaseMode) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMissionsBase() {
 		for _, msn_giver := range mission_givers.Factions {
@@ -593,7 +593,7 @@ func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, shared types
 }
 
 templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, tab_mode BaseMode, shared types.SharedData) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseTradesShared(shared) {
 		for _, trade_route := range trade_routes.TradeRoutes {

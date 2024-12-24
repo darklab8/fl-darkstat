@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 )
 
 templ BriberyBottomBase() {
@@ -32,7 +33,7 @@ templ BriberyBottomBase() {
 }
 
 templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Bribe) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ faction.Name }</div>
 	@BriberyBottomBase() {
 		for _, rep := range rephacks {

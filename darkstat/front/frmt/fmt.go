@@ -27,3 +27,11 @@ func SortedBases(bases_map map[cfgtype.BaseUniNick]*configs_export.GoodAtBase) [
 
 	return bases
 }
+
+func FormatBaseSells(value bool) string {
+	if value {
+		return "sells"
+	} else {
+		return "buysonly"
+	}
+}
