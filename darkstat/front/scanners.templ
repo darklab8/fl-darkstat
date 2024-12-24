@@ -4,6 +4,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"strconv"
 	"strings"
 )
@@ -21,7 +22,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared types.
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(shared)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Range</th>
@@ -41,7 +42,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared types.
 				@TrFromMainTb(scanner.Nickname, ScannerDetailedUrl(scanner), pinm) {
 					@PinTd(scanner.Nickname, scanner.Name, pinm)
 					@PinSelectLeftRight(pinm, ScannerDetailedUrl(scanner))
-					@TdDisco(shared, scanner.Nickname, scanner.DiscoveryTechCompat)
+					@disco.TdDisco(shared, scanner.Nickname, scanner.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(scanner.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(scanner.Bases)) }</td>
 					<td>{ strconv.Itoa(scanner.Range) }</td>

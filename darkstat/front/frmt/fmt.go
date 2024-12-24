@@ -1,5 +1,9 @@
 package frmt
 
+/*
+Allowed to be imported by anything
+*/
+
 import (
 	"fmt"
 	"sort"

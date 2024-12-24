@@ -1,9 +1,11 @@
-package front
+package disco
 
 import (
 	"crypto/md5"
+	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
@@ -46,4 +48,25 @@ func GetDiscoCacheMap(items []Item, shared types.SharedData) map[TdCacheKey]Disc
 		}
 	}
 	return cache
+}
+
+func marshalIDs(shared types.SharedData, item_nickname string) string {
+
+	var compat_by_id map[string]float64 = make(map[string]float64)
+
+	compat_by_id[""] = shared.Config.GetCompatibilty(item_nickname, "")
+
+	for _, id := range shared.Ids {
+		compat := shared.Config.GetCompatibilty(item_nickname, id.Nickname)
+
+		// data size saving
+		if compat <= 0.1 {
+			continue
+		}
+
+		compat_by_id[string(id.ShortNickname)] = compat
+	}
+
+	bytes, _ := json.Marshal(compat_by_id)
+	return strings.ReplaceAll(string(bytes), "\"", "'")
 }

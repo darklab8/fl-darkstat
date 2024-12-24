@@ -743,7 +743,7 @@ templ RouteInfo(name string, route *configs_export.Route, shared types.SharedDat
 
 templ TooltipDestination(Pos cfgtype.Vector, shared types.SharedData) {
 	<span class="tooltip">
-		@MagnifyingGlass()
+		@frmt.MagnifyingGlass()
 		<span class="tooltiptext" style="left: 0px; top: 30px;">
 			if shared.ShowDisco {
 				{ fmt.Sprintf("/wp %.0f %.0f %.0f",Pos.X,Pos.Y,Pos.Z) } <br/>
@@ -756,6 +756,3 @@ templ TooltipDestination(Pos cfgtype.Vector, shared types.SharedData) {
 	</span>
 }
 
-templ MagnifyingGlass() {
-	<span class="magni_glass">&#x1F50D;</span>
-}

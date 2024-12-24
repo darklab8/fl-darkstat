@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"strconv"
 	"strings"
 )
@@ -23,7 +24,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared types.SharedDa
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(shared)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
@@ -81,7 +82,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared types.SharedDa
 				@TrFromMainTb(mine.Nickname, MineDetailedUrl(mine), pinm) {
 					@PinTd(mine.Nickname, mine.Name, pinm)
 					@PinSelectLeftRight(pinm, MineDetailedUrl(mine))
-					@TdDisco(shared, mine.Nickname, mine.DiscoveryTechCompat)
+					@disco.TdDisco(shared, mine.Nickname, mine.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(mine.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(mine.Bases)) }</td>
 					<td>{ strconv.Itoa(mine.AmmoPrice) } </td>

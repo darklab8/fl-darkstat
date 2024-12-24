@@ -1,4 +1,4 @@
-package front
+package disco
 
 import (
 	"testing"

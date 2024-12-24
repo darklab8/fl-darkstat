@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -23,7 +24,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, shared types.Sha
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(shared)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Class</th>
 				<th style="width:25px;">Type</th>
 				<th style="width:25px;">Technology</th>
@@ -59,7 +60,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, shared types.Sha
 				@TrFromMainTb(shield.Nickname, ShieldDetailedUrl(shield), pinm) {
 					@PinTd(shield.Nickname, shield.Name, pinm)
 					@PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
-					@TdDiscoTarget(shared, GetTdDiscoCacheKey(shared, shield.Nickname))
+					@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, shield.Nickname))
 					<td>{ shield.Class }</td>
 					<td class="seo">{ shield.Type }</td>
 					<td class="seo">{ shield.Technology }</td>
@@ -115,7 +116,7 @@ templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, shared types.Sha
 				@InfocardShared()
 			}
 		</div>
-		@CacheTechCompatTable(shared, utils.CompL(shields, func(x configs_export.Shield) Item { return x }))
+		@disco.CacheTechCompatTable(shared, utils.CompL(shields, func(x configs_export.Shield) disco.Item { return x }))
 	}
 }
 

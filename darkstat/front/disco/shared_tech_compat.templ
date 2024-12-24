@@ -1,8 +1,9 @@
-package front
+package disco
 
 import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-configs/configs/cfgtype"
     "fmt"
 )
@@ -26,7 +27,7 @@ templ TdDisco(
 		<td>
 			<span class="tooltip">
 				<span class="seo">
-				@MagnifyingGlass()
+				@frmt.MagnifyingGlass()
 				if tech_compat.TechCell == "" {
 					nil
 				} else {
@@ -67,7 +68,7 @@ templ TdDiscoSource(
         <td data-source-2={ string(cache_key) }>
             <span class="tooltip">
                 <span class="seo">
-                @MagnifyingGlass()
+                @frmt.MagnifyingGlass()
                 if tech_compat.TechCell == "" {
                     nil
                 } else {

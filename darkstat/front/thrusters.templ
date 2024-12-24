@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"strconv"
 	"strings"
 )
@@ -18,7 +19,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, shared ty
 		<thead>
 			<tr>
 				<th style="width:200px;">Thruster</th>
-				@ThDisco(shared)
+				@disco.ThDisco(shared)
 				if pinm == PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
@@ -46,7 +47,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, shared ty
 				@TrFromMainTb(thruster.Nickname, ThrusterDetailedUrl(thruster), pinm) {
 					@PinTd(thruster.Nickname, thruster.Name, pinm)
 					@PinSelectLeftRight(pinm, ThrusterDetailedUrl(thruster))
-					@TdDisco(shared, thruster.Nickname, thruster.DiscoveryTechCompat)
+					@disco.TdDisco(shared, thruster.Nickname, thruster.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(thruster.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(thruster.Bases)) }</td>
 					<td>{ strconv.Itoa(thruster.MaxForce) } </td>

@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"strconv"
 	"strings"
 )
@@ -22,7 +23,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared types.Sha
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(shared)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
@@ -48,7 +49,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared types.Sha
 				@TrFromMainTb(cm.Nickname, CounterMeasreDetailedUrl(cm), pinm) {
 					@PinTd(cm.Nickname, cm.Name, pinm)
 					@PinSelectLeftRight(pinm, CounterMeasreDetailedUrl(cm))
-					@TdDisco(shared, cm.Nickname, cm.DiscoveryTechCompat)
+					@disco.TdDisco(shared, cm.Nickname, cm.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(cm.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(cm.Bases)) }</td>
 					<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
