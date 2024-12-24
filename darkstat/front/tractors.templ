@@ -92,7 +92,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 				@TableBottom(){
 					<div id="table-bottom-main">
 						if tab_mode == TractorModShop {
-							@GoodAtBaseSharedT(ShowAsCommodity(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
 						} else if tab_mode == TractorIDRephacks {
 							@IDRephacksShared()
 						}

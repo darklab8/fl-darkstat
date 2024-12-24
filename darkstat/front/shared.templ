@@ -383,7 +383,7 @@ templ Infocard(info configs_export.Infocard) {
 	}
 }
 
-templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
+templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, disco types.DiscoveryIDs) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -391,13 +391,15 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				<th style="width:150px;">Faction</th>
 				<th style="width:50px;">Region</th>
 				<th style="width:100px;">System</th>
-				<th style="width:5px;">
-					@MultiLinestring([]string{"Not for", "tran", "sports"})
-				</th>
+				if disco.Show {
+					<th style="width:5px;">
+						@MultiLinestring([]string{"Not for", "tran", "sports"})
+					</th>
+				}
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Nav", "Map"})
 				</th>
-				if is_commodity {
+				if bool(is_commodity) && disco.Show {
 					<th style="width:25px;">
 						@MultiLinestring([]string{"Price", "to sell", "to base"})
 					</th>
@@ -407,13 +409,21 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				} else {
 					<th style="width:50px;">Price</th>
 				}
-				if is_commodity {
-					<th style="width:25px;">
-						@MultiLinestring([]string{"price","to sell", "per vol", "to base"})
-					</th>
-					<th style="width:25px;">
-						@MultiLinestring([]string{"price","to buy", "per vol", "from base"})
-					</th>
+				if bool(is_commodity) {
+					if disco.Show {
+						<th style="width:25px;">
+							@MultiLinestring([]string{"price","to sell", "per vol", "to base"})
+						</th>
+						<th style="width:25px;">
+							@MultiLinestring([]string{"price","to buy", "per vol", "from base"})
+						</th>
+					} else {
+						<th style="width:5px;">
+							@MultiLinestring([]string{"Price", "per", "vol"})
+						</th>
+					}
+				}
+				if bool(is_commodity) && disco.Show{
 					<th style="width:5px;">
 						@MultiLinestring([]string{"Ship", "class"})
 					</th>
@@ -430,9 +440,11 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity) {
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Rep.", "Req."})
 				</th>
-				<th style="width:10px;">
-					@MultiLinestring([]string{"Server", "Override"})
-				</th>
+				if disco.Show {
+					<th style="width:10px;">
+						@MultiLinestring([]string{"Server", "Override"})
+					</th>
+				}
 				<th style="width:100px;">Base Nickname</th>
 				<th style="width:20px;">Pos X</th>
 				<th style="width:20px;">Pos Y</th>
@@ -459,10 +471,10 @@ func FormatBoolAsYesNo(value bool) string {
 	}
 }
 
-templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.GoodAtBase, is_commodity ShowAsCommodity) {
+templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.GoodAtBase, is_commodity ShowAsCommodity,disco types.DiscoveryIDs ) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
-	@GoodAtBaseSharedT(is_commodity) {
+	@GoodAtBaseSharedT(is_commodity, disco) {
 		for _, base_info := range SortedBases(base_infos) {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(base_info.BaseNickname)) }
@@ -487,24 +499,32 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 				<td>
 					@WriteSystemName(base_info.SystemName)
 				</td>
-				<td>
-					{ strconv.FormatBool(base_info.IsTransportUnreachable) }
-				</td>
+				if disco.Show {
+					<td>
+						{ strconv.FormatBool(base_info.IsTransportUnreachable) }
+					</td>
+				}
 				<td>{ base_info.SectorCoord }</td>
-				if is_commodity {
+				if bool(is_commodity) && disco.Show{
 					<td>{ strconv.Itoa(base_info.PriceBaseBuysFor) }</td>
 				}
 				<td>{ strconv.Itoa(base_info.PriceBaseSellsFor) }</td>
 				if is_commodity {
-					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
+					if disco.Show {
+						<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
+					}
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseSellsFor, base_info.Volume)) }</td>
+				}
+				if bool(is_commodity) && disco.Show{
 					<td>{ fmt.Sprintf("%d", base_info.ShipClass) }</td>
 				}
 				<td>{ fmt.Sprintf("%.0f", base_info.Volume) }</td>
 				<td>{ FormatBaseSells(base_info.BaseSells) }</td>
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", base_info.RepRequired) }</td>
-				<td>{ strconv.FormatBool(base_info.IsServerSideOverride) }</td>
+				if disco.Show {
+					<td>{ strconv.FormatBool(base_info.IsServerSideOverride) }</td>
+				}
 				<td>
 					@WriteLimit(100) {
 						{ base_info.BaseNickname.ToStr() }

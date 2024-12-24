@@ -295,14 +295,14 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco t
 				@TableBottom(){
 					<div id="table-bottom-main">
 						if mode == GunsShowBases || mode == GunsMissiles {
-							@GoodAtBaseSharedT(ShowAsCommodity(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
 						} else {
 							@GunShowModifiersShared()
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						if mode == GunsShowBases || mode == GunsMissiles {
-							@GoodAtBaseSharedT(ShowAsCommodity(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
 						} else {
 							@GunShowModifiersShared()
 						}

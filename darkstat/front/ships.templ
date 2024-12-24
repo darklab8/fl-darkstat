@@ -75,11 +75,9 @@ templ ShipTable(
 				<th style="width:25px;">Type</th>
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
-				if disco.Show {
-					<th style="width:25px;">
-						@MultiLinestring([]string{"Cruise", "Speed"})
-					</th>
-				}
+				<th style="width:25px;">
+					@MultiLinestring([]string{"Cruise", "Speed"})
+				</th>
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Impulse", "Speed"})
 				</th>
@@ -163,9 +161,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco typ
 		<td class="seo">{ ship.Type }</td>
 		<td>{ strconv.Itoa(ship.Price) }</td>
 		<td>{ FormatBoolAsYesNo(configs_export.Buyable(ship.Bases)) }</td>
-		if disco.Show {
-			<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
-		}
+		<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
 		<td>{ fmt.Sprintf("%.0f",ship.ImpulseSpeed) }</td>
 		<td>{ thruster_speeds_to_str(ship.ThrusterSpeed) }</td>
 		<td>{ strconv.Itoa(ship.Armor) } </td>
@@ -218,14 +214,14 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, dis
 				@TableBottom(){
 					<div id="table-bottom-main">
 						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowAsCommodity(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowAsCommodity(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
