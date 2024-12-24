@@ -10,7 +10,7 @@ import (
 )
 
 
-templ BasesRoutesShared(shared types.SharedData) {
+templ BasesRoutesShared(shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -49,7 +49,7 @@ func RouteUrl(route *configs_export.Route) string {
 	return "routes/route_" + route.GetID()
 }
 
-templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode BaseMode, shared types.SharedData) {
+templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode BaseMode, shared *types.SharedData) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BasesRoutesShared(shared) {

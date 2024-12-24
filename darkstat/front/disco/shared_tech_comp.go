@@ -23,7 +23,7 @@ type Item interface {
 	GetTechCompat() *configs_export.DiscoveryTechCompat
 }
 
-func GetTdDiscoCacheKey(shared types.SharedData, nickname string) TdCacheKey {
+func GetTdDiscoCacheKey(shared *types.SharedData, nickname string) TdCacheKey {
 	if !shared.ShowDisco {
 		return ""
 	}
@@ -33,7 +33,7 @@ func GetTdDiscoCacheKey(shared types.SharedData, nickname string) TdCacheKey {
 	return TdCacheKey(fmt.Sprintf("%x", h.Sum(nil)))
 }
 
-func GetDiscoCacheMap(items []Item, shared types.SharedData) map[TdCacheKey]DiscoCompat {
+func GetDiscoCacheMap(items []Item, shared *types.SharedData) map[TdCacheKey]DiscoCompat {
 	var cache map[TdCacheKey]DiscoCompat = map[TdCacheKey]DiscoCompat{}
 
 	if !shared.ShowDisco {
@@ -50,7 +50,7 @@ func GetDiscoCacheMap(items []Item, shared types.SharedData) map[TdCacheKey]Disc
 	return cache
 }
 
-func marshalIDs(shared types.SharedData, item_nickname string) string {
+func marshalIDs(shared *types.SharedData, item_nickname string) string {
 
 	var compat_by_id map[string]float64 = make(map[string]float64)
 

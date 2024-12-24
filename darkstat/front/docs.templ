@@ -30,7 +30,7 @@ templ SectionHeader(name string) {
     </a>
 }
 
-templ DocsT(mode2 tab.ShowEmpty, shared types.SharedData) {
+templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
     @tab.TabMenu(urls.Docs, mode2, shared)
     @tab.TabContent() {
         <style>

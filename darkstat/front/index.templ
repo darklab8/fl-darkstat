@@ -8,7 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 )
 
-templ Html5(theme types.Theme, shared types.SharedData) {
+templ Html5(theme types.Theme, shared *types.SharedData) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -150,19 +150,19 @@ templ Html5(theme types.Theme, shared types.SharedData) {
 	</html>
 }
 
-templ Index(theme types.Theme, shared types.SharedData) {
+templ Index(theme types.Theme, shared *types.SharedData) {
 	@Html5(theme, shared) {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
 	}
 }
 
-templ DocsEntry(theme types.Theme, shared types.SharedData) {
+templ DocsEntry(theme types.Theme, shared *types.SharedData) {
     @Html5(theme, shared) {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Docs.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
     }
 }
 
-templ HashesEntry(theme types.Theme, shared types.SharedData) {
+templ HashesEntry(theme types.Theme, shared *types.SharedData) {
     @Html5(theme, shared) {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Hashes.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
     }

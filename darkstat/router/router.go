@@ -1,15 +1,16 @@
-package linker
+package router
 
 /*
 Links data from exported fl-configs
 into stuff rendered by fl-darkstat
+Technically it is "Router"
 */
 
 import (
+	"fmt"
 	"sort"
 	"time"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
@@ -27,15 +28,15 @@ import (
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
-type Linker struct {
+type Router struct {
 	mapped  *configs_mapped.MappedConfigs
 	configs *configs_export.Exporter
 }
 
-type LinkOption func(l *Linker)
+type RouterOpt func(l *Router)
 
-func NewLinker(opts ...LinkOption) *Linker {
-	l := &Linker{}
+func NewLinker(opts ...RouterOpt) *Router {
+	l := &Router{}
 	for _, opt := range opts {
 		opt(l)
 	}
@@ -52,7 +53,7 @@ func NewLinker(opts ...LinkOption) *Linker {
 	return l
 }
 
-func (l *Linker) Link() *builder.Builder {
+func (l *Router) Link() *builder.Builder {
 	var build *builder.Builder
 	defer timeit.NewTimer("link, internal measure").Close()
 	timer_building_creation := timeit.NewTimer("building creation")
@@ -165,13 +166,6 @@ func (l *Linker) Link() *builder.Builder {
 			return data.Thrusters[i].Name < data.Thrusters[j].Name
 		})
 
-		sort.Slice(data.Ships, func(i, j int) bool {
-			if data.Ships[i].Name != "" && data.Ships[j].Name == "" {
-				return true
-			}
-			return data.Ships[i].Name < data.Ships[j].Name
-		})
-
 		sort.Slice(data.Tractors, func(i, j int) bool {
 			if data.Tractors[i].Name != "" && data.Tractors[j].Name == "" {
 				return true
@@ -195,21 +189,18 @@ func (l *Linker) Link() *builder.Builder {
 	})
 
 	var useful_factions []configs_export.Faction
-	var useful_ships []configs_export.Ship
 	var useful_guns []configs_export.Gun
 	var useful_missiles []configs_export.Gun
-	tractor_id := cfgtype.TractorID("")
 
-	var shared types.SharedData
+	var shared *types.SharedData = &types.SharedData{}
 
 	timeit.NewTimerMF("filtering to useful stuff", func() {
 		useful_factions = configs_export.FilterToUsefulFactions(data.Factions)
-		useful_ships = data.FilterToUsefulShips(data.Ships)
 		useful_guns = data.FilterToUsefulGun(data.Guns)
 		useful_missiles = data.FilterToUsefulGun(data.Missiles)
 
 		if l.mapped.Discovery != nil {
-			shared = types.SharedData{
+			shared = &types.SharedData{
 				DiscoveryData: types.DiscoveryData{
 					ShowDisco:         true,
 					Ids:               l.configs.Tractors,
@@ -220,29 +211,13 @@ func (l *Linker) Link() *builder.Builder {
 				},
 			}
 		}
+		fmt.Println("attempting to access l.configs.Infocards")
 		shared.Infocards = l.configs.Infocards
 	})
 
 	timeit.NewTimerMF("linking main stuff", func() {
 
-		build.RegComps(
-			builder.NewComponent(
-				urls.Ships+utils_types.FilePath(tractor_id),
-				front.ShipsT(useful_ships, front.ShipShowBases, tab.ShowEmpty(false), shared, data.Infocards),
-			),
-			builder.NewComponent(
-				tab.AllItemsUrl(urls.Ships)+utils_types.FilePath(tractor_id),
-				front.ShipsT(data.Ships, front.ShipShowBases, tab.ShowEmpty(true), shared, data.Infocards),
-			),
-			builder.NewComponent(
-				urls.ShipDetails+utils_types.FilePath(tractor_id),
-				front.ShipsT(useful_ships, front.ShipShowDetails, tab.ShowEmpty(false), shared, data.Infocards),
-			),
-			builder.NewComponent(
-				tab.AllItemsUrl(urls.ShipDetails)+utils_types.FilePath(tractor_id),
-				front.ShipsT(data.Ships, front.ShipShowDetails, tab.ShowEmpty(true), shared, data.Infocards),
-			),
-		)
+		l.LinkShips(build, data, shared)
 
 		build.RegComps(
 			builder.NewComponent(
@@ -574,27 +549,6 @@ func (l *Linker) Link() *builder.Builder {
 				builder.NewComponent(
 					utils_types.FilePath(front.ThrusterDetailedUrl(thruster)),
 					front.GoodAtBaseInfoT(thruster.Name, thruster.Bases, front.ShowAsCommodity(false), shared),
-				),
-			)
-		}
-
-		for _, ship := range data.Ships {
-			build.RegComps(
-				builder.NewComponent(
-					utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowBases)),
-					front.GoodAtBaseInfoT(ship.Name, ship.Bases, front.ShowAsCommodity(false), shared),
-				),
-				builder.NewComponent(
-					utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowDetails)),
-					front.ShipDetails(ship),
-				),
-				builder.NewComponent(
-					utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowBases)),
-					front.ShipRow(ship, front.ShipShowBases, front.PinMode, shared, data.Infocards, true),
-				),
-				builder.NewComponent(
-					utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowDetails)),
-					front.ShipRow(ship, front.ShipShowDetails, front.PinMode, shared, data.Infocards, true),
 				),
 			)
 		}

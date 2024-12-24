@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared types.SharedData) {
+templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -98,7 +98,7 @@ func FormatBoolAsYesNo(value bool) string {
 	}
 }
 
-templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.GoodAtBase, is_commodity ShowAsCommodity,shared types.SharedData ) {
+templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.GoodAtBase, is_commodity ShowAsCommodity,shared *types.SharedData ) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@GoodAtBaseSharedT(is_commodity, shared) {

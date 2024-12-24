@@ -15,7 +15,7 @@ func ScannerDetailedUrl(item configs_export.Scanner) string {
 	return "scanner/scanner_bases_" + strings.ToLower(item.Nickname)
 }
 
-templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared types.SharedData) {
+templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -63,7 +63,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared types.
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ScannersT(scanners []configs_export.Scanner, mode2 tab.ShowEmpty, shared types.SharedData) {
+templ ScannersT(scanners []configs_export.Scanner, mode2 tab.ShowEmpty, shared *types.SharedData) {
 	@tab.TabMenu(urls.Scanners, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">

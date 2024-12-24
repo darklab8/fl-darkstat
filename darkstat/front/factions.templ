@@ -30,7 +30,7 @@ const (
 	FactionShowRephacks
 )
 
-templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm PinMod, shared types.SharedData) {
+templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -90,7 +90,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 tab.ShowEmpty, shared types.SharedData) {
+templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 tab.ShowEmpty, shared *types.SharedData) {
 	if mode == FactionShowBases {
 		@tab.TabMenu(urls.Factions, mode2, shared)
 	} else if mode == FactionShowRephacks {
@@ -100,7 +100,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@tab.FilterBar(types.SharedData{})
+					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@FactionTable(factions, mode, MainMode, shared)
 					</div>

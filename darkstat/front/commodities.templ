@@ -15,7 +15,7 @@ func GoodAtBaseInfoTUrl(commodity *configs_export.Commodity) string {
 	return "commodities/comm_base_" + strings.ToLower(string(configs_export.GetCommodityKey(commodity.Nickname, commodity.ShipClass)))
 }
 
-templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, shared types.SharedData) {
+templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -75,13 +75,13 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, shared types.SharedData) {
+templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, shared *types.SharedData) {
 	@tab.TabMenu(urls.Commodities, mode, shared)
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@tab.FilterBar(types.SharedData{})
+					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@CommodityTable(commodities, MainMode, shared)
 					</div>

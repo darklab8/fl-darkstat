@@ -47,7 +47,7 @@ const (
 	BaseAllRoutes
 )
 
-templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, shared types.SharedData) {
+templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -144,7 +144,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, s
 	</table>
 }
 
-templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared types.SharedData) {
+templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared *types.SharedData) {
 	@TrFromMain(NewTr(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm, WithTransportUnreachable(base.IsTransportUnreachable))) {
 		@PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
@@ -230,7 +230,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared 
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty, shared types.SharedData) {
+templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty, shared *types.SharedData) {
 	if tab_mode == BaseShowShops {
 		@tab.TabMenu(urls.Bases, mode, shared)
 	} else if tab_mode == BaseShowMissions {
@@ -246,7 +246,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@tab.FilterBar(types.SharedData{}) {
+					@tab.FilterBar(&types.SharedData{}) {
 						// Turning off this feature because it has 170+mb bug size increasig for trades.html
 						// if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 						// 	<input
@@ -488,7 +488,7 @@ templ PrintEnemies(enemies []configs_export.EnemyFaction) {
 	}
 }
 
-templ BaseTradesShared(shared types.SharedData) {
+templ BaseTradesShared(shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -565,7 +565,7 @@ func (r RoundedFloat) MarshalJSON() ([]byte, error) {
 }
 
 
-func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, shared types.SharedData, route_type trades.RouteShipType) string {
+func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, shared *types.SharedData, route_type trades.RouteShipType) string {
 	return "" // turning on this feature because it is bugged
 
 	var result []Path
@@ -592,7 +592,7 @@ func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, shared types
 	return string(bytes)
 }
 
-templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, tab_mode BaseMode, shared types.SharedData) {
+templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, tab_mode BaseMode, shared *types.SharedData) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseTradesShared(shared) {
@@ -697,7 +697,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 	}
 }
 
-templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs_export.Route, FreighterRoute *configs_export.Route, shared types.SharedData) {
+templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs_export.Route, FreighterRoute *configs_export.Route, shared *types.SharedData) {
 	@tab.InfocardShared() {
 		<style>
 			.infocard p {
@@ -719,7 +719,7 @@ templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs
 	}
 }
 
-templ RouteInfo(name string, route *configs_export.Route, shared types.SharedData) {
+templ RouteInfo(name string, route *configs_export.Route, shared *types.SharedData) {
 	<p>{ name } Route:</p>
 	<p>{ ">" } Avg Cruise Speed: { strconv.Itoa(route.GetCruiseSpeed()) }</p>
 	<p>{ ">" } Visit Freighter Only JHs: { strconv.FormatBool(route.GetCanVisitFreighterOnlyJH()) }</p>
@@ -735,7 +735,7 @@ templ RouteInfo(name string, route *configs_export.Route, shared types.SharedDat
 	}
 }
 
-templ TooltipDestination(Pos cfgtype.Vector, shared types.SharedData) {
+templ TooltipDestination(Pos cfgtype.Vector, shared *types.SharedData) {
 	<span class="tooltip">
 		@frmt.MagnifyingGlass()
 		<span class="tooltiptext" style="left: 0px; top: 30px;">

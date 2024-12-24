@@ -8,7 +8,7 @@ import (
     "fmt"
 )
 
-templ ThDisco(shared types.SharedData) {
+templ ThDisco(shared *types.SharedData) {
 	if shared.ShowDisco {
 		<th style="width:50px;display:none;" class="tech_compat">ID Compat.</th>
 		<th style="width:50px;">TechCell</th>
@@ -16,7 +16,7 @@ templ ThDisco(shared types.SharedData) {
 }
 
 templ TdDisco(
-	shared types.SharedData,
+	shared *types.SharedData,
 	nickname string,
 	tech_compat *configs_export.DiscoveryTechCompat,
 ) {
@@ -46,7 +46,7 @@ templ TdDisco(
 }
 
 templ TdDiscoTarget(
-	shared types.SharedData,
+	shared *types.SharedData,
     cache_key TdCacheKey,
 ) {
     if shared.ShowDisco {
@@ -56,7 +56,7 @@ templ TdDiscoTarget(
 }
 
 templ TdDiscoSource(
-	shared types.SharedData,
+	shared *types.SharedData,
 	nickname string,
 	tech_compat *configs_export.DiscoveryTechCompat,
     cache_key TdCacheKey,
@@ -86,7 +86,7 @@ templ TdDiscoSource(
     }
 }
 
-templ CacheTechCompatTable(shared types.SharedData, items []Item) {
+templ CacheTechCompatTable(shared *types.SharedData, items []Item) {
 	<div style="display: none;" data-td-disco-cache>
 		<table>
 			<tr><th></th><th></th></tr>

@@ -15,7 +15,7 @@ func AmmoDetailedUrl(ammo configs_export.Ammo) string {
 	return "ammo/ammo_base_" + strings.ToLower(ammo.Nickname)
 }
 
-templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared types.SharedData) {
+templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -79,13 +79,13 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared types.SharedDat
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ AmmoT(ammos []configs_export.Ammo, mode2 tab.ShowEmpty, shared types.SharedData) {
+templ AmmoT(ammos []configs_export.Ammo, mode2 tab.ShowEmpty, shared *types.SharedData) {
 	@tab.TabMenu(urls.Ammo, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@tab.FilterBar(types.SharedData{})
+					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@AmmoTable(ammos, MainMode, shared)
 					</div>

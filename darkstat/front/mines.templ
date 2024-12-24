@@ -16,7 +16,7 @@ func MineDetailedUrl(mine configs_export.Mine) string {
 	return "mines/mines_base_" + strings.ToLower(mine.Nickname)
 }
 
-templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared types.SharedData) {
+templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -118,7 +118,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared types.SharedDa
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ MinesT(mines []configs_export.Mine, mode2 tab.ShowEmpty, shared types.SharedData) {
+templ MinesT(mines []configs_export.Mine, mode2 tab.ShowEmpty, shared *types.SharedData) {
 	@tab.TabMenu(urls.Mines, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">

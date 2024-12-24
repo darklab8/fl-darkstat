@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-templ Heading(shared types.SharedData) {
+templ Heading(shared *types.SharedData) {
 	<style>
 		.heading {
 			display: flex;
@@ -114,7 +114,7 @@ templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePa
 	}
 }
 
-templ TabMenu(url utils_types.FilePath, mode ShowEmpty, shared types.SharedData) {
+templ TabMenu(url utils_types.FilePath, mode ShowEmpty, shared *types.SharedData) {
 	<style>
 	.tab-list {
 		height: 100%;

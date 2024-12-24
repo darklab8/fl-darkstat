@@ -43,7 +43,7 @@ const (
 templ ShipTable(
 	ships []configs_export.Ship,
 	mode ShipTabMode,
-	pinm PinMod, shared types.SharedData, infocards configs_export.Infocards) {
+	pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards) {
 	<table class={ "sortable", templ.KV("top-main", pinm==MainMode), templ.KV("top-pinned", pinm==PinMode) }>
 		<thead>
 			<tr>
@@ -134,7 +134,7 @@ func thruster_speeds_to_str(thrust_speeds []int) string {
 	return strings.Join(as_str, ",")
 }
 
-templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, shared types.SharedData, infocards configs_export.Infocards, prerender bool) {
+templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
 	@TrFromMainTb2(NewTr(ship.Nickname, ShipDetailedUrl(ship, mode), pinm), prerender) {
 		@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
 		@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
@@ -175,7 +175,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, shared ty
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty, shared types.SharedData, infocards configs_export.Infocards) {
+templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards configs_export.Infocards) {
 	if mode == ShipShowBases {
 		@tab.TabMenu(urls.Ships, mode2, shared)
 	} else if mode == ShipShowDetails {

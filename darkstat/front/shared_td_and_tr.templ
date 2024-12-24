@@ -111,7 +111,7 @@ templ PinSelectLeftRight(pinm PinMod, url string) {
 	}
 }
 
-templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, shared types.SharedData) {
+templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, shared *types.SharedData) {
 	@tab.EmbedInfocardForSearch(shared.Infocards, infocardKey)
 	if pinm == PinMode {
 		<td

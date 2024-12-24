@@ -60,7 +60,7 @@ templ TractorValues(tractor configs_export.Tractor) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ TractorsT(tractors []configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode TractorMode, shared types.SharedData) {
+templ TractorsT(tractors []configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode TractorMode, shared *types.SharedData) {
 	if tab_mode == TractorModShop {
 		@tab.TabMenu(urls.Tractors, mode2, shared)
 	} else if tab_mode == TractorIDRephacks {
@@ -70,7 +70,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					@tab.FilterBar(types.SharedData{})
+					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						<table class="sortable">
 							<thead>
