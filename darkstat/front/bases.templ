@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+
 	"math"
 	"strconv"
 	"strings"
@@ -148,14 +149,14 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared 
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		if tab_mode != BaseTabOres {
 			<td>
-				@WriteFactioName(base.FactionName)
+				@frmt.WriteFactioName(base.FactionName)
 			</td>
 		}
 		if tab_mode == BaseTabOres {
 			<td>{ strconv.Itoa(base.DynamicLootMin) } - { strconv.Itoa(base.DynamicLootMax) } ( { strconv.Itoa(base.DynamicLootDifficulty) } ) </td>
 		}
 		<td>
-			@WriteSystemName(base.System)
+			@frmt.WriteSystemName(base.System)
 		</td>
 		if shared.ShowDisco {
 			<td>
@@ -199,7 +200,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared 
 			}
 		}
 		<td>
-			@WriteRegionName(base.Region)
+			@frmt.WriteRegionName(base.Region)
 		</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
@@ -363,12 +364,12 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteLimit(200) {
+					@frmt.WriteLimit(200) {
 						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
 					}
 				</td>
 				<td>
-					@WriteGoodType(string(good.Type))
+					@frmt.WriteGoodType(string(good.Type))
 				</td>
 				<td>
 					if good.PriceToSell != nil {
@@ -384,7 +385,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
 				<td>{ strconv.Itoa(good.PriceBase) }</td>
 				<td>
-					@WriteLimit(200) {
+					@frmt.WriteLimit(200) {
 						{ good.Nickname }
 					}
 				</td>
@@ -443,7 +444,7 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteFactioName(msn_giver.FactionName)
+					@frmt.WriteFactioName(msn_giver.FactionName)
 				</td>
 				<td>{ fmt.Sprintf("%2.2f", msn_giver.MinDifficulty) }</td>
 				<td>{ fmt.Sprintf("%2.2f", msn_giver.MaxDifficulty) }</td>
@@ -612,7 +613,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteLimit(200) {
+					@frmt.WriteLimit(200) {
 						{ trade_route.Transport.Commodity.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.Commodity.ShipClass) }
 					}
 				</td>
@@ -663,23 +664,23 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.Commodity.Volume) }</td>
 				<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.Commodity.ShipClass) }</td>
 				<td>
-					@WriteSystemName(trade_route.Transport.SellingGood.SystemName)
+					@frmt.WriteSystemName(trade_route.Transport.SellingGood.SystemName)
 				</td>
 				<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
 				<td>
-					@WriteFactioName(trade_route.Transport.SellingGood.FactionName)
+					@frmt.WriteFactioName(trade_route.Transport.SellingGood.FactionName)
 				</td>
 				<td>
-					@WriteBaseName(trade_route.Transport.SellingGood.BaseName)
+					@frmt.WriteBaseName(trade_route.Transport.SellingGood.BaseName)
 				</td>
 				<td>
-					@WriteRegionName(trade_route.Transport.SellingGood.Region)
+					@frmt.WriteRegionName(trade_route.Transport.SellingGood.Region)
 				</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>
 				<td>{ trade_route.Transport.Commodity.Nickname }</td>
 				<td>
-					@WriteLimit(100) {
+					@frmt.WriteLimit(100) {
 						{ trade_route.Transport.SellingGood.BaseNickname.ToStr() }
 					}
 				</td>

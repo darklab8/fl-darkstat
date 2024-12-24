@@ -114,7 +114,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, shared t
 					@MultiLinestring([]string{"Hull", "dmg"})
 				</th>
 				<th style="width:5px;">
-					@Tooltip("(Hull Dmg * HullDmgFactor + Energy Dmg) * Avg Shield Dmg Modifier") {
+					@frmt.Tooltip("(Hull Dmg * HullDmgFactor + Energy Dmg) * Avg Shield Dmg Modifier") {
 						@MultiLinestring([]string{"Avg", "Shield", "Dmg"})
 					}
 				</th>

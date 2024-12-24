@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 )
 
 templ BriberyBottomBase() {
@@ -44,14 +45,14 @@ templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Br
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteBaseName(rep.BaseName)
+					@frmt.WriteBaseName(rep.BaseName)
 				</td>
 				<td>
-					@WriteFactioName(rep.FactionName)
+					@frmt.WriteFactioName(rep.FactionName)
 				</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Chance * 100) }</td>
 				<td>
-					@WriteSystemName(rep.SystemName)
+					@frmt.WriteSystemName(rep.SystemName)
 				</td>
 				<td>{ rep.SectorCoord }</td>
 				<td>{ rep.BaseNickname }</td>

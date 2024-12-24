@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
 )
@@ -140,7 +141,7 @@ templ IDRephacksT(rephack configs_export.Tractor) {
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteRepName(rep.FactionName)
+					@frmt.WriteRepName(rep.FactionName)
 				</td>
 				<td>{ string(rep.FactionNick) }</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Reputation) }</td>

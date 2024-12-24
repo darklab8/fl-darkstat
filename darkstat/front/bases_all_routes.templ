@@ -4,6 +4,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
     "fmt"
 )
 
@@ -61,7 +62,7 @@ templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode Base
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteLimit(200) {
+					@frmt.WriteLimit(200) {
 						{ route.Transport.ToBase.Name }
 					}
 				</td>
@@ -104,19 +105,19 @@ templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode Base
 					</td>
 				}
 				<td>
-					@WriteSystemName(route.Transport.ToBase.System)
+					@frmt.WriteSystemName(route.Transport.ToBase.System)
 				</td>
 				<td>{ route.Transport.ToBase.SectorCoord }</td>
 				<td>
-					@WriteFactioName(route.Transport.ToBase.FactionName)
+					@frmt.WriteFactioName(route.Transport.ToBase.FactionName)
 				</td>
 
 				<td>
-					@WriteRegionName(route.Transport.ToBase.Region)
+					@frmt.WriteRegionName(route.Transport.ToBase.Region)
 				</td>
 
 				<td>
-					@WriteLimit(100) {
+					@frmt.WriteLimit(100) {
 						{ route.Transport.ToBase.Nickname.ToStr() }
 					}
 				</td>

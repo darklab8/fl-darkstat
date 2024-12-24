@@ -489,16 +489,16 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 					templ.KV("line_underline", base_info.IsTransportUnreachable), }
 			>
 				<td>
-					@WriteBaseName(base_info.BaseName)
+					@frmt.WriteBaseName(base_info.BaseName)
 				</td>
 				<td>
-					@WriteFactioName(base_info.FactionName)
+					@frmt.WriteFactioName(base_info.FactionName)
 				</td>
 				<td>
-					@WriteRegionName(base_info.Region)
+					@frmt.WriteRegionName(base_info.Region)
 				</td>
 				<td>
-					@WriteSystemName(base_info.SystemName)
+					@frmt.WriteSystemName(base_info.SystemName)
 				</td>
 				if shared.ShowDisco {
 					<td>
@@ -527,7 +527,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 					<td>{ strconv.FormatBool(base_info.IsServerSideOverride) }</td>
 				}
 				<td>
-					@WriteLimit(100) {
+					@frmt.WriteLimit(100) {
 						{ base_info.BaseNickname.ToStr() }
 					}
 				</td>
@@ -606,7 +606,7 @@ script Pin2(id string) {
 templ PinTd(nickname string, name string, pinm PinMod) {
 	<td style="display:flex;justify-content:space-between;min-width:50px;">
 		<span>
-			@WriteLimit(200) {
+			@frmt.WriteLimit(200) {
 				{ name }
 			}
 		</span>
@@ -803,59 +803,3 @@ templ BottomFilterBar() {
 	<input style="width: 100%;" type="text" id="bottom_input" onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')" placeholder="Search rows by any content: name, nickname etc.."/>
 }
 
-templ WriteBaseName(BaseName string) {
-	@WriteLimit(150) {
-		{ BaseName }
-	}
-}
-
-templ WriteFactioName(FactionName string) {
-	@WriteLimit(165) {
-		{ FactionName }
-	}
-}
-
-templ WriteRepName(RepName string) {
-	@WriteLimit(200) {
-		{ RepName }
-	}
-}
-
-templ WriteTractorID(Name string) {
-	@WriteLimit(200) {
-		{ Name }
-	}
-}
-
-templ WriteSystemName(System string) {
-	@WriteLimit(120) {
-		{ System }
-	}
-}
-
-templ WriteGoodType(GoodType string) {
-	@WriteLimit(100) {
-		{ GoodType }
-	}
-}
-
-templ WriteRegionName(RegionName string) {
-	@WriteLimit(170) {
-		{ RegionName }
-	}
-}
-
-templ WriteLimit(limit int) {
-	@templ.Raw("<div class=\"seo\" style=\"width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;overflow-y:hidden;\">")
-	{ children... }
-	@templ.Raw("</div>")
-}
-
-templ Tooltip(tooltip string) {
-	<span class="tooltip">
-		{ children... }
-		<span class="tooltiptext">
-			{ tooltip }
-		</span>
-	</span>
-}
