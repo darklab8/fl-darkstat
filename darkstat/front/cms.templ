@@ -12,7 +12,7 @@ func CounterMeasreDetailedUrl(cm configs_export.CounterMeasure) string {
 	return "cm/cm_base_" + strings.ToLower(cm.Nickname)
 }
 
-templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.DiscoveryIDs) {
+templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -21,7 +21,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				@ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
@@ -47,7 +47,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 				@TrFromMainTb(cm.Nickname, CounterMeasreDetailedUrl(cm), pinm) {
 					@PinTd(cm.Nickname, cm.Name, pinm)
 					@PinSelectLeftRight(pinm, CounterMeasreDetailedUrl(cm))
-					@TdDisco(disco, cm.Nickname, cm.DiscoveryTechCompat)
+					@TdDisco(shared, cm.Nickname, cm.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(cm.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(cm.Bases)) }</td>
 					<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
@@ -61,7 +61,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 					<td class="seo">{ strconv.Itoa(cm.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(cm.InfoID) } </td>
 					@HashTd(cm.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -73,26 +73,26 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.CounterMeasures, mode2, disco)
+templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, shared types.SharedData) {
+	@TabMenu(urls.CounterMeasures, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-					@FilterBar(disco)
+					@FilterBar(shared)
 					<div id="table-top-main">
-						@CmTable(cms, MainMode, disco)
+						@CmTable(cms, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@CmTable(cms, PinMode, disco)
+						@CmTable(cms, PinMode, shared)
 					</div>
 				}
 				@TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}

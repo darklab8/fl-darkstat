@@ -8,7 +8,7 @@ import (
 )
 
 
-templ BasesRoutesShared(disco types.DiscoveryIDs) {
+templ BasesRoutesShared(shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -16,7 +16,7 @@ templ BasesRoutesShared(disco types.DiscoveryIDs) {
 				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:50px;">
 						@MultiLinestring([]string{"Frigate", "Time(sec)"})
 					</th>
@@ -47,10 +47,10 @@ func RouteUrl(route *configs_export.Route) string {
 	return "routes/route_" + route.GetID()
 }
 
-templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode BaseMode, disco types.DiscoveryIDs) {
+templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode BaseMode, shared types.SharedData) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
-	@BasesRoutesShared(disco) {
+	@BasesRoutesShared(shared) {
 		for _, route := range routes.AllRoutes {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(route.Transport.Route) }
@@ -77,7 +77,7 @@ templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode Base
 						</span>
 					</span>
 				</td>
-				if disco.Show {
+				if shared.ShowDisco {
 					<td>
 						<span class="tooltip">
 							@TradeRouteHumanTime(route.Frigate.Route)

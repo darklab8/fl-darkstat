@@ -14,7 +14,7 @@ func EngineDetailedUrl(engine configs_export.Engine) string {
 	return "engines/engines_base_" + strings.ToLower(engine.Nickname)
 }
 
-templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.DiscoveryIDs) {
+templ EnginesTable(engines []configs_export.Engine, pinm PinMod, shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -23,7 +23,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				@ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
@@ -62,7 +62,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 				@TrFromMainTb(engine.Nickname, EngineDetailedUrl(engine), pinm) {
 					@PinTd(engine.Nickname, engine.Name, pinm)
 					@PinSelectLeftRight(pinm, EngineDetailedUrl(engine))
-					@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, engine.Nickname))
+					@TdDiscoTarget(shared, GetTdDiscoCacheKey(shared, engine.Nickname))
 					<td>{ strconv.Itoa(engine.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(engine.Bases)) }</td>
 					<td>{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
@@ -81,7 +81,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 					@HashTd(engine.HpTypeHash)
 					@HashTd(engine.FlameEffectHash)
 					@HashTd(engine.TrailEffectHash)
-					@TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -90,26 +90,26 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Engines, mode, disco)
+templ Engines(engines []configs_export.Engine, mode ShowEmpty, shared types.SharedData) {
+	@TabMenu(urls.Engines, mode, shared)
 	@TabContent() {
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-					@FilterBar(disco)
+					@FilterBar(shared)
 					<div id="table-top-main">
-						@EnginesTable(engines, MainMode, disco)
+						@EnginesTable(engines, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@EnginesTable(engines, PinMode, disco)
+						@EnginesTable(engines, PinMode, shared)
 					</div>
 				}
 				@TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}
@@ -117,6 +117,6 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco types.Disco
 				@InfocardShared()
 			}
 		</div>
-		@CacheTechCompatTable(disco, utils.CompL(engines, func(x configs_export.Engine) Item { return x }))
+		@CacheTechCompatTable(shared, utils.CompL(engines, func(x configs_export.Engine) Item { return x }))
 	}
 }

@@ -44,7 +44,7 @@ const (
 	BaseAllRoutes
 )
 
-templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, disco types.DiscoveryIDs) {
+templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -66,7 +66,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 					</th>
 				}
 				<th style="width:50px;">System</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:5px;">
 						@MultiLinestring([]string{"Not for", "tran", "sports"})
 					</th>
@@ -93,7 +93,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 				}
 				if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 					<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Transport</span><span>profit/v</span><span>¢/sec</span></div></th>
-					if disco.Show {
+					if shared.ShowDisco {
 						<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Frigate</span><span>profit/v</span><span>¢/sec</span></div></th>
 						<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Freighter</span><span>profit/v</span><span>¢/sec</span></div></th>
 					}
@@ -135,13 +135,13 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 		</thead>
 		<tbody>
 			for _, base := range bases {
-				@BaseRow(base, tab_mode, pinm, disco)
+				@BaseRow(base, tab_mode, pinm, shared)
 			}
 		</tbody>
 	</table>
 }
 
-templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco types.DiscoveryIDs) {
+templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared types.SharedData) {
 	@TrFromMain(NewTr(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm, WithTransportUnreachable(base.IsTransportUnreachable))) {
 		@PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
@@ -156,7 +156,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		<td>
 			@WriteSystemName(base.System)
 		</td>
-		if disco.Show {
+		if shared.ShowDisco {
 			<td>
 			{ strconv.FormatBool(base.IsTransportUnreachable) }
 			</td>
@@ -172,7 +172,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 			<td
 				class="route_transport"
-				routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, disco, trades.RouteTransport) }
+				routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteTransport) }
 			>
 				if base.BestTransportRoute != nil {
 					{ fmt.Sprintf("%2.2f", base.BestTransportRoute.GetProffitPerTime() * 100) }
@@ -180,15 +180,15 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 					0
 				}
 			</td>
-			if disco.Show {
-				<td class="route_frigate" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, disco, trades.RouteFrigate) }>
+			if shared.ShowDisco {
+				<td class="route_frigate" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFrigate) }>
 					if base.BestFrigateRoute != nil {
 						{ fmt.Sprintf("%2.2f", base.BestFrigateRoute.GetProffitPerTime() * 100) }
 					} else {
 						0
 					}
 				</td>
-				<td class="route_freighter" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, disco, trades.RouteFreighter) }>
+				<td class="route_freighter" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFreighter) }>
 					if base.BestFreighterRoute != nil {
 						{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.GetProffitPerTime() * 100) }
 					} else {
@@ -221,29 +221,29 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		<td>{ FormatBoolAsYesNo(base.Reachable) }</td>
 		@HashTd(base.NicknameHash)
 		@HashTd(base.SystemNicknameHash)
-		@TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, disco)
+		@TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, shared)
 	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, disco types.DiscoveryIDs) {
+templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, shared types.SharedData) {
 	if tab_mode == BaseShowShops {
-		@TabMenu(urls.Bases, mode, disco)
+		@TabMenu(urls.Bases, mode, shared)
 	} else if tab_mode == BaseShowMissions {
-		@TabMenu(urls.Missions, mode, disco)
+		@TabMenu(urls.Missions, mode, shared)
 	} else if tab_mode == BaseTabTrades {
-		@TabMenu(urls.Trades, mode, disco)
+		@TabMenu(urls.Trades, mode, shared)
 	} else if tab_mode == BaseTabOres {
-		@TabMenu(urls.Asteroids, mode, disco)
+		@TabMenu(urls.Asteroids, mode, shared)
 	} else if tab_mode == BaseAllRoutes {
-		@TabMenu(urls.TravelRoutes, mode, disco)
+		@TabMenu(urls.TravelRoutes, mode, shared)
 	}
 	@TabContent() {
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-					@FilterBar(types.DiscoveryIDs{}) {
+					@FilterBar(types.SharedData{}) {
 						// Turning off this feature because it has 170+mb bug size increasig for trades.html
 						// if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 						// 	<input
@@ -256,10 +256,10 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 						// }
 					}
 					<div id="table-top-main">
-						@BasesTable(bases, tab_mode, MainMode, disco)
+						@BasesTable(bases, tab_mode, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@BasesTable(bases, tab_mode, PinMode, disco)
+						@BasesTable(bases, tab_mode, PinMode, shared)
 					</div>
 				}
 				@TableBottom(){
@@ -269,11 +269,11 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
 						} else if tab_mode == BaseTabTrades {
-							@BaseTradesShared(disco)
+							@BaseTradesShared(shared)
 						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared(disco)
+							@BaseTradesShared(shared)
 						} else if tab_mode == BaseAllRoutes {
-							@BasesRoutesShared(disco)
+							@BasesRoutesShared(shared)
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
@@ -283,11 +283,11 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
 						} else if tab_mode == BaseTabTrades {
-							@BaseTradesShared(disco)
+							@BaseTradesShared(shared)
 						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared(disco)
+							@BaseTradesShared(shared)
 						}  else if tab_mode == BaseAllRoutes {
-							@BasesRoutesShared(disco)
+							@BasesRoutesShared(shared)
 						}
 					</div>
 				}
@@ -493,7 +493,7 @@ templ MultiLinestring(lines []string) {
 	</div>
 }
 
-templ BaseTradesShared(disco types.DiscoveryIDs) {
+templ BaseTradesShared(shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -501,7 +501,7 @@ templ BaseTradesShared(disco types.DiscoveryIDs) {
 				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
 				</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:50px;">
 						@MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
 					</th>
@@ -512,7 +512,7 @@ templ BaseTradesShared(disco types.DiscoveryIDs) {
 				<th style="width:50px;">
 					@MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:50px;">
 						@MultiLinestring([]string{"Frigate", "Time(sec)"})
 					</th>
@@ -570,7 +570,7 @@ func (r RoundedFloat) MarshalJSON() ([]byte, error) {
 }
 
 
-func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, disco types.DiscoveryIDs, route_type trades.RouteShipType) string {
+func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, shared types.SharedData, route_type trades.RouteShipType) string {
 	return "" // turning on this feature because it is bugged
 
 	var result []Path
@@ -597,10 +597,10 @@ func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, disco types.
 	return string(bytes)
 }
 
-templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, tab_mode BaseMode, disco types.DiscoveryIDs) {
+templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, tab_mode BaseMode, shared types.SharedData) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
-	@BaseTradesShared(disco) {
+	@BaseTradesShared(shared) {
 		for _, trade_route := range trade_routes.TradeRoutes {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
@@ -616,7 +616,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 					}
 				</td>
 				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
-				if disco.Show {
+				if shared.ShowDisco {
 					<td class="route_frigate" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
 					<td class="route_freighter" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
 				}
@@ -632,7 +632,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 						</span>
 					</span>
 				</td>
-				if disco.Show {
+				if shared.ShowDisco {
 					<td>
 						<span class="tooltip">
 							@TradeRouteHumanTime(trade_route.Frigate.Route)
@@ -702,7 +702,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 	}
 }
 
-templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs_export.Route, FreighterRoute *configs_export.Route, disco types.DiscoveryIDs) {
+templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs_export.Route, FreighterRoute *configs_export.Route, shared types.SharedData) {
 	@InfocardShared() {
 		<style>
 			.infocard p {
@@ -714,17 +714,17 @@ templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs
 		<p>{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
 		<p>{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>
 		<br/>
-		@RouteInfo("Transport", TransportRoute, disco)
-		if disco.Show {
+		@RouteInfo("Transport", TransportRoute, shared)
+		if shared.ShowDisco {
 			<br/>
-			@RouteInfo("Frigate", FrigateRoute, disco)
+			@RouteInfo("Frigate", FrigateRoute, shared)
 			<br/>
-			@RouteInfo("Freighter", FreighterRoute, disco)
+			@RouteInfo("Freighter", FreighterRoute, shared)
 		}
 	}
 }
 
-templ RouteInfo(name string, route *configs_export.Route, disco types.DiscoveryIDs) {
+templ RouteInfo(name string, route *configs_export.Route, shared types.SharedData) {
 	<p>{ name } Route:</p>
 	<p>{ ">" } Avg Cruise Speed: { strconv.Itoa(route.GetCruiseSpeed()) }</p>
 	<p>{ ">" } Visit Freighter Only JHs: { strconv.FormatBool(route.GetCanVisitFreighterOnlyJH()) }</p>
@@ -732,7 +732,7 @@ templ RouteInfo(name string, route *configs_export.Route, disco types.DiscoveryI
 		if path.NextName != "" {
 			if path.Dist != 0 {
 				<p>
-				@TooltipDestination(path.Pos, disco)
+				@TooltipDestination(path.Pos, shared)
 				{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) [ { path.SectorCoord }] - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s
 				</p>
 			}
@@ -740,11 +740,11 @@ templ RouteInfo(name string, route *configs_export.Route, disco types.DiscoveryI
 	}
 }
 
-templ TooltipDestination(Pos cfgtype.Vector, disco types.DiscoveryIDs) {
+templ TooltipDestination(Pos cfgtype.Vector, shared types.SharedData) {
 	<span class="tooltip">
 		@MagnifyingGlass()
 		<span class="tooltiptext" style="left: 0px; top: 30px;">
-			if disco.Show {
+			if shared.ShowDisco {
 				{ fmt.Sprintf("/wp %.0f %.0f %.0f",Pos.X,Pos.Y,Pos.Z) } <br/>
 				command to create waypoint
 			} else {

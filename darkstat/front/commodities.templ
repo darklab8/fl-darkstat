@@ -13,7 +13,7 @@ func GoodAtBaseInfoTUrl(commodity *configs_export.Commodity) string {
 	return "commodities/comm_base_" + strings.ToLower(string(configs_export.GetCommodityKey(commodity.Nickname, commodity.ShipClass)))
 }
 
-templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco types.DiscoveryIDs) {
+templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -64,7 +64,7 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 					<td class="seo">{ strconv.Itoa(commodity.NameID) }</td>
 					<td class="seo">{ strconv.Itoa(commodity.InfocardID) }</td>
 					@HashTd(commodity.NicknameHash)
-					@TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm, disco)
+					@TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -73,26 +73,26 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CommoditiesT(commodities []*configs_export.Commodity, mode ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Commodities, mode, disco)
+templ CommoditiesT(commodities []*configs_export.Commodity, mode ShowEmpty, shared types.SharedData) {
+	@TabMenu(urls.Commodities, mode, shared)
 	@TabContent() {
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-					@FilterBar(types.DiscoveryIDs{})
+					@FilterBar(types.SharedData{})
 					<div id="table-top-main">
-						@CommodityTable(commodities, MainMode, disco)
+						@CommodityTable(commodities, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@CommodityTable(commodities, PinMode, disco)
+						@CommodityTable(commodities, PinMode, shared)
 					</div>
 				}
 				@TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(true), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(true), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 					</div>
 				}
 			}

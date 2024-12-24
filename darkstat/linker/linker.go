@@ -199,7 +199,7 @@ func (l *Linker) Link() *builder.Builder {
 	var useful_missiles []configs_export.Gun
 	tractor_id := cfgtype.TractorID("")
 
-	var disco_ids types.DiscoveryIDs
+	var shared types.SharedData
 
 	timeit.NewTimerMF("filtering to useful stuff", func() {
 		useful_factions = configs_export.FilterToUsefulFactions(data.Factions)
@@ -208,16 +208,18 @@ func (l *Linker) Link() *builder.Builder {
 		useful_missiles = data.FilterToUsefulGun(data.Missiles)
 
 		if l.mapped.Discovery != nil {
-			disco_ids = types.DiscoveryIDs{
-				Show:              true,
-				Ids:               l.configs.Tractors,
-				TractorsByID:      l.configs.TractorsByID,
-				Config:            l.mapped.Discovery.Techcompat,
-				LatestPatch:       l.mapped.Discovery.LatestPatch,
-				OrderedTechcompat: *configs_export.NewOrderedTechCompat(data),
+			shared = types.SharedData{
+				DiscoveryData: types.DiscoveryData{
+					ShowDisco:         true,
+					Ids:               l.configs.Tractors,
+					TractorsByID:      l.configs.TractorsByID,
+					Config:            l.mapped.Discovery.Techcompat,
+					LatestPatch:       l.mapped.Discovery.LatestPatch,
+					OrderedTechcompat: *configs_export.NewOrderedTechCompat(l.configs),
+				},
 			}
 		}
-		disco_ids.Infocards = l.configs.Infocards
+		shared.Infocards = l.configs.Infocards
 	})
 
 	timeit.NewTimerMF("linking main stuff", func() {
@@ -225,198 +227,198 @@ func (l *Linker) Link() *builder.Builder {
 		build.RegComps(
 			builder.NewComponent(
 				urls.Ships+utils_types.FilePath(tractor_id),
-				front.ShipsT(useful_ships, front.ShipShowBases, front.ShowEmpty(false), disco_ids, data.Infocards),
+				front.ShipsT(useful_ships, front.ShipShowBases, front.ShowEmpty(false), shared, data.Infocards),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Ships)+utils_types.FilePath(tractor_id),
-				front.ShipsT(data.Ships, front.ShipShowBases, front.ShowEmpty(true), disco_ids, data.Infocards),
+				front.ShipsT(data.Ships, front.ShipShowBases, front.ShowEmpty(true), shared, data.Infocards),
 			),
 			builder.NewComponent(
 				urls.ShipDetails+utils_types.FilePath(tractor_id),
-				front.ShipsT(useful_ships, front.ShipShowDetails, front.ShowEmpty(false), disco_ids, data.Infocards),
+				front.ShipsT(useful_ships, front.ShipShowDetails, front.ShowEmpty(false), shared, data.Infocards),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.ShipDetails)+utils_types.FilePath(tractor_id),
-				front.ShipsT(data.Ships, front.ShipShowDetails, front.ShowEmpty(true), disco_ids, data.Infocards),
+				front.ShipsT(data.Ships, front.ShipShowDetails, front.ShowEmpty(true), shared, data.Infocards),
 			),
 		)
 
 		build.RegComps(
 			builder.NewComponent(
 				"index_"+"docs.html",
-				front.DocsEntry(types.ThemeLight, disco_ids),
+				front.DocsEntry(types.ThemeLight, shared),
 			),
 			builder.NewComponent(
 				urls.HashesIndex,
-				front.HashesEntry(types.ThemeLight, disco_ids),
+				front.HashesEntry(types.ThemeLight, shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.HashesIndex),
-				front.HashesEntry(types.ThemeLight, disco_ids),
+				front.HashesEntry(types.ThemeLight, shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Docs),
-				front.DocsT(front.ShowEmpty(true), disco_ids),
+				front.DocsT(front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Docs,
-				front.DocsT(front.ShowEmpty(false), disco_ids),
+				front.DocsT(front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				urls.Index,
-				front.Index(types.ThemeLight, disco_ids),
+				front.Index(types.ThemeLight, shared),
 			),
 			builder.NewComponent(
 				urls.DarkIndex,
-				front.Index(types.ThemeDark, disco_ids),
+				front.Index(types.ThemeDark, shared),
 			),
 			builder.NewComponent(
 				urls.VanillaIndex,
-				front.Index(types.ThemeVanilla, disco_ids),
+				front.Index(types.ThemeVanilla, shared),
 			),
 			builder.NewComponent(
 				urls.Bases,
-				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, front.ShowEmpty(false), disco_ids),
+				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Bases),
-				front.BasesT(data.Bases, front.BaseShowShops, front.ShowEmpty(true), disco_ids),
+				front.BasesT(data.Bases, front.BaseShowShops, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Missions,
-				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, front.ShowEmpty(false), disco_ids),
+				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Missions),
-				front.BasesT(data.Bases, front.BaseShowMissions, front.ShowEmpty(true), disco_ids),
+				front.BasesT(data.Bases, front.BaseShowMissions, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Factions,
-				front.FactionsT(useful_factions, front.FactionShowBases, front.ShowEmpty(false), disco_ids),
+				front.FactionsT(useful_factions, front.FactionShowBases, front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Factions),
-				front.FactionsT(data.Factions, front.FactionShowBases, front.ShowEmpty(true), disco_ids),
+				front.FactionsT(data.Factions, front.FactionShowBases, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Rephacks,
-				front.FactionsT(useful_factions, front.FactionShowRephacks, front.ShowEmpty(false), disco_ids),
+				front.FactionsT(useful_factions, front.FactionShowRephacks, front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Rephacks),
-				front.FactionsT(data.Factions, front.FactionShowRephacks, front.ShowEmpty(true), disco_ids),
+				front.FactionsT(data.Factions, front.FactionShowRephacks, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Commodities,
-				front.CommoditiesT(data.FilterToUsefulCommodities(data.Commodities), front.ShowEmpty(false), disco_ids),
+				front.CommoditiesT(data.FilterToUsefulCommodities(data.Commodities), front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Commodities),
-				front.CommoditiesT(data.Commodities, front.ShowEmpty(true), disco_ids),
+				front.CommoditiesT(data.Commodities, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Guns,
-				front.GunsT(useful_guns, front.GunsShowBases, front.ShowEmpty(false), disco_ids, data.Infocards),
+				front.GunsT(useful_guns, front.GunsShowBases, front.ShowEmpty(false), shared, data.Infocards),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Guns),
-				front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(true), disco_ids, data.Infocards),
+				front.GunsT(data.Guns, front.GunsShowBases, front.ShowEmpty(true), shared, data.Infocards),
 			),
 			builder.NewComponent(
 				urls.GunModifiers,
-				front.GunsT(useful_guns, front.GunsShowDamageBonuses, front.ShowEmpty(false), disco_ids, data.Infocards),
+				front.GunsT(useful_guns, front.GunsShowDamageBonuses, front.ShowEmpty(false), shared, data.Infocards),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.GunModifiers),
-				front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true), disco_ids, data.Infocards),
+				front.GunsT(data.Guns, front.GunsShowDamageBonuses, front.ShowEmpty(true), shared, data.Infocards),
 			),
 			builder.NewComponent(
 				urls.Ammo,
-				front.AmmoT(data.FilterToUsefulAmmo(data.Ammos), front.ShowEmpty(false), disco_ids),
+				front.AmmoT(data.FilterToUsefulAmmo(data.Ammos), front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Ammo),
-				front.AmmoT(data.Ammos, front.ShowEmpty(true), disco_ids),
+				front.AmmoT(data.Ammos, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Hashes,
-				front.HashesT(data.Hashes, front.ShowEmpty(false), disco_ids),
+				front.HashesT(data.Hashes, front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Hashes),
-				front.HashesT(data.Hashes, front.ShowEmpty(true), disco_ids),
+				front.HashesT(data.Hashes, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Missiles,
-				front.GunsT(useful_missiles, front.GunsMissiles, front.ShowEmpty(false), disco_ids, data.Infocards),
+				front.GunsT(useful_missiles, front.GunsMissiles, front.ShowEmpty(false), shared, data.Infocards),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Missiles),
-				front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true), disco_ids, data.Infocards),
+				front.GunsT(data.Missiles, front.GunsMissiles, front.ShowEmpty(true), shared, data.Infocards),
 			),
 			builder.NewComponent(
 				urls.Mines,
-				front.MinesT(data.FilterToUsefulMines(data.Mines), front.ShowEmpty(false), disco_ids),
+				front.MinesT(data.FilterToUsefulMines(data.Mines), front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Mines),
-				front.MinesT(data.Mines, front.ShowEmpty(true), disco_ids),
+				front.MinesT(data.Mines, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Shields,
-				front.ShieldT(data.FilterToUsefulShields(data.Shields), front.ShowEmpty(false), disco_ids),
+				front.ShieldT(data.FilterToUsefulShields(data.Shields), front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Shields),
-				front.ShieldT(data.Shields, front.ShowEmpty(true), disco_ids),
+				front.ShieldT(data.Shields, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Thrusters,
-				front.ThrusterT(data.FilterToUsefulThrusters(data.Thrusters), front.ShowEmpty(false), disco_ids),
+				front.ThrusterT(data.FilterToUsefulThrusters(data.Thrusters), front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Thrusters),
-				front.ThrusterT(data.Thrusters, front.ShowEmpty(true), disco_ids),
+				front.ThrusterT(data.Thrusters, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Tractors,
-				front.TractorsT(data.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), front.TractorModShop, disco_ids),
+				front.TractorsT(data.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), front.TractorModShop, shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Tractors),
-				front.TractorsT(data.Tractors, front.ShowEmpty(true), front.TractorModShop, disco_ids),
+				front.TractorsT(data.Tractors, front.ShowEmpty(true), front.TractorModShop, shared),
 			),
 			builder.NewComponent(
 				urls.IDRephacks,
-				front.TractorsT(data.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), front.TractorIDRephacks, disco_ids),
+				front.TractorsT(data.FilterToUsefulTractors(data.Tractors), front.ShowEmpty(false), front.TractorIDRephacks, shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.IDRephacks),
-				front.TractorsT(data.Tractors, front.ShowEmpty(true), front.TractorIDRephacks, disco_ids),
+				front.TractorsT(data.Tractors, front.ShowEmpty(true), front.TractorIDRephacks, shared),
 			),
 			builder.NewComponent(
 				urls.Engines,
-				front.Engines(data.FilterToUsefulEngines(data.Engines), front.ShowEmpty(false), disco_ids),
+				front.Engines(data.FilterToUsefulEngines(data.Engines), front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Engines),
-				front.Engines(data.Engines, front.ShowEmpty(true), disco_ids),
+				front.Engines(data.Engines, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.CounterMeasures,
-				front.CounterMeasureT(data.FilterToUsefulCounterMeasures(data.CMs), front.ShowEmpty(false), disco_ids),
+				front.CounterMeasureT(data.FilterToUsefulCounterMeasures(data.CMs), front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.CounterMeasures),
-				front.CounterMeasureT(data.CMs, front.ShowEmpty(true), disco_ids),
+				front.CounterMeasureT(data.CMs, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Scanners,
-				front.ScannersT(data.FilterToUserfulScanners(data.Scanners), front.ShowEmpty(false), disco_ids),
+				front.ScannersT(data.FilterToUserfulScanners(data.Scanners), front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Scanners),
-				front.ScannersT(data.Scanners, front.ShowEmpty(true), disco_ids),
+				front.ScannersT(data.Scanners, front.ShowEmpty(true), shared),
 			),
 		)
 
@@ -432,11 +434,11 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
-					front.BaseTrades(base.Name, base.BaseAllTradeRoutes, front.BaseTabTrades, disco_ids),
+					front.BaseTrades(base.Name, base.BaseAllTradeRoutes, front.BaseTabTrades, shared),
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseAllRoutes)),
-					front.BaseRoutes(base.Name, base.BaseAllRoutes, front.BaseAllRoutes, disco_ids),
+					front.BaseRoutes(base.Name, base.BaseAllRoutes, front.BaseAllRoutes, shared),
 				),
 			)
 
@@ -444,7 +446,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
-						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, disco_ids),
+						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, shared),
 					),
 				)
 			}
@@ -454,7 +456,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOres)),
-					front.BaseTrades(base.Name, base.BaseAllTradeRoutes, front.BaseTabOres, disco_ids),
+					front.BaseTrades(base.Name, base.BaseAllTradeRoutes, front.BaseTabOres, shared),
 				),
 			)
 
@@ -463,7 +465,7 @@ func (l *Linker) Link() *builder.Builder {
 				build.RegComps(
 					builder.NewComponent(
 						utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
-						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, disco_ids),
+						front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, shared),
 					),
 				)
 			}
@@ -500,7 +502,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.GoodAtBaseInfoTUrl(base_info)),
-					front.GoodAtBaseInfoT(base_info.Name, base_info.Bases, front.ShowAsCommodity(true), disco_ids),
+					front.GoodAtBaseInfoT(base_info.Name, base_info.Bases, front.ShowAsCommodity(true), shared),
 				),
 			)
 		}
@@ -509,7 +511,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsShowBases)),
-					front.GoodAtBaseInfoT(gun.Name, gun.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(gun.Name, gun.Bases, front.ShowAsCommodity(false), shared),
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.GunDetailedUrl(gun, front.GunsShowDamageBonuses)),
@@ -518,11 +520,11 @@ func (l *Linker) Link() *builder.Builder {
 
 				builder.NewComponent(
 					utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowBases)),
-					front.GunRow(gun, front.GunsShowBases, front.PinMode, disco_ids, data.Infocards, true),
+					front.GunRow(gun, front.GunsShowBases, front.PinMode, shared, data.Infocards, true),
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowDamageBonuses)),
-					front.GunRow(gun, front.GunsShowDamageBonuses, front.PinMode, disco_ids, data.Infocards, true),
+					front.GunRow(gun, front.GunsShowDamageBonuses, front.PinMode, shared, data.Infocards, true),
 				),
 			)
 		}
@@ -530,7 +532,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.AmmoDetailedUrl(ammo)),
-					front.GoodAtBaseInfoT(ammo.Name, ammo.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(ammo.Name, ammo.Bases, front.ShowAsCommodity(false), shared),
 				),
 			)
 		}
@@ -539,11 +541,11 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.GunDetailedUrl(missile, front.GunsMissiles)),
-					front.GoodAtBaseInfoT(missile.Name, missile.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(missile.Name, missile.Bases, front.ShowAsCommodity(false), shared),
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.GunPinnedRowUrl(missile, front.GunsMissiles)),
-					front.GunRow(missile, front.GunsMissiles, front.PinMode, disco_ids, data.Infocards, true),
+					front.GunRow(missile, front.GunsMissiles, front.PinMode, shared, data.Infocards, true),
 				),
 			)
 		}
@@ -552,7 +554,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.MineDetailedUrl(mine)),
-					front.GoodAtBaseInfoT(mine.Name, mine.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(mine.Name, mine.Bases, front.ShowAsCommodity(false), shared),
 				),
 			)
 		}
@@ -561,7 +563,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.ShieldDetailedUrl(shield)),
-					front.GoodAtBaseInfoT(shield.Name, shield.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(shield.Name, shield.Bases, front.ShowAsCommodity(false), shared),
 				),
 			)
 		}
@@ -570,7 +572,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.ThrusterDetailedUrl(thruster)),
-					front.GoodAtBaseInfoT(thruster.Name, thruster.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(thruster.Name, thruster.Bases, front.ShowAsCommodity(false), shared),
 				),
 			)
 		}
@@ -579,7 +581,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowBases)),
-					front.GoodAtBaseInfoT(ship.Name, ship.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(ship.Name, ship.Bases, front.ShowAsCommodity(false), shared),
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.ShipDetailedUrl(ship, front.ShipShowDetails)),
@@ -587,11 +589,11 @@ func (l *Linker) Link() *builder.Builder {
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowBases)),
-					front.ShipRow(ship, front.ShipShowBases, front.PinMode, disco_ids, data.Infocards, true),
+					front.ShipRow(ship, front.ShipShowBases, front.PinMode, shared, data.Infocards, true),
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowDetails)),
-					front.ShipRow(ship, front.ShipShowDetails, front.PinMode, disco_ids, data.Infocards, true),
+					front.ShipRow(ship, front.ShipShowDetails, front.PinMode, shared, data.Infocards, true),
 				),
 			)
 		}
@@ -600,7 +602,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.TractorDetailedUrl(tractor, front.TractorModShop)),
-					front.GoodAtBaseInfoT(tractor.Name, tractor.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(tractor.Name, tractor.Bases, front.ShowAsCommodity(false), shared),
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.TractorDetailedUrl(tractor, front.TractorIDRephacks)),
@@ -613,7 +615,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.EngineDetailedUrl(engine)),
-					front.GoodAtBaseInfoT(engine.Name, engine.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(engine.Name, engine.Bases, front.ShowAsCommodity(false), shared),
 				),
 			)
 		}
@@ -622,7 +624,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.CounterMeasreDetailedUrl(cm)),
-					front.GoodAtBaseInfoT(cm.Name, cm.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(cm.Name, cm.Bases, front.ShowAsCommodity(false), shared),
 				),
 			)
 		}
@@ -631,7 +633,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.ScannerDetailedUrl(item)),
-					front.GoodAtBaseInfoT(item.Name, item.Bases, front.ShowAsCommodity(false), disco_ids),
+					front.GoodAtBaseInfoT(item.Name, item.Bases, front.ShowAsCommodity(false), shared),
 				),
 			)
 		}
@@ -649,27 +651,27 @@ func (l *Linker) Link() *builder.Builder {
 		build.RegComps(
 			builder.NewComponent(
 				urls.Trades,
-				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseTabTrades, front.ShowEmpty(false), disco_ids),
+				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseTabTrades, front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Trades),
-				front.BasesT(data.Bases, front.BaseTabTrades, front.ShowEmpty(true), disco_ids),
+				front.BasesT(data.Bases, front.BaseTabTrades, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.Asteroids,
-				front.BasesT(configs_export.FitlerToUsefulOres(data.MiningOperations), front.BaseTabOres, front.ShowEmpty(false), disco_ids),
+				front.BasesT(configs_export.FitlerToUsefulOres(data.MiningOperations), front.BaseTabOres, front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.Asteroids),
-				front.BasesT(data.MiningOperations, front.BaseTabOres, front.ShowEmpty(true), disco_ids),
+				front.BasesT(data.MiningOperations, front.BaseTabOres, front.ShowEmpty(true), shared),
 			),
 			builder.NewComponent(
 				urls.TravelRoutes,
-				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseAllRoutes, front.ShowEmpty(false), disco_ids),
+				front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseAllRoutes, front.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				front.AllItemsUrl(urls.TravelRoutes),
-				front.BasesT(data.Bases, front.BaseAllRoutes, front.ShowEmpty(true), disco_ids),
+				front.BasesT(data.Bases, front.BaseAllRoutes, front.ShowEmpty(true), shared),
 			),
 		)
 	})

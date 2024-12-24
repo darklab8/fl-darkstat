@@ -14,7 +14,7 @@ func ShieldDetailedUrl(shield configs_export.Shield) string {
 	return "shields/shields_base_" + strings.ToLower(shield.Nickname)
 }
 
-templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.DiscoveryIDs) {
+templ ShieldTable(shields []configs_export.Shield, pinm PinMod, shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -23,7 +23,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				@ThDisco(shared)
 				<th style="width:25px;">Class</th>
 				<th style="width:25px;">Type</th>
 				<th style="width:25px;">Technology</th>
@@ -59,7 +59,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 				@TrFromMainTb(shield.Nickname, ShieldDetailedUrl(shield), pinm) {
 					@PinTd(shield.Nickname, shield.Name, pinm)
 					@PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
-					@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, shield.Nickname))
+					@TdDiscoTarget(shared, GetTdDiscoCacheKey(shared, shield.Nickname))
 					<td>{ shield.Class }</td>
 					<td class="seo">{ shield.Type }</td>
 					<td class="seo">{ shield.Technology }</td>
@@ -79,7 +79,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					<td class="seo">{ strconv.Itoa(shield.IdsInfo) } </td>
 					@HashTd(shield.NicknameHash)
 					@HashTd(shield.HpTypeHash)
-					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -88,26 +88,26 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Shields, mode2, disco)
+templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, shared types.SharedData) {
+	@TabMenu(urls.Shields, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-					@FilterBar(disco)
+					@FilterBar(shared)
 					<div id="table-top-main">
-						@ShieldTable(shields, MainMode, disco)
+						@ShieldTable(shields, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShieldTable(shields, PinMode, disco)
+						@ShieldTable(shields, PinMode, shared)
 					</div>
 				}
 				@TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}
@@ -115,7 +115,7 @@ templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, disco types.Disc
 				@InfocardShared()
 			}
 		</div>
-		@CacheTechCompatTable(disco, utils.CompL(shields, func(x configs_export.Shield) Item { return x }))
+		@CacheTechCompatTable(shared, utils.CompL(shields, func(x configs_export.Shield) Item { return x }))
 	}
 }
 

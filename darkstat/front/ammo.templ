@@ -13,7 +13,7 @@ func AmmoDetailedUrl(ammo configs_export.Ammo) string {
 	return "ammo/ammo_base_" + strings.ToLower(ammo.Nickname)
 }
 
-templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryIDs) {
+templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -22,7 +22,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				// @ThDisco(disco) // techcompat is not active for ammo
+				// @ThDisco(shared) // techcompat is not active for ammo
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Hit Pts</th>
@@ -54,7 +54,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 				@TrFromMainTb(ammo.Nickname, AmmoDetailedUrl(ammo), pinm) {
 					@PinTd(ammo.Nickname, ammo.Name, pinm)
 					@PinSelectLeftRight(pinm, AmmoDetailedUrl(ammo))
-					// @TdDisco(disco, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
+					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					<td>{ strconv.Itoa(ammo.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(ammo.Bases)) }</td>
 					<td>{ strconv.Itoa(ammo.HitPts) } </td>
@@ -68,7 +68,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					<td class="seo">{ strconv.Itoa(ammo.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(ammo.InfoID) } </td>
 					@HashTd(ammo.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -77,26 +77,26 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Ammo, mode2, disco)
+templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, shared types.SharedData) {
+	@TabMenu(urls.Ammo, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-					@FilterBar(types.DiscoveryIDs{})
+					@FilterBar(types.SharedData{})
 					<div id="table-top-main">
-						@AmmoTable(ammos, MainMode, disco)
+						@AmmoTable(ammos, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@AmmoTable(ammos, PinMode, disco)
+						@AmmoTable(ammos, PinMode, shared)
 					</div>
 				}
 				@TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}

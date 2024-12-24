@@ -21,25 +21,25 @@ type Item interface {
 	GetTechCompat() *configs_export.DiscoveryTechCompat
 }
 
-func GetTdDiscoCacheKey(disco types.DiscoveryIDs, nickname string) TdCacheKey {
-	if !disco.Show {
+func GetTdDiscoCacheKey(shared types.SharedData, nickname string) TdCacheKey {
+	if !shared.ShowDisco {
 		return ""
 	}
-	cache_key_data := marshalIDs(disco, nickname)
+	cache_key_data := marshalIDs(shared, nickname)
 	h := md5.New()
 	io.WriteString(h, cache_key_data)
 	return TdCacheKey(fmt.Sprintf("%x", h.Sum(nil)))
 }
 
-func GetDiscoCacheMap(items []Item, disco types.DiscoveryIDs) map[TdCacheKey]DiscoCompat {
+func GetDiscoCacheMap(items []Item, shared types.SharedData) map[TdCacheKey]DiscoCompat {
 	var cache map[TdCacheKey]DiscoCompat = map[TdCacheKey]DiscoCompat{}
 
-	if !disco.Show {
+	if !shared.ShowDisco {
 		return cache
 	}
 	for _, item := range items {
 		nickname := item.GetNickname()
-		cache_key := GetTdDiscoCacheKey(disco, nickname)
+		cache_key := GetTdDiscoCacheKey(shared, nickname)
 		cache[cache_key] = DiscoCompat{
 			Nickname: nickname,
 			Data:     item.GetTechCompat(),

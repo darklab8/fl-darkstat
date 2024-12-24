@@ -57,8 +57,8 @@ templ HashTable(hashes map[string]flhash.HashCode) {
 }
 
 
-templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Hashes, mode2, disco)
+templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, shared types.SharedData) {
+	@TabMenu(urls.Hashes, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
 			@LeftTable(){
@@ -73,10 +73,10 @@ templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, disco types.Di
 				}
 				@TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}

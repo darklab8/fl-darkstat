@@ -140,7 +140,7 @@ templ TabContent() {
 	</style>
 }
 
-templ Heading(disco types.DiscoveryIDs) {
+templ Heading(shared types.SharedData) {
 	<style>
 		.heading {
 			display: flex;
@@ -171,9 +171,9 @@ templ Heading(disco types.DiscoveryIDs) {
 			{ children... }
 		</div>
 		<div class="right">
-			if disco.Show {
+			if shared.ShowDisco {
 				<div id="patch">
-					Patch: <a style="color:var(--color_time);" href="https://patch.discoverygc.com/patchlist.xml">{ disco.LatestPatch.Name }</a>
+					Patch: <a style="color:var(--color_time);" href="https://patch.discoverygc.com/patchlist.xml">{ shared.LatestPatch.Name }</a>
 				</div>
 			}
 			<div id="time">
@@ -222,7 +222,7 @@ templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePa
 	}
 }
 
-templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs) {
+templ TabMenu(url utils_types.FilePath, mode ShowEmpty, shared types.SharedData) {
 	<style>
 	.tab-list {
 		height: 100%;
@@ -253,7 +253,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 	}
 
 	</style>
-	@Heading(disco) {
+	@Heading(shared) {
 		<div class="tab-list" role="tablist">
 			if mode == false {
 				
@@ -276,7 +276,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				@Button([]string{"Ships"}, urls.Ships, url)
 				@Button([]string{"Ship", "Details"}, urls.ShipDetails, url)
 				@Button([]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, url)
-				if disco.Show {
+				if shared.ShowDisco {
 					@Button([]string{"ID Rep", "hacks"}, urls.IDRephacks, url)
 				}
 				@Button([]string{"Engines"}, urls.Engines, url)
@@ -307,7 +307,7 @@ templ TabMenu(url utils_types.FilePath, mode ShowEmpty, disco types.DiscoveryIDs
 				@Button([]string{"Ships"}, AllItemsUrl(urls.Ships), url)
 				@Button([]string{"Ship", "Details"}, AllItemsUrl(urls.ShipDetails), url)
 				@Button([]string{types.GetCtx(ctx).TractorTabName}, AllItemsUrl(urls.Tractors), url)
-				if disco.Show {
+				if shared.ShowDisco {
 					@Button([]string{"ID Rep", "hacks"}, AllItemsUrl(urls.IDRephacks), url)
 				}
 				@Button([]string{"Engines"}, AllItemsUrl(urls.Engines), url)
@@ -383,7 +383,7 @@ templ Infocard(info configs_export.Infocard) {
 	}
 }
 
-templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, disco types.DiscoveryIDs) {
+templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -391,7 +391,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, disco types.DiscoveryIDs) 
 				<th style="width:150px;">Faction</th>
 				<th style="width:50px;">Region</th>
 				<th style="width:100px;">System</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:5px;">
 						@MultiLinestring([]string{"Not for", "tran", "sports"})
 					</th>
@@ -399,7 +399,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, disco types.DiscoveryIDs) 
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Nav", "Map"})
 				</th>
-				if bool(is_commodity) && disco.Show {
+				if bool(is_commodity) && shared.ShowDisco {
 					<th style="width:25px;">
 						@MultiLinestring([]string{"Price", "to sell", "to base"})
 					</th>
@@ -410,7 +410,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, disco types.DiscoveryIDs) 
 					<th style="width:50px;">Price</th>
 				}
 				if bool(is_commodity) {
-					if disco.Show {
+					if shared.ShowDisco {
 						<th style="width:25px;">
 							@MultiLinestring([]string{"price","to sell", "per vol", "to base"})
 						</th>
@@ -423,7 +423,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, disco types.DiscoveryIDs) 
 						</th>
 					}
 				}
-				if bool(is_commodity) && disco.Show{
+				if bool(is_commodity) && shared.ShowDisco{
 					<th style="width:5px;">
 						@MultiLinestring([]string{"Ship", "class"})
 					</th>
@@ -440,7 +440,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, disco types.DiscoveryIDs) 
 				<th style="width:25px;">
 					@MultiLinestring([]string{"Rep.", "Req."})
 				</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:10px;">
 						@MultiLinestring([]string{"Server", "Override"})
 					</th>
@@ -471,10 +471,10 @@ func FormatBoolAsYesNo(value bool) string {
 	}
 }
 
-templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.GoodAtBase, is_commodity ShowAsCommodity,disco types.DiscoveryIDs ) {
+templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.GoodAtBase, is_commodity ShowAsCommodity,shared types.SharedData ) {
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
-	@GoodAtBaseSharedT(is_commodity, disco) {
+	@GoodAtBaseSharedT(is_commodity, shared) {
 		for _, base_info := range SortedBases(base_infos) {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(base_info.BaseNickname)) }
@@ -499,30 +499,30 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 				<td>
 					@WriteSystemName(base_info.SystemName)
 				</td>
-				if disco.Show {
+				if shared.ShowDisco {
 					<td>
 						{ strconv.FormatBool(base_info.IsTransportUnreachable) }
 					</td>
 				}
 				<td>{ base_info.SectorCoord }</td>
-				if bool(is_commodity) && disco.Show{
+				if bool(is_commodity) && shared.ShowDisco{
 					<td>{ strconv.Itoa(base_info.PriceBaseBuysFor) }</td>
 				}
 				<td>{ strconv.Itoa(base_info.PriceBaseSellsFor) }</td>
 				if is_commodity {
-					if disco.Show {
+					if shared.ShowDisco {
 						<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
 					}
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseSellsFor, base_info.Volume)) }</td>
 				}
-				if bool(is_commodity) && disco.Show{
+				if bool(is_commodity) && shared.ShowDisco{
 					<td>{ fmt.Sprintf("%d", base_info.ShipClass) }</td>
 				}
 				<td>{ fmt.Sprintf("%.0f", base_info.Volume) }</td>
 				<td>{ FormatBaseSells(base_info.BaseSells) }</td>
 				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", base_info.RepRequired) }</td>
-				if disco.Show {
+				if shared.ShowDisco {
 					<td>{ strconv.FormatBool(base_info.IsServerSideOverride) }</td>
 				}
 				<td>
@@ -637,7 +637,7 @@ templ PinTd2(nickname string, name string, pinm PinMod, url string) {
 	</td>
 }
 
-templ FilterBar(disco types.DiscoveryIDs) {
+templ FilterBar(shared types.SharedData) {
 	<style>
 		#table-top-panel {
 			display: flex;
@@ -663,10 +663,10 @@ templ FilterBar(disco types.DiscoveryIDs) {
 	<div id="table-top-panel">
 		<input type="text" id="filterinput" class="filter_input" onkeyup="FilteringFunction()" placeholder="Search rows by any content: name, faction, system and etc.."/>
 		<input type="text" id="filterinput_infocard" class="filter_input"  onkeyup="FilteringFunction()" placeholder="Search rows by infocards content"/>
-		if bool(disco.Show) {
+		if bool(shared.ShowDisco) {
 			<select name="IDs" id="tractor_id_selector" onchange="FilteringFunction()">
 				<option value="">Filter items by tech compatible ID</option>
-				for _, id := range disco.Ids {
+				for _, id := range shared.Ids {
 					<option value={ string(id.ShortNickname) }><span>{ id.Name }</span> <span>( { string(id.Nickname) } )</span></option>
 				}
 			</select>
@@ -697,8 +697,8 @@ templ PinSelectLeftRight(pinm PinMod, url string) {
 	}
 }
 
-templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, disco types.DiscoveryIDs) {
-	@EmbedInfocardForSearch(disco.Infocards, infocardKey)
+templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, shared types.SharedData) {
+	@EmbedInfocardForSearch(shared.Infocards, infocardKey)
 	if pinm == PinMode {
 		<td
 			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }

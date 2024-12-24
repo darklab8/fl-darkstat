@@ -58,17 +58,17 @@ templ TractorValues(tractor configs_export.Tractor) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode TractorMode, disco types.DiscoveryIDs) {
+templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode TractorMode, shared types.SharedData) {
 	if tab_mode == TractorModShop {
-		@TabMenu(urls.Tractors, mode2, disco)
+		@TabMenu(urls.Tractors, mode2, shared)
 	} else if tab_mode == TractorIDRephacks {
-		@TabMenu(urls.IDRephacks, mode2, disco)
+		@TabMenu(urls.IDRephacks, mode2, shared)
 	}
 	@TabContent() {
 		<div class="splitter">
 			@LeftTable(){
 				@TableTop(){
-					@FilterBar(types.DiscoveryIDs{})
+					@FilterBar(types.SharedData{})
 					<div id="table-top-main">
 						<table class="sortable">
 							<thead>
@@ -82,7 +82,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 									@TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor, tab_mode), "") {
 										<td class="seo">{ tractor.Name }</td>
 										@TractorValues(tractor)
-										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "", disco)
+										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "", shared)
 									}
 								}
 							</tbody>
@@ -92,7 +92,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 				@TableBottom(){
 					<div id="table-bottom-main">
 						if tab_mode == TractorModShop {
-							@GoodAtBaseSharedT(ShowAsCommodity(false), disco)
+							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 						} else if tab_mode == TractorIDRephacks {
 							@IDRephacksShared()
 						}
