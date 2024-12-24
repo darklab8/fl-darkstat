@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -222,7 +223,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, shared types.
 			<td>
 				@MultiLinestring(GetBurstParams(gun))
 			</td>
-			<td>{ GetAmmoLimitFormatted(gun.AmmoLimit) }</td>
+			<td>{ frmt.GetAmmoLimitFormatted(gun.AmmoLimit) }</td>
 			<td>{ fmt.Sprintf("%.0f", gun.DiscoGun.ArmorPen) }</td>
 		}
 		if mode == GunsMissiles {

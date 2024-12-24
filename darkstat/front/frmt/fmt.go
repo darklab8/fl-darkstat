@@ -1,4 +1,4 @@
-package front
+package frmt
 
 import (
 	"fmt"

@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
 )
@@ -58,7 +59,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared types.SharedDat
 					<td>{ strconv.Itoa(ammo.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(ammo.Bases)) }</td>
 					<td>{ strconv.Itoa(ammo.HitPts) } </td>
-					<td>{ GetAmmoLimitFormatted(ammo.AmmoLimit) }</td>
+					<td>{ frmt.GetAmmoLimitFormatted(ammo.AmmoLimit) }</td>
 					<td>{ fmt.Sprintf("%.4f",ammo.Volume) }</td>
 					<td>{ fmt.Sprintf("%.2f",ammo.MunitionLifetime) }</td>
 					<td>{ ammo.SeekerType }</td>

@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
 )
@@ -50,14 +51,14 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 		<tbody>
 			for _, commodity := range commodities {
 				@TrFromMainTb(commodity.Nickname, GoodAtBaseInfoTUrl(commodity), pinm) {
-					@PinTd(commodity.Nickname, commodity.Name + FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
+					@PinTd(commodity.Nickname, commodity.Name + frmt.FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
 					@PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
 					<td>{ strconv.Itoa(commodity.PriceBestBaseSellsFor) }</td>
 					<td>{ strconv.Itoa(commodity.PriceBestBaseBuysFor) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseSellsFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseBuysFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.2f", commodity.Volume) }</td>
-					<td>{ FormattedShipClassOfCommodity2(commodity.ShipClass) }</td>
+					<td>{ frmt.FormattedShipClassOfCommodity2(commodity.ShipClass) }</td>
 					<td>{ strconv.Itoa(commodity.ProffitMargin) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.ProffitMargin, commodity.Volume)) }</td>
 					<td class="seo">{ commodity.Nickname }</td>

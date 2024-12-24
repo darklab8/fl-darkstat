@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
 )
@@ -88,7 +89,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared types.SharedDa
 					<td>{ strconv.Itoa(mine.ShieldDamage) }</td>
 					<td>{ fmt.Sprintf("%.2f",mine.Value) }</td>
 					<td>{ fmt.Sprintf("%.2f", mine.Refire) }</td>
-					<td>{ GetAmmoLimitFormatted(mine.AmmoLimit) }</td>
+					<td>{ frmt.GetAmmoLimitFormatted(mine.AmmoLimit) }</td>
 					<td>{ fmt.Sprintf("%.2f", mine.DetonationDistance) }</td>
 					<td>{ fmt.Sprintf("%.2f",mine.Radius) }</td>
 					<td>{ strconv.Itoa(mine.SeekDistance) }</td>

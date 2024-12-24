@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"math"
 	"strconv"
 	"strings"
@@ -352,7 +353,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 	@BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMarketGoodsBase() {
-		for _, good := range SortedMarketGoods(goods) {
+		for _, good := range frmt.SortedMarketGoods(goods) {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(good.Infocard) }
 				hx-trigger="click"
@@ -363,7 +364,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 			>
 				<td>
 					@WriteLimit(200) {
-						{ good.Name + FormattedShipClassOfCommodity(good.ShipClass) }
+						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
 					}
 				</td>
 				<td>
@@ -376,7 +377,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 				</td>
 				<td>{ strconv.Itoa(good.PriceToBuy) }</td>
 				<td>{ fmt.Sprintf("%.0f", good.Volume) }</td>
-				<td>{ FormattedShipClassOfCommodity2(good.ShipClass) }</td>
+				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
 				<td>{ FormatBaseSells(good.BaseSells) }</td>
@@ -612,7 +613,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 			>
 				<td>
 					@WriteLimit(200) {
-						{ trade_route.Transport.Commodity.Name + FormattedShipClassOfCommodity(trade_route.Transport.Commodity.ShipClass) }
+						{ trade_route.Transport.Commodity.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.Commodity.ShipClass) }
 					}
 				</td>
 				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
@@ -660,7 +661,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 				}
 				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.Commodity.Volume) }</td>
-				<td>{ FormattedShipClassOfCommodity2(trade_route.Transport.Commodity.ShipClass) }</td>
+				<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.Commodity.ShipClass) }</td>
 				<td>
 					@WriteSystemName(trade_route.Transport.SellingGood.SystemName)
 				</td>
