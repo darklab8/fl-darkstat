@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"strconv"
 	"strings"
 )
@@ -121,8 +122,8 @@ templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, shared types.SharedDa
 	@TabMenu(urls.Mines, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@MinesTable(mines, MainMode, shared)
@@ -131,7 +132,7 @@ templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, shared types.SharedDa
 						@MinesTable(mines, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -140,7 +141,7 @@ templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, shared types.SharedDa
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

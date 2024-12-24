@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"strconv"
 	"strings"
 )
@@ -65,8 +66,8 @@ templ ScannersT(scanners []configs_export.Scanner, mode2 ShowEmpty, shared types
 	@TabMenu(urls.Scanners, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@ScannerTable(scanners, MainMode, shared)
@@ -75,7 +76,7 @@ templ ScannersT(scanners []configs_export.Scanner, mode2 ShowEmpty, shared types
 						@ScannerTable(scanners, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -84,7 +85,7 @@ templ ScannersT(scanners []configs_export.Scanner, mode2 ShowEmpty, shared types
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -93,8 +94,8 @@ templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, shared types.Sha
 	@TabMenu(urls.Shields, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@ShieldTable(shields, MainMode, shared)
@@ -103,7 +104,7 @@ templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, shared types.Sha
 						@ShieldTable(shields, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -112,7 +113,7 @@ templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, shared types.Sha
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

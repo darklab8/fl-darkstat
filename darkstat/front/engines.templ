@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -95,8 +96,8 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty, shared types.Shar
 	@TabMenu(urls.Engines, mode, shared)
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@EnginesTable(engines, MainMode, shared)
@@ -105,7 +106,7 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty, shared types.Shar
 						@EnginesTable(engines, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -114,7 +115,7 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty, shared types.Shar
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

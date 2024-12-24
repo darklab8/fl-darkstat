@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -181,8 +182,8 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, sha
 	}
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@ShipTable(ships, mode, MainMode, shared, infocards)
@@ -191,7 +192,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, sha
 						@ShipTable([]configs_export.Ship{}, mode, PinMode, shared, infocards)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						if mode == ShipShowBases {
 							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
@@ -208,7 +209,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, sha
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

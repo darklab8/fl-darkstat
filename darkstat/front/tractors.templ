@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"strconv"
 	"strings"
 )
@@ -67,8 +68,8 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 	}
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(types.SharedData{})
 					<div id="table-top-main">
 						<table class="sortable">
@@ -90,7 +91,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 						</table>
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						if tab_mode == TractorModShop {
 							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
@@ -100,7 +101,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -284,8 +285,8 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, shared 
 	}
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@GunTable(guns, mode, MainMode, shared, infocards)
@@ -294,7 +295,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, shared 
 						@GunTable([]configs_export.Gun{}, mode, PinMode, shared, infocards)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						if mode == GunsShowBases || mode == GunsMissiles {
 							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
@@ -311,7 +312,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, shared 
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

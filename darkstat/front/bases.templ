@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
@@ -243,8 +244,8 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, sh
 	}
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(types.SharedData{}) {
 						// Turning off this feature because it has 170+mb bug size increasig for trades.html
 						// if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
@@ -264,7 +265,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, sh
 						@BasesTable(bases, tab_mode, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						if tab_mode == BaseShowShops {
 							@BaseMarketGoodsBase()
@@ -294,7 +295,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, sh
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

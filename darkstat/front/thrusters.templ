@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"strconv"
 	"strings"
 )
@@ -74,8 +75,8 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, shared typ
 	@TabMenu(urls.Thrusters, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@ThrustersTable(thrusters, MainMode, shared)
@@ -84,7 +85,7 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, shared typ
 						@ThrustersTable(thrusters, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -93,7 +94,7 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, shared typ
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

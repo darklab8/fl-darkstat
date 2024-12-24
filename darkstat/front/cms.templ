@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"strconv"
 	"strings"
 )
@@ -79,8 +80,8 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, shar
 	@TabMenu(urls.CounterMeasures, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@CmTable(cms, MainMode, shared)
@@ -89,7 +90,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, shar
 						@CmTable(cms, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -98,7 +99,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, shar
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

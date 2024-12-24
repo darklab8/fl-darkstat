@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
@@ -82,8 +83,8 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, shared types.SharedDat
 	@TabMenu(urls.Ammo, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
 					@FilterBar(types.SharedData{})
 					<div id="table-top-main">
 						@AmmoTable(ammos, MainMode, shared)
@@ -92,7 +93,7 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, shared types.SharedDat
 						@AmmoTable(ammos, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -101,7 +102,7 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, shared types.SharedDat
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

@@ -4,6 +4,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/table"
 )
 
 templ HashTd(value flhash.HashCode) {
@@ -61,8 +62,8 @@ templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, shared types.S
 	@TabMenu(urls.Hashes, mode2, shared)
 	@TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@table.LeftTable(){
+				@table.TableTop(){
                     <input style="width: 100%;" type="text" id="hash_search" onkeyup="FilteringForAnyTable('#table-top-main', 'hash_search')" placeholder="Search rows by any content: name, nickname etc.."/>
 					<div id="table-top-main">
 						@HashTable(hashes)
@@ -71,7 +72,7 @@ templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, shared types.S
 						@HashTable(hashes)
 					</div>
 				}
-				@TableBottom(){
+				@table.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -80,7 +81,7 @@ templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, shared types.S
 					</div>
 				}
 			}
-			@InfocardTable(){
+			@table.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>
