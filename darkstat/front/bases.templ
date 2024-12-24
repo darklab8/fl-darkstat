@@ -296,7 +296,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty
 				}
 			}
 			@tab.InfocardTable(){
-				@InfocardShared()
+				@tab.InfocardShared()
 			}
 		</div>
 	}
@@ -698,7 +698,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 }
 
 templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs_export.Route, FreighterRoute *configs_export.Route, shared types.SharedData) {
-	@InfocardShared() {
+	@tab.InfocardShared() {
 		<style>
 			.infocard p {
 				font-size: 1.0em;

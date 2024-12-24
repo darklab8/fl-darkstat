@@ -1,0 +1,36 @@
+package tab
+
+import (
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"strings"
+)
+
+templ InfocardShared() {
+	<style>
+		.infocard {
+			margin: 10px;
+		}
+		.infocard p {
+			margin-top: 5px;
+			margin-bottom: 0px;
+		}
+	</style>
+	<div class="infocard">
+		<h3>infocard</h3>
+		{ children... }
+	</div>
+}
+
+templ Infocard(info configs_export.Infocard) {
+	@InfocardShared() {
+		for _, line := range info {
+			if strings.ReplaceAll(line," ", "") == "" {
+				<p><br></p>
+			} else {
+				<p>
+				@templ.Raw(line)
+				</p>
+			}
+		}
+	}
+}

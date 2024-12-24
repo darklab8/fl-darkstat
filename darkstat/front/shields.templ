@@ -115,7 +115,7 @@ templ ShieldT(shields []configs_export.Shield, mode2 tab.ShowEmpty, shared types
 				}
 			}
 			@tab.InfocardTable(){
-				@InfocardShared()
+				@tab.InfocardShared()
 			}
 		</div>
 		@disco.CacheTechCompatTable(shared, utils.CompL(shields, func(x configs_export.Shield) disco.Item { return x }))

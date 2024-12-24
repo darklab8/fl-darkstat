@@ -494,7 +494,7 @@ func (l *Linker) Link() *builder.Builder {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.InfocardURL(nickname)),
-					front.Infocard(infocard),
+					tab.Infocard(infocard),
 				),
 			)
 		}
