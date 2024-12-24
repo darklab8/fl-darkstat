@@ -6,7 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/table"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
 )
@@ -28,10 +28,10 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared types.Sha
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Diversion", "Chance"})
+					@frmt.MultiLinestring([]string{"Diversion", "Chance"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+					@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
 				</th>
 				<th style="width:25px;">Lifetime</th>
 				<th style="width:25px;">Range</th>
@@ -76,12 +76,12 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared types.Sha
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, shared types.SharedData) {
-	@TabMenu(urls.CounterMeasures, mode2, shared)
-	@TabContent() {
+templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 tab.ShowEmpty, shared types.SharedData) {
+	@tab.TabMenu(urls.CounterMeasures, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@table.LeftTable(){
-				@table.TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@CmTable(cms, MainMode, shared)
@@ -90,7 +90,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, shar
 						@CmTable(cms, PinMode, shared)
 					</div>
 				}
-				@table.TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -99,7 +99,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, shar
 					</div>
 				}
 			}
-			@table.InfocardTable(){
+			@tab.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

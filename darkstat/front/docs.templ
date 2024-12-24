@@ -2,7 +2,7 @@ package front
 
 import (
     "github.com/darklab8/fl-darkstat/darkstat/front/types"
-
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"unicode"
 	"bytes"
@@ -30,9 +30,9 @@ templ SectionHeader(name string) {
     </a>
 }
 
-templ DocsT(mode2 ShowEmpty, shared types.SharedData) {
-    @TabMenu(urls.Docs, mode2, shared)
-    @TabContent() {
+templ DocsT(mode2 tab.ShowEmpty, shared types.SharedData) {
+    @tab.TabMenu(urls.Docs, mode2, shared)
+    @tab.TabContent() {
         <style>
             img {
                 max-width: 800px;

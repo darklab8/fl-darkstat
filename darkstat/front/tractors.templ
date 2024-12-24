@@ -7,7 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-	"github.com/darklab8/fl-darkstat/darkstat/front/table"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
 )
@@ -33,10 +33,10 @@ templ TractorHeaders() {
 	<th style="width:25px;">Price</th>
 	<th style="width:25px;">Buyable</th>
 	<th style="width:25px;">
-		@MultiLinestring([]string{"Max", "Length"})
+		@frmt.MultiLinestring([]string{"Max", "Length"})
 	</th>
 	<th style="width:25px;">
-		@MultiLinestring([]string{"Reach", "Speed"})
+		@frmt.MultiLinestring([]string{"Reach", "Speed"})
 	</th>
 	<th style="width:25px;">Lootable</th>
 	<th style="width:25px;">Nickname</th>
@@ -60,16 +60,16 @@ templ TractorValues(tractor configs_export.Tractor) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode TractorMode, shared types.SharedData) {
+templ TractorsT(tractors []configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode TractorMode, shared types.SharedData) {
 	if tab_mode == TractorModShop {
-		@TabMenu(urls.Tractors, mode2, shared)
+		@tab.TabMenu(urls.Tractors, mode2, shared)
 	} else if tab_mode == TractorIDRephacks {
-		@TabMenu(urls.IDRephacks, mode2, shared)
+		@tab.TabMenu(urls.IDRephacks, mode2, shared)
 	}
-	@TabContent() {
+	@tab.TabContent() {
 		<div class="splitter">
-			@table.LeftTable(){
-				@table.TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
 					@FilterBar(types.SharedData{})
 					<div id="table-top-main">
 						<table class="sortable">
@@ -91,7 +91,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 						</table>
 					</div>
 				}
-				@table.TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						if tab_mode == TractorModShop {
 							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
@@ -101,7 +101,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 ShowEmpty, tab_mode Tra
 					</div>
 				}
 			}
-			@table.InfocardTable(){
+			@tab.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>
@@ -114,7 +114,7 @@ templ IDRephacksShared() {
 			<tr class="flexed-tr">
 				<th style="width:150px;">Faction</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Faction", "Nickname"})
+					@frmt.MultiLinestring([]string{"Faction", "Nickname"})
 				</th>
 				<th style="width:25px;">Reputation</th>
 				<th style="width:25px;">Relationship</th>

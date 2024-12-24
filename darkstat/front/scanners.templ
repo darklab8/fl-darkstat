@@ -5,7 +5,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/table"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
 )
@@ -28,7 +29,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared types.
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Range</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Cargo", "Range"})
+					@frmt.MultiLinestring([]string{"Cargo", "Range"})
 				</th>
 				<th style="width:25px;">Lootable</th>
 				<th style="width:25px;">Nickname</th>
@@ -62,12 +63,12 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared types.
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ScannersT(scanners []configs_export.Scanner, mode2 ShowEmpty, shared types.SharedData) {
-	@TabMenu(urls.Scanners, mode2, shared)
-	@TabContent() {
+templ ScannersT(scanners []configs_export.Scanner, mode2 tab.ShowEmpty, shared types.SharedData) {
+	@tab.TabMenu(urls.Scanners, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@table.LeftTable(){
-				@table.TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@ScannerTable(scanners, MainMode, shared)
@@ -76,7 +77,7 @@ templ ScannersT(scanners []configs_export.Scanner, mode2 ShowEmpty, shared types
 						@ScannerTable(scanners, PinMode, shared)
 					</div>
 				}
-				@table.TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -85,7 +86,7 @@ templ ScannersT(scanners []configs_export.Scanner, mode2 ShowEmpty, shared types
 					</div>
 				}
 			}
-			@table.InfocardTable(){
+			@tab.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

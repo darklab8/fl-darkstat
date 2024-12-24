@@ -15,19 +15,19 @@ templ BasesRoutesShared(shared types.SharedData) {
 			<tr class="flexed-tr">
 				<th style="width:100px;">Base</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Transport", "Time(sec)"})
+					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
 				if shared.ShowDisco {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Frigate", "Time(sec)"})
+						@frmt.MultiLinestring([]string{"Frigate", "Time(sec)"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Freighter", "Time(sec)"})
+						@frmt.MultiLinestring([]string{"Freighter", "Time(sec)"})
 					</th>
 				}
 				<th style="width:100px;">System</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nav", "Map"})
+					@frmt.MultiLinestring([]string{"Nav", "Map"})
 				</th>
 				<th style="width:100px;">Dest. Faction</th>
 				<th style="width:100px;">Dest. Region</th>

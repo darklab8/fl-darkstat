@@ -6,7 +6,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/table"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -33,16 +34,16 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, shared types.Sha
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Capacity</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Regen", "Rate"})
+					@frmt.MultiLinestring([]string{"Regen", "Rate"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Constant", "Power", "Draw"})
+					@frmt.MultiLinestring([]string{"Constant", "Power", "Draw"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Rebuild", "Power", "Draw"})
+					@frmt.MultiLinestring([]string{"Rebuild", "Power", "Draw"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Off", "Power", "Draw"})
+					@frmt.MultiLinestring([]string{"Off", "Power", "Draw"})
 				</th>
 				<th style="width:25px;">Toughness</th>
 				<th style="width:25px;">Hit Pts</th>
@@ -90,12 +91,12 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, shared types.Sha
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, shared types.SharedData) {
-	@TabMenu(urls.Shields, mode2, shared)
-	@TabContent() {
+templ ShieldT(shields []configs_export.Shield, mode2 tab.ShowEmpty, shared types.SharedData) {
+	@tab.TabMenu(urls.Shields, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@table.LeftTable(){
-				@table.TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@ShieldTable(shields, MainMode, shared)
@@ -104,7 +105,7 @@ templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, shared types.Sha
 						@ShieldTable(shields, PinMode, shared)
 					</div>
 				}
-				@table.TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -113,7 +114,7 @@ templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, shared types.Sha
 					</div>
 				}
 			}
-			@table.InfocardTable(){
+			@tab.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

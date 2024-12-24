@@ -6,7 +6,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/table"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -57,58 +58,58 @@ templ ShipTable(
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Cruise", "Speed"})
+					@frmt.MultiLinestring([]string{"Cruise", "Speed"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Impulse", "Speed"})
+					@frmt.MultiLinestring([]string{"Impulse", "Speed"})
 				</th>
 				<th style="width:25px;">
-						@MultiLinestring([]string{"Thrust", "Speed"})
+						@frmt.MultiLinestring([]string{"Thrust", "Speed"})
 				</th>
 				<th style="width:25px;">Armor</th>
 				if shared.ShowDisco {
 					<th style="width:5px;">
-							@MultiLinestring([]string{"Armor", "Res.",})
+							@frmt.MultiLinestring([]string{"Armor", "Res.",})
 					</th>
 				}
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Hold", "Size"})
+					@frmt.MultiLinestring([]string{"Hold", "Size"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nano", "bots"})
+					@frmt.MultiLinestring([]string{"Nano", "bots"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Shield", "batt."})
+					@frmt.MultiLinestring([]string{"Shield", "batt."})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Max ang", "Speed", "(deg/s)"})
+					@frmt.MultiLinestring([]string{"Max ang", "Speed", "(deg/s)"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Ang dist", "to 0.5 s", "(deg)"})
+					@frmt.MultiLinestring([]string{"Ang dist", "to 0.5 s", "(deg)"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Time to", "90% max", "ang sp.(s)"})
+					@frmt.MultiLinestring([]string{"Time to", "90% max", "ang sp.(s)"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Power", "Capacity"})
+					@frmt.MultiLinestring([]string{"Power", "Capacity"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Power", "Recharge", "Rate"})
+					@frmt.MultiLinestring([]string{"Power", "Recharge", "Rate"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Thrust", "Capacity"})
+					@frmt.MultiLinestring([]string{"Thrust", "Capacity"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Thrust", "Recharge", "Rate"})
+					@frmt.MultiLinestring([]string{"Thrust", "Recharge", "Rate"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Reverse", "Fraction"})
+					@frmt.MultiLinestring([]string{"Reverse", "Fraction"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nudge", "Force"})
+					@frmt.MultiLinestring([]string{"Nudge", "Force"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Strafe", "Force"})
+					@frmt.MultiLinestring([]string{"Strafe", "Force"})
 				</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
@@ -174,16 +175,16 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, shared ty
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, shared types.SharedData, infocards configs_export.Infocards) {
+templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty, shared types.SharedData, infocards configs_export.Infocards) {
 	if mode == ShipShowBases {
-		@TabMenu(urls.Ships, mode2, shared)
+		@tab.TabMenu(urls.Ships, mode2, shared)
 	} else if mode == ShipShowDetails {
-		@TabMenu(urls.ShipDetails, mode2, shared)
+		@tab.TabMenu(urls.ShipDetails, mode2, shared)
 	}
-	@TabContent() {
+	@tab.TabContent() {
 		<div class="splitter">
-			@table.LeftTable(){
-				@table.TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@ShipTable(ships, mode, MainMode, shared, infocards)
@@ -192,7 +193,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, sha
 						@ShipTable([]configs_export.Ship{}, mode, PinMode, shared, infocards)
 					</div>
 				}
-				@table.TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						if mode == ShipShowBases {
 							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
@@ -209,7 +210,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, sha
 					</div>
 				}
 			}
-			@table.InfocardTable(){
+			@tab.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

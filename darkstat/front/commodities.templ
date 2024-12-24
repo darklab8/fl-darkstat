@@ -6,7 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-	"github.com/darklab8/fl-darkstat/darkstat/front/table"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
 )
@@ -25,22 +25,22 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 					<th style="width:25px;">Select</th>
 				}
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best price", "to buy", "from base"})
+					@frmt.MultiLinestring([]string{"Best price", "to buy", "from base"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best price", "to sell", "to base"})
+					@frmt.MultiLinestring([]string{"Best price", "to sell", "to base"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best buy", "per vol", "from base"})
+					@frmt.MultiLinestring([]string{"Best buy", "per vol", "from base"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best sell ", "per vol", "to base"})
+					@frmt.MultiLinestring([]string{"Best sell ", "per vol", "to base"})
 				</th>
 				<th style="width:25px;">Volume</th>
-				<th style="width:5px;">@MultiLinestring([]string{"Ship", "Class"})</th>
+				<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "Class"})</th>
 				<th style="width:25px;">Profit</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Profit", "per v. "})
+					@frmt.MultiLinestring([]string{"Profit", "per v. "})
 				</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
@@ -75,12 +75,12 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CommoditiesT(commodities []*configs_export.Commodity, mode ShowEmpty, shared types.SharedData) {
-	@TabMenu(urls.Commodities, mode, shared)
-	@TabContent() {
+templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, shared types.SharedData) {
+	@tab.TabMenu(urls.Commodities, mode, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@table.LeftTable(){
-				@table.TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
 					@FilterBar(types.SharedData{})
 					<div id="table-top-main">
 						@CommodityTable(commodities, MainMode, shared)
@@ -89,7 +89,7 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode ShowEmpty, shar
 						@CommodityTable(commodities, PinMode, shared)
 					</div>
 				}
-				@table.TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 					</div>
@@ -98,7 +98,7 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode ShowEmpty, shar
 					</div>
 				}
 			}
-			@table.InfocardTable(){
+			@tab.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

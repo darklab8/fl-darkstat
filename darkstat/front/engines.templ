@@ -6,7 +6,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/table"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -29,22 +30,22 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, shared types.Sh
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Impulse", "Speed"})
+					@frmt.MultiLinestring([]string{"Impulse", "Speed"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Cruise", "Speed"})
+					@frmt.MultiLinestring([]string{"Cruise", "Speed"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Cruise", "Charge", "Time"})
+					@frmt.MultiLinestring([]string{"Cruise", "Charge", "Time"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Linear", "Drag"})
+					@frmt.MultiLinestring([]string{"Linear", "Drag"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Max", "Force"})
+					@frmt.MultiLinestring([]string{"Max", "Force"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Reverse", "Fraction"})
+					@frmt.MultiLinestring([]string{"Reverse", "Fraction"})
 				</th>
 				<th style="width:25px;">Flame Effect</th>
 				<th style="width:25px;">Trail Effect</th>
@@ -92,12 +93,12 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, shared types.Sh
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ Engines(engines []configs_export.Engine, mode ShowEmpty, shared types.SharedData) {
-	@TabMenu(urls.Engines, mode, shared)
-	@TabContent() {
+templ Engines(engines []configs_export.Engine, mode tab.ShowEmpty, shared types.SharedData) {
+	@tab.TabMenu(urls.Engines, mode, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@table.LeftTable(){
-				@table.TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@EnginesTable(engines, MainMode, shared)
@@ -106,7 +107,7 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty, shared types.Shar
 						@EnginesTable(engines, PinMode, shared)
 					</div>
 				}
-				@table.TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -115,7 +116,7 @@ templ Engines(engines []configs_export.Engine, mode ShowEmpty, shared types.Shar
 					</div>
 				}
 			}
-			@table.InfocardTable(){
+			@tab.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

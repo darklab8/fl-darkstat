@@ -1,0 +1,133 @@
+package tab
+
+import (
+    
+)
+
+templ TabContent() {
+	<div id="tab-content" role="tabpanel" class="tab-content">
+		{ children... }
+	</div>
+	<style>
+		body {
+			background-color: var(--color_background);
+			font-weight: 500;
+			width: calc(100% - 10px);
+		}
+		th, td {
+			padding-left: 5px;
+			padding-bottom: 2px;
+			padding-top: 2px;
+			padding-right: 5px;
+		}
+
+		th, td {
+			border-width: 1px;
+			border-style: solid;
+			border-color: var(--color_border);
+		}
+		table {
+			border-collapse: separate; 
+			position: relative;
+		}
+		th {
+			border-color: var(--color_th_border);
+
+			cursor: pointer;
+
+			background: var(--color_background);
+			position: sticky;
+			top: 0; /* Don't forget this, required for the stickiness */
+			
+		}
+		th:hover {
+			background-color: var(--color_hover);
+		}
+		.bottom_name {
+			padding: 5px;
+		}
+		td {
+			border-color: var(--color_border);
+		}
+		
+		tbody tr:nth-child(odd) {
+			background-color: var(--color_alternate_row);
+		}
+		tbody tr {
+			cursor: pointer;
+		}
+		tbody tr:hover {
+			background-color: var(--color_hover);
+		}
+
+		.selected_row {
+			background-color: var(--selected) !important;
+			filter: brightness(95%);
+		}
+		.splitter {
+			display: flex;
+			flex-direction: row;
+			height: calc(100vh - 65px);
+			box-sizing: border-box;
+		}
+
+		#table-top-main {
+			flex-grow: 1;
+			flex-shrink: 1;
+			overflow: scroll;
+			border-style: solid;
+			border-width: 4px;
+			border-color: var(--color_border);
+			box-sizing: border-box;
+		}
+		#table-top-mainpin {
+			flex-shrink: 0;
+			overflow-x: scroll;
+			border-style: solid;
+			border-width: 4px;
+			border-color: var(--color_border);
+			box-sizing: border-box;
+		}
+					
+		#table-bottom-main {
+			min-width: 50%;
+			flex-grow:1;
+			flex-shrink: 1;
+			overflow: scroll;
+			border-style: solid;
+			border-width: 4px;
+			border-color: var(--color_border);
+			box-sizing: border-box;
+		}
+		#table-bottom-main input {
+			background: var(--color_background_filter_bars);
+		}
+		#table-bottom-mainpin {
+			min-width: 50%;
+			flex-shrink: 1;
+			overflow: scroll;
+			border-style: solid;
+			border-width: 4px;
+			border-color: var(--color_border);
+			box-sizing: border-box;
+		}
+
+		.sortable {
+			width: 100%;
+			min-width: 800px;
+
+			
+		}
+		.sortable th, td {
+			white-space: nowrap;
+		}
+
+		.hidden {
+			display: none;
+		}
+		span.pin {
+			color: gray;
+		}
+		
+	</style>
+}

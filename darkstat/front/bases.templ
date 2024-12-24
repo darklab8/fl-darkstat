@@ -3,7 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-configs/configs/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/front/table"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
@@ -65,33 +65,33 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, s
 				}
 				if tab_mode == BaseTabOres {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Dynamic Loot", "Min-Max", "(Difficulty)"})
+						@frmt.MultiLinestring([]string{"Dynamic Loot", "Min-Max", "(Difficulty)"})
 					</th>
 				}
 				<th style="width:50px;">System</th>
 				if shared.ShowDisco {
 					<th style="width:5px;">
-						@MultiLinestring([]string{"Not for", "tran", "sports"})
+						@frmt.MultiLinestring([]string{"Not for", "tran", "sports"})
 					</th>
 				}
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nav", "Map"})
+					@frmt.MultiLinestring([]string{"Nav", "Map"})
 				</th>
 				if tab_mode == BaseShowMissions {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Min", "Award"})
+						@frmt.MultiLinestring([]string{"Min", "Award"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Max", "Award"})
+						@frmt.MultiLinestring([]string{"Max", "Award"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Min", "Offers"})
+						@frmt.MultiLinestring([]string{"Min", "Offers"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Max", "Offers"})
+						@frmt.MultiLinestring([]string{"Max", "Offers"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Vingettes", "Offers Limit"})
+						@frmt.MultiLinestring([]string{"Vingettes", "Offers Limit"})
 					</th>
 				}
 				if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
@@ -113,19 +113,19 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, s
 					<th style="width:50px;">Zone Nickname</th>
 				}
 				<th style="width:50px;">
-					@MultiLinestring([]string{"System", "Nick."})
+					@frmt.MultiLinestring([]string{"System", "Nick."})
 				</th>
 				<th style="width:20px;">Pos X</th>
 				<th style="width:20px;">Pos Y</th>
 				<th style="width:20px;">Pos Z</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Base", "Name ID"})
+					@frmt.MultiLinestring([]string{"Base", "Name ID"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Infocard", "ID"})
+					@frmt.MultiLinestring([]string{"Infocard", "ID"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Rech", "able"})
+					@frmt.MultiLinestring([]string{"Rech", "able"})
 				</th>
 				if tab_mode != BaseTabOres {
 					@HashTh("Base nick")
@@ -230,22 +230,22 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared 
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, shared types.SharedData) {
+templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty, shared types.SharedData) {
 	if tab_mode == BaseShowShops {
-		@TabMenu(urls.Bases, mode, shared)
+		@tab.TabMenu(urls.Bases, mode, shared)
 	} else if tab_mode == BaseShowMissions {
-		@TabMenu(urls.Missions, mode, shared)
+		@tab.TabMenu(urls.Missions, mode, shared)
 	} else if tab_mode == BaseTabTrades {
-		@TabMenu(urls.Trades, mode, shared)
+		@tab.TabMenu(urls.Trades, mode, shared)
 	} else if tab_mode == BaseTabOres {
-		@TabMenu(urls.Asteroids, mode, shared)
+		@tab.TabMenu(urls.Asteroids, mode, shared)
 	} else if tab_mode == BaseAllRoutes {
-		@TabMenu(urls.TravelRoutes, mode, shared)
+		@tab.TabMenu(urls.TravelRoutes, mode, shared)
 	}
-	@TabContent() {
+	@tab.TabContent() {
 		<div class="splitter">
-			@table.LeftTable(){
-				@table.TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
 					@FilterBar(types.SharedData{}) {
 						// Turning off this feature because it has 170+mb bug size increasig for trades.html
 						// if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
@@ -265,7 +265,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, sh
 						@BasesTable(bases, tab_mode, PinMode, shared)
 					</div>
 				}
-				@table.TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						if tab_mode == BaseShowShops {
 							@BaseMarketGoodsBase()
@@ -295,7 +295,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, sh
 					</div>
 				}
 			}
-			@table.InfocardTable(){
+			@tab.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>
@@ -309,37 +309,37 @@ templ BaseMarketGoodsBase() {
 				<th style="width:200px;">Good</th>
 				<th style="width:10px;">Type</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "to sell", "to base"})
+					@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "to buy", "from base"})
+					@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Volume"})
+					@frmt.MultiLinestring([]string{"Volume"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"comm.","ship", "class"})
+					@frmt.MultiLinestring([]string{"comm.","ship", "class"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Lev.", "Req."})
+					@frmt.MultiLinestring([]string{"Lev.", "Req."})
 				</th>
 				
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Rep.", "Req."})
+					@frmt.MultiLinestring([]string{"Rep.", "Req."})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Base", "Sells"})
+					@frmt.MultiLinestring([]string{"Base", "Sells"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "Modifier"})
+					@frmt.MultiLinestring([]string{"Price", "Modifier"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "Base"})
+					@frmt.MultiLinestring([]string{"Price", "Base"})
 				</th>
 				<th style="width:10px;">Nickname</th>
 				<th style="width:10px;">HpType</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Server", "Override"})
+					@frmt.MultiLinestring([]string{"Server", "Override"})
 				</th>
 				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
@@ -405,17 +405,17 @@ templ BaseMissionsBase() {
 			<tr class="flexed-tr">
 				<th style="width:165px;">Faction</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Min", "Difficulty"})
+					@frmt.MultiLinestring([]string{"Min", "Difficulty"})
 				</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Max", "Difficulty"})
+					@frmt.MultiLinestring([]string{"Max", "Difficulty"})
 				</th>
 				<th style="width:25px;">Chance</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Min", "Money", "Award"})
+					@frmt.MultiLinestring([]string{"Min", "Money", "Award"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Max", "Money", "Award"})
+					@frmt.MultiLinestring([]string{"Max", "Money", "Award"})
 				</th>
 				<th style="width:25px;">NpcRanks</th>
 				<th style="width:25px;">Enemies: Faction Name ( Faction Nickname, NPcs exist for NpcRanks)</th>
@@ -488,56 +488,48 @@ templ PrintEnemies(enemies []configs_export.EnemyFaction) {
 	}
 }
 
-templ MultiLinestring(lines []string) {
-	<div class="vertical_th">
-		for _, line := range lines {
-			<span>{ line }</span>
-		}
-	</div>
-}
-
 templ BaseTradesShared(shared types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:200px;">Commodity</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
+					@frmt.MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
 				</th>
 				if shared.ShowDisco {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
+						@frmt.MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
+						@frmt.MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
 					</th>
 				}
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Transport", "Time(sec)"})
+					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
 				if shared.ShowDisco {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Frigate", "Time(sec)"})
+						@frmt.MultiLinestring([]string{"Frigate", "Time(sec)"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Freighter", "Time(sec)"})
+						@frmt.MultiLinestring([]string{"Freighter", "Time(sec)"})
 					</th>
 				}
 				<th style="width:50px;">Profit/v</th>
 				<th style="width:5px;">Vol.</th>
-				<th style="width:5px;">@MultiLinestring([]string{"Ship", "cl."})</th>
+				<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "cl."})</th>
 				<th style="width:100px;">System</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nav", "Map"})
+					@frmt.MultiLinestring([]string{"Nav", "Map"})
 				</th>
 				<th style="width:100px;">Dest. Faction</th>
 				<th style="width:100px;">Dest. Name</th>
 				<th style="width:100px;">Dest. Region</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Price", "to buy", "from base"})
+					@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
 				</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Price", "to sell", "to base"})
+					@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
 				</th>
 				<th style="width:50px;">Commodity Nick</th>
 				<th style="width:50px;">Dest. Nickname</th>

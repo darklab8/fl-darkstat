@@ -7,7 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/table"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
 )
@@ -29,40 +29,40 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared types.SharedDa
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Ammo", "Price"})
+					@frmt.MultiLinestring([]string{"Ammo", "Price"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Hull", "Dmg"})
+					@frmt.MultiLinestring([]string{"Hull", "Dmg"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Shield", "Dmg"})
+					@frmt.MultiLinestring([]string{"Shield", "Dmg"})
 				</th>
 				<th style="width:25px;">Value</th>
 				<th style="width:25px;">Refire</th>
 				<th style="width:5px;">
-						@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+						@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
 				</th>	
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Detonation", "Distance"})
+					@frmt.MultiLinestring([]string{"Detonation", "Distance"})
 				</th>
 				<th style="width:25px;">Radius</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Seek", "Dist."})
+					@frmt.MultiLinestring([]string{"Seek", "Dist."})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Top", "Speed"})
+					@frmt.MultiLinestring([]string{"Top", "Speed"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Accele", "ration"})
+					@frmt.MultiLinestring([]string{"Accele", "ration"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Linear", "Drag"})
+					@frmt.MultiLinestring([]string{"Linear", "Drag"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Life", "time"})
+					@frmt.MultiLinestring([]string{"Life", "time"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Owner", "Safe"})
+					@frmt.MultiLinestring([]string{"Owner", "Safe"})
 				</th>
 				<th style="width:25px;">Toughness</th>
 				<th style="width:25px;">Hit Pts</th>
@@ -71,7 +71,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared types.SharedDa
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Projectile", "Archetype"})
+					@frmt.MultiLinestring([]string{"Projectile", "Archetype"})
 				</th>
 				@HashTh("Mine Dropper")
 				@HashTh("Mine")
@@ -118,12 +118,12 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared types.SharedDa
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, shared types.SharedData) {
-	@TabMenu(urls.Mines, mode2, shared)
-	@TabContent() {
+templ MinesT(mines []configs_export.Mine, mode2 tab.ShowEmpty, shared types.SharedData) {
+	@tab.TabMenu(urls.Mines, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@table.LeftTable(){
-				@table.TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
 					@FilterBar(shared)
 					<div id="table-top-main">
 						@MinesTable(mines, MainMode, shared)
@@ -132,7 +132,7 @@ templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, shared types.SharedDa
 						@MinesTable(mines, PinMode, shared)
 					</div>
 				}
-				@table.TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
@@ -141,7 +141,7 @@ templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, shared types.SharedDa
 					</div>
 				}
 			}
-			@table.InfocardTable(){
+			@tab.InfocardTable(){
 				@InfocardShared()
 			}
 		</div>

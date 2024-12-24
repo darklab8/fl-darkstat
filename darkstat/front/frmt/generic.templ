@@ -1,0 +1,9 @@
+package frmt
+
+templ MultiLinestring(lines []string) {
+	<div class="vertical_th">
+		for _, line := range lines {
+			<span>{ line }</span>
+		}
+	</div>
+}
