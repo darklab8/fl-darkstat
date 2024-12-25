@@ -7,7 +7,7 @@ import (
 
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
 	"github.com/darklab8/fl-darkcore/darkcore/web"
-	"github.com/darklab8/fl-darkstat/darkstat/linker"
+	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-data-discovery/autopatcher"
@@ -52,7 +52,7 @@ func main() {
 
 		var linked_build *builder.Builder
 		timer_linker := timeit.NewTimer("linking stuff linker.NewLinker().Link()")
-		linked_build = linker.NewLinker().Link()
+		linked_build = router.NewLinker().Link()
 		timer_linker.Close()
 
 		timer_buildall := timeit.NewTimer("building stuff linked_build.BuildAll()")
@@ -65,7 +65,7 @@ func main() {
 	switch Action(action) {
 
 	case Build:
-		linker.NewLinker().Link().BuildAll(false)
+		router.NewLinker().Link().BuildAll(false)
 	case Web:
 		web()
 	case Version:

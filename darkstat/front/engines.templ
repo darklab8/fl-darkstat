@@ -5,6 +5,9 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -14,7 +17,7 @@ func EngineDetailedUrl(engine configs_export.Engine) string {
 	return "engines/engines_base_" + strings.ToLower(engine.Nickname)
 }
 
-templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.DiscoveryIDs) {
+templ EnginesTable(engines []configs_export.Engine, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -23,26 +26,26 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Impulse", "Speed"})
+					@frmt.MultiLinestring([]string{"Impulse", "Speed"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Cruise", "Speed"})
+					@frmt.MultiLinestring([]string{"Cruise", "Speed"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Cruise", "Charge", "Time"})
+					@frmt.MultiLinestring([]string{"Cruise", "Charge", "Time"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Linear", "Drag"})
+					@frmt.MultiLinestring([]string{"Linear", "Drag"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Max", "Force"})
+					@frmt.MultiLinestring([]string{"Max", "Force"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Reverse", "Fraction"})
+					@frmt.MultiLinestring([]string{"Reverse", "Fraction"})
 				</th>
 				<th style="width:25px;">Flame Effect</th>
 				<th style="width:25px;">Trail Effect</th>
@@ -62,7 +65,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 				@TrFromMainTb(engine.Nickname, EngineDetailedUrl(engine), pinm) {
 					@PinTd(engine.Nickname, engine.Name, pinm)
 					@PinSelectLeftRight(pinm, EngineDetailedUrl(engine))
-					@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, engine.Nickname))
+					@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, engine.Nickname))
 					<td>{ strconv.Itoa(engine.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(engine.Bases)) }</td>
 					<td>{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
@@ -81,7 +84,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 					@HashTd(engine.HpTypeHash)
 					@HashTd(engine.FlameEffectHash)
 					@HashTd(engine.TrailEffectHash)
-					@TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -90,33 +93,33 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, disco types.Dis
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ Engines(engines []configs_export.Engine, mode ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Engines, mode, disco)
-	@TabContent() {
+templ Engines(engines []configs_export.Engine, mode tab.ShowEmpty, shared *types.SharedData) {
+	@tab.TabMenu(urls.Engines, mode, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(disco)
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@EnginesTable(engines, MainMode, disco)
+						@EnginesTable(engines, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@EnginesTable(engines, PinMode, disco)
+						@EnginesTable(engines, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
-		@CacheTechCompatTable(disco, utils.CompL(engines, func(x configs_export.Engine) Item { return x }))
+		@disco.CacheTechCompatTable(shared, utils.CompL(engines, func(x configs_export.Engine) disco.Item { return x }))
 	}
 }

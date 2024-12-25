@@ -5,6 +5,9 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
 )
@@ -13,12 +16,12 @@ func ThrusterDetailedUrl(thruster configs_export.Thruster) string {
 	return "thrusters/thruster_base_" + strings.ToLower(thruster.Nickname)
 }
 
-templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco types.DiscoveryIDs) {
+templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:200px;">Thruster</th>
-				@ThDisco(disco)
+				@disco.ThDisco(shared)
 				if pinm == PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
@@ -27,7 +30,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco typ
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Max Force</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Power", "Usage"})
+					@frmt.MultiLinestring([]string{"Power", "Usage"})
 				</th>
 				<th style="width:25px;">Efficiency</th>
 				<th style="width:25px;">Value</th>
@@ -46,7 +49,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco typ
 				@TrFromMainTb(thruster.Nickname, ThrusterDetailedUrl(thruster), pinm) {
 					@PinTd(thruster.Nickname, thruster.Name, pinm)
 					@PinSelectLeftRight(pinm, ThrusterDetailedUrl(thruster))
-					@TdDisco(disco, thruster.Nickname, thruster.DiscoveryTechCompat)
+					@disco.TdDisco(shared, thruster.Nickname, thruster.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(thruster.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(thruster.Bases)) }</td>
 					<td>{ strconv.Itoa(thruster.MaxForce) } </td>
@@ -60,7 +63,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco typ
 					<td class="seo">{ strconv.Itoa(thruster.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(thruster.InfoID) } </td>
 					@HashTd(thruster.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(thruster.Nickname), thruster.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(thruster.Nickname), thruster.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -69,31 +72,31 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, disco typ
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ThrusterT(thrusters []configs_export.Thruster, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Thrusters, mode2, disco)
-	@TabContent() {
+templ ThrusterT(thrusters []configs_export.Thruster, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@tab.TabMenu(urls.Thrusters, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(disco)
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@ThrustersTable(thrusters, MainMode, disco)
+						@ThrustersTable(thrusters, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ThrustersTable(thrusters, PinMode, disco)
+						@ThrustersTable(thrusters, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(true))
+						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
 	}

@@ -5,6 +5,9 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
 )
@@ -13,7 +16,7 @@ func MineDetailedUrl(mine configs_export.Mine) string {
 	return "mines/mines_base_" + strings.ToLower(mine.Nickname)
 }
 
-templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.DiscoveryIDs) {
+templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -22,44 +25,48 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Ammo", "Price"})
+					@frmt.MultiLinestring([]string{"Ammo", "Price"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Hull", "Dmg"})
+					@frmt.MultiLinestring([]string{"Hull", "Dmg"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Shield", "Dmg"})
+					@frmt.MultiLinestring([]string{"Shield", "Dmg"})
 				</th>
 				<th style="width:25px;">Value</th>
 				<th style="width:25px;">Refire</th>
 				<th style="width:5px;">
-						@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+					if shared.ShowDisco {
+						@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+					} else {
+						@frmt.MultiLinestring([]string{"Ammo", "Limit"})
+					}
 				</th>	
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Detonation", "Distance"})
+					@frmt.MultiLinestring([]string{"Detonation", "Distance"})
 				</th>
 				<th style="width:25px;">Radius</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Seek", "Dist."})
+					@frmt.MultiLinestring([]string{"Seek", "Dist."})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Top", "Speed"})
+					@frmt.MultiLinestring([]string{"Top", "Speed"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Accele", "ration"})
+					@frmt.MultiLinestring([]string{"Accele", "ration"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Linear", "Drag"})
+					@frmt.MultiLinestring([]string{"Linear", "Drag"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Life", "time"})
+					@frmt.MultiLinestring([]string{"Life", "time"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Owner", "Safe"})
+					@frmt.MultiLinestring([]string{"Owner", "Safe"})
 				</th>
 				<th style="width:25px;">Toughness</th>
 				<th style="width:25px;">Hit Pts</th>
@@ -68,7 +75,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Projectile", "Archetype"})
+					@frmt.MultiLinestring([]string{"Projectile", "Archetype"})
 				</th>
 				@HashTh("Mine Dropper")
 				@HashTh("Mine")
@@ -80,7 +87,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 				@TrFromMainTb(mine.Nickname, MineDetailedUrl(mine), pinm) {
 					@PinTd(mine.Nickname, mine.Name, pinm)
 					@PinSelectLeftRight(pinm, MineDetailedUrl(mine))
-					@TdDisco(disco, mine.Nickname, mine.DiscoveryTechCompat)
+					@disco.TdDisco(shared, mine.Nickname, mine.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(mine.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(mine.Bases)) }</td>
 					<td>{ strconv.Itoa(mine.AmmoPrice) } </td>
@@ -88,7 +95,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 					<td>{ strconv.Itoa(mine.ShieldDamage) }</td>
 					<td>{ fmt.Sprintf("%.2f",mine.Value) }</td>
 					<td>{ fmt.Sprintf("%.2f", mine.Refire) }</td>
-					<td>{ GetAmmoLimitFormatted(mine.AmmoLimit) }</td>
+					<td>{ frmt.GetAmmoLimitFormatted(mine.AmmoLimit) }</td>
 					<td>{ fmt.Sprintf("%.2f", mine.DetonationDistance) }</td>
 					<td>{ fmt.Sprintf("%.2f",mine.Radius) }</td>
 					<td>{ strconv.Itoa(mine.SeekDistance) }</td>
@@ -106,7 +113,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 					<td class="seo">{ mine.ProjectileArchetype } </td>
 					@HashTd(mine.MineDropperHash)
 					@HashTd(mine.MineHash)
-					@TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -115,31 +122,31 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, disco types.Discovery
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ MinesT(mines []configs_export.Mine, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Mines, mode2, disco)
-	@TabContent() {
+templ MinesT(mines []configs_export.Mine, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@tab.TabMenu(urls.Mines, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(disco)
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@MinesTable(mines, MainMode, disco)
+						@MinesTable(mines, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@MinesTable(mines, PinMode, disco)
+						@MinesTable(mines, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
 	}

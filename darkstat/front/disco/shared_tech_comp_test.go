@@ -1,4 +1,4 @@
-package front
+package disco
 
 import (
 	"testing"
@@ -15,5 +15,5 @@ func TestTechCompat(t *testing.T) {
 	var item Item = gun
 	_ = item
 
-	GetDiscoCacheMap(utils.CompL(guns, func(x configs_export.Gun) Item { return x }), types.DiscoveryIDs{})
+	GetDiscoCacheMap(utils.CompL(guns, func(x configs_export.Gun) Item { return x }), &types.SharedData{})
 }

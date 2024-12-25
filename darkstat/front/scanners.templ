@@ -4,6 +4,9 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
 )
@@ -12,7 +15,7 @@ func ScannerDetailedUrl(item configs_export.Scanner) string {
 	return "scanner/scanner_bases_" + strings.ToLower(item.Nickname)
 }
 
-templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco types.DiscoveryIDs) {
+templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -21,12 +24,12 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco types.D
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Range</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Cargo", "Range"})
+					@frmt.MultiLinestring([]string{"Cargo", "Range"})
 				</th>
 				<th style="width:25px;">Lootable</th>
 				<th style="width:25px;">Nickname</th>
@@ -41,7 +44,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco types.D
 				@TrFromMainTb(scanner.Nickname, ScannerDetailedUrl(scanner), pinm) {
 					@PinTd(scanner.Nickname, scanner.Name, pinm)
 					@PinSelectLeftRight(pinm, ScannerDetailedUrl(scanner))
-					@TdDisco(disco, scanner.Nickname, scanner.DiscoveryTechCompat)
+					@disco.TdDisco(shared, scanner.Nickname, scanner.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(scanner.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(scanner.Bases)) }</td>
 					<td>{ strconv.Itoa(scanner.Range) }</td>
@@ -51,7 +54,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco types.D
 					<td class="seo">{ strconv.Itoa(scanner.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(scanner.InfoID) } </td>
 					@HashTd(scanner.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -60,31 +63,31 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, disco types.D
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ScannersT(scanners []configs_export.Scanner, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Scanners, mode2, disco)
-	@TabContent() {
+templ ScannersT(scanners []configs_export.Scanner, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@tab.TabMenu(urls.Scanners, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(disco)
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@ScannerTable(scanners, MainMode, disco)
+						@ScannerTable(scanners, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ScannerTable(scanners, PinMode, disco)
+						@ScannerTable(scanners, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
 	}

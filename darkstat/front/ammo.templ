@@ -3,8 +3,10 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
 )
@@ -13,7 +15,7 @@ func AmmoDetailedUrl(ammo configs_export.Ammo) string {
 	return "ammo/ammo_base_" + strings.ToLower(ammo.Nickname)
 }
 
-templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryIDs) {
+templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -22,25 +24,29 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				// @ThDisco(disco) // techcompat is not active for ammo
+				// @ThDisco(shared) // techcompat is not active for ammo
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Hit Pts</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+					if shared.ShowDisco {
+						@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+					} else {
+						@frmt.MultiLinestring([]string{"Ammo", "Limit"})
+					}
 				</th>
 				<th style="width:25px;">Volume</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Ammo", "Life","Time"})
+					@frmt.MultiLinestring([]string{"Ammo", "Life","Time"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Seeker", "Type"})
+					@frmt.MultiLinestring([]string{"Seeker", "Type"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Seeker", "Range"})
+					@frmt.MultiLinestring([]string{"Seeker", "Range"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Seeker", "Fov","Deg"})
+					@frmt.MultiLinestring([]string{"Seeker", "Fov","Deg"})
 				</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
@@ -54,11 +60,11 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 				@TrFromMainTb(ammo.Nickname, AmmoDetailedUrl(ammo), pinm) {
 					@PinTd(ammo.Nickname, ammo.Name, pinm)
 					@PinSelectLeftRight(pinm, AmmoDetailedUrl(ammo))
-					// @TdDisco(disco, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
+					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					<td>{ strconv.Itoa(ammo.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(ammo.Bases)) }</td>
 					<td>{ strconv.Itoa(ammo.HitPts) } </td>
-					<td>{ GetAmmoLimitFormatted(ammo.AmmoLimit) }</td>
+					<td>{ frmt.GetAmmoLimitFormatted(ammo.AmmoLimit) }</td>
 					<td>{ fmt.Sprintf("%.4f",ammo.Volume) }</td>
 					<td>{ fmt.Sprintf("%.2f",ammo.MunitionLifetime) }</td>
 					<td>{ ammo.SeekerType }</td>
@@ -68,7 +74,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 					<td class="seo">{ strconv.Itoa(ammo.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(ammo.InfoID) } </td>
 					@HashTd(ammo.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -77,31 +83,31 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, disco types.DiscoveryI
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ AmmoT(ammos []configs_export.Ammo, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Ammo, mode2, disco)
-	@TabContent() {
+templ AmmoT(ammos []configs_export.Ammo, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@tab.TabMenu(urls.Ammo, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(types.DiscoveryIDs{})
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
-						@AmmoTable(ammos, MainMode, disco)
+						@AmmoTable(ammos, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@AmmoTable(ammos, PinMode, disco)
+						@AmmoTable(ammos, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
 	}

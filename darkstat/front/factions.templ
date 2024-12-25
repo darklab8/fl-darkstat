@@ -6,6 +6,8 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
 )
@@ -28,7 +30,7 @@ const (
 	FactionShowRephacks
 )
 
-templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm PinMod, disco types.DiscoveryIDs) {
+templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -41,20 +43,20 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 				<th style="width:50px;">Nickname</th>
 				if mode == FactionShowRephacks {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Has", "Rep","hacks"})
+						@frmt.MultiLinestring([]string{"Has", "Rep","hacks"})
 					</th>
 				}
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Obj. Destr.", "Rep.Cng."})
+					@frmt.MultiLinestring([]string{"Obj. Destr.", "Rep.Cng."})
 				</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Mission Win", "Rep.Cng."})
+					@frmt.MultiLinestring([]string{"Mission Win", "Rep.Cng."})
 				</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Mission Fail", "Rep.Cng."})
+					@frmt.MultiLinestring([]string{"Mission Fail", "Rep.Cng."})
 				</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Mission Abort", "Rep.Cng."})
+					@frmt.MultiLinestring([]string{"Mission Abort", "Rep.Cng."})
 				</th>
 				<th style="width:50px;">InfonameID</th>
 				<th style="width:50px;">InfocardID</th>
@@ -79,7 +81,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					<td class="seo">{ strconv.Itoa(faction.InfonameID) }</td>
 					<td class="seo">{ strconv.Itoa(faction.InfocardID) }</td>
 					@HashTd(faction.NicknameHash)
-					@TdInfoCardClick(faction.Infocard, faction.Nickname, pinm, disco)
+					@TdInfoCardClick(faction.Infocard, faction.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -88,25 +90,25 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ShowEmpty, disco types.DiscoveryIDs) {
+templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 tab.ShowEmpty, shared *types.SharedData) {
 	if mode == FactionShowBases {
-		@TabMenu(urls.Factions, mode2, disco)
+		@tab.TabMenu(urls.Factions, mode2, shared)
 	} else if mode == FactionShowRephacks {
-		@TabMenu(urls.Rephacks, mode2, disco)
+		@tab.TabMenu(urls.Rephacks, mode2, shared)
 	}
-	@TabContent() {
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(types.DiscoveryIDs{})
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
-						@FactionTable(factions, mode, MainMode, disco)
+						@FactionTable(factions, mode, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@FactionTable(factions, mode, PinMode, disco)
+						@FactionTable(factions, mode, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						if mode == FactionShowBases {
 							@FactionRepsBase()
@@ -123,8 +125,8 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 Sh
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
 	}
@@ -149,7 +151,7 @@ templ FactionRepsBase() {
 }
 
 templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputation) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ faction.Name }</div>
 	@FactionRepsBase() {
 		for _, rep := range reps {
@@ -162,7 +164,7 @@ templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputati
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteRepName(rep.Name)
+					@frmt.WriteRepName(rep.Name)
 				</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Rep) }</td>
 				<td>{ fmt.Sprintf("%.2f", rep.Empathy) }</td>

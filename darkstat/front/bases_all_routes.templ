@@ -4,29 +4,31 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
     "fmt"
 )
 
 
-templ BasesRoutesShared(disco types.DiscoveryIDs) {
+templ BasesRoutesShared(shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:100px;">Base</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Transport", "Time(sec)"})
+					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Frigate", "Time(sec)"})
+						@frmt.MultiLinestring([]string{"Frigate", "Time(sec)"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Freighter", "Time(sec)"})
+						@frmt.MultiLinestring([]string{"Freighter", "Time(sec)"})
 					</th>
 				}
 				<th style="width:100px;">System</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nav", "Map"})
+					@frmt.MultiLinestring([]string{"Nav", "Map"})
 				</th>
 				<th style="width:100px;">Dest. Faction</th>
 				<th style="width:100px;">Dest. Region</th>
@@ -47,10 +49,10 @@ func RouteUrl(route *configs_export.Route) string {
 	return "routes/route_" + route.GetID()
 }
 
-templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode BaseMode, disco types.DiscoveryIDs) {
-	@BottomFilterBar()
+templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode BaseMode, shared *types.SharedData) {
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
-	@BasesRoutesShared(disco) {
+	@BasesRoutesShared(shared) {
 		for _, route := range routes.AllRoutes {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(route.Transport.Route) }
@@ -61,7 +63,7 @@ templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode Base
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteLimit(200) {
+					@frmt.WriteLimit(200) {
 						{ route.Transport.ToBase.Name }
 					}
 				</td>
@@ -77,7 +79,7 @@ templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode Base
 						</span>
 					</span>
 				</td>
-				if disco.Show {
+				if shared.ShowDisco {
 					<td>
 						<span class="tooltip">
 							@TradeRouteHumanTime(route.Frigate.Route)
@@ -104,19 +106,19 @@ templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode Base
 					</td>
 				}
 				<td>
-					@WriteSystemName(route.Transport.ToBase.System)
+					@frmt.WriteSystemName(route.Transport.ToBase.System)
 				</td>
 				<td>{ route.Transport.ToBase.SectorCoord }</td>
 				<td>
-					@WriteFactioName(route.Transport.ToBase.FactionName)
+					@frmt.WriteFactioName(route.Transport.ToBase.FactionName)
 				</td>
 
 				<td>
-					@WriteRegionName(route.Transport.ToBase.Region)
+					@frmt.WriteRegionName(route.Transport.ToBase.Region)
 				</td>
 
 				<td>
-					@WriteLimit(100) {
+					@frmt.WriteLimit(100) {
 						{ route.Transport.ToBase.Nickname.ToStr() }
 					}
 				</td>

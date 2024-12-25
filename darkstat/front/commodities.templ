@@ -5,6 +5,8 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
 )
@@ -13,7 +15,7 @@ func GoodAtBaseInfoTUrl(commodity *configs_export.Commodity) string {
 	return "commodities/comm_base_" + strings.ToLower(string(configs_export.GetCommodityKey(commodity.Nickname, commodity.ShipClass)))
 }
 
-templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco types.DiscoveryIDs) {
+templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -23,22 +25,22 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 					<th style="width:25px;">Select</th>
 				}
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best price", "to buy", "from base"})
+					@frmt.MultiLinestring([]string{"Best price", "to buy", "from base"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best price", "to sell", "to base"})
+					@frmt.MultiLinestring([]string{"Best price", "to sell", "to base"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best buy", "per vol", "from base"})
+					@frmt.MultiLinestring([]string{"Best buy", "per vol", "from base"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Best sell ", "per vol", "to base"})
+					@frmt.MultiLinestring([]string{"Best sell ", "per vol", "to base"})
 				</th>
 				<th style="width:25px;">Volume</th>
-				<th style="width:5px;">@MultiLinestring([]string{"Ship", "Class"})</th>
+				<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "Class"})</th>
 				<th style="width:25px;">Profit</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Profit", "per v. "})
+					@frmt.MultiLinestring([]string{"Profit", "per v. "})
 				</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
@@ -50,21 +52,21 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 		<tbody>
 			for _, commodity := range commodities {
 				@TrFromMainTb(commodity.Nickname, GoodAtBaseInfoTUrl(commodity), pinm) {
-					@PinTd(commodity.Nickname, commodity.Name + FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
+					@PinTd(commodity.Nickname, commodity.Name + frmt.FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
 					@PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
 					<td>{ strconv.Itoa(commodity.PriceBestBaseSellsFor) }</td>
 					<td>{ strconv.Itoa(commodity.PriceBestBaseBuysFor) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseSellsFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseBuysFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.2f", commodity.Volume) }</td>
-					<td>{ FormattedShipClassOfCommodity2(commodity.ShipClass) }</td>
+					<td>{ frmt.FormattedShipClassOfCommodity2(commodity.ShipClass) }</td>
 					<td>{ strconv.Itoa(commodity.ProffitMargin) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.ProffitMargin, commodity.Volume)) }</td>
 					<td class="seo">{ commodity.Nickname }</td>
 					<td class="seo">{ strconv.Itoa(commodity.NameID) }</td>
 					<td class="seo">{ strconv.Itoa(commodity.InfocardID) }</td>
 					@HashTd(commodity.NicknameHash)
-					@TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm, disco)
+					@TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -73,31 +75,31 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, disco
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CommoditiesT(commodities []*configs_export.Commodity, mode ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Commodities, mode, disco)
-	@TabContent() {
+templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, shared *types.SharedData) {
+	@tab.TabMenu(urls.Commodities, mode, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(types.DiscoveryIDs{})
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
-						@CommodityTable(commodities, MainMode, disco)
+						@CommodityTable(commodities, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@CommodityTable(commodities, PinMode, disco)
+						@CommodityTable(commodities, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(true))
+						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(true))
+						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
 	}

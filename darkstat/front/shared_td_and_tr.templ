@@ -1,0 +1,190 @@
+package front
+
+import (
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+)
+
+type PinMod string
+
+const (
+	MainMode PinMod = ""
+	PinMode  PinMod = "pin"
+)
+
+script Pin(id string) {
+  if (id.includes("pin")) {
+	Hide(id)
+
+	if (TableLen(document.querySelector("#table-top-mainpin table")) === 1) {
+		Hide("table-top-mainpin")
+		Hide("table-bottom-mainpin")
+	}
+  } else {
+	Unhide("pin"+id)
+	Unhide("table-top-mainpin")
+	Unhide("table-bottom-mainpin")
+  }
+}
+
+script Pin2(id string) {
+  // htmx adding row to table version for performance
+  if (id.includes("pin")) {
+	// deleting htmx added row in table
+	row = document.querySelector("#" + id)
+	row.remove()
+
+	if (TableLen(document.querySelector("#table-top-mainpin table")) === 1) {
+		Hide("table-top-mainpin")
+		Hide("table-bottom-mainpin")
+	}
+  } else {
+	// htmx adds as another element to table
+	Unhide("table-top-mainpin")
+	Unhide("table-bottom-mainpin")
+
+	rows = document.querySelectorAll("#pin"+id)
+	if (rows.length >= 1) {
+		for (let i = 1; i < rows.length; i++) {
+			rows[i].remove()
+		}
+	}
+  }
+}
+
+templ PinTd(nickname string, name string, pinm PinMod) {
+	<td style="display:flex;justify-content:space-between;min-width:50px;">
+		<span>
+			@frmt.WriteLimit(200) {
+				{ name }
+			}
+		</span>
+		if pinm==MainMode {
+			<span style="cursor:copy;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>pin</span>
+		} else {
+			<span style="cursor:no-drop;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>unpin</span>
+		}
+	</td>
+}
+
+templ PinTd2(nickname string, name string, pinm PinMod, url string) {
+	// htmx adding row to table version for performance
+	<td style="display:flex;justify-content:space-between;min-width:50px;" class="seo">
+		<span>{ name }</span>
+		if pinm==MainMode {
+			<span
+				style="cursor:copy;"
+				class="pin"
+				onClick={ Pin2(string(pinm) + "bottominfo_" + nickname) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + url }
+				hx-trigger="mousedown"
+				hx-target="#table-top-mainpin table tbody"
+				hx-swap="beforeend"
+			>pin</span>
+		} else {
+			<span style="cursor:no-drop;" class="pin" onClick={ Pin2(string(pinm) + "bottominfo_" + nickname) }>unpin</span>
+		}
+	</td>
+}
+
+templ PinSelectLeftRight(pinm PinMod, url string) {
+	if pinm == PinMode {
+		<td
+			class="select_left_infocard_trigger"
+			hx-get={ types.GetCtx(ctx).SiteRoot + url }
+			hx-trigger="mousedown consume"
+			hx-target={ "#table-bottom-main" }
+			hx-swap="innerHTML"
+			preload="mouseover"
+			style="cursor:zoom-in; text-align: center;"
+		>&#8592;</td>
+		<td
+			hx-get={ types.GetCtx(ctx).SiteRoot + url }
+			hx-trigger="mousedown"
+			hx-target={ "#table-bottom-main" + string(pinm) }
+			hx-swap="innerHTML"
+			preload="mouseover"
+			style="cursor:zoom-in; text-align: center;"
+		>&#8594;</td>
+	}
+}
+
+templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, shared *types.SharedData) {
+	@tab.EmbedInfocardForSearch(shared.Infocards, infocardKey)
+	if pinm == PinMode {
+		<td
+			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
+			hx-trigger={ "mousedown from:closest tr, click from:previous td.select_left_infocard_trigger" }
+			hx-target="#infocard_view"
+			hx-swap="innerHTML"
+		></td>
+	} else {
+		<td
+			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
+			hx-trigger={ "mousedown from:closest tr" }
+			hx-target="#infocard_view"
+			hx-swap="innerHTML"
+		></td>
+	}
+}
+
+type Tr struct {
+	nickname string
+	detailed_url string
+	pinm PinMod
+	is_tranport_unreachable bool
+}
+type TrOpt func(t *Tr)
+
+func WithTransportUnreachable(is_tranport_unreachable bool) TrOpt {
+	return func(t *Tr) {
+		t.is_tranport_unreachable = is_tranport_unreachable
+	}
+}
+
+func NewTr(nickname string, detailed_url string, pinm PinMod, opts ...TrOpt) *Tr {
+	t := &Tr{
+		nickname: nickname,
+		detailed_url: detailed_url,
+		pinm: pinm,
+	}
+
+	for _, opt := range opts {
+		opt(t)
+	}
+
+	return t
+}
+
+templ TrFromMain(tr *Tr) {
+	@TrFromMainTb2(tr, false) {
+		{ children... }
+	}
+}
+
+templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
+	@TrFromMainTb2(NewTr(nickname, detailed_url, pinm), false) {
+		{ children... }
+	}
+}
+
+templ TrFromMainTb2(tr *Tr, prerender bool) {
+	<tr
+		id={ string(tr.pinm) + "bottominfo_" + tr.nickname }
+		hx-get={ types.GetCtx(ctx).SiteRoot + tr.detailed_url }
+		hx-trigger="mousedown"
+		hx-target={ "#table-bottom-main" + string(tr.pinm) }
+		hx-swap="innerHTML"
+		preload="mouseover"
+		class={
+			templ.KV("hidden", tr.pinm == PinMode && !prerender),
+			templ.KV("line_underline", tr.is_tranport_unreachable),
+		}
+		onclick="RowHighlighter(this)"
+
+	>
+		{ children... }
+	</tr>
+}

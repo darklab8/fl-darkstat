@@ -1,0 +1,73 @@
+package tab
+
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+    "strings"
+)
+
+templ FilterBar(shared *types.SharedData) {
+	<style>
+		#table-top-panel {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+		#table-top-panel * {
+			background: var(--color_background_filter_bars);
+		}
+
+		#table-top-panel select {
+			background: var(--color_background);
+		}
+
+		.filter_input {
+			width:100%;
+		}
+
+		.filter_input:focus {
+			outline: none;
+		}
+	</style>
+	<div id="table-top-panel">
+		<input type="text" id="filterinput" class="filter_input" onkeyup="FilteringFunction()" placeholder="Search rows by any content: name, faction, system and etc.."/>
+		<input type="text" id="filterinput_infocard" class="filter_input"  onkeyup="FilteringFunction()" placeholder="Search rows by infocards content"/>
+		if bool(shared.ShowDisco) {
+			<select name="IDs" id="tractor_id_selector" onchange="FilteringFunction()">
+				<option value="">Filter items by tech compatible ID</option>
+				for _, id := range shared.Ids {
+					<option value={ string(id.ShortNickname) }><span>{ id.Name }</span> <span>( { string(id.Nickname) } )</span></option>
+				}
+			</select>
+		}
+		{ children... }
+	</div>
+}
+
+func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
+	if infocard_lines, ok := infocards[infokey]; ok {
+		if len(infocard_lines) > 0 {
+			return string(infocard_lines[0])
+		}
+	}
+	return ""
+}
+
+func GetInfocard(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
+	if infocard_lines, ok := infocards[infokey]; ok {
+		return strings.Join(infocard_lines, "")
+	}
+	return ""
+}
+
+templ EmbedInfocardForSearch(infocards configs_export.Infocards, infokey configs_export.InfocardKey) {
+	<td style="display:none;">
+		<span style="display:none;" class="seo">{ GetFirstLine(infocards, infokey) }</span>
+		<span style="display:none;" class="search-infocard">{ GetInfocard(infocards, infokey) }</span>
+	</td>
+}
+
+templ BottomFilterBar() {
+	<input style="width: 100%;" type="text" id="bottom_input" onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')" placeholder="Search rows by any content: name, nickname etc.."/>
+}
+

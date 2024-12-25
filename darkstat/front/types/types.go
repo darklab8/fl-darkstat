@@ -46,8 +46,11 @@ func GetCtx(ctx context.Context) *GlobalParams {
 	return ctx.Value(core_types.GlobalParamsCtxKey).(*GlobalParams)
 }
 
-type DiscoveryIDs struct {
-	Show         bool
+type FLSRData struct {
+}
+
+type DiscoveryData struct {
+	ShowDisco    bool
 	Ids          []configs_export.Tractor
 	TractorsByID map[cfgtype.TractorID]configs_export.Tractor
 	Config       *techcompat.Config
@@ -56,4 +59,9 @@ type DiscoveryIDs struct {
 	Infocards configs_export.Infocards
 
 	OrderedTechcompat configs_export.TechCompatOrderer
+}
+
+type SharedData struct {
+	DiscoveryData
+	FLSRData
 }

@@ -4,6 +4,8 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 )
 
 templ HashTd(value flhash.HashCode) {
@@ -14,13 +16,13 @@ templ HashTd(value flhash.HashCode) {
 
 templ HashTh(name string) {
     // <th style="width:10px;">
-    //     @MultiLinestring([]string{name,"hash int32"})
+    //     @frmt.MultiLinestring([]string{name,"hash int32"})
     // </th>
     <th style="width:10px;">
-        @MultiLinestring([]string{name,"hash uint32"})
+        @frmt.MultiLinestring([]string{name,"hash uint32"})
     </th>
     // <th style="width:10px;">
-    //     @MultiLinestring([]string{name,"hash hex"})
+    //     @frmt.MultiLinestring([]string{name,"hash hex"})
     // </th>
 }
 
@@ -29,16 +31,16 @@ templ HashTable(hashes map[string]flhash.HashCode) {
 		<thead>
 			<tr>
                 <th style="width:200px;">
-                    @MultiLinestring([]string{"Nickname"})
+                    @frmt.MultiLinestring([]string{"Nickname"})
                 </th>
                 <th style="width:10px;">
-                    @MultiLinestring([]string{"hash int32"})
+                    @frmt.MultiLinestring([]string{"hash int32"})
                 </th>
                 <th style="width:10px;">
-                    @MultiLinestring([]string{"hash uint32"})
+                    @frmt.MultiLinestring([]string{"hash uint32"})
                 </th>
                 <th style="width:10px;">
-                    @MultiLinestring([]string{"hash hex"})
+                    @frmt.MultiLinestring([]string{"hash hex"})
                 </th>
                 <th style="max-width:100%;"></th>
 			</tr>
@@ -57,12 +59,12 @@ templ HashTable(hashes map[string]flhash.HashCode) {
 }
 
 
-templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Hashes, mode2, disco)
-	@TabContent() {
+templ HashesT(hashes map[string]flhash.HashCode, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@tab.TabMenu(urls.Hashes, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
+			@tab.LeftTable(){
+				@tab.TableTop(){
                     <input style="width: 100%;" type="text" id="hash_search" onkeyup="FilteringForAnyTable('#table-top-main', 'hash_search')" placeholder="Search rows by any content: name, nickname etc.."/>
 					<div id="table-top-main">
 						@HashTable(hashes)
@@ -71,17 +73,17 @@ templ HashesT(hashes map[string]flhash.HashCode, mode2 ShowEmpty, disco types.Di
 						@HashTable(hashes)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
 	}

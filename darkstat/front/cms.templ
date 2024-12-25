@@ -4,6 +4,9 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
 )
@@ -12,7 +15,7 @@ func CounterMeasreDetailedUrl(cm configs_export.CounterMeasure) string {
 	return "cm/cm_base_" + strings.ToLower(cm.Nickname)
 }
 
-templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.DiscoveryIDs) {
+templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -21,14 +24,18 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Diversion", "Chance"})
+					@frmt.MultiLinestring([]string{"Diversion", "Chance"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+					if shared.ShowDisco {
+						@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+					} else {
+						@frmt.MultiLinestring([]string{"Ammo", "Limit"})
+					}
 				</th>
 				<th style="width:25px;">Lifetime</th>
 				<th style="width:25px;">Range</th>
@@ -47,11 +54,11 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 				@TrFromMainTb(cm.Nickname, CounterMeasreDetailedUrl(cm), pinm) {
 					@PinTd(cm.Nickname, cm.Name, pinm)
 					@PinSelectLeftRight(pinm, CounterMeasreDetailedUrl(cm))
-					@TdDisco(disco, cm.Nickname, cm.DiscoveryTechCompat)
+					@disco.TdDisco(shared, cm.Nickname, cm.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(cm.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(cm.Bases)) }</td>
 					<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
-					<td>{ GetAmmoLimitFormatted(cm.AmmoLimit) }</td>
+					<td>{ frmt.GetAmmoLimitFormatted(cm.AmmoLimit) }</td>
 					<td>{ strconv.Itoa(cm.Lifetime) }</td>
 					<td>{ strconv.Itoa(cm.Range) }</td>
 					<td>{ strconv.Itoa(cm.AIRange) }</td>
@@ -61,7 +68,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 					<td class="seo">{ strconv.Itoa(cm.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(cm.InfoID) } </td>
 					@HashTd(cm.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -73,31 +80,31 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, disco types.Disc
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.CounterMeasures, mode2, disco)
-	@TabContent() {
+templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@tab.TabMenu(urls.CounterMeasures, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(disco)
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@CmTable(cms, MainMode, disco)
+						@CmTable(cms, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@CmTable(cms, PinMode, disco)
+						@CmTable(cms, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
 	}

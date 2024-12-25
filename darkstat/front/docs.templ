@@ -2,7 +2,7 @@ package front
 
 import (
     "github.com/darklab8/fl-darkstat/darkstat/front/types"
-
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"unicode"
 	"bytes"
@@ -30,9 +30,9 @@ templ SectionHeader(name string) {
     </a>
 }
 
-templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
-    @TabMenu(urls.Docs, mode2, disco)
-    @TabContent() {
+templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
+    @tab.TabMenu(urls.Docs, mode2, shared)
+    @tab.TabContent() {
         <style>
             img {
                 max-width: 800px;
@@ -131,7 +131,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
                 <ul>
                     <li>Shows trade routes between bases. On click at main table shows all routes originiating from specific base</li>
                     <li>On specific route at bottom table row click, it will show exact path to show. On hover to magnifying glass it will tell waypoint coordinates</li>
-                    if disco.Show {
+                    if shared.ShowDisco {
                         <li>Trade routes are preshown fo<span></span>r Transport, Frigate and Freighter parameters of Discovey</li>
                         <li>Transports have 350 top speed. Too large for freighter's jump holes</li>
                         <li>Frigates 500 top speed. Too large for freighter's jump holes</li> 
@@ -151,7 +151,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
                 <li>Guns
                     <ul>
                         <li>All guns information and where to buy them, but some information about them in Missiles tab (including flaks)</li>
-                        if disco.Show {
+                        if shared.ShowDisco {
                             <li>Some parameters show extra information for burst period of damage usage of burst firing guns</li>
                             <li>Some guns have increased number of barrels affecting their DPS. This is visible in one of columns in square brackets (in same column where other burst params)</li>
                         }
@@ -162,7 +162,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
                 <li>Ammo
                     <ul>
                         <li>ammo and where to buy it. Convinient place to find Anomaly Scanner Batteries</li>
-                        if disco.Show {
+                        if shared.ShowDisco {
                             <li>Tabs ammo, guns, missiles and mines have specified Ammo limit amount, and possible max amount of catridges if u have installed multiple same type weapons</li>
                         }
                     </ul>
@@ -179,7 +179,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
                     </ul>
                 </li>
                 <li>IDs/Tractors - Tractors in vanilla, IDs in Discovery Freelancer containing rules. Note, the server side overrides from public configs are applied for showing</li>
-                if disco.Show {
+                if shared.ShowDisco {
                     <li>ID Rep hacks - Reputation conditions applied to Discover Freelancer character when equipped with specific ID. Exactly this reputation u get after <strong>represet</strong> command</li>
                 }
                 <li>Engines - Engines and where to buy them</li>
@@ -190,7 +190,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
                 <li>Color schemes switch - Available themes are Light, Dark and Vanilla</li>
             </ul>
         </p>   
-        if disco.Show {
+        if shared.ShowDisco {
             @SectionHeader("Coordinates for waypoint creations")
             <p>
                 Hint: All coordinates shown for Discovery Freelancer can be used to create waypoint to find them in current system.
@@ -297,7 +297,7 @@ templ DocsT(mode2 ShowEmpty, disco types.DiscoveryIDs) {
             row underlined, means transports can't reach this base location because
             <ul>
             </ul>
-            if disco.Show {
+            if shared.ShowDisco {
             <li>jump holes are not allowing tranposrts</li>
             <li>or jump holes can't be jumped with cargo more than 650 units</li>
             <li>or there are no transporting docking spheres "jump" type</li> 

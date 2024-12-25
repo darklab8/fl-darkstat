@@ -1,11 +1,13 @@
 package front
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -37,31 +39,11 @@ const (
 	ShipShowDetails
 )
 
-func marshalIDs(data types.DiscoveryIDs, item_nickname string) string {
-
-	var compat_by_id map[string]float64 = make(map[string]float64)
-
-	compat_by_id[""] = data.Config.GetCompatibilty(item_nickname, "")
-
-	for _, id := range data.Ids {
-		compat := data.Config.GetCompatibilty(item_nickname, id.Nickname)
-
-		// data size saving
-		if compat <= 0.1 {
-			continue
-		}
-
-		compat_by_id[string(id.ShortNickname)] = compat
-	}
-
-	bytes, _ := json.Marshal(compat_by_id)
-	return strings.ReplaceAll(string(bytes), "\"","'")
-}
 
 templ ShipTable(
 	ships []configs_export.Ship,
 	mode ShipTabMode,
-	pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
+	pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards) {
 	<table class={ "sortable", templ.KV("top-main", pinm==MainMode), templ.KV("top-pinned", pinm==PinMode) }>
 		<thead>
 			<tr>
@@ -70,66 +52,64 @@ templ ShipTable(
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Class</th>
 				<th style="width:25px;">Type</th>
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
-				if disco.Show {
-					<th style="width:25px;">
-						@MultiLinestring([]string{"Cruise", "Speed"})
-					</th>
-				}
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Impulse", "Speed"})
+					@frmt.MultiLinestring([]string{"Cruise", "Speed"})
 				</th>
 				<th style="width:25px;">
-						@MultiLinestring([]string{"Thrust", "Speed"})
+					@frmt.MultiLinestring([]string{"Impulse", "Speed"})
+				</th>
+				<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"Thrust", "Speed"})
 				</th>
 				<th style="width:25px;">Armor</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:5px;">
-							@MultiLinestring([]string{"Armor", "Res.",})
+							@frmt.MultiLinestring([]string{"Armor", "Res.",})
 					</th>
 				}
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Hold", "Size"})
+					@frmt.MultiLinestring([]string{"Hold", "Size"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nano", "bots"})
+					@frmt.MultiLinestring([]string{"Nano", "bots"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Shield", "batt."})
+					@frmt.MultiLinestring([]string{"Shield", "batt."})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Max ang", "Speed", "(deg/s)"})
+					@frmt.MultiLinestring([]string{"Max ang", "Speed", "(deg/s)"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Ang dist", "to 0.5 s", "(deg)"})
+					@frmt.MultiLinestring([]string{"Ang dist", "to 0.5 s", "(deg)"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Time to", "90% max", "ang sp.(s)"})
+					@frmt.MultiLinestring([]string{"Time to", "90% max", "ang sp.(s)"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Power", "Capacity"})
+					@frmt.MultiLinestring([]string{"Power", "Capacity"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Power", "Recharge", "Rate"})
+					@frmt.MultiLinestring([]string{"Power", "Recharge", "Rate"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Thrust", "Capacity"})
+					@frmt.MultiLinestring([]string{"Thrust", "Capacity"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Thrust", "Recharge", "Rate"})
+					@frmt.MultiLinestring([]string{"Thrust", "Recharge", "Rate"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Reverse", "Fraction"})
+					@frmt.MultiLinestring([]string{"Reverse", "Fraction"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nudge", "Force"})
+					@frmt.MultiLinestring([]string{"Nudge", "Force"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Strafe", "Force"})
+					@frmt.MultiLinestring([]string{"Strafe", "Force"})
 				</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
@@ -140,7 +120,7 @@ templ ShipTable(
 		</thead>
 		<tbody>
 			for _, ship := range ships {
-				@ShipRow(ship, mode, pinm, disco, infocards, false)
+				@ShipRow(ship, mode, pinm, shared, infocards, false)
 			}
 		</tbody>
 	</table>
@@ -154,22 +134,20 @@ func thruster_speeds_to_str(thrust_speeds []int) string {
 	return strings.Join(as_str, ",")
 }
 
-templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
+templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
 	@TrFromMainTb2(NewTr(ship.Nickname, ShipDetailedUrl(ship, mode), pinm), prerender) {
 		@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
 		@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
-		@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, ship.Nickname))
+		@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, ship.Nickname))
 		<td>{ strconv.Itoa(ship.Class) }</td>
 		<td class="seo">{ ship.Type }</td>
 		<td>{ strconv.Itoa(ship.Price) }</td>
 		<td>{ FormatBoolAsYesNo(configs_export.Buyable(ship.Bases)) }</td>
-		if disco.Show {
-			<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
-		}
+		<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
 		<td>{ fmt.Sprintf("%.0f",ship.ImpulseSpeed) }</td>
 		<td>{ thruster_speeds_to_str(ship.ThrusterSpeed) }</td>
 		<td>{ strconv.Itoa(ship.Armor) } </td>
-		if disco.Show {
+		if shared.ShowDisco {
 			<td>{ fmt.Sprintf("%4.0f(%.0f%%)", ship.DiscoShip.ArmorMult, 100*ship.DiscoShip.ArmorMult/(100+ship.DiscoShip.ArmorMult ))}</td>
 		}
 		<td>{ strconv.Itoa(ship.HoldSize) } </td>
@@ -191,52 +169,52 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, disco typ
 		<td class="seo">{ strconv.Itoa(ship.NameID) } </td>
 		<td class="seo">{ strconv.Itoa(ship.InfoID) } </td>
 		@HashTd(ship.NicknameHash)
-		@TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm, disco)
+		@TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm, shared)
 	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 ShowEmpty, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
+templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards configs_export.Infocards) {
 	if mode == ShipShowBases {
-		@TabMenu(urls.Ships, mode2, disco)
+		@tab.TabMenu(urls.Ships, mode2, shared)
 	} else if mode == ShipShowDetails {
-		@TabMenu(urls.ShipDetails, mode2, disco)
+		@tab.TabMenu(urls.ShipDetails, mode2, shared)
 	}
-	@TabContent() {
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(disco)
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@ShipTable(ships, mode, MainMode, disco, infocards)
+						@ShipTable(ships, mode, MainMode, shared, infocards)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShipTable([]configs_export.Ship{}, mode, PinMode, disco, infocards)
+						@ShipTable([]configs_export.Ship{}, mode, PinMode, shared, infocards)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowAsCommodity(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowAsCommodity(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 						} else if mode == ShipShowDetails {
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
-		@CacheTechCompatTable(disco, utils.CompL(ships, func(x configs_export.Ship) Item { return x }))
+		@disco.CacheTechCompatTable(shared, utils.CompL(ships, func(x configs_export.Ship) disco.Item { return x }))
 	}
 }
 
@@ -258,7 +236,7 @@ templ ShipDetailsShared(ship configs_export.Ship) {
 }
 
 templ ShipDetails(ship configs_export.Ship) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ ship.Name }</div>
 	@ShipDetailsShared(ship) {
 		for _, slot := range ship.Slots {

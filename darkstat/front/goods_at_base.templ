@@ -1,0 +1,168 @@
+package front
+
+import (
+	"fmt"
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"strconv"
+)
+
+templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:150px;">Base</th>
+				<th style="width:150px;">Faction</th>
+				<th style="width:50px;">Region</th>
+				<th style="width:100px;">System</th>
+				if shared.ShowDisco {
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Not for", "tran", "sports"})
+					</th>
+				}
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Nav", "Map"})
+				</th>
+				if bool(is_commodity) && shared.ShowDisco {
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
+					</th>
+				} else {
+					<th style="width:50px;">Price</th>
+				}
+				if bool(is_commodity) {
+					if shared.ShowDisco {
+						<th style="width:25px;">
+							@frmt.MultiLinestring([]string{"price","to sell", "per vol", "to base"})
+						</th>
+						<th style="width:25px;">
+							@frmt.MultiLinestring([]string{"price","to buy", "per vol", "from base"})
+						</th>
+					} else {
+						<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"Price", "per", "vol"})
+						</th>
+					}
+				}
+				if bool(is_commodity) && shared.ShowDisco{
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Ship", "class"})
+					</th>
+				}
+				<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Vol", "ume"})
+					</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Base", "Sells"})
+				</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Lev.", "Req."})
+				</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Rep.", "Req."})
+				</th>
+				if shared.ShowDisco {
+					<th style="width:10px;">
+						@frmt.MultiLinestring([]string{"Server", "Override"})
+					</th>
+				}
+				<th style="width:100px;">Base Nickname</th>
+				<th style="width:20px;">Pos X</th>
+				<th style="width:20px;">Pos Y</th>
+				<th style="width:20px;">Pos Z</th>
+				<th style="width:5px;">
+					@frmt.MultiLinestring([]string{"Base is", "Reachable"})
+				</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+type ShowAsCommodity bool
+
+func FormatBoolAsYesNo(value bool) string {
+	if value {
+		return "yes"
+	} else {
+		return "no"
+	}
+}
+
+templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.GoodAtBase, is_commodity ShowAsCommodity,shared *types.SharedData ) {
+	@tab.BottomFilterBar()
+	<div class="bottom_name">{ name }</div>
+	@GoodAtBaseSharedT(is_commodity, shared) {
+		for _, base_info := range frmt.SortedBases(base_infos) {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(base_info.BaseNickname)) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+				preload="mouseover"
+				onclick="RowHighlighter(this)"
+				class={ 
+					templ.KV("line_through", base_info.NotBuyable),
+					templ.KV("line_underline", base_info.IsTransportUnreachable), }
+			>
+				<td>
+					@frmt.WriteBaseName(base_info.BaseName)
+				</td>
+				<td>
+					@frmt.WriteFactioName(base_info.FactionName)
+				</td>
+				<td>
+					@frmt.WriteRegionName(base_info.Region)
+				</td>
+				<td>
+					@frmt.WriteSystemName(base_info.SystemName)
+				</td>
+				if shared.ShowDisco {
+					<td>
+						{ strconv.FormatBool(base_info.IsTransportUnreachable) }
+					</td>
+				}
+				<td>{ base_info.SectorCoord }</td>
+				if bool(is_commodity) && shared.ShowDisco{
+					<td>{ strconv.Itoa(base_info.PriceBaseBuysFor) }</td>
+				}
+				<td>{ strconv.Itoa(base_info.PriceBaseSellsFor) }</td>
+				if is_commodity {
+					if shared.ShowDisco {
+						<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
+					}
+					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseSellsFor, base_info.Volume)) }</td>
+				}
+				if bool(is_commodity) && shared.ShowDisco{
+					<td>{ fmt.Sprintf("%d", base_info.ShipClass) }</td>
+				}
+				<td>{ fmt.Sprintf("%.0f", base_info.Volume) }</td>
+				<td>{ frmt.FormatBaseSells(base_info.BaseSells) }</td>
+				<td>{ strconv.Itoa(base_info.LevelRequired) }</td>
+				<td>{ fmt.Sprintf("%.2f", base_info.RepRequired) }</td>
+				if shared.ShowDisco {
+					<td>{ strconv.FormatBool(base_info.IsServerSideOverride) }</td>
+				}
+				<td>
+					@frmt.WriteLimit(100) {
+						{ base_info.BaseNickname.ToStr() }
+					}
+				</td>
+				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.X) }</td>
+				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Y) }</td>
+				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Z) }</td>
+				<td>{ FormatBoolAsYesNo(!base_info.NotBuyable) }</td>
+				<td></td>
+			</tr>
+		}
+	}
+}

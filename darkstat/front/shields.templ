@@ -5,6 +5,9 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -14,7 +17,7 @@ func ShieldDetailedUrl(shield configs_export.Shield) string {
 	return "shields/shields_base_" + strings.ToLower(shield.Nickname)
 }
 
-templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.DiscoveryIDs) {
+templ ShieldTable(shields []configs_export.Shield, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -23,7 +26,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				@ThDisco(disco)
+				@disco.ThDisco(shared)
 				<th style="width:25px;">Class</th>
 				<th style="width:25px;">Type</th>
 				<th style="width:25px;">Technology</th>
@@ -31,16 +34,16 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 				<th style="width:25px;">Buyable</th>
 				<th style="width:25px;">Capacity</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Regen", "Rate"})
+					@frmt.MultiLinestring([]string{"Regen", "Rate"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Constant", "Power", "Draw"})
+					@frmt.MultiLinestring([]string{"Constant", "Power", "Draw"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Rebuild", "Power", "Draw"})
+					@frmt.MultiLinestring([]string{"Rebuild", "Power", "Draw"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Off", "Power", "Draw"})
+					@frmt.MultiLinestring([]string{"Off", "Power", "Draw"})
 				</th>
 				<th style="width:25px;">Toughness</th>
 				<th style="width:25px;">Hit Pts</th>
@@ -59,7 +62,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 				@TrFromMainTb(shield.Nickname, ShieldDetailedUrl(shield), pinm) {
 					@PinTd(shield.Nickname, shield.Name, pinm)
 					@PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
-					@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, shield.Nickname))
+					@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, shield.Nickname))
 					<td>{ shield.Class }</td>
 					<td class="seo">{ shield.Type }</td>
 					<td class="seo">{ shield.Technology }</td>
@@ -79,7 +82,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 					<td class="seo">{ strconv.Itoa(shield.IdsInfo) } </td>
 					@HashTd(shield.NicknameHash)
 					@HashTd(shield.HpTypeHash)
-					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, disco)
+					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -88,34 +91,34 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, disco types.Disc
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShieldT(shields []configs_export.Shield, mode2 ShowEmpty, disco types.DiscoveryIDs) {
-	@TabMenu(urls.Shields, mode2, disco)
-	@TabContent() {
+templ ShieldT(shields []configs_export.Shield, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@tab.TabMenu(urls.Shields, mode2, shared)
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(disco)
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@ShieldTable(shields, MainMode, disco)
+						@ShieldTable(shields, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShieldTable(shields, PinMode, disco)
+						@ShieldTable(shields, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false))
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
-		@CacheTechCompatTable(disco, utils.CompL(shields, func(x configs_export.Shield) Item { return x }))
+		@disco.CacheTechCompatTable(shared, utils.CompL(shields, func(x configs_export.Shield) disco.Item { return x }))
 	}
 }
 

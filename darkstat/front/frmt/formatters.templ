@@ -1,0 +1,66 @@
+package frmt
+
+import (
+	"strconv"
+)
+
+templ WriteBaseName(BaseName string) {
+	@WriteLimit(150) {
+		{ BaseName }
+	}
+}
+
+templ WriteFactioName(FactionName string) {
+	@WriteLimit(165) {
+		{ FactionName }
+	}
+}
+
+templ WriteRepName(RepName string) {
+	@WriteLimit(200) {
+		{ RepName }
+	}
+}
+
+templ WriteTractorID(Name string) {
+	@WriteLimit(200) {
+		{ Name }
+	}
+}
+
+templ WriteSystemName(System string) {
+	@WriteLimit(120) {
+		{ System }
+	}
+}
+
+templ WriteGoodType(GoodType string) {
+	@WriteLimit(100) {
+		{ GoodType }
+	}
+}
+
+templ WriteRegionName(RegionName string) {
+	@WriteLimit(170) {
+		{ RegionName }
+	}
+}
+
+templ WriteLimit(limit int) {
+	@templ.Raw("<div class=\"seo\" style=\"width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;overflow-y:hidden;\">")
+	{ children... }
+	@templ.Raw("</div>")
+}
+
+templ Tooltip(tooltip string) {
+	<span class="tooltip">
+		{ children... }
+		<span class="tooltiptext">
+			{ tooltip }
+		</span>
+	</span>
+}
+
+templ MagnifyingGlass() {
+	<span class="magni_glass">&#x1F50D;</span>
+}

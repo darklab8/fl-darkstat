@@ -3,10 +3,13 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+
 	"math"
 	"strconv"
 	"strings"
@@ -44,7 +47,7 @@ const (
 	BaseAllRoutes
 )
 
-templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, disco types.DiscoveryIDs) {
+templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -62,38 +65,38 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 				}
 				if tab_mode == BaseTabOres {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Dynamic Loot", "Min-Max", "(Difficulty)"})
+						@frmt.MultiLinestring([]string{"Dynamic Loot", "Min-Max", "(Difficulty)"})
 					</th>
 				}
 				<th style="width:50px;">System</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:5px;">
-						@MultiLinestring([]string{"Not for", "tran", "sports"})
+						@frmt.MultiLinestring([]string{"Not for", "tran", "sports"})
 					</th>
 				}
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nav", "Map"})
+					@frmt.MultiLinestring([]string{"Nav", "Map"})
 				</th>
 				if tab_mode == BaseShowMissions {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Min", "Award"})
+						@frmt.MultiLinestring([]string{"Min", "Award"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Max", "Award"})
+						@frmt.MultiLinestring([]string{"Max", "Award"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Min", "Offers"})
+						@frmt.MultiLinestring([]string{"Min", "Offers"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Max", "Offers"})
+						@frmt.MultiLinestring([]string{"Max", "Offers"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Vingettes", "Offers Limit"})
+						@frmt.MultiLinestring([]string{"Vingettes", "Offers Limit"})
 					</th>
 				}
 				if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 					<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Transport</span><span>profit/v</span><span>¢/sec</span></div></th>
-					if disco.Show {
+					if shared.ShowDisco {
 						<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Frigate</span><span>profit/v</span><span>¢/sec</span></div></th>
 						<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Freighter</span><span>profit/v</span><span>¢/sec</span></div></th>
 					}
@@ -110,19 +113,19 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 					<th style="width:50px;">Zone Nickname</th>
 				}
 				<th style="width:50px;">
-					@MultiLinestring([]string{"System", "Nick."})
+					@frmt.MultiLinestring([]string{"System", "Nick."})
 				</th>
 				<th style="width:20px;">Pos X</th>
 				<th style="width:20px;">Pos Y</th>
 				<th style="width:20px;">Pos Z</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Base", "Name ID"})
+					@frmt.MultiLinestring([]string{"Base", "Name ID"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Infocard", "ID"})
+					@frmt.MultiLinestring([]string{"Infocard", "ID"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Rech", "able"})
+					@frmt.MultiLinestring([]string{"Rech", "able"})
 				</th>
 				if tab_mode != BaseTabOres {
 					@HashTh("Base nick")
@@ -135,28 +138,28 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, d
 		</thead>
 		<tbody>
 			for _, base := range bases {
-				@BaseRow(base, tab_mode, pinm, disco)
+				@BaseRow(base, tab_mode, pinm, shared)
 			}
 		</tbody>
 	</table>
 }
 
-templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco types.DiscoveryIDs) {
+templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared *types.SharedData) {
 	@TrFromMain(NewTr(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm, WithTransportUnreachable(base.IsTransportUnreachable))) {
 		@PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		if tab_mode != BaseTabOres {
 			<td>
-				@WriteFactioName(base.FactionName)
+				@frmt.WriteFactioName(base.FactionName)
 			</td>
 		}
 		if tab_mode == BaseTabOres {
 			<td>{ strconv.Itoa(base.DynamicLootMin) } - { strconv.Itoa(base.DynamicLootMax) } ( { strconv.Itoa(base.DynamicLootDifficulty) } ) </td>
 		}
 		<td>
-			@WriteSystemName(base.System)
+			@frmt.WriteSystemName(base.System)
 		</td>
-		if disco.Show {
+		if shared.ShowDisco {
 			<td>
 			{ strconv.FormatBool(base.IsTransportUnreachable) }
 			</td>
@@ -172,7 +175,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 			<td
 				class="route_transport"
-				routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, disco, trades.RouteTransport) }
+				routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteTransport) }
 			>
 				if base.BestTransportRoute != nil {
 					{ fmt.Sprintf("%2.2f", base.BestTransportRoute.GetProffitPerTime() * 100) }
@@ -180,15 +183,15 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 					0
 				}
 			</td>
-			if disco.Show {
-				<td class="route_frigate" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, disco, trades.RouteFrigate) }>
+			if shared.ShowDisco {
+				<td class="route_frigate" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFrigate) }>
 					if base.BestFrigateRoute != nil {
 						{ fmt.Sprintf("%2.2f", base.BestFrigateRoute.GetProffitPerTime() * 100) }
 					} else {
 						0
 					}
 				</td>
-				<td class="route_freighter" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, disco, trades.RouteFreighter) }>
+				<td class="route_freighter" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFreighter) }>
 					if base.BestFreighterRoute != nil {
 						{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.GetProffitPerTime() * 100) }
 					} else {
@@ -198,7 +201,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 			}
 		}
 		<td>
-			@WriteRegionName(base.Region)
+			@frmt.WriteRegionName(base.Region)
 		</td>
 		if tab_mode == BaseShowMissions {
 			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
@@ -221,29 +224,29 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, disco t
 		<td>{ FormatBoolAsYesNo(base.Reachable) }</td>
 		@HashTd(base.NicknameHash)
 		@HashTd(base.SystemNicknameHash)
-		@TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, disco)
+		@TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, shared)
 	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, disco types.DiscoveryIDs) {
+templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty, shared *types.SharedData) {
 	if tab_mode == BaseShowShops {
-		@TabMenu(urls.Bases, mode, disco)
+		@tab.TabMenu(urls.Bases, mode, shared)
 	} else if tab_mode == BaseShowMissions {
-		@TabMenu(urls.Missions, mode, disco)
+		@tab.TabMenu(urls.Missions, mode, shared)
 	} else if tab_mode == BaseTabTrades {
-		@TabMenu(urls.Trades, mode, disco)
+		@tab.TabMenu(urls.Trades, mode, shared)
 	} else if tab_mode == BaseTabOres {
-		@TabMenu(urls.Asteroids, mode, disco)
+		@tab.TabMenu(urls.Asteroids, mode, shared)
 	} else if tab_mode == BaseAllRoutes {
-		@TabMenu(urls.TravelRoutes, mode, disco)
+		@tab.TabMenu(urls.TravelRoutes, mode, shared)
 	}
-	@TabContent() {
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(types.DiscoveryIDs{}) {
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(&types.SharedData{}) {
 						// Turning off this feature because it has 170+mb bug size increasig for trades.html
 						// if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 						// 	<input
@@ -256,24 +259,24 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 						// }
 					}
 					<div id="table-top-main">
-						@BasesTable(bases, tab_mode, MainMode, disco)
+						@BasesTable(bases, tab_mode, MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@BasesTable(bases, tab_mode, PinMode, disco)
+						@BasesTable(bases, tab_mode, PinMode, shared)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						if tab_mode == BaseShowShops {
 							@BaseMarketGoodsBase()
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
 						} else if tab_mode == BaseTabTrades {
-							@BaseTradesShared(disco)
+							@BaseTradesShared(shared)
 						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared(disco)
+							@BaseTradesShared(shared)
 						} else if tab_mode == BaseAllRoutes {
-							@BasesRoutesShared(disco)
+							@BasesRoutesShared(shared)
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
@@ -283,17 +286,17 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode ShowEmpty, di
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
 						} else if tab_mode == BaseTabTrades {
-							@BaseTradesShared(disco)
+							@BaseTradesShared(shared)
 						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared(disco)
+							@BaseTradesShared(shared)
 						}  else if tab_mode == BaseAllRoutes {
-							@BasesRoutesShared(disco)
+							@BasesRoutesShared(shared)
 						}
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
 	}
@@ -306,37 +309,37 @@ templ BaseMarketGoodsBase() {
 				<th style="width:200px;">Good</th>
 				<th style="width:10px;">Type</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "to sell", "to base"})
+					@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "to buy", "from base"})
+					@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Volume"})
+					@frmt.MultiLinestring([]string{"Volume"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"comm.","ship", "class"})
+					@frmt.MultiLinestring([]string{"comm.","ship", "class"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Lev.", "Req."})
+					@frmt.MultiLinestring([]string{"Lev.", "Req."})
 				</th>
 				
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Rep.", "Req."})
+					@frmt.MultiLinestring([]string{"Rep.", "Req."})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Base", "Sells"})
+					@frmt.MultiLinestring([]string{"Base", "Sells"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "Modifier"})
+					@frmt.MultiLinestring([]string{"Price", "Modifier"})
 				</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Price", "Base"})
+					@frmt.MultiLinestring([]string{"Price", "Base"})
 				</th>
 				<th style="width:10px;">Nickname</th>
 				<th style="width:10px;">HpType</th>
 				<th style="width:10px;">
-					@MultiLinestring([]string{"Server", "Override"})
+					@frmt.MultiLinestring([]string{"Server", "Override"})
 				</th>
 				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
@@ -349,10 +352,10 @@ templ BaseMarketGoodsBase() {
 }
 
 templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs_export.MarketGood, tab_mode BaseMode) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMarketGoodsBase() {
-		for _, good := range SortedMarketGoods(goods) {
+		for _, good := range frmt.SortedMarketGoods(goods) {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(good.Infocard) }
 				hx-trigger="click"
@@ -362,12 +365,12 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteLimit(200) {
-						{ good.Name + FormattedShipClassOfCommodity(good.ShipClass) }
+					@frmt.WriteLimit(200) {
+						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
 					}
 				</td>
 				<td>
-					@WriteGoodType(string(good.Type))
+					@frmt.WriteGoodType(string(good.Type))
 				</td>
 				<td>
 					if good.PriceToSell != nil {
@@ -376,14 +379,14 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 				</td>
 				<td>{ strconv.Itoa(good.PriceToBuy) }</td>
 				<td>{ fmt.Sprintf("%.0f", good.Volume) }</td>
-				<td>{ FormattedShipClassOfCommodity2(good.ShipClass) }</td>
+				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
-				<td>{ FormatBaseSells(good.BaseSells) }</td>
+				<td>{ frmt.FormatBaseSells(good.BaseSells) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
 				<td>{ strconv.Itoa(good.PriceBase) }</td>
 				<td>
-					@WriteLimit(200) {
+					@frmt.WriteLimit(200) {
 						{ good.Nickname }
 					}
 				</td>
@@ -402,17 +405,17 @@ templ BaseMissionsBase() {
 			<tr class="flexed-tr">
 				<th style="width:165px;">Faction</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Min", "Difficulty"})
+					@frmt.MultiLinestring([]string{"Min", "Difficulty"})
 				</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Max", "Difficulty"})
+					@frmt.MultiLinestring([]string{"Max", "Difficulty"})
 				</th>
 				<th style="width:25px;">Chance</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Min", "Money", "Award"})
+					@frmt.MultiLinestring([]string{"Min", "Money", "Award"})
 				</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Max", "Money", "Award"})
+					@frmt.MultiLinestring([]string{"Max", "Money", "Award"})
 				</th>
 				<th style="width:25px;">NpcRanks</th>
 				<th style="width:25px;">Enemies: Faction Name ( Faction Nickname, NPcs exist for NpcRanks)</th>
@@ -429,7 +432,7 @@ templ BaseMissionsBase() {
 }
 
 templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_mode BaseMode) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMissionsBase() {
 		for _, msn_giver := range mission_givers.Factions {
@@ -442,7 +445,7 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteFactioName(msn_giver.FactionName)
+					@frmt.WriteFactioName(msn_giver.FactionName)
 				</td>
 				<td>{ fmt.Sprintf("%2.2f", msn_giver.MinDifficulty) }</td>
 				<td>{ fmt.Sprintf("%2.2f", msn_giver.MaxDifficulty) }</td>
@@ -485,56 +488,48 @@ templ PrintEnemies(enemies []configs_export.EnemyFaction) {
 	}
 }
 
-templ MultiLinestring(lines []string) {
-	<div class="vertical_th">
-		for _, line := range lines {
-			<span>{ line }</span>
-		}
-	</div>
-}
-
-templ BaseTradesShared(disco types.DiscoveryIDs) {
+templ BaseTradesShared(shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:200px;">Commodity</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
+					@frmt.MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
 				</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
+						@frmt.MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
+						@frmt.MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
 					</th>
 				}
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Transport", "Time(sec)"})
+					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Frigate", "Time(sec)"})
+						@frmt.MultiLinestring([]string{"Frigate", "Time(sec)"})
 					</th>
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Freighter", "Time(sec)"})
+						@frmt.MultiLinestring([]string{"Freighter", "Time(sec)"})
 					</th>
 				}
 				<th style="width:50px;">Profit/v</th>
 				<th style="width:5px;">Vol.</th>
-				<th style="width:5px;">@MultiLinestring([]string{"Ship", "cl."})</th>
+				<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "cl."})</th>
 				<th style="width:100px;">System</th>
 				<th style="width:25px;">
-					@MultiLinestring([]string{"Nav", "Map"})
+					@frmt.MultiLinestring([]string{"Nav", "Map"})
 				</th>
 				<th style="width:100px;">Dest. Faction</th>
 				<th style="width:100px;">Dest. Name</th>
 				<th style="width:100px;">Dest. Region</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Price", "to buy", "from base"})
+					@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
 				</th>
 				<th style="width:50px;">
-					@MultiLinestring([]string{"Price", "to sell", "to base"})
+					@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
 				</th>
 				<th style="width:50px;">Commodity Nick</th>
 				<th style="width:50px;">Dest. Nickname</th>
@@ -570,7 +565,7 @@ func (r RoundedFloat) MarshalJSON() ([]byte, error) {
 }
 
 
-func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, disco types.DiscoveryIDs, route_type trades.RouteShipType) string {
+func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, shared *types.SharedData, route_type trades.RouteShipType) string {
 	return "" // turning on this feature because it is bugged
 
 	var result []Path
@@ -597,10 +592,10 @@ func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, disco types.
 	return string(bytes)
 }
 
-templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, tab_mode BaseMode, disco types.DiscoveryIDs) {
-	@BottomFilterBar()
+templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, tab_mode BaseMode, shared *types.SharedData) {
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
-	@BaseTradesShared(disco) {
+	@BaseTradesShared(shared) {
 		for _, trade_route := range trade_routes.TradeRoutes {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
@@ -611,12 +606,12 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@WriteLimit(200) {
-						{ trade_route.Transport.Commodity.Name + FormattedShipClassOfCommodity(trade_route.Transport.Commodity.ShipClass) }
+					@frmt.WriteLimit(200) {
+						{ trade_route.Transport.Commodity.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.Commodity.ShipClass) }
 					}
 				</td>
 				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
-				if disco.Show {
+				if shared.ShowDisco {
 					<td class="route_frigate" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
 					<td class="route_freighter" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
 				}
@@ -632,7 +627,7 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 						</span>
 					</span>
 				</td>
-				if disco.Show {
+				if shared.ShowDisco {
 					<td>
 						<span class="tooltip">
 							@TradeRouteHumanTime(trade_route.Frigate.Route)
@@ -660,25 +655,25 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 				}
 				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.Commodity.Volume) }</td>
-				<td>{ FormattedShipClassOfCommodity2(trade_route.Transport.Commodity.ShipClass) }</td>
+				<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.Commodity.ShipClass) }</td>
 				<td>
-					@WriteSystemName(trade_route.Transport.SellingGood.SystemName)
+					@frmt.WriteSystemName(trade_route.Transport.SellingGood.SystemName)
 				</td>
 				<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
 				<td>
-					@WriteFactioName(trade_route.Transport.SellingGood.FactionName)
+					@frmt.WriteFactioName(trade_route.Transport.SellingGood.FactionName)
 				</td>
 				<td>
-					@WriteBaseName(trade_route.Transport.SellingGood.BaseName)
+					@frmt.WriteBaseName(trade_route.Transport.SellingGood.BaseName)
 				</td>
 				<td>
-					@WriteRegionName(trade_route.Transport.SellingGood.Region)
+					@frmt.WriteRegionName(trade_route.Transport.SellingGood.Region)
 				</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>
 				<td>{ trade_route.Transport.Commodity.Nickname }</td>
 				<td>
-					@WriteLimit(100) {
+					@frmt.WriteLimit(100) {
 						{ trade_route.Transport.SellingGood.BaseNickname.ToStr() }
 					}
 				</td>
@@ -702,8 +697,8 @@ templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, ta
 	}
 }
 
-templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs_export.Route, FreighterRoute *configs_export.Route, disco types.DiscoveryIDs) {
-	@InfocardShared() {
+templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs_export.Route, FreighterRoute *configs_export.Route, shared *types.SharedData) {
+	@tab.InfocardShared() {
 		<style>
 			.infocard p {
 				font-size: 1.0em;
@@ -714,17 +709,17 @@ templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs
 		<p>{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
 		<p>{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>
 		<br/>
-		@RouteInfo("Transport", TransportRoute, disco)
-		if disco.Show {
+		@RouteInfo("Transport", TransportRoute, shared)
+		if shared.ShowDisco {
 			<br/>
-			@RouteInfo("Frigate", FrigateRoute, disco)
+			@RouteInfo("Frigate", FrigateRoute, shared)
 			<br/>
-			@RouteInfo("Freighter", FreighterRoute, disco)
+			@RouteInfo("Freighter", FreighterRoute, shared)
 		}
 	}
 }
 
-templ RouteInfo(name string, route *configs_export.Route, disco types.DiscoveryIDs) {
+templ RouteInfo(name string, route *configs_export.Route, shared *types.SharedData) {
 	<p>{ name } Route:</p>
 	<p>{ ">" } Avg Cruise Speed: { strconv.Itoa(route.GetCruiseSpeed()) }</p>
 	<p>{ ">" } Visit Freighter Only JHs: { strconv.FormatBool(route.GetCanVisitFreighterOnlyJH()) }</p>
@@ -732,7 +727,7 @@ templ RouteInfo(name string, route *configs_export.Route, disco types.DiscoveryI
 		if path.NextName != "" {
 			if path.Dist != 0 {
 				<p>
-				@TooltipDestination(path.Pos, disco)
+				@TooltipDestination(path.Pos, shared)
 				{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) [ { path.SectorCoord }] - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s
 				</p>
 			}
@@ -740,11 +735,11 @@ templ RouteInfo(name string, route *configs_export.Route, disco types.DiscoveryI
 	}
 }
 
-templ TooltipDestination(Pos cfgtype.Vector, disco types.DiscoveryIDs) {
+templ TooltipDestination(Pos cfgtype.Vector, shared *types.SharedData) {
 	<span class="tooltip">
-		@MagnifyingGlass()
+		@frmt.MagnifyingGlass()
 		<span class="tooltiptext" style="left: 0px; top: 30px;">
-			if disco.Show {
+			if shared.ShowDisco {
 				{ fmt.Sprintf("/wp %.0f %.0f %.0f",Pos.X,Pos.Y,Pos.Z) } <br/>
 				command to create waypoint
 			} else {
@@ -755,6 +750,3 @@ templ TooltipDestination(Pos cfgtype.Vector, disco types.DiscoveryIDs) {
 	</span>
 }
 
-templ MagnifyingGlass() {
-	<span class="magni_glass">&#x1F50D;</span>
-}

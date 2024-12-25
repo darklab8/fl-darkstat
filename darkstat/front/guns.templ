@@ -6,6 +6,9 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -94,7 +97,7 @@ func GetBurstParams(gun configs_export.Gun) []string {
 	return []string{burst_ammo, fmt.Sprintf("(%.2f)", gun.BurstFire.ReloadTime)}
 }
 
-templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
+templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -103,75 +106,95 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 					<th style="width:50px;">Select</th>
 					<th style="width:50px;">Select</th>
 				}
-				@ThDisco(disco)
+				@disco.ThDisco(shared)
 				<th style="width:5px;">Class</th>
 				<th style="width:5px;">Type</th>
 				<th style="width:5px;">Price</th>
 				<th style="width:5px;">Buyable</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Hull", "dmg"})
+					@frmt.MultiLinestring([]string{"Hull", "dmg"})
 				</th>
 				<th style="width:5px;">
-					@Tooltip("(Hull Dmg * HullDmgFactor + Energy Dmg) * Avg Shield Dmg Modifier") {
-						@MultiLinestring([]string{"Avg", "Shield", "Dmg"})
+					@frmt.Tooltip("(Hull Dmg * HullDmgFactor + Energy Dmg) * Avg Shield Dmg Modifier") {
+						@frmt.MultiLinestring([]string{"Avg", "Shield", "Dmg"})
 					}
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Energy", "Dmg"})
+					@frmt.MultiLinestring([]string{"Energy", "Dmg"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Power", "Usage"})
+					@frmt.MultiLinestring([]string{"Power", "Usage"})
 				</th>
+				
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Refire", "(+Burst.)"})
+					if shared.ShowDisco {
+						@frmt.MultiLinestring([]string{"Refire", "(+Burst.)"})
+					} else {
+						@frmt.MultiLinestring([]string{"Refire"})
+					}
 				</th>
-				if disco.Show {
+				if shared.ShowDisco {
 					<th style="width:5px;">
-						@MultiLinestring([]string{"Burst", "Ammo","[barre.]" ,"(relo.)"})
+						@frmt.MultiLinestring([]string{"Burst", "Ammo","[barre.]" ,"(relo.)"})
 					</th>
 					<th style="width:5px;">
-							@MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+							@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
 					</th>
 					<th style="width:5px;">
-							@MultiLinestring([]string{"Armor", "Pen.",})
+							@frmt.MultiLinestring([]string{"Armor", "Pen.",})
 					</th>
 				}
 				if mode == GunsMissiles {
 					<th style="width:50px;">
-						@MultiLinestring([]string{"Max", "Angular", "Velocity"})
+						@frmt.MultiLinestring([]string{"Max", "Angular", "Velocity"})
 					</th>
 				}
-				<th style="width:5px;">
-					@MultiLinestring([]string{"Hull", "Dmg/s", "(+Burst.)"})
-				</th>
-				<th style="width:5px;">
-					@MultiLinestring([]string{"Avg", "Sheld", "Dmg/s", "(+Burst.)"})
-				</th>
-				<th style="width:5px;">
-					@MultiLinestring([]string{"Energy", "Dmg/s", "(+Burst.)"})
-				</th>
-				<th style="width:5px;">
-					@MultiLinestring([]string{"Power/s", "(+Burst.)"})
-				</th>
+				if shared.ShowDisco {
+					<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"Hull", "Dmg/s", "(+Burst.)"})		
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Avg", "Sheld", "Dmg/s", "(+Burst.)"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Energy", "Dmg/s", "(+Burst.)"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Power/s", "(+Burst.)"})
+					</th>
+				} else {
+					<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"Hull", "Dmg/s"})		
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Avg", "Sheld", "Dmg/s"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Energy", "Dmg/s"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Power/s"})
+					</th>
+				}
 				<th style="width:5px;">Range</th>
 				<th style="width:5px;">Speed</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Avg", "Effic."})
+					@frmt.MultiLinestring([]string{"Avg", "Effic."})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Anti", "Hull", "Effic."})
+					@frmt.MultiLinestring([]string{"Anti", "Hull", "Effic."})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Anti", "Shield", "Effic."})
+					@frmt.MultiLinestring([]string{"Anti", "Shield", "Effic."})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Anti", "Energy", "Effic."})
+					@frmt.MultiLinestring([]string{"Anti", "Energy", "Effic."})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Gun", "Turn", "Rate"})
+					@frmt.MultiLinestring([]string{"Gun", "Turn", "Rate"})
 				</th>
 				<th style="width:5px;">
-					@MultiLinestring([]string{"Dispe", "rsion", "angle"})
+					@frmt.MultiLinestring([]string{"Dispe", "rsion", "angle"})
 				</th>
 				<th style="width:5px;">Volume</th>
 				<th style="width:5px;">Hit Pts</th>
@@ -194,17 +217,17 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, disco ty
 		</thead>
 		<tbody>
 			for _, gun := range guns {
-				@GunRow(gun, mode, pinm, disco, infocards, false)
+				@GunRow(gun, mode, pinm, shared, infocards, false)
 			}
 		</tbody>
 	</table>
 }
 
-templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.DiscoveryIDs, infocards configs_export.Infocards, prerender bool) {
+templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
 	@TrFromMainTb2(NewTr(gun.Nickname, GunDetailedUrl(gun, mode), pinm), prerender) {
 		@PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
 		@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
-		@TdDiscoTarget(disco, GetTdDiscoCacheKey(disco, gun.Nickname))
+		@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, gun.Nickname))
 		<td>{ gun.Class }</td>
 		<td>{ gun.Type }</td>
 		<td>{ strconv.Itoa(gun.Price) } </td>
@@ -216,29 +239,29 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		<td>{ strconv.Itoa(gun.EnergyDamage) }</td>
 		<td>{ fmt.Sprintf("%.1f", gun.PowerUsage) }</td>
 		<td>
-			@MultiLinestring(GetRefire(gun))
+			@frmt.MultiLinestring(GetRefire(gun))
 		</td>
-		if disco.Show {
+		if shared.ShowDisco {
 			<td>
-				@MultiLinestring(GetBurstParams(gun))
+				@frmt.MultiLinestring(GetBurstParams(gun))
 			</td>
-			<td>{ GetAmmoLimitFormatted(gun.AmmoLimit) }</td>
+			<td>{ frmt.GetAmmoLimitFormatted(gun.AmmoLimit) }</td>
 			<td>{ fmt.Sprintf("%.0f", gun.DiscoGun.ArmorPen) }</td>
 		}
 		if mode == GunsMissiles {
 			<td>{ fmt.Sprintf("%.4f", gun.Missile.MaxAngularVelocity) }</td>
 		}
 		<td>
-			@MultiLinestring(GetHullPerSec(gun))
+			@frmt.MultiLinestring(GetHullPerSec(gun))
 		</td>
 		<td>
-			@MultiLinestring(GetShieldPerSec(gun))
+			@frmt.MultiLinestring(GetShieldPerSec(gun))
 		</td>
 		<td>
-			@MultiLinestring(GetEnergyPerSec(gun))
+			@frmt.MultiLinestring(GetEnergyPerSec(gun))
 		</td>
 		<td>
-			@MultiLinestring(GetPowerPerSec(gun))
+			@frmt.MultiLinestring(GetPowerPerSec(gun))
 		</td>
 		<td>{ fmt.Sprintf("%.0f", gun.Range) }</td>
 		<td>{ fmt.Sprintf("%.0f", gun.Speed) }</td>
@@ -266,54 +289,54 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, disco types.D
 		@HashTd(gun.NicknameHash)
 		@HashTd(gun.MunitionHash)
 		@HashTd(gun.HpTypeHash)
-		@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, disco)
+		@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, shared)
 	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 ShowEmpty, disco types.DiscoveryIDs, infocards configs_export.Infocards) {
+templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards configs_export.Infocards) {
 	if mode == GunsShowBases {
-		@TabMenu(urls.Guns, mode2, disco)
+		@tab.TabMenu(urls.Guns, mode2, shared)
 	} else if mode == GunsShowDamageBonuses {
-		@TabMenu(urls.GunModifiers, mode2, disco)
+		@tab.TabMenu(urls.GunModifiers, mode2, shared)
 	} else if mode == GunsMissiles {
-		@TabMenu(urls.Missiles, mode2, disco)
+		@tab.TabMenu(urls.Missiles, mode2, shared)
 	}
-	@TabContent() {
+	@tab.TabContent() {
 		<div class="splitter">
-			@LeftTable(){
-				@TableTop(){
-					@FilterBar(disco)
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@GunTable(guns, mode, MainMode, disco, infocards)
+						@GunTable(guns, mode, MainMode, shared, infocards)
 					</div>
 					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@GunTable([]configs_export.Gun{}, mode, PinMode, disco, infocards)
+						@GunTable([]configs_export.Gun{}, mode, PinMode, shared, infocards)
 					</div>
 				}
-				@TableBottom(){
+				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						if mode == GunsShowBases || mode == GunsMissiles {
-							@GoodAtBaseSharedT(ShowAsCommodity(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 						} else {
 							@GunShowModifiersShared()
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
 						if mode == GunsShowBases || mode == GunsMissiles {
-							@GoodAtBaseSharedT(ShowAsCommodity(false))
+							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 						} else {
 							@GunShowModifiersShared()
 						}
 					</div>
 				}
 			}
-			@InfocardTable(){
-				@InfocardShared()
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
 			}
 		</div>
-		@CacheTechCompatTable(disco, utils.CompL(guns, func(x configs_export.Gun) Item { return x }))
+		@disco.CacheTechCompatTable(shared, utils.CompL(guns, func(x configs_export.Gun) disco.Item { return x }))
 	}
 }
 
@@ -326,7 +349,7 @@ templ GunShowModifiersShared() {
 				<th style="width:100px;">Damage Modifier</th>
 				<th style="width:100px;">Shield Dmg</th>
 				<th style="width:100px;">
-					@MultiLinestring([]string{"Moded", "Shield Dmg"})
+					@frmt.MultiLinestring([]string{"Moded", "Shield Dmg"})
 				</th>
 				<th style="max-width:100%;"></th>
 			</tr>
@@ -338,7 +361,7 @@ templ GunShowModifiersShared() {
 }
 
 templ GunShowModifiers(gun configs_export.Gun) {
-	@BottomFilterBar()
+	@tab.BottomFilterBar()
 	<div class="bottom_name">{ gun.Name }</div>
 	@GunShowModifiersShared() {
 		for _, bonus := range gun.DamageBonuses {
