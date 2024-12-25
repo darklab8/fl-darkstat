@@ -3,7 +3,6 @@ package router
 import (
 	"sort"
 
-	"github.com/a-h/templ"
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
@@ -25,35 +24,26 @@ func (l *Router) LinkShips(
 		return data.Ships[i].Name < data.Ships[j].Name
 	})
 
-	router := NewTabRouter(build, data.Ships, data.FilterToUsefulShips)
-	router.Register(urls.Ships,
-		func(items []configs_export.Ship, show_empty tab.ShowEmpty) templ.Component {
-			return front.ShipsT(items, front.ShipShowBases, show_empty, shared, data.Infocards)
-		})
-	router.Register(urls.ShipDetails,
-		func(items []configs_export.Ship, show_empty tab.ShowEmpty) templ.Component {
-			return front.ShipsT(items, front.ShipShowDetails, show_empty, shared, data.Infocards)
-		})
+	var useful_ships []configs_export.Ship = data.FilterToUsefulShips(data.Ships)
 
-	// deprecating stufff
-	// build.RegComps(
-	// 	builder.NewComponent(
-	// 		urls.Ships,
-	// 		front.ShipsT(useful_ships, front.ShipShowBases, tab.ShowEmpty(false), shared, data.Infocards),
-	// 	),
-	// 	builder.NewComponent(
-	// 		tab.AllItemsUrl(urls.Ships),
-	// 		front.ShipsT(data.Ships, front.ShipShowBases, tab.ShowEmpty(true), shared, data.Infocards),
-	// 	),
-	// 	builder.NewComponent(
-	// 		urls.ShipDetails,
-	// 		front.ShipsT(useful_ships, front.ShipShowDetails, tab.ShowEmpty(false), shared, data.Infocards),
-	// 	),
-	// 	builder.NewComponent(
-	// 		tab.AllItemsUrl(urls.ShipDetails),
-	// 		front.ShipsT(data.Ships, front.ShipShowDetails, tab.ShowEmpty(true), shared, data.Infocards),
-	// 	),
-	// )
+	build.RegComps(
+		builder.NewComponent(
+			urls.Ships,
+			front.ShipsT(useful_ships, front.ShipShowBases, tab.ShowEmpty(false), shared, data.Infocards),
+		),
+		builder.NewComponent(
+			tab.AllItemsUrl(urls.Ships),
+			front.ShipsT(data.Ships, front.ShipShowBases, tab.ShowEmpty(true), shared, data.Infocards),
+		),
+		builder.NewComponent(
+			urls.ShipDetails,
+			front.ShipsT(useful_ships, front.ShipShowDetails, tab.ShowEmpty(false), shared, data.Infocards),
+		),
+		builder.NewComponent(
+			tab.AllItemsUrl(urls.ShipDetails),
+			front.ShipsT(data.Ships, front.ShipShowDetails, tab.ShowEmpty(true), shared, data.Infocards),
+		),
+	)
 
 	for _, ship := range data.Ships {
 		build.RegComps(
@@ -72,6 +62,19 @@ func (l *Router) LinkShips(
 			builder.NewComponent(
 				utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowDetails)),
 				front.ShipRow(ship, front.ShipShowDetails, front.PinMode, shared, data.Infocards, true),
+			),
+		)
+	}
+
+	for _, missile := range data.Missiles {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.GunDetailedUrl(missile, front.GunsMissiles)),
+				front.GoodAtBaseInfoT(missile.Name, missile.Bases, front.ShowAsCommodity(false), shared),
+			),
+			builder.NewComponent(
+				utils_types.FilePath(front.GunPinnedRowUrl(missile, front.GunsMissiles)),
+				front.GunRow(missile, front.GunsMissiles, front.PinMode, shared, data.Infocards, true),
 			),
 		)
 	}
