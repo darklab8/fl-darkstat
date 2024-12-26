@@ -109,6 +109,13 @@ func (l *Router) Link() *builder.Builder {
 	var shared *types.SharedData = &types.SharedData{}
 
 	timeit.NewTimerMF("filtering to useful stuff", func() {
+		if l.mapped.FLSR != nil {
+			shared = &types.SharedData{
+				FLSRData: types.FLSRData{
+					ShowFLSR: true,
+				},
+			}
+		}
 
 		if l.mapped.Discovery != nil {
 			shared = &types.SharedData{
@@ -125,6 +132,8 @@ func (l *Router) Link() *builder.Builder {
 		fmt.Println("attempting to access l.configs.Infocards")
 		shared.Infocards = l.configs.Infocards
 	})
+
+	shared.CraftableBaseName = l.configs.CraftableBaseName()
 
 	timeit.NewTimerMF("linking main stuff", func() {
 

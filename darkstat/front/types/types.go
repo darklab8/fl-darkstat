@@ -47,6 +47,7 @@ func GetCtx(ctx context.Context) *GlobalParams {
 }
 
 type FLSRData struct {
+	ShowFLSR bool
 }
 
 type DiscoveryData struct {
@@ -64,4 +65,5 @@ type DiscoveryData struct {
 type SharedData struct {
 	DiscoveryData
 	FLSRData
+	CraftableBaseName string
 }
