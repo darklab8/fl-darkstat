@@ -37,6 +37,9 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 					@frmt.MultiLinestring([]string{"Best sell ", "per vol", "to base"})
 				</th>
 				<th style="width:25px;">Volume</th>
+				if shared.ShowFLSR {
+					<th style="width:5px;">Mass</th>
+				}
 				if shared.ShowDisco {
 					<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "Class"})</th>
 				}
@@ -61,6 +64,9 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseSellsFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseBuysFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.2f", commodity.Volume) }</td>
+					if shared.ShowFLSR {
+						<td>{ fmt.Sprintf("%.2f", commodity.Mass) }</td>
+					}
 					if shared.ShowDisco {
 						<td>{ frmt.FormattedShipClassOfCommodity2(commodity.ShipClass) }</td>
 					}
