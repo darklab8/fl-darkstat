@@ -37,7 +37,9 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 					@frmt.MultiLinestring([]string{"Best sell ", "per vol", "to base"})
 				</th>
 				<th style="width:25px;">Volume</th>
-				<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "Class"})</th>
+				if shared.ShowDisco {
+					<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "Class"})</th>
+				}
 				<th style="width:25px;">Profit</th>
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Profit", "per v. "})
@@ -59,7 +61,9 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseSellsFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseBuysFor, commodity.Volume)) }</td>
 					<td>{ fmt.Sprintf("%.2f", commodity.Volume) }</td>
-					<td>{ frmt.FormattedShipClassOfCommodity2(commodity.ShipClass) }</td>
+					if shared.ShowDisco {
+						<td>{ frmt.FormattedShipClassOfCommodity2(commodity.ShipClass) }</td>
+					}
 					<td>{ strconv.Itoa(commodity.ProffitMargin) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.ProffitMargin, commodity.Volume)) }</td>
 					<td class="seo">{ commodity.Nickname }</td>
