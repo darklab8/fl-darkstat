@@ -39,6 +39,7 @@ func (l *Router) LinkFactions(
 	}
 
 	var useful_factions []configs_export.Faction = configs_export.FilterToUsefulFactions(data.Factions)
+	var useful_bribes []configs_export.Faction = configs_export.FilterToUsefulBribes(data.Factions)
 
 	build.RegComps(
 		builder.NewComponent(
@@ -51,7 +52,7 @@ func (l *Router) LinkFactions(
 		),
 		builder.NewComponent(
 			urls.Rephacks,
-			front.FactionsT(useful_factions, front.FactionShowRephacks, tab.ShowEmpty(false), shared),
+			front.FactionsT(useful_bribes, front.FactionShowRephacks, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Rephacks),
