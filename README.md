@@ -9,6 +9,8 @@ See demos:
 - [development version](https://darklab8.github.io/fl-darkstat/)
 - [Freelancer Discovery version](https://darklab8.github.io/fl-data-discovery/) [(action)](<https://github.com/darklab8/fl-data-discovery/actions/workflows/publish.yaml>)
 - [Freelancer Vanilla version](https://darklab8.github.io/fl-data-vanilla/) [(action)](<https://github.com/darklab8/fl-data-vanilla/actions/workflows/publish.yaml>)
+- [Freelancer Sirius Revival](https://darklab8.github.io/fl-data-flsr/) [(action)](<https://github.com/darklab8/fl-data-flsr/actions/workflows/publish.yaml>)
+
 
 # Support
 
