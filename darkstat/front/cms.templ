@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
+	"fmt"
 )
 
 func CounterMeasreDetailedUrl(cm configs_export.CounterMeasure) string {
@@ -27,6 +28,9 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared *types.Sh
 				@disco.ThDisco(shared)
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
+				if shared.ShowFLSR {
+					<th style="width:5px;">Mass</th>
+				}
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Diversion", "Chance"})
 				</th>
@@ -57,6 +61,9 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared *types.Sh
 					@disco.TdDisco(shared, cm.Nickname, cm.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(cm.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(cm.Bases)) }</td>
+					if shared.ShowFLSR {
+						<td>{ fmt.Sprintf("%.2f", cm.Mass) }</td>
+					}
 					<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
 					<td>{ frmt.GetAmmoLimitFormatted(cm.AmmoLimit) }</td>
 					<td>{ strconv.Itoa(cm.Lifetime) }</td>

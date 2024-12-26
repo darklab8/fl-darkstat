@@ -27,6 +27,9 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared *types.SharedDa
 				// @ThDisco(shared) // techcompat is not active for ammo
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
+				if shared.ShowFLSR {
+					<th style="width:5px;">Mass</th>
+				}
 				<th style="width:25px;">Hit Pts</th>
 				<th style="width:5px;">
 					if shared.ShowDisco {
@@ -63,6 +66,9 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared *types.SharedDa
 					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					<td>{ strconv.Itoa(ammo.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(ammo.Bases)) }</td>
+					if shared.ShowFLSR {
+						<td>{ fmt.Sprintf("%.2f", ammo.Mass) }</td>
+					}
 					<td>{ strconv.Itoa(ammo.HitPts) } </td>
 					<td>{ frmt.GetAmmoLimitFormatted(ammo.AmmoLimit) }</td>
 					<td>{ fmt.Sprintf("%.4f",ammo.Volume) }</td>

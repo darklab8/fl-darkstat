@@ -28,6 +28,9 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, shared *t
 				}
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
+				if shared.ShowFLSR {
+					<th style="width:5px;">Mass</th>
+				}
 				<th style="width:25px;">Max Force</th>
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Power", "Usage"})
@@ -52,6 +55,9 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, shared *t
 					@disco.TdDisco(shared, thruster.Nickname, thruster.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(thruster.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(thruster.Bases)) }</td>
+					if shared.ShowFLSR {
+						<td>{ fmt.Sprintf("%.2f", thruster.Mass) }</td>
+					}
 					<td>{ strconv.Itoa(thruster.MaxForce) } </td>
 					<td>{ strconv.Itoa(thruster.PowerUsage) }</td>
 					<td>{ fmt.Sprintf("%.2f",thruster.Efficiency) }</td>

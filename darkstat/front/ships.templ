@@ -57,6 +57,9 @@ templ ShipTable(
 				<th style="width:25px;">Type</th>
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
+				if shared.ShowFLSR {
+					<th style="width:5px;">Mass</th>
+				}
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Cruise", "Speed"})
 				</th>
@@ -143,6 +146,9 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, shared *t
 		<td class="seo">{ ship.Type }</td>
 		<td>{ strconv.Itoa(ship.Price) }</td>
 		<td>{ FormatBoolAsYesNo(configs_export.Buyable(ship.Bases)) }</td>
+		if shared.ShowFLSR {
+			<td>{ fmt.Sprintf("%.2f", ship.Mass) }</td>
+		}
 		<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
 		<td>{ fmt.Sprintf("%.0f",ship.ImpulseSpeed) }</td>
 		<td>{ thruster_speeds_to_str(ship.ThrusterSpeed) }</td>

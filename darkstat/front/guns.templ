@@ -111,6 +111,9 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, shared *
 				<th style="width:5px;">Type</th>
 				<th style="width:5px;">Price</th>
 				<th style="width:5px;">Buyable</th>
+				if shared.ShowFLSR {
+					<th style="width:5px;">Mass</th>
+				}
 				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Hull", "dmg"})
 				</th>
@@ -232,6 +235,9 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, shared *types
 		<td>{ gun.Type }</td>
 		<td>{ strconv.Itoa(gun.Price) } </td>
 		<td>{ FormatBoolAsYesNo(configs_export.Buyable(gun.Bases)) }</td>
+		if shared.ShowFLSR {
+			<td>{ fmt.Sprintf("%.2f", gun.Mass) }</td>
+		}
 		<td>{ strconv.Itoa(gun.HullDamage) }</td>
 		<td>
 			{ strconv.Itoa(gun.AvgShieldDamage) }

@@ -29,9 +29,12 @@ const (
 	TractorIDRephacks
 )
 
-templ TractorHeaders() {
+templ TractorHeaders(shared *types.SharedData) {
 	<th style="width:25px;">Price</th>
 	<th style="width:25px;">Buyable</th>
+	if shared.ShowFLSR {
+		<th style="width:5px;">Mass</th>
+	}
 	<th style="width:25px;">
 		@frmt.MultiLinestring([]string{"Max", "Length"})
 	</th>
@@ -46,9 +49,12 @@ templ TractorHeaders() {
 	<th style="max-width:100%;"></th>
 }
 
-templ TractorValues(tractor configs_export.Tractor) {
+templ TractorValues(tractor configs_export.Tractor, shared *types.SharedData) {
 	<td>{ strconv.Itoa(tractor.Price) } </td>
 	<td>{ FormatBoolAsYesNo(configs_export.Buyable(tractor.Bases)) }</td>
+	if shared.ShowFLSR {
+		<td>{ fmt.Sprintf("%.2f", tractor.Mass) }</td>
+	}
 	<td>{ strconv.Itoa(tractor.MaxLength) } </td>
 	<td>{ strconv.Itoa(tractor.ReachSpeed) }</td>
 	<td>{ strconv.FormatBool(tractor.Lootable) }</td>
@@ -76,14 +82,14 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode
 							<thead>
 								<tr>
 									<th style="width:200px;">Tractor</th>
-									@TractorHeaders()
+									@TractorHeaders(shared)
 								</tr>
 							</thead>
 							<tbody>
 								for _, tractor := range tractors {
 									@TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor, tab_mode), "") {
 										<td class="seo">{ tractor.Name }</td>
-										@TractorValues(tractor)
+										@TractorValues(tractor, shared)
 										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "", shared)
 									}
 								}
