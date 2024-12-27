@@ -178,7 +178,12 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
                         <li>Use found HpType in searching bar of relevant tabs to find all compatible items, just insert it into search bar</li>
                     </ul>
                 </li>
-                <li>IDs/Tractors - Tractors in vanilla, IDs in Discovery Freelancer containing rules. Note, the server side overrides from public configs are applied for showing</li>
+                <li>
+                    IDs/Tractors - Tractors in vanilla 
+                    if shared.ShowDisco {
+                        , IDs in Discovery Freelancer containing rules. Note, the server side overrides from public configs are applied for showing
+                    }
+                </li>
                 if shared.ShowDisco {
                     <li>ID Rep hacks - Reputation conditions applied to Discover Freelancer character when equipped with specific ID. Exactly this reputation u get after <strong>represet</strong> command</li>
                 }
