@@ -106,27 +106,25 @@ func (l *Router) Link() *builder.Builder {
 	var data *configs_export.Exporter
 	timeit.NewTimerMF("exporting data", func() { data = l.configs.Export() })
 
-	var shared *types.SharedData = &types.SharedData{}
+	var shared *types.SharedData = &types.SharedData{
+		Mapped: l.mapped,
+	}
 
 	timeit.NewTimerMF("filtering to useful stuff", func() {
 		if l.mapped.FLSR != nil {
-			shared = &types.SharedData{
-				FLSRData: types.FLSRData{
-					ShowFLSR: true,
-				},
+			shared.FLSRData = types.FLSRData{
+				ShowFLSR: true,
 			}
 		}
 
 		if l.mapped.Discovery != nil {
-			shared = &types.SharedData{
-				DiscoveryData: types.DiscoveryData{
-					ShowDisco:         true,
-					Ids:               l.configs.Tractors,
-					TractorsByID:      l.configs.TractorsByID,
-					Config:            l.mapped.Discovery.Techcompat,
-					LatestPatch:       l.mapped.Discovery.LatestPatch,
-					OrderedTechcompat: *configs_export.NewOrderedTechCompat(l.configs),
-				},
+			shared.DiscoveryData = types.DiscoveryData{
+				ShowDisco:         true,
+				Ids:               l.configs.Tractors,
+				TractorsByID:      l.configs.TractorsByID,
+				Config:            l.mapped.Discovery.Techcompat,
+				LatestPatch:       l.mapped.Discovery.LatestPatch,
+				OrderedTechcompat: *configs_export.NewOrderedTechCompat(l.configs),
 			}
 		}
 		fmt.Println("attempting to access l.configs.Infocards")
