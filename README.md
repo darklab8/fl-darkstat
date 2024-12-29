@@ -72,8 +72,8 @@ If u have problems with configuring development environment, then seek my contac
 
 # Usage locally
 
-- build latest [according to instruction](<https://github.com/darklab8/fl-darkstat/blob/550b40a49ec4f5dd1113457e4c96eee161296b7b/.github/actions/build/action.yml#L25>)
-  - if it is not forgotten, then recent version has it built as binaries already https://github.com/darklab8/fl-darkstat/releases
+- download latest from https://github.com/darklab8/fl-darkstat/releases , they are autobuilt from CI, so they will be always there.
+  - optionally build latest [according to instruction](<https://github.com/darklab8/fl-darkstat/blob/550b40a49ec4f5dd1113457e4c96eee161296b7b/.github/actions/build/action.yml#L25>) on your own if desired
 - put file into root of Freelancer folder and start
   - optionally launch from anywhere, just add env variable FREELANCER_FOLDER with location to freelancer folder root.
 - visit http://localhost:8000/ as printed in console to see web site locally
@@ -107,8 +107,9 @@ So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery f
 # Contacts
 
 - discord DM: darkwind8
-- discord server lab: https://discord.gg/aukHmTK82J
+- discord server lab: https://discord.gg/zFzSs82y3W
 - or open [Pull Request here](https://github.com/darklab8/fl-darkstat/issues) and write there
+- [see up to date contacts here](<https://darklab8.github.io/blog/index.html#contacts>)
 
 See anouncements at [Discovery Freelancer forum thread](https://discoverygc.com/forums/showthread.php?tid=187294)
 
