@@ -10,7 +10,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
-	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/timeit"
 )
@@ -23,7 +22,6 @@ const (
 	Build   Action = "build"
 	Web     Action = "web"
 	Version Action = "version"
-	Patch   Action = "patch"
 )
 
 func main() {
@@ -70,8 +68,6 @@ func main() {
 		web()
 	case Version:
 		fmt.Println("version=", settings.Env.AppVersion)
-	case Patch:
-		autopatcher.RunAutopatcher()
 	default:
 		web()
 	}

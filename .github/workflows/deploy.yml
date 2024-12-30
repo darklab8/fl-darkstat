@@ -17,7 +17,7 @@ jobs:
       - name: Check out source repository
         uses: actions/checkout@v2
 
-      - uses: darklab8/fl-configs/.github/actions/checkout-freelancer@master
+      - uses: darklab8/infra/.github/actions/checkout-freelancer@master
         with:
           freelancer-mod: "discovery"
           freelancer-folder: ${{ github.workspace }}/fl-data
@@ -26,16 +26,13 @@ jobs:
       - run: ls ./fl-data
   
       - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '^1.22.5'
+        uses: darklab8/infra/.github/actions/install-go@master
 
-      - name: Install Task
-        run: |
-            sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+      - name: Install Taskfile
+        uses: darklab8/infra/.github/actions/install-taskfile@master
 
-      - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@v0.2.747
+      - name: Install Templ
+        uses: darklab8/infra/.github/actions/install-templ@master    
       
       - name: Build templ file to go
         run: templ generate
@@ -43,9 +40,10 @@ jobs:
       - name: Add versions
         run: task build-version
         
-      - name: Patch to latest
-        run: go run ${{ github.workspace }}/main.go patch 
-        working-directory: ${{ github.workspace }}/fl-data
+      - name: Patch disco to latest
+        uses: darklab8/infra/.github/actions/patch-disco@master      
+        with:
+          freelancer-folder: ${{ github.workspace }}/fl-data
 
       - name: Test things
         run: task test -- -v
