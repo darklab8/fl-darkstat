@@ -97,12 +97,12 @@ func GetBurstParams(gun configs_export.Gun) []string {
 	return []string{burst_ammo, fmt.Sprintf("(%.2f)", gun.BurstFire.ReloadTime)}
 }
 
-templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards) {
+templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards configs_export.Infocards) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:200px;">Gun</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:50px;">Select</th>
 					<th style="width:50px;">Select</th>
 				}
@@ -226,10 +226,10 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm PinMod, shared *
 	</table>
 }
 
-templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
-	@TrFromMainTb2(NewTr(gun.Nickname, GunDetailedUrl(gun, mode), pinm), prerender) {
-		@PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
-		@PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
+templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
+	@tab.TrFromMainTb2(tab.NewTr(gun.Nickname, GunDetailedUrl(gun, mode), pinm), prerender) {
+		@tab.PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
+		@tab.PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
 		@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, gun.Nickname))
 		<td>{ gun.Class }</td>
 		<td>{ gun.Type }</td>
@@ -295,7 +295,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm PinMod, shared *types
 		@HashTd(gun.NicknameHash)
 		@HashTd(gun.MunitionHash)
 		@HashTd(gun.HpTypeHash)
-		@TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, shared)
+		@tab.TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, shared)
 	}
 }
 
@@ -315,10 +315,10 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, sha
 				@tab.TableTop(){
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@GunTable(guns, mode, MainMode, shared, infocards)
+						@GunTable(guns, mode, tab.MainMode, shared, infocards)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@GunTable([]configs_export.Gun{}, mode, PinMode, shared, infocards)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@GunTable([]configs_export.Gun{}, mode, tab.PinMode, shared, infocards)
 					</div>
 				}
 				@tab.TableBottom(){
@@ -329,7 +329,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, sha
 							@GunShowModifiersShared()
 						}
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						if mode == GunsShowBases || mode == GunsMissiles {
 							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 						} else {

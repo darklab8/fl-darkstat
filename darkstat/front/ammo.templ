@@ -15,12 +15,12 @@ func AmmoDetailedUrl(ammo configs_export.Ammo) string {
 	return "ammo/ammo_base_" + strings.ToLower(ammo.Nickname)
 }
 
-templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared *types.SharedData) {
+templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:100px;">Ammo</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
@@ -60,9 +60,9 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared *types.SharedDa
 		</thead>
 		<tbody>
 			for _, ammo := range ammos {
-				@TrFromMainTb(ammo.Nickname, AmmoDetailedUrl(ammo), pinm) {
-					@PinTd(ammo.Nickname, ammo.Name, pinm)
-					@PinSelectLeftRight(pinm, AmmoDetailedUrl(ammo))
+				@tab.TrFromMainTb(ammo.Nickname, AmmoDetailedUrl(ammo), pinm) {
+					@tab.PinTd(ammo.Nickname, ammo.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, AmmoDetailedUrl(ammo))
 					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					<td>{ strconv.Itoa(ammo.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(ammo.Bases)) }</td>
@@ -80,7 +80,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm PinMod, shared *types.SharedDa
 					<td class="seo">{ strconv.Itoa(ammo.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(ammo.InfoID) } </td>
 					@HashTd(ammo.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -97,17 +97,17 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 tab.ShowEmpty, shared *types.Shar
 				@tab.TableTop(){
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
-						@AmmoTable(ammos, MainMode, shared)
+						@AmmoTable(ammos, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@AmmoTable(ammos, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@AmmoTable(ammos, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}

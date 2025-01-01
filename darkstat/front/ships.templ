@@ -43,12 +43,12 @@ const (
 templ ShipTable(
 	ships []configs_export.Ship,
 	mode ShipTabMode,
-	pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards) {
-	<table class={ "sortable", templ.KV("top-main", pinm==MainMode), templ.KV("top-pinned", pinm==PinMode) }>
+	pinm tab.PinMod, shared *types.SharedData, infocards configs_export.Infocards) {
+	<table class={ "sortable", templ.KV("top-main", pinm==tab.MainMode), templ.KV("top-pinned", pinm==tab.PinMode) }>
 		<thead>
 			<tr>
 				<th style="width:200px;">Ship</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
@@ -137,10 +137,10 @@ func thruster_speeds_to_str(thrust_speeds []int) string {
 	return strings.Join(as_str, ",")
 }
 
-templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
-	@TrFromMainTb2(NewTr(ship.Nickname, ShipDetailedUrl(ship, mode), pinm), prerender) {
-		@PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
-		@PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
+templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
+	@tab.TrFromMainTb2(tab.NewTr(ship.Nickname, ShipDetailedUrl(ship, mode), pinm), prerender) {
+		@tab.PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
+		@tab.PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
 		@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, ship.Nickname))
 		<td>{ strconv.Itoa(ship.Class) }</td>
 		<td class="seo">{ ship.Type }</td>
@@ -175,7 +175,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm PinMod, shared *t
 		<td class="seo">{ strconv.Itoa(ship.NameID) } </td>
 		<td class="seo">{ strconv.Itoa(ship.InfoID) } </td>
 		@HashTd(ship.NicknameHash)
-		@TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm, shared)
+		@tab.TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm, shared)
 	}
 }
 
@@ -193,10 +193,10 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 				@tab.TableTop(){
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@ShipTable(ships, mode, MainMode, shared, infocards)
+						@ShipTable(ships, mode, tab.MainMode, shared, infocards)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShipTable([]configs_export.Ship{}, mode, PinMode, shared, infocards)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@ShipTable([]configs_export.Ship{}, mode, tab.PinMode, shared, infocards)
 					</div>
 				}
 				@tab.TableBottom(){
@@ -207,7 +207,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
 						}
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						if mode == ShipShowBases {
 							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 						} else if mode == ShipShowDetails {

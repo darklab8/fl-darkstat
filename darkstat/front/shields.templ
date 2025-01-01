@@ -17,12 +17,12 @@ func ShieldDetailedUrl(shield configs_export.Shield) string {
 	return "shields/shields_base_" + strings.ToLower(shield.Nickname)
 }
 
-templ ShieldTable(shields []configs_export.Shield, pinm PinMod, shared *types.SharedData) {
+templ ShieldTable(shields []configs_export.Shield, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:200px;">Shield</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
@@ -62,9 +62,9 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, shared *types.Sh
 		</thead>
 		<tbody>
 			for _, shield := range shields {
-				@TrFromMainTb(shield.Nickname, ShieldDetailedUrl(shield), pinm) {
-					@PinTd(shield.Nickname, shield.Name, pinm)
-					@PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
+				@tab.TrFromMainTb(shield.Nickname, ShieldDetailedUrl(shield), pinm) {
+					@tab.PinTd(shield.Nickname, shield.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
 					@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, shield.Nickname))
 					<td>{ shield.Class }</td>
 					<td class="seo">{ shield.Type }</td>
@@ -88,7 +88,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm PinMod, shared *types.Sh
 					<td class="seo">{ strconv.Itoa(shield.IdsInfo) } </td>
 					@HashTd(shield.NicknameHash)
 					@HashTd(shield.HpTypeHash)
-					@TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -105,17 +105,17 @@ templ ShieldT(shields []configs_export.Shield, mode2 tab.ShowEmpty, shared *type
 				@tab.TableTop(){
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@ShieldTable(shields, MainMode, shared)
+						@ShieldTable(shields, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ShieldTable(shields, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@ShieldTable(shields, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}

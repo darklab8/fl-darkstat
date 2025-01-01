@@ -57,11 +57,11 @@ func (l *Router) LinkShips(
 			),
 			builder.NewComponent(
 				utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowBases)),
-				front.ShipRow(ship, front.ShipShowBases, front.PinMode, shared, data.Infocards, true),
+				front.ShipRow(ship, front.ShipShowBases, tab.PinMode, shared, data.Infocards, true),
 			),
 			builder.NewComponent(
 				utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowDetails)),
-				front.ShipRow(ship, front.ShipShowDetails, front.PinMode, shared, data.Infocards, true),
+				front.ShipRow(ship, front.ShipShowDetails, tab.PinMode, shared, data.Infocards, true),
 			),
 		)
 	}
@@ -74,7 +74,7 @@ func (l *Router) LinkShips(
 			),
 			builder.NewComponent(
 				utils_types.FilePath(front.GunPinnedRowUrl(missile, front.GunsMissiles)),
-				front.GunRow(missile, front.GunsMissiles, front.PinMode, shared, data.Infocards, true),
+				front.GunRow(missile, front.GunsMissiles, tab.PinMode, shared, data.Infocards, true),
 			),
 		)
 	}

@@ -16,12 +16,12 @@ func MineDetailedUrl(mine configs_export.Mine) string {
 	return "mines/mines_base_" + strings.ToLower(mine.Nickname)
 }
 
-templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared *types.SharedData) {
+templ MinesTable(mines []configs_export.Mine, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:100px;">Mine</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
@@ -87,9 +87,9 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared *types.SharedD
 		</thead>
 		<tbody>
 			for _, mine := range mines {
-				@TrFromMainTb(mine.Nickname, MineDetailedUrl(mine), pinm) {
-					@PinTd(mine.Nickname, mine.Name, pinm)
-					@PinSelectLeftRight(pinm, MineDetailedUrl(mine))
+				@tab.TrFromMainTb(mine.Nickname, MineDetailedUrl(mine), pinm) {
+					@tab.PinTd(mine.Nickname, mine.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, MineDetailedUrl(mine))
 					@disco.TdDisco(shared, mine.Nickname, mine.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(mine.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(mine.Bases)) }</td>
@@ -119,7 +119,7 @@ templ MinesTable(mines []configs_export.Mine, pinm PinMod, shared *types.SharedD
 					<td class="seo">{ mine.ProjectileArchetype } </td>
 					@HashTd(mine.MineDropperHash)
 					@HashTd(mine.MineHash)
-					@TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -136,17 +136,17 @@ templ MinesT(mines []configs_export.Mine, mode2 tab.ShowEmpty, shared *types.Sha
 				@tab.TableTop(){
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@MinesTable(mines, MainMode, shared)
+						@MinesTable(mines, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@MinesTable(mines, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@MinesTable(mines, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}

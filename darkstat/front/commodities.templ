@@ -15,12 +15,12 @@ func GoodAtBaseInfoTUrl(commodity *configs_export.Commodity) string {
 	return "commodities/comm_base_" + strings.ToLower(string(configs_export.GetCommodityKey(commodity.Nickname, commodity.ShipClass)))
 }
 
-templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, shared *types.SharedData) {
+templ CommodityTable(commodities []*configs_export.Commodity, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:200px;">Commodity</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
@@ -56,9 +56,9 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 		</thead>
 		<tbody>
 			for _, commodity := range commodities {
-				@TrFromMainTb(commodity.Nickname, GoodAtBaseInfoTUrl(commodity), pinm) {
-					@PinTd(commodity.Nickname, commodity.Name + frmt.FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
-					@PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
+				@tab.TrFromMainTb(commodity.Nickname, GoodAtBaseInfoTUrl(commodity), pinm) {
+					@tab.PinTd(commodity.Nickname, commodity.Name + frmt.FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
+					@tab.PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
 					<td>{ strconv.Itoa(commodity.PriceBestBaseSellsFor) }</td>
 					<td>{ strconv.Itoa(commodity.PriceBestBaseBuysFor) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.PriceBestBaseSellsFor, commodity.Volume)) }</td>
@@ -76,7 +76,7 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm PinMod, share
 					<td class="seo">{ strconv.Itoa(commodity.NameID) }</td>
 					<td class="seo">{ strconv.Itoa(commodity.InfocardID) }</td>
 					@HashTd(commodity.NicknameHash)
-					@TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -93,17 +93,17 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, 
 				@tab.TableTop(){
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
-						@CommodityTable(commodities, MainMode, shared)
+						@CommodityTable(commodities, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@CommodityTable(commodities, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@CommodityTable(commodities, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 					</div>
 				}

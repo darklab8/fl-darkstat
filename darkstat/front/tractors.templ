@@ -87,10 +87,10 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode
 							</thead>
 							<tbody>
 								for _, tractor := range tractors {
-									@TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor, tab_mode), "") {
+									@tab.TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor, tab_mode), "") {
 										<td class="seo">{ tractor.Name }</td>
 										@TractorValues(tractor, shared)
-										@TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "", shared)
+										@tab.TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "", shared)
 									}
 								}
 							</tbody>
@@ -140,7 +140,7 @@ templ IDRephacksT(rephack configs_export.Tractor) {
 	@IDRephacksShared() {
 		for _, rep := range rephack.GetRephacksList() {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(rep.FactionNick)) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(rep.FactionNick)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"

@@ -9,16 +9,11 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-
 	"math"
 	"strconv"
 	"strings"
 	"encoding/json"
 )
-
-func InfocardURL(infocard_key configs_export.InfocardKey) string {
-	return "infocards/info_" + strings.ToLower(string(infocard_key))
-}
 
 func BaseDetailedUrl(base *configs_export.Base, tab_mode BaseMode) string {
 
@@ -47,7 +42,7 @@ const (
 	BaseAllRoutes
 )
 
-templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, shared *types.SharedData) {
+templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -56,7 +51,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, s
 				} else {
 					<th style="width:200px;">Mining Zone</th>
 				}
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:50px;">Select</th>
 					<th style="width:50px;">Select</th>
 				}
@@ -144,10 +139,10 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm PinMod, s
 	</table>
 }
 
-templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared *types.SharedData) {
-	@TrFromMain(NewTr(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm, WithTransportUnreachable(base.IsTransportUnreachable))) {
-		@PinTd(base.Nickname.ToStr(), base.Name, pinm)
-		@PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
+templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, shared *types.SharedData) {
+	@tab.TrFromMain(tab.NewTr(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm, tab.WithTransportUnreachable(base.IsTransportUnreachable))) {
+		@tab.PinTd(base.Nickname.ToStr(), base.Name, pinm)
+		@tab.PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		if tab_mode != BaseTabOres {
 			<td>
 				@frmt.WriteFactioName(base.FactionName)
@@ -224,7 +219,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm PinMod, shared 
 		<td>{ FormatBoolAsYesNo(base.Reachable) }</td>
 		@HashTd(base.NicknameHash)
 		@HashTd(base.SystemNicknameHash)
-		@TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, shared)
+		@tab.TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, shared)
 	}
 }
 
@@ -259,10 +254,10 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty
 						// }
 					}
 					<div id="table-top-main">
-						@BasesTable(bases, tab_mode, MainMode, shared)
+						@BasesTable(bases, tab_mode, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@BasesTable(bases, tab_mode, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@BasesTable(bases, tab_mode, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
@@ -279,7 +274,7 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty
 							@BasesRoutesShared(shared)
 						}
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 					
 						if tab_mode == BaseShowShops {
 							@BaseMarketGoodsBase()
@@ -357,7 +352,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 	@BaseMarketGoodsBase() {
 		for _, good := range frmt.SortedMarketGoods(goods) {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(good.Infocard) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(good.Infocard) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
@@ -437,7 +432,7 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 	@BaseMissionsBase() {
 		for _, msn_giver := range mission_givers.Factions {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(msn_giver.Infocard) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(msn_giver.Infocard) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"

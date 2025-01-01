@@ -17,12 +17,12 @@ func EngineDetailedUrl(engine configs_export.Engine) string {
 	return "engines/engines_base_" + strings.ToLower(engine.Nickname)
 }
 
-templ EnginesTable(engines []configs_export.Engine, pinm PinMod, shared *types.SharedData) {
+templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:200px;">Engine</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
@@ -65,9 +65,9 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, shared *types.S
 		</thead>
 		<tbody>
 			for _, engine := range engines {
-				@TrFromMainTb(engine.Nickname, EngineDetailedUrl(engine), pinm) {
-					@PinTd(engine.Nickname, engine.Name, pinm)
-					@PinSelectLeftRight(pinm, EngineDetailedUrl(engine))
+				@tab.TrFromMainTb(engine.Nickname, EngineDetailedUrl(engine), pinm) {
+					@tab.PinTd(engine.Nickname, engine.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, EngineDetailedUrl(engine))
 					@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, engine.Nickname))
 					<td>{ strconv.Itoa(engine.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(engine.Bases)) }</td>
@@ -90,7 +90,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm PinMod, shared *types.S
 					@HashTd(engine.HpTypeHash)
 					@HashTd(engine.FlameEffectHash)
 					@HashTd(engine.TrailEffectHash)
-					@TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -107,17 +107,17 @@ templ Engines(engines []configs_export.Engine, mode tab.ShowEmpty, shared *types
 				@tab.TableTop(){
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@EnginesTable(engines, MainMode, shared)
+						@EnginesTable(engines, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@EnginesTable(engines, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@EnginesTable(engines, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}

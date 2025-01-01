@@ -30,12 +30,12 @@ const (
 	FactionShowRephacks
 )
 
-templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm PinMod, shared *types.SharedData) {
+templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:200px;">Name</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:50px;">Select</th>
 					<th style="width:50px;">Select</th>
 				}
@@ -66,9 +66,9 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 		</thead>
 		<tbody>
 			for _, faction := range factions {
-				@TrFromMainTb(faction.Nickname, FactionRepUrl(faction, mode), pinm) {
-					@PinTd(faction.Nickname, faction.Name, pinm)
-					@PinSelectLeftRight(pinm, FactionRepUrl(faction, mode))
+				@tab.TrFromMainTb(faction.Nickname, FactionRepUrl(faction, mode), pinm) {
+					@tab.PinTd(faction.Nickname, faction.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, FactionRepUrl(faction, mode))
 					<td class="seo">{ faction.ShortName }</td>
 					<td class="seo">{ faction.Nickname }</td>
 					if mode == FactionShowRephacks {
@@ -81,7 +81,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					<td class="seo">{ strconv.Itoa(faction.InfonameID) }</td>
 					<td class="seo">{ strconv.Itoa(faction.InfocardID) }</td>
 					@HashTd(faction.NicknameHash)
-					@TdInfoCardClick(faction.Infocard, faction.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(faction.Infocard, faction.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -102,10 +102,10 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 				@tab.TableTop(){
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
-						@FactionTable(factions, mode, MainMode, shared)
+						@FactionTable(factions, mode, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@FactionTable(factions, mode, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@FactionTable(factions, mode, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
@@ -116,7 +116,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 							@BriberyBottomBase()
 						}
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						if mode == FactionShowBases {
 							@FactionRepsBase()
 						} else if mode == FactionShowRephacks {
@@ -156,7 +156,7 @@ templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputati
 	@FactionRepsBase() {
 		for _, rep := range reps {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(rep.Nickname)) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(rep.Nickname)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"

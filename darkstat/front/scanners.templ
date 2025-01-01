@@ -16,12 +16,12 @@ func ScannerDetailedUrl(item configs_export.Scanner) string {
 	return "scanner/scanner_bases_" + strings.ToLower(item.Nickname)
 }
 
-templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared *types.SharedData) {
+templ ScannerTable(scanners []configs_export.Scanner, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:100px;">Scanner</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
@@ -45,9 +45,9 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared *types
 		</thead>
 		<tbody>
 			for _, scanner := range scanners {
-				@TrFromMainTb(scanner.Nickname, ScannerDetailedUrl(scanner), pinm) {
-					@PinTd(scanner.Nickname, scanner.Name, pinm)
-					@PinSelectLeftRight(pinm, ScannerDetailedUrl(scanner))
+				@tab.TrFromMainTb(scanner.Nickname, ScannerDetailedUrl(scanner), pinm) {
+					@tab.PinTd(scanner.Nickname, scanner.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, ScannerDetailedUrl(scanner))
 					@disco.TdDisco(shared, scanner.Nickname, scanner.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(scanner.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(scanner.Bases)) }</td>
@@ -61,7 +61,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm PinMod, shared *types
 					<td class="seo">{ strconv.Itoa(scanner.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(scanner.InfoID) } </td>
 					@HashTd(scanner.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -78,17 +78,17 @@ templ ScannersT(scanners []configs_export.Scanner, mode2 tab.ShowEmpty, shared *
 				@tab.TableTop(){
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@ScannerTable(scanners, MainMode, shared)
+						@ScannerTable(scanners, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ScannerTable(scanners, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@ScannerTable(scanners, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}

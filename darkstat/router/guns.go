@@ -73,11 +73,11 @@ func (l *Router) LinkGuns(
 
 			builder.NewComponent(
 				utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowBases)),
-				front.GunRow(gun, front.GunsShowBases, front.PinMode, shared, data.Infocards, true),
+				front.GunRow(gun, front.GunsShowBases, tab.PinMode, shared, data.Infocards, true),
 			),
 			builder.NewComponent(
 				utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowDamageBonuses)),
-				front.GunRow(gun, front.GunsShowDamageBonuses, front.PinMode, shared, data.Infocards, true),
+				front.GunRow(gun, front.GunsShowDamageBonuses, tab.PinMode, shared, data.Infocards, true),
 			),
 		)
 	}

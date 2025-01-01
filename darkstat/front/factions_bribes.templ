@@ -38,7 +38,7 @@ templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Br
 	@BriberyBottomBase() {
 		for _, rep := range rephacks {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(configs_export.InfocardKey(rep.BaseNickname)) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(rep.BaseNickname)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"

@@ -104,7 +104,7 @@ func (l *Router) Link() *builder.Builder {
 	timer_building_creation.Close()
 
 	var data *configs_export.Exporter
-	timeit.NewTimerMF("exporting data", func() { data = l.configs.Export() })
+	timeit.NewTimerMF("exporting data", func() { data = l.configs.Export(configs_export.ExportOptions{}) })
 
 	var shared *types.SharedData = &types.SharedData{
 		Mapped: l.mapped,
@@ -198,7 +198,7 @@ func (l *Router) Link() *builder.Builder {
 		for nickname, infocard := range data.Infocards {
 			build.RegComps(
 				builder.NewComponent(
-					utils_types.FilePath(front.InfocardURL(nickname)),
+					utils_types.FilePath(tab.InfocardURL(nickname)),
 					tab.Infocard(infocard),
 				),
 			)

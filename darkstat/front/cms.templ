@@ -16,12 +16,12 @@ func CounterMeasreDetailedUrl(cm configs_export.CounterMeasure) string {
 	return "cm/cm_base_" + strings.ToLower(cm.Nickname)
 }
 
-templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared *types.SharedData) {
+templ CmTable(cms []configs_export.CounterMeasure, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:200px;">CM</th>
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
@@ -55,9 +55,9 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared *types.Sh
 		</thead>
 		<tbody>
 			for _, cm := range cms {
-				@TrFromMainTb(cm.Nickname, CounterMeasreDetailedUrl(cm), pinm) {
-					@PinTd(cm.Nickname, cm.Name, pinm)
-					@PinSelectLeftRight(pinm, CounterMeasreDetailedUrl(cm))
+				@tab.TrFromMainTb(cm.Nickname, CounterMeasreDetailedUrl(cm), pinm) {
+					@tab.PinTd(cm.Nickname, cm.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, CounterMeasreDetailedUrl(cm))
 					@disco.TdDisco(shared, cm.Nickname, cm.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(cm.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(cm.Bases)) }</td>
@@ -75,7 +75,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm PinMod, shared *types.Sh
 					<td class="seo">{ strconv.Itoa(cm.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(cm.InfoID) } </td>
 					@HashTd(cm.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -95,17 +95,17 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 tab.ShowEmpty, 
 				@tab.TableTop(){
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@CmTable(cms, MainMode, shared)
+						@CmTable(cms, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@CmTable(cms, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@CmTable(cms, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
 				}

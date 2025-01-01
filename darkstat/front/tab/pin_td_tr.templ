@@ -1,10 +1,9 @@
-package front
+package tab
 
 import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 )
 
 type PinMod string
@@ -61,7 +60,7 @@ templ PinTd(nickname string, name string, pinm PinMod) {
 				{ name }
 			}
 		</span>
-		if pinm==MainMode {
+		if pinm == MainMode {
 			<span style="cursor:copy;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>pin</span>
 		} else {
 			<span style="cursor:no-drop;" class="pin" onClick={ Pin(string(pinm) + "bottominfo_" + nickname) }>unpin</span>
@@ -112,7 +111,7 @@ templ PinSelectLeftRight(pinm PinMod, url string) {
 }
 
 templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, shared *types.SharedData) {
-	@tab.EmbedInfocardForSearch(shared.Infocards, infocardKey)
+	@EmbedInfocardForSearch(shared.Infocards, infocardKey)
 	if pinm == PinMode {
 		<td
 			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }

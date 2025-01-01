@@ -16,13 +16,13 @@ func ThrusterDetailedUrl(thruster configs_export.Thruster) string {
 	return "thrusters/thruster_base_" + strings.ToLower(thruster.Nickname)
 }
 
-templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, shared *types.SharedData) {
+templ ThrustersTable(thrusters []configs_export.Thruster, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
 				<th style="width:200px;">Thruster</th>
 				@disco.ThDisco(shared)
-				if pinm == PinMode {
+				if pinm == tab.PinMode {
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
@@ -49,9 +49,9 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, shared *t
 		</thead>
 		<tbody>
 			for _, thruster := range thrusters {
-				@TrFromMainTb(thruster.Nickname, ThrusterDetailedUrl(thruster), pinm) {
-					@PinTd(thruster.Nickname, thruster.Name, pinm)
-					@PinSelectLeftRight(pinm, ThrusterDetailedUrl(thruster))
+				@tab.TrFromMainTb(thruster.Nickname, ThrusterDetailedUrl(thruster), pinm) {
+					@tab.PinTd(thruster.Nickname, thruster.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, ThrusterDetailedUrl(thruster))
 					@disco.TdDisco(shared, thruster.Nickname, thruster.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(thruster.Price) } </td>
 					<td>{ FormatBoolAsYesNo(configs_export.Buyable(thruster.Bases)) }</td>
@@ -69,7 +69,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm PinMod, shared *t
 					<td class="seo">{ strconv.Itoa(thruster.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(thruster.InfoID) } </td>
 					@HashTd(thruster.NicknameHash)
-					@TdInfoCardClick(configs_export.InfocardKey(thruster.Nickname), thruster.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(thruster.Nickname), thruster.Nickname, pinm, shared)
 				}
 			}
 		</tbody>
@@ -86,17 +86,17 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 tab.ShowEmpty, shared
 				@tab.TableTop(){
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
-						@ThrustersTable(thrusters, MainMode, shared)
+						@ThrustersTable(thrusters, tab.MainMode, shared)
 					</div>
-					<div id={ "table-top-main" + string(PinMode) } class="hidden">
-						@ThrustersTable(thrusters, PinMode, shared)
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@ThrustersTable(thrusters, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom(){
 					<div id="table-bottom-main">
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					</div>
-					<div id={ "table-bottom-main" + string(PinMode) } class="hidden">
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 					</div>
 				}
