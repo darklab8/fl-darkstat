@@ -234,7 +234,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *t
 		<td>{ gun.Class }</td>
 		<td>{ gun.Type }</td>
 		<td>{ strconv.Itoa(gun.Price) } </td>
-		<td>{ FormatBoolAsYesNo(configs_export.Buyable(gun.Bases)) }</td>
+		<td>{ frmt.FormatBoolAsYesNo(configs_export.Buyable(gun.Bases)) }</td>
 		if shared.ShowFLSR {
 			<td>{ fmt.Sprintf("%.2f", gun.Mass) }</td>
 		}

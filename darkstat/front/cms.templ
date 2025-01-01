@@ -60,7 +60,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm tab.PinMod, shared *type
 					@tab.PinSelectLeftRight(pinm, CounterMeasreDetailedUrl(cm))
 					@disco.TdDisco(shared, cm.Nickname, cm.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(cm.Price) } </td>
-					<td>{ FormatBoolAsYesNo(configs_export.Buyable(cm.Bases)) }</td>
+					<td>{ frmt.FormatBoolAsYesNo(configs_export.Buyable(cm.Bases)) }</td>
 					if shared.ShowFLSR {
 						<td>{ fmt.Sprintf("%.2f", cm.Mass) }</td>
 					}

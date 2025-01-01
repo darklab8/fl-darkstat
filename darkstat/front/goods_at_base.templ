@@ -90,14 +90,6 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 
 type ShowAsCommodity bool
 
-func FormatBoolAsYesNo(value bool) string {
-	if value {
-		return "yes"
-	} else {
-		return "no"
-	}
-}
-
 templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.GoodAtBase, is_commodity ShowAsCommodity,shared *types.SharedData ) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
@@ -160,7 +152,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.X) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Y) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Z) }</td>
-				<td>{ FormatBoolAsYesNo(!base_info.NotBuyable) }</td>
+				<td>{ frmt.FormatBoolAsYesNo(!base_info.NotBuyable) }</td>
 				<td></td>
 			</tr>
 		}

@@ -70,7 +70,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm tab.PinMod, shared *type
 					<td class="seo">{ shield.Type }</td>
 					<td class="seo">{ shield.Technology }</td>
 					<td>{ strconv.Itoa(shield.Price) } </td>
-					<td>{ FormatBoolAsYesNo(configs_export.Buyable(shield.Bases)) }</td>
+					<td>{ frmt.FormatBoolAsYesNo(configs_export.Buyable(shield.Bases)) }</td>
 					if shared.ShowFLSR {
 						<td>{ fmt.Sprintf("%.2f", shield.Mass) }</td>
 					}

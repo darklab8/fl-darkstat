@@ -35,3 +35,11 @@ func FormatBaseSells(value bool) string {
 		return "buysonly"
 	}
 }
+
+func FormatBoolAsYesNo(value bool) string {
+	if value {
+		return "yes"
+	} else {
+		return "no"
+	}
+}

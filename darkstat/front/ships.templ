@@ -145,7 +145,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 		<td>{ strconv.Itoa(ship.Class) }</td>
 		<td class="seo">{ ship.Type }</td>
 		<td>{ strconv.Itoa(ship.Price) }</td>
-		<td>{ FormatBoolAsYesNo(configs_export.Buyable(ship.Bases)) }</td>
+		<td>{ frmt.FormatBoolAsYesNo(configs_export.Buyable(ship.Bases)) }</td>
 		if shared.ShowFLSR {
 			<td>{ fmt.Sprintf("%.2f", ship.Mass) }</td>
 		}
