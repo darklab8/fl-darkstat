@@ -1,11 +1,11 @@
 github.com/a-h/templ v0.2.747 h1:D0dQ2lxC3W7Dxl6fxQ/1zZHBQslSkTSvl5FxP/CfdKg=
 github.com/a-h/templ v0.2.747/go.mod h1:69ObQIbrcuwPCU32ohNaWce3Cb7qM5GMiqN1K+2yop4=
-github.com/darklab8/fl-configs v0.95.8 h1:t6MPobJEbd8XsX7miJsY+cPpFCzpM5xQxINmfJUXcyM=
-github.com/darklab8/fl-configs v0.95.8/go.mod h1:fbyKxEPv22FD2bvahG/Y6kYyhyvCMg0+J6mH230iB3s=
+github.com/darklab8/fl-configs v0.101.0 h1:wB4LK/BJ1pUqSL216Ijw+doIz1madM4lIrFxJ8I1pDM=
+github.com/darklab8/fl-configs v0.101.0/go.mod h1:fbyKxEPv22FD2bvahG/Y6kYyhyvCMg0+J6mH230iB3s=
 github.com/darklab8/fl-darkcore v0.5.0 h1:mrUTz6RBjWp6XbSdiJDyJVcNdgOj7UubWfjLkOIAm0o=
 github.com/darklab8/fl-darkcore v0.5.0/go.mod h1:D/CnWlkPgusS6hUHsH9sPgmg3q+Zrb70tFcsg6dN6Do=
-github.com/darklab8/fl-data-discovery v0.2.1 h1:iMBnEs1gN/nJN4szZqo5OSfow8nj9sceHOh8g+K8WR4=
-github.com/darklab8/fl-data-discovery v0.2.1/go.mod h1:SgRh0N3cWrhslXVkc5LJXK52Mw4+Fdsbmv+0qkNJ6QI=
+github.com/darklab8/fl-data-discovery v0.4.0 h1:cUacP+N04/PrYl4cmw687BAaQWVJI32scePjLfmqxEI=
+github.com/darklab8/fl-data-discovery v0.4.0/go.mod h1:SgRh0N3cWrhslXVkc5LJXK52Mw4+Fdsbmv+0qkNJ6QI=
 github.com/darklab8/go-typelog v0.6.2 h1:R6urrs4zgtjWfAngB7UclxpkVMA1uW3hEw7PEgSU7pU=
 github.com/darklab8/go-typelog v0.6.2/go.mod h1:RPymaCKD04g9lpGNYTQ2RarSYD8XaAgTZKN5J9fGRGA=
 github.com/darklab8/go-utils v0.21.0 h1:SsHSYj7DFmyUV2itLSG2LB+mRanwmywzpSyKxrStCJ4=
@@ -18,8 +18,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-golang.org/x/text v0.20.0 h1:gK/Kv2otX8gz+wn7Rmb3vT96ZwuoxnQlY+HlJVj7Qug=
-golang.org/x/text v0.20.0/go.mod h1:D4IsuqiFMhST5bX19pQ9ikHC2GsaKyk/oF+pn3ducp4=
+golang.org/x/text v0.21.0 h1:zyQAAkrwaneQ066sspRyJaG9VNi/YJ1NfzcGB3hZ/qo=
+golang.org/x/text v0.21.0/go.mod h1:4IBbMaMmOPCJ8SecivzSH54+73PCFmPWxNTLm+vZkEQ=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
