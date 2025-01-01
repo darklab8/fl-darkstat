@@ -68,9 +68,9 @@ templ TractorValues(tractor configs_export.Tractor, shared *types.SharedData) {
 // https://www.cssscript.com/fast-html-table-sorting/
 templ TractorsT(tractors []configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode TractorMode, shared *types.SharedData) {
 	if tab_mode == TractorModShop {
-		@tab.TabMenu(urls.Tractors, mode2, shared)
+		@TabMenu(urls.Tractors, mode2, shared)
 	} else if tab_mode == TractorIDRephacks {
-		@tab.TabMenu(urls.IDRephacks, mode2, shared)
+		@TabMenu(urls.IDRephacks, mode2, shared)
 	}
 	@tab.TabContent() {
 		<div class="splitter">

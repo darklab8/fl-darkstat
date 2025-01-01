@@ -227,15 +227,15 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 // https://www.cssscript.com/fast-html-table-sorting/
 templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty, shared *types.SharedData) {
 	if tab_mode == BaseShowShops {
-		@tab.TabMenu(urls.Bases, mode, shared)
+		@TabMenu(urls.Bases, mode, shared)
 	} else if tab_mode == BaseShowMissions {
-		@tab.TabMenu(urls.Missions, mode, shared)
+		@TabMenu(urls.Missions, mode, shared)
 	} else if tab_mode == BaseTabTrades {
-		@tab.TabMenu(urls.Trades, mode, shared)
+		@TabMenu(urls.Trades, mode, shared)
 	} else if tab_mode == BaseTabOres {
-		@tab.TabMenu(urls.Asteroids, mode, shared)
+		@TabMenu(urls.Asteroids, mode, shared)
 	} else if tab_mode == BaseAllRoutes {
-		@tab.TabMenu(urls.TravelRoutes, mode, shared)
+		@TabMenu(urls.TravelRoutes, mode, shared)
 	}
 	@tab.TabContent() {
 		<div class="splitter">

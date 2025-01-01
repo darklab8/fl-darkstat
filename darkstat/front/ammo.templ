@@ -90,7 +90,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.Shar
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ AmmoT(ammos []configs_export.Ammo, mode2 tab.ShowEmpty, shared *types.SharedData) {
-	@tab.TabMenu(urls.Ammo, mode2, shared)
+	@TabMenu(urls.Ammo, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable(){

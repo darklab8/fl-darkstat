@@ -303,11 +303,11 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *t
 // https://www.cssscript.com/fast-html-table-sorting/
 templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards configs_export.Infocards) {
 	if mode == GunsShowBases {
-		@tab.TabMenu(urls.Guns, mode2, shared)
+		@TabMenu(urls.Guns, mode2, shared)
 	} else if mode == GunsShowDamageBonuses {
-		@tab.TabMenu(urls.GunModifiers, mode2, shared)
+		@TabMenu(urls.GunModifiers, mode2, shared)
 	} else if mode == GunsMissiles {
-		@tab.TabMenu(urls.Missiles, mode2, shared)
+		@TabMenu(urls.Missiles, mode2, shared)
 	}
 	@tab.TabContent() {
 		<div class="splitter">

@@ -1,169 +1,133 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkcore/darkcore/core_front"
-	"github.com/darklab8/fl-darkcore/darkcore/core_static"
-	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
-templ Html5(theme types.Theme, shared *types.SharedData) {
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8"/>
-			@core_front.StaticFile(core_static.FaviconIco)
-			<title>{ "darkstat" }</title>
-			<style></style>
-			// For loading https://htmx.org/examples/tabs-hateoas/
-			switch theme {
-				case types.ThemeDark:
-					<style>
-						:root {
-							--color_background_filter_bars: #0e0e0e;
-							--color_background: #1D1D1D;
-							--color_alternate_row: #1F1F1F;
-							--color_border: #474747;
-							--color_th_border: #8B8B8B;
-							--color_hover: #303030;
-							--color_scrollbar_thing: #888;
-							--color_scrollbar_background: #353535;
-							--color_text: #e5e5e5;
-							--selected: #404040;
-							--color_link: #4D8ED0;
-							--color_hover_link: #57A5F2;
-							--color_time: #4b4b4b;
-							--infocard_text_highlight: #6b6d1e;
-						}
-					</style>
-				case types.ThemeVanilla:
-					<style>
-						:root {
-							--color_background_filter_bars: #fdf7ec;
-							--color_background: #F6ECDA;
-							--color_alternate_row: #F5EaDA;
-							--color_border: #A68E64;
-							--color_th_border: #A68E64;
-							--color_hover: #f3d195;
-							--color_scrollbar_thing: #6e5d40;
-							--color_scrollbar_background: #ddbe87;
-							--color_text: #000;
-							--selected: #eecc91;
-							--color_link: #65471d;
-							--color_hover_link: #453013;
-							--color_time: #a9a9a9;
-							--infocard_text_highlight: #ffff00;
-						}
-					</style>
-				case types.ThemeLight:
-					<style>
-						:root {
-							--color_background_filter_bars: #ffffff;
-							--color_background: #EFEFEF;
-							--color_alternate_row: #E6E6E6;
-							--color_border: #D7D7D7;
-							--color_th_border: #D7D7D7;
-							--color_hover: #CCC;
-							--color_scrollbar_thing: #999;
-							--color_scrollbar_background: #E1E1E1;
-							--color_text: #000;
-							--selected: #D7D7D7;
-							--color_link: #2A4E73;
-							--color_hover_link: #152B41;
-							--color_time: #a9a9a9;
-							--infocard_text_highlight: #ffff00;
-						}
-					</style>
-			}
-			<style>
-				body, input {
-					background: var(--color_background);
-				}
-				input {
-					background: var(--color_background);
-					color: var(--color_text);
-					border-color: var(--color_border);
-				}
-				* {
-					color: var(--color_text);
-				}
-
-				// scrollbars
-				html {
-					scrollbar-color: var(--color_scrollbar_thing) var(--color_scrollbar_background);
-				}
-				::-webkit-scrollbar {
-					background-color: var(--color_scrollbar_background);
-				}
-				::-webkit-scrollbar-thumb {
-					background: var(--color_scrollbar_thing);
-					border-radius: 5px;
-				}
-				::-webkit-scrollbar-corner { 
-					background: var(--color_scrollbar_background);
-				}
-			</style>
-			<style>
-				a {
-					color: var(--color_link);
-				}
-				a:hover {
-					color: var(--color_hover_link);
-				}
-			</style>
-			@core_front.StaticFile(core_static.ResetCSS)
-			@core_front.StaticFile(static_front.CommonCSS)
-			@core_front.StaticFile(static_front.CustomCSS)
-
-			if shared.ShowDisco {
-				@core_front.StaticFile(static_front.CustomJSSharedDiscovery)
-			} else {
-				@core_front.StaticFile(static_front.CustomJSSharedVanilla)
-			}
-
-			@core_front.StaticFile(static_front.CustomJSShared)
-			@core_front.StaticFile(static_front.CustomJS)
-			@core_front.StaticFile(static_front.CustomJSResizer)
-			@core_front.StaticFile(static_front.CustomJSFiltering)
-			@core_front.StaticFile(static_front.CustomJSFilteringRoutes)
-			@core_front.StaticFile(core_static.SortableJS)
-			@core_front.StaticFile(core_static.HtmxJS)
-			@core_front.StaticFile(core_static.HtmxPreloadJS)
-			<script>
-				document.addEventListener("DOMContentLoaded", (event) => {
-					document.addEventListener('htmx:afterSettle',(event) => {
-						// console.log("htmx:afterSettle");
-						LoadTechCompat()
-						LoadSelectedTractorID()
-						highlightInfocardHook()
-						FilteringFunction()
-
-						if (location.hash) location.href = location.hash;
-					});
-				});
-			</script>
-		</head>
-		<body hx-ext="preload">
-			{ children... }
-		</body>
-	</html>
-}
-
 templ Index(theme types.Theme, shared *types.SharedData) {
-	@Html5(theme, shared) {
+	@tab.Html5(theme, shared) {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Bases.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
 	}
 }
 
 templ DocsEntry(theme types.Theme, shared *types.SharedData) {
-    @Html5(theme, shared) {
+    @tab.Html5(theme, shared) {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Docs.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
     }
 }
 
 templ HashesEntry(theme types.Theme, shared *types.SharedData) {
-    @Html5(theme, shared) {
+    @tab.Html5(theme, shared) {
 		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Hashes.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
     }
+}
+
+
+templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.SharedData) {
+	<style>
+	.tab-list {
+		height: 100%;
+		display: flex;
+    	flex-wrap: wrap;
+    	flex-direction: row;
+		align-content: stretch;
+	}
+	.tab-list .selected {
+		background-color: var(--selected);
+	}
+	.tab-list button {
+		font-size: 0.90em;
+		background-color: var(--color_background);
+		color: var(--color_text);
+		border-color: var(--color_border);
+
+		min-width: 45px;
+		cursor: pointer;
+		min-height: 36px;
+	}
+	.tab-list button:hover {
+		background-color: var(--color_hover);
+	}
+
+	button.Docs {
+  		border-radius: 25px;
+	}
+
+	</style>
+	@tab.Heading(shared) {
+		<div class="tab-list" role="tablist">
+			if mode == false {
+				
+				@tab.Button([]string{"Bases"}, urls.Bases, url)
+				@tab.Button([]string{"Missions"}, urls.Missions, url)
+				@tab.Button([]string{"Factions"}, urls.Factions, url)
+				@tab.Button([]string{"Bribes"}, urls.Rephacks, url)
+				@tab.Button([]string{"Trade", "routes"}, urls.Trades, url)
+				@tab.Button([]string{"Ore", "routes"}, urls.Asteroids, url)
+				@tab.Button([]string{"Travel", "routes"}, urls.TravelRoutes, url)
+				@tab.Button([]string{"Comm", "odities"}, urls.Commodities, url)
+				@tab.Button([]string{"Guns"}, urls.Guns, url)
+				@tab.Button([]string{"Guns", "Mods"}, urls.GunModifiers, url)
+				@tab.Button([]string{"Missiles"}, urls.Missiles, url)
+				@tab.Button([]string{"Ammo"}, urls.Ammo, url)
+				@tab.Button([]string{"Mines"}, urls.Mines, url)
+				@tab.Button([]string{"CMs"}, urls.CounterMeasures, url)
+				@tab.Button([]string{"Shields"}, urls.Shields, url)
+				@tab.Button([]string{"Thru","sters"}, urls.Thrusters, url)
+				@tab.Button([]string{"Ships"}, urls.Ships, url)
+				@tab.Button([]string{"Ship", "Details"}, urls.ShipDetails, url)
+				@tab.Button([]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, url)
+				if shared.ShowDisco {
+					@tab.Button([]string{"ID Rep", "hacks"}, urls.IDRephacks, url)
+				}
+				@tab.Button([]string{"Engines"}, urls.Engines, url)
+				@tab.Button([]string{"Scan","ners"}, urls.Scanners, url)
+				@tab.Button([]string{"Hash"}, urls.HashesIndex, url)
+				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
+					@frmt.MultiLinestring([]string{"Show", "All"})
+				</button>
+				@tab.Button([]string{"Docs"}, urls.Docs, url)
+			} else {
+				
+				@tab.Button([]string{"Bases"}, tab.AllItemsUrl(urls.Bases), url)
+				@tab.Button([]string{"Missions"}, tab.AllItemsUrl(urls.Missions), url)
+				@tab.Button([]string{"Factions"}, tab.AllItemsUrl(urls.Factions), url)
+				@tab.Button([]string{"Bribes"}, tab.AllItemsUrl(urls.Rephacks), url)
+				@tab.Button([]string{"Trade", "routes"}, tab.AllItemsUrl(urls.Trades), url)
+				@tab.Button([]string{"Ore", "routes"}, tab.AllItemsUrl(urls.Asteroids), url)
+				@tab.Button([]string{"Travel", "routes"}, tab.AllItemsUrl(urls.TravelRoutes), url)
+				@tab.Button([]string{"Comm", "odities"}, tab.AllItemsUrl(urls.Commodities), url)
+				@tab.Button([]string{"Guns"}, tab.AllItemsUrl(urls.Guns), url)
+				@tab.Button([]string{"Guns", "Mods"}, tab.AllItemsUrl(urls.GunModifiers), url)
+				@tab.Button([]string{"Missiles"}, tab.AllItemsUrl(urls.Missiles), url)
+				@tab.Button([]string{"Ammo"}, tab.AllItemsUrl(urls.Ammo), url)
+				@tab.Button([]string{"Mines"}, tab.AllItemsUrl(urls.Mines), url)
+				@tab.Button([]string{"CMs"}, tab.AllItemsUrl(urls.CounterMeasures), url)
+				@tab.Button([]string{"Shields"}, tab.AllItemsUrl(urls.Shields), url)
+				@tab.Button([]string{"Thru","sters"}, tab.AllItemsUrl(urls.Thrusters), url)
+				@tab.Button([]string{"Ships"}, tab.AllItemsUrl(urls.Ships), url)
+				@tab.Button([]string{"Ship", "Details"}, tab.AllItemsUrl(urls.ShipDetails), url)
+				@tab.Button([]string{types.GetCtx(ctx).TractorTabName}, tab.AllItemsUrl(urls.Tractors), url)
+				if shared.ShowDisco {
+					@tab.Button([]string{"ID Rep", "hacks"}, tab.AllItemsUrl(urls.IDRephacks), url)
+				}
+				@tab.Button([]string{"Engines"}, tab.AllItemsUrl(urls.Engines), url)
+				@tab.Button([]string{"Scan","ners"}, tab.AllItemsUrl(urls.Scanners), url)
+				@tab.Button([]string{"Hash"}, tab.AllItemsUrl(urls.HashesIndex), url)
+				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
+					@frmt.MultiLinestring([]string{"Don't", "Show All"})
+				</button>
+				@tab.Button([]string{"Docs"}, tab.AllItemsUrl(urls.Docs), url)
+			}
+			<button style="width:60px; border-radius: 20px;" onClick={ tab.GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).Themes) } type="button">
+				@frmt.MultiLinestring([]string{"Color", "Scheme"})
+			</button>
+			
+		</div>
+	}
+	<hr/>
 }

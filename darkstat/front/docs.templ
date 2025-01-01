@@ -31,7 +31,7 @@ templ SectionHeader(name string) {
 }
 
 templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
-    @tab.TabMenu(urls.Docs, mode2, shared)
+    @TabMenu(urls.Docs, mode2, shared)
     @tab.TabContent() {
         <style>
             img {

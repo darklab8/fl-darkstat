@@ -28,8 +28,6 @@ import (
 )
 
 type Router struct {
-	mapped  *configs_mapped.MappedConfigs
-	configs *configs_export.Exporter
 }
 
 type RouterOpt func(l *Router)
@@ -40,24 +38,33 @@ func NewLinker(opts ...RouterOpt) *Router {
 		opt(l)
 	}
 
-	timeit.NewTimerF(func() {
-		freelancer_folder := settings.Env.FreelancerFolder
-		if l.configs == nil {
-			l.mapped = configs_mapped.NewMappedConfigs()
-			logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
-			l.mapped.Read(freelancer_folder)
-			l.configs = configs_export.NewExporter(l.mapped)
-		}
-	}, timeit.WithMsg("MappedConfigs creation"))
 	return l
 }
 
-func (l *Router) Link() *builder.Builder {
+type AppData struct {
+	Build   *builder.Builder
+	Configs *configs_export.Exporter
+	Shared  *types.SharedData
+}
+
+func NewAppData() *AppData {
+	var mapped *configs_mapped.MappedConfigs
+	var configs *configs_export.Exporter
+	timeit.NewTimerF(func() {
+		freelancer_folder := settings.Env.FreelancerFolder
+
+		mapped = configs_mapped.NewMappedConfigs()
+		logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
+		mapped.Read(freelancer_folder)
+		configs = configs_export.NewExporter(mapped)
+
+	}, timeit.WithMsg("MappedConfigs creation"))
+
 	var build *builder.Builder
-	defer timeit.NewTimer("link, internal measure").Close()
 	timer_building_creation := timeit.NewTimer("building creation")
+
 	tractor_tab_name := settings.Env.TractorTabName
-	if l.mapped.Discovery != nil {
+	if mapped.Discovery != nil {
 		tractor_tab_name = "IDs"
 	}
 	staticPrefix := "static/"
@@ -100,54 +107,68 @@ func (l *Router) Link() *builder.Builder {
 	}
 
 	build = builder.NewBuilder(params, static_files)
-
 	timer_building_creation.Close()
 
 	var data *configs_export.Exporter
-	timeit.NewTimerMF("exporting data", func() { data = l.configs.Export(configs_export.ExportOptions{}) })
+	timeit.NewTimerMF("exporting data", func() { data = configs.Export(configs_export.ExportOptions{}) })
 
 	var shared *types.SharedData = &types.SharedData{
-		Mapped: l.mapped,
+		Mapped: mapped,
 	}
 
 	timeit.NewTimerMF("filtering to useful stuff", func() {
-		if l.mapped.FLSR != nil {
+		if mapped.FLSR != nil {
 			shared.FLSRData = types.FLSRData{
 				ShowFLSR: true,
 			}
 		}
 
-		if l.mapped.Discovery != nil {
+		if mapped.Discovery != nil {
 			shared.DiscoveryData = types.DiscoveryData{
 				ShowDisco:         true,
-				Ids:               l.configs.Tractors,
-				TractorsByID:      l.configs.TractorsByID,
-				Config:            l.mapped.Discovery.Techcompat,
-				LatestPatch:       l.mapped.Discovery.LatestPatch,
-				OrderedTechcompat: *configs_export.NewOrderedTechCompat(l.configs),
+				Ids:               configs.Tractors,
+				TractorsByID:      configs.TractorsByID,
+				Config:            mapped.Discovery.Techcompat,
+				LatestPatch:       mapped.Discovery.LatestPatch,
+				OrderedTechcompat: *configs_export.NewOrderedTechCompat(configs),
 			}
 		}
 		fmt.Println("attempting to access l.configs.Infocards")
-		shared.Infocards = l.configs.Infocards
+		shared.Infocards = configs.Infocards
 	})
 
-	shared.CraftableBaseName = l.configs.CraftableBaseName()
+	shared.CraftableBaseName = configs.CraftableBaseName()
+
+	return &AppData{
+		Build:   build,
+		Configs: data,
+		Shared:  shared,
+	}
+}
+
+func (l *Router) Link() *builder.Builder {
+	app_data := NewAppData()
+	shared := app_data.Shared
+	configs := app_data.Configs
+	build := app_data.Build
+
+	defer timeit.NewTimer("link, internal measure").Close()
 
 	timeit.NewTimerMF("linking main stuff", func() {
 
-		l.LinkBases(build, data, shared)
-		l.LinkFactions(build, data, shared)
-		l.LinkShips(build, data, shared)
-		l.LinkGuns(build, data, shared)
-		l.LinkCommodities(build, data, shared)
-		l.LinkAmmo(build, data, shared)
-		l.LinkMines(build, data, shared)
-		l.LinkShields(build, data, shared)
-		l.LinkThrusters(build, data, shared)
-		l.LinkTractors(build, data, shared)
-		l.LinkEngines(build, data, shared)
-		l.LinkCounterMeasures(build, data, shared)
-		l.LinkScanners(build, data, shared)
+		l.LinkBases(build, configs, shared)
+		l.LinkFactions(build, configs, shared)
+		l.LinkShips(build, configs, shared)
+		l.LinkGuns(build, configs, shared)
+		l.LinkCommodities(build, configs, shared)
+		l.LinkAmmo(build, configs, shared)
+		l.LinkMines(build, configs, shared)
+		l.LinkShields(build, configs, shared)
+		l.LinkThrusters(build, configs, shared)
+		l.LinkTractors(build, configs, shared)
+		l.LinkEngines(build, configs, shared)
+		l.LinkCounterMeasures(build, configs, shared)
+		l.LinkScanners(build, configs, shared)
 
 		build.RegComps(
 			builder.NewComponent(
@@ -185,17 +206,17 @@ func (l *Router) Link() *builder.Builder {
 
 			builder.NewComponent(
 				urls.Hashes,
-				front.HashesT(data.Hashes, tab.ShowEmpty(false), shared),
+				front.HashesT(configs.Hashes, tab.ShowEmpty(false), shared),
 			),
 			builder.NewComponent(
 				tab.AllItemsUrl(urls.Hashes),
-				front.HashesT(data.Hashes, tab.ShowEmpty(true), shared),
+				front.HashesT(configs.Hashes, tab.ShowEmpty(true), shared),
 			),
 		)
 	})
 
 	timeit.NewTimerMF("linking most of stuff", func() {
-		for nickname, infocard := range data.Infocards {
+		for nickname, infocard := range configs.Infocards {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(tab.InfocardURL(nickname)),

@@ -183,9 +183,9 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 // https://www.cssscript.com/fast-html-table-sorting/
 templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards configs_export.Infocards) {
 	if mode == ShipShowBases {
-		@tab.TabMenu(urls.Ships, mode2, shared)
+		@TabMenu(urls.Ships, mode2, shared)
 	} else if mode == ShipShowDetails {
-		@tab.TabMenu(urls.ShipDetails, mode2, shared)
+		@TabMenu(urls.ShipDetails, mode2, shared)
 	}
 	@tab.TabContent() {
 		<div class="splitter">

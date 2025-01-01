@@ -92,9 +92,9 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 // https://www.cssscript.com/fast-html-table-sorting/
 templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 tab.ShowEmpty, shared *types.SharedData) {
 	if mode == FactionShowBases {
-		@tab.TabMenu(urls.Factions, mode2, shared)
+		@TabMenu(urls.Factions, mode2, shared)
 	} else if mode == FactionShowRephacks {
-		@tab.TabMenu(urls.Rephacks, mode2, shared)
+		@TabMenu(urls.Rephacks, mode2, shared)
 	}
 	@tab.TabContent() {
 		<div class="splitter">

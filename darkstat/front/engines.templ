@@ -100,7 +100,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *typ
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ Engines(engines []configs_export.Engine, mode tab.ShowEmpty, shared *types.SharedData) {
-	@tab.TabMenu(urls.Engines, mode, shared)
+	@TabMenu(urls.Engines, mode, shared)
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable(){

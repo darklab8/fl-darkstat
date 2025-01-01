@@ -60,7 +60,7 @@ templ HashTable(hashes map[string]flhash.HashCode) {
 
 
 templ HashesT(hashes map[string]flhash.HashCode, mode2 tab.ShowEmpty, shared *types.SharedData) {
-	@tab.TabMenu(urls.Hashes, mode2, shared)
+	@TabMenu(urls.Hashes, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable(){

@@ -79,7 +79,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm tab.PinMod, share
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ ThrusterT(thrusters []configs_export.Thruster, mode2 tab.ShowEmpty, shared *types.SharedData) {
-	@tab.TabMenu(urls.Thrusters, mode2, shared)
+	@TabMenu(urls.Thrusters, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable(){

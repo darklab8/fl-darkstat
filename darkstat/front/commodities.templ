@@ -86,7 +86,7 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm tab.PinMod, s
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
 templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, shared *types.SharedData) {
-	@tab.TabMenu(urls.Commodities, mode, shared)
+	@TabMenu(urls.Commodities, mode, shared)
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable(){
