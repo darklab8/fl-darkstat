@@ -4,6 +4,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"context"
 )
 
 type PinMod string
@@ -134,12 +135,19 @@ type Tr struct {
 	detailed_url string
 	pinm PinMod
 	is_tranport_unreachable bool
+	from_relay bool
 }
 type TrOpt func(t *Tr)
 
 func WithTransportUnreachable(is_tranport_unreachable bool) TrOpt {
 	return func(t *Tr) {
 		t.is_tranport_unreachable = is_tranport_unreachable
+	}
+}
+
+func WithFromRelay() TrOpt {
+	return func(t *Tr) {
+		t.from_relay = true
 	}
 }
 
@@ -169,10 +177,18 @@ templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
 	}
 }
 
+func GetSiteRoot(tr *Tr, ctx context.Context) string {
+	if tr.from_relay {
+		return types.GetCtx(ctx).RelayHost + types.GetCtx(ctx).RelayRoot
+	}
+
+	return types.GetCtx(ctx).SiteRoot
+}
+
 templ TrFromMainTb2(tr *Tr, prerender bool) {
 	<tr
 		id={ string(tr.pinm) + "bottominfo_" + tr.nickname }
-		hx-get={ types.GetCtx(ctx).SiteRoot + tr.detailed_url }
+		hx-get={ GetSiteRoot(tr,ctx) + tr.detailed_url }
 		hx-trigger="mousedown"
 		hx-target={ "#table-bottom-main" + string(tr.pinm) }
 		hx-swap="innerHTML"

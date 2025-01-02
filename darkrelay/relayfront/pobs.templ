@@ -1,0 +1,196 @@
+package relayfront
+
+import (
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front"
+	"strconv"
+	"strings"
+)
+
+func PoBDetailedUrl(pob configs_export.PoB) string {
+	return "pob/pob_" + strings.ToLower(pob.Nickname)
+}
+
+func FmtPtrString(value *string) string {
+	if value == nil {
+		return "noaccess"
+	}
+	return  *value
+}
+
+func FmtPtrInt(value *int) string {
+	if value == nil {
+		return "noaccess"
+	}
+	return  strconv.Itoa(*value)
+}
+
+templ PobTable(pobs []configs_export.PoB, pinm tab.PinMod, shared *types.SharedData) {
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th style="width:100px;">Player Owned Base</th>
+				if pinm == tab.PinMode {
+					<th style="width:25px;">Select</th>
+					<th style="width:25px;">Select</th>
+				}
+				<th style="width:25px;">@frmt.MultiLinestring([]string{"Pinned", "items", "amount"})</th>
+				<th style="width:25px;">Pos</th>
+				<th style="width:25px;">Level</th>
+				<th style="width:25px;">Money</th>
+				<th style="width:25px;">Health</th>
+				<th style="width:25px;">System</th>
+				<th style="width:25px;">@frmt.MultiLinestring([]string{"System", "Nickname"})</th>
+				<th style="width:25px;">Faction</th>
+				<th style="width:25px;">@frmt.MultiLinestring([]string{"Faction", "Nickname"})</th>
+
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Defense", "Mode"})
+				</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, pob := range pobs {
+				@tab.TrFromMainTb2(tab.NewTr(pob.Nickname, PoBDetailedUrl(pob), pinm, tab.WithFromRelay()), false) {
+					@tab.PinTd(pob.Nickname, pob.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, PoBDetailedUrl(pob))
+					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
+					<td> { strconv.Itoa(len(pob.ShopItems)) } </td>
+					<td> { FmtPtrString(pob.Pos)} </td>
+					<td>{ FmtPtrInt(pob.Level) }</td>
+					<td>{ FmtPtrInt(pob.Money) }</td>
+					<td>{ FmtPtrInt(pob.Health) }</td>
+					<td class="seo">{ FmtPtrString(pob.SystemName) }</td>
+					<td class="seo">{ FmtPtrString(pob.SystemNick) } </td>
+					<td class="seo">{ FmtPtrString(pob.FactionName) }</td>
+					
+					<td class="seo">{ FmtPtrString(pob.FactionNick) } </td>
+					<td class="seo">
+					if pob.DefenseMode != nil {
+						{ pob.DefenseMode.ToStr() }
+					} else {
+						noaccess
+					}
+					</td>
+					@tab.TdInfoCardClick(configs_export.InfocardKey(pob.Nickname), pob.Nickname, pinm, shared)
+				}
+			}
+		</tbody>
+	</table>
+}
+
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
+templ PoBsT(configs *configs_export.Exporter, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@front.TabMenu(urls.Ammo, mode2, shared)
+	@tab.TabContent() {
+		<div class="splitter">
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(&types.SharedData{})
+					<div id="table-top-main">
+						@PobTable(configs.PoBs, tab.MainMode, shared)
+					</div>
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@PobTable(configs.PoBs, tab.PinMode, shared)
+					</div>
+				}
+				@tab.TableBottom(){
+					<div id="table-bottom-main">
+						@PoBShopItemsShared()
+					</div>
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
+						@PoBShopItemsShared()
+					</div>
+				}
+			}
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
+			}
+		</div>
+	}
+}
+
+
+
+templ PoBShopItemsShared() {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:200px;">Pinned Item</th>
+				<th style="width:100px;">Category</th>
+				<th style="width:10px;">Quantity</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"price","to sell","to base"})
+				</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"price","to buy","from base"})
+				</th>
+				<th style="width:75px;">
+					@frmt.MultiLinestring([]string{"Base", "Sells"})
+				</th>
+				<th style="width:10px;">Min Stock</th>
+				<th style="width:10px;">Max Stock</th>
+				<th style="width:200px;">Nickname</th>
+
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ PoBShopItems(name string, shop_items []configs_export.ShopItem) {
+	@tab.BottomFilterBar()
+	<div class="bottom_name">{ name }</div>
+	@PoBShopItemsShared() {
+		for _, good := range shop_items {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(good.Nickname)) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+				preload="mouseover"
+				onclick="RowHighlighter(this)"
+			>
+				<td>
+					@frmt.WriteLimit(200) {
+						{ good.Name }
+					}
+				</td>
+				<td>
+					@frmt.WriteGoodType(string(good.Category))
+				</td>
+				<td> { strconv.Itoa(good.Quantity) }</td>
+				<td> { strconv.Itoa(good.Price) }</td>
+				<td> { strconv.Itoa(good.SellPrice) }</td>
+				<td> { FormatPoBSells(good) }</td>
+				<td> { strconv.Itoa(good.MinStock) }</td>
+				<td> { strconv.Itoa(good.MaxStock) }</td>
+				<td>
+					@frmt.WriteLimit(200) {
+						{ good.Nickname }
+					}
+				</td>
+				<td></td>
+			</tr>
+		}
+	}
+}
+
+func FormatPoBSells(good configs_export.ShopItem) string {
+	if good.Quantity > good.MinStock && good.Quantity < good.MaxStock { return "sells & buys"}
+
+	if good.Quantity > good.MinStock { return "sells only" }
+
+	if good.Quantity < good.MaxStock { return "buys only" }
+
+	return "unidentified"
+}

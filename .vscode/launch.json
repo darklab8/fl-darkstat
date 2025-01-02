@@ -9,7 +9,9 @@
             // "port": 2345,
             "host": "127.0.0.1",
             "program": "${workspaceFolder}",
-            "args": [],
+            "args": [
+                "relay",
+            ],
             "env": {
                 "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"
             },

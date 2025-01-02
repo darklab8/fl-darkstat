@@ -93,12 +93,24 @@ templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePa
 				role="tab"
 				aria-selected="false"
 				aria-controls="tab-content"
-				style="height: 100%;"
+				style="width:60px; border-radius: 20px; height: 100%;" 
 			>
 				@frmt.MultiLinestring(text)
 			</button>
 		</a>
 
+	} else if get_url == urls.Pobs {
+		<button
+			preload="mouseover"
+			hx-trigger="mousedown"
+			hx-get={ types.GetCtx(ctx).RelayHost + types.GetCtx(ctx).RelayRoot + get_url.ToString() }
+			class={ templ.KV("selected", strings.Contains(get_url.ToString(), url.ToString())), "button", strings.Join(text,"") }
+			role="tab"
+			aria-selected="false"
+			aria-controls="tab-content"
+		>
+			@frmt.MultiLinestring(text)
+		</button>
 	} else {
 		<button
 			preload="mouseover"

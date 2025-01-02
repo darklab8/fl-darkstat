@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
@@ -86,6 +87,9 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				}
 				@tab.Button([]string{"Engines"}, urls.Engines, url)
 				@tab.Button([]string{"Scan","ners"}, urls.Scanners, url)
+				if settings.IsRelayActive(shared.Mapped) {
+					@tab.Button([]string{"PoBs"}, urls.Pobs, url)
+				}
 				@tab.Button([]string{"Hash"}, urls.HashesIndex, url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestring([]string{"Show", "All"})
@@ -117,6 +121,10 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				}
 				@tab.Button([]string{"Engines"}, tab.AllItemsUrl(urls.Engines), url)
 				@tab.Button([]string{"Scan","ners"}, tab.AllItemsUrl(urls.Scanners), url)
+				if settings.IsRelayActive(shared.Mapped) {
+					@tab.Button([]string{"PoBs"}, tab.AllItemsUrl(urls.Pobs), url)
+				}
+				
 				@tab.Button([]string{"Hash"}, tab.AllItemsUrl(urls.HashesIndex), url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestring([]string{"Don't", "Show All"})

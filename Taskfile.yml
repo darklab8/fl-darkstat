@@ -48,6 +48,23 @@ tasks:
         --recursive
         -- sh -c "task web; sleep infinity"
 
+  relay:
+    cmds:
+      - task: build-version
+      - templ generate
+      - go run . relay
+
+  relay:watch:
+    cmds:
+      - task: build-version
+      # pip install watchdog[watchmedo]
+      - >
+        ~/venv/bin/watchmedo auto-restart 
+        --patterns "*.templ;*.go;*.css;*.js;enverant.json" 
+        -i "*_templ.go"
+        --recursive
+        -- sh -c "task relay; sleep infinity"
+
   build:test:
     cmds:
       - task: build-version

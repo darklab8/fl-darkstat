@@ -28,17 +28,22 @@ import (
 )
 
 type Router struct {
+	AppData *AppData
 }
 
 type RouterOpt func(l *Router)
 
-func NewLinker(opts ...RouterOpt) *Router {
+func NewRouter(opts ...RouterOpt) *Router {
 	l := &Router{}
 	for _, opt := range opts {
 		opt(l)
 	}
 
 	return l
+}
+
+func WithAppData(AppData *AppData) RouterOpt {
+	return func(l *Router) { l.AppData = AppData }
 }
 
 type AppData struct {
@@ -82,6 +87,9 @@ func NewAppData() *AppData {
 		StaticRoot:     siteRoot + staticPrefix,
 		Heading:        settings.Env.AppHeading,
 		Timestamp:      time.Now().UTC(),
+
+		RelayHost: settings.Env.RelayHost,
+		RelayRoot: settings.Env.RelayRoot,
 	}
 
 	static_files := []builder.StaticFile{
@@ -147,10 +155,13 @@ func NewAppData() *AppData {
 }
 
 func (l *Router) Link() *builder.Builder {
-	app_data := NewAppData()
-	shared := app_data.Shared
-	configs := app_data.Configs
-	build := app_data.Build
+
+	if l.AppData == nil {
+		l.AppData = NewAppData()
+	}
+	shared := l.AppData.Shared
+	configs := l.AppData.Configs
+	build := l.AppData.Build
 
 	defer timeit.NewTimer("link, internal measure").Close()
 

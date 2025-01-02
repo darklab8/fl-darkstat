@@ -31,6 +31,9 @@ type GlobalParams struct {
 	Heading        string
 	Timestamp      time.Time
 	TractorTabName string
+
+	RelayHost string
+	RelayRoot string
 }
 
 func (g *GlobalParams) GetBuildPath() utils_types.FilePath {

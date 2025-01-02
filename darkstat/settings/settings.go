@@ -6,6 +6,7 @@ import (
 
 	_ "embed"
 
+	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_settings"
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
@@ -22,6 +23,9 @@ type DarkstatEnvVars struct {
 	AppHeading     string
 	AppVersion     string
 	IsDetailed     bool
+
+	RelayHost string
+	RelayRoot string
 }
 
 var Env DarkstatEnvVars
@@ -36,8 +40,27 @@ func init() {
 		AppHeading:     env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr("")),
 		AppVersion:     getAppVersion(),
 		IsDetailed:     env.GetBoolOr("DARKSTAT_DETAILED", false),
+		RelayHost:      env.GetStr("RELAY_HOST", enverant.OrStr("http://localhost:8080")),
+		RelayRoot:      env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
 	}
+
 	fmt.Sprintln("conf=", Env)
+}
+
+func IsRelayActive(configs *configs_mapped.MappedConfigs) bool {
+	if configs.Discovery == nil {
+		return false
+	}
+
+	if Env.IsDevEnv {
+		return true
+	}
+
+	if !strings.Contains(Env.RelayHost, "localhost") {
+		return true
+	}
+
+	return true
 }
 
 func getAppVersion() string {
