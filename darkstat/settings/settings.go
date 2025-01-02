@@ -24,8 +24,9 @@ type DarkstatEnvVars struct {
 	AppVersion     string
 	IsDetailed     bool
 
-	RelayHost string
-	RelayRoot string
+	RelayHost     string
+	RelayRoot     string
+	RelayLoopSecs int
 }
 
 var Env DarkstatEnvVars
@@ -42,6 +43,7 @@ func init() {
 		IsDetailed:     env.GetBoolOr("DARKSTAT_DETAILED", false),
 		RelayHost:      env.GetStr("RELAY_HOST", enverant.OrStr("http://localhost:8080")),
 		RelayRoot:      env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
+		RelayLoopSecs:  env.GetIntOr("RELAY_LOOP_SECS", 30),
 	}
 
 	fmt.Sprintln("conf=", Env)

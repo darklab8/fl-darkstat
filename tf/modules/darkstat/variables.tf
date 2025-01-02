@@ -6,5 +6,6 @@ locals {
     DEV_ENV            = "true" # to optimize trade routes. optimize them better later
     DARKSTAT_LOG_LEVEL = "DEBUG"
     UTILS_LOG_LEVEL    = "DEBUG"
+    RELAY_LOOP_SECS    = "300"
   }
 }

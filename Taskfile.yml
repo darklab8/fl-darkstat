@@ -107,5 +107,5 @@ tasks:
       - task: docker:push
 
 env:
-  tag_version: v1.45.0-a1
+  tag_version: v1.45.0-a2
   DOCKER_HOST: ssh://root@darklab:22
