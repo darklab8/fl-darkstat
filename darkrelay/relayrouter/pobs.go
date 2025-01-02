@@ -34,6 +34,16 @@ func (l *Router) LinkPobs(
 		})
 	}
 
+	// For sanity checking test regarding data being updated
+	// for index, _ := range configs.PoBs {
+	// 	configs.PoBs[index].Name += fmt.Sprintf("%d", rand.IntN(100))
+	// 	if configs.PoBs[index].Level == nil {
+	// 		configs.PoBs[index].Level = ptr.Ptr(10)
+	// 	} else {
+	// 		configs.PoBs[index].Level = ptr.Ptr(*configs.PoBs[index].Level + 10)
+	// 	}
+	// }
+
 	build.RegComps(
 		builder.NewComponent(
 			urls.Pobs,
