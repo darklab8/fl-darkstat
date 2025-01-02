@@ -1,0 +1,15 @@
+go.work*
+**/*.wasm
+web/static/export/*
+**/*_templ*
+/build/
+**/id_rsa*
+**/cover.out
+**/dist/*
+**/ruby_home/
+**/gems/
+!.vscode/
+!vendor/**
+**/.terraform/
+**/.git
+

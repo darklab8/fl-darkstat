@@ -61,3 +61,4 @@ jobs:
           FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
           FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
           DARKSTAT_DETAILED: "true"
+          RELAY_HOST: "https://darkrelay.dd84ai.com"

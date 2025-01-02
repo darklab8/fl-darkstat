@@ -1,31 +1,37 @@
-# create darkstat folder if not exists
+module "discovery" {
+  source      = "../modules/discovery"
+  environment = "production"
+}
 
-# pull fl-data-discovery data
+module "darkstat" {
+  source         = "../modules/darkstat"
+  environment    = "production"
+  discovery_path = module.discovery.discovery_path
+  ipv4_address   = module.data_cluster.node_darklab.ipv4_address
+}
 
-# run docker container with periodic patcher?
-# if patch was succesful, run darkstat builder
+module "nginx" {
+  source = "../modules/docker_nginx"
+}
 
-# run nginx container to serve content?
-
-
-# resource "docker_image" "darkstat_nginx" {
-#   name         = "nginx:latest"
-#   keep_locally = true
-# }
-
-# resource "docker_container" "darkstat_nginx" {
-#   name  = "darkstat_nginx"
-#   image = docker_image.darkstat_nginx.image_id
-
-#   volumes {
-#     container_path = "/usr/share/nginx/html"
-#     host_path      = "/var/lib/darkstat/discovery/build"
-#     read_only      = true
-#   }
-
-#   lifecycle {
-#     ignore_changes = [
-#       memory_swap,
-#     ]
-#   }
-# }
+module "dns" {
+  source = "../../../infra/tf/modules/cloudflare_dns"
+  zone   = "dd84ai.com"
+  dns_records = [{
+    type    = "A"
+    value   = module.data_cluster.node_darklab.ipv4_address
+    name    = "darkstat"
+    proxied = false
+    }, {
+    type    = "A"
+    value   = module.data_cluster.node_darklab.ipv4_address
+    name    = "darkrelay"
+    proxied = false
+    }, {
+    type    = "A"
+    value   = module.data_cluster.node_darklab.ipv4_address
+    name    = "test"
+    proxied = false
+    }
+  ]
+}

@@ -83,3 +83,29 @@ tasks:
       - sudo rm /usr/local/bin/darkstat | true
       - GOOS=linux GOARCH=amd64 go build -v -o dist/darkstat-linux-amd64 main.go
       - sudo ln -s {{.PWD}}/dist/darkstat-linux-amd64 /usr/local/bin/darkstat
+
+  docker:build:
+    cmds:
+      - docker build --tag darkwind8/darkstat:$tag_version .
+
+  docker:push:
+    cmds:
+      - docker push darkwind8/darkstat:$tag_version
+
+  docker:run:
+    cmds:
+      - docker run -it darkwind8/darkstat:$tag_version
+
+  docker:retag:
+    cmds:
+      - docker tag darkwind8/darkstat:$tag_version darkwind8/darkstat:production
+      - docker push darkwind8/darkstat:production
+
+  docker:buildpush:
+    cmds:
+      - task: docker:build
+      - task: docker:push
+
+env:
+  tag_version: v1.45.0-a1
+  DOCKER_HOST: ssh://root@darklab:22
