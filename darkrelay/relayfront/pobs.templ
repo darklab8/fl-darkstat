@@ -182,8 +182,8 @@ templ PoBShopItems(name string, shop_items []configs_export.ShopItem) {
 					@frmt.WriteGoodType(string(good.Category))
 				</td>
 				<td> { strconv.Itoa(good.Quantity) }</td>
-				<td> { strconv.Itoa(good.Price) }</td>
 				<td> { strconv.Itoa(good.SellPrice) }</td>
+				<td> { strconv.Itoa(good.Price) }</td>
 				<td> { FormatPoBSells(good) }</td>
 				<td> { strconv.Itoa(good.MinStock) }</td>
 				<td> { strconv.Itoa(good.MaxStock) }</td>
