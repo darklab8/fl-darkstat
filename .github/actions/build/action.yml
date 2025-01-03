@@ -13,6 +13,9 @@ inputs:
     description: Heading at the site rigit.
     # type: string
     default: 'fl-darkstat powered by <a href="https://github.com/darklab8/fl-darkstat">Github</a>'
+  relay-host:
+    description: turning of optional dark relay features. necessary only for Discovery
+    default: "http://localhost:8080"
 
 runs:
   using: "composite"
@@ -40,3 +43,4 @@ runs:
         SITE_ROOT: ${{ inputs.site-root }}
         FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
         FLDARKSTAT_HEADING: ${{ inputs.heading }}
+        RELAY_HOST: ${{ inputs.relay-host }}
