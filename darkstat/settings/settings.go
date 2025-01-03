@@ -8,6 +8,7 @@ import (
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_settings"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
 )
@@ -50,19 +51,18 @@ func init() {
 }
 
 func IsRelayActive(configs *configs_mapped.MappedConfigs) bool {
-	if configs.Discovery == nil {
-		return false
-	}
-
-	if Env.IsDevEnv {
+	if Env.IsDevEnv && configs.Discovery != nil {
+		logus.Log.Info("activating relay for dev env of discovery")
 		return true
 	}
 
 	if !strings.Contains(Env.RelayHost, "localhost") {
+		logus.Log.Info("activating relay for non localhost RELAY_HOST variable defined")
 		return true
 	}
 
-	return true
+	logus.Log.Info("relay is disabled")
+	return false
 }
 
 func getAppVersion() string {
