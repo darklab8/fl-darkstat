@@ -9,6 +9,7 @@
     # if u wish to speed up rerender by magnitude, then keep uncommended trade route calculations disabling
     "CONFIGS_DISABLE_TRADE_ROUTES": "false",
     "FLDARKSTAT_HEADING": 'Dev server for fl-darkstat | <a href="https://github.com/darklab8/fl-darkstat">Github</a>',
+    "SITE_ROOT_ACCEPTORS": "fl-data-discovery/,fl-darkstat/",
     # "DARKSTAT_DETAILED": "true"
     # "CONFIGS_FALLBACK_TO_NICKNAMES": "true",
     # "CONFIGS_STRICT": "false",

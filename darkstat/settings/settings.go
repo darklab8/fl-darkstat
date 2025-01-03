@@ -18,11 +18,12 @@ var version string
 type DarkstatEnvVars struct {
 	utils_settings.UtilsEnvs
 	configs_settings.ConfEnvVars
-	TractorTabName string
-	SiteRoot       string
-	AppHeading     string
-	AppVersion     string
-	IsDetailed     bool
+	TractorTabName    string
+	SiteRoot          string
+	SiteRootAcceptors string
+	AppHeading        string
+	AppVersion        string
+	IsDetailed        bool
 
 	RelayHost     string
 	RelayRoot     string
@@ -34,19 +35,28 @@ var Env DarkstatEnvVars
 func init() {
 	env := enverant.NewEnverant()
 	Env = DarkstatEnvVars{
-		UtilsEnvs:      utils_settings.GetEnvs(env),
-		ConfEnvVars:    configs_settings.GetEnvs(env),
-		TractorTabName: env.GetStr("DARKSTAT_TRACTOR_TAB_NAME", enverant.OrStr("Tractors")),
-		SiteRoot:       env.GetStr("SITE_ROOT", enverant.OrStr("/")),
-		AppHeading:     env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr("")),
-		AppVersion:     getAppVersion(),
-		IsDetailed:     env.GetBoolOr("DARKSTAT_DETAILED", false),
-		RelayHost:      env.GetStr("RELAY_HOST", enverant.OrStr("http://localhost:8080")),
-		RelayRoot:      env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
-		RelayLoopSecs:  env.GetIntOr("RELAY_LOOP_SECS", 30),
+		UtilsEnvs:         utils_settings.GetEnvs(env),
+		ConfEnvVars:       configs_settings.GetEnvs(env),
+		TractorTabName:    env.GetStr("DARKSTAT_TRACTOR_TAB_NAME", enverant.OrStr("Tractors")),
+		SiteRoot:          env.GetStr("SITE_ROOT", enverant.OrStr("/")),
+		SiteRootAcceptors: env.GetStr("SITE_ROOT_ACCEPTORS", enverant.OrStr("")),
+		AppHeading:        env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr("")),
+		AppVersion:        getAppVersion(),
+		IsDetailed:        env.GetBoolOr("DARKSTAT_DETAILED", false),
+		RelayHost:         env.GetStr("RELAY_HOST", enverant.OrStr("http://localhost:8080")),
+		RelayRoot:         env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
+		RelayLoopSecs:     env.GetIntOr("RELAY_LOOP_SECS", 30),
 	}
 
 	fmt.Sprintln("conf=", Env)
+}
+
+func (e DarkstatEnvVars) GetSiteRootAcceptors() []string {
+	if e.SiteRootAcceptors == "" {
+		return []string{}
+	}
+
+	return strings.Split(e.SiteRootAcceptors, ",")
 }
 
 func IsRelayActive(configs *configs_mapped.MappedConfigs) bool {

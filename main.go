@@ -87,7 +87,10 @@ func main() {
 			}
 		}()
 
-		web.NewWeb(relay_fs).Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
+		web.NewWeb(
+			relay_fs,
+			web.WithSiteRootAcceptors(settings.Env.GetSiteRootAcceptors(), settings.Env.SiteRoot),
+		).Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 	}
 
 	switch Action(action) {

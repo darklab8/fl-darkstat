@@ -51,11 +51,11 @@ func (l *Router) LinkFactions(
 			front.FactionsT(data.Factions, front.FactionShowBases, tab.ShowEmpty(true), shared),
 		),
 		builder.NewComponent(
-			urls.Rephacks,
+			urls.Bribes,
 			front.FactionsT(useful_bribes, front.FactionShowRephacks, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
-			tab.AllItemsUrl(urls.Rephacks),
+			tab.AllItemsUrl(urls.Bribes),
 			front.FactionsT(data.Factions, front.FactionShowRephacks, tab.ShowEmpty(true), shared),
 		),
 	)

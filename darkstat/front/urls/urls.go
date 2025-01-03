@@ -17,7 +17,7 @@ const (
 	TravelRoutes    utils_types.FilePath = "travel_routes.html"
 	Missions        utils_types.FilePath = "missions.html"
 	Factions        utils_types.FilePath = "factions.html"
-	Rephacks        utils_types.FilePath = "rephacks.html"
+	Bribes          utils_types.FilePath = "bribes.html"
 	Commodities     utils_types.FilePath = "commodities.html"
 	Guns            utils_types.FilePath = "guns.html"
 	GunModifiers    utils_types.FilePath = "gun_modifiers.html"
