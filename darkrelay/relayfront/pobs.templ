@@ -22,6 +22,13 @@ func FmtPtrString(value *string) string {
 	return  *value
 }
 
+func FmtPtrStringOrQuestionMark(value *string) string {
+	if value == nil {
+		return "?"
+	}
+	return  *value
+}
+
 func FmtPtrInt(value *int) string {
 	if value == nil {
 		return "noaccess"
@@ -44,6 +51,8 @@ templ PobTable(pobs []configs_export.PoB, pinm tab.PinMod, shared *types.SharedD
 				<th style="width:25px;">Money</th>
 				<th style="width:25px;">Health</th>
 				<th style="width:25px;">System</th>
+				<th style="width:25px;">@frmt.MultiLinestring([]string{"Nav", "Map"})</th>
+                <th style="width:100px;">Region</th>
 				<th style="width:25px;">@frmt.MultiLinestring([]string{"System", "Nickname"})</th>
 				<th style="width:25px;">Faction</th>
 				<th style="width:25px;">@frmt.MultiLinestring([]string{"Faction", "Nickname"})</th>
@@ -66,6 +75,10 @@ templ PobTable(pobs []configs_export.PoB, pinm tab.PinMod, shared *types.SharedD
 					<td>{ FmtPtrInt(pob.Money) }</td>
 					<td>{ FmtPtrInt(pob.Health) }</td>
 					<td class="seo">{ FmtPtrString(pob.SystemName) }</td>
+					<td>{ FmtPtrStringOrQuestionMark(pob.SectorCoord) }</td>
+					<td>@frmt.WriteLimit(100) {
+						{ FmtPtrString(pob.Region) }
+					}</td>
 					<td class="seo">{ FmtPtrString(pob.SystemNick) } </td>
 					<td class="seo">{ FmtPtrString(pob.FactionName) }</td>
 					

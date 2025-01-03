@@ -9,6 +9,8 @@ locals {
     RELAY_LOOP_SECS    = "300"
 
     SITE_ROOT          = "/fl-data-discovery/"
+    # How the heck to fix that.
+    # SITE_ROOT_ACCEPTORS = "/fl-data-discovery/,/fl-darkstat/"
     FLDARKSTAT_HEADING = <<-EOT
     <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
     EOT
