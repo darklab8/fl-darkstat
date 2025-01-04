@@ -1,0 +1,157 @@
+package relayfront
+
+import (
+	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front"
+	"strings"
+	"strconv"
+)
+
+func PoBGoodDetailedUrl(good *configs_export.PoBGood) string {
+	return "pob_good/pob_good_" + strings.ToLower(good.Nickname)
+}
+
+templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared *types.SharedData) {
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th style="width:200px;">Pinned Item</th>
+				if pinm == tab.PinMode {
+					<th style="width:25px;">Select</th>
+					<th style="width:25px;">Select</th>
+				}
+				<th style="width:100px;">Category</th>
+				<th style="width:10px;">@frmt.MultiLinestring([]string{"Total","buyable","from bases"})</th>
+				<th style="width:10px;">@frmt.MultiLinestring([]string{"Total","sellable", "to bases"})</th>
+				<th style="width:10px;">@frmt.MultiLinestring([]string{"Best price","to buy","from bases"})</th>
+				<th style="width:10px;">@frmt.MultiLinestring([]string{"Best price","to sell","to bases"})</th>
+				<th style="width:75px;">
+					@frmt.MultiLinestring([]string{"Base", "Sells"})
+				</th>
+				<th style="width:200px;">Nickname</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, good := range pob_goods {
+				@tab.TrFromMainTb2(tab.NewTr(good.Nickname, PoBGoodDetailedUrl(good), pinm, tab.WithFromRelay()), false) {
+					@tab.PinTd(good.Nickname, good.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, PoBGoodDetailedUrl(good))
+					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
+					<td>
+						@frmt.WriteGoodType(string(good.Category))
+					</td>
+					<td> { strconv.Itoa(good.TotalBuyableFromBases) }</td>
+					<td> { strconv.Itoa(good.TotalSellableToBases) }</td>
+					<td>
+					if good.BestPriceToBuy != nil {
+						{ strconv.Itoa(*good.BestPriceToBuy) }
+					}</td>
+					<td>
+					if good.BestPriceToSell != nil {
+						{ strconv.Itoa(*good.BestPriceToSell) }
+					}</td>
+					<td> { FormatPoBSells(good) }</td>
+					<td>
+						@frmt.WriteLimit(200) {
+							{ good.Nickname }
+						}
+					</td>
+					@tab.TdInfoCardClick(configs_export.InfocardKey(good.Nickname), good.Nickname, pinm, shared)
+				}
+			}
+		</tbody>
+	</table>
+}
+
+templ PoBGoodsT(configs *configs_export.Exporter, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@front.TabMenu(urls.PoBGoods, mode2, shared)
+	@tab.TabContent() {
+		<div class="splitter">
+			@tab.LeftTable(){
+				@tab.TableTop(){
+					@tab.FilterBar(&types.SharedData{})
+					<div id="table-top-main">
+						@PoBGoodsTable(configs.PoBGoods, tab.MainMode, shared)
+					</div>
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@PoBGoodsTable(configs.PoBGoods, tab.PinMode, shared)
+					</div>
+				}
+				@tab.TableBottom(){
+					<div id="table-bottom-main">
+						@PoBGoodPobsShared()
+					</div>
+					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
+						@PoBGoodPobsShared()
+					</div>
+				}
+			}
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
+			}
+		</div>
+	}
+}
+
+templ PoBGoodPobsShared() {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:100px;">Player Owned Base</th>
+
+				<th style="width:10px;">Quantity</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"price","to sell","to base"})
+				</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"price","to buy","from base"})
+				</th>
+				<th style="width:75px;">
+					@frmt.MultiLinestring([]string{"Base", "Sells"})
+				</th>
+				<th style="width:10px;">Min Stock</th>
+				<th style="width:10px;">Max Stock</th>
+				@PoBTableHeaders()
+			</tr>
+		</thead>
+		<tbody>
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ PoBGoodPobs(name string, pobs []*configs_export.PoBGoodBase) {
+	@tab.BottomFilterBar()
+	<div class="bottom_name">{ name }</div>
+	@PoBGoodPobsShared() {
+		for _, pob := range pobs {
+			<tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(pob.Base.Nickname)) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+				preload="mouseover"
+				onclick="RowHighlighter(this)"
+			>
+				<td>
+					@frmt.WriteLimit(200) {
+						{ pob.Base.Name }
+					}
+				</td>
+				<td> { strconv.Itoa(pob.ShopItem.Quantity) }</td>
+				<td> { strconv.Itoa(pob.ShopItem.SellPrice) }</td>
+				<td> { strconv.Itoa(pob.ShopItem.Price) }</td>
+				<td> { FormatPoBSells(pob.ShopItem) }</td>
+				<td> { strconv.Itoa(pob.ShopItem.MinStock) }</td>
+				<td> { strconv.Itoa(pob.ShopItem.MaxStock) }</td>
+				@PobTableRow(pob.Base)
+				<td></td>
+			</tr>
+		}
+	}
+}

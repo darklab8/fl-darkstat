@@ -35,5 +35,6 @@ const (
 	Engines         utils_types.FilePath = "engines.html"
 	CounterMeasures utils_types.FilePath = "counter_measures.html"
 	Scanners        utils_types.FilePath = "scanners.html"
-	Pobs            utils_types.FilePath = "pobs.html"
+	PoBs            utils_types.FilePath = "pobs.html"
+	PoBGoods        utils_types.FilePath = "pob_goods.html"
 )

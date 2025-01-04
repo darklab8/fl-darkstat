@@ -93,13 +93,14 @@ templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePa
 				role="tab"
 				aria-selected="false"
 				aria-controls="tab-content"
-				style="width:60px; border-radius: 20px; height: 100%;" 
+				style="width:40px; border-radius: 20px; height: 100%;" 
 			>
 				@frmt.MultiLinestring(text)
 			</button>
 		</a>
 
-	} else if get_url == urls.Pobs {
+	// TODO refactor this hackery
+	} else if get_url == urls.PoBs || get_url == urls.PoBGoods {
 		<button
 			preload="mouseover"
 			hx-trigger="mousedown"

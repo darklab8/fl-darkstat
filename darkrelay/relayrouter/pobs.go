@@ -46,11 +46,11 @@ func (l *Router) LinkPobs(
 
 	build.RegComps(
 		builder.NewComponent(
-			urls.Pobs,
+			urls.PoBs,
 			relayfront.PoBsT(configs, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
-			tab.AllItemsUrl(urls.Pobs),
+			tab.AllItemsUrl(urls.PoBs),
 			relayfront.PoBsT(configs, tab.ShowEmpty(true), shared),
 		),
 	)
@@ -63,4 +63,38 @@ func (l *Router) LinkPobs(
 		)
 	}
 
+	sort.Slice(configs.PoBGoods, func(i, j int) bool {
+		if configs.PoBGoods[i].Category != configs.PoBGoods[j].Category {
+			return configs.PoBGoods[i].Category < configs.PoBGoods[j].Category
+		}
+
+		return configs.PoBGoods[i].Name < configs.PoBGoods[j].Name
+	})
+
+	for _, base := range configs.PoBGoods {
+		sort.Slice(base.Bases, func(i, j int) bool {
+			if base.Bases[i].Base.Name != "" && base.Bases[j].Base.Name == "" {
+				return true
+			}
+			return base.Bases[i].Base.Name < base.Bases[j].Base.Name
+		})
+	}
+	build.RegComps(
+		builder.NewComponent(
+			urls.PoBGoods,
+			relayfront.PoBGoodsT(configs, tab.ShowEmpty(false), shared),
+		),
+		builder.NewComponent(
+			tab.AllItemsUrl(urls.PoBGoods),
+			relayfront.PoBGoodsT(configs, tab.ShowEmpty(true), shared),
+		),
+	)
+	for _, good := range configs.PoBGoods {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(relayfront.PoBGoodDetailedUrl(good)),
+				relayfront.PoBGoodPobs(good.Name, good.Bases),
+			),
+		)
+	}
 }

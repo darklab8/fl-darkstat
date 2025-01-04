@@ -10,7 +10,7 @@ import (
 
 templ Index(theme types.Theme, shared *types.SharedData) {
 	@tab.Html5(theme, shared) {
-		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Pobs.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
+		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.PoBs.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
 	}
 }
 

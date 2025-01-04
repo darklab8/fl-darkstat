@@ -145,7 +145,7 @@ func NewAppData() *AppData {
 		shared.Infocards = configs.Infocards
 	})
 
-	shared.CraftableBaseName = configs.CraftableBaseName()
+	shared.CraftableBaseName = mapped.CraftableBaseName()
 
 	return &AppData{
 		Build:   build,
