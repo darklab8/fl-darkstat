@@ -112,5 +112,5 @@ tasks:
       - docker pull darkwind8/darkstat:production && docker service update --image darkwind8/darkstat:production darkstat-production
 
 env:
-  tag_version: v1.45.0-a6
+  tag_version: v1.45.0-a7
   DOCKER_HOST: ssh://root@darklab:22
