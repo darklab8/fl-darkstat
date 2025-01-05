@@ -67,6 +67,9 @@ templ ShipTable(
 					@frmt.MultiLinestring([]string{"Impulse", "Speed"})
 				</th>
 				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Engine", "Max", "Force"})
+				</th>
+				<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"Thrust", "Speed"})
 				</th>
 				<th style="width:25px;">Armor</th>
@@ -151,6 +154,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 		}
 		<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
 		<td>{ fmt.Sprintf("%.0f",ship.ImpulseSpeed) }</td>
+		<td>{ strconv.Itoa(ship.EngineMaxForce) }</td>
 		<td>{ thruster_speeds_to_str(ship.ThrusterSpeed) }</td>
 		<td>{ strconv.Itoa(ship.Armor) } </td>
 		if shared.ShowDisco {

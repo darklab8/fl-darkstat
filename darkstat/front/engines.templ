@@ -74,12 +74,12 @@ templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *typ
 					if shared.ShowFLSR {
 						<td>{ fmt.Sprintf("%.2f", engine.Mass) }</td>
 					}
-					<td>{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
-					<td>{ strconv.Itoa(engine.CruiseSpeed) }</td>
-					<td>{ strconv.Itoa(engine.CruiseChargeTime) }</td>
-					<td>{ strconv.Itoa(engine.LinearDrag) }</td>
-					<td>{ strconv.Itoa(engine.MaxForce) }</td>
-					<td>{ fmt.Sprintf("%.2f", engine.ReverseFraction) }</td>
+					<td class="seo">{ fmt.Sprintf("%.2f",engine.ImpulseSpeed) } </td>
+					<td class="seo">{ strconv.Itoa(engine.CruiseSpeed) }</td>
+					<td class="seo">{ strconv.Itoa(engine.CruiseChargeTime) }</td>
+					<td class="seo">{ strconv.Itoa(engine.LinearDrag) }</td>
+					<td class="seo">{ strconv.Itoa(engine.MaxForce) }</td>
+					<td class="seo">{ fmt.Sprintf("%.2f", engine.ReverseFraction) }</td>
 					<td class="seo">{ engine.FlameEffect }</td>
 					<td class="seo">{ engine.TrailEffect }</td>
 					<td class="seo">{ engine.Nickname } </td>
