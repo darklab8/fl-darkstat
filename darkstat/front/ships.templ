@@ -152,10 +152,10 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 		if shared.ShowFLSR {
 			<td>{ fmt.Sprintf("%.2f", ship.Mass) }</td>
 		}
-		<td>{ strconv.Itoa(ship.CruiseSpeed) }</td>
-		<td>{ fmt.Sprintf("%.0f",ship.ImpulseSpeed) }</td>
-		<td>{ strconv.Itoa(ship.EngineMaxForce) }</td>
-		<td>{ thruster_speeds_to_str(ship.ThrusterSpeed) }</td>
+		<td class="seo">{ strconv.Itoa(ship.CruiseSpeed) }</td>
+		<td class="seo">{ fmt.Sprintf("%.0f",ship.ImpulseSpeed) }</td>
+		<td class="seo">{ strconv.Itoa(ship.EngineMaxForce) }</td>
+		<td class="seo">{ thruster_speeds_to_str(ship.ThrusterSpeed) }</td>
 		<td>{ strconv.Itoa(ship.Armor) } </td>
 		if shared.ShowDisco {
 			<td>{ fmt.Sprintf("%4.0f(%.0f%%)", ship.DiscoShip.ArmorMult, 100*ship.DiscoShip.ArmorMult/(100+ship.DiscoShip.ArmorMult ))}</td>
