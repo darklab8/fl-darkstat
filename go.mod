@@ -5,7 +5,7 @@ go 1.22.5
 require (
 	github.com/a-h/templ v0.2.747
 	github.com/darklab8/fl-configs v0.104.4
-	github.com/darklab8/fl-darkcore v0.7.0
+	github.com/darklab8/fl-darkcore v0.7.1
 	github.com/darklab8/fl-data-discovery v0.4.0
 	github.com/darklab8/go-typelog v0.6.2
 	github.com/darklab8/go-utils v0.21.0
