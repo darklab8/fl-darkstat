@@ -145,31 +145,31 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 		@tab.PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
 		@tab.PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
 		@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, ship.Nickname))
-		<td>{ strconv.Itoa(ship.Class) }</td>
+		<td class="seo">{ strconv.Itoa(ship.Class) }</td>
 		<td class="seo">{ ship.Type }</td>
-		<td>{ strconv.Itoa(ship.Price) }</td>
+		<td class="seo">{ strconv.Itoa(ship.Price) }</td>
 		<td>{ frmt.FormatBoolAsYesNo(configs_export.Buyable(ship.Bases)) }</td>
 		if shared.ShowFLSR {
-			<td>{ fmt.Sprintf("%.2f", ship.Mass) }</td>
+			<td class="seo">{ fmt.Sprintf("%.2f", ship.Mass) }</td>
 		}
 		<td class="seo">{ strconv.Itoa(ship.CruiseSpeed) }</td>
 		<td class="seo">{ fmt.Sprintf("%.0f",ship.ImpulseSpeed) }</td>
 		<td class="seo">{ strconv.Itoa(ship.EngineMaxForce) }</td>
 		<td class="seo">{ thruster_speeds_to_str(ship.ThrusterSpeed) }</td>
-		<td>{ strconv.Itoa(ship.Armor) } </td>
+		<td class="seo">{ strconv.Itoa(ship.Armor) } </td>
 		if shared.ShowDisco {
-			<td>{ fmt.Sprintf("%4.0f(%.0f%%)", ship.DiscoShip.ArmorMult, 100*ship.DiscoShip.ArmorMult/(100+ship.DiscoShip.ArmorMult ))}</td>
+			<td class="seo">{ fmt.Sprintf("%4.0f(%.0f%%)", ship.DiscoShip.ArmorMult, 100*ship.DiscoShip.ArmorMult/(100+ship.DiscoShip.ArmorMult ))}</td>
 		}
-		<td>{ strconv.Itoa(ship.HoldSize) } </td>
-		<td>{ strconv.Itoa(ship.Nanobots) }</td>
-		<td>{ strconv.Itoa(ship.Batteries) }</td>
+		<td class="seo">{ strconv.Itoa(ship.HoldSize) } </td>
+		<td class="seo">{ strconv.Itoa(ship.Nanobots) }</td>
+		<td class="seo">{ strconv.Itoa(ship.Batteries) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.MaxAngularSpeedDegS) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.AngularDistanceFrom0ToHalfSec) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.TimeTo90MaxAngularSpeed) }</td>
-		<td>{ strconv.Itoa(ship.PowerCapacity) }</td>
-		<td>{ strconv.Itoa(ship.PowerRechargeRate) }</td>
-		<td>{ strconv.Itoa(ship.ThrustCapacity) }</td>
-		<td>{ strconv.Itoa(ship.ThrustRecharge) }</td>
+		<td class="seo">{ strconv.Itoa(ship.PowerCapacity) }</td>
+		<td class="seo">{ strconv.Itoa(ship.PowerRechargeRate) }</td>
+		<td class="seo">{ strconv.Itoa(ship.ThrustCapacity) }</td>
+		<td class="seo">{ strconv.Itoa(ship.ThrustRecharge) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.ReverseFraction) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.NudgeForce) }</td>
 		<td>{ fmt.Sprintf("%.2f",ship.StrafeForce) }</td>
