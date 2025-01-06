@@ -11,7 +11,7 @@ env:
         
 jobs:
   build:
-    name: Run the CI suite
+    name: Build docker image and save to latest
     uses: darklab8/fl-darkstat/.github/workflows/deploy-docker-staging.yml@master
     secrets: inherit
   deploy:

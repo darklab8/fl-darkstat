@@ -1,6 +1,7 @@
 name: Deploy docker staging
 
 on:
+    workflow_call: {}
     workflow_dispatch:
     push: 
         branches: ["master"]
