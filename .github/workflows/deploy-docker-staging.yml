@@ -32,7 +32,7 @@ jobs:
       - name: Find tags
         id: data
         run: |
-          echo "BUILD_VERSION=$(autogit semver --alpha --build 1 | sed 's/\+/-build/')" >> $GITHUB_OUTPUT
+          echo "BUILD_VERSION=$(autogit semver --alpha --build ${{ github.run_number }} | sed 's/\+/-build/')" >> $GITHUB_OUTPUT
 
       - name: Echo tags
         run: |
@@ -57,9 +57,10 @@ jobs:
 
       - name: Build image
         run: docker build --build-arg "BUILD_VERSION=${{ steps.data.outputs.BUILD_VERSION }}" --tag darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }} .
+        # docker push darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }}
+        # no point to push staging version eh
       - name: Push image
         run: |
-          docker push darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }}
           docker tag darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }} darkwind8/darkstat:staging
           docker tag darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }} darkwind8/darkstat:latest
           docker push darkwind8/darkstat:staging
