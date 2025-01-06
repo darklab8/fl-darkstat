@@ -12,4 +12,4 @@ web/static/export/*
 !vendor/**
 **/.terraform/
 **/.git
-
+**/version.txt

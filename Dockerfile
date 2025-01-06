@@ -21,6 +21,8 @@ COPY darkrelay darkrelay
 # building golang gazilion times faster
 ENV GOCACHE=/root/.cache/go-build
 RUN templ generate
+ARG BUILD_VERSION
+RUN echo '${BUILD_VERSION}' > darkstat/settings/version.txt
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
 FROM debian:11.6-slim AS runner
