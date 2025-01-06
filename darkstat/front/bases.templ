@@ -219,7 +219,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		<td>{ frmt.FormatBoolAsYesNo(base.Reachable) }</td>
 		@HashTd(base.NicknameHash)
 		@HashTd(base.SystemNicknameHash)
-		@tab.TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, shared)
+		@tab.TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, shared, tab.InfocardClickOpts{})
 	}
 }
 

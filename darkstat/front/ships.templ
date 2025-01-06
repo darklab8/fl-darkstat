@@ -179,7 +179,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 		<td class="seo">{ strconv.Itoa(ship.NameID) } </td>
 		<td class="seo">{ strconv.Itoa(ship.InfoID) } </td>
 		@HashTd(ship.NicknameHash)
-		@tab.TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm, shared)
+		@tab.TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm, shared, tab.InfocardClickOpts{})
 	}
 }
 

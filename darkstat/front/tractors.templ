@@ -90,7 +90,7 @@ templ TractorsT(tractors []configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode
 									@tab.TrFromMainTb(string(tractor.Nickname), TractorDetailedUrl(tractor, tab_mode), "") {
 										<td class="seo">{ tractor.Name }</td>
 										@TractorValues(tractor, shared)
-										@tab.TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "", shared)
+										@tab.TdInfoCardClick(configs_export.InfocardKey(tractor.Nickname), string(tractor.Nickname), "", shared, tab.InfocardClickOpts{})
 									}
 								}
 							</tbody>

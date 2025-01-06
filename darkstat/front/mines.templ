@@ -119,7 +119,7 @@ templ MinesTable(mines []configs_export.Mine, pinm tab.PinMod, shared *types.Sha
 					<td class="seo">{ mine.ProjectileArchetype } </td>
 					@HashTd(mine.MineDropperHash)
 					@HashTd(mine.MineHash)
-					@tab.TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

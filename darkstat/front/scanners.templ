@@ -61,7 +61,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm tab.PinMod, shared *t
 					<td class="seo">{ strconv.Itoa(scanner.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(scanner.InfoID) } </td>
 					@HashTd(scanner.NicknameHash)
-					@tab.TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

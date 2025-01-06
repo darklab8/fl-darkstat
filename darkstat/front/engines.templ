@@ -90,7 +90,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *typ
 					@HashTd(engine.HpTypeHash)
 					@HashTd(engine.FlameEffectHash)
 					@HashTd(engine.TrailEffectHash)
-					@tab.TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

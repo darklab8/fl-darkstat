@@ -111,23 +111,27 @@ templ PinSelectLeftRight(pinm PinMod, url string) {
 	}
 }
 
-templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, shared *types.SharedData) {
+type InfocardClickOpts struct {
+	IsRelayHosted bool
+}
+
+templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, shared *types.SharedData, opts InfocardClickOpts) {
 	@EmbedInfocardForSearch(shared.Infocards, infocardKey)
-	if pinm == PinMode {
+	
 		<td
-			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
-			hx-trigger={ "mousedown from:closest tr, click from:previous td.select_left_infocard_trigger" }
+			if !opts.IsRelayHosted {
+				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
+			} else {
+				hx-get={ types.GetCtx(ctx).RelayHost + types.GetCtx(ctx).RelayRoot + InfocardURL(infocardKey) }
+			}
+			if pinm == PinMode {
+				hx-trigger={ "mousedown from:closest tr, click from:previous td.select_left_infocard_trigger" }
+			} else {
+				hx-trigger={ "mousedown from:closest tr" }
+			}
 			hx-target="#infocard_view"
 			hx-swap="innerHTML"
 		></td>
-	} else {
-		<td
-			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
-			hx-trigger={ "mousedown from:closest tr" }
-			hx-target="#infocard_view"
-			hx-swap="innerHTML"
-		></td>
-	}
 }
 
 type Tr struct {

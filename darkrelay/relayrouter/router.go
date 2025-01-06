@@ -3,10 +3,12 @@ package relayrouter
 import (
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayfront"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/go-utils/utils/timeit"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type Router struct {
@@ -29,6 +31,7 @@ func (r *Router) Link() *builder.Builder {
 
 	shared := r.AppData.Shared
 	build := r.AppData.Build
+	configs := r.AppData.Configs
 
 	r.LinkPobs(r.AppData)
 
@@ -46,6 +49,17 @@ func (r *Router) Link() *builder.Builder {
 			relayfront.Index(types.ThemeVanilla, shared),
 		),
 	)
+
+	timeit.NewTimerMF("linking most of stuff", func() {
+		for nickname, infocard := range configs.Infocards {
+			build.RegComps(
+				builder.NewComponent(
+					utils_types.FilePath(tab.InfocardURL(nickname)),
+					tab.Infocard(infocard),
+				),
+			)
+		}
+	})
 
 	return build
 }

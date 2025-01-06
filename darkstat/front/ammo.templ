@@ -80,7 +80,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.Shar
 					<td class="seo">{ strconv.Itoa(ammo.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(ammo.InfoID) } </td>
 					@HashTd(ammo.NicknameHash)
-					@tab.TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

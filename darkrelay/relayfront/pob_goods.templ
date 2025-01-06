@@ -61,7 +61,7 @@ templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared
 							{ good.Nickname }
 						}
 					</td>
-					@tab.TdInfoCardClick(configs_export.InfocardKey(good.Nickname), good.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(good.Nickname), good.Nickname, pinm, shared, tab.InfocardClickOpts{IsRelayHosted: true})
 				}
 			}
 		</tbody>

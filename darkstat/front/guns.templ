@@ -295,7 +295,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *t
 		@HashTd(gun.NicknameHash)
 		@HashTd(gun.MunitionHash)
 		@HashTd(gun.HpTypeHash)
-		@tab.TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, shared)
+		@tab.TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, shared, tab.InfocardClickOpts{})
 	}
 }
 

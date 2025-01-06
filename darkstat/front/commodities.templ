@@ -76,7 +76,7 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm tab.PinMod, s
 					<td class="seo">{ strconv.Itoa(commodity.NameID) }</td>
 					<td class="seo">{ strconv.Itoa(commodity.InfocardID) }</td>
 					@HashTd(commodity.NicknameHash)
-					@tab.TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(commodity.Infocard, commodity.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

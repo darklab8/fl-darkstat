@@ -81,7 +81,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					<td class="seo">{ strconv.Itoa(faction.InfonameID) }</td>
 					<td class="seo">{ strconv.Itoa(faction.InfocardID) }</td>
 					@HashTd(faction.NicknameHash)
-					@tab.TdInfoCardClick(faction.Infocard, faction.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(faction.Infocard, faction.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

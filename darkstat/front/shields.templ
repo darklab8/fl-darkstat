@@ -88,7 +88,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm tab.PinMod, shared *type
 					<td class="seo">{ strconv.Itoa(shield.IdsInfo) } </td>
 					@HashTd(shield.NicknameHash)
 					@HashTd(shield.HpTypeHash)
-					@tab.TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, shared)
+					@tab.TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>
