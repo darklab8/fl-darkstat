@@ -12,7 +12,10 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout git repo with tags and commits for autogit
+        uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
 
       - name: Install Taskfile
         uses: darklab8/infra/.github/actions/install-taskfile@master
@@ -20,13 +23,16 @@ jobs:
       - name: Set up Go
         uses: darklab8/infra/.github/actions/install-go@master
 
+      - name: Install autogit
+        uses: darklab8/infra/.github/actions/install-autogit@master
+
       # SOURCE_NAME: The branch or the tag
       # SOURCE_BRANCH: The branch or empty
       # SOURCE_TAG: The tag or empty
       - name: Find tags
         id: data
         run: |
-          echo "BUILD_VERSION=${{github.run_number}}" >> $GITHUB_OUTPUT
+          echo "BUILD_VERSION=$(autogit semver --build 1 | sed 's/\+/-build/')" >> $GITHUB_OUTPUT
 
       - name: Echo tags
         run: |
