@@ -8,7 +8,7 @@ require (
 	github.com/darklab8/fl-darkcore v0.7.1
 	github.com/darklab8/fl-data-discovery v0.4.0
 	github.com/darklab8/go-typelog v0.6.2
-	github.com/darklab8/go-utils v0.21.0
+	github.com/darklab8/go-utils v0.21.1
 )
 
 require (
