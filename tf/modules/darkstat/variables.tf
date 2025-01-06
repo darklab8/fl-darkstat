@@ -9,7 +9,6 @@ locals {
     RELAY_LOOP_SECS    = "300"
 
     SITE_ROOT = var.SITE_ROOT
-    RELAY_ROOT = var.SITE_ROOT
     # How the heck to fix that.
     # SITE_ROOT_ACCEPTORS = "/fl-data-discovery/,/fl-darkstat/"
     FLDARKSTAT_HEADING = var.FLDARKSTAT_HEADING
