@@ -1,9 +1,10 @@
-name: Deploy docker staging
+name: Deploy docker production
 
 on:
     workflow_dispatch:
-    push: 
-        branches: ["master"]
+    push:
+        tags:
+            - "*"
 
 env:
   DOCKER_HOST: ssh://root@darkbot
@@ -14,8 +15,6 @@ jobs:
     steps:
       - name: Checkout git repo with tags and commits for autogit
         uses: actions/checkout@v3
-        with:
-            fetch-depth: 0
 
       - name: Install Taskfile
         uses: darklab8/infra/.github/actions/install-taskfile@master
@@ -23,16 +22,13 @@ jobs:
       - name: Set up Go
         uses: darklab8/infra/.github/actions/install-go@master
 
-      - name: Install autogit
-        uses: darklab8/infra/.github/actions/install-autogit@master
-
       # SOURCE_NAME: The branch or the tag
       # SOURCE_BRANCH: The branch or empty
       # SOURCE_TAG: The tag or empty
       - name: Find tags
         id: data
         run: |
-          echo "BUILD_VERSION=$(autogit semver --alpha --build 1 | sed 's/\+/-build/')" >> $GITHUB_OUTPUT
+          echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
 
       - name: Echo tags
         run: |
@@ -55,16 +51,14 @@ jobs:
           ssh-keyscan -H 37.27.207.42 >> ~/.ssh/known_hosts | true
           ssh-keyscan -H darkbot >> ~/.ssh/known_hosts | true
 
-      - name: Build image
-        run: docker build --build-arg "BUILD_VERSION=${{ steps.data.outputs.BUILD_VERSION }}" --tag darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }} .
       - name: Push image
         run: |
+          docker pull darkwind8/darkstat:latest
+          docker tag darkwind8/darkstat:latest darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }}
+          docker tag darkwind8/darkstat:latest darkwind8/darkstat:production
           docker push darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }}
-          docker tag darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }} darkwind8/darkstat:staging
-          docker tag darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }} darkwind8/darkstat:latest
-          docker push darkwind8/darkstat:staging
-          docker push darkwind8/darkstat:latest
+          docker push darkwind8/darkstat:production
           
       - name: Switch service image to new one
         run: |
-          docker pull darkwind8/darkstat:staging && docker service update --image darkwind8/darkstat:staging darkstat-staging
+          docker pull darkwind8/darkstat:production && docker service update --image darkwind8/darkstat:production darkstat-production
