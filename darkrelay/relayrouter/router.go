@@ -6,7 +6,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
-	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/timeit"
 )
 
@@ -16,8 +15,8 @@ type Router struct {
 
 type RouterOpt func(l *Router)
 
-func NewRouter(opts ...RouterOpt) *Router {
-	l := &Router{}
+func NewRouter(app_data *router.AppData, opts ...RouterOpt) *Router {
+	l := &Router{AppData: app_data}
 	for _, opt := range opts {
 		opt(l)
 	}
@@ -25,16 +24,8 @@ func NewRouter(opts ...RouterOpt) *Router {
 	return l
 }
 
-func WithAppData(AppData *router.AppData) RouterOpt {
-	return func(l *Router) { l.AppData = AppData }
-}
-
 func (r *Router) Link() *builder.Builder {
 	defer timeit.NewTimer("link, internal measure").Close()
-
-	if r.AppData == nil {
-		r.AppData = router.NewAppData()
-	}
 
 	shared := r.AppData.Shared
 	build := r.AppData.Build
@@ -57,15 +48,4 @@ func (r *Router) Link() *builder.Builder {
 	)
 
 	return build
-}
-
-func (r *Router) Update() {
-	r.AppData.Configs.PoBs = r.AppData.Configs.GetPoBs()
-
-	for _, pob := range r.AppData.Configs.PoBs {
-		if pob.Money == nil {
-			pob.Money = ptr.Ptr(1)
-		}
-		pob.Money = ptr.Ptr(*pob.Money + 1)
-	}
 }

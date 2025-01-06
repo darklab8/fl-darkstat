@@ -8,6 +8,7 @@ Technically it is "Router"
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/darklab8/fl-configs/configs/configs_export"
@@ -33,8 +34,8 @@ type Router struct {
 
 type RouterOpt func(l *Router)
 
-func NewRouter(opts ...RouterOpt) *Router {
-	l := &Router{}
+func NewRouter(AppData *AppData, opts ...RouterOpt) *Router {
+	l := &Router{AppData: AppData}
 	for _, opt := range opts {
 		opt(l)
 	}
@@ -47,24 +48,18 @@ func WithAppData(AppData *AppData) RouterOpt {
 }
 
 type AppData struct {
+	Mapped  *configs_mapped.MappedConfigs
 	Build   *builder.Builder
 	Configs *configs_export.Exporter
 	Shared  *types.SharedData
+
+	mu sync.Mutex
 }
 
-func NewAppData() *AppData {
-	var mapped *configs_mapped.MappedConfigs
-	var configs *configs_export.Exporter
-	timeit.NewTimerF(func() {
-		freelancer_folder := settings.Env.FreelancerFolder
+func (a *AppData) Lock()   { a.mu.Lock() }
+func (a *AppData) Unlock() { a.mu.Unlock() }
 
-		mapped = configs_mapped.NewMappedConfigs()
-		logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
-		mapped.Read(freelancer_folder)
-		configs = configs_export.NewExporter(mapped)
-
-	}, timeit.WithMsg("MappedConfigs creation"))
-
+func NewBuilder(mapped *configs_mapped.MappedConfigs) *builder.Builder {
 	var build *builder.Builder
 	timer_building_creation := timeit.NewTimer("building creation")
 
@@ -116,6 +111,25 @@ func NewAppData() *AppData {
 
 	build = builder.NewBuilder(params, static_files)
 	timer_building_creation.Close()
+	return build
+}
+
+func NewMapped() *configs_mapped.MappedConfigs {
+	var mapped *configs_mapped.MappedConfigs
+	freelancer_folder := settings.Env.FreelancerFolder
+
+	timeit.NewTimerF(func() {
+		mapped = configs_mapped.NewMappedConfigs()
+	}, timeit.WithMsg("MappedConfigs creation"))
+	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
+	mapped.Read(freelancer_folder)
+	return mapped
+}
+
+func NewAppData() *AppData {
+	mapped := NewMapped()
+	configs := configs_export.NewExporter(mapped)
+	build := NewBuilder(mapped)
 
 	var data *configs_export.Exporter
 	timeit.NewTimerMF("exporting data", func() { data = configs.Export(configs_export.ExportOptions{}) })
@@ -151,14 +165,19 @@ func NewAppData() *AppData {
 		Build:   build,
 		Configs: data,
 		Shared:  shared,
+		Mapped:  mapped,
 	}
 }
 
-func (l *Router) Link() *builder.Builder {
+func (a *AppData) Refresh() {
+	updated := NewAppData()
+	a.Build = updated.Build
+	a.Mapped = updated.Mapped
+	a.Shared = updated.Shared
+	a.Configs = updated.Configs
+}
 
-	if l.AppData == nil {
-		l.AppData = NewAppData()
-	}
+func (l *Router) Link() *builder.Builder {
 	shared := l.AppData.Shared
 	configs := l.AppData.Configs
 	build := l.AppData.Build

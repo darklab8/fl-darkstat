@@ -14,7 +14,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
-	"github.com/darklab8/go-utils/utils/timeit"
 )
 
 type Action string
@@ -29,11 +28,7 @@ const (
 )
 
 func GetRelayFs(app_data *router.AppData) *builder.Filesystem {
-	var args []relayrouter.RouterOpt
-	if app_data != nil {
-		args = append(args, relayrouter.WithAppData(app_data))
-	}
-	relay_router := relayrouter.NewRouter(args...)
+	relay_router := relayrouter.NewRouter(app_data)
 	relay_builder := relay_router.Link()
 	relay_fs := relay_builder.BuildAll(true, nil)
 	relay_router = nil
@@ -62,33 +57,52 @@ func main() {
 	fmt.Println("act:", action)
 
 	web_darkstat := func() {
-		_timer_web := timeit.NewTimer("total time for web web := func()")
+		app_data := router.NewAppData()
 
-		_timer_linker := timeit.NewTimer("linking stuff linker.NewLinker().Link()")
-		stat_router := router.NewRouter()
+		stat_router := router.NewRouter(app_data)
 		stat_builder := stat_router.Link()
-		_timer_linker.Close()
 
-		_timer_buildall := timeit.NewTimer("building stuff linked_build.BuildAll()")
 		stat_fs := stat_builder.BuildAll(true, nil)
-		_timer_buildall.Close()
-		_timer_web.Close()
-		go web.NewWeb(stat_fs).Serve(web.WebServeOpts{})
 
+		go web.NewWeb(stat_fs,
+			web.WithMutexableData(app_data),
+		).Serve(web.WebServeOpts{})
+
+		app_data.Lock()
 		relay_fs := GetRelayFs(stat_router.AppData)
+		app_data.Unlock()
 		runtime.GC()
+
+		// go func() {
+		// 	for {
+		// 		// TODO perhaps better just actually launching container restart
+		// 		time.Sleep(time.Hour * 4)
+		// 		app_data.Lock()
+		// 		app_data.Refresh()
+		// 		relay_fs2 := GetRelayFs(stat_router.AppData)
+		// 		relay_fs.Files = relay_fs2.Files
+		// 		app_data.Unlock()
+		// 	}
+		// }()
 
 		go func() {
 			for {
-				time.Sleep(time.Second * 30)
-				relay_fs2 := GetRelayFs(nil)
+				time.Sleep(time.Minute * 5)
+				app_data.Lock()
+				app_data.Mapped.Discovery.PlayerOwnedBases.Refresh()
+				app_data.Configs.PoBs = app_data.Configs.GetPoBs()
+				app_data.Configs.PoBGoods = app_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
+				relay_fs2 := GetRelayFs(stat_router.AppData)
 				relay_fs.Files = relay_fs2.Files
+				logus.Log.Info("refreshed content")
 				runtime.GC()
+				app_data.Unlock()
 			}
 		}()
 
 		web.NewWeb(
 			relay_fs,
+			web.WithMutexableData(app_data),
 			web.WithSiteRootAcceptors(settings.Env.GetSiteRootAcceptors(), settings.Env.SiteRoot),
 		).Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 	}
@@ -96,7 +110,8 @@ func main() {
 	switch Action(action) {
 
 	case Build:
-		router.NewRouter().Link().BuildAll(false, nil)
+		app_data := router.NewAppData()
+		router.NewRouter(app_data).Link().BuildAll(false, nil)
 	case Web:
 		web_darkstat()
 	case Version:
