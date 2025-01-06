@@ -320,5 +320,45 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
         <p>
             rows crossed out with line through means the base is invisible and not dockable at all
         </p>
+        if shared.ShowDisco {
+            @SectionHeader("Player Owned Bases (PoBs)")
+            <p>Pob Tab:</p>
+            <p><img src={ types.GetCtx(ctx).StaticRoot + "pobs_pob_tab.png" }></p>
+            <p>PoB in commodities:</p>
+            <p><img src={ types.GetCtx(ctx).StaticRoot + "pobs_in_commodities.png" }></p>
+            <p>PoB goods search:</p>
+            <p><img src={ types.GetCtx(ctx).StaticRoot + "pob_goods_search.png" }></p>
+            <p>
+                <ul>
+                    <li>New Tab "PoBs" to see pinned items of publicly observable pobs (Requires toggling this feature on by base owner!)
+                Amount of data depends on amount of turned on things in pob account (This tab is updated like every 5-15 minutes)</li>
+                    <li>All tabs are enhanced with ability to show if item can be bought from pob (Updates are only 2 times per day)</li>
+                    <li>New tab "PoB goods" for search by shop items more easily</li>
+                </ul>
+            </p>
+            <p>
+                How to turn this feature on for your own PoB base?
+                <ul>
+                    <li>login to base, <b>/base login base_password</b></li>
+                    <li><b>/base setpublic public &lt;master password&gt;</b></li>
+                    <li>then go to Forum PoB account manager
+                        <ul>
+                            <li>login to your base, and toggle all things you wish to show about your base to darkstat.</li>
+                            <li>Within 15 minutes information will appear in "PoBs" tab, and within day will propagate to other tabs.</li>
+                        </ul>
+                    </li>
+                    <li>Declare some ship items to be visible in darkstat by one out of two methods below:
+                        <ul>
+                            <li>set more shop items to be pinned via <b>/shop pin item-index</b>. Than more are pinned, then more are visible.</li>
+                            <li>or set some shop items to be just public without usage of pinned feature by commands: <b>/shop public item-index</b> and <b>/shop private item-index</b>.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </p>
+            <p>How pob account manager looks like:</p>
+            <img src={ types.GetCtx(ctx).StaticRoot + "pobs_forun_account.png" }>
+            <p>Note: some settings open multiple stuff. Opened position? then it will show Infocard</p>
+            <p>Opened defense status? Docking permissions are shown then</p>
+        }
     }
 }
