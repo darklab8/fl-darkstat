@@ -1,7 +1,7 @@
 github.com/a-h/templ v0.2.747 h1:D0dQ2lxC3W7Dxl6fxQ/1zZHBQslSkTSvl5FxP/CfdKg=
 github.com/a-h/templ v0.2.747/go.mod h1:69ObQIbrcuwPCU32ohNaWce3Cb7qM5GMiqN1K+2yop4=
-github.com/darklab8/fl-configs v0.106.3 h1:HoqB6TZ6KQrk6wGzlMe4C7crmdICbegLPgtlUa2tibs=
-github.com/darklab8/fl-configs v0.106.3/go.mod h1:fbyKxEPv22FD2bvahG/Y6kYyhyvCMg0+J6mH230iB3s=
+github.com/darklab8/fl-configs v0.106.4 h1:5gI1BHWL79z0beDeEafunTAh7EJM2U5umI0zcTLD7Yg=
+github.com/darklab8/fl-configs v0.106.4/go.mod h1:fbyKxEPv22FD2bvahG/Y6kYyhyvCMg0+J6mH230iB3s=
 github.com/darklab8/fl-darkcore v0.8.1 h1:VEJD/wr0EACRlhY2mzPGISYcrv5FPemmfywLGQMrXgs=
 github.com/darklab8/fl-darkcore v0.8.1/go.mod h1:7CLmeqBIg71S/WrR/v75irT4GKZz420UooF/kC97mF8=
 github.com/darklab8/fl-data-discovery v0.4.0 h1:cUacP+N04/PrYl4cmw687BAaQWVJI32scePjLfmqxEI=
