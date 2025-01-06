@@ -59,10 +59,13 @@ jobs:
 
       - name: Push image
         run: |
+          set -ex
           docker pull darkwind8/darkstat:latest
+          sleep 5
           docker tag darkwind8/darkstat:latest darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }}
           docker tag darkwind8/darkstat:latest darkwind8/darkstat:production
           docker push darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }}
+          sleep 10
           docker push darkwind8/darkstat:production
           
       - name: Switch service image to new one
