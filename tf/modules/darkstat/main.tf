@@ -29,7 +29,7 @@ resource "docker_service" "darkstat" {
     }
     resources {
       limits {
-        memory_bytes = 1000 * 1000 * 6000 # 1 gb
+        memory_bytes = 1000 * 1000 * 3000 # 1 gb
       }
     }
   }
@@ -38,12 +38,12 @@ resource "docker_service" "darkstat" {
 
     ports {
       target_port    = "8000"
-      published_port = "8000"
+      published_port = tostring(var.darkstat_port)
     }
 
     ports {
       target_port    = "8080"
-      published_port = "8080"
+      published_port = tostring(var.relay_port)
     }
   }
 }

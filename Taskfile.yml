@@ -91,26 +91,20 @@ tasks:
   docker:push:
     cmds:
       - docker push darkwind8/darkstat:$tag_version
-      - task: docker:retag
+      - docker tag darkwind8/darkstat:$tag_version darkwind8/darkstat:staging
+      - docker push darkwind8/darkstat:staging
+      # - docker pull darkwind8/darkstat:staging && docker service update --image darkwind8/darkstat:staging darkstat-staging
 
   docker:run:
     cmds:
       - docker run -it darkwind8/darkstat:$tag_version
 
-  docker:retag:
+  docker:deploy:
     cmds:
       - docker tag darkwind8/darkstat:$tag_version darkwind8/darkstat:production
       - docker push darkwind8/darkstat:production
-
-  docker:buildpush:
-    cmds:
-      - task: docker:build
-      - task: docker:push
-
-  docker:deploy:
-    cmds:
       - docker pull darkwind8/darkstat:production && docker service update --image darkwind8/darkstat:production darkstat-production
 
 env:
-  tag_version: v1.45.0-a8
+  tag_version: v1.48.0-a2
   DOCKER_HOST: ssh://root@darklab:22

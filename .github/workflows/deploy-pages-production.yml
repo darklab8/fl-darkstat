@@ -1,4 +1,4 @@
-name: Build binaries and trigger deployments
+name: Deploy pages production
 
 on:
   workflow_dispatch:

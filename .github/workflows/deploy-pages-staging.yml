@@ -1,4 +1,4 @@
-name: Deploy to own pages
+name: Deploy pages staging
 
 on:
   workflow_dispatch: {}
