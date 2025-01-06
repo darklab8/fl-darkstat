@@ -32,7 +32,7 @@ jobs:
       - name: Find tags
         id: data
         run: |
-          echo "BUILD_VERSION=$(autogit semver --build 1 | sed 's/\+/-build/')" >> $GITHUB_OUTPUT
+          echo "BUILD_VERSION=$(autogit semver --alpha --build 1 | sed 's/\+/-build/')" >> $GITHUB_OUTPUT
 
       - name: Echo tags
         run: |
