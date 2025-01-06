@@ -3,7 +3,6 @@ package tab
 import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-configs/configs/configs_export"
-    "strings"
 )
 
 templ FilterBar(shared *types.SharedData) {
@@ -47,7 +46,7 @@ templ FilterBar(shared *types.SharedData) {
 func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
 	if infocard_lines, ok := infocards[infokey]; ok {
 		if len(infocard_lines) > 0 {
-			return string(infocard_lines[0])
+			return string(infocard_lines[0].ToStr())
 		}
 	}
 	return ""
@@ -55,7 +54,7 @@ func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.Inf
 
 func GetInfocard(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
 	if infocard_lines, ok := infocards[infokey]; ok {
-		return strings.Join(infocard_lines, "")
+		return infocard_lines.StringsJoin("")
 	}
 	return ""
 }

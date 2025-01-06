@@ -23,6 +23,7 @@ table {
     padding: 0px;
 }
 
-b {
+b,
+.bold {
     font-weight: bold;
 }

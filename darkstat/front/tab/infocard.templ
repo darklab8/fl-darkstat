@@ -24,11 +24,17 @@ templ InfocardShared() {
 templ Infocard(info configs_export.Infocard) {
 	@InfocardShared() {
 		for _, line := range info {
-			if strings.ReplaceAll(line," ", "") == "" {
+			if strings.ReplaceAll(line.ToStr()," ", "") == "" {
 				<p><br></p>
 			} else {
 				<p>
-				@templ.Raw(line)
+					for _, phrase := range line.Phrases {
+						if phrase.Link != nil {
+							<a href={ templ.SafeURL(*phrase.Link) }>{ phrase.Phrase }</a>
+						} else {
+							<span class={ templ.KV("bold", phrase.Bold) }>{ phrase.Phrase }</span>
+						}
+					}
 				</p>
 			}
 		}
