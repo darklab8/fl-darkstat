@@ -62,11 +62,16 @@ jobs:
         # no point to push staging version eh
       - name: Push image
         run: |
+          set -ex
           docker tag darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }} darkwind8/darkstat:staging
           docker tag darkwind8/darkstat:${{ steps.data.outputs.BUILD_VERSION }} darkwind8/darkstat:latest
           docker push darkwind8/darkstat:staging
+          sleep 5
           docker push darkwind8/darkstat:latest
           
       - name: Switch service image to new one
         run: |
-          docker pull darkwind8/darkstat:staging && docker service update --image darkwind8/darkstat:staging darkstat-staging
+          set -ex
+          docker pull darkwind8/darkstat:staging
+          sleep 5
+          docker service update --image darkwind8/darkstat:staging darkstat-staging
