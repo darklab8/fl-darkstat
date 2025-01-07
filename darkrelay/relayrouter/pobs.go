@@ -27,8 +27,8 @@ func (l *Router) LinkPobs(
 
 	for _, base := range configs.PoBs {
 		sort.Slice(base.ShopItems, func(i, j int) bool {
-			if base.ShopItems[i].Name != "" && base.ShopItems[j].Name == "" {
-				return true
+			if base.ShopItems[i].Category != base.ShopItems[j].Category {
+				return base.ShopItems[i].Category < base.ShopItems[j].Category
 			}
 			return base.ShopItems[i].Name < base.ShopItems[j].Name
 		})
