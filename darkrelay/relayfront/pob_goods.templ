@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"strings"
 	"strconv"
+	"html"
 )
 
 func PoBGoodDetailedUrl(good *configs_export.PoBGood) string {
@@ -140,7 +141,7 @@ templ PoBGoodPobs(name string, pobs []*configs_export.PoBGoodBase) {
 			>
 				<td>
 					@frmt.WriteLimit(200) {
-						{ pob.Base.Name }
+						{ html.UnescapeString(pob.Base.Name) }
 					}
 				</td>
 				<td> { strconv.Itoa(pob.ShopItem.Quantity) }</td>

@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"strconv"
 	"strings"
+	"html"
 )
 
 func PoBDetailedUrl(pob *configs_export.PoB) string {
@@ -94,7 +95,7 @@ templ PobTable(pobs []*configs_export.PoB, pinm tab.PinMod, shared *types.Shared
 		<tbody>
 			for _, pob := range pobs {
 				@tab.TrFromMainTb2(tab.NewTr(pob.Nickname, PoBDetailedUrl(pob), pinm, tab.WithFromRelay()), false) {
-					@tab.PinTd(pob.Nickname, pob.Name, pinm)
+					@tab.PinTd(pob.Nickname, html.UnescapeString(pob.Name), pinm)
 					@tab.PinSelectLeftRight(pinm, PoBDetailedUrl(pob))
 					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					@PobTableRow(pob)

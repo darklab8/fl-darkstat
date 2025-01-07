@@ -3,6 +3,7 @@ package tab
 import (
 	"github.com/darklab8/fl-configs/configs/configs_export"
 	"strings"
+	"html"
 )
 
 templ InfocardShared() {
@@ -30,9 +31,9 @@ templ Infocard(info configs_export.Infocard) {
 				<p>
 					for _, phrase := range line.Phrases {
 						if phrase.Link != nil {
-							<a href={ templ.SafeURL(*phrase.Link) }>{ phrase.Phrase }</a>
+							<a href={ templ.SafeURL(*phrase.Link) }>{ html.UnescapeString(phrase.Phrase) }</a>
 						} else {
-							<span class={ templ.KV("bold", phrase.Bold) }>{ phrase.Phrase }</span>
+							<span class={ templ.KV("bold", phrase.Bold) }>{ html.UnescapeString(phrase.Phrase) }</span>
 						}
 					}
 				</p>
