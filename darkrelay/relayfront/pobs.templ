@@ -38,7 +38,7 @@ func FmtPtrInt(value *int) string {
 }
 
 templ PoBTableHeaders() {
-	<th style="width:25px;">@frmt.MultiLinestring([]string{"Pinned", "items", "amount"})</th>
+	<th style="width:25px;">@frmt.MultiLinestring([]string{"Public", "items", "amount"})</th>
 	<th style="width:25px;">Pos</th>
 	<th style="width:25px;">Level</th>
 	<th style="width:25px;">Money</th>
@@ -142,7 +142,7 @@ templ PoBShopItemsShared() {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
-				<th style="width:200px;">Pinned Item</th>
+				<th style="width:200px;">Pinned/Public Item</th>
 				<th style="width:100px;">Category</th>
 				<th style="width:10px;">Quantity</th>
 				<th style="width:25px;">
