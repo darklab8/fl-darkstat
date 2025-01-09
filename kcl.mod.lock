@@ -1,0 +1,5 @@
+[dependencies]
+  [dependencies.infra]
+    name = "infra"
+    full_name = "infra_0.0.1"
+    version = "0.0.1"

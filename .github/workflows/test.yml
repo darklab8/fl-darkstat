@@ -1,64 +1,47 @@
-name: Test
-
-on:
+name: Test build
+'on':
   push:
     branches:
-    - "master"
+    - master
   schedule:
-    - cron: '0 9 * * *'
-
+  - cron: '0 9 * * *'
 jobs:
-  github-pages:
-    name: Github Pages
+  test:
+    name: Test build
     runs-on: ubuntu-22.04
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out source repository
-        uses: actions/checkout@v2
-
-      - uses: darklab8/infra/.github/actions/checkout-freelancer@master
-        with:
-          freelancer-mod: "discovery"
-          freelancer-folder: ${{ github.workspace }}/fl-data
-          ssh-key-base64-discovery: ${{ secrets.ID_RSA_FILES_FREELANCER_DISCOVERY }}
-
-      - run: ls ./fl-data
-  
-      - name: Set up Go
-        uses: darklab8/infra/.github/actions/install-go@master
-
-      - name: Install Taskfile
-        uses: darklab8/infra/.github/actions/install-taskfile@master
-      
-      - name: Install Templ
-        uses: darklab8/infra/.github/actions/install-templ@master      
-
-      - name: Build templ file to go
-        run: templ generate
-
-      - name: Add versions
-        run: task build-version
-        
-      - name: Patch disco to latest
-        uses: darklab8/infra/.github/actions/patch-disco@master      
-        with:
-          freelancer-folder: ${{ github.workspace }}/fl-data
-
-      - name: Test things
-        run: task test -- -v
-        env:
-          FLDARKDATA_LOG_LEVEL: "DEBUG"
-
-      - name: build
-        run: task build
-        env:
-          SITE_ROOT: "/fl-darkstat/"
-          FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
-          FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
-          DARKSTAT_DETAILED: "true"
-          RELAY_HOST: "https://darkrelay.dd84ai.com"
+    - name: Check out source repository
+      uses: actions/checkout@v2
+    - name: Checkout Freelancer
+      uses: darklab8/infra/.github/actions/checkout-freelancer@master
+      with:
+        freelancer-mod: discovery
+        freelancer-folder: ${{ github.workspace }}/fl-data
+        ssh-key-base64-discovery: ${{ secrets.ID_RSA_FILES_FREELANCER_DISCOVERY }}
+    - run: ls ./fl-data
+    - name: Install Go
+      uses: darklab8/infra/.github/actions/install-go@master
+    - name: Install Taskfile
+      uses: darklab8/infra/.github/actions/install-taskfile@master
+    - name: Install Templ
+      uses: darklab8/infra/.github/actions/install-templ@master
+    - name: generate Templ files
+      run: templ generate
+    - name: add versions
+      run: task build-version
+    - name: Patch freelancer discovery to latest
+      uses: darklab8/infra/.github/actions/patch-disco@master
+      with:
+        freelancer-folder: ${{ github.workspace }}/fl-data
+    - name: Test things
+      run: task test -- -v
+      env:
+        FLDARKDATA_LOG_LEVEL: DEBUG
+    - name: build
+      run: task build
+      env:
+        SITE_ROOT: /fl-darkstat/
+        FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
+        FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
+        DARKSTAT_DETAILED: 'true'
+        RELAY_HOST: https://darkrelay.dd84ai.com
