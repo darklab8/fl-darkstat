@@ -107,9 +107,7 @@ tasks:
 
   kcl:build:
     cmds:
-      - >
-        kcl
-        kcl_test.k
+      - kcl kcls/main.k
 
 env:
   tag_version: v1.48.0-a4

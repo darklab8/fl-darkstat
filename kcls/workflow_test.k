@@ -7,11 +7,10 @@ import infra.kcls.actions.install_taskfile as tf
 import infra.kcls.actions.install_templ as templ
 import infra.kcls.actions.patch_disco as disco
 
-import yaml
-
 _freelancer_folder = r"${{ github.workspace }}/fl-data"
 
-yaml.dump_to_file(gw.Workflow {
+_workflow_test = gw.Workflow {
+    _filename = "test.yml"
     name = "Test build"
     on = {
         push.branches = ["master"]
@@ -62,4 +61,4 @@ yaml.dump_to_file(gw.Workflow {
             ]
         }
     }
-}, ".github/workflows/test.yml", ignore_private=True, ignore_none=True)
+}
