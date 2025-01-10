@@ -1,14 +1,19 @@
-name: Test build
+name: Deploy pages staging
 'on':
   push:
     branches:
     - master
-  schedule:
-  - cron: '0 9 * * *'
+  workflow_dispatch: {}
 jobs:
-  test:
-    name: Test build
+  job:
+    name: Github Pages Staging
     runs-on: ubuntu-22.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
     - name: Check out source repository
       uses: actions/checkout@v2
@@ -43,5 +48,11 @@ jobs:
         SITE_ROOT: /fl-darkstat/
         FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
         FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
-        DARKSTAT_DETAILED: 'true'
-        RELAY_HOST: https://darkrelay.dd84ai.com
+        DARKSTAT_DETAILED: 'false'
+        RELAY_HOST: https://darkrelay-staging.dd84ai.com
+    - uses: actions/upload-pages-artifact@v1
+      with:
+        name: github-pages
+        path: './build'
+    - uses: actions/deploy-pages@v1
+      id: deployment

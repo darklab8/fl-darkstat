@@ -1,0 +1,60 @@
+name: Deploy docker staging
+'on':
+  push:
+    branches:
+    - master
+  workflow_dispatch: {}
+  workflow_call: {}
+jobs:
+  job:
+    name: Deploy docker staging
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Check out source repository with commits history
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Install Go
+      uses: darklab8/infra/.github/actions/install-go@master
+    - name: Install Taskfile
+      uses: darklab8/infra/.github/actions/install-taskfile@master
+    - name: Install Autogit
+      uses: darklab8/infra/.github/actions/install-autogit@master
+    - name: get autogit semantic version
+      run: |
+        set -x
+        echo "BUILD_VERSION=$(autogit semver --alpha --build ${{ github.run_number }} | sed 's/\+/-build/')" >> $GITHUB_OUTPUT
+      id: version
+    - name: Docker login
+      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username darkwind8 --password-stdin
+    - name: Install Darklab ssh key
+      run: |
+        mkdir ~/.ssh | true
+        echo "${{ secrets.SSH_KEY_BASE64 }}" | base64 --decode > ~/.ssh/id_rsa
+        echo "Host darkbot" > ~/.ssh/config
+        echo "    HostName 37.27.207.42" >> ~/.ssh/config
+        echo "    User root" >> ~/.ssh/config
+        echo "    IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+        echo "    IdentitiesOnly yes" >> ~/.ssh/config
+        chmod 700 ~/.ssh
+        chmod 600 ~/.ssh/*
+        ssh-keyscan -H 37.27.207.42 >> ~/.ssh/known_hosts | true
+        ssh-keyscan -H darkbot >> ~/.ssh/known_hosts | true
+    - name: Build image
+      run: docker build --build-arg "BUILD_VERSION=${{ steps.version.outputs.BUILD_VERSION }}" --tag darkwind8/darkstat:${{ steps.version.outputs.BUILD_VERSION }} .
+    - name: Push image
+      run: |
+        set -ex
+        docker tag darkwind8/darkstat:${{ steps.version.outputs.BUILD_VERSION }} darkwind8/darkstat:staging
+        docker tag darkwind8/darkstat:${{ steps.version.outputs.BUILD_VERSION }} darkwind8/darkstat:latest
+        docker push darkwind8/darkstat:staging
+        sleep 5
+        docker push darkwind8/darkstat:latest
+    - name: Switch service image to new one
+      run: |
+        set -ex
+        docker pull darkwind8/darkstat:staging
+        sleep 5
+        docker service update --image darkwind8/darkstat:staging darkstat-staging
+env:
+  DOCKER_HOST: ssh://root@darkbot

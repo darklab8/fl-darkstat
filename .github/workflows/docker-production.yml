@@ -1,0 +1,63 @@
+name: Deploy docker Production
+'on':
+  push:
+    tags:
+    - '*'
+  workflow_dispatch: {}
+jobs:
+  build:
+    name: Build docker image and save to latest
+    uses: darklab8/fl-darkstat/.github/workflows/deploy-docker-staging.yml@master
+    secrets: inherit
+  job:
+    name: Deploy docker Production
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Check out source repository with commits history
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Install Go
+      uses: darklab8/infra/.github/actions/install-go@master
+    - name: Install Taskfile
+      uses: darklab8/infra/.github/actions/install-taskfile@master
+    - name: Install Autogit
+      uses: darklab8/infra/.github/actions/install-autogit@master
+    - run: |
+        set -x
+        echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+    - name: Docker login
+      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username darkwind8 --password-stdin
+    - name: Install Darklab ssh key
+      run: |
+        mkdir ~/.ssh | true
+        echo "${{ secrets.SSH_KEY_BASE64 }}" | base64 --decode > ~/.ssh/id_rsa
+        echo "Host darkbot" > ~/.ssh/config
+        echo "    HostName 37.27.207.42" >> ~/.ssh/config
+        echo "    User root" >> ~/.ssh/config
+        echo "    IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+        echo "    IdentitiesOnly yes" >> ~/.ssh/config
+        chmod 700 ~/.ssh
+        chmod 600 ~/.ssh/*
+        ssh-keyscan -H 37.27.207.42 >> ~/.ssh/known_hosts | true
+        ssh-keyscan -H darkbot >> ~/.ssh/known_hosts | true
+    - name: Push image
+      run: |
+        set -ex
+        docker pull darkwind8/darkstat:latest
+        sleep 5
+        docker tag darkwind8/darkstat:latest darkwind8/darkstat:${{ steps.version.outputs.BUILD_VERSION }}
+        docker tag darkwind8/darkstat:latest darkwind8/darkstat:production
+        docker push darkwind8/darkstat:${{ steps.version.outputs.BUILD_VERSION }}
+        sleep 10
+        docker push darkwind8/darkstat:production
+    - name: Switch service image to new one
+      run: |
+        set -ex
+        docker pull darkwind8/darkstat:production
+        sleep 5
+        docker service update --image darkwind8/darkstat:production darkstat-production
+    needs:
+    - build
+env:
+  DOCKER_HOST: ssh://root@darkbot

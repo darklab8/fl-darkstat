@@ -12,3 +12,4 @@ gems/
 !vendor/**
 .terraform/
 terraform.tfstate*
+check/

@@ -1,0 +1,65 @@
+name: Deploy pages production
+'on':
+  push:
+    tags:
+    - '*'
+  workflow_dispatch: {}
+jobs:
+  job:
+    name: Github Pages Production
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Install Autogit
+      uses: darklab8/infra/.github/actions/install-autogit@master
+    - name: Check out source repository with commits history
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Install Go
+      uses: darklab8/infra/.github/actions/install-go@master
+    - name: Install Taskfile
+      uses: darklab8/infra/.github/actions/install-taskfile@master
+    - name: Install Templ
+      uses: darklab8/infra/.github/actions/install-templ@master
+    - name: generate Templ files
+      run: templ generate
+    - name: add versions
+      run: task build-version
+    - name: Build Binaries
+      run: task build:bins
+    - name: Print release changelog
+      run: |
+        echo 'artifact<<EOF' >> $GITHUB_OUTPUT
+        autogit changelog >> "$GITHUB_OUTPUT"
+        echo 'EOF' >> $GITHUB_OUTPUT
+      id: changelog
+    - name: upload binaries to release
+      if: ${{startsWith(github.ref, 'refs/tags/') }}
+      uses: softprops/action-gh-release@v2
+      with:
+        body: ${{ steps.changelog.outputs.artifact }}
+        files: |
+          dist/darkstat-linux-amd64
+          dist/darkstat-linux-arm64
+          dist/darkstat-macos-amd64
+          dist/darkstat-macos-arm64
+          dist/darkstat-windows-amd64.exe
+          dist/darkstat-windows-arm64.exe
+    - name: Repository Dispatch for Vanilla
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.FL_DATA_KEY }}
+        repository: darklab8/fl-data-vanilla
+        event-type: publish
+    - name: Repository Dispatch for Discovery
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.FL_DATA_KEY }}
+        repository: darklab8/fl-data-discovery
+        event-type: publish
+    - name: Repository Dispatch for FLSR
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.FL_DATA_KEY }}
+        repository: darklab8/fl-data-flsr
+        event-type: publish
