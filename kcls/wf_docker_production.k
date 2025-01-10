@@ -9,7 +9,10 @@ _workflow = gw.Workflow {
     name = _workflow_name
     on = {
         workflow_dispatch: {}
-        push.tags: ["*"]
+        push = {
+            tags: ["*"]
+            "tags-ignore" = ["*-*"]
+        }
     }
     env = ghc.DockerHostEnv
     jobs = {

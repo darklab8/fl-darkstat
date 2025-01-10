@@ -3,6 +3,8 @@ name: Deploy pages production
   push:
     tags:
     - '*'
+    tags-ignore:
+    - '*-*'
   workflow_dispatch: {}
 jobs:
   job:

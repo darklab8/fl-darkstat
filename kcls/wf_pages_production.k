@@ -13,7 +13,10 @@ _workflow = gw.Workflow {
     name = "Deploy pages production"
     on = {
         workflow_dispatch: {}
-        push.tags = ["*"]
+        push = {
+            tags: ["*"]
+            "tags-ignore" = ["*-*"]
+        }
     }
     jobs = {
         job = _pages_production_job
