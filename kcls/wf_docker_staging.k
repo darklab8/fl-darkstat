@@ -22,9 +22,7 @@ _workflow = gw.Workflow {
 _docker_staging_job: gw.Job = {
     name = _workflow_name
     steps = [
-        ghc.CheckoutRepoWithCommits
-        go.InstallGo {}
-        tf.InstallTaskfile {}
+        ghc.CheckoutRepo
         ghc.GetVersionFromTag
         ghc.DockerLogin
         ghc.InstallDarklabSshKey

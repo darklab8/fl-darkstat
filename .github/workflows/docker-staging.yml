@@ -9,14 +9,8 @@ jobs:
     name: Deploy docker staging
     runs-on: ubuntu-22.04
     steps:
-    - name: Check out source repository with commits history
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - name: Install Go
-      uses: darklab8/infra/.github/actions/install-go@master
-    - name: Install Taskfile
-      uses: darklab8/infra/.github/actions/install-taskfile@master
+    - name: Check out source repository
+      uses: actions/checkout@v2
     - name: Get version from tag
       run: |
         set -x
