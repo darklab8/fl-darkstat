@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Check out source repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Checkout Freelancer
       uses: darklab8/infra/.github/actions/checkout-freelancer@master
       with:
