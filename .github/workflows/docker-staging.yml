@@ -45,13 +45,13 @@ jobs:
     - name: Retag from ${{ steps.version.outputs.BUILD_VERSION }} to staging
       run: |
         set -ex
-        docker tag darkwind8/darkstat:$ darkwind8/darkstat:staging
+        docker tag darkwind8/darkstat:${{ steps.version.outputs.BUILD_VERSION }} darkwind8/darkstat:staging
         docker push darkwind8/darkstat:staging
         sleep 5
     - name: Retag from ${{ steps.version.outputs.BUILD_VERSION }} to latest
       run: |
         set -ex
-        docker tag darkwind8/darkstat:$ darkwind8/darkstat:latest
+        docker tag darkwind8/darkstat:${{ steps.version.outputs.BUILD_VERSION }} darkwind8/darkstat:latest
         docker push darkwind8/darkstat:latest
         sleep 5
     - name: Switch service image darkwind8/darkstat for swarm to new one
