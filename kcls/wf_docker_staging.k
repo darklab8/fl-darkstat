@@ -11,7 +11,7 @@ _workflow = gw.Workflow {
     _filename = "docker-staging.yml"
     name = _workflow_name
     on = {
-        push.tags: ["*-*"]
+        push.tags: ghc.TagsSemverStaging
         workflow_dispatch: {}
     }
     env = ghc.DockerHostEnv

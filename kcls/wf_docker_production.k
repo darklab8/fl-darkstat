@@ -9,23 +9,15 @@ _workflow = gw.Workflow {
     name = _workflow_name
     on = {
         workflow_dispatch: {}
-        push = {
-            tags: ["*", "!*-*"]
-        }
+        push.tags: ghc.TagsSemverProduction
     }
     env = ghc.DockerHostEnv
     jobs = {
-        # i think it is messy approach
-        # build = gw.JobDispatch {
-        #     name = "Build docker image and save to latest"
-        #     uses = "darklab8/fl-darkstat/.github/workflows/docker-staging.yml@master"
-        # }
         job = _production_deploy_job
     }
 }
 _production_deploy_job: gw.Job = {
     name = _workflow_name
-    # needs = ["build"]
     steps = [
         ghc.CheckoutRepo
         ghc.DockerLogin

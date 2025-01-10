@@ -2,7 +2,7 @@ name: Deploy docker staging
 'on':
   push:
     tags:
-    - '*-*'
+    - '!*-*'
   workflow_dispatch: {}
 jobs:
   job:
