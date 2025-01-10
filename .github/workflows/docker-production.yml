@@ -13,16 +13,8 @@ jobs:
     name: Deploy docker Production
     runs-on: ubuntu-22.04
     steps:
-    - name: Check out source repository with commits history
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - name: Install Go
-      uses: darklab8/infra/.github/actions/install-go@master
-    - name: Install Taskfile
-      uses: darklab8/infra/.github/actions/install-taskfile@master
-    - name: Install Autogit
-      uses: darklab8/infra/.github/actions/install-autogit@master
+    - name: Check out source repository
+      uses: actions/checkout@v2
     - run: |
         set -x
         echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
@@ -41,17 +33,21 @@ jobs:
         chmod 600 ~/.ssh/*
         ssh-keyscan -H 37.27.207.42 >> ~/.ssh/known_hosts | true
         ssh-keyscan -H darkbot >> ~/.ssh/known_hosts | true
-    - name: Push image
+    - name: Retag from staging to ${{ steps.version.outputs.BUILD_VERSION }}
       run: |
         set -ex
-        docker pull darkwind8/darkstat:latest
+        docker pull darkwind8/darkstat:staging
         sleep 5
-        docker tag darkwind8/darkstat:latest darkwind8/darkstat:${{ steps.version.outputs.BUILD_VERSION }}
-        docker tag darkwind8/darkstat:latest darkwind8/darkstat:production
-        docker push darkwind8/darkstat:${{ steps.version.outputs.BUILD_VERSION }}
-        sleep 10
+        docker tag darkwind8/darkstat:staging darkwind8/darkstat:$
+        docker push darkwind8/darkstat:$
+        sleep 5
+    - name: Retag from ${{ steps.version.outputs.BUILD_VERSION }} to production
+      run: |
+        set -ex
+        docker tag darkwind8/darkstat:$ darkwind8/darkstat:production
         docker push darkwind8/darkstat:production
-    - name: Switch service image to new one
+        sleep 5
+    - name: Switch service image darkwind8/darkstat for swarm to new one
       run: |
         set -ex
         docker pull darkwind8/darkstat:production

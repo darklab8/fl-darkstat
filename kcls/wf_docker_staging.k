@@ -1,9 +1,11 @@
 import infra.kcls.models.github_action as ga
 import infra.kcls.models.github_workflow as gw
 import infra.kcls.common.github as ghc
+import infra.kcls.common.docker
 import infra.kcls.actions.install_go as go
 import infra.kcls.actions.install_taskfile as tf
 import infra.kcls.actions.install_autogit as autogit
+import .common as c
 
 _workflow_name = "Deploy docker staging"
 _workflow = gw.Workflow {
@@ -26,28 +28,24 @@ _workflow = gw.Workflow {
                 autogit.GetVersionStep
                 ghc.DockerLogin
                 ghc.InstallDarklabSshKey
-                ga.Step {
-                    name = "Build image"
-                    run = """docker build --build-arg "BUILD_VERSION=${autogit.GetVersionOutput}" --tag darkwind8/darkstat:${autogit.GetVersionOutput} ."""
-                }
-                ga.Step {
-                    name = "Push image"
-                    run = """set -ex
-docker tag darkwind8/darkstat:${autogit.GetVersionOutput} darkwind8/darkstat:staging
-docker tag darkwind8/darkstat:${autogit.GetVersionOutput} darkwind8/darkstat:latest
-docker push darkwind8/darkstat:staging
-sleep 5
-docker push darkwind8/darkstat:latest
-"""
-                }
-                ga.Step {
-                    name = "Switch service image to new one"
-                    run = """set -ex
-docker pull darkwind8/darkstat:staging
-sleep 5
-docker service update --image darkwind8/darkstat:staging darkstat-staging
-"""
-                }
+                docker.Build(docker.BuildOpts {image_name = c._image_name})
+                docker.Retag(docker.RetagOpts {
+                    image_name = c._image_name
+                    old_tag = ghc.GetVersionOutput
+                    new_tag = "staging"
+                    push = True
+                })
+                docker.Retag(docker.RetagOpts {
+                    image_name = c._image_name
+                    old_tag = ghc.GetVersionOutput
+                    new_tag = "latest"
+                    push = True
+                })
+                docker.DeploySwarm(docker.DeploySwarmOpts {
+                    image_name = c._image_name
+                    service_name = "darkstat-staging"
+                    tag = "staging"
+                })
             ]
         }
     }

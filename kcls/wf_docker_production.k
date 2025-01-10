@@ -1,9 +1,7 @@
-import infra.kcls.models.github_action as ga
 import infra.kcls.models.github_workflow as gw
 import infra.kcls.common.github as ghc
-import infra.kcls.actions.install_go as go
-import infra.kcls.actions.install_taskfile as tf
-import infra.kcls.actions.install_autogit as autogit
+import infra.kcls.common.docker
+import .common as c
 
 _workflow_name = "Deploy docker Production"
 _workflow = gw.Workflow {
@@ -23,33 +21,28 @@ _workflow = gw.Workflow {
             name = _workflow_name
             needs = ["build"]
             steps = [
-                ghc.CheckoutRepoWithCommits
-                go.InstallGo {}
-                tf.InstallTaskfile {}
-                autogit.InstallAutogit {}
+                ghc.CheckoutRepo
                 ghc.GetVersionFromTag
                 ghc.DockerLogin
                 ghc.InstallDarklabSshKey
-                ga.Step {
-                    name = "Push image"
-                    run = """set -ex
-docker pull darkwind8/darkstat:latest
-sleep 5
-docker tag darkwind8/darkstat:latest darkwind8/darkstat:${ghc.GetVersionOutput}
-docker tag darkwind8/darkstat:latest darkwind8/darkstat:production
-docker push darkwind8/darkstat:${ghc.GetVersionOutput}
-sleep 10
-docker push darkwind8/darkstat:production
-"""
-                }
-                ga.Step {
-                    name = "Switch service image to new one"
-                    run = """set -ex
-docker pull darkwind8/darkstat:production
-sleep 5
-docker service update --image darkwind8/darkstat:production darkstat-production
-"""
-                }
+                docker.Retag(docker.RetagOpts {
+                    image_name = c._image_name
+                    old_tag = "staging"
+                    new_tag = ghc.GetVersionOutput
+                    pull = True
+                    push = True
+                })
+                docker.Retag(docker.RetagOpts {
+                    image_name = c._image_name
+                    old_tag = ghc.GetVersionOutput
+                    new_tag = "production"
+                    push = True
+                })
+                docker.DeploySwarm(docker.DeploySwarmOpts {
+                    image_name = c._image_name
+                    service_name = "darkstat-production"
+                    tag = "production"
+                })
             ]
         }
     }
