@@ -12,22 +12,23 @@ _workflow = gw.Workflow {
         workflow_dispatch: {}
     }
     jobs = {
-        job = {
-            name = "Github Pages Staging"
-            permissions: ghc.PagesPermissions {}
-            environment: dict(ghc.PagesEnvironment {})
-            steps = [
-                ghc.CheckoutRepo
-                cf.NewCheckoutFreelancerOpts(cf.CheckoutArgs {
-                    freelancer_mod = cf._mod_discovery
-                    freelancer_folder = c._freelancer_folder
-                })
-            ] + c.DarkstatBuildAssetsSteps(c.BuildArgs {
-                site_root = "/fl-darkstat/"
-                freelancer_folder = c._freelancer_folder
-                heading = '<span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>'
-                relay_host = "https://darkrelay-staging.dd84ai.com"
-            }) + ghc.PagesToDeploySteps()
-        }
+        job = _pages_staging_job
     }
+}
+_pages_staging_job: gw.Job = {
+    name = "Github Pages Staging"
+    permissions: ghc.PagesPermissions {}
+    environment: dict(ghc.PagesEnvironment {})
+    steps = [
+        ghc.CheckoutRepo
+        cf.NewCheckoutFreelancerOpts(cf.CheckoutArgs {
+            freelancer_mod = cf._mod_discovery
+            freelancer_folder = c._freelancer_folder
+        })
+    ] + c.DarkstatBuildAssetsSteps(c.BuildArgs {
+        site_root = "/fl-darkstat/"
+        freelancer_folder = c._freelancer_folder
+        heading = '<span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>'
+        relay_host = "https://darkrelay-staging.dd84ai.com"
+    }) + ghc.PagesToDeploySteps()
 }

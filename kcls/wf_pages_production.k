@@ -16,42 +16,43 @@ _workflow = gw.Workflow {
         push.tags = ["*"]
     }
     jobs = {
-        job = {
-            name = "Github Pages Production"
-            steps = [
-                autogit.InstallAutogit {}
-                ghc.CheckoutRepoWithCommits
-                go.InstallGo {}
-                tf.InstallTaskfile {}
-                templ.InstallTempl {}
-                templ.GenerateTempl {}
-                c.TaskfileBuildVersion
-                ga.Step {
-                    name: "Build Binaries"
-                    run: "task build:bins"
-                }
-                autogit.GetChangelogStep {}
-                ghc.UploadBinariesStep(ghc.UploadBinariesStepOpts {
-                    body = autogit.GetChangelogOutput
-                    files = [
-                        "dist/darkstat-linux-amd64"
-                        "dist/darkstat-linux-arm64"
-                        "dist/darkstat-macos-amd64"
-                        "dist/darkstat-macos-arm64"
-                        "dist/darkstat-windows-amd64.exe"
-                        "dist/darkstat-windows-arm64.exe"
-                    ]
-                })
-                ghc.TriggerWorkflowDispatch(ghc.TriggerWorkflowDispatchOpts {
-                    repository = "darklab8/fl-data-vanilla"
-                }) {name = "Repository Dispatch for Vanilla"}
-                ghc.TriggerWorkflowDispatch(ghc.TriggerWorkflowDispatchOpts {
-                    repository = "darklab8/fl-data-discovery"
-                }) {name = "Repository Dispatch for Discovery"}
-                ghc.TriggerWorkflowDispatch(ghc.TriggerWorkflowDispatchOpts {
-                    repository = "darklab8/fl-data-flsr"
-                }) {name = "Repository Dispatch for FLSR"}
-            ]
-        }
+        job = _pages_production_job
     }
+}
+_pages_production_job: gw.Job = {
+    name = "Github Pages Production"
+    steps = [
+        autogit.InstallAutogit {}
+        ghc.CheckoutRepoWithCommits
+        go.InstallGo {}
+        tf.InstallTaskfile {}
+        templ.InstallTempl {}
+        templ.GenerateTempl {}
+        c.TaskfileBuildVersion
+        ga.Step {
+            name: "Build Binaries"
+            run: "task build:bins"
+        }
+        autogit.GetChangelogStep {}
+        ghc.UploadBinariesStep(ghc.UploadBinariesStepOpts {
+            body = autogit.GetChangelogOutput
+            files = [
+                "dist/darkstat-linux-amd64"
+                "dist/darkstat-linux-arm64"
+                "dist/darkstat-macos-amd64"
+                "dist/darkstat-macos-arm64"
+                "dist/darkstat-windows-amd64.exe"
+                "dist/darkstat-windows-arm64.exe"
+            ]
+        })
+        ghc.TriggerWorkflowDispatch(ghc.TriggerWorkflowDispatchOpts {
+            repository = "darklab8/fl-data-vanilla"
+        }) {name = "Repository Dispatch for Vanilla"}
+        ghc.TriggerWorkflowDispatch(ghc.TriggerWorkflowDispatchOpts {
+            repository = "darklab8/fl-data-discovery"
+        }) {name = "Repository Dispatch for Discovery"}
+        ghc.TriggerWorkflowDispatch(ghc.TriggerWorkflowDispatchOpts {
+            repository = "darklab8/fl-data-flsr"
+        }) {name = "Repository Dispatch for FLSR"}
+    ]
 }
