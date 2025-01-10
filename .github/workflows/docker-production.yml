@@ -3,8 +3,7 @@ name: Deploy docker Production
   push:
     tags:
     - '*'
-    tags-ignore:
-    - '*-*'
+    - '!*-*'
   workflow_dispatch: {}
 jobs:
   job:

@@ -14,8 +14,7 @@ _workflow = gw.Workflow {
     on = {
         workflow_dispatch: {}
         push = {
-            tags: ["*"]
-            "tags-ignore" = ["*-*"]
+            tags: ["*", "!*-*"]
         }
     }
     jobs = {
