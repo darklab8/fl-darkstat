@@ -17,8 +17,6 @@ jobs:
       uses: darklab8/infra/.github/actions/install-go@master
     - name: Install Taskfile
       uses: darklab8/infra/.github/actions/install-taskfile@master
-    - name: Install Autogit
-      uses: darklab8/infra/.github/actions/install-autogit@master
     - name: Get version from tag
       run: |
         set -x

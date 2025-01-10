@@ -25,7 +25,6 @@ _docker_staging_job: gw.Job = {
         ghc.CheckoutRepoWithCommits
         go.InstallGo {}
         tf.InstallTaskfile {}
-        autogit.InstallAutogit {}
         ghc.GetVersionFromTag
         ghc.DockerLogin
         ghc.InstallDarklabSshKey
