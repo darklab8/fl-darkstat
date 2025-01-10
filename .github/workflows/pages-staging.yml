@@ -1,8 +1,8 @@
 name: Deploy pages staging
 'on':
   push:
-    branches:
-    - master
+    tags:
+    - '*-*'
   workflow_dispatch: {}
 jobs:
   job:

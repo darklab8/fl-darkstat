@@ -8,7 +8,7 @@ _workflow = gw.Workflow {
     _filename = "pages-staging.yml"
     name = "Deploy pages staging"
     on = {
-        push.branches = ["master"]
+        push.tags: ["*-*"]
         workflow_dispatch: {}
     }
     jobs = {

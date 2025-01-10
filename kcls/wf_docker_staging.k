@@ -1,4 +1,3 @@
-import infra.kcls.models.github_action as ga
 import infra.kcls.models.github_workflow as gw
 import infra.kcls.common.github as ghc
 import infra.kcls.common.docker
@@ -12,9 +11,8 @@ _workflow = gw.Workflow {
     _filename = "docker-staging.yml"
     name = _workflow_name
     on = {
-        push.branches = ["master"]
+        push.tags: ["*-*"]
         workflow_dispatch: {}
-        workflow_call: {}
     }
     env = ghc.DockerHostEnv
     jobs = {
@@ -28,26 +26,19 @@ _docker_staging_job: gw.Job = {
         go.InstallGo {}
         tf.InstallTaskfile {}
         autogit.InstallAutogit {}
-        autogit.GetVersionStep
+        ghc.GetVersionFromTag
         ghc.DockerLogin
         ghc.InstallDarklabSshKey
-        docker.Build(docker.BuildOpts {image_name = c._image_name})
-        docker.Retag(docker.RetagOpts {
+        docker.Build(docker.BuildOpts {
             image_name = c._image_name
-            old_tag = ghc.GetVersionOutput
-            new_tag = "staging"
-            push = True
-        })
-        docker.Retag(docker.RetagOpts {
-            image_name = c._image_name
-            old_tag = ghc.GetVersionOutput
-            new_tag = "latest"
+            tag = ghc.GetVersionOutput
+            extra_tags = ["staging"]
             push = True
         })
         docker.DeploySwarm(docker.DeploySwarmOpts {
             image_name = c._image_name
-            service_name = "darkstat-staging"
             tag = "staging"
+            service_name = "darkstat-staging"
         })
     ]
 }

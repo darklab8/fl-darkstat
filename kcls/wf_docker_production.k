@@ -13,38 +13,32 @@ _workflow = gw.Workflow {
     }
     env = ghc.DockerHostEnv
     jobs = {
-        build = gw.JobDispatch {
-            name = "Build docker image and save to latest"
-            uses = "darklab8/fl-darkstat/.github/workflows/deploy-docker-staging.yml@master"
-        }
+        # i think it is messy approach
+        # build = gw.JobDispatch {
+        #     name = "Build docker image and save to latest"
+        #     uses = "darklab8/fl-darkstat/.github/workflows/docker-staging.yml@master"
+        # }
         job = _production_deploy_job
     }
 }
 _production_deploy_job: gw.Job = {
     name = _workflow_name
-    needs = ["build"]
+    # needs = ["build"]
     steps = [
         ghc.CheckoutRepo
-        ghc.GetVersionFromTag
         ghc.DockerLogin
         ghc.InstallDarklabSshKey
-        docker.Retag(docker.RetagOpts {
+        ghc.GetVersionFromTag
+        docker.Build(docker.BuildOpts {
             image_name = c._image_name
-            old_tag = "staging"
-            new_tag = ghc.GetVersionOutput
-            pull = True
-            push = True
-        })
-        docker.Retag(docker.RetagOpts {
-            image_name = c._image_name
-            old_tag = ghc.GetVersionOutput
-            new_tag = "production"
+            tag = ghc.GetVersionOutput
+            extra_tags = ["production"]
             push = True
         })
         docker.DeploySwarm(docker.DeploySwarmOpts {
             image_name = c._image_name
-            service_name = "darkstat-production"
             tag = "production"
+            service_name = "darkstat-production"
         })
     ]
 }
