@@ -13,9 +13,7 @@ _workflow = gw.Workflow {
     name = "Deploy pages production"
     on = {
         workflow_dispatch: {}
-        push = {
-            tags: ["*", "!*-*"]
-        }
+        push.tags: ghc.TagsSemverProduction
     }
     jobs = {
         job = _pages_production_job

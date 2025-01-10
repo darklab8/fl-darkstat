@@ -8,7 +8,7 @@ _workflow = gw.Workflow {
     _filename = "pages-staging.yml"
     name = "Deploy pages staging"
     on = {
-        push.tags: ["*-*"]
+        push.tags: ghc.TagsSemverStaging
         workflow_dispatch: {}
     }
     jobs = {
