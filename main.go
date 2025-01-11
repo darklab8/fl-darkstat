@@ -66,6 +66,7 @@ func main() {
 
 		go web.NewWeb(stat_fs,
 			web.WithMutexableData(app_data),
+			web.WithSiteRoot(settings.Env.SiteRoot),
 		).Serve(web.WebServeOpts{})
 
 		app_data.Lock()
@@ -103,7 +104,7 @@ func main() {
 		web.NewWeb(
 			relay_fs,
 			web.WithMutexableData(app_data),
-			web.WithSiteRootAcceptors(settings.Env.GetSiteRootAcceptors(), settings.Env.SiteRoot),
+			web.WithSiteRoot(settings.Env.SiteRoot),
 		).Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 	}
 
