@@ -5,7 +5,6 @@ import infra.kcls.actions.install_templ as templ
 import infra.kcls.actions.patch_disco as disco
 
 _freelancer_folder = r"${{ github.workspace }}/fl-data"
-_image_name = "darkwind8/darkstat"
 
 schema BuildArgs:
     site_root: str
