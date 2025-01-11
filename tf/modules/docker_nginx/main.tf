@@ -12,22 +12,26 @@ resource "docker_image" "nginx" {
 # command to create cert from https://phoenixnap.com/kb/letsencrypt-docker
 # docker run -v /var/lib/cerbot/:/var/www/certbot/ -v /var/lib/letsencrypt/:/etc/letsencrypt/ -it certbot/certbot:latest certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d darkstat.dd84ai.com
 
-
 resource "docker_container" "nginx" {
-  name         = "nginx"
-  image        = docker_image.nginx.image_id
-  network_mode = "host" # lazy solution i know. Fix to proper networknig later.
-  restart      = "always"
+  name    = "nginx"
+  image   = docker_image.nginx.image_id
+  restart = "always"
 
-  # ports aren't needed in network mode
-  #   ports {
-  #     internal = "80"
-  #     external = "80"
-  #   }
-  #   ports {
-  #     internal = "443"
-  #     external = "443"
-  #   }
+  networks_advanced {
+    name = "darkstat-staging"
+  }
+  networks_advanced {
+    name = "darkstat-production"
+  }
+
+  ports {
+    internal = "80"
+    external = "80"
+  }
+  ports {
+    internal = "443"
+    external = "443"
+  }
 
   volumes {
     host_path      = "/var/lib/cerbot/"

@@ -23,4 +23,5 @@ resource "docker_container" "cron_restart" {
       network_mode,
     ]
   }
+
 }
