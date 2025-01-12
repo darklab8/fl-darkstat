@@ -62,7 +62,7 @@ templ PobTableRow(pob *configs_export.PoB) {
 		if pob.ForumThreadUrl != nil {
 			<a href={ templ.SafeURL(*pob.ForumThreadUrl) }>link</a>
 		} else {
-			noaccess
+			notfound
 		}
 	</td>
 	<td> { strconv.Itoa(len(pob.ShopItems)) } </td>
