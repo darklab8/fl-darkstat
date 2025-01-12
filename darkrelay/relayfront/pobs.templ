@@ -38,6 +38,7 @@ func FmtPtrInt(value *int) string {
 }
 
 templ PoBTableHeaders() {
+	<th style="width:25px;">@frmt.MultiLinestring([]string{"Forum", "thread"})</th>
 	<th style="width:25px;">@frmt.MultiLinestring([]string{"Public", "items", "amount"})</th>
 	<th style="width:25px;">Pos</th>
 	<th style="width:25px;">Level</th>
@@ -57,6 +58,13 @@ templ PoBTableHeaders() {
 }
 
 templ PobTableRow(pob *configs_export.PoB) {
+	<td>
+		if pob.ForumThreadUrl != nil {
+			<a href={ templ.SafeURL(*pob.ForumThreadUrl) }>link</a>
+		} else {
+			noaccess
+		}
+	</td>
 	<td> { strconv.Itoa(len(pob.ShopItems)) } </td>
 	<td> { FmtPtrString(pob.Pos)} </td>
 	<td>{ FmtPtrInt(pob.Level) }</td>
