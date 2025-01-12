@@ -60,13 +60,8 @@ func (e DarkstatEnvVars) GetSiteRootAcceptors() []string {
 }
 
 func IsRelayActive(configs *configs_mapped.MappedConfigs) bool {
-	if Env.IsDevEnv && configs.Discovery != nil {
-		fmt.Println("activating relay for dev env of discovery")
-		return true
-	}
-
-	if !strings.Contains(Env.RelayHost, "localhost") {
-		fmt.Println("activating relay for non localhost RELAY_HOST variable defined")
+	if configs.Discovery != nil {
+		fmt.Println("discovery always wishes to see pobs")
 		return true
 	}
 
