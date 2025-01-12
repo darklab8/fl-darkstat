@@ -22,7 +22,7 @@ _pages_staging_job: gw.Job = {
     environment: dict(ghc.PagesEnvironment {})
     steps = [
         ghc.CheckoutRepo
-        cf.NewCheckoutFreelancerOpts(cf.CheckoutArgs {
+        cf.NewCheckoutFreelancer(cf.CheckoutArgs {
             freelancer_mod = cf._mod_discovery
             freelancer_folder = c._freelancer_folder
         })

@@ -20,7 +20,7 @@ _test_job: gw.Job = {
     name = "Test build"
     steps = [
         ghc.CheckoutRepo
-        cf.NewCheckoutFreelancerOpts(cf.CheckoutArgs {
+        cf.NewCheckoutFreelancer(cf.CheckoutArgs {
             freelancer_mod = cf._mod_discovery
             freelancer_folder = c._freelancer_folder
         })
