@@ -16,30 +16,8 @@ module "darkstat" {
   EOT
   darkstat_port      = 8000
   relay_port         = 8080
-}
 
-module "nginx" {
-  source = "../modules/docker_nginx"
-}
-
-module "dns" {
-  source = "../../../infra/tf/modules/cloudflare_dns"
-  zone   = "dd84ai.com"
-  dns_records = [{
-    type    = "A"
-    value   = module.data_cluster.node_darklab.ipv4_address
-    name    = "darkstat"
-    proxied = false
-    }, {
-    type    = "A"
-    value   = module.data_cluster.node_darklab.ipv4_address
-    name    = "darkrelay"
-    proxied = false
-    }, {
-    type    = "A"
-    value   = module.data_cluster.node_darklab.ipv4_address
-    name    = "test"
-    proxied = false
-    }
-  ]
+  stat_prefix  = "darkstat"
+  relay_prefix = "darkrelay"
+  zone         = "dd84ai.com"
 }

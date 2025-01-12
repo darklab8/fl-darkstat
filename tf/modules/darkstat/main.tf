@@ -9,6 +9,10 @@ resource "docker_image" "darkstat" {
   keep_locally = true
 }
 
+data "docker_network" "caddy" {
+  name = "caddy"
+}
+
 resource "docker_service" "darkstat" {
   name = "darkstat-${var.environment}"
 
@@ -16,10 +20,31 @@ resource "docker_service" "darkstat" {
     networks_advanced {
       name = docker_network.network.id
     }
+    networks_advanced {
+      name = data.docker_network.caddy.id
+    }
+
     container_spec {
       image = docker_image.darkstat.name
       env   = local.envs
       #   args = ["sleep", "infinity"]
+
+      labels {
+        label = "caddy_0"
+        value = "${var.stat_prefix}.${var.zone}"
+      }
+      labels {
+        label = "caddy_0.reverse_proxy"
+        value = "{{upstreams 8000}}"
+      }
+      labels {
+        label = "caddy_1"
+        value = "${var.relay_prefix}.${var.zone}"
+      }
+      labels {
+        label = "caddy_1.reverse_proxy"
+        value = "{{upstreams 8080}}"
+      }
 
       mounts {
         target    = "/data"

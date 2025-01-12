@@ -25,3 +25,12 @@ variable "darkstat_port" {
 variable "relay_port" {
   type = number
 }
+variable "stat_prefix" {
+  type = string
+}
+variable "relay_prefix" {
+  type = string
+}
+variable "zone" {
+  type = string
+}

@@ -15,21 +15,8 @@ module "darkstat" {
   EOT
   darkstat_port      = 8001
   relay_port         = 8081
-}
 
-module "dns" {
-  source = "../../../infra/tf/modules/cloudflare_dns"
-  zone   = "dd84ai.com"
-  dns_records = [{
-    type    = "A"
-    value   = module.data_cluster.node_darklab.ipv4_address
-    name    = "darkstat-staging"
-    proxied = false
-    }, {
-    type    = "A"
-    value   = module.data_cluster.node_darklab.ipv4_address
-    name    = "darkrelay-staging"
-    proxied = false
-    }
-  ]
+  stat_prefix  = "darkstat-staging"
+  relay_prefix = "darkrelay-staging"
+  zone         = "dd84ai.com"
 }
