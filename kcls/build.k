@@ -14,13 +14,11 @@ _workflows = [
         image_name = _image_name
         service_name = "darkstat"
         environment = "staging"
-        task_name = "web"
     })
     workflow.DockerDeploySwarm(workflow.DockerDeploySwarmOpts {
         image_name = _image_name
         service_name = "darkstat"
         environment = "production"
-        task_name = "web"
     })
 ]
 

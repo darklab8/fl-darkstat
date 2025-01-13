@@ -49,6 +49,6 @@ jobs:
         set -ex
         docker pull darkwind8/darkstat:production
         sleep 5
-        docker service update --image darkwind8/darkstat:production production-darkstat-web
+        docker service update --image darkwind8/darkstat:production production-darkstat-app
 env:
   DOCKER_HOST: ssh://root@darkbot
