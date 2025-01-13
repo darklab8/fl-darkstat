@@ -45,6 +45,6 @@ jobs:
         set -ex
         docker pull darkwind8/darkstat:staging
         sleep 5
-        docker service update --image darkwind8/darkstat:staging darkstat-staging
+        docker service update --image darkwind8/darkstat:staging staging-darkstat-web
 env:
   DOCKER_HOST: ssh://root@darkbot

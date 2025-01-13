@@ -14,7 +14,7 @@ data "docker_network" "caddy" {
 }
 
 resource "docker_service" "darkstat" {
-  name = "darkstat-${var.environment}"
+  name = "${var.environment}-darkstat-web"
 
   task_spec {
     networks_advanced {
