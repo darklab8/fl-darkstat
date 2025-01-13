@@ -17,7 +17,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
     - name: Check out source repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Checkout Freelancer
       uses: darklab8/infra/.github/actions/checkout-freelancer@master
       with:
@@ -51,9 +51,11 @@ jobs:
         FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
         DARKSTAT_DETAILED: 'false'
         RELAY_HOST: https://darkrelay-staging.dd84ai.com
-    - uses: actions/upload-pages-artifact@v1
+    - name: Upload artifacts for deployment to Github Pages
+      uses: actions/upload-pages-artifact@v3
       with:
         name: github-pages
         path: './build'
-    - uses: actions/deploy-pages@v1
+    - name: Deploy to pages
+      uses: actions/deploy-pages@v4
       id: deployment
