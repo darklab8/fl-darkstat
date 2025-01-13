@@ -10,7 +10,7 @@ locals {
 }
 
 resource "docker_container" "discovery" {
-  name  = "discovery-${var.environment}"
+  name  = "${var.environment}-discovery-data"
   image = docker_image.discovery.image_id
 
   volumes {
