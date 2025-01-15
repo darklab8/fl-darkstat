@@ -7,10 +7,9 @@ online version of the [flstat](https://discoverygc.com/forums/showthread.php?tid
 See demos:
 
 - [development version](https://darklab8.github.io/fl-darkstat/)
-- [Freelancer Discovery version](https://darklab8.github.io/fl-data-discovery/) [(action)](<https://github.com/darklab8/fl-data-discovery/actions/workflows/publish.yaml>)
-- [Freelancer Vanilla version](https://darklab8.github.io/fl-data-vanilla/) [(action)](<https://github.com/darklab8/fl-data-vanilla/actions/workflows/publish.yaml>)
-- [Freelancer Sirius Revival](https://darklab8.github.io/fl-data-flsr/) [(action)](<https://github.com/darklab8/fl-data-flsr/actions/workflows/publish.yaml>)
-
+- [Freelancer Discovery version](https://darklab8.github.io/fl-data-discovery/) [(action)](https://github.com/darklab8/fl-data-discovery/actions/workflows/publish.yaml)
+- [Freelancer Vanilla version](https://darklab8.github.io/fl-data-vanilla/) [(action)](https://github.com/darklab8/fl-data-vanilla/actions/workflows/publish.yaml)
+- [Freelancer Sirius Revival](https://darklab8.github.io/fl-data-flsr/) [(action)](https://github.com/darklab8/fl-data-flsr/actions/workflows/publish.yaml)
 
 # Support
 
@@ -22,6 +21,7 @@ See demos:
 
 - git clone https://github.com/darklab8/fl-configs repository for game configs scan, download it to same parent folder as this repository
 - install golang of project version or higher (potentially will work anyway).
+
   - See current golang version [in CI workflow](.github/workflows/deploy.yml)
 - install [templ](https://templ.guide/quick-start/installation)
 
@@ -34,7 +34,6 @@ See demos:
   - ensure it was set. `echo $FREELANCER_FOLDER` at Linux or `echo %FREELANCER_FOLDER%` at windows
     - optionally is enough to change value in [enverant.json](.vscode/enverant.json) for that
   - Check to have set other values from [enverant.json](.vscode/enverant.json) ! Some options make development way more pleasant by speeding up rerender by disabling unnecessary features!
-
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
 
   - run some command, for example `task web`
@@ -70,10 +69,12 @@ If u have problems with configuring development environment, then seek my contac
 - You can pin items for comparison
 - For Discovery Freelancer, u can select ID/Tractor and having guns/ships etc filtered/shown according to what your ID can use without power core regeneration debuffs. Shows ID compatibility (75% ID compatibility at any equiped item will mean having only 75% of Power core regeneration)
 
-# Usage locally
+# Usage
+
+## Local usage
 
 - download latest from https://github.com/darklab8/fl-darkstat/releases , they are autobuilt from CI, so they will be always there.
-  - optionally build latest [according to instruction](<https://github.com/darklab8/fl-darkstat/blob/550b40a49ec4f5dd1113457e4c96eee161296b7b/.github/actions/build/action.yml#L25>) on your own if desired
+  - optionally build latest [according to instruction](https://github.com/darklab8/fl-darkstat/blob/550b40a49ec4f5dd1113457e4c96eee161296b7b/.github/actions/build/action.yml#L25) on your own if desired
 - put file into root of Freelancer folder and start
   - optionally launch from anywhere, just add env variable FREELANCER_FOLDER with location to freelancer folder root.
 - visit http://localhost:8000/ as printed in console to see web site locally
@@ -81,6 +82,13 @@ If u have problems with configuring development environment, then seek my contac
 
 P.S. The tool uses lazy filesystem approach by grabbing first file with matching name. I did not use full paths.
 So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery folder
+
+## Docker usage
+
+- [Docker releases](https://hub.docker.com/r/darkwind8/darkstat) are available too. tag `production` is latest stable and running in prod.
+- Configuration for its running check in terraform infra code of [module darkstat](./tf/modules/darkstat)
+  - you need to point at least volume -v /data:/path_to_frelancer_folder
+  - and point required environment variables [as described there](./tf/modules/darkstat/variables.tf)
 
 # Acknowledments
 
@@ -109,7 +117,7 @@ So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery f
 - discord DM: darkwind8
 - discord server lab: https://discord.gg/zFzSs82y3W
 - or open [Pull Request here](https://github.com/darklab8/fl-darkstat/issues) and write there
-- [see up to date contacts here](<https://darklab8.github.io/blog/index.html#contacts>)
+- [see up to date contacts here](https://darklab8.github.io/blog/index.html#contacts)
 
 See anouncements at [Discovery Freelancer forum thread](https://discoverygc.com/forums/showthread.php?tid=187294)
 
@@ -118,4 +126,3 @@ See anouncements at [Discovery Freelancer forum thread](https://discoverygc.com/
 fl-darkstat was originally created by Andrei Novoselov (aka darkwind, aka dd84ai)
 The work is released under AGPL license, free to modify, copy and etc. as long as you keep code open source and mentioned original author.
 See [LICENSE](./LICENSE) file for details.
-
