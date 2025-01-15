@@ -74,18 +74,6 @@ func main() {
 		app_data.Unlock()
 		runtime.GC()
 
-		// go func() {
-		// 	for {
-		// 		// TODO perhaps better just actually launching container restart
-		// 		time.Sleep(time.Hour * 4)
-		// 		app_data.Lock()
-		// 		app_data.Refresh()
-		// 		relay_fs2 := GetRelayFs(stat_router.AppData)
-		// 		relay_fs.Files = relay_fs2.Files
-		// 		app_data.Unlock()
-		// 	}
-		// }()
-
 		if settings.IsRelayActive(app_data.Mapped) {
 			go func() {
 				for {
