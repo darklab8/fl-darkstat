@@ -44,7 +44,7 @@ type Account struct {
 	Name string `json:"name" example:"account name"`
 }
 
-// @title Darkstat Swagger API
+// @title Darkstat API
 // @version 1.0
 // @description Darkstat API exposed info in json format.
 // @termsOfService http://swagger.io/terms/
