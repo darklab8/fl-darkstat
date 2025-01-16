@@ -56,10 +56,6 @@ templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *typ
 				<th style="width:25px;">HpType</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
-				@HashTh("Nickname")
-				@HashTh("HPType")
-				@HashTh("Flame Eff")
-				@HashTh("Trail Eff")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -86,10 +82,6 @@ templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *typ
 					<td class="seo">{ engine.HpType } </td>
 					<td class="seo">{ strconv.Itoa(engine.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(engine.InfoID) } </td>
-					@HashTd(engine.NicknameHash)
-					@HashTd(engine.HpTypeHash)
-					@HashTd(engine.FlameEffectHash)
-					@HashTd(engine.TrailEffectHash)
 					@tab.TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}

@@ -78,6 +78,7 @@ func NewBuilder(mapped *configs_mapped.MappedConfigs) *builder.Builder {
 			siteRoot + urls.VanillaIndex.ToString(),
 		},
 		TractorTabName: tractor_tab_name,
+		SiteHost:       settings.Env.SiteHost,
 		SiteRoot:       siteRoot,
 		StaticRoot:     siteRoot + staticPrefix,
 		Heading:        settings.Env.AppHeading,
@@ -206,14 +207,6 @@ func (l *Router) Link() *builder.Builder {
 				front.DocsEntry(types.ThemeLight, shared),
 			),
 			builder.NewComponent(
-				urls.HashesIndex,
-				front.HashesEntry(types.ThemeLight, shared),
-			),
-			builder.NewComponent(
-				tab.AllItemsUrl(urls.HashesIndex),
-				front.HashesEntry(types.ThemeLight, shared),
-			),
-			builder.NewComponent(
 				tab.AllItemsUrl(urls.Docs),
 				front.DocsT(tab.ShowEmpty(true), shared),
 			),
@@ -232,15 +225,6 @@ func (l *Router) Link() *builder.Builder {
 			builder.NewComponent(
 				urls.VanillaIndex,
 				front.Index(types.ThemeVanilla, shared),
-			),
-
-			builder.NewComponent(
-				urls.Hashes,
-				front.HashesT(configs.Hashes, tab.ShowEmpty(false), shared),
-			),
-			builder.NewComponent(
-				tab.AllItemsUrl(urls.Hashes),
-				front.HashesT(configs.Hashes, tab.ShowEmpty(true), shared),
 			),
 		)
 	})

@@ -49,7 +49,6 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm tab.PinMod, shared *type
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
-				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -74,7 +73,6 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm tab.PinMod, shared *type
 					<td class="seo">{ cm.Nickname } </td>
 					<td class="seo">{ strconv.Itoa(cm.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(cm.InfoID) } </td>
-					@HashTd(cm.NicknameHash)
 					@tab.TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}

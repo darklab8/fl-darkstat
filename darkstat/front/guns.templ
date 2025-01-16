@@ -212,9 +212,6 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 				}
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
-				@HashTh("Gun Nick")
-				@HashTh("Munition")
-				@HashTh("HpType")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -292,9 +289,6 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *t
 		}
 		<td class="seo">{ strconv.Itoa(gun.IdsName) } </td>
 		<td class="seo">{ strconv.Itoa(gun.IdsInfo) } </td>
-		@HashTd(gun.NicknameHash)
-		@HashTd(gun.MunitionHash)
-		@HashTd(gun.HpTypeHash)
 		@tab.TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, shared, tab.InfocardClickOpts{})
 	}
 }

@@ -19,6 +19,7 @@ type DarkstatEnvVars struct {
 	utils_settings.UtilsEnvs
 	configs_settings.ConfEnvVars
 	TractorTabName    string
+	SiteHost          string
 	SiteRoot          string
 	SiteRootAcceptors string
 	AppHeading        string
@@ -38,14 +39,16 @@ func init() {
 		UtilsEnvs:         utils_settings.GetEnvs(env),
 		ConfEnvVars:       configs_settings.GetEnvs(env),
 		TractorTabName:    env.GetStr("DARKSTAT_TRACTOR_TAB_NAME", enverant.OrStr("Tractors")),
+		SiteHost:          env.GetStr("SITE_HOST", enverant.OrStr("")),
 		SiteRoot:          env.GetStr("SITE_ROOT", enverant.OrStr("/")),
 		SiteRootAcceptors: env.GetStr("SITE_ROOT_ACCEPTORS", enverant.OrStr("")),
 		AppHeading:        env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr("")),
 		AppVersion:        getAppVersion(),
 		IsDetailed:        env.GetBoolOr("DARKSTAT_DETAILED", false),
-		RelayHost:         env.GetStr("RELAY_HOST", enverant.OrStr("http://localhost:8080")),
-		RelayRoot:         env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
-		RelayLoopSecs:     env.GetIntOr("RELAY_LOOP_SECS", 30),
+
+		RelayHost:     env.GetStr("RELAY_HOST", enverant.OrStr("http://localhost:8080")),
+		RelayRoot:     env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
+		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 30),
 	}
 
 	fmt.Sprintln("conf=", Env)

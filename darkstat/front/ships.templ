@@ -120,7 +120,6 @@ templ ShipTable(
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
-				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -178,7 +177,6 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 		</td>
 		<td class="seo">{ strconv.Itoa(ship.NameID) } </td>
 		<td class="seo">{ strconv.Itoa(ship.InfoID) } </td>
-		@HashTd(ship.NicknameHash)
 		@tab.TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm, shared, tab.InfocardClickOpts{})
 	}
 }

@@ -39,7 +39,6 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm tab.PinMod, shared *t
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
-				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -60,7 +59,6 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm tab.PinMod, shared *t
 					<td class="seo">{ scanner.Nickname } </td>
 					<td class="seo">{ strconv.Itoa(scanner.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(scanner.InfoID) } </td>
-					@HashTd(scanner.NicknameHash)
 					@tab.TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}

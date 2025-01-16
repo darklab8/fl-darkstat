@@ -80,8 +80,6 @@ templ MinesTable(mines []configs_export.Mine, pinm tab.PinMod, shared *types.Sha
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Projectile", "Archetype"})
 				</th>
-				@HashTh("Mine Dropper")
-				@HashTh("Mine")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -117,8 +115,6 @@ templ MinesTable(mines []configs_export.Mine, pinm tab.PinMod, shared *types.Sha
 					<td class="seo">{ strconv.Itoa(mine.IdsName) } </td>
 					<td class="seo">{ strconv.Itoa(mine.IdsInfo) } </td>
 					<td class="seo">{ mine.ProjectileArchetype } </td>
-					@HashTd(mine.MineDropperHash)
-					@HashTd(mine.MineHash)
 					@tab.TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}

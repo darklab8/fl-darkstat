@@ -45,7 +45,6 @@ templ TractorHeaders(shared *types.SharedData) {
 	<th style="width:25px;">Nickname</th>
 	<th style="width:25px;">Name ID</th>
 	<th style="width:25px;">Info ID</th>
-	@HashTh("Nickname")
 	<th style="max-width:100%;"></th>
 }
 
@@ -61,7 +60,6 @@ templ TractorValues(tractor configs_export.Tractor, shared *types.SharedData) {
 	<td class="seo">{ string(tractor.Nickname) } </td>
 	<td class="seo">{ strconv.Itoa(tractor.NameID) } </td>
 	<td class="seo">{ strconv.Itoa(tractor.InfoID) } </td>
-	@HashTd(tractor.NicknameHash)
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers

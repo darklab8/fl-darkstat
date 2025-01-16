@@ -54,7 +54,6 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.Shar
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
-				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -79,7 +78,6 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.Shar
 					<td class="seo">{ ammo.Nickname } </td>
 					<td class="seo">{ strconv.Itoa(ammo.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(ammo.InfoID) } </td>
-					@HashTd(ammo.NicknameHash)
 					@tab.TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}

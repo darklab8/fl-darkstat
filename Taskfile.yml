@@ -109,6 +109,10 @@ tasks:
     cmds:
       - kcl kcls/build.k
 
+  swag:build:
+    cmds:
+      - swag init --parseDependency
+
 env:
   tag_version: v1.48.0-a4
   DOCKER_HOST: ssh://root@darklab:22

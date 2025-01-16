@@ -122,12 +122,6 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm tab.PinMo
 				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Rech", "able"})
 				</th>
-				if tab_mode != BaseTabOres {
-					@HashTh("Base nick")
-				} else {
-					@HashTh("Zone nick")
-				}
-				@HashTh("System nick")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -217,8 +211,6 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		<td class="seo">{ strconv.Itoa(base.StridName) }</td>
 		<td class="seo">{ strconv.Itoa(base.InfocardID) }</td>
 		<td>{ frmt.FormatBoolAsYesNo(base.Reachable) }</td>
-		@HashTd(base.NicknameHash)
-		@HashTd(base.SystemNicknameHash)
 		@tab.TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, shared, tab.InfocardClickOpts{})
 	}
 }
@@ -336,7 +328,6 @@ templ BaseMarketGoodsBase() {
 				<th style="width:10px;">
 					@frmt.MultiLinestring([]string{"Server", "Override"})
 				</th>
-				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -387,7 +378,6 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 				</td>
 				<td>{ good.HpType }</td>
 				<td>{ strconv.FormatBool(good.IsServerSideOverride) }</td>
-				@HashTd(good.NicknameHash)
 				<td></td>
 			</tr>
 		}

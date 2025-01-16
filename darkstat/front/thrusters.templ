@@ -43,7 +43,6 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm tab.PinMod, share
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
-				@HashTh("Nickname")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -68,7 +67,6 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm tab.PinMod, share
 					<td class="seo">{ thruster.Nickname } </td>
 					<td class="seo">{ strconv.Itoa(thruster.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(thruster.InfoID) } </td>
-					@HashTd(thruster.NicknameHash)
 					@tab.TdInfoCardClick(configs_export.InfocardKey(thruster.Nickname), thruster.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}

@@ -10,6 +10,7 @@ WORKDIR /code
 COPY go.mod go.sum ./
 RUN go mod download -x
 RUN go install github.com/a-h/templ/cmd/templ@v0.2.747
+RUN go install github.com/swaggo/swag/cmd/swag@v1.16.4
 
 FROM dependencies AS build
 
@@ -21,6 +22,8 @@ COPY darkrelay darkrelay
 # building golang gazilion times faster
 ENV GOCACHE=/root/.cache/go-build
 RUN templ generate
+RUN swag init --parseDependency
+
 ARG BUILD_VERSION
 RUN echo "${BUILD_VERSION}" > darkstat/settings/version.txt
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go

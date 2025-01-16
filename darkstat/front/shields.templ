@@ -55,8 +55,6 @@ templ ShieldTable(shields []configs_export.Shield, pinm tab.PinMod, shared *type
 				<th style="width:25px;">HpType</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
-				@HashTh("Nickname")
-				@HashTh("HpType")
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -86,8 +84,6 @@ templ ShieldTable(shields []configs_export.Shield, pinm tab.PinMod, shared *type
 					<td class="seo">{ shield.HpType } </td>
 					<td class="seo">{ strconv.Itoa(shield.IdsName) } </td>
 					<td class="seo">{ strconv.Itoa(shield.IdsInfo) } </td>
-					@HashTd(shield.NicknameHash)
-					@HashTd(shield.HpTypeHash)
 					@tab.TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}

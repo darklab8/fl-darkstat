@@ -9,11 +9,14 @@ import (
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
 	"github.com/darklab8/fl-darkcore/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
+	"github.com/darklab8/fl-darkstat/darkstat/api"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
+
+	_ "github.com/darklab8/fl-darkstat/docs" // necessary for Swagger initialization
 )
 
 type Action string
@@ -36,7 +39,27 @@ func GetRelayFs(app_data *router.AppData) *builder.Filesystem {
 	return relay_fs
 }
 
+type Account struct {
+	ID   int    `json:"id" example:"1"`
+	Name string `json:"name" example:"account name"`
+}
+
+// @title Darkstat Swagger API
+// @version 1.0
+// @description Darkstat API exposed info in json format.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url https://darklab8.github.io/blog/index.html#contacts
+// @contact.email dark.dreamflyer@gmail.com
+
+// @license.name AGPL3
+// @license.url https://raw.githubusercontent.com/darklab8/fl-darkstat/refs/heads/master/LICENSE
+
+// @host darkstat.dd84ai.com
+// @BasePath /
 func main() {
+
 	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	defer func() {
 		if r := recover(); r != nil {
@@ -64,10 +87,10 @@ func main() {
 
 		stat_fs := stat_builder.BuildAll(true, nil)
 
-		go web.NewWeb(stat_fs,
+		go api.RegisterApiRoutes(web.NewWeb(stat_fs,
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
-		).Serve(web.WebServeOpts{})
+		), app_data).Serve(web.WebServeOpts{})
 
 		app_data.Lock()
 		relay_fs := GetRelayFs(stat_router.AppData)

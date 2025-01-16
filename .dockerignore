@@ -13,3 +13,6 @@ web/static/export/*
 **/.terraform/
 **/.git
 **/version.txt
+**/docs.go
+**/swagger.json
+**/swagger.yaml

@@ -21,13 +21,6 @@ templ DocsEntry(theme types.Theme, shared *types.SharedData) {
     }
 }
 
-templ HashesEntry(theme types.Theme, shared *types.SharedData) {
-    @tab.Html5(theme, shared) {
-		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Hashes.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
-    }
-}
-
-
 templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.SharedData) {
 	<style>
 	.tab-list {
@@ -91,7 +84,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button([]string{"PoBs"}, urls.PoBs, url)
 					@tab.Button([]string{"PoB","goods"}, urls.PoBGoods, url)
 				}
-				@tab.Button([]string{"Hash"}, urls.HashesIndex, url)
+				@tab.Button([]string{"API"}, urls.Swagger, url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestring([]string{"Show", "All"})
 				</button>
@@ -127,7 +120,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button([]string{"PoB","goods"}, tab.AllItemsUrl(urls.PoBGoods), url)
 				}
 				
-				@tab.Button([]string{"Hash"}, tab.AllItemsUrl(urls.HashesIndex), url)
+				@tab.Button([]string{"API"}, tab.AllItemsUrl(urls.Swagger), url)
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestring([]string{"Don't", "Show All"})
 				</button>
