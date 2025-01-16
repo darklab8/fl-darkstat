@@ -10,6 +10,7 @@ locals {
     UTILS_LOG_LEVEL    = "DEBUG" # Optional: for more debugging info
 
     SITE_ROOT = var.SITE_ROOT # Optional for when needing Site served from /fl-data-discovery/ route instead of just / (it is used to make Relay backend usable for Github pages frontend)
+    SITE_HOST = "https://${var.stat_prefix}.${var.zone}"
     FLDARKSTAT_HEADING = var.FLDARKSTAT_HEADING # Optional for phrases at the top of Darkstat interface
   }
 }
