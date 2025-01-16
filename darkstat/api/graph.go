@@ -62,6 +62,12 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 			}
 			json.Unmarshal(body, &input_routes)
 
+			if len(input_routes.Routes) == 0 {
+				resp.WriteHeader(http.StatusBadRequest)
+				fmt.Fprintf(resp, "input at least some routes into request body")
+				return
+			}
+
 			var output_routes []GraphPathsResp
 
 			for _, route := range input_routes.Routes {
