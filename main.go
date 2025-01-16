@@ -56,10 +56,8 @@ type Account struct {
 // @license.name AGPL3
 // @license.url https://raw.githubusercontent.com/darklab8/fl-darkstat/refs/heads/master/LICENSE
 
-// @host darkstat.dd84ai.com
 // @BasePath /
 func main() {
-
 	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	defer func() {
 		if r := recover(); r != nil {
