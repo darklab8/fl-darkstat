@@ -13,6 +13,8 @@ import (
 
 // ShowAccount godoc
 // @Summary      Getting list of Player Owned Bases
+// @Description  in difference to Disco API, it is enriched with Nicknames/Infocard Names,Region names
+// @Description  Sector coordinates, and extra information written in Infocard (totally reflecting Darkstat itself)
 // @Tags         pobs
 // @Accept       json
 // @Produce      json

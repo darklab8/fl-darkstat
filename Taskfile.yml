@@ -30,6 +30,7 @@ tasks:
     cmds:
       - task: build-version
       - templ generate
+      - task: swag:build
       - go run . web
 
   dev:templ:
@@ -111,6 +112,7 @@ tasks:
 
   swag:build:
     cmds:
+      - rm docs/docs.go | true
       - swag init --parseDependency
 
 env:
