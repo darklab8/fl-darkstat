@@ -30,7 +30,7 @@ tasks:
     cmds:
       - task: build-version
       - templ generate
-      - task: swag:build
+      # - task: swag:build
       - go run . web
 
   dev:templ:

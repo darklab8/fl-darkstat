@@ -21,6 +21,7 @@ func RegisterApiRoutes(w *web.Web, app_data *router.AppData) *web.Web {
 	api_routes.Register(NewEndpointPoBs(w, api))
 	api_routes.Register(NewEndpointPoBGoods(w, api))
 	api_routes.Register(NewEndpointHashes(w, api))
+	api_routes.Register(PostGraphPaths(w, api))
 
 	w.GetMux().Handle("GET /swagger/", httpSwagger.Handler(
 		httpSwagger.URL("/swagger/doc.json"),
