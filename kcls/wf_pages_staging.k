@@ -27,6 +27,7 @@ _pages_staging_job: gw.Job = {
             freelancer_folder = c._freelancer_folder
         })
     ] + c.DarkstatBuildAssetsSteps(darkstat.BuildArgs {
+        site_host = "https://darkstat-staging.dd84ai.com"
         site_root = "/fl-darkstat/"
         freelancer_folder = c._freelancer_folder
         heading = '<span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>'

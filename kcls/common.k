@@ -35,6 +35,7 @@ DarkstatBuildAssetsSteps = lambda a: darkstat.BuildArgs {
             name = "build"
             run = "task build"
             env = {
+                SITE_HOST = a.site_host
                 SITE_ROOT = a.site_root
                 FREELANCER_FOLDER = a.freelancer_folder
                 FLDARKSTAT_HEADING = a.heading

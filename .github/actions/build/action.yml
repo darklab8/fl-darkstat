@@ -5,6 +5,10 @@ inputs:
     description: Path to root of freelancer directory
     default: ${{ github.workspace }}
     # type: string
+  site-host:
+    description: Site host
+    # type: string
+    default: ""
   site-root:
     description: Site root prefix to static assets
     # type: string
@@ -40,6 +44,7 @@ runs:
       shell: bash
       run: darkstat build
       env:
+        SITE_HOST: ${{ inputs.site-host }}
         SITE_ROOT: ${{ inputs.site-root }}
         FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
         FLDARKSTAT_HEADING: ${{ inputs.heading }}
