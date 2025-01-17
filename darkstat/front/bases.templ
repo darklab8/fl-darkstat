@@ -154,11 +154,19 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		}
 		<td>{ base.SectorCoord }</td>
 		if tab_mode == BaseShowMissions {
-			<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
-			<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
-			<td>{ strconv.Itoa(base.Missions.MinOffers) }</td>
-			<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>
-			<td>{ strconv.Itoa(base.Missions.Vignettes) }</td>
+			if base.Missions != nil {
+				<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
+				<td>{ strconv.Itoa(base.Missions.MaxMoneyAward) }</td>
+				<td>{ strconv.Itoa(base.Missions.MinOffers) }</td>
+				<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>
+				<td>{ strconv.Itoa(base.Missions.Vignettes) }</td>
+			} else {
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>			
+			}
 		}
 		if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 			<td
