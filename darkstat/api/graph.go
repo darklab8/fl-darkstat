@@ -92,9 +92,9 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 					result.Error = err.Error()
 				} else {
 					result.Time = &GraphPathTime{
-						Transport: ptr.Ptr(transport_time),
-						Frigate:   ptr.Ptr(frigate_time),
-						Freighter: ptr.Ptr(freighter_time),
+						Transport: ptr.Ptr(transport_time / int(trades.PrecisionMultipiler)),
+						Frigate:   ptr.Ptr(frigate_time / int(trades.PrecisionMultipiler)),
+						Freighter: ptr.Ptr(freighter_time / int(trades.PrecisionMultipiler)),
 					}
 				}
 
