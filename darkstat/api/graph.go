@@ -29,8 +29,9 @@ type GraphPathTime struct {
 }
 
 type GraphPathsResp struct {
-	Route GraphPathReq  `json:"route"`
-	Time  GraphPathTime `json:"time"`
+	Route GraphPathReq   `json:"route"`
+	Time  *GraphPathTime `json:"time,omitempty"`
+	Error string         `json:"error,omitempty"`
 }
 
 // ShowAccount godoc
@@ -73,21 +74,33 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 			for _, route := range input_routes.Routes {
 				result := GraphPathsResp{Route: route}
 
-				result.Time.Transport = ptr.Ptr(trades.GetDist(
+				var transport_time, frigate_time, freighter_time int
+				var err error
+				transport_time, _ = trades.GetDist(
 					api.app_data.Configs.Transport.Graph,
 					api.app_data.Configs.Transport.Time,
 					route.From,
-					route.To))
-				result.Time.Frigate = ptr.Ptr(trades.GetDist(
+					route.To)
+				frigate_time, _ = trades.GetDist(
 					api.app_data.Configs.Frigate.Graph,
 					api.app_data.Configs.Frigate.Time,
 					route.From,
-					route.To))
-				result.Time.Freighter = ptr.Ptr(trades.GetDist(
+					route.To)
+				freighter_time, err = trades.GetDist(
 					api.app_data.Configs.Freighter.Graph,
 					api.app_data.Configs.Freighter.Time,
 					route.From,
-					route.To))
+					route.To)
+
+				if err != nil {
+					result.Error = err.Error()
+				} else {
+					result.Time = &GraphPathTime{
+						Transport: ptr.Ptr(transport_time),
+						Frigate:   ptr.Ptr(frigate_time),
+						Freighter: ptr.Ptr(freighter_time),
+					}
+				}
 
 				output_routes = append(output_routes, result)
 			}
