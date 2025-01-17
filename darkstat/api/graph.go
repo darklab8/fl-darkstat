@@ -13,10 +13,6 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
-type GraphPathBody struct {
-	Routes []GraphPathReq `json:"routes"`
-}
-
 type GraphPathReq struct {
 	From string `json:"from" example:"li01_01_base"`
 	To   string `json:"to" example:"br01_01_base"`
@@ -42,7 +38,7 @@ type GraphPathsResp struct {
 // @Tags         graph
 // @Accept       json
 // @Produce      json
-// @Param request body api.GraphPathBody true "Request body"
+// @Param request body []api.GraphPathReq true "Request body"
 // @Success      200  {array}  	api.GraphPathsResp
 // @Router       /api/graph/paths [post]
 func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
@@ -54,7 +50,7 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			var input_routes GraphPathBody
+			var input_routes []GraphPathReq
 			body, err := io.ReadAll(r.Body)
 			if logus.Log.CheckError(err, "failed to read body") {
 				resp.WriteHeader(http.StatusBadRequest)
@@ -63,7 +59,7 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 			}
 			json.Unmarshal(body, &input_routes)
 
-			if len(input_routes.Routes) == 0 {
+			if len(input_routes) == 0 {
 				resp.WriteHeader(http.StatusBadRequest)
 				fmt.Fprintf(resp, "input at least some routes into request body")
 				return
@@ -71,7 +67,7 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 
 			var output_routes []GraphPathsResp
 
-			for _, route := range input_routes.Routes {
+			for _, route := range input_routes {
 				result := GraphPathsResp{Route: route}
 
 				var transport_time, frigate_time, freighter_time int
