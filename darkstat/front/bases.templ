@@ -161,11 +161,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 				<td>{ strconv.Itoa(base.Missions.MaxOffers) }</td>
 				<td>{ strconv.Itoa(base.Missions.Vignettes) }</td>
 			} else {
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>			
+				<td></td><td></td><td></td><td></td><td></td>		
 			}
 		}
 		if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
@@ -199,15 +195,19 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 			@frmt.WriteRegionName(base.Region)
 		</td>
 		if tab_mode == BaseShowMissions {
-			<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
-			<td class="seo">
-				@PrintEnemies(EnemistToList(base.Missions.EnemiesAtBaseMap))
-			</td>
-			<td class="seo">
-				if base.Missions.Err != nil {
-					{ base.Missions.Err.Error() }
-				}
-			</td>
+			if base.Missions != nil {
+				<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
+				<td class="seo">
+					@PrintEnemies(EnemistToList(base.Missions.EnemiesAtBaseMap))
+				</td>
+				<td class="seo">
+					if base.Missions.Err != nil {
+						{ base.Missions.Err.Error() }
+					}
+				</td>
+			} else {
+				<td></td><td></td><td></td>
+			}
 		}
 		<td class="seo">{ base.Nickname.ToStr() }</td>
 		<td class="seo">{ base.SystemNickname }</td>
