@@ -12,7 +12,6 @@ import (
 	"math"
 	"strconv"
 	"strings"
-	"encoding/json"
 )
 
 func BaseDetailedUrl(base *configs_export.Base, tab_mode BaseMode) string {
@@ -163,9 +162,8 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		}
 		if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 			<td
-				class="route_transport"
-				routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteTransport) }
-			>
+				class="route_transport" 
+			> // routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteTransport) }
 				if base.BestTransportRoute != nil {
 					{ fmt.Sprintf("%2.2f", base.BestTransportRoute.GetProffitPerTime() * 100) }
 				} else {
@@ -173,14 +171,14 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 				}
 			</td>
 			if shared.ShowDisco {
-				<td class="route_frigate" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFrigate) }>
+				<td class="route_frigate"> // routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFrigate) }
 					if base.BestFrigateRoute != nil {
 						{ fmt.Sprintf("%2.2f", base.BestFrigateRoute.GetProffitPerTime() * 100) }
 					} else {
 						0
 					}
 				</td>
-				<td class="route_freighter" routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFreighter) }>
+				<td class="route_freighter"> // routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFreighter) }
 					if base.BestFreighterRoute != nil {
 						{ fmt.Sprintf("%2.2f", base.BestFreighterRoute.GetProffitPerTime() * 100) }
 					} else {
@@ -211,7 +209,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		<td class="seo">{ strconv.Itoa(base.StridName) }</td>
 		<td class="seo">{ strconv.Itoa(base.InfocardID) }</td>
 		<td>{ frmt.FormatBoolAsYesNo(base.Reachable) }</td>
-		@tab.TdInfoCardClick(base.Infocard, base.Nickname.ToStr(), pinm, shared, tab.InfocardClickOpts{})
+		@tab.TdInfoCardClick(base.InfocardKey, base.Nickname.ToStr(), pinm, shared, tab.InfocardClickOpts{})
 	}
 }
 
@@ -552,38 +550,38 @@ func (r RoundedFloat) MarshalJSON() ([]byte, error) {
 }
 
 
-func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, shared *types.SharedData, route_type trades.RouteShipType) string {
-	return "" // turning on this feature because it is bugged
+// func RoutesInfoJSON(trade_routes configs_export.BaseAllTradeRoutes, shared *types.SharedData, route_type trades.RouteShipType) string {
+// 	return "" // turning on this feature because it is bugged
 
-	var result []Path
-	for _, trade_route := range trade_routes.TradeRoutes {
-		switch route_type {
-			case trades.RouteTransport:
-				result = append(result, Path{
-					P: RoundedFloat(trade_route.Transport.GetProffitPerTime()),
-					S: int(trade_route.Transport.Route.GetTime()),
-				})
-			case trades.RouteFrigate:
-				result = append(result, Path{
-					P: RoundedFloat(trade_route.Frigate.GetProffitPerTime()),
-					S: int(trade_route.Frigate.Route.GetTime()),
-				})
-			case trades.RouteFreighter:
-				result = append(result, Path{
-					P: RoundedFloat(trade_route.Freighter.GetProffitPerTime()),
-					S: int(trade_route.Freighter.Route.GetTime()),
-				})
-			}
-	}
-	bytes, _ := json.Marshal(result)
-	return string(bytes)
-}
+// 	var result []Path
+// 	for _, trade_route := range trade_routes.TradeRoutes {
+// 		switch route_type {
+// 			case trades.RouteTransport:
+// 				result = append(result, Path{
+// 					P: RoundedFloat(trade_route.Transport.GetProffitPerTime()),
+// 					S: int(trade_route.Transport.Route.GetTime()),
+// 				})
+// 			case trades.RouteFrigate:
+// 				result = append(result, Path{
+// 					P: RoundedFloat(trade_route.Frigate.GetProffitPerTime()),
+// 					S: int(trade_route.Frigate.Route.GetTime()),
+// 				})
+// 			case trades.RouteFreighter:
+// 				result = append(result, Path{
+// 					P: RoundedFloat(trade_route.Freighter.GetProffitPerTime()),
+// 					S: int(trade_route.Freighter.Route.GetTime()),
+// 				})
+// 			}
+// 	}
+// 	bytes, _ := json.Marshal(result)
+// 	return string(bytes)
+// }
 
-templ BaseTrades(name string, trade_routes configs_export.BaseAllTradeRoutes, tab_mode BaseMode, shared *types.SharedData) {
+templ BaseTrades(name string, trade_routes []*configs_export.ComboTradeRoute, tab_mode BaseMode, shared *types.SharedData) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseTradesShared(shared) {
-		for _, trade_route := range trade_routes.TradeRoutes {
+		for _, trade_route := range trade_routes {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
 				hx-trigger="click"

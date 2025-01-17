@@ -49,11 +49,11 @@ func RouteUrl(route *configs_export.Route) string {
 	return "routes/route_" + route.GetID()
 }
 
-templ BaseRoutes(name string, routes configs_export.BaseAllRoutes, tab_mode BaseMode, shared *types.SharedData) {
+templ BaseRoutes(name string, routes []*configs_export.ComboRoute, tab_mode BaseMode, shared *types.SharedData) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BasesRoutesShared(shared) {
-		for _, route := range routes.AllRoutes {
+		for _, route := range routes {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(route.Transport.Route) }
 				hx-trigger="click"

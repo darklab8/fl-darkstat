@@ -48,22 +48,28 @@ func (l *Router) LinkBases(
 	)
 
 	for _, base := range data.Bases {
+		if base.Missions != nil {
+			build.RegComps(
+				builder.NewComponent(
+					utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseShowMissions)),
+					front.BaseMissions(base.Name, *base.Missions, front.BaseShowMissions),
+				),
+			)
+		}
+
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseShowShops)),
 				front.BaseMarketGoods(base.Name, base.MarketGoodsPerNick, front.BaseShowShops),
 			),
-			builder.NewComponent(
-				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseShowMissions)),
-				front.BaseMissions(base.Name, base.Missions, front.BaseShowMissions),
-			),
+
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
-				front.BaseTrades(base.Name, base.BaseAllTradeRoutes, front.BaseTabTrades, shared),
+				front.BaseTrades(base.Name, base.TradeRoutes, front.BaseTabTrades, shared),
 			),
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseAllRoutes)),
-				front.BaseRoutes(base.Name, base.BaseAllRoutes, front.BaseAllRoutes, shared),
+				front.BaseRoutes(base.Name, base.AllRoutes, front.BaseAllRoutes, shared),
 			),
 		)
 
@@ -118,7 +124,7 @@ func (l *Router) LinkBases(
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOres)),
-				front.BaseTrades(base.Name, base.BaseAllTradeRoutes, front.BaseTabOres, shared),
+				front.BaseTrades(base.Name, base.TradeRoutes, front.BaseTabOres, shared),
 			),
 		)
 
