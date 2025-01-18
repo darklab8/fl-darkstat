@@ -5,12 +5,17 @@ resource "docker_image" "discovery_dev" {
   }
 
   triggers = {
-    dir_sha1 = sha1(join("", [for f in ["Dockerfile", "entrypoint.sh"] : filesha1("${path.module}/${f}")]))
+    dir_sha1 = sha1(join("", [for f in ["Dockerfile", "entrypoint.py"] : filesha1("${path.module}/${f}")]))
   }
 }
 
 locals {
   host_path = "/var/lib/darklab/discovery-${var.environment}"
+  disco_dev_webhook = data.external.disco_dev_webhook.result["webhook_url"]
+}
+
+data "external" "disco_dev_webhook" {
+  program = ["pass", "personal/terraform/darkstat/discovery_dev_branch_webhook"]
 }
 
 resource "docker_container" "discovery" {
@@ -21,6 +26,10 @@ resource "docker_container" "discovery" {
     host_path      = local.host_path
     container_path = "/code"
   }
+
+  env = [
+    "DISCO_DEV_WEBHOOK=${local.disco_dev_webhook}"
+  ]
 
   restart = "always"
 

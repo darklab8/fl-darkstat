@@ -74,6 +74,7 @@ resource "docker_service" "darkstat" {
   lifecycle {
     ignore_changes = [
       task_spec[0].restart_policy[0].window,
+      task_spec[0].container_spec[0].env,
     ]
   }
   # with usage of docker networking, this is no longer necessary
