@@ -13,8 +13,6 @@ module "darkstat" {
   FLDARKSTAT_HEADING = <<-EOT
   <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
   EOT
-  darkstat_port      = 8001
-  relay_port         = 8081
 
   stat_prefix  = "darkstat-staging"
   relay_prefix = "darkrelay-staging"

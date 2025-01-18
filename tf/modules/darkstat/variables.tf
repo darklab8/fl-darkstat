@@ -1,5 +1,5 @@
 locals {
-  envs = {
+  envs = merge({
     FREELANCER_FOLDER = "/data/freelancer_folder" # Required
 
     RELAY_HOST        = var.RELAY_HOST # Required only for Discover Freelancer. Path to backend for PoBs data
@@ -12,5 +12,8 @@ locals {
     SITE_ROOT = var.SITE_ROOT # Optional for when needing Site served from /fl-data-discovery/ route instead of just / (it is used to make Relay backend usable for Github pages frontend)
     SITE_HOST = "https://${var.stat_prefix}.${var.zone}"
     FLDARKSTAT_HEADING = var.FLDARKSTAT_HEADING # Optional for phrases at the top of Darkstat interface
-  }
+  },
+  var.password != null? { DARKCORE_PASSWORD=var.password } : {},
+  var.secret != null? { DARKCORE_SECRET=var.secret } : {},
+  )
 }

@@ -2,6 +2,11 @@ variable "environment" {
   type = string
 }
 
+variable "tag" {
+  type = string
+  default = null
+}
+
 variable "discovery_path" {
   type = string
 }
@@ -19,12 +24,6 @@ variable "SITE_ROOT" {
 variable "FLDARKSTAT_HEADING" {
   type = string
 }
-variable "darkstat_port" {
-  type = number
-}
-variable "relay_port" {
-  type = number
-}
 variable "stat_prefix" {
   type = string
 }
@@ -33,4 +32,13 @@ variable "relay_prefix" {
 }
 variable "zone" {
   type = string
+}
+
+variable "password" {
+  type = string
+  default = null
+}
+variable "secret" {
+  type = string
+  default = null
 }

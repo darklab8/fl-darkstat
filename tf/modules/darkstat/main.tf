@@ -4,8 +4,12 @@ resource "docker_network" "network" {
   driver     = "overlay"
 }
 
+locals {
+  tag = var.tag != null ? var.tag : var.environment
+}
+
 resource "docker_image" "darkstat" {
-  name         = "darkwind8/darkstat:${var.environment}"
+  name         = "darkwind8/darkstat:${local.tag}"
   keep_locally = true
 }
 

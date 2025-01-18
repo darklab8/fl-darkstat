@@ -19,7 +19,7 @@ _workflows = [
         image_name = _image_name
         service_name = "darkstat"
         environment = "production"
-        extra_env_trigger = "dev"
+        extra_service = "dev-darkstat-app"
     })
 ]
 
