@@ -28,7 +28,8 @@ runs:
       uses: darklab8/infra/.github/actions/install-go@master
     - name: Install Taskfile
       uses: darklab8/infra/.github/actions/install-templ@master
-
+    - name: Install Swag
+      uses: darklab8/infra/.github/actions/install-swag@master
     - name: Install Darkstat
       shell: bash
       run: |
@@ -36,6 +37,7 @@ runs:
         cd fl-darkstat
         echo $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/https:\/\/github.com\/darklab8\/fl-darkstat\/releases\/tag\///") > darkstat/settings/version.txt
         templ generate
+        swag init --parseDependency
         GOOS=linux go build -v -o main main.go
         install -m 777 main /usr/local/bin/darkstat
         cd ..

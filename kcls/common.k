@@ -2,6 +2,8 @@ import infra.kcls.models.github_action as ga
 import infra.kcls.actions.install_go as go
 import infra.kcls.actions.install_taskfile as tf
 import infra.kcls.actions.install_templ as templ
+import infra.kcls.actions.install_swag as swag
+
 import infra.kcls.actions.patch_disco as disco
 import infra.kcls.actions.darkstat
 
@@ -20,6 +22,8 @@ DarkstatBuildAssetsSteps = lambda a: darkstat.BuildArgs {
         tf.InstallTaskfile {}
         templ.InstallTempl {}
         templ.GenerateTempl {}
+        swag.SwagInstall {}
+        swag.SwagBuild {}
         TaskfileBuildVersion
         disco.PatchDisco {
             with = {
