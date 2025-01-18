@@ -143,7 +143,7 @@ func main() {
 			DisableCompression: true,
 		}
 		client := &http.Client{Transport: tr}
-		resp, err := client.Get(fmt.Sprintf("http://localhost/index.html?password=%s", settings.Env.DarkcoreEnvVars.Password))
+		resp, err := client.Get(fmt.Sprintf("http://localhost:8000/index.html?password=%s", settings.Env.DarkcoreEnvVars.Password))
 		logus.Log.CheckPanic(err, "failed to health check")
 		if resp.StatusCode != 200 {
 			logus.Log.Panic("status code is not 200", typelog.Any("code", resp.StatusCode))
