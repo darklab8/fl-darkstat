@@ -33,7 +33,10 @@ DarkstatBuildAssetsSteps = lambda a: darkstat.BuildArgs {
         ga.Step {
             name = "Test things"
             run = "task test -- -v"
-            env = {FLDARKDATA_LOG_LEVEL = "DEBUG"}
+            env = {
+                FLDARKDATA_LOG_LEVEL = "DEBUG"
+                FREELANCER_FOLDER = r"${{ github.workspace }}/fl-data"
+            }
         }
         ga.Step {
             name = "build"
