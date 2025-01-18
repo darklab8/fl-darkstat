@@ -3,7 +3,7 @@ variable "environment" {
 }
 
 variable "tag" {
-  type = string
+  type    = string
   default = null
 }
 
@@ -16,7 +16,8 @@ variable "ipv4_address" {
 }
 
 variable "RELAY_HOST" {
-  type = string
+  type    = string
+  default = null
 }
 variable "SITE_ROOT" {
   type = string
@@ -35,10 +36,10 @@ variable "zone" {
 }
 
 variable "password" {
-  type = string
+  type    = string
   default = null
 }
 variable "secret" {
-  type = string
+  type    = string
   default = null
 }

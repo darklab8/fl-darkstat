@@ -21,12 +21,12 @@ module "darkstat" {
 }
 
 resource "random_string" "random_password" {
-  length           = 32
-  special          = false
+  length  = 32
+  special = false
 }
 resource "random_string" "random_secret" {
-  length           = 32
-  special          = false
+  length  = 32
+  special = false
 }
 
 module "discovery_dev" {
@@ -41,7 +41,6 @@ module "darkstat_dev" {
   discovery_path = module.discovery_dev.discovery_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
 
-  RELAY_HOST         = "https://darkstat-dev.dd84ai.com"
   SITE_ROOT          = "/"
   FLDARKSTAT_HEADING = <<-EOT
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
@@ -52,5 +51,5 @@ module "darkstat_dev" {
   zone         = "dd84ai.com"
 
   password = random_string.random_password.result
-  secret = random_string.random_secret.result
+  secret   = random_string.random_secret.result
 }

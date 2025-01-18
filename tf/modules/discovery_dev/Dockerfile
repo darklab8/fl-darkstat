@@ -1,5 +1,7 @@
 FROM docker:27.3.1-cli
 
+ENV PYTHONUNBUFFERED 1
+
 RUN apk add curl python3 py3-pip
 RUN pip3 install --break-system-packages requests
 

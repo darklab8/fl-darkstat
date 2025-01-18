@@ -10,7 +10,7 @@ resource "docker_image" "discovery_dev" {
 }
 
 locals {
-  host_path = "/var/lib/darklab/discovery-${var.environment}"
+  host_path         = "/var/lib/darklab/discovery-${var.environment}"
   disco_dev_webhook = data.external.disco_dev_webhook.result["webhook_url"]
 }
 
