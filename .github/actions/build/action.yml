@@ -53,4 +53,3 @@ runs:
         FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
         FLDARKSTAT_HEADING: ${{ inputs.heading }}
         RELAY_HOST: ${{ inputs.relay-host }}
-        DEV_ENV: "true"
