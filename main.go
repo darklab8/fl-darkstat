@@ -60,7 +60,7 @@ type Account struct {
 func main() {
 	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteUrl, "https://", "")
 	docs.SwaggerInfo.Host = strings.ReplaceAll(docs.SwaggerInfo.Host, "http://", "")
-	if strings.Contains(docs.SwaggerInfo.Host, "https") {
+	if strings.Contains(settings.Env.SiteUrl, "https") {
 		docs.SwaggerInfo.Schemes = []string{"https"}
 	}
 
