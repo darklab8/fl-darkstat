@@ -85,7 +85,7 @@ script GoToUrl(current string, themes []string) {
 templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePath) {
 	if get_url == urls.Swagger {
 		<a 
-			href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "/" + get_url.ToString()) }
+			href={ templ.SafeURL(types.GetCtx(ctx).SiteUrl + "/" + get_url.ToString()) }
 			style="display: block;"
 		>
 			<button

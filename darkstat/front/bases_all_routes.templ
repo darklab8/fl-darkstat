@@ -71,8 +71,8 @@ templ BaseRoutes(name string, routes []*configs_export.ComboRoute, tab_mode Base
 					<span class="tooltip">
 						@TradeRouteHumanTime(route.Transport.Route)
 						<span class="tooltiptext">
-							if route.Transport.Route.GetDist() < trades.INF/2 {
-								{ fmt.Sprintf("%.0f", route.Transport.Route.GetTime()) } secs
+							if route.Transport.Route.GetTimeMs() < trades.INF/2 {
+								{ fmt.Sprintf("%.0f", route.Transport.Route.GetTimeS()) } secs
 							} else {
 								INF secs
 							}
@@ -84,8 +84,8 @@ templ BaseRoutes(name string, routes []*configs_export.ComboRoute, tab_mode Base
 						<span class="tooltip">
 							@TradeRouteHumanTime(route.Frigate.Route)
 							<span class="tooltiptext">
-								if route.Frigate.Route.GetDist() < trades.INF/2 {
-									{ fmt.Sprintf("%.0f", route.Frigate.Route.GetTime()) } secs
+								if route.Frigate.Route.GetTimeMs() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", route.Frigate.Route.GetTimeS()) } secs
 								} else {
 									INF secs
 								}
@@ -96,8 +96,8 @@ templ BaseRoutes(name string, routes []*configs_export.ComboRoute, tab_mode Base
 						<span class="tooltip">
 							@TradeRouteHumanTime(route.Freighter.Route)
 							<span class="tooltiptext">
-								if route.Freighter.Route.GetDist() < trades.INF/2 {
-									{ fmt.Sprintf("%.0f", route.Freighter.Route.GetTime()) } secs
+								if route.Freighter.Route.GetTimeMs() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", route.Freighter.Route.GetTimeS()) } secs
 								} else {
 									INF secs
 								}

@@ -19,7 +19,7 @@ type DarkstatEnvVars struct {
 	utils_settings.UtilsEnvs
 	configs_settings.ConfEnvVars
 	TractorTabName    string
-	SiteHost          string
+	SiteUrl           string
 	SiteRoot          string
 	SiteRootAcceptors string
 	AppHeading        string
@@ -39,7 +39,7 @@ func init() {
 		UtilsEnvs:         utils_settings.GetEnvs(env),
 		ConfEnvVars:       configs_settings.GetEnvs(env),
 		TractorTabName:    env.GetStr("DARKSTAT_TRACTOR_TAB_NAME", enverant.OrStr("Tractors")),
-		SiteHost:          env.GetStr("SITE_HOST", enverant.OrStr("")),
+		SiteUrl:           env.GetStrOr("SITE_URL", env.GetStr("SITE_HOST", enverant.OrStr(""))),
 		SiteRoot:          env.GetStr("SITE_ROOT", enverant.OrStr("/")),
 		SiteRootAcceptors: env.GetStr("SITE_ROOT_ACCEPTORS", enverant.OrStr("")),
 		AppHeading:        env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr("")),

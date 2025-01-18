@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_export/trades"
 	"github.com/darklab8/fl-darkcore/darkcore/web"
 	"github.com/darklab8/fl-darkcore/darkcore/web/registry"
@@ -14,20 +15,20 @@ import (
 )
 
 type GraphPathReq struct {
-	From string `json:"from" example:"li01_01_base"`
-	To   string `json:"to" example:"br01_01_base"`
+	From string `json:"from" example:"li01_01_base"` // Write NPC base nickname, or PoB nickname (Name in base64 encoding) or Ore field name
+	To   string `json:"to" example:"br01_01_base"`   // Write NPC base nickname, or PoB nickname (Name in base64 encoding) or Ore field name
 }
 
 type GraphPathTime struct {
-	Transport *int `json:"transport"`
-	Frigate   *int `json:"frigate"`
-	Freighter *int `json:"freighter"`
+	Transport *cfgtype.SecondsI `json:"transport"` // time in seconds
+	Frigate   *cfgtype.SecondsI `json:"frigate"`   // time in seconds
+	Freighter *cfgtype.SecondsI `json:"freighter"` // time in seconds
 }
 
 type GraphPathsResp struct {
-	Route GraphPathReq   `json:"route"`
+	Route GraphPathReq   `json:"route"` // writes requested input
 	Time  *GraphPathTime `json:"time,omitempty"`
-	Error string         `json:"error,omitempty"`
+	Error *string        `json:"error,omitempty"` // writes error if requesting not existing nicknames in from/to fields
 }
 
 // ShowAccount godoc
@@ -72,24 +73,24 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 
 				var transport_time, frigate_time, freighter_time int
 				var err error
-				transport_time, _ = trades.GetDist(
+				transport_time, _ = trades.GetTimeMs(
 					api.app_data.Configs.Transport.Graph,
 					api.app_data.Configs.Transport.Time,
 					route.From,
 					route.To)
-				frigate_time, _ = trades.GetDist(
+				frigate_time, _ = trades.GetTimeMs(
 					api.app_data.Configs.Frigate.Graph,
 					api.app_data.Configs.Frigate.Time,
 					route.From,
 					route.To)
-				freighter_time, err = trades.GetDist(
+				freighter_time, err = trades.GetTimeMs(
 					api.app_data.Configs.Freighter.Graph,
 					api.app_data.Configs.Freighter.Time,
 					route.From,
 					route.To)
 
 				if err != nil {
-					result.Error = err.Error()
+					result.Error = ptr.Ptr(err.Error())
 				} else {
 					result.Time = &GraphPathTime{
 						Transport: ptr.Ptr(transport_time / int(trades.PrecisionMultipiler)),

@@ -539,8 +539,8 @@ templ BaseTradesShared(shared *types.SharedData) {
 }
 
 templ TradeRouteHumanTime(route *configs_export.Route) {
-	if route.GetDist() < trades.INF/2 {
-		{ fmt.Sprintf("%2.0f", math.Floor(route.GetTime()/60)) }m-{ fmt.Sprintf("%2.0f", route.GetTime() - 60*math.Floor(route.GetTime()/60)) }s
+	if route.GetTimeMs() < trades.INF/2 {
+		{ fmt.Sprintf("%2.0f", math.Floor(route.GetTimeS()/60)) }m-{ fmt.Sprintf("%2.0f", route.GetTimeS() - 60*math.Floor(route.GetTimeS()/60)) }s
 	} else {
 		INF
 	}
@@ -603,17 +603,17 @@ templ BaseTrades(name string, trade_routes []*configs_export.ComboTradeRoute, ta
 						{ trade_route.Transport.Commodity.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.Commodity.ShipClass) }
 					}
 				</td>
-				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
+				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
 				if shared.ShowDisco {
-					<td class="route_frigate" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
-					<td class="route_freighter" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTime()) } >{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+					<td class="route_frigate" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
+					<td class="route_freighter" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
 				}
 				<td>
 					<span class="tooltip">
 						@TradeRouteHumanTime(trade_route.Transport.Route)
 						<span class="tooltiptext">
-							if trade_route.Transport.Route.GetDist() < trades.INF/2 {
-								{ fmt.Sprintf("%.0f", trade_route.Transport.Route.GetTime()) } secs
+							if trade_route.Transport.Route.GetTimeMs() < trades.INF/2 {
+								{ fmt.Sprintf("%.0f", trade_route.Transport.Route.GetTimeS()) } secs
 							} else {
 								INF secs
 							}
@@ -625,8 +625,8 @@ templ BaseTrades(name string, trade_routes []*configs_export.ComboTradeRoute, ta
 						<span class="tooltip">
 							@TradeRouteHumanTime(trade_route.Frigate.Route)
 							<span class="tooltiptext">
-								if trade_route.Frigate.Route.GetDist() < trades.INF/2 {
-									{ fmt.Sprintf("%.0f", trade_route.Frigate.Route.GetTime()) } secs
+								if trade_route.Frigate.Route.GetTimeMs() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", trade_route.Frigate.Route.GetTimeS()) } secs
 								} else {
 									INF secs
 								}
@@ -637,8 +637,8 @@ templ BaseTrades(name string, trade_routes []*configs_export.ComboTradeRoute, ta
 						<span class="tooltip">
 							@TradeRouteHumanTime(trade_route.Freighter.Route)
 							<span class="tooltiptext">
-								if trade_route.Freighter.Route.GetDist() < trades.INF/2 {
-									{ fmt.Sprintf("%.0f", trade_route.Freighter.Route.GetTime()) } secs
+								if trade_route.Freighter.Route.GetTimeMs() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", trade_route.Freighter.Route.GetTimeS()) } secs
 								} else {
 									INF secs
 								}

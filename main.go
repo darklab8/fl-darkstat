@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
@@ -13,10 +14,9 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
+	"github.com/darklab8/fl-darkstat/docs"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
-
-	_ "github.com/darklab8/fl-darkstat/docs" // necessary for Swagger initialization
 )
 
 type Action string
@@ -58,6 +58,12 @@ type Account struct {
 
 // @BasePath /
 func main() {
+	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteUrl, "https://", "")
+	docs.SwaggerInfo.Host = strings.ReplaceAll(docs.SwaggerInfo.Host, "http://", "")
+	if strings.Contains(docs.SwaggerInfo.Host, "https") {
+		docs.SwaggerInfo.Schemes = []string{"https"}
+	}
+
 	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	defer func() {
 		if r := recover(); r != nil {

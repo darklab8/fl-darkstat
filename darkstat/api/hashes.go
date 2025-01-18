@@ -12,7 +12,7 @@ import (
 )
 
 type Hashes struct {
-	Data map[string]flhash.HashCode
+	NicknameToHash map[string]flhash.HashCode `json:"nickname_to_hash"`
 }
 
 // ShowAccount godoc
@@ -31,7 +31,7 @@ func NewEndpointHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			data, err := json.Marshal(Hashes{Data: api.app_data.Configs.Hashes})
+			data, err := json.Marshal(Hashes{NicknameToFlhash: api.app_data.Configs.Hashes})
 			logus.Log.CheckPanic(err, "should be marshable")
 			fmt.Fprint(w, string(data))
 		},
