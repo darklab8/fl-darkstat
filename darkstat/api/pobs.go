@@ -29,9 +29,7 @@ func NewEndpointPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			data, err := json.Marshal(api.app_data.Configs.PoBs)
-			logus.Log.CheckPanic(err, "should be marshable")
-			fmt.Fprint(w, string(data))
+			ReturnJson(&w, api.app_data.Configs.PoBs)
 		},
 	}
 }

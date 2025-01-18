@@ -1,13 +1,10 @@
 package api
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/darklab8/fl-darkcore/darkcore/web"
 	"github.com/darklab8/fl-darkcore/darkcore/web/registry"
-	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
 
 // ShowAccount godoc
@@ -25,10 +22,7 @@ func NewEndpointBases(webapp *web.Web, api *Api) *registry.Endpoint {
 				webapp.AppDataMutex.Lock()
 				defer webapp.AppDataMutex.Unlock()
 			}
-
-			data, err := json.Marshal(api.app_data.Configs.Bases)
-			logus.Log.CheckPanic(err, "should be marshable")
-			fmt.Fprint(w, string(data))
+			ReturnJson(&w, api.app_data.Configs.Bases)
 		},
 	}
 }
@@ -48,10 +42,7 @@ func NewEndpointOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 				webapp.AppDataMutex.Lock()
 				defer webapp.AppDataMutex.Unlock()
 			}
-
-			data, err := json.Marshal(api.app_data.Configs.MiningOperations)
-			logus.Log.CheckPanic(err, "should be marshable")
-			fmt.Fprint(w, string(data))
+			ReturnJson(&w, api.app_data.Configs.MiningOperations)
 		},
 	}
 }

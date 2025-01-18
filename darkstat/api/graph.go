@@ -102,9 +102,7 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 				output_routes = append(output_routes, result)
 			}
 
-			data, err := json.Marshal(output_routes)
-			logus.Log.CheckPanic(err, "should be marshable")
-			fmt.Fprint(resp, string(data))
+			ReturnJson(&resp, output_routes)
 		},
 	}
 }

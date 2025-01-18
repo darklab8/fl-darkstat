@@ -64,6 +64,8 @@ If u have problems with configuring development environment, then seek my contac
 Hint:
 - You could generate entire API Client out of openapi with commands like
   - `wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.10.0/openapi-generator-cli-7.10.0.jar -O openapi-generator-cli.jar`
+  - `sdk install java 11.0.25-sem` (assuming sdkman is installed)
+  - `sdk use java 11.0.25-sem`
   - `java -jar openapi-generator-cli.jar generate -g csharp -i https://darkstat.dd84ai.com/swagger/doc.json -o ./generated_csharp` (example on Discovery deployment)
   - `java -jar openapi-generator-cli.jar generate -g csharp -i ./docs/swagger.json -o ./generated_csharp` (if locally)
   - `java -jar openapi-generator-cli.jar list` to get list of possible API client outputs

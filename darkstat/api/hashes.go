@@ -1,14 +1,11 @@
 package api
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkcore/darkcore/web"
 	"github.com/darklab8/fl-darkcore/darkcore/web/registry"
-	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
 
 type Hashes struct {
@@ -31,9 +28,7 @@ func NewEndpointHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			data, err := json.Marshal(Hashes{NicknameToHash: api.app_data.Configs.Hashes})
-			logus.Log.CheckPanic(err, "should be marshable")
-			fmt.Fprint(w, string(data))
+			ReturnJson(&w, Hashes{NicknameToHash: api.app_data.Configs.Hashes})
 		},
 	}
 }
