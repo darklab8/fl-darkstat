@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"runtime"
 	"strings"
@@ -28,6 +29,7 @@ const (
 	Web     Action = "web"
 	Version Action = "version"
 	Relay   Action = "relay"
+	Health  Action = "health"
 )
 
 func GetRelayFs(app_data *router.AppData) *builder.Filesystem {
@@ -134,6 +136,19 @@ func main() {
 		web_darkstat()
 	case Version:
 		fmt.Println("version=", settings.Env.AppVersion)
+	case Health:
+		tr := &http.Transport{
+			MaxIdleConns:       10,
+			IdleConnTimeout:    10 * time.Second,
+			DisableCompression: true,
+		}
+		client := &http.Client{Transport: tr}
+		resp, err := client.Get(fmt.Sprintf("http://localhost/index.html?password=%s", settings.Env.DarkcoreEnvVars.Password))
+		logus.Log.CheckPanic(err, "failed to health check")
+		if resp.StatusCode != 200 {
+			logus.Log.Panic("status code is not 200", typelog.Any("code", resp.StatusCode))
+		}
+		fmt.Println("service is healthy")
 	default:
 		web_darkstat()
 	}
