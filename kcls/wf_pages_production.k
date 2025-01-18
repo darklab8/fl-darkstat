@@ -5,6 +5,7 @@ import infra.kcls.actions.install_go as go
 import infra.kcls.actions.install_taskfile as tf
 import infra.kcls.actions.install_templ as templ
 import infra.kcls.actions.install_autogit as autogit
+import infra.kcls.actions.install_swag as swag
 
 import .common as c
 
@@ -28,6 +29,8 @@ _pages_production_job: gw.Job = {
         tf.InstallTaskfile {}
         templ.InstallTempl {}
         templ.GenerateTempl {}
+        swag.SwagInstall {}
+        swag.SwagBuild {}
         c.TaskfileBuildVersion
         ga.Step {
             name: "Build Binaries"
