@@ -93,15 +93,16 @@ func main() {
 
 		stat_fs := stat_builder.BuildAll(true, nil)
 
-		go api.RegisterApiRoutes(web.NewWeb(stat_fs,
-			web.WithMutexableData(app_data),
-			web.WithSiteRoot(settings.Env.SiteRoot),
-		), app_data).Serve(web.WebServeOpts{})
-
 		app_data.Lock()
 		relay_fs := GetRelayFs(stat_router.AppData)
 		app_data.Unlock()
 		runtime.GC()
+
+		go api.RegisterApiRoutes(web.NewWeb(
+			[]*builder.Filesystem{stat_fs, relay_fs},
+			web.WithMutexableData(app_data),
+			web.WithSiteRoot(settings.Env.SiteRoot),
+		), app_data).Serve(web.WebServeOpts{})
 
 		if settings.IsRelayActive(app_data.Mapped) {
 			go func() {
@@ -121,7 +122,7 @@ func main() {
 		}
 
 		web.NewWeb(
-			relay_fs,
+			[]*builder.Filesystem{relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
 		).Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})

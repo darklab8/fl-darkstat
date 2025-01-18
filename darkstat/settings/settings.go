@@ -51,7 +51,7 @@ func init() {
 		AppVersion:        getAppVersion(),
 		IsDetailed:        env.GetBoolOr("DARKSTAT_DETAILED", false),
 
-		RelayHost:     env.GetStr("RELAY_HOST", enverant.OrStr("http://localhost:8080")),
+		RelayHost:     env.GetStr("RELAY_HOST", enverant.OrStr("")),
 		RelayRoot:     env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
 		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 30),
 	}
