@@ -8,7 +8,7 @@ import (
 	"sort"
 
 	"github.com/darklab8/fl-configs/configs/cfgtype"
-	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
 func SortedBases(bases_map map[cfgtype.BaseUniNick]*configs_export.GoodAtBase) []*configs_export.GoodAtBase {

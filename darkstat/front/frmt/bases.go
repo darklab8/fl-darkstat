@@ -5,7 +5,7 @@ import (
 	"sort"
 
 	"github.com/darklab8/fl-configs/configs/cfgtype"
-	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
 func SortedMarketGoods(goods_per_nick map[configs_export.CommodityKey]configs_export.MarketGood) []configs_export.MarketGood {

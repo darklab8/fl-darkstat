@@ -3,7 +3,7 @@ package disco
 import (
 	"testing"
 
-	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/go-utils/utils"
 )

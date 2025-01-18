@@ -57,6 +57,17 @@ If u have problems with configuring development environment, then seek my contac
 - Usable locally for Linux and Windows.
 - Only Freelancer Discovery mod and Vanilla are supported at the moment
 
+# Darkstat has API Swagger documentation
+
+- API has swagger documentation accessable from its interface by button "API" at the top of menu
+
+Hint:
+- You could generate entire API Client out of openapi with commands like
+  - `wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.10.0/openapi-generator-cli-7.10.0.jar -O openapi-generator-cli.jar`
+  - `java -jar openapi-generator-cli.jar generate -g csharp -i https://darkstat.dd84ai.com/swagger/doc.json -o ./generated_csharp` (example on Discovery deployment)
+  - `java -jar openapi-generator-cli.jar generate -g csharp -i ./docs/swagger.json -o ./generated_csharp` (if locally)
+  - `java -jar openapi-generator-cli.jar list` to get list of possible API client outputs
+
 # What makes different from regular flstat
 
 - Obviously online

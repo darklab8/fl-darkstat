@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-configs/configs/cfgtype"
-	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/discovery/techcompat"
 	"github.com/darklab8/fl-darkcore/darkcore/core_types"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )

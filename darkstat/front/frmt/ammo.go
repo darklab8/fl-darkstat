@@ -3,7 +3,7 @@ package frmt
 import (
 	"fmt"
 
-	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
 func GetAmmoLimitFormatted(ammo_limit configs_export.AmmoLimit) string {

@@ -3,7 +3,7 @@ package tab
 import (
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
 type ShowEmpty bool

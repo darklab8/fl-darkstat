@@ -3,8 +3,8 @@ package router
 import (
 	"sort"
 
-	"github.com/darklab8/fl-configs/configs/configs_export"
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"

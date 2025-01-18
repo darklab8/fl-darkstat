@@ -13,3 +13,5 @@ gems/
 .terraform/
 terraform.tfstate*
 check/
+generated*
+openapi-generator-cli.jar
