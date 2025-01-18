@@ -33,6 +33,7 @@ runs:
     - name: Install Darkstat
       shell: bash
       run: |
+        set -ex
         git clone --depth 1 --branch $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/https:\/\/github.com\/darklab8\/fl-darkstat\/releases\/tag\///") https://github.com/darklab8/fl-darkstat.git
         cd fl-darkstat
         echo $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/https:\/\/github.com\/darklab8\/fl-darkstat\/releases\/tag\///") > darkstat/settings/version.txt

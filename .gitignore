@@ -15,3 +15,4 @@ terraform.tfstate*
 check/
 generated*
 openapi-generator-cli.jar
+*prof
