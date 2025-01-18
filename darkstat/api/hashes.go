@@ -31,7 +31,7 @@ func NewEndpointHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			data, err := json.Marshal(Hashes{NicknameToFlhash: api.app_data.Configs.Hashes})
+			data, err := json.Marshal(Hashes{NicknameToHash: api.app_data.Configs.Hashes})
 			logus.Log.CheckPanic(err, "should be marshable")
 			fmt.Fprint(w, string(data))
 		},
