@@ -208,11 +208,11 @@ type Base struct {
 	Name               string              `json:"name"`       // Infocard Name
 	Archetypes         []string            `json:"archetypes"` // Base Archetypes
 	Nickname           cfgtype.BaseUniNick `json:"nickname"`
-	NicknameHash       flhash.HashCode     `json:"-"` // Flhash of nickname
+	NicknameHash       flhash.HashCode     `json:"-" swaggerignore:"true"` // Flhash of nickname
 	FactionName        string              `json:"faction_nickname"`
 	System             string              `json:"system_name"`
 	SystemNickname     string              `json:"system_nickname"`
-	SystemNicknameHash flhash.HashCode     `json:"-"`
+	SystemNicknameHash flhash.HashCode     `json:"-" swaggerignore:"true"`
 	Region             string              `json:"region_name"`
 	StridName          int                 `json:"strid_name"`
 	InfocardID         int                 `json:"infocard_id"`

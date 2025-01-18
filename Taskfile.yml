@@ -118,3 +118,5 @@ tasks:
 env:
   tag_version: v1.48.0-a4
   DOCKER_HOST: ssh://root@darklab:22
+  # DARKCORE_PASSWORD: "1233"
+  # DARKCORE_SECRET: "passphrasewgichneedstobe32bytes!"
