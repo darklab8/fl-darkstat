@@ -36,6 +36,9 @@ type DarkstatEnvVars struct {
 
 	IsDisabledTradeRouting       bool
 	TradeRoutesDetailedTradeLane bool
+
+	IsCPUProfilerEnabled bool
+	IsMemProfilerEnabled bool
 }
 
 var Env DarkstatEnvVars
@@ -60,6 +63,9 @@ func init() {
 
 		TradeRoutesDetailedTradeLane: env.GetBoolOr("DARKSTAT_TRADE_ROUTES_DETAILED_TRADE_LANE", false),
 		IsDisabledTradeRouting:       env.GetBoolOr("CONFIGS_DISABLE_TRADE_ROUTES", false), // BROKEN. DO NOT TURN THIS FEATURE ON.
+
+		IsCPUProfilerEnabled: env.GetBoolOr("IS_CPU_PROFILER_ENABLED", false),
+		IsMemProfilerEnabled: env.GetBoolOr("IS_MEM_PROFILER_ENABLED", false),
 	}
 
 	fmt.Sprintln("conf=", Env)

@@ -115,9 +115,13 @@ tasks:
       - rm docs/docs.go | true
       - swag init --parseDependency
 
-  profiler:cpu: # uncomment
+  profiler:cpu:
     cmds:
       - go tool pprof main.go prof.prof
+
+  profiler:mem: # https://www.codingexplorations.com/blog/memory-management-and-profiling-in-go
+    cmds:
+      - go tool pprof mem.pprof
 
 env:
   tag_version: v1.48.0-a4
