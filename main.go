@@ -60,6 +60,23 @@ type Account struct {
 
 // @BasePath /
 func main() {
+
+	// // for CPU profiling only stuff.
+	// f, err := os.Create("prof.prof")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// pprof.StartCPUProfile(f)
+	// defer pprof.StopCPUProfile()
+
+	// for Memory profiling stuff
+	// go func() {
+	// 	time.Sleep(time.Second * 30)
+	// 	f, _ := os.Create("mem.pprof")
+	// 	pprof.WriteHeapProfile(f)
+	// 	f.Close()
+	// }()
+
 	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteUrl, "https://", "")
 	docs.SwaggerInfo.Host = strings.ReplaceAll(docs.SwaggerInfo.Host, "http://", "")
 	if strings.Contains(settings.Env.SiteUrl, "https") {
@@ -153,4 +170,5 @@ func main() {
 	default:
 		web_darkstat()
 	}
+
 }

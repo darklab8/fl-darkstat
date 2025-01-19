@@ -115,6 +115,10 @@ tasks:
       - rm docs/docs.go | true
       - swag init --parseDependency
 
+  profiler:cpu: # uncomment
+    cmds:
+      - go tool pprof main.go prof.prof
+
 env:
   tag_version: v1.48.0-a4
   DOCKER_HOST: ssh://root@darklab:22

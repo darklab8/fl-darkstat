@@ -2,7 +2,6 @@ locals {
   envs = merge({
     FREELANCER_FOLDER = "/data/freelancer_folder" # Required
 
-    DEV_ENV            = "true"  # Optional: to optimize trade routes calcs to faster. optimize them better later
     DARKSTAT_LOG_LEVEL = "DEBUG" # Optional: for more debugging info
     UTILS_LOG_LEVEL    = "DEBUG" # Optional: for more debugging info
 
