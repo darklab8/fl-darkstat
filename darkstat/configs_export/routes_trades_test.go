@@ -27,7 +27,7 @@ func TestGetTrades(t *testing.T) {
 	}
 
 	var wg sync.WaitGroup
-	graph_options := trades.MappingOptions{SimplifiedTradeLanesCalc: ptr.Ptr(true)}
+	graph_options := trades.MappingOptions{TradeRoutesDetailedTradeLane: ptr.Ptr(true)}
 
 	wg.Add(1)
 	go func() {

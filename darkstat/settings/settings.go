@@ -33,6 +33,9 @@ type DarkstatEnvVars struct {
 	RelayHost     string
 	RelayRoot     string
 	RelayLoopSecs int
+
+	IsDisabledTradeRouting       bool
+	TradeRoutesDetailedTradeLane bool
 }
 
 var Env DarkstatEnvVars
@@ -54,6 +57,9 @@ func init() {
 		RelayHost:     env.GetStr("RELAY_HOST", enverant.OrStr("")),
 		RelayRoot:     env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
 		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 30),
+
+		TradeRoutesDetailedTradeLane: env.GetBoolOr("DARKSTAT_TRADE_ROUTES_DETAILED_TRADE_LANE", false),
+		IsDisabledTradeRouting:       env.GetBoolOr("CONFIGS_DISABLE_TRADE_ROUTES", false), // BROKEN. DO NOT TURN THIS FEATURE ON.
 	}
 
 	fmt.Sprintln("conf=", Env)

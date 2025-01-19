@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
-	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/stretchr/testify/assert"
 )
@@ -22,7 +21,7 @@ func TestTradeRoutes(t *testing.T) {
 		DiscoverySpeeds.AvgTransportCruiseSpeed,
 		WithFreighterPaths(false),
 		make(map[string][]ExtraBase),
-		MappingOptions{SimplifiedTradeLanesCalc: ptr.Ptr(true)},
+		MappingOptions{},
 	)
 
 	edges_count := 0

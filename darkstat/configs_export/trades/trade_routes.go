@@ -8,7 +8,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
-	"github.com/darklab8/fl-configs/configs/configs_settings"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -104,7 +104,7 @@ And on click we show proffits of delivery to some location. With time of deliver
 Optionally print sum of two best routes that can be started within close range from each other.
 */
 type MappingOptions struct {
-	SimplifiedTradeLanesCalc *bool
+	TradeRoutesDetailedTradeLane *bool
 }
 
 func MapConfigsToFGraph(
@@ -114,8 +114,8 @@ func MapConfigsToFGraph(
 	extra_bases_by_system map[string][]ExtraBase,
 	opts MappingOptions,
 ) *GameGraph {
-	if opts.SimplifiedTradeLanesCalc == nil {
-		opts.SimplifiedTradeLanesCalc = ptr.Ptr(configs_settings.Env.SimplifiedTradeRoutesCalc)
+	if opts.TradeRoutesDetailedTradeLane == nil {
+		opts.TradeRoutesDetailedTradeLane = ptr.Ptr(settings.Env.TradeRoutesDetailedTradeLane)
 	}
 	average_trade_lane_speed := configs.GetAvgTradeLaneSpeed()
 
@@ -286,8 +286,27 @@ func MapConfigsToFGraph(
 			next_tradelane, next_exists := tradelane.NextRing.GetValue()
 			prev_tradelane, prev_exists := tradelane.PrevRing.GetValue()
 
-			if *opts.SimplifiedTradeLanesCalc {
+			if *opts.TradeRoutesDetailedTradeLane {
+				// in production every trade lane ring will work as separate entity
+				// CONSUMES A LOT OF RAM MEMORY.
+				if next_exists {
+					if last_tradelane, ok := system.TradelaneByNick[next_tradelane]; ok {
+						distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
+						distance_inside_tradelane := distance * PrecisionMultipiler / float64(average_trade_lane_speed)
+						graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
+					}
+				}
+
+				if prev_exists {
+					if last_tradelane, ok := system.TradelaneByNick[prev_tradelane]; ok {
+						distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
+						distance_inside_tradelane := distance * PrecisionMultipiler / float64(average_trade_lane_speed)
+						graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
+					}
+				}
+			} else {
 				// for dev env purposes to speed up test execution, we treat tradelanes as single entity
+				// THIS CONSUMES FAR LESS RAM MEMORY. For this reason making it default.
 				if next_exists && prev_exists {
 					continue
 				}
@@ -324,23 +343,6 @@ func MapConfigsToFGraph(
 				distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
 				distance_inside_tradelane := distance * PrecisionMultipiler / float64(average_trade_lane_speed)
 				graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
-			} else {
-				// in production every trade lane ring will work as separate entity
-				if next_exists {
-					if last_tradelane, ok := system.TradelaneByNick[next_tradelane]; ok {
-						distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
-						distance_inside_tradelane := distance * PrecisionMultipiler / float64(average_trade_lane_speed)
-						graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
-					}
-				}
-
-				if prev_exists {
-					if last_tradelane, ok := system.TradelaneByNick[prev_tradelane]; ok {
-						distance := DistanceForVecs(object.pos, last_tradelane.Pos.Get())
-						distance_inside_tradelane := distance * PrecisionMultipiler / float64(average_trade_lane_speed)
-						graph.SetEdge(object.nickname, last_tradelane.Nickname.Get(), distance_inside_tradelane)
-					}
-				}
 			}
 
 			for _, existing_object := range system_objects {

@@ -7,8 +7,8 @@ import (
 	"github.com/darklab8/fl-configs/configs/cfgtype"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
-	"github.com/darklab8/fl-configs/configs/configs_settings"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 )
 
 type InfocardKey string
@@ -221,7 +221,7 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 		e.ship_speeds = trades.FLSRSpeeds
 	}
 
-	if !configs_settings.Env.IsDisabledTradeRouting {
+	if !settings.Env.IsDisabledTradeRouting {
 
 		wg.Add(1)
 		go func() {
