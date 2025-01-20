@@ -48,7 +48,7 @@ type PoB struct {
 	Pos         *string      `json:"pos"`
 	Level       *int         `json:"level"`
 	Money       *int         `json:"money"`
-	Health      *int         `json:"health"`
+	Health      *float64     `json:"health"`
 	DefenseMode *DefenseMode `json:"defense_mode"`
 
 	SystemNick  *string `json:"system_nickname"`

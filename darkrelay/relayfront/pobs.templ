@@ -37,6 +37,13 @@ func FmtPtrInt(value *int) string {
 	return  strconv.Itoa(*value)
 }
 
+func FmtPtrFloat(value *float64, precision int) string {
+	if value == nil {
+		return "noaccess"
+	}
+	return  strconv.FormatFloat(*value, 'f', precision, 64)
+}
+
 templ PoBTableHeaders() {
 	<th style="width:25px;">@frmt.MultiLinestring([]string{"Forum", "thread"})</th>
 	<th style="width:25px;">@frmt.MultiLinestring([]string{"Public", "items", "amount"})</th>
@@ -69,7 +76,7 @@ templ PobTableRow(pob *configs_export.PoB) {
 	<td> { FmtPtrString(pob.Pos)} </td>
 	<td>{ FmtPtrInt(pob.Level) }</td>
 	<td>{ FmtPtrInt(pob.Money) }</td>
-	<td>{ FmtPtrInt(pob.Health) }</td>
+	<td>{ FmtPtrFloat(pob.Health, 2) }</td>
 	<td class="seo">{ FmtPtrString(pob.SystemName) }</td>
 	<td>{ FmtPtrStringOrQuestionMark(pob.SectorCoord) }</td>
 	<td>@frmt.WriteLimit(100) {
