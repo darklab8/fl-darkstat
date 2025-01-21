@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
@@ -48,6 +49,10 @@ func (l *Router) LinkBases(
 	)
 
 	for _, base := range data.Bases {
+		if base.Nickname == "ew09_03_base" {
+			fmt.Println()
+		}
+
 		if base.Missions != nil {
 			build.RegComps(
 				builder.NewComponent(

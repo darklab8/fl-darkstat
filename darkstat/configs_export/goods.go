@@ -144,6 +144,10 @@ func (e *Exporter) getMarketGoods() map[cfgtype.BaseUniNick]map[CommodityKey]Mar
 			}
 		}
 
+		if !e.TraderExists(string(base_nickname)) {
+			continue
+		}
+
 		goods_per_base[base_nickname] = MarketGoods
 	}
 	return goods_per_base

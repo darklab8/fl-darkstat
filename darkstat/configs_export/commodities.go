@@ -273,6 +273,12 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 		}
 	}
 
+	for base_nickname := range goods_per_base {
+		if !e.TraderExists(string(base_nickname)) {
+			delete(goods_per_base, base_nickname)
+		}
+	}
+
 	return goods_per_base
 }
 

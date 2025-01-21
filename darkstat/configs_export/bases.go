@@ -13,6 +13,16 @@ import (
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
+func (e *Exporter) TraderExists(base_nickname string) bool {
+	universe_base, ok := e.Configs.Universe.BasesMap[universe_mapped.BaseNickname(base_nickname)]
+	if !ok {
+		return false
+	}
+
+	_, trader_exists := universe_base.ConfigBase.RoomMapByRoomNickname["trader"]
+	return trader_exists
+}
+
 func VectorToSectorCoord(system *universe_mapped.System, pos cfgtype.Vector) string {
 	var scale float64 = 1.0
 	if value, ok := system.NavMapScale.GetValue(); ok {
@@ -85,8 +95,15 @@ func (e *Exporter) GetBases() []*Base {
 		}
 
 		var market_goods_per_good_nick map[CommodityKey]MarketGood = make(map[CommodityKey]MarketGood)
+
+		if base.Nickname.Get() == "ew09_03_base" {
+			fmt.Println()
+		}
+
 		if found_commodities, ok := commodities_per_base[cfgtype.BaseUniNick(base.Nickname.Get())]; ok {
-			market_goods_per_good_nick = found_commodities
+			if e.TraderExists(base.Nickname.Get()) {
+				market_goods_per_good_nick = found_commodities
+			}
 		}
 
 		var nickname cfgtype.BaseUniNick = cfgtype.BaseUniNick(base.Nickname.Get())
@@ -208,11 +225,11 @@ type Base struct {
 	Name               string              `json:"name"`       // Infocard Name
 	Archetypes         []string            `json:"archetypes"` // Base Archetypes
 	Nickname           cfgtype.BaseUniNick `json:"nickname"`
-	NicknameHash       flhash.HashCode     `json:"nickname_hash" format:"int64"` // Flhash of nickname
+	NicknameHash       flhash.HashCode     `json:"nickname_hash"` // Flhash of nickname
 	FactionName        string              `json:"faction_nickname"`
 	System             string              `json:"system_name"`
 	SystemNickname     string              `json:"system_nickname"`
-	SystemNicknameHash flhash.HashCode     `json:"system_nickname_hash" format:"int64"`
+	SystemNicknameHash flhash.HashCode     `json:"system_nickname_hash"`
 	Region             string              `json:"region_name"`
 	StridName          int                 `json:"strid_name"`
 	InfocardID         int                 `json:"infocard_id"`
