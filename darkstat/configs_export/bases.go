@@ -94,10 +94,6 @@ func (e *Exporter) GetBases() []*Base {
 
 		var market_goods_per_good_nick map[CommodityKey]MarketGood = make(map[CommodityKey]MarketGood)
 
-		if base.Nickname.Get() == "ew09_03_base" {
-			fmt.Println()
-		}
-
 		if found_commodities, ok := commodities_per_base[cfgtype.BaseUniNick(base.Nickname.Get())]; ok {
 			market_goods_per_good_nick = found_commodities
 		}
