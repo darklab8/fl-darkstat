@@ -275,7 +275,12 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 
 	for base_nickname := range goods_per_base {
 		if !e.TraderExists(string(base_nickname)) {
-			delete(goods_per_base, base_nickname)
+			if good, found_good := e.Configs.Goods.GoodsMap[commodity.Nickname]; found_good {
+				if good.Category.Get() == "commodity" {
+					delete(goods_per_base, base_nickname)
+				}
+			}
+
 		}
 	}
 

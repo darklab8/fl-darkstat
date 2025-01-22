@@ -18,9 +18,7 @@ func (e *Exporter) TraderExists(base_nickname string) bool {
 	if !ok {
 		return false
 	}
-
-	_, trader_exists := universe_base.ConfigBase.RoomMapByRoomNickname["trader"]
-	return trader_exists
+	return universe_base.TraderExists
 }
 
 func VectorToSectorCoord(system *universe_mapped.System, pos cfgtype.Vector) string {
@@ -101,9 +99,7 @@ func (e *Exporter) GetBases() []*Base {
 		}
 
 		if found_commodities, ok := commodities_per_base[cfgtype.BaseUniNick(base.Nickname.Get())]; ok {
-			if e.TraderExists(base.Nickname.Get()) {
-				market_goods_per_good_nick = found_commodities
-			}
+			market_goods_per_good_nick = found_commodities
 		}
 
 		var nickname cfgtype.BaseUniNick = cfgtype.BaseUniNick(base.Nickname.Get())
