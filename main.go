@@ -129,16 +129,23 @@ func main() {
 		if settings.IsRelayActive(app_data.Mapped) {
 			go func() {
 				for {
-					time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
-					app_data.Lock()
-					app_data.Mapped.Discovery.PlayerOwnedBases.Refresh()
-					app_data.Configs.PoBs = app_data.Configs.GetPoBs()
-					app_data.Configs.PoBGoods = app_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
-					relay_fs2 := GetRelayFs(stat_router.AppData)
-					relay_fs.Files = relay_fs2.Files
-					logus.Log.Info("refreshed content")
-					runtime.GC()
-					app_data.Unlock()
+					func() {
+						defer func() {
+							if r := recover(); r != nil {
+								fmt.Println("Recovered in f, trying to update app data", r)
+							}
+						}()
+						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
+						app_data.Lock()
+						defer app_data.Unlock()
+						app_data.Mapped.Discovery.PlayerOwnedBases.Refresh()
+						app_data.Configs.PoBs = app_data.Configs.GetPoBs()
+						app_data.Configs.PoBGoods = app_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
+						relay_fs2 := GetRelayFs(stat_router.AppData)
+						relay_fs.Files = relay_fs2.Files
+						logus.Log.Info("refreshed content")
+						runtime.GC()
+					}()
 				}
 			}()
 		}
