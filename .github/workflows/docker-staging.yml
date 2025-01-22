@@ -37,9 +37,9 @@ jobs:
         export tag_version=staging
         DOCKER_HOST=ssh://root@darkbot docker build --build-arg "BUILD_VERSION=$tag_version" --tag darkwind8/darkstat:${tag_version}-arm64 .
         DOCKER_HOST=unix:///var/run/docker.sock docker build --build-arg "BUILD_VERSION=$tag_version" --tag darkwind8/darkstat:${tag_version}-amd64 .
-        docker push darkwind8/darkstat:${tag_version}-arm64
+        DOCKER_HOST=ssh://root@darkbot docker push darkwind8/darkstat:${tag_version}-arm64
         sleep 5
-        docker push darkwind8/darkstat:${tag_version}-amd64
+        DOCKER_HOST=unix:///var/run/docker.sock docker push darkwind8/darkstat:${tag_version}-amd64
         sleep 5
         docker manifest create darkwind8/darkstat:${tag_version} --amend darkwind8/darkstat:${tag_version}-arm64 --amend darkwind8/darkstat:${tag_version}-amd64
         docker manifest push darkwind8/darkstat:${tag_version}
