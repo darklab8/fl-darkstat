@@ -44,7 +44,7 @@ jobs:
         sleep 5
         docker manifest create darkwind8/darkstat:${tag_version} --amend darkwind8/darkstat:${tag_version}-arm64 --amend darkwind8/darkstat:${tag_version}-amd64
         docker manifest push darkwind8/darkstat:${tag_version}
-        docker manifest create darkwind8/darkstat:${tag_version} --amend darkwind8/darkstat:${tag_version}-arm64 --amend darkwind8/darkstat:${tag_version}-amd64
+        docker manifest create darkwind8/darkstat:production --amend darkwind8/darkstat:${tag_version}-arm64 --amend darkwind8/darkstat:${tag_version}-amd64
         docker manifest push darkwind8/darkstat:production
     - name: Switch service image darkwind8/darkstat for swarm to new one
       run: |
