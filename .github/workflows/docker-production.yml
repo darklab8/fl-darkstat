@@ -41,6 +41,10 @@ jobs:
         docker build --build-arg "BUILD_VERSION=${tag_version}-arm64" --tag darkwind8/darkstat:${tag_version}-arm64 .
 
         docker tag darkwind8/darkstat:${tag_version}-arm64 darkwind8/darkstat:production-arm64
+        docker push darkwind8/darkstat:${tag_version}-arm64
+        sleep 5
+        docker push darkwind8/darkstat:production-arm64
+        sleep 5
   build-amd64:
     name: Build amd64
     runs-on: ubuntu-22.04
@@ -76,6 +80,10 @@ jobs:
         docker build --build-arg "BUILD_VERSION=${tag_version}-amd64" --tag darkwind8/darkstat:${tag_version}-amd64 .
 
         docker tag darkwind8/darkstat:${tag_version}-amd64 darkwind8/darkstat:production-amd64
+        docker push darkwind8/darkstat:${tag_version}-amd64
+        sleep 5
+        docker push darkwind8/darkstat:production-amd64
+        sleep 5
   deploy:
     name: Join And Deploy
     runs-on: ubuntu-22.04

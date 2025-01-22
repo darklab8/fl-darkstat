@@ -34,11 +34,13 @@ jobs:
         ssh-keyscan -H 37.27.207.42 >> ~/.ssh/known_hosts | true
         ssh-keyscan -H darkbot >> ~/.ssh/known_hosts | true
     - name: Build image darkwind8/darkstat
-      run: |+
+      run: |
         set -ex
         export tag_version=staging
         docker build --build-arg "BUILD_VERSION=${tag_version}-arm64" --tag darkwind8/darkstat:${tag_version}-arm64 .
 
+        docker push darkwind8/darkstat:${tag_version}-arm64
+        sleep 5
   build-amd64:
     name: Build amd64
     runs-on: ubuntu-22.04
@@ -68,11 +70,13 @@ jobs:
         ssh-keyscan -H 37.27.207.42 >> ~/.ssh/known_hosts | true
         ssh-keyscan -H darkbot >> ~/.ssh/known_hosts | true
     - name: Build image darkwind8/darkstat
-      run: |+
+      run: |
         set -ex
         export tag_version=staging
         docker build --build-arg "BUILD_VERSION=${tag_version}-amd64" --tag darkwind8/darkstat:${tag_version}-amd64 .
 
+        docker push darkwind8/darkstat:${tag_version}-amd64
+        sleep 5
   deploy:
     name: Join And Deploy
     runs-on: ubuntu-22.04
