@@ -6,9 +6,11 @@ name: Deploy docker production
     - '!*-*'
   workflow_dispatch: {}
 jobs:
-  job:
-    name: Deploy docker production
+  build-arm64:
+    name: Build arm64
     runs-on: ubuntu-22.04
+    env:
+      DOCKER_HOST: ssh://root@darkbot
     steps:
     - name: Check out source repository
       uses: actions/checkout@v4
@@ -36,12 +38,54 @@ jobs:
       run: |
         set -ex
         export tag_version=${{ steps.version.outputs.BUILD_VERSION }}
-        DOCKER_HOST=ssh://root@darkbot docker build --build-arg "BUILD_VERSION=$tag_version" --tag darkwind8/darkstat:${tag_version}-arm64 .
-        DOCKER_HOST=unix:///var/run/docker.sock docker build --build-arg "BUILD_VERSION=$tag_version" --tag darkwind8/darkstat:${tag_version}-amd64 .
-        DOCKER_HOST=ssh://root@darkbot docker push darkwind8/darkstat:${tag_version}-arm64
-        sleep 5
-        DOCKER_HOST=unix:///var/run/docker.sock docker push darkwind8/darkstat:${tag_version}-amd64
-        sleep 5
+        docker build --build-arg "BUILD_VERSION=${tag_version}-arm64" --tag darkwind8/darkstat:${tag_version}-arm64 .
+
+        docker tag darkwind8/darkstat:${tag_version}-arm64 darkwind8/darkstat:production-arm64
+  build-amd64:
+    name: Build amd64
+    runs-on: ubuntu-22.04
+    env:
+      DOCKER_HOST: unix:///var/run/docker.sock
+    steps:
+    - name: Check out source repository
+      uses: actions/checkout@v4
+    - name: Get version from tag
+      run: |
+        set -x
+        echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+      id: version
+    - name: Docker login
+      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username darkwind8 --password-stdin
+    - name: Install Darklab ssh key
+      run: |
+        mkdir ~/.ssh | true
+        echo "${{ secrets.SSH_KEY_BASE64 }}" | base64 --decode > ~/.ssh/id_rsa
+        echo "Host darkbot" > ~/.ssh/config
+        echo "    HostName 37.27.207.42" >> ~/.ssh/config
+        echo "    User root" >> ~/.ssh/config
+        echo "    IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+        echo "    IdentitiesOnly yes" >> ~/.ssh/config
+        chmod 700 ~/.ssh
+        chmod 600 ~/.ssh/*
+        ssh-keyscan -H 37.27.207.42 >> ~/.ssh/known_hosts | true
+        ssh-keyscan -H darkbot >> ~/.ssh/known_hosts | true
+    - name: Build image darkwind8/darkstat
+      run: |
+        set -ex
+        export tag_version=${{ steps.version.outputs.BUILD_VERSION }}
+        docker build --build-arg "BUILD_VERSION=${tag_version}-amd64" --tag darkwind8/darkstat:${tag_version}-amd64 .
+
+        docker tag darkwind8/darkstat:${tag_version}-amd64 darkwind8/darkstat:production-amd64
+  deploy:
+    name: Join And Deploy
+    runs-on: ubuntu-22.04
+    env:
+      DOCKER_HOST: ssh://root@darkbot
+    steps:
+    - name: Manifest join image darkwind8/darkstat
+      run: |
+        set -ex
+        export tag_version=${{ steps.version.outputs.BUILD_VERSION }}
         docker manifest create darkwind8/darkstat:${tag_version} --amend darkwind8/darkstat:${tag_version}-arm64 --amend darkwind8/darkstat:${tag_version}-amd64
         docker manifest push darkwind8/darkstat:${tag_version}
         docker manifest create darkwind8/darkstat:production --amend darkwind8/darkstat:${tag_version}-arm64 --amend darkwind8/darkstat:${tag_version}-amd64
@@ -58,5 +102,6 @@ jobs:
         docker pull darkwind8/darkstat:production
         sleep 5
         docker service update --image darkwind8/darkstat:production dev-darkstat-app
-env:
-  DOCKER_HOST: ssh://root@darkbot
+    needs:
+    - build-arm64
+    - build-amd64
