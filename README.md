@@ -102,6 +102,7 @@ So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery f
 - Configuration for its running check in terraform infra code of [module darkstat](./tf/modules/darkstat)
   - you need to point at least volume -v /data:/path_to_frelancer_folder
   - and point required environment variables [as described there](./tf/modules/darkstat/variables.tf)
+  - docker images are built for amd64 and arm64 :)
 
 # Acknowledments
 
