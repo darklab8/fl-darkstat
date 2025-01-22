@@ -90,6 +90,11 @@ jobs:
     env:
       DOCKER_HOST: ssh://root@darkbot
     steps:
+    - name: Get version from tag
+      run: |
+        set -x
+        echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+      id: version
     - name: Docker login
       run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username darkwind8 --password-stdin
     - name: Install Darklab ssh key
