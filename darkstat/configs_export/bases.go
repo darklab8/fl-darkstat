@@ -13,6 +13,14 @@ import (
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
+func (e *Exporter) TraderExists(base_nickname string) bool {
+	universe_base, ok := e.Configs.Universe.BasesMap[universe_mapped.BaseNickname(base_nickname)]
+	if !ok {
+		return false
+	}
+	return universe_base.TraderExists
+}
+
 func VectorToSectorCoord(system *universe_mapped.System, pos cfgtype.Vector) string {
 	var scale float64 = 1.0
 	if value, ok := system.NavMapScale.GetValue(); ok {
@@ -85,6 +93,7 @@ func (e *Exporter) GetBases() []*Base {
 		}
 
 		var market_goods_per_good_nick map[CommodityKey]MarketGood = make(map[CommodityKey]MarketGood)
+
 		if found_commodities, ok := commodities_per_base[cfgtype.BaseUniNick(base.Nickname.Get())]; ok {
 			market_goods_per_good_nick = found_commodities
 		}

@@ -5,6 +5,9 @@ import (
 	"testing"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
+	"github.com/darklab8/go-typelog/typelog"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -38,6 +41,30 @@ func FixtureBases(t *testing.T) FixtureBasesOutput {
 			break
 		}
 	}
+	bases_by_nick := make(map[string]*Base)
+	for _, base := range bases {
+		bases_by_nick[string(base.Nickname)] = base
+	}
+
+	if configs.Discovery != nil {
+		aralsk_shipyard := bases_by_nick["ew09_03_base"]
+		aralsk_shipyard_universe_base, ok := configs.Universe.BasesMap[universe_mapped.BaseNickname(aralsk_shipyard.Nickname)]
+		assert.True(t, ok)
+		_, aralsk_shipyard_trader_exists := aralsk_shipyard_universe_base.ConfigBase.RoomMapByRoomNickname["trader"]
+		assert.False(t, aralsk_shipyard_trader_exists)
+	}
+
+	// toggle func TraderExists not removing market goods in order to see data here, make func Trader exists always returning true.
+	for _, base := range bases {
+		universe_base := configs.Universe.BasesMap[universe_mapped.BaseNickname(base.Nickname)]
+		if len(base.MarketGoodsPerNick) > 0 && !universe_base.TraderExists {
+			logus.Log.Warn("____",
+				typelog.Any("base_nickname", base.Nickname),
+				typelog.Any("base_name", base.Name),
+			)
+		}
+	}
+
 	return FixtureBasesOutput{
 		configs: configs,
 		expoter: exporter,
