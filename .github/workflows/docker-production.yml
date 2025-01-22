@@ -82,6 +82,21 @@ jobs:
     env:
       DOCKER_HOST: ssh://root@darkbot
     steps:
+    - name: Docker login
+      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username darkwind8 --password-stdin
+    - name: Install Darklab ssh key
+      run: |
+        mkdir ~/.ssh | true
+        echo "${{ secrets.SSH_KEY_BASE64 }}" | base64 --decode > ~/.ssh/id_rsa
+        echo "Host darkbot" > ~/.ssh/config
+        echo "    HostName 37.27.207.42" >> ~/.ssh/config
+        echo "    User root" >> ~/.ssh/config
+        echo "    IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+        echo "    IdentitiesOnly yes" >> ~/.ssh/config
+        chmod 700 ~/.ssh
+        chmod 600 ~/.ssh/*
+        ssh-keyscan -H 37.27.207.42 >> ~/.ssh/known_hosts | true
+        ssh-keyscan -H darkbot >> ~/.ssh/known_hosts | true
     - name: Manifest join image darkwind8/darkstat
       run: |
         set -ex
