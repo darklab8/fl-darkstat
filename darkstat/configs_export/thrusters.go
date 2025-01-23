@@ -20,7 +20,7 @@ type Thruster struct {
 	NameID       int
 	InfoID       int
 
-	Bases map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases map[cfgtype.BaseUniNick]*MarketGood
 
 	*DiscoveryTechCompat
 	Mass float64
@@ -31,7 +31,7 @@ func (e *Exporter) GetThrusters(ids []Tractor) []Thruster {
 
 	for _, thruster_info := range e.Configs.Equip.Thrusters {
 		thruster := Thruster{
-			Bases: make(map[cfgtype.BaseUniNick]*GoodAtBase),
+			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
 		}
 		thruster.Mass, _ = thruster_info.Mass.GetValue()
 

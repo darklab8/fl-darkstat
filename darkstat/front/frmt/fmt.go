@@ -11,8 +11,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
-func SortedBases(bases_map map[cfgtype.BaseUniNick]*configs_export.GoodAtBase) []*configs_export.GoodAtBase {
-	var bases []*configs_export.GoodAtBase = make([]*configs_export.GoodAtBase, 0, 10)
+func SortedBases(bases_map map[cfgtype.BaseUniNick]*configs_export.MarketGood) []*configs_export.MarketGood {
+	var bases []*configs_export.MarketGood = make([]*configs_export.MarketGood, 0, 10)
 
 	for _, base := range bases_map {
 		bases = append(bases, base)

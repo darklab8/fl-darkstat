@@ -7,11 +7,11 @@ import (
 type TradeRoute struct {
 	Route       *Route
 	Commodity   *Commodity
-	BuyingGood  *GoodAtBase
-	SellingGood *GoodAtBase
+	BuyingGood  *MarketGood
+	SellingGood *MarketGood
 }
 
-func NewTradeRoute(g *GraphResults, buying_good *GoodAtBase, selling_good *GoodAtBase, commodity *Commodity) *TradeRoute {
+func NewTradeRoute(g *GraphResults, buying_good *MarketGood, selling_good *MarketGood, commodity *Commodity) *TradeRoute {
 	if g == nil {
 		return &TradeRoute{Route: &Route{is_disabled: true}}
 	}
@@ -61,12 +61,12 @@ func (e *Exporter) TradePaths(
 ) ([]*Base, []*Commodity) {
 
 	var commodity_by_nick map[CommodityKey]*Commodity = make(map[CommodityKey]*Commodity)
-	var commodity_by_good_and_base map[CommodityKey]map[cfgtype.BaseUniNick]*GoodAtBase = make(map[CommodityKey]map[cfgtype.BaseUniNick]*GoodAtBase)
+	var commodity_by_good_and_base map[CommodityKey]map[cfgtype.BaseUniNick]*MarketGood = make(map[CommodityKey]map[cfgtype.BaseUniNick]*MarketGood)
 	for _, commodity := range commodities {
 		commodity_key := GetCommodityKey(commodity.Nickname, commodity.ShipClass)
 		commodity_by_nick[commodity_key] = commodity
 		if _, ok := commodity_by_good_and_base[commodity_key]; !ok {
-			commodity_by_good_and_base[commodity_key] = make(map[cfgtype.BaseUniNick]*GoodAtBase)
+			commodity_by_good_and_base[commodity_key] = make(map[cfgtype.BaseUniNick]*MarketGood)
 		}
 		for _, good_at_base := range commodity.Bases {
 			commodity_by_good_and_base[commodity_key][good_at_base.BaseNickname] = good_at_base

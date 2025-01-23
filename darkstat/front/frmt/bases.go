@@ -8,8 +8,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
-func SortedMarketGoods(goods_per_nick map[configs_export.CommodityKey]configs_export.MarketGood) []configs_export.MarketGood {
-	var market_goods []configs_export.MarketGood = make([]configs_export.MarketGood, 0, 10)
+func SortedMarketGoods(goods_per_nick map[configs_export.CommodityKey]*configs_export.MarketGood) []*configs_export.MarketGood {
+	var market_goods []*configs_export.MarketGood = make([]*configs_export.MarketGood, 0, 10)
 
 	for _, good := range goods_per_nick {
 		market_goods = append(market_goods, good)

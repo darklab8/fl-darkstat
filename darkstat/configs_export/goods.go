@@ -8,22 +8,6 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
-type MarketGood struct {
-	GoodInfo
-
-	LevelRequired        int
-	RepRequired          float64
-	PriceToBuy           int
-	PriceToSell          *int
-	Volume               float64
-	ShipClass            cfgtype.ShipClass
-	BaseSells            bool
-	IsServerSideOverride bool
-
-	PriceModifier float64
-	Infocard      InfocardKey
-}
-
 func NameWithSpacesOnly(word string) bool {
 	for _, ch := range word {
 		if ch != ' ' {
@@ -95,42 +79,42 @@ func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 	return info
 }
 
-func (e *Exporter) getMarketGoods() map[cfgtype.BaseUniNick]map[CommodityKey]MarketGood {
+func (e *Exporter) getMarketGoods() map[cfgtype.BaseUniNick]map[CommodityKey]*MarketGood {
 
-	var goods_per_base map[cfgtype.BaseUniNick]map[CommodityKey]MarketGood = make(map[cfgtype.BaseUniNick]map[CommodityKey]MarketGood)
+	var goods_per_base map[cfgtype.BaseUniNick]map[CommodityKey]*MarketGood = make(map[cfgtype.BaseUniNick]map[CommodityKey]*MarketGood)
 
 	for _, base_good := range e.Configs.Market.BaseGoods {
 		base_nickname := cfgtype.BaseUniNick(base_good.Base.Get())
 
-		var MarketGoods map[CommodityKey]MarketGood
+		var MarketGoods map[CommodityKey]*MarketGood
 		if market_goods, ok := goods_per_base[base_nickname]; ok {
 			MarketGoods = market_goods
 		} else {
-			MarketGoods = make(map[CommodityKey]MarketGood)
+			MarketGoods = make(map[CommodityKey]*MarketGood)
 		}
 		for _, market_good := range base_good.MarketGoods {
 
 			var market_good_nickname string = market_good.Nickname.Get()
 
-			good_to_add := MarketGood{
+			good_to_add := &MarketGood{
 				GoodInfo:      e.GetGoodInfo(market_good_nickname),
 				LevelRequired: market_good.LevelRequired.Get(),
 				RepRequired:   market_good.RepRequired.Get(),
 				BaseSells:     market_good.BaseSells(),
-				PriceModifier: market_good.PriceModifier.Get(),
-				Infocard:      InfocardKey(market_good_nickname),
-				ShipClass:     -1,
+				// PriceModifier: market_good.PriceModifier.Get(),
+				// Infocard:      InfocardKey(market_good_nickname),
+				ShipClass: -1,
 			}
-			good_to_add.PriceToBuy = int(math.Floor(float64(good_to_add.PriceBase) * market_good.PriceModifier.Get()))
+			good_to_add.PriceBaseSellsFor = int(math.Floor(float64(good_to_add.PriceBase) * market_good.PriceModifier.Get()))
 
 			e.Hashes[market_good_nickname] = good_to_add.NicknameHash
 
 			if good_to_add.Category == "commodity" {
 
 				if e.Configs.Discovery != nil {
-					good_to_add.PriceToSell = ptr.Ptr(market_good.BaseSellsIPositiveAndDiscoSellPrice.Get())
+					good_to_add.PriceBaseBuysFor = ptr.Ptr(market_good.BaseSellsIPositiveAndDiscoSellPrice.Get())
 				} else {
-					good_to_add.PriceToSell = &good_to_add.PriceToBuy
+					good_to_add.PriceBaseBuysFor = ptr.Ptr(good_to_add.PriceBaseSellsFor)
 				}
 				equipment := e.Configs.Equip.CommoditiesMap[market_good_nickname]
 

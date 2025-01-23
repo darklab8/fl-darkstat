@@ -40,7 +40,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 	base := &Base{
 		Name:               e.Configs.CraftableBaseName(),
-		MarketGoodsPerNick: make(map[CommodityKey]MarketGood),
+		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 		Nickname:           cfgtype.BaseUniNick(pob_crafts_nickname),
 		InfocardKey:        InfocardKey(pob_crafts_nickname),
 		SystemNickname:     "neverwhere",
@@ -52,9 +52,8 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 	base.Archetypes = append(base.Archetypes, pob_crafts_nickname)
 
 	for produced, _ := range pob_produced {
-		market_good := MarketGood{
+		market_good := &MarketGood{
 			GoodInfo:             e.GetGoodInfo(produced),
-			Infocard:             InfocardKey(produced),
 			BaseSells:            true,
 			ShipClass:            -1,
 			IsServerSideOverride: true,
@@ -95,7 +94,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		}
 
 		var info InfocardBuilder
-		if value, ok := e.Infocards[market_good.Infocard]; ok {
+		if value, ok := e.Infocards[InfocardKey(market_good.Nickname)]; ok {
 			info.Lines = value
 		}
 
@@ -122,7 +121,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		}
 		info.Lines = add_line_about_recipes(info.Lines)
 
-		e.Infocards[market_good.Infocard] = append(info.Lines, infocard_addition.Lines...)
+		e.Infocards[InfocardKey(market_good.Nickname)] = append(info.Lines, infocard_addition.Lines...)
 
 		if market_good.ShipNickname != "" {
 			var info Infocard

@@ -16,7 +16,7 @@ type MiningInfo struct {
 	DynamicLootMin        int
 	DynamicLootMax        int
 	DynamicLootDifficulty int
-	MinedGood             MarketGood
+	MinedGood             *MarketGood
 }
 
 func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
@@ -55,7 +55,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			base := &Base{
 				MiningInfo:         &MiningInfo{},
 				Pos:                location,
-				MarketGoodsPerNick: make(map[CommodityKey]MarketGood),
+				MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 			}
 			base.DynamicLootMin, _ = asteroids.LootableZone.DynamicLootMin.GetValue()
 			base.DynamicLootMax, _ = asteroids.LootableZone.DynamicLootMax.GetValue()
@@ -89,14 +89,13 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			equipment := e.Configs.Equip.CommoditiesMap[commodity]
 			for _, volume_info := range equipment.Volumes {
 
-				market_good := MarketGood{
-					GoodInfo:      e.GetGoodInfo(commodity),
-					BaseSells:     true,
-					PriceModifier: 0,
-					PriceToBuy:    0,
-					PriceToSell:   ptr.Ptr(0),
-					Volume:        volume_info.Volume.Get(),
-					ShipClass:     volume_info.GetShipClass(),
+				market_good := &MarketGood{
+					GoodInfo:          e.GetGoodInfo(commodity),
+					BaseSells:         true,
+					PriceBaseSellsFor: 0,
+					PriceBaseBuysFor:  ptr.Ptr(0),
+					Volume:            volume_info.Volume.Get(),
+					ShipClass:         volume_info.GetShipClass(),
 				}
 
 				if equipment, ok := e.Configs.Equip.CommoditiesMap[commodity]; ok {
@@ -111,7 +110,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 				added_goods[market_good.Nickname] = true
 
 				if commodity, ok := comm_by_nick[market_good_key]; ok {
-					good_at_base := &GoodAtBase{
+					good_at_base := &MarketGood{
 						BaseSells:         true,
 						PriceBaseBuysFor:  nil,
 						PriceBaseSellsFor: 0,
@@ -159,14 +158,13 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 								}
 								equipment := e.Configs.Equip.CommoditiesMap[commodity_produced]
 								for _, volume_info := range equipment.Volumes {
-									market_good := MarketGood{
-										GoodInfo:      e.GetGoodInfo(commodity_produced),
-										BaseSells:     true,
-										PriceModifier: 0,
-										PriceToBuy:    0,
-										PriceToSell:   ptr.Ptr(0),
-										Volume:        volume_info.Volume.Get(),
-										ShipClass:     volume_info.GetShipClass(),
+									market_good := &MarketGood{
+										GoodInfo:          e.GetGoodInfo(commodity_produced),
+										BaseSells:         true,
+										PriceBaseSellsFor: 0,
+										PriceBaseBuysFor:  ptr.Ptr(0),
+										Volume:            volume_info.Volume.Get(),
+										ShipClass:         volume_info.GetShipClass(),
 									}
 									market_good_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
 									if equipment, ok := e.Configs.Equip.CommoditiesMap[commodity_produced]; ok {
@@ -175,7 +173,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 									base.MarketGoodsPerNick[market_good_key] = market_good
 
 									if commodity, ok := comm_by_nick[market_good_key]; ok {
-										good_at_base := &GoodAtBase{
+										good_at_base := &MarketGood{
 											BaseSells:         true,
 											PriceBaseBuysFor:  nil,
 											PriceBaseSellsFor: 0,

@@ -22,7 +22,7 @@ type Ammo struct {
 	SeekerRange  int
 	SeekerFovDeg int
 
-	Bases map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases map[cfgtype.BaseUniNick]*MarketGood
 
 	*DiscoveryTechCompat
 
@@ -35,7 +35,7 @@ func (e *Exporter) GetAmmo(ids []Tractor) []Ammo {
 
 	for _, munition_info := range e.Configs.Equip.Munitions {
 		munition := Ammo{
-			Bases: make(map[cfgtype.BaseUniNick]*GoodAtBase),
+			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
 		}
 		munition.Mass, _ = munition_info.Mass.GetValue()
 

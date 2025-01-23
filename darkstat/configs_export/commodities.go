@@ -9,7 +9,7 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
-type GoodAtBase struct {
+type MarketGood struct {
 	GoodInfo
 
 	LevelRequired        int
@@ -27,7 +27,7 @@ type GoodAtBase struct {
 	BaseInfo
 }
 
-func (g GoodAtBase) GetPriceBaseBuysFor() int {
+func (g MarketGood) GetPriceBaseBuysFor() int {
 	if g.PriceBaseBuysFor == nil {
 		return 0
 	}
@@ -44,7 +44,7 @@ type Commodity struct {
 	NameID                int
 	InfocardID            int
 	Infocard              InfocardKey
-	Bases                 map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases                 map[cfgtype.BaseUniNick]*MarketGood
 	PriceBestBaseBuysFor  int
 	PriceBestBaseSellsFor int
 	ProffitMargin         int
@@ -68,7 +68,7 @@ func (e *Exporter) GetCommodities() []*Commodity {
 
 		for _, volume_info := range equipment.Volumes {
 			commodity := &Commodity{
-				Bases: make(map[cfgtype.BaseUniNick]*GoodAtBase),
+				Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
 			}
 			commodity.Mass, _ = equipment.Mass.GetValue()
 
@@ -128,8 +128,8 @@ type GetCommodityAtBasesInput struct {
 	ShipClass cfgtype.ShipClass
 }
 
-func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesInput) map[cfgtype.BaseUniNick]*GoodAtBase {
-	var bases_already_found map[cfgtype.BaseUniNick]*GoodAtBase = make(map[cfgtype.BaseUniNick]*GoodAtBase)
+func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesInput) map[cfgtype.BaseUniNick]*MarketGood {
+	var bases_already_found map[cfgtype.BaseUniNick]*MarketGood = make(map[cfgtype.BaseUniNick]*MarketGood)
 
 	for _, base_market := range e.Configs.Discovery.Prices.BasesPerGood[commodity.Nickname] {
 		base_nickname := cfgtype.BaseUniNick(base_market.BaseNickname.Get())
@@ -143,7 +143,7 @@ func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesI
 			}
 		}()
 
-		var base_info *GoodAtBase = &GoodAtBase{
+		var base_info *MarketGood = &MarketGood{
 			BaseInfo:             e.GetBaseInfo(universe_mapped.BaseNickname(base_nickname)),
 			NotBuyable:           false,
 			BaseSells:            base_market.BaseSells.Get(),
@@ -165,14 +165,14 @@ func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesI
 	return bases_already_found
 }
 
-func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtype.BaseUniNick]*GoodAtBase {
-	var goods_per_base map[cfgtype.BaseUniNick]*GoodAtBase = make(map[cfgtype.BaseUniNick]*GoodAtBase)
+func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtype.BaseUniNick]*MarketGood {
+	var goods_per_base map[cfgtype.BaseUniNick]*MarketGood = make(map[cfgtype.BaseUniNick]*MarketGood)
 
 	for _, base_market := range e.Configs.Market.BasesPerGood[commodity.Nickname] {
 		base_nickname := base_market.Base
 
 		market_good := base_market.MarketGood
-		base_info := &GoodAtBase{
+		base_info := &MarketGood{
 			NotBuyable: false,
 			Volume:     commodity.Volume,
 			ShipClass:  commodity.ShipClass,
@@ -212,7 +212,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 	if e.Configs.Discovery != nil || e.Configs.FLSR != nil {
 		pob_produced := e.pob_produced()
 		if _, ok := pob_produced[commodity.Nickname]; ok {
-			good_to_add := &GoodAtBase{
+			good_to_add := &MarketGood{
 				BaseSells:            true,
 				IsServerSideOverride: true,
 				Volume:               commodity.Volume,
@@ -231,7 +231,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 
 	loot_findable := e.findable_in_loot()
 	if _, ok := loot_findable[commodity.Nickname]; ok {
-		good_to_add := &GoodAtBase{
+		good_to_add := &MarketGood{
 			BaseSells:            true,
 			IsServerSideOverride: false,
 			Volume:               commodity.Volume,
@@ -252,7 +252,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 		pob_buyable := e.get_pob_buyable()
 		if goods, ok := pob_buyable[commodity.Nickname]; ok {
 			for _, good := range goods {
-				good_to_add := &GoodAtBase{
+				good_to_add := &MarketGood{
 					BaseSells:            good.Quantity > good.MinStock,
 					IsServerSideOverride: true,
 					PriceBaseBuysFor:     ptr.Ptr(good.SellPrice),
@@ -308,7 +308,9 @@ func (e *Exporter) GetRegionName(system *universe_mapped.System) string {
 }
 
 func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseInfo {
-	var result BaseInfo
+	var result BaseInfo = BaseInfo{
+		BaseNickname: cfgtype.BaseUniNick(base_nickname),
+	}
 	universe_base, found_universe_base := e.Configs.Universe.BasesMap[universe_mapped.BaseNickname(base_nickname)]
 
 	if !found_universe_base {

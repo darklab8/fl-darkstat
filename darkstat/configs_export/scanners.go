@@ -18,7 +18,7 @@ type Scanner struct {
 	NameID       int
 	InfoID       int
 
-	Bases map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases map[cfgtype.BaseUniNick]*MarketGood
 
 	*DiscoveryTechCompat
 	Mass float64
@@ -29,7 +29,7 @@ func (e *Exporter) GetScanners(ids []Tractor) []Scanner {
 
 	for _, scanner_info := range e.Configs.Equip.Scanners {
 		item := Scanner{
-			Bases: make(map[cfgtype.BaseUniNick]*GoodAtBase),
+			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
 		}
 		item.Mass, _ = scanner_info.Mass.GetValue()
 

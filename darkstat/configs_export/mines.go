@@ -39,7 +39,7 @@ type Mine struct {
 	HitPts   int
 	Lootable bool
 
-	Bases map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases map[cfgtype.BaseUniNick]*MarketGood
 
 	*DiscoveryTechCompat
 
@@ -58,7 +58,7 @@ func (e *Exporter) GetMines(ids []Tractor) []Mine {
 
 	for _, mine_dropper := range e.Configs.Equip.MineDroppers {
 		mine := Mine{
-			Bases: make(map[cfgtype.BaseUniNick]*GoodAtBase),
+			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
 		}
 		mine.Mass, _ = mine_dropper.Mass.GetValue()
 

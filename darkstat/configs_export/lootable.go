@@ -48,7 +48,7 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 
 	base := &Base{
 		Name:               "Lootable",
-		MarketGoodsPerNick: make(map[CommodityKey]MarketGood),
+		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 		Nickname:           cfgtype.BaseUniNick(BaseLootableNickname),
 		InfocardKey:        InfocardKey(BaseLootableNickname),
 		SystemNickname:     "neverwhere",
@@ -60,9 +60,8 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 	base.Archetypes = append(base.Archetypes, BaseLootableNickname)
 
 	for wreck, _ := range in_wrecks {
-		market_good := MarketGood{
+		market_good := &MarketGood{
 			GoodInfo:             e.GetGoodInfo(wreck),
-			Infocard:             InfocardKey(wreck),
 			BaseSells:            true,
 			ShipClass:            -1,
 			IsServerSideOverride: true,

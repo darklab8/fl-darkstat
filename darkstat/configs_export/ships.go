@@ -55,7 +55,7 @@ type Ship struct {
 	NameID      int
 	InfoID      int
 
-	Bases            map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases            map[cfgtype.BaseUniNick]*MarketGood
 	Slots            []EquipmentSlot
 	BiggestHardpoint []string
 	ShipPackages     []ShipPackage
@@ -189,7 +189,7 @@ func (e *Exporter) GetShips(ids []Tractor, TractorsByID map[cfgtype.TractorID]Tr
 	for _, ship_info := range e.Configs.Shiparch.Ships {
 		ship := Ship{
 			Nickname: ship_info.Nickname.Get(),
-			Bases:    make(map[cfgtype.BaseUniNick]*GoodAtBase),
+			Bases:    make(map[cfgtype.BaseUniNick]*MarketGood),
 		}
 		ship.NicknameHash = flhash.HashNickname(ship.Nickname)
 		e.Hashes[ship.Nickname] = ship.NicknameHash
