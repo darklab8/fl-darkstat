@@ -9,25 +9,19 @@ import (
 )
 
 type MarketGood struct {
-	Name         string
-	Nickname     string
-	NicknameHash flhash.HashCode
-	HpType       string
-	Type         string
+	GoodInfo
 
-	LevelRequired int
-	RepRequired   float64
-	Infocard      InfocardKey
-
-	BaseSells     bool
-	PriceModifier float64
-	PriceBase     int
-	PriceToBuy    int
-	PriceToSell   *int
-	Volume        float64
-	ShipClass     cfgtype.ShipClass
-
+	LevelRequired        int
+	RepRequired          float64
+	PriceToBuy           int
+	PriceToSell          *int
+	Volume               float64
+	ShipClass            cfgtype.ShipClass
+	BaseSells            bool
 	IsServerSideOverride bool
+
+	PriceModifier float64
+	Infocard      InfocardKey
 }
 
 func NameWithSpacesOnly(word string) bool {
@@ -37,6 +31,68 @@ func NameWithSpacesOnly(word string) bool {
 		}
 	}
 	return true
+}
+
+type GoodInfo struct {
+	Nickname     string
+	ShipNickname string
+	NicknameHash flhash.HashCode
+	Name         string
+	PriceBase    int
+	HpType       string
+	Category     string
+}
+
+func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
+	var info GoodInfo = GoodInfo{
+		Nickname:     good_nickname,
+		NicknameHash: flhash.HashNickname(good_nickname),
+	}
+	if good, found_good := e.Configs.Goods.GoodsMap[good_nickname]; found_good {
+		info.PriceBase = good.Price.Get()
+
+		info.Category = good.Category.Get()
+		switch info.Category {
+		default:
+			if equip, ok := e.Configs.Equip.ItemsMap[good_nickname]; ok {
+				info.Category = equip.Category
+				info.Name = e.GetInfocardName(equip.IdsName.Get(), good_nickname)
+
+				e.exportInfocards(InfocardKey(good_nickname), equip.IdsInfo.Get())
+			}
+		case "ship":
+			ship := e.Configs.Goods.ShipsMap[good.Nickname.Get()]
+
+			ship_hull := e.Configs.Goods.ShipHullsMap[ship.Hull.Get()]
+			info.PriceBase = ship_hull.Price.Get()
+
+			// Infocard data
+			info.ShipNickname = ship_hull.Ship.Get()
+			shiparch := e.Configs.Shiparch.ShipsMap[info.ShipNickname]
+
+			info.Name = e.GetInfocardName(shiparch.IdsName.Get(), info.ShipNickname)
+
+			// e.exportInfocards(InfocardKey(market_good_nickname),
+			// 	shiparch.IdsInfo.Get(), shiparch.IdsInfo1.Get(), shiparch.IdsInfo2.Get(), shiparch.IdsInfo3.Get())
+			e.exportInfocards(InfocardKey(good_nickname),
+				shiparch.IdsInfo1.Get(), shiparch.IdsInfo.Get())
+		}
+
+		if gun, ok := e.Configs.Equip.GunMap[good_nickname]; ok {
+			info.HpType, _ = gun.HPGunType.GetValue()
+		}
+		if shield, ok := e.Configs.Equip.ShidGenMap[good_nickname]; ok {
+			info.HpType, _ = shield.HpType.GetValue()
+		}
+		if engine, ok := e.Configs.Equip.EnginesMap[good_nickname]; ok {
+			info.HpType, _ = engine.HpType.GetValue()
+		}
+	}
+	if NameWithSpacesOnly(info.Name) {
+		info.Name = ""
+	}
+
+	return info
 }
 
 func (e *Exporter) getMarketGoods() map[cfgtype.BaseUniNick]map[CommodityKey]MarketGood {
@@ -55,75 +111,21 @@ func (e *Exporter) getMarketGoods() map[cfgtype.BaseUniNick]map[CommodityKey]Mar
 		for _, market_good := range base_good.MarketGoods {
 
 			var market_good_nickname string = market_good.Nickname.Get()
-			var price_base int
-			var Name string
-			var category string
-			var hptype string
-			if good, found_good := e.Configs.Goods.GoodsMap[market_good_nickname]; found_good {
-				price_base = good.Price.Get()
-
-				category = good.Category.Get()
-				switch category {
-				default:
-					if equip, ok := e.Configs.Equip.ItemsMap[market_good_nickname]; ok {
-						category = equip.Category
-						Name = e.GetInfocardName(equip.IdsName.Get(), market_good_nickname)
-
-						e.exportInfocards(InfocardKey(market_good_nickname), equip.IdsInfo.Get())
-					}
-				case "ship":
-					ship := e.Configs.Goods.ShipsMap[good.Nickname.Get()]
-
-					ship_hull := e.Configs.Goods.ShipHullsMap[ship.Hull.Get()]
-					price_base = ship_hull.Price.Get()
-
-					// Infocard data
-					ship_nickname := ship_hull.Ship.Get()
-					shiparch := e.Configs.Shiparch.ShipsMap[ship_nickname]
-
-					Name = e.GetInfocardName(shiparch.IdsName.Get(), ship_nickname)
-
-					// e.exportInfocards(InfocardKey(market_good_nickname),
-					// 	shiparch.IdsInfo.Get(), shiparch.IdsInfo1.Get(), shiparch.IdsInfo2.Get(), shiparch.IdsInfo3.Get())
-					e.exportInfocards(InfocardKey(market_good_nickname),
-						shiparch.IdsInfo1.Get(), shiparch.IdsInfo.Get())
-				}
-
-				if gun, ok := e.Configs.Equip.GunMap[market_good_nickname]; ok {
-					hptype, _ = gun.HPGunType.GetValue()
-				}
-				if shield, ok := e.Configs.Equip.ShidGenMap[market_good_nickname]; ok {
-					hptype, _ = shield.HpType.GetValue()
-				}
-				if engine, ok := e.Configs.Equip.EnginesMap[market_good_nickname]; ok {
-					hptype, _ = engine.HpType.GetValue()
-				}
-
-			}
-
-			if NameWithSpacesOnly(Name) {
-				Name = ""
-			}
 
 			good_to_add := MarketGood{
-				Name:          Name,
-				Nickname:      market_good_nickname,
-				NicknameHash:  flhash.HashNickname(market_good_nickname),
-				HpType:        hptype,
-				Type:          category,
+				GoodInfo:      e.GetGoodInfo(market_good_nickname),
 				LevelRequired: market_good.LevelRequired.Get(),
 				RepRequired:   market_good.RepRequired.Get(),
 				BaseSells:     market_good.BaseSells(),
 				PriceModifier: market_good.PriceModifier.Get(),
-				PriceBase:     price_base,
-				PriceToBuy:    int(math.Floor(float64(price_base) * market_good.PriceModifier.Get())),
 				Infocard:      InfocardKey(market_good_nickname),
 				ShipClass:     -1,
 			}
+			good_to_add.PriceToBuy = int(math.Floor(float64(good_to_add.PriceBase) * market_good.PriceModifier.Get()))
 
 			e.Hashes[market_good_nickname] = good_to_add.NicknameHash
 
-			if category == "commodity" {
+			if good_to_add.Category == "commodity" {
 
 				if e.Configs.Discovery != nil {
 					good_to_add.PriceToSell = ptr.Ptr(market_good.BaseSellsIPositiveAndDiscoSellPrice.Get())
@@ -146,7 +148,7 @@ func (e *Exporter) getMarketGoods() map[cfgtype.BaseUniNick]map[CommodityKey]Mar
 
 		if !e.TraderExists(string(base_nickname)) {
 			for good_key, good := range MarketGoods {
-				if good.Type == "commodity" {
+				if good.Category == "commodity" {
 					delete(MarketGoods, good_key)
 				}
 			}

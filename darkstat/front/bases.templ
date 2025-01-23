@@ -362,7 +362,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 					}
 				</td>
 				<td>
-					@frmt.WriteGoodType(string(good.Type))
+					@frmt.WriteGoodType(string(good.Category))
 				</td>
 				<td>
 					if good.PriceToSell != nil {
@@ -646,7 +646,7 @@ templ BaseTrades(name string, trade_routes []*configs_export.ComboTradeRoute, ta
 						</span>
 					</td>
 				}
-				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
+				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.Commodity.Volume) }</td>
 				if shared.ShowDisco {
 					<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.Commodity.ShipClass) }</td>
@@ -665,7 +665,7 @@ templ BaseTrades(name string, trade_routes []*configs_export.ComboTradeRoute, ta
 					@frmt.WriteRegionName(trade_route.Transport.SellingGood.Region)
 				</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
-				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>
+				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.GetPriceBaseBuysFor()) }</td>
 				<td>{ trade_route.Transport.Commodity.Nickname }</td>
 				<td>
 					@frmt.WriteLimit(100) {

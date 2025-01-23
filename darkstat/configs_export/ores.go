@@ -90,15 +90,13 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			for _, volume_info := range equipment.Volumes {
 
 				market_good := MarketGood{
-					Nickname:      commodity,
+					GoodInfo:      e.GetGoodInfo(commodity),
 					BaseSells:     true,
 					PriceModifier: 0,
-					PriceBase:     0,
 					PriceToBuy:    0,
 					PriceToSell:   ptr.Ptr(0),
 					Volume:        volume_info.Volume.Get(),
 					ShipClass:     volume_info.GetShipClass(),
-					Type:          "commodity",
 				}
 
 				if equipment, ok := e.Configs.Equip.CommoditiesMap[commodity]; ok {
@@ -114,19 +112,19 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 
 				if commodity, ok := comm_by_nick[market_good_key]; ok {
 					good_at_base := &GoodAtBase{
-						BaseNickname:      base.Nickname,
 						BaseSells:         true,
-						PriceBaseBuysFor:  0,
+						PriceBaseBuysFor:  nil,
 						PriceBaseSellsFor: 0,
 						Volume:            commodity.Volume,
 						ShipClass:         commodity.ShipClass,
 						BaseInfo: BaseInfo{
-							BaseName:    base.Name,
-							SystemName:  base.System,
-							BasePos:     base.Pos,
-							Region:      base.Region,
-							FactionName: "Mining Field",
-							SectorCoord: base.SectorCoord,
+							BaseNickname: base.Nickname,
+							BaseName:     base.Name,
+							SystemName:   base.System,
+							BasePos:      base.Pos,
+							Region:       base.Region,
+							FactionName:  "Mining Field",
+							SectorCoord:  base.SectorCoord,
 						},
 					}
 
@@ -162,13 +160,11 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 								equipment := e.Configs.Equip.CommoditiesMap[commodity_produced]
 								for _, volume_info := range equipment.Volumes {
 									market_good := MarketGood{
-										Nickname:      commodity_produced,
+										GoodInfo:      e.GetGoodInfo(commodity_produced),
 										BaseSells:     true,
 										PriceModifier: 0,
-										PriceBase:     0,
 										PriceToBuy:    0,
 										PriceToSell:   ptr.Ptr(0),
-										Type:          "commodity",
 										Volume:        volume_info.Volume.Get(),
 										ShipClass:     volume_info.GetShipClass(),
 									}
@@ -180,19 +176,18 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 
 									if commodity, ok := comm_by_nick[market_good_key]; ok {
 										good_at_base := &GoodAtBase{
-											BaseNickname: base.Nickname,
-
 											BaseSells:         true,
-											PriceBaseBuysFor:  0,
+											PriceBaseBuysFor:  nil,
 											PriceBaseSellsFor: 0,
 											Volume:            commodity.Volume,
 											ShipClass:         volume_info.GetShipClass(),
 											BaseInfo: BaseInfo{
-												BaseName:    base.Name,
-												SystemName:  base.System,
-												BasePos:     base.Pos,
-												Region:      base.Region,
-												FactionName: "Mining Field",
+												BaseNickname: base.Nickname,
+												BaseName:     base.Name,
+												SystemName:   base.System,
+												BasePos:      base.Pos,
+												Region:       base.Region,
+												FactionName:  "Mining Field",
 											},
 										}
 										if system_uni_ok {

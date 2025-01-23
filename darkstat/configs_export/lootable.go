@@ -1,10 +1,7 @@
 package configs_export
 
 import (
-	"fmt"
-
 	"github.com/darklab8/fl-configs/configs/cfgtype"
-	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 )
 
 func (e *Exporter) findable_in_loot() map[string]bool {
@@ -64,29 +61,13 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 
 	for wreck, _ := range in_wrecks {
 		market_good := MarketGood{
-			Nickname:             wreck,
-			NicknameHash:         flhash.HashNickname(wreck),
+			GoodInfo:             e.GetGoodInfo(wreck),
 			Infocard:             InfocardKey(wreck),
 			BaseSells:            true,
-			Type:                 "lootable",
 			ShipClass:            -1,
 			IsServerSideOverride: true,
 		}
 		e.Hashes[market_good.Nickname] = market_good.NicknameHash
-
-		if good, found_good := e.Configs.Goods.GoodsMap[market_good.Nickname]; found_good {
-			category := good.Category.Get()
-			market_good.Type = fmt.Sprintf("%s loot", category)
-			if equip, ok := e.Configs.Equip.ItemsMap[market_good.Nickname]; ok {
-				market_good.Type = fmt.Sprintf("%s loot", equip.Category)
-				e.exportInfocards(InfocardKey(market_good.Nickname), equip.IdsInfo.Get())
-			}
-
-		}
-		if equip, ok := e.Configs.Equip.ItemsMap[wreck]; ok {
-			market_good.Name = e.GetInfocardName(equip.IdsName.Get(), wreck)
-			e.exportInfocards(InfocardKey(market_good.Nickname), equip.IdsInfo.Get())
-		}
 
 		market_good_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
 		base.MarketGoodsPerNick[market_good_key] = market_good

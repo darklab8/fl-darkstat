@@ -31,11 +31,11 @@ func (t *TradeRoute) GetProffitPerV() float64 {
 		return 0
 	}
 
-	if t.SellingGood.PriceBaseBuysFor-t.BuyingGood.PriceBaseSellsFor == 0 {
+	if t.SellingGood.GetPriceBaseBuysFor()-t.BuyingGood.PriceBaseSellsFor == 0 {
 		return 0
 	}
 
-	return float64(t.SellingGood.PriceBaseBuysFor-t.BuyingGood.PriceBaseSellsFor) / float64(t.Commodity.Volume)
+	return float64(t.SellingGood.GetPriceBaseBuysFor()-t.BuyingGood.PriceBaseSellsFor) / float64(t.Commodity.Volume)
 }
 
 func (t *TradeRoute) GetProffitPerTime() float64 {
@@ -75,7 +75,7 @@ func (e *Exporter) TradePaths(
 
 	for _, base := range bases {
 		for _, good := range base.MarketGoodsPerNick {
-			if good.Type != "commodity" {
+			if good.Category != "commodity" {
 				continue
 			}
 

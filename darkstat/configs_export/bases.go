@@ -9,7 +9,6 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
-	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
@@ -166,14 +165,14 @@ func EnhanceBasesWithServerOverrides(bases []*Base, commodities []*Commodity) {
 			market_good.Name = commodity.Name
 			market_good.Nickname = commodity.Nickname
 			market_good.NicknameHash = commodity.NicknameHash
-			market_good.Type = "commodity"
+			market_good.Category = "commodity"
 
 			market_good.LevelRequired = base_location.LevelRequired
 			market_good.RepRequired = base_location.RepRequired
 			market_good.BaseSells = base_location.BaseSells
 
 			market_good.PriceToBuy = base_location.PriceBaseSellsFor
-			market_good.PriceToSell = ptr.Ptr(base_location.PriceBaseBuysFor)
+			market_good.PriceToSell = base_location.PriceBaseBuysFor
 			market_good.Infocard = commodity.Infocard
 			market_good.Volume = commodity.Volume
 			market_good.IsServerSideOverride = base_location.IsServerSideOverride
