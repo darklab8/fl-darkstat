@@ -101,9 +101,7 @@ func (e *Exporter) getMarketGoods() map[cfgtype.BaseUniNick]map[CommodityKey]*Ma
 				LevelRequired: market_good.LevelRequired.Get(),
 				RepRequired:   market_good.RepRequired.Get(),
 				BaseSells:     market_good.BaseSells(),
-				// PriceModifier: market_good.PriceModifier.Get(),
-				// Infocard:      InfocardKey(market_good_nickname),
-				ShipClass: -1,
+				ShipClass:     -1,
 			}
 			good_to_add.PriceBaseSellsFor = int(math.Floor(float64(good_to_add.PriceBase) * market_good.PriceModifier.Get()))
 
