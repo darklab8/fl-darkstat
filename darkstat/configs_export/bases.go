@@ -16,7 +16,7 @@ import (
 func (e *Exporter) TraderExists(base_nickname string) bool {
 	universe_base, ok := e.Configs.Universe.BasesMap[universe_mapped.BaseNickname(base_nickname)]
 	if !ok {
-		return false
+		return true
 	}
 	return universe_base.TraderExists
 }
