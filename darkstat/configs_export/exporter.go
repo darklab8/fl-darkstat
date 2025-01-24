@@ -92,8 +92,9 @@ type Exporter struct {
 	Configs *configs_mapped.MappedConfigs
 	Hashes  map[string]flhash.HashCode
 
-	Bases      []*Base
-	TradeBases []*Base
+	Bases       []*Base
+	TradeBases  []*Base
+	TravelBases []*Base
 
 	MiningOperations     []*Base
 	useful_bases_by_nick map[cfgtype.BaseUniNick]bool
@@ -269,6 +270,9 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	e.TradeBases, e.Commodities = e.TradePaths(TradeBases, e.Commodities)
 	e.MiningOperations, e.Commodities = e.TradePaths(e.MiningOperations, e.Commodities)
 	e.TradeBases = e.AllRoutes(TradeBases)
+	for _, base := range e.TradeBases {
+		e.TravelBases = append(e.TravelBases, base)
+	}
 
 	for _, system := range e.Configs.Systems.Systems {
 		for zone_nick := range system.ZonesByNick {

@@ -22,8 +22,22 @@ func (l *Router) LinkBases(
 		return data.Bases[i].Name < data.Bases[j].Name
 	})
 	sort.Slice(data.MiningOperations, func(i, j int) bool {
-		return data.MiningOperations[i].Name < data.MiningOperations[j].Name
+		if data.MiningOperations[i].BestTransportRoute == nil && data.MiningOperations[j].BestTransportRoute == nil {
+			return true
+		}
+		if data.MiningOperations[i].BestTransportRoute == nil {
+			return false
+		}
+		if data.MiningOperations[j].BestTransportRoute == nil {
+			return true
+		}
+		return data.MiningOperations[i].BestTransportRoute.GetProffitPerTime() > data.MiningOperations[j].BestTransportRoute.GetProffitPerTime()
 	})
+	for _, base := range data.MiningOperations {
+		sort.Slice(base.TradeRoutes, func(i, j int) bool {
+			return base.TradeRoutes[i].Transport.GetProffitPerTime() > base.TradeRoutes[j].Transport.GetProffitPerTime()
+		})
+	}
 	sort.Slice(data.TradeBases, func(i, j int) bool {
 		if data.TradeBases[i].BestTransportRoute == nil && data.TradeBases[j].BestTransportRoute == nil {
 			return true
@@ -42,6 +56,9 @@ func (l *Router) LinkBases(
 			return base.TradeRoutes[i].Transport.GetProffitPerTime() > base.TradeRoutes[j].Transport.GetProffitPerTime()
 		})
 	}
+	sort.Slice(data.TravelBases, func(i, j int) bool {
+		return data.TravelBases[i].Name < data.TravelBases[j].Name
+	})
 
 	build.RegComps(
 		builder.NewComponent(
@@ -139,11 +156,11 @@ func (l *Router) LinkBases(
 		),
 		builder.NewComponent(
 			urls.TravelRoutes,
-			front.BasesT(configs_export.FilterToUserfulBases(data.TradeBases), front.BaseAllRoutes, tab.ShowEmpty(false), shared),
+			front.BasesT(configs_export.FilterToUserfulBases(data.TravelBases), front.BaseAllRoutes, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.TravelRoutes),
-			front.BasesT(data.TradeBases, front.BaseAllRoutes, tab.ShowEmpty(true), shared),
+			front.BasesT(data.TravelBases, front.BaseAllRoutes, tab.ShowEmpty(true), shared),
 		),
 	)
 
