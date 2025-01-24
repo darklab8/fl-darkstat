@@ -144,17 +144,10 @@ func EnhanceBasesWithServerOverrides(bases []*Base, commodities []*Commodity) {
 
 	for _, commodity := range commodities {
 		for _, market_good := range commodity.Bases {
-
-			// no idea why :) but crashes otherwise
-			if market_good.BaseNickname == pob_crafts_nickname || market_good.BaseNickname == BaseLootableNickname {
-				continue
-			}
-			if market_good.IsServerSideOverride {
-				continue
-			}
-
 			commodity_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
-			base_per_nick[market_good.BaseNickname].MarketGoodsPerNick[commodity_key] = market_good
+			if base, ok := base_per_nick[market_good.BaseNickname]; ok {
+				base.MarketGoodsPerNick[commodity_key] = market_good
+			}
 		}
 	}
 }
