@@ -120,8 +120,8 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button([]string{"PoB","goods"}, tab.AllItemsUrl(urls.PoBGoods), url)
 				}
 				
-				@tab.Button([]string{"API"}, tab.AllItemsUrl(urls.Swagger), url)
-				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
+				@tab.Button([]string{"API"}, urls.Swagger, url)
+				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + url.ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestring([]string{"Don't", "Show All"})
 				</button>
 				@tab.Button([]string{"Docs"}, tab.AllItemsUrl(urls.Docs), url)
