@@ -12,19 +12,19 @@ import (
 type MarketGood struct {
 	GoodInfo
 
-	LevelRequired        int
-	RepRequired          float64
-	PriceBaseBuysFor     *int
-	PriceBaseSellsFor    int
-	Volume               float64
-	ShipClass            cfgtype.ShipClass
-	BaseSells            bool
-	IsServerSideOverride bool
+	LevelRequired        int               `json:"level_required"`
+	RepRequired          float64           `json:"rep_required"`
+	PriceBaseBuysFor     *int              `json:"price_base_buys_for"`
+	PriceBaseSellsFor    int               `json:"price_base_sells_for"`
+	Volume               float64           `json:"volume"`
+	ShipClass            cfgtype.ShipClass `json:"ship_class"` // Discovery specific value. Volume can be different based on ship class. Duplicating market goods with different volumes for that
+	BaseSells            bool              `json:"base_sells"`
+	IsServerSideOverride bool              `json:"is_server_override"`
 
-	NotBuyable             bool
-	IsTransportUnreachable bool
+	NotBuyable             bool `json:"_" swaggerignore:"true"`
+	IsTransportUnreachable bool `json:"_" swaggerignore:"true"`
 
-	BaseInfo
+	BaseInfo `json:"_" swaggerignore:"true"`
 }
 
 func (g MarketGood) GetPriceBaseBuysFor() int {
@@ -144,6 +144,7 @@ func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesI
 		}()
 
 		var base_info *MarketGood = &MarketGood{
+			GoodInfo:             e.GetGoodInfo(commodity.Nickname),
 			BaseInfo:             e.GetBaseInfo(universe_mapped.BaseNickname(base_nickname)),
 			NotBuyable:           false,
 			BaseSells:            base_market.BaseSells.Get(),
@@ -173,6 +174,8 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 
 		market_good := base_market.MarketGood
 		base_info := &MarketGood{
+			GoodInfo:   e.GetGoodInfo(commodity.Nickname),
+			BaseInfo:   e.GetBaseInfo(universe_mapped.BaseNickname(base_nickname)),
 			NotBuyable: false,
 			Volume:     commodity.Volume,
 			ShipClass:  commodity.ShipClass,
@@ -213,6 +216,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 		pob_produced := e.pob_produced()
 		if _, ok := pob_produced[commodity.Nickname]; ok {
 			good_to_add := &MarketGood{
+				GoodInfo:             e.GetGoodInfo(commodity.Nickname),
 				BaseSells:            true,
 				IsServerSideOverride: true,
 				Volume:               commodity.Volume,
@@ -232,6 +236,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 	loot_findable := e.findable_in_loot()
 	if _, ok := loot_findable[commodity.Nickname]; ok {
 		good_to_add := &MarketGood{
+			GoodInfo:             e.GetGoodInfo(commodity.Nickname),
 			BaseSells:            true,
 			IsServerSideOverride: false,
 			Volume:               commodity.Volume,
@@ -253,6 +258,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 		if goods, ok := pob_buyable[commodity.Nickname]; ok {
 			for _, good := range goods {
 				good_to_add := &MarketGood{
+					GoodInfo:             e.GetGoodInfo(commodity.Nickname),
 					BaseSells:            good.Quantity > good.MinStock,
 					IsServerSideOverride: true,
 					PriceBaseBuysFor:     ptr.Ptr(good.SellPrice),
@@ -294,13 +300,13 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 }
 
 type BaseInfo struct {
-	BaseNickname cfgtype.BaseUniNick
-	BaseName     string
-	SystemName   string
-	Region       string
-	FactionName  string
-	BasePos      cfgtype.Vector
-	SectorCoord  string
+	BaseNickname cfgtype.BaseUniNick `json:"base_nickname"`
+	BaseName     string              `json:"base_name"`
+	SystemName   string              `json:"system_name"`
+	Region       string              `json:"region_name"`
+	FactionName  string              `json:"faction_name"`
+	BasePos      cfgtype.Vector      `json:"base_pos"`
+	SectorCoord  string              `json:"sector_coord"`
 }
 
 func (e *Exporter) GetRegionName(system *universe_mapped.System) string {

@@ -203,15 +203,15 @@ type Base struct {
 	InfocardKey        InfocardKey
 	File               utils_types.FilePath `json:"file"`
 	BGCS_base_run_by   string
-	MarketGoodsPerNick map[CommodityKey]*MarketGood `json:"-"`
+	MarketGoodsPerNick map[CommodityKey]*MarketGood `json:"-" swaggerignore:"true"`
 	Pos                cfgtype.Vector               `json:"pos"`
 	SectorCoord        string                       `json:"sector_coord"`
 
 	IsTransportUnreachable bool `json:"is_transport_unreachable"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
 
-	Missions           *BaseMissions `json:"-"`
-	baseAllTradeRoutes `json:"-"`
-	baseAllRoutes      `json:"-"`
+	Missions           *BaseMissions `json:"-" swaggerignore:"true"`
+	baseAllTradeRoutes `json:"-" swaggerignore:"true"`
+	baseAllRoutes      `json:"-" swaggerignore:"true"`
 	*MiningInfo        `json:"mining_info,omitempty"`
 
 	Reachable bool `json:"is_reachhable"` // is base IS Rechable by frighter from Manhattan
