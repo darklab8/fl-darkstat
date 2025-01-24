@@ -1,7 +1,6 @@
 package configs_export
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
@@ -15,11 +14,15 @@ func TestExportCommodities(t *testing.T) {
 	items := exporter.GetCommodities()
 	assert.Greater(t, len(items), 0)
 
-	fmt.Println(items[0])
-
-	for _, item := range items {
-		if item.Nickname == "commodity_diamonds" {
-			fmt.Println()
+	if configs.Discovery != nil {
+		var scidata *Commodity
+		for _, item := range items {
+			if item.Nickname == "commodity_sciencedata" {
+				scidata = item
+			}
 		}
+		assert.NotNil(t, scidata)
+		assert.NotContains(t, scidata.Name, "\r")
 	}
+
 }
