@@ -5,6 +5,7 @@ name: Test build
     - master
   schedule:
   - cron: '0 9 * * *'
+  pull_request: {}
 jobs:
   job:
     name: Test build
