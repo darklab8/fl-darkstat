@@ -90,7 +90,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 
 type ShowAsCommodity bool
 
-templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.GoodAtBase, is_commodity ShowAsCommodity,shared *types.SharedData ) {
+templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_export.MarketGood, is_commodity ShowAsCommodity,shared *types.SharedData ) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@GoodAtBaseSharedT(is_commodity, shared) {
@@ -125,12 +125,12 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfgtype.BaseUniNick]*configs_e
 				}
 				<td>{ base_info.SectorCoord }</td>
 				if bool(is_commodity) && shared.ShowDisco{
-					<td>{ strconv.Itoa(base_info.PriceBaseBuysFor) }</td>
+					<td>{ strconv.Itoa(base_info.GetPriceBaseBuysFor()) }</td>
 				}
 				<td>{ strconv.Itoa(base_info.PriceBaseSellsFor) }</td>
 				if is_commodity {
 					if shared.ShowDisco {
-						<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseBuysFor, base_info.Volume)) }</td>
+						<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.GetPriceBaseBuysFor(), base_info.Volume)) }</td>
 					}
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseSellsFor, base_info.Volume)) }</td>
 				}

@@ -73,7 +73,7 @@ type Gun struct {
 	ShieldEfficiency       float64
 	EnergyDamageEfficiency float64
 
-	Bases         map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases         map[cfgtype.BaseUniNick]*MarketGood
 	DamageBonuses []DamageBonus
 
 	Missile
@@ -140,7 +140,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor, buyable
 		Speed:        gun_info.MuzzleVelosity.Get(),
 		Toughness:    gun_info.Toughness.Get(),
 		Lootable:     gun_info.Lootable.Get(),
-		Bases:        make(map[cfgtype.BaseUniNick]*GoodAtBase),
+		Bases:        make(map[cfgtype.BaseUniNick]*MarketGood),
 	}
 
 	gun.Mass, _ = gun_info.Mass.GetValue()

@@ -9,7 +9,6 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
-	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
@@ -92,7 +91,7 @@ func (e *Exporter) GetBases() []*Base {
 			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
 		}
 
-		var market_goods_per_good_nick map[CommodityKey]MarketGood = make(map[CommodityKey]MarketGood)
+		var market_goods_per_good_nick map[CommodityKey]*MarketGood = make(map[CommodityKey]*MarketGood)
 
 		if found_commodities, ok := commodities_per_base[cfgtype.BaseUniNick(base.Nickname.Get())]; ok {
 			market_goods_per_good_nick = found_commodities
@@ -144,41 +143,11 @@ func EnhanceBasesWithServerOverrides(bases []*Base, commodities []*Commodity) {
 	}
 
 	for _, commodity := range commodities {
-		for _, base_location := range commodity.Bases {
-
-			// no idea why :) but crashes otherwise
-			if base_location.BaseNickname == pob_crafts_nickname || base_location.BaseNickname == BaseLootableNickname {
-				continue
+		for _, market_good := range commodity.Bases {
+			commodity_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
+			if base, ok := base_per_nick[market_good.BaseNickname]; ok {
+				base.MarketGoodsPerNick[commodity_key] = market_good
 			}
-			if base_location.IsServerSideOverride {
-				continue
-			}
-
-			var market_good MarketGood
-			commodity_key := GetCommodityKey(commodity.Nickname, commodity.ShipClass)
-
-			if base, ok := base_per_nick[base_location.BaseNickname]; ok {
-				if good, ok := base.MarketGoodsPerNick[commodity_key]; ok {
-					market_good = good
-				}
-			}
-
-			market_good.Name = commodity.Name
-			market_good.Nickname = commodity.Nickname
-			market_good.NicknameHash = commodity.NicknameHash
-			market_good.Type = "commodity"
-
-			market_good.LevelRequired = base_location.LevelRequired
-			market_good.RepRequired = base_location.RepRequired
-			market_good.BaseSells = base_location.BaseSells
-
-			market_good.PriceToBuy = base_location.PriceBaseSellsFor
-			market_good.PriceToSell = ptr.Ptr(base_location.PriceBaseBuysFor)
-			market_good.Infocard = commodity.Infocard
-			market_good.Volume = commodity.Volume
-			market_good.IsServerSideOverride = base_location.IsServerSideOverride
-
-			base_per_nick[base_location.BaseNickname].MarketGoodsPerNick[commodity_key] = market_good
 		}
 	}
 }
@@ -186,6 +155,11 @@ func EnhanceBasesWithServerOverrides(bases []*Base, commodities []*Commodity) {
 func FilterToUserfulBases(bases []*Base) []*Base {
 	var useful_bases []*Base = make([]*Base, 0, len(bases))
 	for _, item := range bases {
+		if item.IsPob {
+			useful_bases = append(useful_bases, item)
+			continue
+		}
+
 		if item.Reachable {
 			useful_bases = append(useful_bases, item)
 			continue
@@ -229,9 +203,9 @@ type Base struct {
 	InfocardKey        InfocardKey
 	File               utils_types.FilePath `json:"file"`
 	BGCS_base_run_by   string
-	MarketGoodsPerNick map[CommodityKey]MarketGood `json:"-"`
-	Pos                cfgtype.Vector              `json:"pos"`
-	SectorCoord        string                      `json:"sector_coord"`
+	MarketGoodsPerNick map[CommodityKey]*MarketGood `json:"-"`
+	Pos                cfgtype.Vector               `json:"pos"`
+	SectorCoord        string                       `json:"sector_coord"`
 
 	IsTransportUnreachable bool `json:"is_transport_unreachable"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
 
@@ -241,6 +215,7 @@ type Base struct {
 	*MiningInfo        `json:"mining_info,omitempty"`
 
 	Reachable bool `json:"is_reachhable"` // is base IS Rechable by frighter from Manhattan
+	IsPob     bool
 }
 
 type CommodityKey string

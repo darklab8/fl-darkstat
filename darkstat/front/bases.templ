@@ -323,9 +323,9 @@ templ BaseMarketGoodsBase() {
 				<th style="width:10px;">
 					@frmt.MultiLinestring([]string{"Base", "Sells"})
 				</th>
-				<th style="width:10px;">
-					@frmt.MultiLinestring([]string{"Price", "Modifier"})
-				</th>
+				// <th style="width:10px;">
+				// 	@frmt.MultiLinestring([]string{"Price", "Modifier"})
+				// </th>
 				<th style="width:10px;">
 					@frmt.MultiLinestring([]string{"Price", "Base"})
 				</th>
@@ -343,13 +343,13 @@ templ BaseMarketGoodsBase() {
 	</table>
 }
 
-templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs_export.MarketGood, tab_mode BaseMode) {
+templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*configs_export.MarketGood, tab_mode BaseMode) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseMarketGoodsBase() {
 		for _, good := range frmt.SortedMarketGoods(goods) {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(good.Infocard) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(good.Nickname)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
@@ -362,20 +362,20 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]configs
 					}
 				</td>
 				<td>
-					@frmt.WriteGoodType(string(good.Type))
+					@frmt.WriteGoodType(string(good.Category))
 				</td>
 				<td>
-					if good.PriceToSell != nil {
-						{ strconv.Itoa(*good.PriceToSell) }
+					if good.PriceBaseBuysFor != nil {
+						{ strconv.Itoa(*good.PriceBaseBuysFor) }
 					}
 				</td>
-				<td>{ strconv.Itoa(good.PriceToBuy) }</td>
+				<td>{ strconv.Itoa(good.PriceBaseSellsFor) }</td>
 				<td>{ fmt.Sprintf("%.0f", good.Volume) }</td>
 				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
 				<td>{ frmt.FormatBaseSells(good.BaseSells) }</td>
-				<td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
+				// <td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
 				<td>{ strconv.Itoa(good.PriceBase) }</td>
 				<td>
 					@frmt.WriteLimit(200) {
@@ -646,7 +646,7 @@ templ BaseTrades(name string, trade_routes []*configs_export.ComboTradeRoute, ta
 						</span>
 					</td>
 				}
-				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.PriceBaseBuysFor - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
+				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
 				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.Commodity.Volume) }</td>
 				if shared.ShowDisco {
 					<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.Commodity.ShipClass) }</td>
@@ -665,7 +665,7 @@ templ BaseTrades(name string, trade_routes []*configs_export.ComboTradeRoute, ta
 					@frmt.WriteRegionName(trade_route.Transport.SellingGood.Region)
 				</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
-				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.PriceBaseBuysFor) }</td>
+				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.GetPriceBaseBuysFor()) }</td>
 				<td>{ trade_route.Transport.Commodity.Nickname }</td>
 				<td>
 					@frmt.WriteLimit(100) {

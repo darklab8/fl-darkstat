@@ -131,7 +131,7 @@ func MapConfigsToFGraph(
 					nickname: base.Nickname.ToStr(),
 					pos:      base.Pos,
 				}
-				graph.SetIdsName(object.nickname, 0)
+				graph.SetIdsName(object.nickname, int(flhash.HashNickname(object.nickname)))
 
 				for _, existing_object := range system_objects {
 					distance := graph.DistanceToTime(

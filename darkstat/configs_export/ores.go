@@ -16,7 +16,7 @@ type MiningInfo struct {
 	DynamicLootMin        int
 	DynamicLootMax        int
 	DynamicLootDifficulty int
-	MinedGood             MarketGood
+	MinedGood             *MarketGood
 }
 
 func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
@@ -55,7 +55,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			base := &Base{
 				MiningInfo:         &MiningInfo{},
 				Pos:                location,
-				MarketGoodsPerNick: make(map[CommodityKey]MarketGood),
+				MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 			}
 			base.DynamicLootMin, _ = asteroids.LootableZone.DynamicLootMin.GetValue()
 			base.DynamicLootMax, _ = asteroids.LootableZone.DynamicLootMax.GetValue()
@@ -89,56 +89,39 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			equipment := e.Configs.Equip.CommoditiesMap[commodity]
 			for _, volume_info := range equipment.Volumes {
 
-				market_good := MarketGood{
-					Nickname:      commodity,
-					BaseSells:     true,
-					PriceModifier: 0,
-					PriceBase:     0,
-					PriceToBuy:    0,
-					PriceToSell:   ptr.Ptr(0),
-					Volume:        volume_info.Volume.Get(),
-					ShipClass:     volume_info.GetShipClass(),
-					Type:          "commodity",
-				}
-
-				if equipment, ok := e.Configs.Equip.CommoditiesMap[commodity]; ok {
-					market_good.Name = e.GetInfocardName(equipment.IdsName.Get(), market_good.Nickname)
+				market_good := &MarketGood{
+					GoodInfo:          e.GetGoodInfo(commodity),
+					BaseSells:         true,
+					PriceBaseSellsFor: 0,
+					PriceBaseBuysFor:  nil,
+					Volume:            volume_info.Volume.Get(),
+					ShipClass:         volume_info.GetShipClass(),
+					BaseInfo: BaseInfo{
+						BaseNickname: base.Nickname,
+						BaseName:     base.Name,
+						SystemName:   base.System,
+						BasePos:      base.Pos,
+						Region:       base.Region,
+						FactionName:  "Mining Field",
+						SectorCoord:  base.SectorCoord,
+					},
 				}
 				base.Name = market_good.Name
+				market_good.BaseName = market_good.Name
 
 				market_good_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
-
 				base.MarketGoodsPerNick[market_good_key] = market_good
 				base.MinedGood = market_good
 				added_goods[market_good.Nickname] = true
 
 				if commodity, ok := comm_by_nick[market_good_key]; ok {
-					good_at_base := &GoodAtBase{
-						BaseNickname:      base.Nickname,
-						BaseSells:         true,
-						PriceBaseBuysFor:  0,
-						PriceBaseSellsFor: 0,
-						Volume:            commodity.Volume,
-						ShipClass:         commodity.ShipClass,
-						BaseInfo: BaseInfo{
-							BaseName:    base.Name,
-							SystemName:  base.System,
-							BasePos:     base.Pos,
-							Region:      base.Region,
-							FactionName: "Mining Field",
-							SectorCoord: base.SectorCoord,
-						},
-					}
-
-					commodity.Bases[good_at_base.BaseNickname] = good_at_base
+					commodity.Bases[market_good.BaseNickname] = market_good
 				}
 
 			}
 
 			if e.Configs.Discovery != nil {
-
 				if recipes, ok := e.Configs.Discovery.BaseRecipeItems.RecipePerConsumed[commodity]; ok {
-
 					for _, recipe := range recipes {
 						recipe_produces_only_commodities := true
 
@@ -161,45 +144,30 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 								}
 								equipment := e.Configs.Equip.CommoditiesMap[commodity_produced]
 								for _, volume_info := range equipment.Volumes {
-									market_good := MarketGood{
-										Nickname:      commodity_produced,
-										BaseSells:     true,
-										PriceModifier: 0,
-										PriceBase:     0,
-										PriceToBuy:    0,
-										PriceToSell:   ptr.Ptr(0),
-										Type:          "commodity",
-										Volume:        volume_info.Volume.Get(),
-										ShipClass:     volume_info.GetShipClass(),
+									market_good := &MarketGood{
+										GoodInfo:          e.GetGoodInfo(commodity_produced),
+										BaseSells:         true,
+										PriceBaseSellsFor: 0,
+										PriceBaseBuysFor:  nil,
+										Volume:            volume_info.Volume.Get(),
+										ShipClass:         volume_info.GetShipClass(),
+										BaseInfo: BaseInfo{
+											BaseNickname: base.Nickname,
+											BaseName:     base.Name,
+											SystemName:   base.System,
+											BasePos:      base.Pos,
+											Region:       base.Region,
+											FactionName:  "Mining Field",
+										},
+									}
+									market_good.BaseName = market_good.Name
+									if system_uni_ok {
+										market_good.SectorCoord = VectorToSectorCoord(system_uni, market_good.BasePos)
 									}
 									market_good_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
-									if equipment, ok := e.Configs.Equip.CommoditiesMap[commodity_produced]; ok {
-										market_good.Name = e.GetInfocardName(equipment.IdsName.Get(), market_good.Nickname)
-									}
 									base.MarketGoodsPerNick[market_good_key] = market_good
-
 									if commodity, ok := comm_by_nick[market_good_key]; ok {
-										good_at_base := &GoodAtBase{
-											BaseNickname: base.Nickname,
-
-											BaseSells:         true,
-											PriceBaseBuysFor:  0,
-											PriceBaseSellsFor: 0,
-											Volume:            commodity.Volume,
-											ShipClass:         volume_info.GetShipClass(),
-											BaseInfo: BaseInfo{
-												BaseName:    base.Name,
-												SystemName:  base.System,
-												BasePos:     base.Pos,
-												Region:      base.Region,
-												FactionName: "Mining Field",
-											},
-										}
-										if system_uni_ok {
-											good_at_base.SectorCoord = VectorToSectorCoord(system_uni, good_at_base.BasePos)
-										}
-
-										commodity.Bases[good_at_base.BaseNickname] = good_at_base
+										commodity.Bases[market_good.BaseNickname] = market_good
 									}
 									added_goods[commodity_produced] = true
 								}

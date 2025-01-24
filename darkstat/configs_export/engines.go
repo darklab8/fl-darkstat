@@ -32,7 +32,7 @@ type Engine struct {
 	NameID       int
 	InfoID       int
 
-	Bases map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases map[cfgtype.BaseUniNick]*MarketGood
 	*DiscoveryTechCompat
 	Mass float64
 }
@@ -53,7 +53,7 @@ func (e *Exporter) GetEngines(ids []Tractor) []Engine {
 
 	for _, engine_info := range e.Configs.Equip.Engines {
 		engine := Engine{
-			Bases: make(map[cfgtype.BaseUniNick]*GoodAtBase),
+			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
 		}
 		engine.Mass, _ = engine_info.Mass.GetValue()
 

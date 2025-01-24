@@ -39,7 +39,7 @@ type Shield struct {
 	IdsName      int
 	IdsInfo      int
 
-	Bases map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases map[cfgtype.BaseUniNick]*MarketGood
 
 	*DiscoveryTechCompat
 	Mass float64
@@ -50,7 +50,7 @@ func (e *Exporter) GetShields(ids []Tractor) []Shield {
 
 	for _, shield_gen := range e.Configs.Equip.ShieldGens {
 		shield := Shield{
-			Bases: make(map[cfgtype.BaseUniNick]*GoodAtBase),
+			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
 		}
 		shield.Mass, _ = shield_gen.Mass.GetValue()
 

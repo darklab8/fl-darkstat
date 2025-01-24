@@ -11,6 +11,7 @@ import (
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
 	"github.com/darklab8/fl-configs/configs/discovery/pob_goods"
 	"github.com/darklab8/go-typelog/typelog"
@@ -88,6 +89,62 @@ func (good PoBGood) BaseBuys() bool  { return good.AnyBaseBuys }
 type PoBGoodBase struct {
 	ShopItem *ShopItem `json:"shop_item"`
 	Base     *PoB      `json:"base"`
+}
+
+// Exporting only with position ones
+func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
+	var bases []*Base
+
+	for _, pob := range pobs {
+		if pob.BasePos == nil {
+			continue
+		}
+
+		base := &Base{
+			Nickname:           cfgtype.BaseUniNick(pob.Nickname),
+			NicknameHash:       flhash.HashNickname(pob.Nickname),
+			Name:               fmt.Sprintf("(PoB) %s", pob.Name),
+			Pos:                *pob.BasePos,
+			System:             *pob.SystemName,
+			SystemNickname:     *pob.SystemNick,
+			Region:             *pob.Region,
+			SectorCoord:        *pob.SectorCoord,
+			MarketGoodsPerNick: map[CommodityKey]*MarketGood{},
+			IsPob:              true,
+		}
+		if pob.FactionName != nil {
+			base.FactionName = *pob.FactionName
+		}
+		base.Infocard = pob.Infocard
+		bases = append(bases, base)
+
+		for _, pob_good := range pob.ShopItems {
+			market_good := &MarketGood{
+				GoodInfo:             e.GetGoodInfo(pob_good.Nickname),
+				IsServerSideOverride: true,
+				ShipClass:            -1,
+			}
+			if pob_good.BaseBuys() {
+				market_good.PriceBaseBuysFor = ptr.Ptr(pob_good.SellPrice)
+			}
+			if pob_good.BaseSells() {
+				market_good.PriceBaseSellsFor = pob_good.Price
+				market_good.BaseSells = true
+			}
+			if market_good.Category == "commodity" {
+				equipment := e.Configs.Equip.CommoditiesMap[market_good.Nickname]
+				for _, volume := range equipment.Volumes {
+					volumed_good := market_good
+					volumed_good.Volume = volume.Volume.Get()
+					volumed_good.ShipClass = volume.GetShipClass()
+					base.MarketGoodsPerNick[GetCommodityKey(volumed_good.Nickname, volumed_good.ShipClass)] = volumed_good
+				}
+			} else {
+				base.MarketGoodsPerNick[GetCommodityKey(market_good.Nickname, market_good.ShipClass)] = market_good
+			}
+		}
+	}
+	return bases
 }
 
 func (e *Exporter) GetPoBGoods(pobs []*PoB) []*PoBGood {
@@ -281,6 +338,7 @@ func (e *Exporter) GetPoBs() []*PoB {
 
 		// TODO add pob infocards here
 		e.Infocards[InfocardKey(pob.Nickname)] = sb.Lines
+		e.Configs.Infocards.Infonames[int(flhash.HashNickname(pob.Nickname))] = infocard.Infoname(pob.Name)
 		pob.Infocard = sb.Lines
 
 		pobs = append(pobs, pob)

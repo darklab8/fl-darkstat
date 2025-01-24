@@ -1,11 +1,9 @@
 package configs_export
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-configs/configs/cfgtype"
-	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
 )
 
@@ -42,7 +40,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 	base := &Base{
 		Name:               e.Configs.CraftableBaseName(),
-		MarketGoodsPerNick: make(map[CommodityKey]MarketGood),
+		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 		Nickname:           cfgtype.BaseUniNick(pob_crafts_nickname),
 		InfocardKey:        InfocardKey(pob_crafts_nickname),
 		SystemNickname:     "neverwhere",
@@ -54,43 +52,13 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 	base.Archetypes = append(base.Archetypes, pob_crafts_nickname)
 
 	for produced, _ := range pob_produced {
-		market_good := MarketGood{
-			Nickname:             produced,
-			NicknameHash:         flhash.HashNickname(produced),
-			Infocard:             InfocardKey(produced),
+		market_good := &MarketGood{
+			GoodInfo:             e.GetGoodInfo(produced),
 			BaseSells:            true,
-			Type:                 "craftable",
 			ShipClass:            -1,
 			IsServerSideOverride: true,
 		}
 		e.Hashes[market_good.Nickname] = market_good.NicknameHash
-
-		if good, found_good := e.Configs.Goods.GoodsMap[market_good.Nickname]; found_good {
-			category := good.Category.Get()
-			market_good.Type = fmt.Sprintf("%s craft", category)
-			if equip, ok := e.Configs.Equip.ItemsMap[market_good.Nickname]; ok {
-				market_good.Type = fmt.Sprintf("%s craft", equip.Category)
-				e.exportInfocards(InfocardKey(market_good.Nickname), equip.IdsInfo.Get())
-			}
-
-		}
-		var ship_nickname string
-		if good_ship, ok := e.Configs.Goods.ShipsMap[produced]; ok {
-			hull_name := good_ship.Hull.Get()
-			if good_shiphull, ok := e.Configs.Goods.ShipHullsMap[hull_name]; ok {
-				ship_nick := good_shiphull.Ship.Get()
-				ship_nickname = ship_nick
-				if equipment, ok := e.Configs.Shiparch.ShipsMap[ship_nick]; ok {
-					market_good.Name = e.GetInfocardName(equipment.IdsName.Get(), market_good.Nickname)
-					e.exportInfocards(InfocardKey(market_good.Nickname), equipment.IdsInfo1.Get(), equipment.IdsInfo.Get())
-				}
-			}
-		} else {
-			if equip, ok := e.Configs.Equip.ItemsMap[produced]; ok {
-				market_good.Name = e.GetInfocardName(equip.IdsName.Get(), produced)
-				e.exportInfocards(InfocardKey(market_good.Nickname), equip.IdsInfo.Get())
-			}
-		}
 
 		market_good_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
 		base.MarketGoodsPerNick[market_good_key] = market_good
@@ -126,7 +94,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		}
 
 		var info InfocardBuilder
-		if value, ok := e.Infocards[market_good.Infocard]; ok {
+		if value, ok := e.Infocards[InfocardKey(market_good.Nickname)]; ok {
 			info.Lines = value
 		}
 
@@ -153,15 +121,15 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		}
 		info.Lines = add_line_about_recipes(info.Lines)
 
-		e.Infocards[market_good.Infocard] = append(info.Lines, infocard_addition.Lines...)
+		e.Infocards[InfocardKey(market_good.Nickname)] = append(info.Lines, infocard_addition.Lines...)
 
-		if ship_nickname != "" {
+		if market_good.ShipNickname != "" {
 			var info Infocard
-			if value, ok := e.Infocards[InfocardKey(ship_nickname)]; ok {
+			if value, ok := e.Infocards[InfocardKey(market_good.ShipNickname)]; ok {
 				info = value
 			}
 			info = add_line_about_recipes(info)
-			e.Infocards[InfocardKey(ship_nickname)] = append(info, infocard_addition.Lines...)
+			e.Infocards[InfocardKey(market_good.ShipNickname)] = append(info, infocard_addition.Lines...)
 		}
 	}
 

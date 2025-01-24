@@ -22,7 +22,7 @@ type CounterMeasure struct {
 	NameID       int
 	InfoID       int
 
-	Bases map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases map[cfgtype.BaseUniNick]*MarketGood
 
 	*DiscoveryTechCompat
 
@@ -35,7 +35,7 @@ func (e *Exporter) GetCounterMeasures(ids []Tractor) []CounterMeasure {
 
 	for _, cm_info := range e.Configs.Equip.CounterMeasureDroppers {
 		cm := CounterMeasure{
-			Bases: make(map[cfgtype.BaseUniNick]*GoodAtBase),
+			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
 		}
 		cm.Mass, _ = cm_info.Mass.GetValue()
 

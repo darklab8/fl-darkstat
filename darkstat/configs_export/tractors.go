@@ -48,7 +48,7 @@ type Tractor struct {
 	NameID        int
 	InfoID        int
 
-	Bases map[cfgtype.BaseUniNick]*GoodAtBase
+	Bases map[cfgtype.BaseUniNick]*MarketGood
 	DiscoveryIDRephacks
 	Mass float64
 }
@@ -69,7 +69,7 @@ func (e *Exporter) GetTractors() []Tractor {
 			DiscoveryIDRephacks: DiscoveryIDRephacks{
 				Rephacks: make(map[cfgtype.FactionNick]Rephack),
 			},
-			Bases: make(map[cfgtype.BaseUniNick]*GoodAtBase),
+			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
 		}
 		tractor.Mass, _ = tractor_info.Mass.GetValue()
 

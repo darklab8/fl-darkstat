@@ -92,7 +92,10 @@ type Exporter struct {
 	Configs *configs_mapped.MappedConfigs
 	Hashes  map[string]flhash.HashCode
 
-	Bases                []*Base
+	Bases       []*Base
+	TradeBases  []*Base
+	TravelBases []*Base
+
 	MiningOperations     []*Base
 	useful_bases_by_nick map[cfgtype.BaseUniNick]bool
 
@@ -262,9 +265,14 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	e.Ammos = e.GetAmmo(e.Tractors)
 	wg.Wait()
 
-	e.Bases, e.Commodities = e.TradePaths(e.Bases, e.Commodities)
+	BasesFromPobs := e.PoBsToBases(e.PoBs)
+	TradeBases := append(e.Bases, BasesFromPobs...)
+	e.TradeBases, e.Commodities = e.TradePaths(TradeBases, e.Commodities)
 	e.MiningOperations, e.Commodities = e.TradePaths(e.MiningOperations, e.Commodities)
-	e.Bases = e.AllRoutes(e.Bases)
+	e.TradeBases = e.AllRoutes(TradeBases)
+	for _, base := range e.TradeBases {
+		e.TravelBases = append(e.TravelBases, base)
+	}
 
 	for _, system := range e.Configs.Systems.Systems {
 		for zone_nick := range system.ZonesByNick {
@@ -306,7 +314,7 @@ func (e *Exporter) EnhanceBasesWithIsTransportReachable(
 		}
 	}
 
-	enhance_with_transport_unrechability := func(Bases map[cfgtype.BaseUniNick]*GoodAtBase) {
+	enhance_with_transport_unrechability := func(Bases map[cfgtype.BaseUniNick]*MarketGood) {
 		for _, base := range Bases {
 			if trades.GetTimeMs2(tg.Graph, tg.Time, reachable_base_example, string(base.BaseNickname)) >= trades.INF/2 {
 				base.IsTransportUnreachable = true
@@ -365,7 +373,7 @@ func Empty(phrase string) bool {
 	return true
 }
 
-func (e *Exporter) Buyable(Bases map[cfgtype.BaseUniNick]*GoodAtBase) bool {
+func (e *Exporter) Buyable(Bases map[cfgtype.BaseUniNick]*MarketGood) bool {
 	for _, base := range Bases {
 
 		if e.useful_bases_by_nick != nil {
@@ -378,7 +386,7 @@ func (e *Exporter) Buyable(Bases map[cfgtype.BaseUniNick]*GoodAtBase) bool {
 	return false
 }
 
-func Buyable(Bases map[cfgtype.BaseUniNick]*GoodAtBase) bool {
+func Buyable(Bases map[cfgtype.BaseUniNick]*MarketGood) bool {
 	return len(Bases) > 0
 }
 
