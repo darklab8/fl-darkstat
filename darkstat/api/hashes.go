@@ -19,7 +19,7 @@ type Hashes struct {
 // @Produce      json
 // @Success      200  {object}  	api.Hashes
 // @Router       /api/hashes [get]
-func NewEndpointHashes(webapp *web.Web, api *Api) *registry.Endpoint {
+func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET " + ApiRoute + "/hashes",
 		Handler: func(w http.ResponseWriter, r *http.Request) {

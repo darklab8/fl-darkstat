@@ -391,8 +391,8 @@ func Buyable(Bases map[cfgtype.BaseUniNick]*MarketGood) bool {
 }
 
 type DiscoveryTechCompat struct {
-	TechcompatByID map[cfgtype.TractorID]float64
-	TechCell       string
+	TechcompatByID map[cfgtype.TractorID]float64 `json:"techchompat_by_id"`
+	TechCell       string                        `json:"tech_cell"`
 }
 
 func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []Tractor, nickname string) *DiscoveryTechCompat {

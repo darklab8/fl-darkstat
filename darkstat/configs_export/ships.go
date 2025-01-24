@@ -22,47 +22,47 @@ type ShipPackage struct {
 }
 
 type Ship struct {
-	Nickname     string
-	NicknameHash flhash.HashCode
+	Nickname     string          `json:"nickname"`
+	NicknameHash flhash.HashCode `json:"nickname_hash"`
 
-	Name      string
-	Class     int
-	Type      string
-	Price     int
-	Armor     int
-	HoldSize  int
-	Nanobots  int
-	Batteries int
-	Mass      float64
+	Name      string  `json:"name"`
+	Class     int     `json:"class"`
+	Type      string  `json:"type"`
+	Price     int     `json:"price"`
+	Armor     int     `json:"armor"`
+	HoldSize  int     `json:"hold_size"`
+	Nanobots  int     `json:"nanobots"`
+	Batteries int     `json:"batteries"`
+	Mass      float64 `json:"mass"`
 
-	PowerCapacity     int
-	PowerRechargeRate int
-	CruiseSpeed       int
-	LinearDrag        float64
-	EngineMaxForce    int
-	ImpulseSpeed      float64
-	ThrusterSpeed     []int
-	ReverseFraction   float64
-	ThrustCapacity    int
-	ThrustRecharge    int
+	PowerCapacity     int     `json:"power_capacity"`
+	PowerRechargeRate int     `json:"power_recharge_rate"`
+	CruiseSpeed       int     `json:"cruise_speed"`
+	LinearDrag        float64 `json:"linear_drag"`
+	EngineMaxForce    int     `json:"engine_max_force"`
+	ImpulseSpeed      float64 `json:"impulse_speed"`
+	ThrusterSpeed     []int   `json:"thruster_speed"`
+	ReverseFraction   float64 `json:"reverse_fraction"`
+	ThrustCapacity    int     `json:"thrust_capacity"`
+	ThrustRecharge    int     `json:"thrust_recharge"`
 
-	MaxAngularSpeedDegS           float64
-	AngularDistanceFrom0ToHalfSec float64
-	TimeTo90MaxAngularSpeed       float64
+	MaxAngularSpeedDegS           float64 `json:"max_ansgular_speed"`
+	AngularDistanceFrom0ToHalfSec float64 `json:"angular_distance_from_0_to_halfsec"`
+	TimeTo90MaxAngularSpeed       float64 `json:"time_to_90_max_angular_speed"`
 
-	NudgeForce  float64
-	StrafeForce float64
-	NameID      int
-	InfoID      int
+	NudgeForce  float64 `json:"nudge_force"`
+	StrafeForce float64 `json:"strafe_force"`
+	NameID      int     `json:"name_id"`
+	InfoID      int     `json:"info_id"`
 
-	Bases            map[cfgtype.BaseUniNick]*MarketGood
-	Slots            []EquipmentSlot
-	BiggestHardpoint []string
-	ShipPackages     []ShipPackage
+	Bases            map[cfgtype.BaseUniNick]*MarketGood `json:"_" swaggerignore:"true"`
+	Slots            []EquipmentSlot                     `json:"equipment_slots"`
+	BiggestHardpoint []string                            `json:"biggest_hardpoint"`
+	ShipPackages     []ShipPackage                       `json:"ship_packages"`
 
-	*DiscoveryTechCompat
+	*DiscoveryTechCompat `json:"_" swaggerignore:"true"`
 
-	DiscoShip *DiscoShip
+	DiscoShip *DiscoShip `json:"discovery_ship"`
 }
 
 /*
@@ -175,7 +175,7 @@ func (s *Ship) getThrusterSpeed(
 }
 
 type DiscoShip struct {
-	ArmorMult float64
+	ArmorMult float64 `json:"armor_mult"`
 }
 
 func (e *Exporter) GetShips(ids []Tractor, TractorsByID map[cfgtype.TractorID]Tractor, Thrusters []Thruster) []Ship {

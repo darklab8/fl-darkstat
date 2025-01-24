@@ -24,7 +24,7 @@ type MarketGood struct {
 	NotBuyable             bool `json:"_" swaggerignore:"true"`
 	IsTransportUnreachable bool `json:"_" swaggerignore:"true"`
 
-	BaseInfo `json:"_" swaggerignore:"true"`
+	BaseInfo
 }
 
 func (g MarketGood) GetPriceBaseBuysFor() int {

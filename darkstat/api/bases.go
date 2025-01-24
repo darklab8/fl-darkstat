@@ -21,7 +21,7 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Base
 // @Router       /api/npc_bases [get]
-func NewEndpointBases(webapp *web.Web, api *Api) *registry.Endpoint {
+func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET " + ApiRoute + "/npc_bases",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
@@ -35,9 +35,9 @@ func NewEndpointBases(webapp *web.Web, api *Api) *registry.Endpoint {
 }
 
 type MarketGoodResp struct {
-	MarketGoods  []*configs_export.MarketGood `json:"market_goods"`
-	BaseNickname string                       `json:"base_nickname"`
-	Error        *string                      `json:"error"`
+	MarketGoods []*configs_export.MarketGood `json:"market_goods"`
+	Nickname    string                       `json:"nickname"`
+	Error       *string                      `json:"error"`
 }
 
 // ShowAccount godoc
@@ -48,7 +48,7 @@ type MarketGoodResp struct {
 // @Param request body []cfgtype.BaseUniNick true "Array of npc base nicknames as input, for example [li01_01_base]" example("li01_01_base")
 // @Success      200  {array}  	MarketGoodResp
 // @Router       /api/npc_bases/market_goods [post]
-func NewEndpointBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
+func PostBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "POST " + ApiRoute + "/npc_bases/market_goods",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +79,7 @@ func NewEndpointBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 			}
 
 			for _, base_nickname := range base_nicknames {
-				answer := &MarketGoodResp{BaseNickname: string(base_nickname)}
+				answer := &MarketGoodResp{Nickname: string(base_nickname)}
 				if base, ok := bases_by_nick[base_nickname.ToStr()]; ok {
 					for _, good := range base.MarketGoodsPerNick {
 						answer.MarketGoods = append(answer.MarketGoods, good)
@@ -102,7 +102,7 @@ func NewEndpointBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Produce      json
 // @Success      200  {array}  	configs_export.Base
 // @Router       /api/mining_operations [get]
-func NewEndpointOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
+func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET " + ApiRoute + "/mining_operations",
 		Handler: func(w http.ResponseWriter, r *http.Request) {

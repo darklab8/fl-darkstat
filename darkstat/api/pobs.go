@@ -20,7 +20,7 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.PoB
 // @Router       /api/pobs [get]
-func NewEndpointPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
+func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET " + ApiRoute + "/pobs",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +41,7 @@ func NewEndpointPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Produce      json
 // @Success      200  {array}  	configs_export.PoBGood
 // @Router       /api/pob_goods [get]
-func NewEndpointPoBGoods(webapp *web.Web, api *Api) *registry.Endpoint {
+func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET " + ApiRoute + "/pob_goods",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
