@@ -2,11 +2,15 @@ package configs_export
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
+	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
+	"github.com/darklab8/fl-configs/configs/discovery/discoprices"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/stretchr/testify/assert"
 )
@@ -18,6 +22,20 @@ type FixtureBasesOutput struct {
 }
 
 func FixtureBases(t *testing.T) FixtureBasesOutput {
+	configs := configs_mapped.TestFixtureConfigs()
+	exporter := NewExporter(configs)
+
+	bases := exporter.GetBases()
+	assert.Greater(t, len(bases), 0)
+
+	return FixtureBasesOutput{
+		configs: configs,
+		expoter: exporter,
+		bases:   bases,
+	}
+}
+
+func TestExportBases(t *testing.T) {
 	configs := configs_mapped.TestFixtureConfigs()
 	exporter := NewExporter(configs)
 
@@ -64,14 +82,49 @@ func FixtureBases(t *testing.T) FixtureBasesOutput {
 			)
 		}
 	}
-
-	return FixtureBasesOutput{
-		configs: configs,
-		expoter: exporter,
-		bases:   bases,
-	}
 }
 
-func TestExportBases(t *testing.T) {
-	_ = FixtureBases(t)
+func TestServerOverrides(t *testing.T) {
+	configs := configs_mapped.TestFixtureConfigs()
+	if configs.Discovery == nil {
+		return
+	}
+
+	content := `
+[Price]
+MarketGood = li01_01_base, commodity_basic_alloys, 1150, 1550, 1
+`
+	memory_file := file.NewMemoryFile(strings.Split(content, "\n"))
+	scanned_file := iniload.NewLoader(memory_file).Scan()
+	discoPrices := discoprices.Read(scanned_file)
+	// Adding to main Freelancer instance..
+	configs.Discovery.Prices = discoPrices
+
+	exporter := NewExporter(configs)
+
+	bases := exporter.GetBases()
+	commodities := exporter.GetCommodities()
+	EnhanceBasesWithServerOverrides(bases, commodities)
+
+	var targetbase *Base
+	for _, base := range bases {
+		if base.Nickname == "li01_01_base" {
+			targetbase = base
+		}
+	}
+
+	commodity_nickname := GetCommodityKey("commodity_basic_alloys", -1)
+	alloy := targetbase.MarketGoodsPerNick[commodity_nickname]
+	assert.Equal(t, 1550, alloy.PriceBaseSellsFor)
+	assert.True(t, alloy.IsServerSideOverride)
+
+	var targetcom *Commodity
+	for _, com := range commodities {
+		if com.Nickname == "commodity_basic_alloys" {
+			targetcom = com
+		}
+	}
+	market_good := targetcom.Bases["li01_01_base"]
+	assert.Equal(t, 1550, market_good.PriceBaseSellsFor)
+	assert.True(t, market_good.IsServerSideOverride)
 }
