@@ -162,6 +162,11 @@ func EnhanceBasesWithServerOverrides(bases []*Base, commodities []*Commodity) {
 func FilterToUserfulBases(bases []*Base) []*Base {
 	var useful_bases []*Base = make([]*Base, 0, len(bases))
 	for _, item := range bases {
+		if item.IsPob {
+			useful_bases = append(useful_bases, item)
+			continue
+		}
+
 		if item.Reachable {
 			useful_bases = append(useful_bases, item)
 			continue
@@ -217,6 +222,7 @@ type Base struct {
 	*MiningInfo        `json:"mining_info,omitempty"`
 
 	Reachable bool `json:"is_reachhable"` // is base IS Rechable by frighter from Manhattan
+	IsPob     bool
 }
 
 type CommodityKey string
