@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,7 +16,7 @@ func TestGetShips(t *testing.T) {
 	ids := exporter.GetTractors()
 	thrusters := exporter.GetThrusters(ids)
 
-	TractorsByID := make(map[cfgtype.TractorID]*Tractor)
+	TractorsByID := make(map[cfg.TractorID]*Tractor)
 	for _, tractor := range ids {
 		TractorsByID[tractor.Nickname] = tractor
 	}

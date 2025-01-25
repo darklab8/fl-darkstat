@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
@@ -63,7 +63,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 
 			var base_nickname string
 			base_nickname, _ = zone.Nickname.GetValue()
-			base.Nickname = cfgtype.BaseUniNick(base_nickname)
+			base.Nickname = cfg.BaseUniNick(base_nickname)
 
 			base.NicknameHash = flhash.HashNickname(base_nickname)
 			e.Hashes[base_nickname] = base.NicknameHash

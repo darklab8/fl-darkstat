@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/ship_mapped"
@@ -55,10 +55,10 @@ type Ship struct {
 	NameID      int     `json:"name_id"`
 	InfoID      int     `json:"info_id"`
 
-	Bases            map[cfgtype.BaseUniNick]*MarketGood `json:"_" swaggerignore:"true"`
-	Slots            []EquipmentSlot                     `json:"equipment_slots"`
-	BiggestHardpoint []string                            `json:"biggest_hardpoint"`
-	ShipPackages     []ShipPackage                       `json:"ship_packages"`
+	Bases            map[cfg.BaseUniNick]*MarketGood `json:"_" swaggerignore:"true"`
+	Slots            []EquipmentSlot                 `json:"equipment_slots"`
+	BiggestHardpoint []string                        `json:"biggest_hardpoint"`
+	ShipPackages     []ShipPackage                   `json:"ship_packages"`
 
 	*DiscoveryTechCompat `json:"_" swaggerignore:"true"`
 
@@ -178,7 +178,7 @@ type DiscoShip struct {
 	ArmorMult float64 `json:"armor_mult"`
 }
 
-func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfgtype.TractorID]*Tractor, Thrusters []Thruster) []Ship {
+func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Tractor, Thrusters []Thruster) []Ship {
 	var ships []Ship
 
 	var ThrusterMap map[string]*Thruster = make(map[string]*Thruster)
@@ -189,7 +189,7 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfgtype.TractorID]*
 	for _, ship_info := range e.Configs.Shiparch.Ships {
 		ship := Ship{
 			Nickname: ship_info.Nickname.Get(),
-			Bases:    make(map[cfgtype.BaseUniNick]*MarketGood),
+			Bases:    make(map[cfg.BaseUniNick]*MarketGood),
 		}
 		ship.NicknameHash = flhash.HashNickname(ship.Nickname)
 		e.Hashes[ship.Nickname] = ship.NicknameHash

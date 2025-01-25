@@ -1,7 +1,7 @@
 package configs_export
 
 import (
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 )
@@ -70,7 +70,7 @@ func (t *Route) GetCanVisitFreighterOnlyJH() bool {
 type PathWithNavmap struct {
 	trades.DetailedPath
 	SectorCoord string
-	Pos         cfgtype.Vector
+	Pos         cfg.Vector
 }
 
 func (t *Route) GetPaths() []PathWithNavmap {
@@ -108,11 +108,11 @@ func (t *Route) GetNameByIdsName(ids_name int) string {
 	return string(t.g.e.Configs.Infocards.Infonames[ids_name])
 }
 
-func (t *Route) GetTimeMs() cfgtype.MillisecondsI {
+func (t *Route) GetTimeMs() cfg.MillisecondsI {
 	return trades.GetTimeMs2(t.g.Graph, t.g.Time, t.from_base_nickname, t.to_base_nickname)
 }
 
-func (t *Route) GetTimeS() cfgtype.Seconds {
+func (t *Route) GetTimeS() cfg.Seconds {
 	return float64(t.GetTimeMs())/trades.PrecisionMultipiler + float64(trades.BaseDockingDelay)
 }
 

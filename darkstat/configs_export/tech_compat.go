@@ -3,7 +3,7 @@ package configs_export
 import (
 	"sort"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 )
 
@@ -28,7 +28,7 @@ func NewOrderedTechCompat(e *Exporter) *TechCompatOrderer {
 		if unlisted_faction_modifier, ok := faction.DefaultUnlisted.GetValue(); ok {
 			orderer.cached_techcell_nil = append(orderer.cached_techcell_nil, CompatibleIDsForTractor{
 				TechCompat: unlisted_faction_modifier,
-				Tractor:    orderer.exporter.TractorsByID[cfgtype.TractorID(faction.ID.Get())],
+				Tractor:    orderer.exporter.TractorsByID[cfg.TractorID(faction.ID.Get())],
 			})
 		}
 	}

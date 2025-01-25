@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
@@ -20,7 +20,7 @@ func (e *Exporter) TraderExists(base_nickname string) bool {
 	return universe_base.TraderExists
 }
 
-func VectorToSectorCoord(system *universe_mapped.System, pos cfgtype.Vector) string {
+func VectorToSectorCoord(system *universe_mapped.System, pos cfg.Vector) string {
 	var scale float64 = 1.0
 	if value, ok := system.NavMapScale.GetValue(); ok {
 		scale = value
@@ -58,7 +58,7 @@ func (e *Exporter) GetBases() []*Base {
 
 		var infocard_id int
 		var reputation_nickname string
-		var pos cfgtype.Vector
+		var pos cfg.Vector
 
 		var archetypes []string
 
@@ -93,11 +93,11 @@ func (e *Exporter) GetBases() []*Base {
 
 		var market_goods_per_good_nick map[CommodityKey]*MarketGood = make(map[CommodityKey]*MarketGood)
 
-		if found_commodities, ok := commodities_per_base[cfgtype.BaseUniNick(base.Nickname.Get())]; ok {
+		if found_commodities, ok := commodities_per_base[cfg.BaseUniNick(base.Nickname.Get())]; ok {
 			market_goods_per_good_nick = found_commodities
 		}
 
-		var nickname cfgtype.BaseUniNick = cfgtype.BaseUniNick(base.Nickname.Get())
+		var nickname cfg.BaseUniNick = cfg.BaseUniNick(base.Nickname.Get())
 
 		e.exportInfocards(InfocardKey(nickname), infocard_ids...)
 
@@ -137,7 +137,7 @@ func (e *Exporter) GetBases() []*Base {
 }
 
 func EnhanceBasesWithServerOverrides(bases []*Base, commodities []*Commodity) {
-	var base_per_nick map[cfgtype.BaseUniNick]*Base = make(map[cfgtype.BaseUniNick]*Base)
+	var base_per_nick map[cfg.BaseUniNick]*Base = make(map[cfg.BaseUniNick]*Base)
 	for _, base := range bases {
 		base_per_nick[base.Nickname] = base
 	}
@@ -188,23 +188,23 @@ func FilterToUserfulBases(bases []*Base) []*Base {
 }
 
 type Base struct {
-	Name               string              `json:"name"`       // Infocard Name
-	Archetypes         []string            `json:"archetypes"` // Base Archetypes
-	Nickname           cfgtype.BaseUniNick `json:"nickname"`
-	NicknameHash       flhash.HashCode     `json:"nickname_hash" format:"int64"` // Flhash of nickname
-	FactionName        string              `json:"faction_nickname"`
-	System             string              `json:"system_name"`
-	SystemNickname     string              `json:"system_nickname"`
-	SystemNicknameHash flhash.HashCode     `json:"system_nickname_hash" format:"int64"`
-	Region             string              `json:"region_name"`
-	StridName          int                 `json:"strid_name"`
-	InfocardID         int                 `json:"infocard_id"`
-	Infocard           Infocard            `json:"infocard"`
+	Name               string          `json:"name"`       // Infocard Name
+	Archetypes         []string        `json:"archetypes"` // Base Archetypes
+	Nickname           cfg.BaseUniNick `json:"nickname"`
+	NicknameHash       flhash.HashCode `json:"nickname_hash" format:"int64"` // Flhash of nickname
+	FactionName        string          `json:"faction_nickname"`
+	System             string          `json:"system_name"`
+	SystemNickname     string          `json:"system_nickname"`
+	SystemNicknameHash flhash.HashCode `json:"system_nickname_hash" format:"int64"`
+	Region             string          `json:"region_name"`
+	StridName          int             `json:"strid_name"`
+	InfocardID         int             `json:"infocard_id"`
+	Infocard           Infocard        `json:"infocard"`
 	InfocardKey        InfocardKey
 	File               utils_types.FilePath `json:"file"`
 	BGCS_base_run_by   string
 	MarketGoodsPerNick map[CommodityKey]*MarketGood `json:"-" swaggerignore:"true"`
-	Pos                cfgtype.Vector               `json:"pos"`
+	Pos                cfg.Vector                   `json:"pos"`
 	SectorCoord        string                       `json:"sector_coord"`
 
 	IsTransportUnreachable bool `json:"is_transport_unreachable"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
@@ -220,6 +220,6 @@ type Base struct {
 
 type CommodityKey string
 
-func GetCommodityKey(nickname string, ship_class cfgtype.ShipClass) CommodityKey {
+func GetCommodityKey(nickname string, ship_class cfg.ShipClass) CommodityKey {
 	return CommodityKey(fmt.Sprintf("%s_%d", nickname, ship_class))
 }

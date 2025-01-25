@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-darkcore/darkcore/web"
 	"github.com/darklab8/fl-darkcore/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
@@ -20,9 +20,9 @@ type GraphPathReq struct {
 }
 
 type GraphPathTime struct {
-	Transport *cfgtype.SecondsI `json:"transport"` // time in seconds
-	Frigate   *cfgtype.SecondsI `json:"frigate"`   // time in seconds
-	Freighter *cfgtype.SecondsI `json:"freighter"` // time in seconds
+	Transport *cfg.SecondsI `json:"transport"` // time in seconds
+	Frigate   *cfg.SecondsI `json:"frigate"`   // time in seconds
+	Freighter *cfg.SecondsI `json:"freighter"` // time in seconds
 }
 
 type GraphPathsResp struct {

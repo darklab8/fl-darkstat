@@ -1,7 +1,7 @@
 package configs_export
 
 import (
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -22,7 +22,7 @@ type Ammo struct {
 	SeekerRange  int
 	SeekerFovDeg int
 
-	Bases map[cfgtype.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood
 
 	*DiscoveryTechCompat
 
@@ -35,7 +35,7 @@ func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 
 	for _, munition_info := range e.Configs.Equip.Munitions {
 		munition := Ammo{
-			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
+			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
 		munition.Mass, _ = munition_info.Mass.GetValue()
 

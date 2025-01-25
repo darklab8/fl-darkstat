@@ -1,8 +1,6 @@
 package configs_export
 
-import (
-	"github.com/darklab8/fl-configs/configs/cfgtype"
-)
+import "github.com/darklab8/fl-configs/configs/cfg"
 
 func (e *Exporter) findable_in_loot() map[string]bool {
 	if e.findable_in_loot_cache != nil {
@@ -49,7 +47,7 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 	base := &Base{
 		Name:               "Lootable",
 		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
-		Nickname:           cfgtype.BaseUniNick(BaseLootableNickname),
+		Nickname:           cfg.BaseUniNick(BaseLootableNickname),
 		InfocardKey:        InfocardKey(BaseLootableNickname),
 		SystemNickname:     "neverwhere",
 		System:             "Neverwhere",

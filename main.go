@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	// _ "net/http/pprof"
+
 	"github.com/darklab8/fl-darkcore/darkcore/builder"
 	"github.com/darklab8/fl-darkcore/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
@@ -20,7 +22,6 @@ import (
 	"github.com/darklab8/fl-darkstat/docs"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
-	// _ "net/http/pprof"
 )
 
 type Action string

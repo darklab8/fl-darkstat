@@ -4,7 +4,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
     "fmt"
 )
 
@@ -63,7 +63,7 @@ templ TdDiscoSource(
 ) {
 	if shared.ShowDisco {
         <td data-source-1={ string(cache_key) } style="display:none;" class="tech_compat" techcompats={ marshalIDs(shared, nickname) }>
-            { fmt.Sprintf("%.0f%%",(tech_compat.TechcompatByID[cfgtype.TractorID(tech_compat.TechCell)]*100)) }
+            { fmt.Sprintf("%.0f%%",(tech_compat.TechcompatByID[cfg.TractorID(tech_compat.TechCell)]*100)) }
         </td>
         <td data-source-2={ string(cache_key) }>
             <span class="tooltip">

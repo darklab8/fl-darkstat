@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/mbases_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
@@ -44,7 +44,7 @@ type Bribe struct {
 func (e *Exporter) GetFactions(bases []*Base) []Faction {
 	var factions []Faction = make([]Faction, 0, 100)
 
-	var basemap map[cfgtype.BaseUniNick]*Base = make(map[cfgtype.BaseUniNick]*Base)
+	var basemap map[cfg.BaseUniNick]*Base = make(map[cfg.BaseUniNick]*Base)
 	for _, base := range bases {
 		basemap[base.Nickname] = base
 	}

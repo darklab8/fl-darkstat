@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/discovery/techcompat"
 	"github.com/darklab8/fl-darkcore/darkcore/core_types"
@@ -58,7 +58,7 @@ type FLSRData struct {
 type DiscoveryData struct {
 	ShowDisco    bool
 	Ids          []*configs_export.Tractor
-	TractorsByID map[cfgtype.TractorID]*configs_export.Tractor
+	TractorsByID map[cfg.TractorID]*configs_export.Tractor
 	Config       *techcompat.Config
 	LatestPatch  autopatcher.Patch
 

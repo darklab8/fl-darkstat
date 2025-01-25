@@ -4,7 +4,7 @@ import (
 	"math"
 	"regexp"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
@@ -39,7 +39,7 @@ type Shield struct {
 	IdsName      int
 	IdsInfo      int
 
-	Bases map[cfgtype.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood
 
 	*DiscoveryTechCompat
 	Mass float64
@@ -50,7 +50,7 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 
 	for _, shield_gen := range e.Configs.Equip.ShieldGens {
 		shield := Shield{
-			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
+			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
 		shield.Mass, _ = shield_gen.Mass.GetValue()
 

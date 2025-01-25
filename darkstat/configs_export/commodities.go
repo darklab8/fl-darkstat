@@ -3,7 +3,7 @@ package configs_export
 import (
 	"fmt"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -12,14 +12,14 @@ import (
 type MarketGood struct {
 	GoodInfo
 
-	LevelRequired        int               `json:"level_required"`
-	RepRequired          float64           `json:"rep_required"`
-	PriceBaseBuysFor     *int              `json:"price_base_buys_for"`
-	PriceBaseSellsFor    int               `json:"price_base_sells_for"`
-	Volume               float64           `json:"volume"`
-	ShipClass            cfgtype.ShipClass `json:"ship_class"` // Discovery specific value. Volume can be different based on ship class. Duplicating market goods with different volumes for that
-	BaseSells            bool              `json:"base_sells"`
-	IsServerSideOverride bool              `json:"is_server_override"`
+	LevelRequired        int           `json:"level_required"`
+	RepRequired          float64       `json:"rep_required"`
+	PriceBaseBuysFor     *int          `json:"price_base_buys_for"`
+	PriceBaseSellsFor    int           `json:"price_base_sells_for"`
+	Volume               float64       `json:"volume"`
+	ShipClass            cfg.ShipClass `json:"ship_class"` // Discovery specific value. Volume can be different based on ship class. Duplicating market goods with different volumes for that
+	BaseSells            bool          `json:"base_sells"`
+	IsServerSideOverride bool          `json:"is_server_override"`
 
 	NotBuyable             bool `json:"_" swaggerignore:"true"`
 	IsTransportUnreachable bool `json:"_" swaggerignore:"true"`
@@ -40,11 +40,11 @@ type Commodity struct {
 	Name                  string
 	Combinable            bool
 	Volume                float64
-	ShipClass             cfgtype.ShipClass
+	ShipClass             cfg.ShipClass
 	NameID                int
 	InfocardID            int
 	Infocard              InfocardKey
-	Bases                 map[cfgtype.BaseUniNick]*MarketGood
+	Bases                 map[cfg.BaseUniNick]*MarketGood
 	PriceBestBaseBuysFor  int
 	PriceBestBaseSellsFor int
 	ProffitMargin         int
@@ -68,7 +68,7 @@ func (e *Exporter) GetCommodities() []*Commodity {
 
 		for _, volume_info := range equipment.Volumes {
 			commodity := &Commodity{
-				Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
+				Bases: make(map[cfg.BaseUniNick]*MarketGood),
 			}
 			commodity.Mass, _ = equipment.Mass.GetValue()
 
@@ -125,14 +125,14 @@ type GetCommodityAtBasesInput struct {
 	Nickname  string
 	Price     int
 	Volume    float64
-	ShipClass cfgtype.ShipClass
+	ShipClass cfg.ShipClass
 }
 
-func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesInput) map[cfgtype.BaseUniNick]*MarketGood {
-	var bases_already_found map[cfgtype.BaseUniNick]*MarketGood = make(map[cfgtype.BaseUniNick]*MarketGood)
+func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesInput) map[cfg.BaseUniNick]*MarketGood {
+	var bases_already_found map[cfg.BaseUniNick]*MarketGood = make(map[cfg.BaseUniNick]*MarketGood)
 
 	for _, base_market := range e.Configs.Discovery.Prices.BasesPerGood[commodity.Nickname] {
-		base_nickname := cfgtype.BaseUniNick(base_market.BaseNickname.Get())
+		base_nickname := cfg.BaseUniNick(base_market.BaseNickname.Get())
 
 		defer func() {
 			if r := recover(); r != nil {
@@ -166,8 +166,8 @@ func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesI
 	return bases_already_found
 }
 
-func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtype.BaseUniNick]*MarketGood {
-	var goods_per_base map[cfgtype.BaseUniNick]*MarketGood = make(map[cfgtype.BaseUniNick]*MarketGood)
+func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.BaseUniNick]*MarketGood {
+	var goods_per_base map[cfg.BaseUniNick]*MarketGood = make(map[cfg.BaseUniNick]*MarketGood)
 
 	for _, base_market := range e.Configs.Market.BasesPerGood[commodity.Nickname] {
 		base_nickname := base_market.Base
@@ -265,7 +265,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 					PriceBaseSellsFor:    good.Price,
 					Volume:               commodity.Volume,
 					BaseInfo: BaseInfo{
-						BaseNickname: cfgtype.BaseUniNick(good.PobNickname),
+						BaseNickname: cfg.BaseUniNick(good.PobNickname),
 						BaseName:     "(PoB) " + good.PoBName,
 						SystemName:   good.SystemName,
 						FactionName:  good.FactionName,
@@ -279,7 +279,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 					good_to_add.BasePos = *good.BasePos
 					good_to_add.SectorCoord = VectorToSectorCoord(good.System, *good.BasePos)
 				}
-				goods_per_base[cfgtype.BaseUniNick(good.PobNickname)] = good_to_add
+				goods_per_base[cfg.BaseUniNick(good.PobNickname)] = good_to_add
 			}
 		}
 	}
@@ -300,13 +300,13 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfgtyp
 }
 
 type BaseInfo struct {
-	BaseNickname cfgtype.BaseUniNick `json:"base_nickname"`
-	BaseName     string              `json:"base_name"`
-	SystemName   string              `json:"system_name"`
-	Region       string              `json:"region_name"`
-	FactionName  string              `json:"faction_name"`
-	BasePos      cfgtype.Vector      `json:"base_pos"`
-	SectorCoord  string              `json:"sector_coord"`
+	BaseNickname cfg.BaseUniNick `json:"base_nickname"`
+	BaseName     string          `json:"base_name"`
+	SystemName   string          `json:"system_name"`
+	Region       string          `json:"region_name"`
+	FactionName  string          `json:"faction_name"`
+	BasePos      cfg.Vector      `json:"base_pos"`
+	SectorCoord  string          `json:"sector_coord"`
 }
 
 func (e *Exporter) GetRegionName(system *universe_mapped.System) string {
@@ -315,7 +315,7 @@ func (e *Exporter) GetRegionName(system *universe_mapped.System) string {
 
 func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseInfo {
 	var result BaseInfo = BaseInfo{
-		BaseNickname: cfgtype.BaseUniNick(base_nickname),
+		BaseNickname: cfg.BaseUniNick(base_nickname),
 	}
 	universe_base, found_universe_base := e.Configs.Universe.BasesMap[universe_mapped.BaseNickname(base_nickname)]
 

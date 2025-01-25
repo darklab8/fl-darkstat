@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld"
@@ -59,9 +59,9 @@ type PoB struct {
 
 	ForumThreadUrl *string `json:"forum_thread_url"`
 
-	BasePos     *cfgtype.Vector `json:"base_pos"`
-	SectorCoord *string         `json:"sector_coord"`
-	Region      *string         `json:"region_name"`
+	BasePos     *cfg.Vector `json:"base_pos"`
+	SectorCoord *string     `json:"sector_coord"`
+	Region      *string     `json:"region_name"`
 
 	ShopItems []*ShopItem `json:"shop_items"`
 	Infocard  Infocard    `json:"infocard"`
@@ -101,7 +101,7 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 		}
 
 		base := &Base{
-			Nickname:           cfgtype.BaseUniNick(pob.Nickname),
+			Nickname:           cfg.BaseUniNick(pob.Nickname),
 			NicknameHash:       flhash.HashNickname(pob.Nickname),
 			Name:               fmt.Sprintf("(PoB) %s", pob.Name),
 			Pos:                *pob.BasePos,
@@ -356,7 +356,7 @@ type PobShopItem struct {
 	SystemName  string
 	FactionNick string
 	FactionName string
-	BasePos     *cfgtype.Vector
+	BasePos     *cfg.Vector
 }
 
 func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
@@ -465,7 +465,7 @@ func fmt_docking_tags(tags_or_names []string) string {
 	return fmt.Sprintf("[%s]", strings.Join(tags_or_names, ", "))
 }
 
-func StrPosToVectorPos(value string) *cfgtype.Vector {
+func StrPosToVectorPos(value string) *cfg.Vector {
 	coords := strings.Split(value, ",")
 	x, err1 := strconv.ParseFloat(strings.ReplaceAll(coords[0], " ", ""), 64)
 	y, err2 := strconv.ParseFloat(strings.ReplaceAll(coords[1], " ", ""), 64)
@@ -474,5 +474,5 @@ func StrPosToVectorPos(value string) *cfgtype.Vector {
 	logus.Log.CheckPanic(err2, "failed parsing y coord", typelog.Any("pos", value))
 	logus.Log.CheckPanic(err3, "failed parsing z coord", typelog.Any("pos", value))
 
-	return &cfgtype.Vector{X: x, Y: y, Z: z}
+	return &cfg.Vector{X: x, Y: y, Z: z}
 }

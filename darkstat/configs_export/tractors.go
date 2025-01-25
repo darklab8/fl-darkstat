@@ -5,20 +5,20 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/discovery/playercntl_rephacks"
 )
 
 type Rephack struct {
 	FactionName string
-	FactionNick cfgtype.FactionNick
+	FactionNick cfg.FactionNick
 	Reputation  float64
 	RepType     playercntl_rephacks.RepType
 }
 
 type DiscoveryIDRephacks struct {
-	Rephacks map[cfgtype.FactionNick]Rephack
+	Rephacks map[cfg.FactionNick]Rephack
 }
 
 func (r DiscoveryIDRephacks) GetRephacksList() []Rephack {
@@ -42,18 +42,18 @@ type Tractor struct {
 	ReachSpeed int
 
 	Lootable      bool
-	Nickname      cfgtype.TractorID
+	Nickname      cfg.TractorID
 	NicknameHash  flhash.HashCode
 	ShortNickname string
 	NameID        int
 	InfoID        int
 
-	Bases map[cfgtype.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood
 	DiscoveryIDRephacks
 	Mass float64
 }
 
-func (e *Exporter) GetFactionName(nickname cfgtype.FactionNick) string {
+func (e *Exporter) GetFactionName(nickname cfg.FactionNick) string {
 	if group, ok := e.Configs.InitialWorld.GroupsMap[string(nickname)]; ok {
 		return e.GetInfocardName(group.IdsName.Get(), string(nickname))
 	}
@@ -67,13 +67,13 @@ func (e *Exporter) GetTractors() []*Tractor {
 		tractor := &Tractor{
 			ShortNickname: fmt.Sprintf("i%d", tractor_id),
 			DiscoveryIDRephacks: DiscoveryIDRephacks{
-				Rephacks: make(map[cfgtype.FactionNick]Rephack),
+				Rephacks: make(map[cfg.FactionNick]Rephack),
 			},
-			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
+			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
 		tractor.Mass, _ = tractor_info.Mass.GetValue()
 
-		tractor.Nickname = cfgtype.TractorID(tractor_info.Nickname.Get())
+		tractor.Nickname = cfg.TractorID(tractor_info.Nickname.Get())
 		tractor.NicknameHash = flhash.HashNickname(string(tractor.Nickname))
 		e.Hashes[string(tractor.Nickname)] = tractor.NicknameHash
 
@@ -111,7 +111,7 @@ func (e *Exporter) GetTractors() []*Tractor {
 			if faction, ok := e.Configs.Discovery.PlayercntlRephacks.RephacksByID[tractor.Nickname]; ok {
 
 				if inherited_id, ok := faction.Inherits.GetValue(); ok {
-					if faction, ok := e.Configs.Discovery.PlayercntlRephacks.RephacksByID[cfgtype.TractorID(inherited_id)]; ok {
+					if faction, ok := e.Configs.Discovery.PlayercntlRephacks.RephacksByID[cfg.TractorID(inherited_id)]; ok {
 						for faction_nick, rep := range faction.Reps {
 							tractor.Rephacks[faction_nick] = Rephack{
 								Reputation:  rep.Rep.Get(),

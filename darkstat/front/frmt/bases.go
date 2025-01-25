@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -25,7 +25,7 @@ func SortedMarketGoods(goods_per_nick map[configs_export.CommodityKey]*configs_e
 	return market_goods
 }
 
-func FormattedShipClassOfCommodity(ship_class cfgtype.ShipClass) string {
+func FormattedShipClassOfCommodity(ship_class cfg.ShipClass) string {
 	if ship_class >= 0 {
 		return " (" + ship_class.ToStr() + ")"
 	} else {
@@ -33,7 +33,7 @@ func FormattedShipClassOfCommodity(ship_class cfgtype.ShipClass) string {
 	}
 }
 
-func FormattedShipClassOfCommodity2(ship_class cfgtype.ShipClass) string {
+func FormattedShipClassOfCommodity2(ship_class cfg.ShipClass) string {
 	if ship_class >= 0 {
 		return fmt.Sprintf("%d,%s", ship_class, ship_class.ToStr())
 	} else {

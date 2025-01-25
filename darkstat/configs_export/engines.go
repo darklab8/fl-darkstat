@@ -1,7 +1,7 @@
 package configs_export
 
 import (
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 )
@@ -32,7 +32,7 @@ type Engine struct {
 	NameID       int
 	InfoID       int
 
-	Bases map[cfgtype.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood
 	*DiscoveryTechCompat
 	Mass float64
 }
@@ -53,7 +53,7 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 
 	for _, engine_info := range e.Configs.Equip.Engines {
 		engine := Engine{
-			Bases: make(map[cfgtype.BaseUniNick]*MarketGood),
+			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
 		engine.Mass, _ = engine_info.Mass.GetValue()
 

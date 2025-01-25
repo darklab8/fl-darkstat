@@ -4,7 +4,7 @@ import (
 	"math"
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
@@ -14,10 +14,10 @@ import (
 
 type SystemObject struct {
 	nickname string
-	pos      cfgtype.Vector
+	pos      cfg.Vector
 }
 
-func DistanceForVecs(Pos1 cfgtype.Vector, Pos2 cfgtype.Vector) float64 {
+func DistanceForVecs(Pos1 cfg.Vector, Pos2 cfg.Vector) float64 {
 	// if _, ok := Pos1.X.GetValue(); !ok {
 	// 	return 0, errors.New("no x")
 	// }
@@ -78,8 +78,8 @@ const (
 )
 
 type ExtraBase struct {
-	Pos      cfgtype.Vector
-	Nickname cfgtype.BaseUniNick
+	Pos      cfg.Vector
+	Nickname cfg.BaseUniNick
 }
 
 /*
@@ -364,16 +364,16 @@ func MapConfigsToFGraph(
 // 	return float64(time * graph.AvgCruiseSpeed)
 // }
 
-func (graph *GameGraph) DistanceToTime(distance float64, system_speed_multiplier float64) cfgtype.Milliseconds {
+func (graph *GameGraph) DistanceToTime(distance float64, system_speed_multiplier float64) cfg.Milliseconds {
 	// we assume graph.AvgCruiseSpeed is above zero smth. Not going to check correctness
 	// lets try in milliseconds
 	return distance * float64(PrecisionMultipiler) / (float64(graph.AvgCruiseSpeed) * system_speed_multiplier)
 }
 
-func (graph *GameGraph) GetTimeForDist(dist cfgtype.Milliseconds) cfgtype.Seconds {
+func (graph *GameGraph) GetTimeForDist(dist cfg.Milliseconds) cfg.Seconds {
 	// Surprise ;) Distance is time now.
 	return dist / PrecisionMultipiler
 }
 
 // makes time in ms. Higher int value help having better calcs.
-const PrecisionMultipiler = cfgtype.Milliseconds(1000)
+const PrecisionMultipiler = cfg.Milliseconds(1000)

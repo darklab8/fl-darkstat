@@ -3,7 +3,7 @@ package configs_export
 import (
 	"math"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -80,12 +80,12 @@ func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 	return info
 }
 
-func (e *Exporter) getMarketGoods() map[cfgtype.BaseUniNick]map[CommodityKey]*MarketGood {
+func (e *Exporter) getMarketGoods() map[cfg.BaseUniNick]map[CommodityKey]*MarketGood {
 
-	var goods_per_base map[cfgtype.BaseUniNick]map[CommodityKey]*MarketGood = make(map[cfgtype.BaseUniNick]map[CommodityKey]*MarketGood)
+	var goods_per_base map[cfg.BaseUniNick]map[CommodityKey]*MarketGood = make(map[cfg.BaseUniNick]map[CommodityKey]*MarketGood)
 
 	for _, base_good := range e.Configs.Market.BaseGoods {
-		base_nickname := cfgtype.BaseUniNick(base_good.Base.Get())
+		base_nickname := cfg.BaseUniNick(base_good.Base.Get())
 
 		var MarketGoods map[CommodityKey]*MarketGood
 		if market_goods, ok := goods_per_base[base_nickname]; ok {

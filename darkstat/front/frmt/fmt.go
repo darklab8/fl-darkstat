@@ -7,11 +7,11 @@ Allowed to be imported by anything
 import (
 	"sort"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
-func SortedBases(bases_map map[cfgtype.BaseUniNick]*configs_export.MarketGood) []*configs_export.MarketGood {
+func SortedBases(bases_map map[cfg.BaseUniNick]*configs_export.MarketGood) []*configs_export.MarketGood {
 	var bases []*configs_export.MarketGood = make([]*configs_export.MarketGood, 0, 10)
 
 	for _, base := range bases_map {

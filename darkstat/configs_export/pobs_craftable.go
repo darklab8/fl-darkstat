@@ -3,7 +3,7 @@ package configs_export
 import (
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
 )
 
@@ -41,7 +41,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 	base := &Base{
 		Name:               e.Configs.CraftableBaseName(),
 		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
-		Nickname:           cfgtype.BaseUniNick(pob_crafts_nickname),
+		Nickname:           cfg.BaseUniNick(pob_crafts_nickname),
 		InfocardKey:        InfocardKey(pob_crafts_nickname),
 		SystemNickname:     "neverwhere",
 		System:             "Neverwhere",

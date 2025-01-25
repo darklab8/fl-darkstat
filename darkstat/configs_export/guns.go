@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
@@ -73,7 +73,7 @@ type Gun struct {
 	ShieldEfficiency       float64
 	EnergyDamageEfficiency float64
 
-	Bases         map[cfgtype.BaseUniNick]*MarketGood
+	Bases         map[cfg.BaseUniNick]*MarketGood
 	DamageBonuses []DamageBonus
 
 	Missile
@@ -140,7 +140,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		Speed:        gun_info.MuzzleVelosity.Get(),
 		Toughness:    gun_info.Toughness.Get(),
 		Lootable:     gun_info.Lootable.Get(),
-		Bases:        make(map[cfgtype.BaseUniNick]*MarketGood),
+		Bases:        make(map[cfg.BaseUniNick]*MarketGood),
 	}
 
 	gun.Mass, _ = gun_info.Mass.GetValue()

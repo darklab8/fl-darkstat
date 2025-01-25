@@ -1,8 +1,6 @@
 package configs_export
 
-import (
-	"github.com/darklab8/fl-configs/configs/cfgtype"
-)
+import "github.com/darklab8/fl-configs/configs/cfg"
 
 type TradeRoute struct {
 	Route       *Route
@@ -61,12 +59,12 @@ func (e *Exporter) TradePaths(
 ) ([]*Base, []*Commodity) {
 
 	var commodity_by_nick map[CommodityKey]*Commodity = make(map[CommodityKey]*Commodity)
-	var commodity_by_good_and_base map[CommodityKey]map[cfgtype.BaseUniNick]*MarketGood = make(map[CommodityKey]map[cfgtype.BaseUniNick]*MarketGood)
+	var commodity_by_good_and_base map[CommodityKey]map[cfg.BaseUniNick]*MarketGood = make(map[CommodityKey]map[cfg.BaseUniNick]*MarketGood)
 	for _, commodity := range commodities {
 		commodity_key := GetCommodityKey(commodity.Nickname, commodity.ShipClass)
 		commodity_by_nick[commodity_key] = commodity
 		if _, ok := commodity_by_good_and_base[commodity_key]; !ok {
-			commodity_by_good_and_base[commodity_key] = make(map[cfgtype.BaseUniNick]*MarketGood)
+			commodity_by_good_and_base[commodity_key] = make(map[cfg.BaseUniNick]*MarketGood)
 		}
 		for _, good_at_base := range commodity.Bases {
 			commodity_by_good_and_base[commodity_key][good_at_base.BaseNickname] = good_at_base

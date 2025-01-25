@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/darklab8/fl-configs/configs/cfgtype"
+	"github.com/darklab8/fl-configs/configs/cfg"
 	"github.com/darklab8/fl-darkcore/darkcore/web"
 	"github.com/darklab8/fl-darkcore/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -32,6 +32,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 			ReturnJson(&w, api.app_data.Configs.Bases)
 		},
 	}
+
 }
 
 type MarketGoodResp struct {
@@ -45,7 +46,7 @@ type MarketGoodResp struct {
 // @Tags         bases
 // @Accept       json
 // @Produce      json
-// @Param request body []cfgtype.BaseUniNick true "Array of npc base nicknames as input, for example [li01_01_base]" example("li01_01_base")
+// @Param request body []cfg.BaseUniNick true "Array of npc base nicknames as input, for example [li01_01_base]" example("li01_01_base")
 // @Success      200  {array}  	MarketGoodResp
 // @Router       /api/npc_bases/market_goods [post]
 func PostBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
@@ -57,7 +58,7 @@ func PostBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			var base_nicknames []cfgtype.BaseUniNick
+			var base_nicknames []cfg.BaseUniNick
 			body, err := io.ReadAll(r.Body)
 			if logus.Log.CheckError(err, "failed to read body") {
 				w.WriteHeader(http.StatusBadRequest)
