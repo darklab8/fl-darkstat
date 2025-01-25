@@ -20,6 +20,7 @@ import (
 	"github.com/darklab8/fl-darkstat/docs"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
+	// _ "net/http/pprof"
 )
 
 type Action string
@@ -62,6 +63,9 @@ type Account struct {
 
 // @BasePath /
 func main() {
+	// go func() {
+	// 	log.Println(http.ListenAndServe("localhost:6060", nil))
+	// }()
 	if settings.Env.IsCPUProfilerEnabled {
 		// task profiler:cpu after that
 		f, err := os.Create("prof.prof")

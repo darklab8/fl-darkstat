@@ -118,7 +118,7 @@ func getGunClass(gun_info *equip_mapped.Gun) string {
 	return gun_class
 }
 
-func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []Tractor, buyable_ship_tech map[string]bool) (Gun, error) {
+func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyable_ship_tech map[string]bool) (Gun, error) {
 	gun_nickname := gun_info.Nickname.Get()
 	defer func() {
 		if r := recover(); r != nil {
@@ -343,7 +343,7 @@ func (e *Exporter) GetBuyableShields(shields []Shield) map[string]bool {
 	return buyable_ship_tech
 }
 
-func (e *Exporter) GetGuns(ids []Tractor, buyable_ship_tech map[string]bool) []Gun {
+func (e *Exporter) GetGuns(ids []*Tractor, buyable_ship_tech map[string]bool) []Gun {
 	var guns []Gun
 
 	for _, gun_info := range e.Configs.Equip.Guns {

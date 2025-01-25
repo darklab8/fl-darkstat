@@ -30,7 +30,7 @@ type Ammo struct {
 	Mass      float64
 }
 
-func (e *Exporter) GetAmmo(ids []Tractor) []Ammo {
+func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 	var tractors []Ammo
 
 	for _, munition_info := range e.Configs.Equip.Munitions {

@@ -113,8 +113,8 @@ type Exporter struct {
 	Shields      []Shield
 	Thrusters    []Thruster
 	Ships        []Ship
-	Tractors     []Tractor
-	TractorsByID map[cfgtype.TractorID]Tractor
+	Tractors     []*Tractor
+	TractorsByID map[cfgtype.TractorID]*Tractor
 	Engines      []Engine
 	CMs          []CounterMeasure
 	Scanners     []Scanner
@@ -167,6 +167,7 @@ func NewGraphResults(
 	dijkstra_apsp := trades.NewDijkstraApspFromGraph(graph)
 	dists, parents := dijkstra_apsp.DijkstraApsp()
 
+	graph.WipeMatrix()
 	return &GraphResults{
 		e:       e,
 		Graph:   graph,
@@ -229,6 +230,8 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 		wg.Add(1)
 		go func() {
 			e.Transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false), extra_graph_bases, options.MappingOptions)
+			// e.Freighter = e.Transport
+			// e.Frigate = e.Transport
 			wg.Done()
 		}()
 		wg.Add(1)
@@ -244,7 +247,7 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	}
 
 	e.Tractors = e.GetTractors()
-	e.TractorsByID = make(map[cfgtype.TractorID]Tractor)
+	e.TractorsByID = make(map[cfgtype.TractorID]*Tractor)
 	for _, tractor := range e.Tractors {
 		e.TractorsByID[tractor.Nickname] = tractor
 	}
@@ -256,7 +259,6 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	e.Guns = e.GetGuns(e.Tractors, buyable_shield_tech)
 	e.Missiles = e.GetMissiles(e.Tractors, buyable_shield_tech)
 	e.Mines = e.GetMines(e.Tractors)
-
 	e.Thrusters = e.GetThrusters(e.Tractors)
 	e.Ships = e.GetShips(e.Tractors, e.TractorsByID, e.Thrusters)
 	e.Engines = e.GetEngines(e.Tractors)
@@ -395,7 +397,7 @@ type DiscoveryTechCompat struct {
 	TechCell       string                        `json:"tech_cell"`
 }
 
-func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []Tractor, nickname string) *DiscoveryTechCompat {
+func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []*Tractor, nickname string) *DiscoveryTechCompat {
 	if Discovery == nil {
 		return nil
 	}

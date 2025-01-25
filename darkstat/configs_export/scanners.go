@@ -24,7 +24,7 @@ type Scanner struct {
 	Mass float64
 }
 
-func (e *Exporter) GetScanners(ids []Tractor) []Scanner {
+func (e *Exporter) GetScanners(ids []*Tractor) []Scanner {
 	var scanners []Scanner
 
 	for _, scanner_info := range e.Configs.Equip.Scanners {

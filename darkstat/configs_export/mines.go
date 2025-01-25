@@ -53,7 +53,7 @@ type AmmoLimit struct {
 	MaxCatridges     *int
 }
 
-func (e *Exporter) GetMines(ids []Tractor) []Mine {
+func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 	var mines []Mine
 
 	for _, mine_dropper := range e.Configs.Equip.MineDroppers {

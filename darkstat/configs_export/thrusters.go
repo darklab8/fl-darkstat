@@ -26,7 +26,7 @@ type Thruster struct {
 	Mass float64
 }
 
-func (e *Exporter) GetThrusters(ids []Tractor) []Thruster {
+func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 	var thrusters []Thruster
 
 	for _, thruster_info := range e.Configs.Equip.Thrusters {

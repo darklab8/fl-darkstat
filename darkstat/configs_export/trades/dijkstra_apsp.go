@@ -163,6 +163,11 @@ func (g *DijkstraAPSP) dijkstra(source int) ([]int, []Parent) {
 
 	}
 
+	// cleanup a bit
+	for pq.Len() > 0 {
+		pq.Pop()
+	}
+
 	return distance, parents
 }
 
@@ -232,5 +237,6 @@ func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]Parent) {
 			parents[result.source] = result.parents_result
 		}
 	}
+
 	return distances, parents
 }

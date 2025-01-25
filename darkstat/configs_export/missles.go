@@ -4,7 +4,7 @@ type Missile struct {
 	MaxAngularVelocity float64
 }
 
-func (e *Exporter) GetMissiles(ids []Tractor, buyable_ship_tech map[string]bool) []Gun {
+func (e *Exporter) GetMissiles(ids []*Tractor, buyable_ship_tech map[string]bool) []Gun {
 	var missiles []Gun
 
 	for _, gun_info := range e.Configs.Equip.Guns {

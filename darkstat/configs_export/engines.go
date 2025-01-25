@@ -48,7 +48,7 @@ func (e *Exporter) GetEngineSpeed(engine_info *equip_mapped.Engine) int {
 	return 350
 }
 
-func (e *Exporter) GetEngines(ids []Tractor) []Engine {
+func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 	var engines []Engine
 
 	for _, engine_info := range e.Configs.Equip.Engines {

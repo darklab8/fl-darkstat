@@ -21,7 +21,7 @@ func NewOrderedTechCompat(e *Exporter) *TechCompatOrderer {
 
 	orderer.cached_techcell_nil = append(orderer.cached_techcell_nil, CompatibleIDsForTractor{
 		TechCompat: e.Configs.Discovery.Techcompat.General.UnlistedTech.Get(),
-		Tractor:    Tractor{Name: "Most Factions"},
+		Tractor:    &Tractor{Name: "Most Factions"},
 	})
 
 	for _, faction := range e.Configs.Discovery.Techcompat.Factions {

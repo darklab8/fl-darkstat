@@ -57,8 +57,8 @@ type FLSRData struct {
 
 type DiscoveryData struct {
 	ShowDisco    bool
-	Ids          []configs_export.Tractor
-	TractorsByID map[cfgtype.TractorID]configs_export.Tractor
+	Ids          []*configs_export.Tractor
+	TractorsByID map[cfgtype.TractorID]*configs_export.Tractor
 	Config       *techcompat.Config
 	LatestPatch  autopatcher.Patch
 

@@ -16,7 +16,7 @@ func TestGetShips(t *testing.T) {
 	ids := exporter.GetTractors()
 	thrusters := exporter.GetThrusters(ids)
 
-	var TractorsByID map[cfgtype.TractorID]Tractor = make(map[cfgtype.TractorID]Tractor)
+	TractorsByID := make(map[cfgtype.TractorID]*Tractor)
 	for _, tractor := range ids {
 		TractorsByID[tractor.Nickname] = tractor
 	}

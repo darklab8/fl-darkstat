@@ -25,6 +25,10 @@ type GameGraph struct {
 	CanVisitFreightersOnlyJHs WithFreighterPaths
 }
 
+func (g *GameGraph) WipeMatrix() {
+	g.matrix = nil
+}
+
 func NewGameGraph(avgCruiseSpeed int, canVisitFreighterOnlyJHs WithFreighterPaths) *GameGraph {
 	return &GameGraph{
 		matrix:                    make(map[VertexName]map[VertexName]float64),

@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func TractorDetailedUrl(tractor configs_export.Tractor, tab_mode TractorMode) string {
+func TractorDetailedUrl(tractor *configs_export.Tractor, tab_mode TractorMode) string {
 	if tab_mode == TractorModShop {
 		return "tractor/tractor_base_" + strings.ToLower(string(tractor.Nickname))
 	} else if tab_mode == TractorIDRephacks {
@@ -48,7 +48,7 @@ templ TractorHeaders(shared *types.SharedData) {
 	<th style="max-width:100%;"></th>
 }
 
-templ TractorValues(tractor configs_export.Tractor, shared *types.SharedData) {
+templ TractorValues(tractor *configs_export.Tractor, shared *types.SharedData) {
 	<td>{ strconv.Itoa(tractor.Price) } </td>
 	<td>{ frmt.FormatBoolAsYesNo(configs_export.Buyable(tractor.Bases)) }</td>
 	if shared.ShowFLSR {
@@ -64,7 +64,7 @@ templ TractorValues(tractor configs_export.Tractor, shared *types.SharedData) {
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ TractorsT(tractors []configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode TractorMode, shared *types.SharedData) {
+templ TractorsT(tractors []*configs_export.Tractor, mode2 tab.ShowEmpty, tab_mode TractorMode, shared *types.SharedData) {
 	if tab_mode == TractorModShop {
 		@TabMenu(urls.Tractors, mode2, shared)
 	} else if tab_mode == TractorIDRephacks {
@@ -132,7 +132,7 @@ templ IDRephacksShared() {
 	</table>
 }
 
-templ IDRephacksT(rephack configs_export.Tractor) {
+templ IDRephacksT(rephack *configs_export.Tractor) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ rephack.Name }</div>
 	@IDRephacksShared() {

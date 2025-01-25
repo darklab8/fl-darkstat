@@ -123,6 +123,12 @@ tasks:
     cmds:
       - go tool pprof mem.pprof
 
+  profiler:web:
+    cmds:
+      # https://www.codereliant.io/memory-leaks-with-pprof/
+      - go tool pprof -alloc_space http://localhost:6060/debug/pprof/heap
+      # commands like `top`, `web`, `list FunctionName`
+
 env:
   tag_version: v1.48.0-a4
   DOCKER_HOST: ssh://root@darklab:22

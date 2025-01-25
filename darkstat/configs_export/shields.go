@@ -45,7 +45,7 @@ type Shield struct {
 	Mass float64
 }
 
-func (e *Exporter) GetShields(ids []Tractor) []Shield {
+func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 	var shields []Shield
 
 	for _, shield_gen := range e.Configs.Equip.ShieldGens {

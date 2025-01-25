@@ -178,7 +178,7 @@ type DiscoShip struct {
 	ArmorMult float64 `json:"armor_mult"`
 }
 
-func (e *Exporter) GetShips(ids []Tractor, TractorsByID map[cfgtype.TractorID]Tractor, Thrusters []Thruster) []Ship {
+func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfgtype.TractorID]*Tractor, Thrusters []Thruster) []Ship {
 	var ships []Ship
 
 	var ThrusterMap map[string]*Thruster = make(map[string]*Thruster)
@@ -404,5 +404,5 @@ func (e *Exporter) FilterToUsefulShips(ships []Ship) []Ship {
 
 type CompatibleIDsForTractor struct {
 	TechCompat float64
-	Tractor    Tractor
+	Tractor    *Tractor
 }

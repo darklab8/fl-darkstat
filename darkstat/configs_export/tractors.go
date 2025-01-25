@@ -60,11 +60,11 @@ func (e *Exporter) GetFactionName(nickname cfgtype.FactionNick) string {
 	return ""
 }
 
-func (e *Exporter) GetTractors() []Tractor {
-	var tractors []Tractor
+func (e *Exporter) GetTractors() []*Tractor {
+	var tractors []*Tractor
 
 	for tractor_id, tractor_info := range e.Configs.Equip.Tractors {
-		tractor := Tractor{
+		tractor := &Tractor{
 			ShortNickname: fmt.Sprintf("i%d", tractor_id),
 			DiscoveryIDRephacks: DiscoveryIDRephacks{
 				Rephacks: make(map[cfgtype.FactionNick]Rephack),
@@ -139,8 +139,8 @@ func (e *Exporter) GetTractors() []Tractor {
 	return tractors
 }
 
-func (e *Exporter) FilterToUsefulTractors(tractors []Tractor) []Tractor {
-	var buyable_tractors []Tractor = make([]Tractor, 0, len(tractors))
+func (e *Exporter) FilterToUsefulTractors(tractors []*Tractor) []*Tractor {
+	var buyable_tractors []*Tractor = make([]*Tractor, 0, len(tractors))
 	for _, item := range tractors {
 
 		if !e.Buyable(item.Bases) && (strings.Contains(strings.ToLower(item.Name), "discontinued") ||

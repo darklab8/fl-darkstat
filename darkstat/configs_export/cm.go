@@ -30,7 +30,7 @@ type CounterMeasure struct {
 	Mass      float64
 }
 
-func (e *Exporter) GetCounterMeasures(ids []Tractor) []CounterMeasure {
+func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 	var tractors []CounterMeasure
 
 	for _, cm_info := range e.Configs.Equip.CounterMeasureDroppers {
