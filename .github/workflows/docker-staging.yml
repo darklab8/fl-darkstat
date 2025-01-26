@@ -37,7 +37,7 @@ jobs:
       run: |
         set -ex
         export tag_version=staging
-        docker build --build-arg "BUILD_VERSION=${tag_version}-arm64" --tag darkwind8/darkstat:${tag_version}-arm64 .
+        docker build --build-arg "BUILD_VERSION=${tag_version}" --tag darkwind8/darkstat:${tag_version}-arm64 .
 
         docker push darkwind8/darkstat:${tag_version}-arm64
         sleep 5
@@ -73,7 +73,7 @@ jobs:
       run: |
         set -ex
         export tag_version=staging
-        docker build --build-arg "BUILD_VERSION=${tag_version}-amd64" --tag darkwind8/darkstat:${tag_version}-amd64 .
+        docker build --build-arg "BUILD_VERSION=${tag_version}" --tag darkwind8/darkstat:${tag_version}-amd64 .
 
         docker push darkwind8/darkstat:${tag_version}-amd64
         sleep 5
