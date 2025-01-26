@@ -31,12 +31,12 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				@tab.Button(tab.NewButtn(ctx,[]string{"Miss","ions"}, urls.Missions, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Fact","ions"}, urls.Factions, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Bribes"}, urls.Bribes, url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Trade","&thinsp;", "routes"}, urls.Trades, url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Ore","&thinsp;", "routes"}, urls.Asteroids, url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Travel","&thinsp;", "routes"}, urls.TravelRoutes, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Trade&thinsp;", "routes"}, urls.Trades, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ore&thinsp;", "routes"}, urls.Asteroids, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Travel&thinsp;", "routes"}, urls.TravelRoutes, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Comm", "odities"}, urls.Commodities, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Guns"}, urls.Guns, url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Guns","&thinsp;", "Mods"}, urls.GunModifiers, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Guns&thinsp;", "Mods"}, urls.GunModifiers, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Miss","iles"}, urls.Missiles, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Ammo"}, urls.Ammo, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Mines"}, urls.Mines, url))
@@ -44,20 +44,20 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				@tab.Button(tab.NewButtn(ctx,[]string{"Shields"}, urls.Shields, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Thru","sters"}, urls.Thrusters, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Ships"}, urls.Ships, url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Ship","&thinsp;", "Details"}, urls.ShipDetails, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ship&thinsp;", "Details"}, urls.ShipDetails, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, url))
 				if shared.ShowDisco {
-					@tab.Button(tab.NewButtn(ctx,[]string{"ID Rep","&thinsp;", "hacks"}, urls.IDRephacks, url))
+					@tab.Button(tab.NewButtn(ctx,[]string{"ID Rep&thinsp;", "hacks"}, urls.IDRephacks, url))
 				}
 				@tab.Button(tab.NewButtn(ctx,[]string{"Engines"}, urls.Engines, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Scan","ners"}, urls.Scanners, url))
 				if settings.IsRelayActive(shared.Mapped) {
 					@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, urls.PoBs, url, tab.WithRelay()))
-					@tab.Button(tab.NewButtn(ctx,[]string{"PoB","&thinsp;","goods"}, urls.PoBGoods, url, tab.WithRelay()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"PoB&thinsp;","goods"}, urls.PoBGoods, url, tab.WithRelay()))
 				}
 				@tab.Button(tab.NewButtn(ctx,[]string{"API"}, urls.Swagger, url))
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
-					@frmt.MultiLinestringWrap([]string{"Show","&thinsp;", "All"})
+					@frmt.MultiLinestringWrap([]string{"Show&thinsp;", "All"})
 				</button>
 				@tab.Button(tab.NewButtn(ctx,[]string{"Docs"}, urls.Docs, url))
 			} else {
@@ -66,12 +66,12 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				@tab.Button(tab.NewButtn(ctx,[]string{"Miss","ions"}, tab.AllItemsUrl(urls.Missions), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Fact","ions"}, tab.AllItemsUrl(urls.Factions), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Bribes"}, tab.AllItemsUrl(urls.Bribes), url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Trade","&thinsp;", "routes"}, tab.AllItemsUrl(urls.Trades), url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Ore","&thinsp;", "routes"}, tab.AllItemsUrl(urls.Asteroids), url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Travel","&thinsp;", "routes"}, tab.AllItemsUrl(urls.TravelRoutes), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Trade&thinsp;", "routes"}, tab.AllItemsUrl(urls.Trades), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ore&thinsp;", "routes"}, tab.AllItemsUrl(urls.Asteroids), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Travel&thinsp;", "routes"}, tab.AllItemsUrl(urls.TravelRoutes), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Comm", "odities"}, tab.AllItemsUrl(urls.Commodities), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Guns"}, tab.AllItemsUrl(urls.Guns), url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Guns","&thinsp;", "Mods"}, tab.AllItemsUrl(urls.GunModifiers), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Guns&thinsp;", "Mods"}, tab.AllItemsUrl(urls.GunModifiers), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Miss","iles"}, tab.AllItemsUrl(urls.Missiles), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Ammo"}, tab.AllItemsUrl(urls.Ammo), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Mines"}, tab.AllItemsUrl(urls.Mines), url))
@@ -79,16 +79,16 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				@tab.Button(tab.NewButtn(ctx,[]string{"Shields"}, tab.AllItemsUrl(urls.Shields), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Thru","sters"}, tab.AllItemsUrl(urls.Thrusters), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Ships"}, tab.AllItemsUrl(urls.Ships), url))
-				@tab.Button(tab.NewButtn(ctx,[]string{"Ship","&thinsp;", "Details"}, tab.AllItemsUrl(urls.ShipDetails), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ship&thinsp;", "Details"}, tab.AllItemsUrl(urls.ShipDetails), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{types.GetCtx(ctx).TractorTabName}, tab.AllItemsUrl(urls.Tractors), url))
 				if shared.ShowDisco {
-					@tab.Button(tab.NewButtn(ctx,[]string{"ID Rep","&thinsp;", "hacks"}, tab.AllItemsUrl(urls.IDRephacks), url))
+					@tab.Button(tab.NewButtn(ctx,[]string{"ID Rep&thinsp;", "hacks"}, tab.AllItemsUrl(urls.IDRephacks), url))
 				}
 				@tab.Button(tab.NewButtn(ctx,[]string{"Engines"}, tab.AllItemsUrl(urls.Engines), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Scan","ners"}, tab.AllItemsUrl(urls.Scanners), url))
 				if settings.IsRelayActive(shared.Mapped) {
 					@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, tab.AllItemsUrl(urls.PoBs), url, tab.WithRelay()))
-					@tab.Button(tab.NewButtn(ctx,[]string{"PoB","&thinsp;","goods"}, tab.AllItemsUrl(urls.PoBGoods), url, tab.WithRelay()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"PoB&thinsp;","goods"}, tab.AllItemsUrl(urls.PoBGoods), url, tab.WithRelay()))
 				}
 				
 				@tab.Button(tab.NewButtn(ctx,[]string{"API"}, urls.Swagger, url))
