@@ -11,6 +11,10 @@ See demos:
 - [Freelancer Vanilla version](https://darklab8.github.io/fl-data-vanilla/) [(action)](https://github.com/darklab8/fl-data-vanilla/actions/workflows/publish.yaml)
 - [Freelancer Sirius Revival](https://darklab8.github.io/fl-data-flsr/) [(action)](https://github.com/darklab8/fl-data-flsr/actions/workflows/publish.yaml)
 
+# Contains sub projects
+
+- [darkcore Readme](./darkcore/README.md) - reusable web part for freelancer related web tools. We can say it is filling same niche as "Framework" in normal projects.
+
 # Support
 
 - It was made in mind with supporting [Freelancer Discovery](https://discoverygc.com/) as first order.
