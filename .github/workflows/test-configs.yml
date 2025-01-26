@@ -39,7 +39,7 @@ jobs:
       uses: darklab8/infra/.github/actions/install-go@master
 
     - name: Test
-      run: go test ./configs/... {{.CLI_ARGS}}
+      run: go test ./...
       env:
         # CONFIGS_LOG_LEVEL: "DEBUG"
         FREELANCER_FOLDER: ${{ github.workspace }}/${{ matrix.freelancer-mod }}
