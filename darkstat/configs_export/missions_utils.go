@@ -4,9 +4,9 @@ import (
 	"errors"
 	"math"
 
-	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
-	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/semantic"
-	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 )
 
 func DistanceForVecs(Pos1 *semantic.Vect, Pos2 *semantic.Vect) (float64, error) {

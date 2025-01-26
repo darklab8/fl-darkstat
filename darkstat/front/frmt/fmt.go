@@ -7,7 +7,7 @@ Allowed to be imported by anything
 import (
 	"sort"
 
-	"github.com/darklab8/fl-configs/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 

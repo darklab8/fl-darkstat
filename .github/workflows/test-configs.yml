@@ -1,0 +1,45 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Go
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        freelancer-mod:
+          - "discovery"
+          - "vanilla"
+    name: Test ${{ matrix.freelancer-mod }}
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: darklab8/infra/.github/actions/checkout-freelancer@master
+      with:
+        freelancer-mod: "${{ matrix.freelancer-mod }}"
+        freelancer-folder: '${{ github.workspace }}/${{ matrix.freelancer-mod }}'
+        ssh-key-base64-discovery: ${{ secrets.ID_RSA_FILES_FREELANCER_DISCOVERY }}
+        ssh-key-base64-vanilla: ${{ secrets.ID_RSA_FILES_FREELANCER_VANILLA }}
+
+    - run: ls ./${{ matrix.freelancer-mod }}
+
+    - name: Install Taskfile
+      uses: darklab8/infra/.github/actions/install-taskfile@master
+
+    - name: Set up Go
+      uses: darklab8/infra/.github/actions/install-go@master
+
+    - name: Test
+      run: go test ./configs/... {{.CLI_ARGS}}
+      env:
+        # CONFIGS_LOG_LEVEL: "DEBUG"
+        FREELANCER_FOLDER: ${{ github.workspace }}/${{ matrix.freelancer-mod }}

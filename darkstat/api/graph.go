@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/darklab8/fl-configs/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"

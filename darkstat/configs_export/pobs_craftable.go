@@ -3,8 +3,8 @@ package configs_export
 import (
 	"strings"
 
-	"github.com/darklab8/fl-configs/configs/cfg"
-	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/inireader"
+	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 )
 
 func (e *Exporter) pob_produced() map[string]bool {

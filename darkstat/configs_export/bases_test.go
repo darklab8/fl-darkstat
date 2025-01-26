@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/darklab8/fl-configs/configs/configs_mapped"
-	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
-	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/filefind/file"
-	"github.com/darklab8/fl-configs/configs/configs_mapped/parserutils/iniload"
-	"github.com/darklab8/fl-configs/configs/configs_settings/logus"
-	"github.com/darklab8/fl-configs/configs/discovery/discoprices"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/iniload"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/configs/discovery/discoprices"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/stretchr/testify/assert"
 )

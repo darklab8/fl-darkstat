@@ -9,7 +9,7 @@ import (
 	"math"
 	"reflect"
 
-	"github.com/darklab8/fl-configs/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 )
 
 type VertexName string

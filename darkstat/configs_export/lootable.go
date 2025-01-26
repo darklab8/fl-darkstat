@@ -1,6 +1,6 @@
 package configs_export
 
-import "github.com/darklab8/fl-configs/configs/cfg"
+import "github.com/darklab8/fl-darkstat/configs/cfg"
 
 func (e *Exporter) findable_in_loot() map[string]bool {
 	if e.findable_in_loot_cache != nil {

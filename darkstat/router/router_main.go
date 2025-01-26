@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"

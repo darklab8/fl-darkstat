@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/go-utils/utils/ptr"
 )

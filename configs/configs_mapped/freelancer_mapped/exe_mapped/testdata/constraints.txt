@@ -1,0 +1,2 @@
+dataclassy==1.0.1
+deconstruct==0.6

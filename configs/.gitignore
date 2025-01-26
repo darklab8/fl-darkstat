@@ -1,0 +1,16 @@
+/darktool
+/dist
+Discovery-DEV-Groshyr/
+Discovery-DEV-Groshyr
+__debug_bin
+**/tempdata/*
+!.gitkeep
+version.txt
+parsed.json
+main
+*.prof
+__debug_bin*
+!.vscode/
+.venv/
+go.work*
+

@@ -1,6 +1,6 @@
 package configs_export
 
-import "github.com/darklab8/fl-configs/configs/cfg"
+import "github.com/darklab8/fl-darkstat/configs/cfg"
 
 type TradeRoute struct {
 	Route       *Route

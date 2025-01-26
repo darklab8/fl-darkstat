@@ -1,0 +1,106 @@
+{
+    "bases": {
+        "&lt;Trents Bar and Grill&gt;": {
+            "shop_items": []
+        },
+        "Freeport-54": {
+            "shop_items": []
+        },
+        "Tipperary smelter": {
+            "shop_items": [
+                {
+                    "id": 2181067140,
+                    "quantity": 0,
+                    "price": 35,
+                    "sell_price": 35,
+                    "min_stock": 15000,
+                    "max_stock": 15000
+                },
+                {
+                    "id": 2411298114,
+                    "quantity": 500,
+                    "price": 25000,
+                    "sell_price": 1,
+                    "min_stock": 2000,
+                    "max_stock": 2000
+                },
+                {
+                    "id": 2571848195,
+                    "quantity": 0,
+                    "price": 30,
+                    "sell_price": 30,
+                    "min_stock": 20000,
+                    "max_stock": 20000
+                },
+                {
+                    "id": 2577422792,
+                    "quantity": 0,
+                    "price": 50,
+                    "sell_price": 50,
+                    "min_stock": 100000,
+                    "max_stock": 100000
+                },
+                {
+                    "id": 2734967041,
+                    "quantity": 4490,
+                    "price": 20,
+                    "sell_price": 20,
+                    "min_stock": 15000,
+                    "max_stock": 15000
+                },
+                {
+                    "id": 2957210948,
+                    "quantity": 3000,
+                    "price": 30,
+                    "sell_price": 30,
+                    "min_stock": 20000,
+                    "max_stock": 20000
+                },
+                {
+                    "id": 2977071884,
+                    "quantity": 12511,
+                    "price": 60,
+                    "sell_price": 60,
+                    "min_stock": 0,
+                    "max_stock": 100000
+                },
+                {
+                    "id": 3082256908,
+                    "quantity": 17,
+                    "price": 50000,
+                    "sell_price": 50000,
+                    "min_stock": 0,
+                    "max_stock": 15
+                }
+            ]
+        },
+        "TB458": {
+            "system": 2745655887,
+            "pos": "299016, 33, -178",
+            "affiliation": 2620,
+            "level": 1,
+            "money": 0,
+            "health": 50,
+            "defensemode": 1,
+            "shop_items": [
+                {
+                    "id": 2593638279,
+                    "quantity": 444,
+                    "price": 1,
+                    "sell_price": 1,
+                    "min_stock": 100000,
+                    "max_stock": 100000
+                },
+                {
+                    "id": 2866206539,
+                    "quantity": 500,
+                    "price": 1,
+                    "sell_price": 1,
+                    "min_stock": 100000,
+                    "max_stock": 100000
+                }
+            ]
+        }
+    },
+    "timestamp": "20250101T183000"
+}

@@ -3,7 +3,7 @@ package relaysettings
 import (
 	"fmt"
 
-	"github.com/darklab8/fl-configs/configs/configs_settings"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
 )

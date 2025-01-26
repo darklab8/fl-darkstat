@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/stretchr/testify/assert"
 )
 

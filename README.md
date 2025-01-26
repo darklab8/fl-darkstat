@@ -14,6 +14,8 @@ See demos:
 # Contains sub projects
 
 - [darkcore Readme](./darkcore/README.md) - reusable web part for freelancer related web tools. We can say it is filling same niche as "Framework" in normal projects.
+- darkrelay - subproject to make darkstat having dynamic backend, which helps to break limitations of a static site generator which darkstat originally started as.
+- configs - ORM library to access configs data.
 
 # Support
 

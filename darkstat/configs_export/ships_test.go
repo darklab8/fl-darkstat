@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/darklab8/fl-configs/configs/cfg"
-	"github.com/darklab8/fl-configs/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/stretchr/testify/assert"
 )
 
