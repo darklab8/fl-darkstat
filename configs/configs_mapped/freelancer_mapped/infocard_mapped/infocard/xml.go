@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-func (i *NotParsedInfocard) XmlToText() ([]string, error) {
+func (i *Infocard) XmlToText() ([]string, error) {
 	return XmlToText(i.content)
 }
 
-func (i *NotParsedInfocard) GetContent() string {
+func (i *Infocard) GetContent() string {
 	return i.content
 }
 

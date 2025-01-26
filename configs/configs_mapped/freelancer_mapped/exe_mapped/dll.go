@@ -133,7 +133,7 @@ func ParseDLL(fileData []byte, out *infocard.Config, globalOffset int) {
 					logus.Log.Warn("Infocard corrupt, skipping.", typelog.Any("id", idsId), typelog.Any("error", err))
 					continue
 				}
-				out.NotParsedInfocard[idsId] = infocard.NewNotParsedInfocard(str)
+				out.Infocards[idsId] = infocard.NewInfocard(str)
 			}
 		case RT_STRING:
 			for _, res := range table.Resources {

@@ -1,19 +1,12 @@
 package infocard
 
-type NotParsedInfocard struct {
-	content string
-}
-
 type Infocard struct {
-	Lines []string
+	content string
+	Lines   []string
 }
 
-func NewInfocard(Lines []string) *Infocard {
-	return &Infocard{Lines: Lines}
-}
-
-func NewNotParsedInfocard(Content string) *NotParsedInfocard {
-	return &NotParsedInfocard{content: Content}
+func NewInfocard(content string) *Infocard {
+	return &Infocard{content: content}
 }
 
 type Infoname string
@@ -26,15 +19,13 @@ const (
 )
 
 type Config struct {
-	Infonames         map[int]Infoname
-	NotParsedInfocard map[int]*NotParsedInfocard
-	Infocards         map[int]*Infocard
+	Infonames map[int]Infoname
+	Infocards map[int]*Infocard
 }
 
 func NewConfig() *Config {
 	return &Config{
-		Infocards:         make(map[int]*Infocard),
-		Infonames:         make(map[int]Infoname),
-		NotParsedInfocard: make(map[int]*NotParsedInfocard),
+		Infocards: make(map[int]*Infocard),
+		Infonames: make(map[int]Infoname),
 	}
 }

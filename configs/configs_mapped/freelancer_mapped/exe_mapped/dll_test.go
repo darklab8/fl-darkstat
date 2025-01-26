@@ -27,10 +27,10 @@ func TestReadInfocards(t *testing.T) {
 	dlls := config.GetDlls()
 	infocards := GetAllInfocards(filesystem, dlls)
 
-	assert.Greater(t, len(infocards.NotParsedInfocard), 0)
-	assert.Greater(t, len(infocards.NotParsedInfocard), 0)
+	assert.Greater(t, len(infocards.Infocards), 0)
+	assert.Greater(t, len(infocards.Infocards), 0)
 
-	for id, text := range infocards.NotParsedInfocard {
+	for id, text := range infocards.Infocards {
 		fmt.Println(id)
 		fmt.Println(text)
 		break
@@ -77,7 +77,7 @@ func TestReadInfocardsToHtml(t *testing.T) {
 		// _ = TradeLaneGaName
 		// assert.Contains(t, TradeLaneGaName, "EFL Gate/Lane Parts")
 
-		xml_stuff := infocards.NotParsedInfocard[501545]
+		xml_stuff := infocards.Infocards[501545]
 		if xml_stuff != nil {
 			// Only for Discovery
 			fmt.Println("xml_stuff=", xml_stuff)
@@ -104,7 +104,7 @@ func TestValidateInfocards(t *testing.T) {
 	var parsed_text map[int][]string = make(map[int][]string)
 	var failed []*infocard.Infocard = make([]*infocard.Infocard, 0, 100)
 
-	for id, card := range infocards.NotParsedInfocard {
+	for id, card := range infocards.Infocards {
 		text, err := card.XmlToText()
 		parsed_text[id] = text
 
@@ -115,10 +115,10 @@ func TestValidateInfocards(t *testing.T) {
 			}
 
 			failed = append(failed)
-			fmt.Println("failed=", id, infocard.NewInfocard(text))
+			fmt.Println("failed=", id, text)
 
 		} else {
-			parsed = append(parsed, infocard.NewInfocard([]string{}))
+			parsed = append(parsed, card)
 		}
 	}
 

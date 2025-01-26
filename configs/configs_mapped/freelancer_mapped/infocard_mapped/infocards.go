@@ -45,7 +45,7 @@ func ReadFromTextFile(input_file *file.File) (*infocard.Config, error) {
 		case infocard.TYPE_NAME:
 			frelconfig.Infonames[id] = infocard.Infoname(content)
 		case infocard.TYPE_INFOCAD:
-			frelconfig.NotParsedInfocard[id] = infocard.NewNotParsedInfocard(content)
+			frelconfig.Infocards[id] = infocard.NewInfocard(content)
 		default:
 			logus1.Log.Fatal(
 				"unrecognized object name in infocards.txt",
@@ -95,7 +95,7 @@ func ReadFromDiscoServerConfig(input_file *file.File) (*infocard.Config, error) 
 		case infocard.TYPE_NAME:
 			frelconfig.Infonames[id] = infocard.Infoname(content)
 		case infocard.TYPE_INFOCAD:
-			frelconfig.NotParsedInfocard[id] = infocard.NewNotParsedInfocard(content)
+			frelconfig.Infocards[id] = infocard.NewInfocard(content)
 		default:
 			logus1.Log.Fatal(
 				"unrecognized object name in infocards.txt",
@@ -136,17 +136,13 @@ func Read(filesystem *filefind.Filesystem, freelancer_ini *exe_mapped.Config, in
 	}
 
 	var wg sync.WaitGroup
-	for index, card := range config.NotParsedInfocard {
+	for _, card := range config.Infocards {
 		wg.Add(1)
-		parsed_infocard := &infocard.Infocard{}
-		config.Infocards[index] = parsed_infocard
-
-		go func(parsed_infocard *infocard.Infocard, card *infocard.NotParsedInfocard) {
-			parsed_infocard.Lines, _ = card.XmlToText()
+		go func(parsed_infocard *infocard.Infocard) {
+			card.Lines, _ = card.XmlToText()
 			wg.Done()
-		}(parsed_infocard, card)
+		}(card)
 	}
-	config.NotParsedInfocard = nil
 	wg.Wait()
 	return config, nil
 }

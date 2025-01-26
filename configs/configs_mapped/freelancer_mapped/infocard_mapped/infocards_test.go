@@ -24,7 +24,7 @@ func TestReader(t *testing.T) {
 	assert.Greater(t, len(config.Infocards), 0)
 
 	fmt.Println(len(config.Infocards))
-	for index, infocard := range config.NotParsedInfocard {
+	for index, infocard := range config.Infocards {
 		if strings.Contains(infocard.GetContent(), "TAU BORDER WORLDS") {
 			lines, _ := infocard.XmlToText()
 			fmt.Println("index=", index, " ", lines)
