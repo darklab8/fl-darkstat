@@ -18,6 +18,8 @@ RUN mkdir data
 COPY main.go ./
 COPY darkstat darkstat
 COPY darkrelay darkrelay
+COPY configs configs
+COPY darkcore darkcore
 
 # building golang gazilion times faster
 ENV GOCACHE=/root/.cache/go-build
