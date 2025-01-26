@@ -1,3 +1,4 @@
+# type: ignore
 # Provided by Alex from Freelancer Discovery
 
 createIDTable = None

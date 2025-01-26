@@ -1,3 +1,4 @@
+# type: ignore
 """
 By Alex (of Discovery GC and The Starport), 31st May 2015 & 27th June 2016
 Based heavily on PHP work done for the Discovery GC wiki by

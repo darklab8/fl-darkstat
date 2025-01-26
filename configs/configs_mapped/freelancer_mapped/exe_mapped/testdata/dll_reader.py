@@ -174,8 +174,8 @@ def getAllInfocards():
     # as resources.dll is supposed to be always 0 indexed
     # and the rest should get their index number from freelancer.ini
     dllPaths = [
-        str(exe_path/"resources.dll")),
-        str(exe_path/"InfoCards.dll")),
+        str(exe_path/"resources.dll"),
+        str(exe_path/"InfoCards.dll"),
         str(exe_path/"MiscText.dll"),
         # str(exe_path/"nameresources.dll"),
         # str(exe_path/"equipresources.dll"),
