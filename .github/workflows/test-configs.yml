@@ -22,22 +22,27 @@ jobs:
     name: Test ${{ matrix.freelancer-mod }}
     steps:
     - uses: actions/checkout@v3
-
     - uses: darklab8/infra/.github/actions/checkout-freelancer@master
       with:
         freelancer-mod: "${{ matrix.freelancer-mod }}"
         freelancer-folder: '${{ github.workspace }}/${{ matrix.freelancer-mod }}'
         ssh-key-base64-discovery: ${{ secrets.ID_RSA_FILES_FREELANCER_DISCOVERY }}
         ssh-key-base64-vanilla: ${{ secrets.ID_RSA_FILES_FREELANCER_VANILLA }}
-
     - run: ls ./${{ matrix.freelancer-mod }}
-
     - name: Install Taskfile
       uses: darklab8/infra/.github/actions/install-taskfile@master
-
     - name: Set up Go
       uses: darklab8/infra/.github/actions/install-go@master
-
+    - name: Install Templ
+      uses: darklab8/infra/.github/actions/install-templ@master
+    - name: generate Templ files
+      run: templ generate
+    - name: Install Swag
+      uses: darklab8/infra/.github/actions/install-swag@master
+    - name: Build swag go stuff
+      run: swag init --parseDependency
+    - name: add versions
+      run: task build-version
     - name: Test
       run: go test ./...
       env:
