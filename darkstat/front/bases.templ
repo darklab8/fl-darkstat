@@ -89,10 +89,10 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm tab.PinMo
 					</th>
 				}
 				if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
-					<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Transport</span><span>profit/v</span><span>¢/sec</span></div></th>
+					<th style="width:50px;">@frmt.MultiLinestring([]string{"Best","Transport","profit/v", "¢/sec"})</th>
 					if shared.ShowDisco {
-						<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Frigate</span><span>profit/v</span><span>¢/sec</span></div></th>
-						<th style="width:50px;"><div class="vertical_th"><span>Best</span><span>Freighter</span><span>profit/v</span><span>¢/sec</span></div></th>
+						<th style="width:50px;">@frmt.MultiLinestring([]string{"Best","Frigate","profit/v", "¢/sec"})</th>
+						<th style="width:50px;">@frmt.MultiLinestring([]string{"Best","Freighter","profit/v", "¢/sec"})</th>
 					}
 				}
 				<th style="width:100px;">Region</th>

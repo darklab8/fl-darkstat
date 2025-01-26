@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils/utils_types"
 	"strings"
+	"context"
 )
 
 templ Heading(shared *types.SharedData) {
@@ -24,7 +25,7 @@ templ Heading(shared *types.SharedData) {
 		}
 		.left {
 			align-self: stretch;
-
+			flex-grow: 1;
 		}
 		#time, #patch {
 			color: var(--color_time);
@@ -55,6 +56,46 @@ templ Heading(shared *types.SharedData) {
 	</div>
 }
 
+templ TabStyle() {
+	<style>
+	.tab-list {
+		height: 100%;
+		display: flex;
+    	flex-wrap: wrap;
+    	flex-direction: row;
+		align-content: stretch;
+	}
+	.tab-list .selected {
+		background-color: var(--selected);
+	}
+	.tab-list a {
+		min-width: 45px;
+		max-width: 75px;
+		flex-grow: 1;
+		flex-basis:45px;
+	}
+	.tab-list button {
+		font-size: 0.90em;
+		background-color: var(--color_background);
+		color: var(--color_text);
+		border-color: var(--color_border);
+
+		min-width: 45px;
+		max-width: 75px;
+		flex-grow: 1;
+		cursor: pointer;
+		min-height: 36px;
+		flex-basis:45px;
+	}
+	.tab-list button:hover {
+		background-color: var(--color_hover);
+	}
+
+	button.Docs {
+  		border-radius: 25px;
+	}
+	</style>
+}
 
 script GoToUrl(current string, themes []string) {
 	let index = 0; 
@@ -82,47 +123,106 @@ script GoToUrl(current string, themes []string) {
 	
 }
 
-templ Button(text []string, get_url utils_types.FilePath, url utils_types.FilePath) {
-	if get_url == urls.Swagger {
+type Buttn struct {
+	ctx context.Context
+	text []string
+	get_url utils_types.FilePath
+	url utils_types.FilePath
+
+	is_relay bool
+	extra_style string
+	attrs templ.Attributes
+}
+type ButtnOpt func(s *Buttn) 
+
+func WithRelay() ButtnOpt{
+	return func(s *Buttn) {
+		s.is_relay = true
+	}
+}
+func WithStyle(style string) ButtnOpt{
+	return func(s *Buttn) {
+		s.extra_style = style
+	}
+}
+
+func NewButtn(
+	ctx context.Context,
+	text []string,
+	get_url utils_types.FilePath,
+	url utils_types.FilePath,
+	opts ...ButtnOpt,
+	) *Buttn {
+	button := &Buttn{
+		ctx:ctx,
+		text: text,
+		get_url: get_url,
+		url: url,
+	}
+
+	for _, opt := range opts {
+		opt(button)
+	}
+
+	button.attrs = make(templ.Attributes)
+	var sb strings.Builder
+	if button.get_url == urls.Swagger {
+		sb.WriteString("width:100%; border-radius: 20px; height: 100%; ")
+	}
+
+	if button.get_url == urls.Thrusters ||
+		button.get_url == urls.Scanners ||
+		button.get_url == urls.Missiles ||
+		button.get_url == urls.Factions ||
+		button.get_url == urls.Missions ||
+		button.get_url == urls.IDRephacks {
+		sb.WriteString("flex-grow: 2; ")
+	}
+
+	sb.WriteString(button.extra_style)
+	button.attrs["style"] =sb.String()
+
+	return button
+}
+
+func (opt *Buttn) HxGet() string {
+	if opt.is_relay {
+		return types.GetCtx(opt.ctx).RelayHost + types.GetCtx(opt.ctx).RelayRoot + opt.get_url.ToString()
+	} 
+
+	return types.GetCtx(opt.ctx).SiteRoot + opt.get_url.ToString()
+}
+
+templ Button(opt *Buttn) {
+	if opt.get_url == urls.Swagger {
 		<a 
-			href={ templ.SafeURL(types.GetCtx(ctx).SiteUrl + "/" + get_url.ToString()) }
+			href={ templ.SafeURL(types.GetCtx(ctx).SiteUrl + "/" + opt.get_url.ToString()) }
 			style="display: block;"
 		>
 			<button
-				class={ templ.KV("selected", strings.Contains(get_url.ToString(), url.ToString())), "button", strings.Join(text,"") }
+				class={ templ.KV("selected", strings.Contains(opt.get_url.ToString(), opt.url.ToString())), "button", strings.Join(opt.text,"") }
 				role="tab"
 				aria-selected="false"
 				aria-controls="tab-content"
-				style="width:40px; border-radius: 20px; height: 100%;" 
+				{ opt.attrs... }
 			>
-				@frmt.MultiLinestring(text)
+				@frmt.MultiLinestringWrap(opt.text)
 			</button>
 		</a>
 
 	// TODO refactor this hackery
-	} else if get_url == urls.PoBs || get_url == urls.PoBGoods {
-		<button
-			preload="mouseover"
-			hx-trigger="mousedown"
-			hx-get={ types.GetCtx(ctx).RelayHost + types.GetCtx(ctx).RelayRoot + get_url.ToString() }
-			class={ templ.KV("selected", strings.Contains(get_url.ToString(), url.ToString())), "button", strings.Join(text,"") }
-			role="tab"
-			aria-selected="false"
-			aria-controls="tab-content"
-		>
-			@frmt.MultiLinestring(text)
-		</button>
 	} else {
 		<button
 			preload="mouseover"
 			hx-trigger="mousedown"
-			hx-get={ types.GetCtx(ctx).SiteRoot + get_url.ToString() }
-			class={ templ.KV("selected", strings.Contains(get_url.ToString(), url.ToString())), "button", strings.Join(text,"") }
+			hx-get={ opt.HxGet() }
+			class={ templ.KV("selected", strings.Contains(opt.get_url.ToString(), opt.url.ToString())), "button", strings.Join(opt.text,"") }
 			role="tab"
 			aria-selected="false"
 			aria-controls="tab-content"
+			{ opt.attrs... }
 		>
-			@frmt.MultiLinestring(text)
+			@frmt.MultiLinestringWrap(opt.text)
 		</button>
 	}
 }

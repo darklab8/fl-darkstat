@@ -7,3 +7,10 @@ templ MultiLinestring(lines []string) {
 		}
 	</div>
 }
+templ MultiLinestringWrap(lines []string) {
+	<div class="vertical_wrap">
+		for _, line := range lines {
+			<span>@templ.Raw(line)</span>
+		}
+	</div>
+}

@@ -34,6 +34,20 @@
     flex-direction: column;
 }
 
+.vertical_wrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.vertical_wrap span {}
+
+
 highlight {
     background-color: var(--infocard_text_highlight);
 }

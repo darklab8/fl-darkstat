@@ -22,112 +22,83 @@ templ DocsEntry(theme types.Theme, shared *types.SharedData) {
 }
 
 templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.SharedData) {
-	<style>
-	.tab-list {
-		height: 100%;
-		display: flex;
-    	flex-wrap: wrap;
-    	flex-direction: row;
-		align-content: stretch;
-	}
-	.tab-list .selected {
-		background-color: var(--selected);
-	}
-	.tab-list button {
-		font-size: 0.90em;
-		background-color: var(--color_background);
-		color: var(--color_text);
-		border-color: var(--color_border);
-
-		min-width: 45px;
-		cursor: pointer;
-		min-height: 36px;
-	}
-	.tab-list button:hover {
-		background-color: var(--color_hover);
-	}
-
-	button.Docs {
-  		border-radius: 25px;
-	}
-
-	</style>
+	@tab.TabStyle()
 	@tab.Heading(shared) {
 		<div class="tab-list" role="tablist">
 			if mode == false {
 				
-				@tab.Button([]string{"Bases"}, urls.Bases, url)
-				@tab.Button([]string{"Miss","ions"}, urls.Missions, url)
-				@tab.Button([]string{"Fact","ions"}, urls.Factions, url)
-				@tab.Button([]string{"Bribes"}, urls.Bribes, url)
-				@tab.Button([]string{"Trade", "routes"}, urls.Trades, url)
-				@tab.Button([]string{"Ore", "routes"}, urls.Asteroids, url)
-				@tab.Button([]string{"Travel", "routes"}, urls.TravelRoutes, url)
-				@tab.Button([]string{"Comm", "odities"}, urls.Commodities, url)
-				@tab.Button([]string{"Guns"}, urls.Guns, url)
-				@tab.Button([]string{"Guns", "Mods"}, urls.GunModifiers, url)
-				@tab.Button([]string{"Miss","iles"}, urls.Missiles, url)
-				@tab.Button([]string{"Ammo"}, urls.Ammo, url)
-				@tab.Button([]string{"Mines"}, urls.Mines, url)
-				@tab.Button([]string{"CMs"}, urls.CounterMeasures, url)
-				@tab.Button([]string{"Shields"}, urls.Shields, url)
-				@tab.Button([]string{"Thru","sters"}, urls.Thrusters, url)
-				@tab.Button([]string{"Ships"}, urls.Ships, url)
-				@tab.Button([]string{"Ship", "Details"}, urls.ShipDetails, url)
-				@tab.Button([]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"Bases"}, urls.Bases, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Miss","ions"}, urls.Missions, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Fact","ions"}, urls.Factions, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Bribes"}, urls.Bribes, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Trade","&thinsp;", "routes"}, urls.Trades, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ore","&thinsp;", "routes"}, urls.Asteroids, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Travel","&thinsp;", "routes"}, urls.TravelRoutes, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Comm", "odities"}, urls.Commodities, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Guns"}, urls.Guns, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Guns","&thinsp;", "Mods"}, urls.GunModifiers, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Miss","iles"}, urls.Missiles, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ammo"}, urls.Ammo, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Mines"}, urls.Mines, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"CMs"}, urls.CounterMeasures, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Shields"}, urls.Shields, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Thru","sters"}, urls.Thrusters, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ships"}, urls.Ships, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ship","&thinsp;", "Details"}, urls.ShipDetails, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{types.GetCtx(ctx).TractorTabName}, urls.Tractors, url))
 				if shared.ShowDisco {
-					@tab.Button([]string{"ID Rep", "hacks"}, urls.IDRephacks, url)
+					@tab.Button(tab.NewButtn(ctx,[]string{"ID Rep","&thinsp;", "hacks"}, urls.IDRephacks, url))
 				}
-				@tab.Button([]string{"Engines"}, urls.Engines, url)
-				@tab.Button([]string{"Scan","ners"}, urls.Scanners, url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"Engines"}, urls.Engines, url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Scan","ners"}, urls.Scanners, url))
 				if settings.IsRelayActive(shared.Mapped) {
-					@tab.Button([]string{"PoBs"}, urls.PoBs, url)
-					@tab.Button([]string{"PoB","goods"}, urls.PoBGoods, url)
+					@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, urls.PoBs, url, tab.WithRelay()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"PoB","&thinsp;","goods"}, urls.PoBGoods, url, tab.WithRelay()))
 				}
-				@tab.Button([]string{"API"}, urls.Swagger, url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"API"}, urls.Swagger, url))
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
-					@frmt.MultiLinestring([]string{"Show", "All"})
+					@frmt.MultiLinestringWrap([]string{"Show","&thinsp;", "All"})
 				</button>
-				@tab.Button([]string{"Docs"}, urls.Docs, url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"Docs"}, urls.Docs, url))
 			} else {
 				
-				@tab.Button([]string{"Bases"}, tab.AllItemsUrl(urls.Bases), url)
-				@tab.Button([]string{"Miss","ions"}, tab.AllItemsUrl(urls.Missions), url)
-				@tab.Button([]string{"Fact","ions"}, tab.AllItemsUrl(urls.Factions), url)
-				@tab.Button([]string{"Bribes"}, tab.AllItemsUrl(urls.Bribes), url)
-				@tab.Button([]string{"Trade", "routes"}, tab.AllItemsUrl(urls.Trades), url)
-				@tab.Button([]string{"Ore", "routes"}, tab.AllItemsUrl(urls.Asteroids), url)
-				@tab.Button([]string{"Travel", "routes"}, tab.AllItemsUrl(urls.TravelRoutes), url)
-				@tab.Button([]string{"Comm", "odities"}, tab.AllItemsUrl(urls.Commodities), url)
-				@tab.Button([]string{"Guns"}, tab.AllItemsUrl(urls.Guns), url)
-				@tab.Button([]string{"Guns", "Mods"}, tab.AllItemsUrl(urls.GunModifiers), url)
-				@tab.Button([]string{"Miss","iles"}, tab.AllItemsUrl(urls.Missiles), url)
-				@tab.Button([]string{"Ammo"}, tab.AllItemsUrl(urls.Ammo), url)
-				@tab.Button([]string{"Mines"}, tab.AllItemsUrl(urls.Mines), url)
-				@tab.Button([]string{"CMs"}, tab.AllItemsUrl(urls.CounterMeasures), url)
-				@tab.Button([]string{"Shields"}, tab.AllItemsUrl(urls.Shields), url)
-				@tab.Button([]string{"Thru","sters"}, tab.AllItemsUrl(urls.Thrusters), url)
-				@tab.Button([]string{"Ships"}, tab.AllItemsUrl(urls.Ships), url)
-				@tab.Button([]string{"Ship", "Details"}, tab.AllItemsUrl(urls.ShipDetails), url)
-				@tab.Button([]string{types.GetCtx(ctx).TractorTabName}, tab.AllItemsUrl(urls.Tractors), url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"Bases"}, tab.AllItemsUrl(urls.Bases), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Miss","ions"}, tab.AllItemsUrl(urls.Missions), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Fact","ions"}, tab.AllItemsUrl(urls.Factions), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Bribes"}, tab.AllItemsUrl(urls.Bribes), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Trade","&thinsp;", "routes"}, tab.AllItemsUrl(urls.Trades), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ore","&thinsp;", "routes"}, tab.AllItemsUrl(urls.Asteroids), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Travel","&thinsp;", "routes"}, tab.AllItemsUrl(urls.TravelRoutes), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Comm", "odities"}, tab.AllItemsUrl(urls.Commodities), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Guns"}, tab.AllItemsUrl(urls.Guns), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Guns","&thinsp;", "Mods"}, tab.AllItemsUrl(urls.GunModifiers), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Miss","iles"}, tab.AllItemsUrl(urls.Missiles), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ammo"}, tab.AllItemsUrl(urls.Ammo), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Mines"}, tab.AllItemsUrl(urls.Mines), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"CMs"}, tab.AllItemsUrl(urls.CounterMeasures), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Shields"}, tab.AllItemsUrl(urls.Shields), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Thru","sters"}, tab.AllItemsUrl(urls.Thrusters), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ships"}, tab.AllItemsUrl(urls.Ships), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Ship","&thinsp;", "Details"}, tab.AllItemsUrl(urls.ShipDetails), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{types.GetCtx(ctx).TractorTabName}, tab.AllItemsUrl(urls.Tractors), url))
 				if shared.ShowDisco {
-					@tab.Button([]string{"ID Rep", "hacks"}, tab.AllItemsUrl(urls.IDRephacks), url)
+					@tab.Button(tab.NewButtn(ctx,[]string{"ID Rep","&thinsp;", "hacks"}, tab.AllItemsUrl(urls.IDRephacks), url))
 				}
-				@tab.Button([]string{"Engines"}, tab.AllItemsUrl(urls.Engines), url)
-				@tab.Button([]string{"Scan","ners"}, tab.AllItemsUrl(urls.Scanners), url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"Engines"}, tab.AllItemsUrl(urls.Engines), url))
+				@tab.Button(tab.NewButtn(ctx,[]string{"Scan","ners"}, tab.AllItemsUrl(urls.Scanners), url))
 				if settings.IsRelayActive(shared.Mapped) {
-					@tab.Button([]string{"PoBs"}, tab.AllItemsUrl(urls.PoBs), url)
-					@tab.Button([]string{"PoB","goods"}, tab.AllItemsUrl(urls.PoBGoods), url)
+					@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, tab.AllItemsUrl(urls.PoBs), url, tab.WithRelay()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"PoB","&thinsp;","goods"}, tab.AllItemsUrl(urls.PoBGoods), url, tab.WithRelay()))
 				}
 				
-				@tab.Button([]string{"API"}, urls.Swagger, url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"API"}, urls.Swagger, url))
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + url.ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
-					@frmt.MultiLinestring([]string{"Don't", "Show All"})
+					@frmt.MultiLinestringWrap([]string{"Don't", "Show All"})
 				</button>
-				@tab.Button([]string{"Docs"}, tab.AllItemsUrl(urls.Docs), url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"Docs"}, tab.AllItemsUrl(urls.Docs), url))
 			}
 			<button style="width:60px; border-radius: 20px;" onClick={ tab.GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).Themes) } type="button">
-				@frmt.MultiLinestring([]string{"Color", "Scheme"})
+				@frmt.MultiLinestringWrap([]string{"Color", "Scheme"})
 			</button>
 			
 		</div>

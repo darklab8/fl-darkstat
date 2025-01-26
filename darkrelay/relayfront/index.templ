@@ -16,47 +16,18 @@ templ Index(theme types.Theme, shared *types.SharedData) {
 
 
 templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.SharedData) {
-	<style>
-	.tab-list {
-		height: 100%;
-		display: flex;
-    	flex-wrap: wrap;
-    	flex-direction: row;
-		align-content: stretch;
-	}
-	.tab-list .selected {
-		background-color: var(--selected);
-	}
-	.tab-list button {
-		font-size: 0.90em;
-		background-color: var(--color_background);
-		color: var(--color_text);
-		border-color: var(--color_border);
-
-		min-width: 45px;
-		cursor: pointer;
-		min-height: 36px;
-	}
-	.tab-list button:hover {
-		background-color: var(--color_hover);
-	}
-
-	button.Docs {
-  		border-radius: 25px;
-	}
-
-	</style>
+	@tab.TabStyle()
 	@tab.Heading(shared) {
 		<div class="tab-list" role="tablist">
 			if mode == false {
 				
-				@tab.Button([]string{"PoBs"}, urls.Ammo, url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, urls.Ammo, url))
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestring([]string{"Show", "All"})
 				</button>
 			} else {
 				
-				@tab.Button([]string{"PoBs"}, tab.AllItemsUrl(urls.Ammo), url)
+				@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, tab.AllItemsUrl(urls.Ammo), url))
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestring([]string{"Don't", "Show All"})
 				</button>
