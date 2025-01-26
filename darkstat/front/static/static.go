@@ -3,7 +3,7 @@ package static
 import (
 	"embed"
 
-	"github.com/darklab8/fl-darkcore/darkcore/core_front"
+	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 

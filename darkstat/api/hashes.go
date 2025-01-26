@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
-	"github.com/darklab8/fl-darkcore/darkcore/web"
-	"github.com/darklab8/fl-darkcore/darkcore/web/registry"
+	"github.com/darklab8/fl-darkstat/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 )
 
 type Hashes struct {

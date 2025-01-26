@@ -1,7 +1,7 @@
 package relayrouter
 
 import (
-	"github.com/darklab8/fl-darkcore/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayfront"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"

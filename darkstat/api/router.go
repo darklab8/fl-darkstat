@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/darklab8/fl-darkcore/darkcore/web"
-	"github.com/darklab8/fl-darkcore/darkcore/web/registry"
+	"github.com/darklab8/fl-darkstat/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	httpSwagger "github.com/swaggo/http-swagger"

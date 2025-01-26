@@ -1,0 +1,15 @@
+package core_front
+
+import "github.com/darklab8/fl-darkstat/darkcore/core_types"
+
+templ StaticFile(file core_types.StaticFile) {
+	switch file.Kind {
+		case core_types.StaticFileCSS:
+			<link rel="stylesheet" href={ core_types.GetCtx(ctx).GetStaticRoot() + file.Filename }/>
+			// @templ.Raw("<style>" + file.Content + "</style>")
+		case core_types.StaticFileJS:
+			<script src={ core_types.GetCtx(ctx).GetStaticRoot() + file.Filename }></script>
+		case core_types.StaticFileIco:
+			<link rel="icon" type="image/x-icon" href={ core_types.GetCtx(ctx).GetStaticRoot() + file.Filename }/>
+	}
+}

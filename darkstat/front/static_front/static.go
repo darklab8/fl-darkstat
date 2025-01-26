@@ -3,7 +3,7 @@ package static_front
 import (
 	_ "embed"
 
-	"github.com/darklab8/fl-darkcore/darkcore/core_types"
+	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 )
 
 //go:embed custom/shared_vanilla.js

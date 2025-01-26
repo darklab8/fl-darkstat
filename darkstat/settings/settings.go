@@ -8,7 +8,7 @@ import (
 
 	"github.com/darklab8/fl-configs/configs/configs_mapped"
 	"github.com/darklab8/fl-configs/configs/configs_settings"
-	darkcore_settings "github.com/darklab8/fl-darkcore/darkcore/settings"
+	darkcore_settings "github.com/darklab8/fl-darkstat/darkcore/settings"
 
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"

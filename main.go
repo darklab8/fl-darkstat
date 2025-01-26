@@ -12,8 +12,8 @@ import (
 
 	// _ "net/http/pprof"
 
-	"github.com/darklab8/fl-darkcore/darkcore/builder"
-	"github.com/darklab8/fl-darkcore/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/api"
 	"github.com/darklab8/fl-darkstat/darkstat/router"

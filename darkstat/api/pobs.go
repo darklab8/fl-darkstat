@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/darklab8/fl-darkcore/darkcore/web"
-	"github.com/darklab8/fl-darkcore/darkcore/web/registry"
+	"github.com/darklab8/fl-darkstat/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	_ "github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
