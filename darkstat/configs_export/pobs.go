@@ -58,6 +58,7 @@ type PoB struct {
 	FactionName *string `json:"faction_name"` // AffiliationHash *flhash.HashCode `json:"affiliation"` //: 2620,
 
 	ForumThreadUrl *string `json:"forum_thread_url"`
+	CargoSpaceLeft *int    `json:"cargospace"`
 
 	BasePos     *cfg.Vector `json:"base_pos"`
 	SectorCoord *string     `json:"sector_coord"`
@@ -181,7 +182,15 @@ func (e *Exporter) GetPoBGoods(pobs []*PoB) []*PoBGood {
 			}
 			if pob.ShopItem.BaseBuys() {
 				item.AnyBaseBuys = true
-				item.TotalSellableToBases += pob.ShopItem.MaxStock - pob.ShopItem.Quantity
+				sellable_to_current_base := pob.ShopItem.MaxStock - pob.ShopItem.Quantity
+
+				if pob.Base.CargoSpaceLeft != nil {
+					if *pob.Base.CargoSpaceLeft < sellable_to_current_base {
+						sellable_to_current_base = *pob.Base.CargoSpaceLeft
+					}
+				}
+
+				item.TotalSellableToBases += sellable_to_current_base
 
 				if item.BestPriceToSell == nil {
 					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.SellPrice)
@@ -231,12 +240,13 @@ func (e *Exporter) GetPoBs() []*PoB {
 	for _, pob_info := range e.Configs.Discovery.PlayerOwnedBases.Bases {
 
 		var pob *PoB = &PoB{
-			Nickname: pob_info.Nickname,
-			Name:     pob_info.Name,
-			Pos:      pob_info.Pos,
-			Level:    pob_info.Level,
-			Money:    pob_info.Money,
-			Health:   pob_info.Health,
+			Nickname:       pob_info.Nickname,
+			Name:           pob_info.Name,
+			Pos:            pob_info.Pos,
+			Level:          pob_info.Level,
+			Money:          pob_info.Money,
+			Health:         pob_info.Health,
+			CargoSpaceLeft: pob_info.CargoSpaceLeft,
 		}
 		if pob_info.DefenseMode != nil {
 			pob.DefenseMode = (*DefenseMode)(pob_info.DefenseMode)

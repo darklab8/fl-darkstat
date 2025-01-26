@@ -45,6 +45,7 @@ func FmtPtrFloat(value *float64, precision int) string {
 }
 
 templ PoBTableHeaders() {
+	<th style="width:25px;">@frmt.MultiLinestring([]string{"Cargo", "space", "left"})</th>
 	<th style="width:25px;">@frmt.MultiLinestring([]string{"Forum", "thread"})</th>
 	<th style="width:25px;">@frmt.MultiLinestring([]string{"Public", "items", "amount"})</th>
 	<th style="width:25px;">Pos</th>
@@ -65,6 +66,7 @@ templ PoBTableHeaders() {
 }
 
 templ PobTableRow(pob *configs_export.PoB) {
+	<td> { FmtPtrInt(pob.CargoSpaceLeft)} </td>
 	<td>
 		if pob.ForumThreadUrl != nil {
 			<a href={ templ.SafeURL(*pob.ForumThreadUrl) }>link</a>

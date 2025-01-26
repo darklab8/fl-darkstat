@@ -31,6 +31,7 @@ type Base struct {
 	ShopItems []ShopItem `json:"shop_items"`
 
 	ForumThreadUrl *string `json:"thread"`
+	CargoSpaceLeft *int    `json:"cargospace"`
 
 	SystemHash         *flhash.HashCode `json:"system"`      //: 2745655887,
 	Pos                *string          `json:"pos"`         //: "299016, 33, -178",
