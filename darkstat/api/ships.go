@@ -18,7 +18,7 @@ import (
 // @Tags         ships
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	configs_export.Base
+// @Success      200  {array}  	configs_export.Ship
 // @Router       /api/ships [get]
 func GetShips(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{

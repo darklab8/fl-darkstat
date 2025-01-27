@@ -35,21 +35,22 @@ func (g MarketGood) GetPriceBaseBuysFor() int {
 }
 
 type Commodity struct {
-	Nickname              string
-	NicknameHash          flhash.HashCode
-	Name                  string
-	Combinable            bool
-	Volume                float64
-	ShipClass             cfg.ShipClass
-	NameID                int
-	InfocardID            int
-	Infocard              InfocardKey
-	Bases                 map[cfg.BaseUniNick]*MarketGood
-	PriceBestBaseBuysFor  int
-	PriceBestBaseSellsFor int
-	ProffitMargin         int
-	baseAllTradeRoutes
-	Mass float64
+	Nickname              string                          `json:"nickname"`
+	NicknameHash          flhash.HashCode                 `json:"nickname_hash" format:"int64"`
+	PriceBase             int                             `json:"price_base"`
+	Name                  string                          `json:"name"`
+	Combinable            bool                            `json:"combinable"`
+	Volume                float64                         `json:"volume"`
+	ShipClass             cfg.ShipClass                   `json:"ship_class"`
+	NameID                int                             `json:"name_id"`
+	InfocardID            int                             `json:"infocard_id"`
+	Infocard              InfocardKey                     `json:"infocard_key"`
+	Bases                 map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
+	PriceBestBaseBuysFor  int                             `json:"price_best_base_buys_for"`
+	PriceBestBaseSellsFor int                             `json:"price_best_base_sells_for"`
+	ProffitMargin         int                             `json:"proffit_margin"`
+	baseAllTradeRoutes    `json:"-" swaggerignore:"true"`
+	Mass                  float64 `json:"mass"`
 }
 
 func GetPricePerVoume(price int, volume float64) float64 {
@@ -68,7 +69,8 @@ func (e *Exporter) GetCommodities() []*Commodity {
 
 		for _, volume_info := range equipment.Volumes {
 			commodity := &Commodity{
-				Bases: make(map[cfg.BaseUniNick]*MarketGood),
+				Bases:     make(map[cfg.BaseUniNick]*MarketGood),
+				PriceBase: comm.Price.Get(),
 			}
 			commodity.Mass, _ = equipment.Mass.GetValue()
 
