@@ -66,16 +66,18 @@ func PostCommodityMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 
 			var market_good_answers []*MarketGoodResp
 
-			items_by_nick := make(map[string]*configs_export.Commodity)
+			items_by_nick := make(map[string][]*configs_export.Commodity)
 			for _, item := range api.app_data.Configs.Commodities {
-				items_by_nick[string(item.Nickname)] = item
+				items_by_nick[string(item.Nickname)] = append(items_by_nick[string(item.Nickname)], item)
 			}
 
 			for _, input_nickname := range nicknames {
 				answer := &MarketGoodResp{Nickname: string(input_nickname)}
-				if item, ok := items_by_nick[input_nickname]; ok {
-					for _, good := range item.Bases {
-						answer.MarketGoods = append(answer.MarketGoods, good)
+				if items, ok := items_by_nick[input_nickname]; ok {
+					for _, item := range items {
+						for _, good := range item.Bases {
+							answer.MarketGoods = append(answer.MarketGoods, good)
+						}
 					}
 				} else {
 					answer.Error = ptr.Ptr("not existing nickname")

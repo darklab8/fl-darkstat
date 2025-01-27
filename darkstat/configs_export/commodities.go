@@ -222,6 +222,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 				BaseSells:            true,
 				IsServerSideOverride: true,
 				Volume:               commodity.Volume,
+				ShipClass:            commodity.ShipClass,
 				BaseInfo: BaseInfo{
 					BaseNickname: pob_crafts_nickname,
 					BaseName:     e.Configs.CraftableBaseName(),
@@ -242,7 +243,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 			BaseSells:            true,
 			IsServerSideOverride: false,
 			Volume:               commodity.Volume,
-
+			ShipClass:            commodity.ShipClass,
 			BaseInfo: BaseInfo{
 				BaseNickname: BaseLootableNickname,
 				BaseName:     BaseLootableName,
@@ -266,6 +267,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 					PriceBaseBuysFor:     ptr.Ptr(good.SellPrice),
 					PriceBaseSellsFor:    good.Price,
 					Volume:               commodity.Volume,
+					ShipClass:            commodity.ShipClass,
 					BaseInfo: BaseInfo{
 						BaseNickname: cfg.BaseUniNick(good.PobNickname),
 						BaseName:     "(PoB) " + good.PoBName,
