@@ -142,6 +142,10 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		Lootable:     gun_info.Lootable.Get(),
 		Bases:        make(map[cfg.BaseUniNick]*MarketGood),
 	}
+	gun.IdsInfo, _ = gun_info.IdsInfo.GetValue()
+	if _, ok := gun_info.IdsInfo.GetValue(); !ok {
+		logus.Log.Warn("gun is not having defined infocard", typelog.Any("nickname", gun_nickname))
+	}
 
 	gun.Mass, _ = gun_info.Mass.GetValue()
 
