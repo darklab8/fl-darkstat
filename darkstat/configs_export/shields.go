@@ -50,28 +50,19 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 
 	for _, shield_gen := range e.Configs.Equip.ShieldGens {
 		shield := Shield{
-			Bases: make(map[cfg.BaseUniNick]*MarketGood),
+			Nickname: shield_gen.Nickname.Get(),
+
+			IdsInfo: shield_gen.IdsInfo.Get(),
+			IdsName: shield_gen.IdsName.Get(),
+			Bases:   make(map[cfg.BaseUniNick]*MarketGood),
 		}
 		shield.Mass, _ = shield_gen.Mass.GetValue()
 
-		shield.Nickname = shield_gen.Nickname.Get()
 		shield.NicknameHash = flhash.HashNickname(shield.Nickname)
 		e.Hashes[shield.Nickname] = shield.NicknameHash
 
-		if ids_info, ok := shield_gen.IdsInfo.GetValue(); ok {
-			shield.IdsInfo = ids_info
-		} else {
-			continue
-		}
-
-		shield.IdsName = shield_gen.IdsName.Get()
 		shield.Technology, _ = shield_gen.ShieldType.GetValue()
-
-		if max_capacity, ok := shield_gen.MaxCapacity.GetValue(); ok {
-			shield.Capacity = max_capacity
-		} else {
-			continue
-		}
+		shield.Capacity, _ = shield_gen.MaxCapacity.GetValue()
 
 		shield.RegenerationRate = shield_gen.RegenerationRate.Get()
 		shield.ConstantPowerDraw = shield_gen.ConstPowerDraw.Get()

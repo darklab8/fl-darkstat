@@ -153,7 +153,7 @@ func Read(configs []*iniload.IniLoader) *Config {
 				shiphull.Nickname = semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				shiphull.Ship = semantic.NewString(section, cfg.Key("ship"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				shiphull.Price = semantic.NewInt(section, cfg.Key("price"))
-				shiphull.IdsName = semantic.NewInt(section, cfg.Key("ids_name"))
+				shiphull.IdsName = semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional())
 
 				frelconfig.ShipHulls = append(frelconfig.ShipHulls, shiphull)
 				frelconfig.ShipHullsMap[shiphull.Nickname.Get()] = shiphull

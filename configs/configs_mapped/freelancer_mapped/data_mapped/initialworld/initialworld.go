@@ -68,8 +68,8 @@ func Read(input_file *iniload.IniLoader) *Config {
 			group := &Group{}
 			group.Map(group_res)
 			group.Nickname = semantic.NewString(group_res, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
-			group.IdsName = semantic.NewInt(group_res, cfg.Key("ids_name"))
-			group.IdsInfo = semantic.NewInt(group_res, cfg.Key("ids_info"))
+			group.IdsName = semantic.NewInt(group_res, cfg.Key("ids_name"), semantic.Optional())
+			group.IdsInfo = semantic.NewInt(group_res, cfg.Key("ids_info"), semantic.Optional())
 			group.IdsShortName = semantic.NewInt(group_res, cfg.Key("ids_short_name"))
 
 			group.Relationships = make([]*Relationship, 0, 20)

@@ -457,8 +457,8 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					zone_to_add := &Zone{
 						Nickname: semantic.NewString(zone_info, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 						Pos:      semantic.NewVector(zone_info, cfg.Key("pos"), semantic.Precision(0)),
-						IdsName:  semantic.NewInt(zone_info, cfg.Key("ids_name")),
-						IDsInfo:  semantic.NewInt(zone_info, cfg.Key("ids_info")),
+						IdsName:  semantic.NewInt(zone_info, cfg.Key("ids_name"), semantic.Optional()),
+						IDsInfo:  semantic.NewInt(zone_info, cfg.Key("ids_info"), semantic.Optional()),
 					}
 					system_to_add.ZonesByNick[zone_to_add.Nickname.Get()] = zone_to_add
 

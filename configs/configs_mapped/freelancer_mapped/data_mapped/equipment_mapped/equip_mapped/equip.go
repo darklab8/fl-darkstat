@@ -346,8 +346,8 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				commodity.Map(section)
 				commodity.Nickname = semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
-				commodity.IdsName = semantic.NewInt(section, cfg.Key("ids_name"))
-				commodity.IdsInfo = semantic.NewInt(section, cfg.Key("ids_info"))
+				commodity.IdsName = semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional())
+				commodity.IdsInfo = semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional())
 				commodity.UnitsPerContainer = semantic.NewInt(section, cfg.Key("units_per_container"))
 				commodity.PodApperance = semantic.NewString(section, cfg.Key("pod_appearance"))
 				commodity.LootAppearance = semantic.NewString(section, cfg.Key("loot_appearance"))
@@ -388,8 +388,8 @@ func Read(files []*iniload.IniLoader) *Config {
 				gun.Map(section)
 
 				gun.Nickname = semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
-				gun.IdsName = semantic.NewInt(section, cfg.Key("ids_name"))
-				gun.IdsInfo = semantic.NewInt(section, cfg.Key("ids_info"))
+				gun.IdsName = semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional())
+				gun.IdsInfo = semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional())
 				gun.HitPts = semantic.NewString(section, cfg.Key("hit_pts"))
 				gun.PowerUsage = semantic.NewFloat(section, cfg.Key("power_usage"), semantic.Precision(2))
 				gun.RefireDelay = semantic.NewFloat(section, cfg.Key("refire_delay"), semantic.Precision(2))
@@ -416,8 +416,8 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				munition.Map(section)
 				munition.Nickname = semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
-				munition.IdsName = semantic.NewInt(section, cfg.Key("ids_name"))
-				munition.IdsInfo = semantic.NewInt(section, cfg.Key("ids_info"))
+				munition.IdsName = semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional())
+				munition.IdsInfo = semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional())
 				munition.ExplosionArch = semantic.NewString(section, cfg.Key("explosion_arch"))
 				munition.RequiredAmmo = semantic.NewBool(section, cfg.Key("requires_ammo"), semantic.StrBool)
 				munition.HullDamage = semantic.NewInt(section, cfg.Key("hull_damage"))
@@ -448,8 +448,8 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[minedropper]":
 				mine_dropper := &MineDropper{
 					Nickname:            semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					IdsName:             semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:             semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:             semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:             semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					HitPts:              semantic.NewInt(section, cfg.Key("hit_pts")),
 					ChildImpulse:        semantic.NewFloat(section, cfg.Key("child_impulse"), semantic.Precision(2)),
 					PowerUsage:          semantic.NewFloat(section, cfg.Key("power_usage"), semantic.Precision(2)),
@@ -471,8 +471,8 @@ func Read(files []*iniload.IniLoader) *Config {
 
 					HitPts:             semantic.NewInt(section, cfg.Key("hit_pts")),
 					Lifetime:           semantic.NewFloat(section, cfg.Key("lifetime"), semantic.Precision(2)),
-					IdsName:            semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:            semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:            semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:            semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					SeekDist:           semantic.NewInt(section, cfg.Key("seek_dist")),
 					TopSpeed:           semantic.NewInt(section, cfg.Key("top_speed")),
 					Acceleration:       semantic.NewInt(section, cfg.Key("acceleration")),
@@ -486,8 +486,8 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[shieldgenerator]":
 				shield := &ShieldGenerator{
 					Nickname:           semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					IdsName:            semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:            semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:            semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:            semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					HitPts:             semantic.NewInt(section, cfg.Key("hit_pts")),
 					Volume:             semantic.NewInt(section, cfg.Key("volume")),
 					RegenerationRate:   semantic.NewInt(section, cfg.Key("regeneration_rate")),
@@ -506,8 +506,8 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[thruster]":
 				thruster := &Thruster{
 					Nickname:   semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					IdsName:    semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:    semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:    semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:    semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					HitPts:     semantic.NewInt(section, cfg.Key("hit_pts")),
 					Lootable:   semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool),
 					MaxForce:   semantic.NewInt(section, cfg.Key("max_force")),
@@ -519,8 +519,8 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[power]":
 				power := &Power{
 					Nickname:       semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					IdsName:        semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:        semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:        semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:        semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					Capacity:       semantic.NewInt(section, cfg.Key("capacity")),
 					ChargeRate:     semantic.NewInt(section, cfg.Key("charge_rate")),
 					ThrustCapacity: semantic.NewInt(section, cfg.Key("thrust_capacity")),
@@ -532,8 +532,8 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[engine]":
 				engine := &Engine{
 					Nickname:        semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					IdsName:         semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:         semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:         semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:         semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					CruiseSpeed:     semantic.NewInt(section, cfg.Key("cruise_speed")),
 					LinearDrag:      semantic.NewInt(section, cfg.Key("linear_drag")),
 					MaxForce:        semantic.NewInt(section, cfg.Key("max_force")),
@@ -550,8 +550,8 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[tractor]":
 				tractor := &Tractor{
 					Nickname:   semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					IdsName:    semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:    semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:    semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:    semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					MaxLength:  semantic.NewInt(section, cfg.Key("max_length")),
 					ReachSpeed: semantic.NewInt(section, cfg.Key("reach_speed")),
 					Lootable:   semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool),
@@ -561,8 +561,8 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[countermeasuredropper]":
 				item := &CounterMeasureDropper{
 					Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					IdsName:  semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:  semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:  semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:  semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					Lootable: semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool),
 
 					ProjectileArchetype: semantic.NewString(section, cfg.Key("projectile_archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -574,8 +574,8 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[countermeasure]":
 				item := &CounterMeasure{
 					Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					IdsName:  semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:  semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:  semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:  semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 
 					AmmoLimitAmountInCatridge: semantic.NewInt(section, cfg.Key("ammo_limit")),
 					AmmoLimitMaxCatridges:     semantic.NewInt(section, cfg.Key("ammo_limit"), semantic.Order(1)),
@@ -589,8 +589,8 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[scanner]":
 				item := &Scanner{
 					Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					IdsName:  semantic.NewInt(section, cfg.Key("ids_name")),
-					IdsInfo:  semantic.NewInt(section, cfg.Key("ids_info")),
+					IdsName:  semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:  semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 
 					Range:          semantic.NewInt(section, cfg.Key("range")),
 					CargoScanRange: semantic.NewInt(section, cfg.Key("cargo_scan_range")),
