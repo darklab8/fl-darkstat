@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/darklab8/fl-darkstat/darkstat/darkrpc"
+	"github.com/darklab8/fl-darkstat/darkrpc"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 )
 

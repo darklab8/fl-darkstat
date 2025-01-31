@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/darklab8/fl-darkstat/darkstat/darkrpc"
+	"github.com/darklab8/fl-darkstat/darkrpc"
 )
 
 func GetBases(args darkrpc.Args, reply *darkrpc.Reply) error {

@@ -1,4 +1,4 @@
-package api
+package darkapi
 
 import (
 	"net/http"
