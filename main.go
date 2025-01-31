@@ -1,13 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"runtime"
 	"runtime/pprof"
 	"strings"
+	"syscall"
 	"time"
 
 	// _ "net/http/pprof"
@@ -16,6 +19,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/api"
+	"github.com/darklab8/fl-darkstat/darkstat/darkrpc"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -112,7 +116,7 @@ func main() {
 	}
 	fmt.Println("act:", action)
 
-	web_darkstat := func() {
+	web_darkstat := func() func() {
 		app_data := router.NewAppData()
 
 		stat_router := router.NewRouter(app_data)
@@ -125,11 +129,12 @@ func main() {
 		app_data.Unlock()
 		runtime.GC()
 
-		go api.RegisterApiRoutes(web.NewWeb(
+		relay_server := api.RegisterApiRoutes(web.NewWeb(
 			[]*builder.Filesystem{stat_fs, relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
-		), app_data).Serve(web.WebServeOpts{})
+		), app_data)
+		relay_closer := relay_server.Serve(web.WebServeOpts{SockAddress: web.DarkstatAPISock})
 
 		if settings.IsRelayActive(app_data.Mapped) {
 			go func() {
@@ -155,11 +160,21 @@ func main() {
 			}()
 		}
 
-		web.NewWeb(
+		web_server := web.NewWeb(
 			[]*builder.Filesystem{relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
-		).Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
+		)
+		web_closer := web_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
+
+		rpc_server := darkrpc.NewRpcServer()
+		rpc_server.Serve(app_data)
+		return func() {
+			web_closer.Close()
+			relay_closer.Close()
+			rpc_server.Close()
+			fmt.Println("graceful shutdown is certainly acomplished")
+		}
 	}
 
 	switch Action(action) {
@@ -168,7 +183,12 @@ func main() {
 		app_data := router.NewAppData()
 		router.NewRouter(app_data).Link().BuildAll(false, nil)
 	case Web:
-		web_darkstat()
+		closer := web_darkstat()
+
+		ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+		defer stop()
+		<-ctx.Done()
+		closer()
 	case Version:
 		fmt.Println("version=", settings.Env.AppVersion)
 	case Health:
@@ -185,7 +205,14 @@ func main() {
 		}
 		fmt.Println("service is healthy")
 	default:
-		web_darkstat()
+
+		closer := web_darkstat()
+
+		ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+		defer stop()
+		<-ctx.Done()
+		closer()
+		fmt.Println("trying gracefully shutting down")
 	}
 
 }

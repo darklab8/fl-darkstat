@@ -1,10 +1,10 @@
 package configs_export
 
 import (
-	"errors"
 	"sort"
 	"strconv"
 
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 )
@@ -77,7 +77,7 @@ type MissioNFaction struct {
 	MaxAward int
 	NpcRanks []int
 	Enemies  []EnemyFaction
-	Err      error
+	Err      cfg.Err
 }
 
 type BaseMissions struct {
@@ -92,7 +92,7 @@ type BaseMissions struct {
 	MinMoneyAward int
 	MaxMoneyAward int
 	Vignettes     int
-	Err           error
+	Err           cfg.Err
 }
 
 type DiffToMoney struct {
@@ -124,7 +124,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 
 		base_info, ok := e.Configs.MBases.BaseMap[base.Nickname]
 		if !ok {
-			base.Missions.Err = errors.New("base is not defined in mbases")
+			base.Missions.Err = cfg.NewErr("base is not defined in mbases")
 			bases[base_index] = base
 			continue
 		}
@@ -133,7 +133,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 
 			_, bar_exists := universe_base.ConfigBase.RoomMapByRoomNickname["bar"]
 			if !bar_exists {
-				base.Missions.Err = errors.New("bar is not defined for the base")
+				base.Missions.Err = cfg.NewErr("bar is not defined for the base")
 				bases[base_index] = base
 				continue
 			}
@@ -142,7 +142,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 		// Firstly finding SystemBase coresponding to base
 		system, system_exists := e.Configs.Systems.SystemsMap[base.SystemNickname]
 		if !system_exists {
-			base.Missions.Err = errors.New("system is not found for base")
+			base.Missions.Err = cfg.NewErr("system is not found for base")
 			bases[base_index] = base
 			continue
 		}
@@ -155,7 +155,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 			}
 		}
 		if system_base == nil {
-			base.Missions.Err = errors.New("base is not found in system")
+			base.Missions.Err = cfg.NewErr("base is not found in system")
 			bases[base_index] = base
 			continue
 		}
@@ -176,13 +176,13 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 		}
 
 		if base.Missions.Vignettes == 0 {
-			base.Missions.Err = errors.New("base has no vignette zones")
+			base.Missions.Err = cfg.NewErr("base has no vignette zones")
 			bases[base_index] = base
 			continue
 		}
 
 		if base_info.MVendor == nil {
-			base.Missions.Err = errors.New("no mvendor in mbase")
+			base.Missions.Err = cfg.NewErr("no mvendor in mbase")
 			bases[base_index] = base
 			continue
 		}
@@ -202,7 +202,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 
 			faction_export_info, faction_exists := factions_map[faction.FactionNickname]
 			if !faction_exists {
-				faction.Err = errors.New("mission faction does not eixst")
+				faction.Err = cfg.NewErr("mission faction does not eixst")
 				base.Missions.Factions = append(base.Missions.Factions, faction)
 				continue
 			}
@@ -212,7 +212,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 
 			_, gives_missions := faction_info.MissionType.MinDifficulty.GetValue()
 			if !gives_missions {
-				faction.Err = errors.New("mission_type is not in mbase")
+				faction.Err = cfg.NewErr("mission_type is not in mbase")
 				base.Missions.Factions = append(base.Missions.Factions, faction)
 				continue
 			}
@@ -299,7 +299,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 			}
 
 			if len(base_enemies) == 0 {
-				faction.Err = errors.New("no npc spawn zones with enemies")
+				faction.Err = cfg.NewErr("no npc spawn zones with enemies")
 				base.Missions.Factions = append(base.Missions.Factions, faction)
 				continue
 			}
@@ -313,7 +313,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 		// Make sanity check that Factions were added to base
 		// If not then don't add to it mission existence.
 		if len(base.Missions.Factions) == 0 {
-			base.Missions.Err = errors.New("no msn giving factions found")
+			base.Missions.Err = cfg.NewErr("no msn giving factions found")
 			bases[base_index] = base
 			continue
 		}
@@ -330,7 +330,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 			}
 		}
 		if !npc_exist {
-			base.Missions.Err = errors.New("npcs do not exist")
+			base.Missions.Err = cfg.NewErr("npcs do not exist")
 			bases[base_index] = base
 			continue
 		}

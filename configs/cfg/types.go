@@ -1,5 +1,7 @@
 package cfg
 
+import "github.com/darklab8/go-utils/utils/ptr"
+
 type Vector struct {
 	X float64
 	Y float64
@@ -31,4 +33,16 @@ func (s ShipClass) ToStr() string {
 	default:
 		return ""
 	}
+}
+
+// Gob friendly
+type ErrP string
+type Err = *ErrP
+
+func NewErr(msg string) Err {
+	return Err(ptr.Ptr(msg))
+}
+
+func (r *ErrP) Error() string {
+	return string(*r)
 }

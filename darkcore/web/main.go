@@ -7,8 +7,11 @@ Entrypoint for front and for dev web server?
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/http"
+	"os"
 
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 )
@@ -64,7 +67,8 @@ func NewWeb(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
 }
 
 type WebServeOpts struct {
-	Port *int
+	Port        *int
+	SockAddress string
 }
 
 func enableCors(w *http.ResponseWriter) {
@@ -79,7 +83,7 @@ func CorsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func (w *Web) Serve(opts WebServeOpts) {
+func (w *Web) Serve(opts WebServeOpts) ServerClose {
 	w.registry.Foreach(func(e *registry.Endpoint) {
 		w.mux.HandleFunc(string(e.Url), e.Handler)
 	})
@@ -91,7 +95,47 @@ func (w *Web) Serve(opts WebServeOpts) {
 	}
 
 	fmt.Printf("launching web server, visit http://localhost:%d to check it!\n", port)
-	if err := http.ListenAndServe(fmt.Sprintf("%s:%d", ip, port), AuthMiddleware(CorsMiddleware(w.mux))); err != nil {
-		log.Fatal(err)
+	hander := AuthMiddleware(CorsMiddleware(w.mux))
+
+	var sock_listener net.Listener
+	var sock_server http.Server
+	if cfg.IsLinux && opts.SockAddress != "" {
+		sock_server = http.Server{Handler: hander}
+		var err error
+		os.Mkdir("/tmp/darkstat", 0777)
+		os.Remove(opts.SockAddress)
+		fmt.Println("started to listen to sock ", opts.SockAddress)
+		sock_listener, err = net.Listen("unix", opts.SockAddress)
+		if err != nil {
+			panic(err)
+		}
+		go sock_server.Serve(sock_listener)
+	}
+
+	tcp_server := http.Server{Handler: hander}
+
+	var err error
+	tcp_listener, err := net.Listen("tcp", fmt.Sprintf("%s:%d", ip, port))
+	if err != nil {
+		panic(err)
+	}
+	go func() {
+		err := tcp_server.Serve(tcp_listener) // if serving over Http
+		if err != nil {
+			log.Fatal("http error:", err)
+		}
+	}()
+	return ServerClose{
+		sock_adrr: opts.SockAddress,
 	}
 }
+
+type ServerClose struct {
+	sock_adrr string
+}
+
+func (s ServerClose) Close() {
+	os.Remove(s.sock_adrr)
+}
+
+const DarkstatAPISock = "/tmp/darkstat/api.sock"
