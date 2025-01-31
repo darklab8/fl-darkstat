@@ -4,7 +4,6 @@ parse universe.ini
 package universe_mapped
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
@@ -242,7 +241,7 @@ func Read(ini *iniload.IniLoader, filesystem *filefind.Filesystem) *Config {
 					if room_switch, ok := hot_spot.RoomSwitch.GetValue(); ok {
 						if strings.ToLower(room_switch) == "trader" {
 							room_info.Base.TraderExists = true
-							fmt.Println("found, trader exists for base_nickname=", base.Nickname.Get())
+							// fmt.Println("found, trader exists for base_nickname=", base.Nickname.Get())
 						}
 					}
 				}

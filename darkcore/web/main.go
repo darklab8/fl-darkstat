@@ -13,6 +13,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 )
 
@@ -103,8 +104,10 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 		sock_server = http.Server{Handler: hander}
 		var err error
 		os.Mkdir("/tmp/darkstat", 0777)
-		os.Remove(opts.SockAddress)
-		fmt.Println("started to listen to sock ", opts.SockAddress)
+		err = os.Remove(opts.SockAddress)
+		logus.Log.CheckWarn(err, "attempting to remove socket")
+
+		fmt.Println("starting to listen to sock ", opts.SockAddress)
 		sock_listener, err = net.Listen("unix", opts.SockAddress)
 		if err != nil {
 			panic(err)

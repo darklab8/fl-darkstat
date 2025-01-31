@@ -14,27 +14,50 @@ import (
 )
 
 type RpcServer struct {
+	sock_address string
+	port         int
 }
 
-func NewRpcServer() RpcServer { return RpcServer{} }
+func NewRpcServer(opts ...ServerOpt) *RpcServer {
+	srv := &RpcServer{
+		port: 8100,
+	}
+	for _, opt := range opts {
+		opt(srv)
+	}
+	return srv
+}
+
+type ServerOpt func(r *RpcServer)
+
+func WithSockSrv(sock string) ServerOpt {
+	return func(r *RpcServer) {
+		r.sock_address = sock
+	}
+}
+
+func WithPortSrv(port int) ServerOpt {
+	return func(r *RpcServer) {
+		r.port = port
+	}
+}
 
 func (r *RpcServer) Serve(app_data *router.AppData) {
 	rpcServer := rpc.NewServer()
-
 	rpc_server := NewRpc(app_data)
 	rpcServer.Register(rpc_server)
 
-	rpc.HandleHTTP()                                // if serving over http
-	tcp_listener, err := net.Listen("tcp", ":8100") // if serving over http
+	rpc.HandleHTTP()                                                   // if serving over http
+	tcp_listener, err := net.Listen("tcp", fmt.Sprintf(":%d", r.port)) // if serving over http
 	if err != nil {
 		log.Fatal("listen error:", err)
 	}
 
 	var sock_listener net.Listener
 	if cfg.IsLinux {
-		os.Remove(DarkstatSock)
+		os.Remove(r.sock_address)
 		os.Mkdir("/tmp/darkstat", 0777)
-		sock_listener, err = net.Listen("unix", DarkstatSock) // if serving over Unix
+		sock_listener, err = net.Listen("unix", r.sock_address) // if serving over Unix
 		if err != nil {
 			log.Fatal("listen error:", err)
 		}
@@ -57,5 +80,5 @@ func (r *RpcServer) Serve(app_data *router.AppData) {
 
 func (r *RpcServer) Close() {
 	fmt.Println("gracefully existing rpc server")
-	logus.Log.CheckError(os.Remove(DarkstatSock), "unable removing sock")
+	logus.Log.CheckError(os.Remove(r.sock_address), "unable removing sock")
 }

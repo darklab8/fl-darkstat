@@ -129,12 +129,12 @@ func main() {
 		app_data.Unlock()
 		runtime.GC()
 
-		relay_server := darkapi.RegisterApiRoutes(web.NewWeb(
+		web_server := darkapi.RegisterApiRoutes(web.NewWeb(
 			[]*builder.Filesystem{stat_fs, relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
 		), app_data)
-		relay_closer := relay_server.Serve(web.WebServeOpts{SockAddress: web.DarkstatAPISock})
+		web_closer := web_server.Serve(web.WebServeOpts{SockAddress: web.DarkstatAPISock})
 
 		if settings.IsRelayActive(app_data.Mapped) {
 			go func() {
@@ -160,18 +160,18 @@ func main() {
 			}()
 		}
 
-		web_server := web.NewWeb(
+		relay_server := web.NewWeb(
 			[]*builder.Filesystem{relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
 		)
-		web_closer := web_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
+		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 
 		rpc_server := darkrpc.NewRpcServer()
 		rpc_server.Serve(app_data)
 		return func() {
-			web_closer.Close()
 			relay_closer.Close()
+			web_closer.Close()
 			rpc_server.Close()
 			fmt.Println("graceful shutdown is certainly acomplished")
 		}
