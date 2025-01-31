@@ -39,8 +39,8 @@ type GraphPathsResp struct {
 // @Tags         graph
 // @Accept       json
 // @Produce      json
-// @Param request body []api.GraphPathReq true "Request body"
-// @Success      200  {array}  	api.GraphPathsResp
+// @Param request body []GraphPathReq true "Request body"
+// @Success      200  {array}  	GraphPathsResp
 // @Router       /api/graph/paths [post]
 func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{

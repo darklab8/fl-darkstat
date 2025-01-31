@@ -17,7 +17,7 @@ type Hashes struct {
 // @Tags         hashes
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  	api.Hashes
+// @Success      200  {object}  	Hashes
 // @Router       /api/hashes [get]
 func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
