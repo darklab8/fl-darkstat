@@ -53,6 +53,8 @@ type Tractor struct {
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	DiscoveryIDRephacks
 	Mass float64 `json:"mass"`
+
+	Infocard Infocard `json:"infocard"`
 }
 
 func (e *Exporter) GetFactionName(nickname cfg.FactionNick) string {
@@ -139,7 +141,7 @@ func (e *Exporter) GetTractors() []*Tractor {
 				}
 			}
 		}
-
+		tractor.Infocard = e.Infocards[InfocardKey(tractor.Nickname)]
 		tractors = append(tractors, tractor)
 	}
 	return tractors

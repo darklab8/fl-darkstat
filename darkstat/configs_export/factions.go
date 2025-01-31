@@ -30,9 +30,11 @@ type Faction struct {
 
 	InfonameID  int
 	InfocardID  int
-	Infocard    InfocardKey
+	InfocardKey InfocardKey
 	Reputations []Reputation
 	Bribes      []Bribe
+
+	Infocard Infocard `json:"infocard"`
 }
 
 type Bribe struct {
@@ -59,7 +61,7 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 			NicknameHash: flhash.HashFaction(nickname),
 			InfonameID:   group.IdsName.Get(),
 			InfocardID:   group.IdsInfo.Get(),
-			Infocard:     InfocardKey(nickname),
+			InfocardKey:  InfocardKey(nickname),
 		}
 		e.Hashes[faction.Nickname] = faction.NicknameHash
 
@@ -116,6 +118,8 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 
 			faction.Reputations = append(faction.Reputations, *rep_to_add)
 		}
+
+		faction.Infocard = e.Infocards[InfocardKey(faction.Nickname)]
 
 		factions = append(factions, faction)
 

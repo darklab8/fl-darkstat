@@ -79,7 +79,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					<td>{ fmt.Sprintf("%.2f", faction.MissionAbort) }</td>
 					<td class="seo">{ strconv.Itoa(faction.InfonameID) }</td>
 					<td class="seo">{ strconv.Itoa(faction.InfocardID) }</td>
-					@tab.TdInfoCardClick(faction.Infocard, faction.Nickname, pinm, shared, tab.InfocardClickOpts{})
+					@tab.TdInfoCardClick(faction.InfocardKey, faction.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

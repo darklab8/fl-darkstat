@@ -87,6 +87,7 @@ type Gun struct {
 	Mass float64
 
 	DiscoGun *DiscoGun
+	Infocard Infocard `json:"infocard"`
 }
 
 type DiscoGun struct {
@@ -261,6 +262,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 	}
 
 	e.exportInfocards(InfocardKey(gun.Nickname), gun.IdsInfo)
+	gun.Infocard = e.Infocards[InfocardKey(gun.Nickname)]
 
 	gun.ShieldDamage = int(float64(gun.HullDamage)*float64(e.Configs.Consts.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get()) + float64(gun.EnergyDamage))
 

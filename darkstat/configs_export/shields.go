@@ -43,6 +43,8 @@ type Shield struct {
 
 	*DiscoveryTechCompat
 	Mass float64
+
+	Infocard Infocard `json:"infocard"`
 }
 
 func (e *Exporter) GetShields(ids []*Tractor) []Shield {
@@ -109,6 +111,8 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 
 		e.exportInfocards(InfocardKey(shield.Nickname), shield.IdsInfo)
 		shield.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, shield.Nickname)
+		shield.Infocard = e.Infocards[InfocardKey(shield.Nickname)]
+
 		shields = append(shields, shield)
 	}
 

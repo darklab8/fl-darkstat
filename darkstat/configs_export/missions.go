@@ -207,7 +207,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 				continue
 			}
 
-			faction.Infocard = faction_export_info.Infocard
+			faction.Infocard = faction_export_info.InfocardKey
 			faction.FactionName = faction_export_info.Name
 
 			_, gives_missions := faction_info.MissionType.MinDifficulty.GetValue()

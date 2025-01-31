@@ -18,7 +18,7 @@ func TestFaction(t *testing.T) {
 	infocards := exporter.Infocards
 	for _, faction := range items {
 		if faction.Nickname == "br_m_grp" {
-			lines := infocards[faction.Infocard]
+			lines := infocards[faction.InfocardKey]
 			fmt.Println(faction.Nickname, lines)
 			assert.Greater(t, len(lines), 0)
 			break

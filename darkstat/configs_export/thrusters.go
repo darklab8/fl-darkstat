@@ -24,6 +24,8 @@ type Thruster struct {
 
 	*DiscoveryTechCompat
 	Mass float64
+
+	Infocard Infocard `json:"infocard"`
 }
 
 func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
@@ -83,6 +85,7 @@ func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 		thruster.Rating = float64(thruster.MaxForce) / float64(thruster.PowerUsage-100) * thruster.Value / 1000
 		e.exportInfocards(InfocardKey(thruster.Nickname), thruster.InfoID)
 		thruster.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, thruster.Nickname)
+		thruster.Infocard = e.Infocards[InfocardKey(thruster.Nickname)]
 		thrusters = append(thrusters, thruster)
 	}
 	return thrusters

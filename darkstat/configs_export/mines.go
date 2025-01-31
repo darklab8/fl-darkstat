@@ -45,6 +45,8 @@ type Mine struct {
 
 	AmmoLimit AmmoLimit
 	Mass      float64
+
+	Infocard Infocard `json:"infocard"`
 }
 
 type AmmoLimit struct {
@@ -124,6 +126,8 @@ func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 
 		e.exportInfocards(InfocardKey(mine.Nickname), mine.IdsInfo)
 		mine.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, mine.Nickname)
+		mine.Infocard = e.Infocards[InfocardKey(mine.Nickname)]
+
 		mines = append(mines, mine)
 	}
 
