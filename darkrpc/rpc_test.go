@@ -12,7 +12,7 @@ import (
 func TestRpc(t *testing.T) {
 	some_socket := "/tmp/darkstat/rpc_test.sock"
 
-	app_data := router.NewAppData()
+	app_data := router.GetAppDataFixture()
 	srv := NewRpcServer(WithSockSrv(some_socket), WithPortSrv(8523))
 	srv.Serve(app_data)
 

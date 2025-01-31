@@ -63,7 +63,7 @@ func TestApiHealth(t *testing.T) {
 
 func TestApi(t *testing.T) {
 
-	app_data := router.NewAppData()
+	app_data := router.GetAppDataFixture()
 	stat_router := router.NewRouter(app_data)
 	stat_builder := stat_router.Link()
 	stat_fs := stat_builder.BuildAll(true, nil)
