@@ -11,36 +11,36 @@ import (
 )
 
 type Reputation struct {
-	Name     string
-	Rep      float64
-	Empathy  float64
-	Nickname string
+	Name     string  `json:"name"`
+	Rep      float64 `json:"rep"`
+	Empathy  float64 `json:"empathy"`
+	Nickname string  `json:"nickname"`
 }
 
 type Faction struct {
-	Name         string
-	ShortName    string
-	Nickname     string
-	NicknameHash flhash.HashCode
+	Name         string          `json:"name"`
+	ShortName    string          `json:"short_name"`
+	Nickname     string          `json:"nickname"`
+	NicknameHash flhash.HashCode `json:"-" swaggerignore:"true"`
 
-	ObjectDestruction float64
-	MissionSuccess    float64
-	MissionFailure    float64
-	MissionAbort      float64
+	ObjectDestruction float64 `json:"object_destruction"`
+	MissionSuccess    float64 `json:"mission_success"`
+	MissionFailure    float64 `json:"mission_failure"`
+	MissionAbort      float64 `json:"mission_abort"`
 
-	InfonameID  int
-	InfocardID  int
-	InfocardKey InfocardKey
-	Reputations []Reputation
-	Bribes      []Bribe
+	InfonameID  int          `json:"infoname_id"`
+	InfocardID  int          `json:"infocard_id"`
+	InfocardKey InfocardKey  `json:"-" swaggerignore:"true"`
+	Reputations []Reputation `json:"reputations"`
+	Bribes      []Bribe      `json:"bribe"`
 
 	Infocard Infocard `json:"infocard"`
 }
 
 type Bribe struct {
-	BaseNickname string
+	BaseNickname string `json:"base_nickname"`
 	BaseInfo
-	Chance float64
+	Chance float64 `json:"chance"`
 }
 
 func (e *Exporter) GetFactions(bases []*Base) []Faction {

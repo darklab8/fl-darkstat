@@ -108,18 +108,18 @@ type Exporter struct {
 	Factions     []Faction
 	Infocards    Infocards
 	Commodities  []*Commodity
-	Guns         []Gun
-	Missiles     []Gun
-	Mines        []Mine
-	Shields      []Shield
-	Thrusters    []Thruster
+	Guns         []Gun      // TODO add to API
+	Missiles     []Gun      // TODO add to API
+	Mines        []Mine     // TODO add to API
+	Shields      []Shield   // TODO add to API
+	Thrusters    []Thruster // TODO add to API
 	Ships        []Ship
 	Tractors     []*Tractor
 	TractorsByID map[cfg.TractorID]*Tractor
-	Engines      []Engine
-	CMs          []CounterMeasure
-	Scanners     []Scanner
-	Ammos        []Ammo
+	Engines      []Engine         // TODO add to API
+	CMs          []CounterMeasure // TODO add to API
+	Scanners     []Scanner        // TODO add to API
+	Ammos        []Ammo           // TODO add to API
 	PoBs         []*PoB
 	PoBGoods     []*PoBGood
 

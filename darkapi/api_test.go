@@ -154,6 +154,20 @@ func TestApi(t *testing.T) {
 		assert.Greater(t, len(items), 0)
 	})
 
+	t.Run("GetFactions", func(t *testing.T) {
+		res, err := httpc.Get("http://localhost/api/factions")
+		logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
+
+		resBody, err := io.ReadAll(res.Body)
+		logus.Log.CheckPanic(err, "client: could not read response body: %s\n", typelog.OptError(err))
+
+		var items []configs_export.Faction
+		err = json.Unmarshal(resBody, &items)
+		logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))
+
+		assert.Greater(t, len(items), 0)
+	})
+
 	t.Run("GetPoBs", func(t *testing.T) {
 		res, err := httpc.Get("http://localhost/api/pobs")
 		logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
