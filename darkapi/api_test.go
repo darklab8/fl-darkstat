@@ -165,6 +165,9 @@ func TestApi(t *testing.T) {
 		err = json.Unmarshal(resBody, &items)
 		logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))
 
+		if app_data.Configs.Configs.Discovery == nil {
+			return
+		}
 		assert.Greater(t, len(items), 0)
 	})
 
@@ -179,6 +182,9 @@ func TestApi(t *testing.T) {
 		err = json.Unmarshal(resBody, &items)
 		logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))
 
+		if app_data.Configs.Configs.Discovery == nil {
+			return
+		}
 		assert.Greater(t, len(items), 0)
 	})
 
