@@ -13,14 +13,14 @@ import (
 )
 
 type Rephack struct {
-	FactionName string
-	FactionNick cfg.FactionNick
-	Reputation  float64
-	RepType     playercntl_rephacks.RepType
+	FactionName string                      `json:"faction_name"`
+	FactionNick cfg.FactionNick             `json:"faction_nickname"`
+	Reputation  float64                     `json:"reputation"`
+	RepType     playercntl_rephacks.RepType `json:"rep_type"`
 }
 
 type DiscoveryIDRephacks struct {
-	Rephacks map[cfg.FactionNick]Rephack
+	Rephacks map[cfg.FactionNick]Rephack `json:"rephacks"`
 }
 
 func (r DiscoveryIDRephacks) GetRephacksList() []Rephack {
@@ -38,21 +38,21 @@ func (r DiscoveryIDRephacks) GetRephacksList() []Rephack {
 }
 
 type Tractor struct {
-	Name       string
-	Price      int
-	MaxLength  int
-	ReachSpeed int
+	Name       string `json:"name"`
+	Price      int    `json:"price"`
+	MaxLength  int    `json:"max_length"`
+	ReachSpeed int    `json:"reach_speed"`
 
-	Lootable      bool
-	Nickname      cfg.TractorID
-	NicknameHash  flhash.HashCode
-	ShortNickname string
-	NameID        int
-	InfoID        int
+	Lootable      bool            `json:"lootable"`
+	Nickname      cfg.TractorID   `json:"nickname"`
+	NicknameHash  flhash.HashCode `json:"nickname_hash" format:"int64"`
+	ShortNickname string          `json:"short_nickname"`
+	NameID        int             `json:"name_id"`
+	InfoID        int             `json:"info_id"`
 
-	Bases map[cfg.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	DiscoveryIDRephacks
-	Mass float64
+	Mass float64 `json:"mass"`
 }
 
 func (e *Exporter) GetFactionName(nickname cfg.FactionNick) string {
