@@ -13,6 +13,18 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
+type MarketGoodResp struct {
+	MarketGoods []*configs_export.MarketGood `json:"market_goods"`
+	Nickname    string                       `json:"nickname"`
+	Error       *string                      `json:"error"`
+}
+
+type TechCompatResp struct {
+	TechCompat *configs_export.DiscoveryTechCompat `json:"tech_compat"`
+	Nickname   string                              `json:"nickname"`
+	Error      *string                             `json:"error"`
+}
+
 func GetItemsT[T any](webapp *web.Web, items []T) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if webapp.AppDataMutex != nil {

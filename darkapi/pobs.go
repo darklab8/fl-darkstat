@@ -35,3 +35,17 @@ func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 		Handler: GetItemsT(webapp, api.app_data.Configs.PoBGoods),
 	}
 }
+
+// ShowAccount godoc
+// @Summary      Getting list of Player Owned Bases in Bases format. Lists only pobs that have known position coordinate
+// @Tags         player_owned_bases
+// @Accept       json
+// @Produce      json
+// @Success      200  {array}  	configs_export.Base
+// @Router       /api/pobs/bases [get]
+func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
+	return &registry.Endpoint{
+		Url:     "GET " + ApiRoute + "/pobs/bases",
+		Handler: GetItemsT(webapp, api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs)),
+	}
+}

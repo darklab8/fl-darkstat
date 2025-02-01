@@ -230,6 +230,7 @@ func TestApi(t *testing.T) {
 			return
 		}
 		_ = FixtureTestItems[configs_export.PoB](t, httpc, "/pobs", "Pobs", TestOpts{})
+		_ = FixtureTestItems[configs_export.Base](t, httpc, "/pobs/bases", "PoBBases", TestOpts{})
 	})
 
 	t.Run("GetPoBGoods", func(t *testing.T) {

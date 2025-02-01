@@ -29,12 +29,6 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 
 }
 
-type MarketGoodResp struct {
-	MarketGoods []*configs_export.MarketGood `json:"market_goods"`
-	Nickname    string                       `json:"nickname"`
-	Error       *string                      `json:"error"`
-}
-
 // ShowAccount godoc
 // @Summary      Getting list of NPC Bases Market Goods
 // @Tags         bases

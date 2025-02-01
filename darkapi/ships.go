@@ -3,7 +3,6 @@ package darkapi
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
 // ShowAccount godoc
@@ -33,12 +32,6 @@ func PostShipMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url:     "POST " + ApiRoute + "/ships/market_goods",
 		Handler: PostItemsMarketGoodsT(webapp, api.app_data.Configs.Ships),
 	}
-}
-
-type TechCompatResp struct {
-	TechCompat *configs_export.DiscoveryTechCompat `json:"tech_compat"`
-	Nickname   string                              `json:"nickname"`
-	Error      *string                             `json:"error"`
 }
 
 // ShowAccount godoc
