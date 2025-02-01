@@ -7,12 +7,11 @@ import (
 
 // ShowAccount godoc
 // @Summary      Getting list of Thrusters
-// @Tags         ammos
+// @Tags         thrusters
 // @Accept       json
 // @Produce      json
 // @Success      200  {array}  	configs_export.Thruster
 // @Router       /api/thrusters [get]
-
 func GetThrusters(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/thrusters",

@@ -12,7 +12,6 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.CounterMeasure
 // @Router       /api/counter_measures [get]
-
 func GetCMs(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/counter_measures",

@@ -12,7 +12,6 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Engine
 // @Router       /api/engines [get]
-
 func GetEngines(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/engines",

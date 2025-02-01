@@ -12,7 +12,6 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Ammo
 // @Router       /api/ammos [get]
-
 func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/ammos",

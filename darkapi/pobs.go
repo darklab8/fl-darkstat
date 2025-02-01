@@ -10,7 +10,7 @@ import (
 // @Summary      Getting list of Player Owned Bases
 // @Description  in difference to Disco API, it is enriched with Nicknames/Infocard Names,Region names
 // @Description  Sector coordinates, and extra information written in Infocard (totally reflecting Darkstat itself)
-// @Tags         pobs
+// @Tags         player_owned_bases
 // @Accept       json
 // @Produce      json
 // @Success      200  {array}  	configs_export.PoB
@@ -24,7 +24,7 @@ func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 
 // ShowAccount godoc
 // @Summary      PoB Goods
-// @Tags         pobs
+// @Tags         player_owned_bases
 // @Accept       json
 // @Produce      json
 // @Success      200  {array}  	configs_export.PoBGood

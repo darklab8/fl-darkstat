@@ -12,7 +12,6 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Scanner
 // @Router       /api/scanners [get]
-
 func GetScanners(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/scanners",

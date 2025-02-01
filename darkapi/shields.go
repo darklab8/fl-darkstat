@@ -12,7 +12,6 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Shield
 // @Router       /api/shields [get]
-
 func GetShields(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/shields",
