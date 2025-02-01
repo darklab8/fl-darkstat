@@ -308,6 +308,72 @@ func TestApi(t *testing.T) {
 		})
 	})
 
+	t.Run("GetAmmos", func(t *testing.T) {
+		res, err := httpc.Get("http://localhost/api/ammos")
+		logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
+
+		resBody, err := io.ReadAll(res.Body)
+		logus.Log.CheckPanic(err, "client: could not read response body: %s\n", typelog.OptError(err))
+
+		var items []configs_export.Ammo
+		err = json.Unmarshal(resBody, &items)
+		logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))
+
+		assert.Greater(t, len(items), 0)
+
+		t.Run("GetAmmosMarketGoods", func(t *testing.T) {
+			var nickname []string = []string{
+				items[0].Nickname,
+				items[1].Nickname,
+			}
+
+			post_body, err := json.Marshal(nickname)
+			logus.Log.CheckPanic(err, "unable to marshal post body", typelog.OptError(err))
+
+			res, err := httpc.Post("http://localhost/api/ammos/market_goods", ApplicationJson, bytes.NewBuffer(post_body))
+			logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
+
+			resBody, err := io.ReadAll(res.Body)
+			logus.Log.CheckPanic(err, "client: could not read response body: %s\n", typelog.OptError(err))
+
+			var items []MarketGoodResp
+			fmt.Println("resBody=", string(resBody))
+			err = json.Unmarshal(resBody, &items)
+			logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))
+
+			assert.Greater(t, len(items), 0)
+
+			assert.Nil(t, items[0].Error)
+			assert.Nil(t, items[1].Error)
+		})
+
+		t.Run("GetAmmosTechCompats", func(t *testing.T) {
+			var nickname []string = []string{
+				items[0].Nickname,
+				items[1].Nickname,
+			}
+
+			post_body, err := json.Marshal(nickname)
+			logus.Log.CheckPanic(err, "unable to marshal post body", typelog.OptError(err))
+
+			res, err := httpc.Post("http://localhost/api/ammos/tech_compats", ApplicationJson, bytes.NewBuffer(post_body))
+			logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
+
+			resBody, err := io.ReadAll(res.Body)
+			logus.Log.CheckPanic(err, "client: could not read response body: %s\n", typelog.OptError(err))
+
+			var items []TechCompatResp
+			fmt.Println("resBody=", string(resBody))
+			err = json.Unmarshal(resBody, &items)
+			logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))
+
+			assert.Greater(t, len(items), 0)
+
+			assert.Nil(t, items[0].Error)
+			assert.Nil(t, items[1].Error)
+		})
+	})
+
 	// // Teardown code for given condition goes here
 	web_closer.Close()
 }

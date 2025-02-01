@@ -54,6 +54,9 @@ func RegisterApiRoutes(w *web.Web, app_data *router.AppData) *web.Web {
 	api_routes.Register(GetTractors(w, api))
 	api_routes.Register(PostTractorMarketGoods(w, api))
 	api_routes.Register(GetFactions(w, api))
+	api_routes.Register(GetAmmos(w, api))
+	api_routes.Register(PostAmmoMarketGoods(w, api))
+	api_routes.Register(PostAmmoTechcompatibilities(w, api))
 
 	w.GetMux().Handle("GET /swagger/", httpSwagger.Handler(
 		httpSwagger.URL("/swagger/doc.json"),
