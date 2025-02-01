@@ -37,6 +37,8 @@ type Faction struct {
 	Infocard Infocard `json:"infocard"`
 }
 
+func (b Faction) GetNickname() string { return string(b.Nickname) }
+
 type Bribe struct {
 	BaseNickname string `json:"base_nickname"`
 	BaseInfo

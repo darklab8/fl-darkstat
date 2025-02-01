@@ -49,6 +49,8 @@ type Mine struct {
 	Infocard Infocard `json:"infocard"`
 }
 
+func (b Mine) GetNickname() string { return string(b.Nickname) }
+
 type AmmoLimit struct {
 	// Disco stuff
 	AmountInCatridge *int

@@ -23,14 +23,8 @@ import (
 // @Router       /api/npc_bases [get]
 func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/npc_bases",
-		Handler: func(w http.ResponseWriter, r *http.Request) {
-			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
-			}
-			ReturnJson(&w, api.app_data.Configs.Bases)
-		},
+		Url:     "GET " + ApiRoute + "/npc_bases",
+		Handler: GetItemsT(webapp, api.app_data.Configs.Bases),
 	}
 
 }

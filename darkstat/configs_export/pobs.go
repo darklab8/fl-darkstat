@@ -68,6 +68,8 @@ type PoB struct {
 	Infocard  Infocard    `json:"infocard"`
 }
 
+func (b PoB) GetNickname() string { return string(b.Nickname) }
+
 type PoBGood struct {
 	Nickname              string `json:"nickname"`
 	Name                  string `json:"name"`
@@ -83,6 +85,8 @@ type PoBGood struct {
 	AnyBaseSells bool `json:"any_base_sells"`
 	AnyBaseBuys  bool `json:"any_base_buys"`
 }
+
+func (b PoBGood) GetNickname() string { return string(b.Nickname) }
 
 func (good PoBGood) BaseSells() bool { return good.AnyBaseSells }
 func (good PoBGood) BaseBuys() bool  { return good.AnyBaseBuys }

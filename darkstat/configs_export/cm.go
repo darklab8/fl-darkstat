@@ -30,6 +30,8 @@ type CounterMeasure struct {
 	Mass      float64
 }
 
+func (b CounterMeasure) GetNickname() string { return string(b.Nickname) }
+
 func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 	var tractors []CounterMeasure
 

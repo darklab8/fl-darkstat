@@ -13,7 +13,6 @@ import (
 	"github.com/darklab8/go-typelog/typelog"
 )
 
-func (g Ship) GetNickname() string                 { return g.Nickname }
 func (g Ship) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type ShipPackage struct {
@@ -66,6 +65,12 @@ type Ship struct {
 
 	Infocard Infocard `json:"infocard"`
 }
+
+func (b Ship) GetNickname() string { return string(b.Nickname) }
+
+func (b Ship) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
+func (b Ship) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
 /*
 For each ship

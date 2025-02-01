@@ -147,6 +147,10 @@ func (e *Exporter) GetTractors() []*Tractor {
 	return tractors
 }
 
+func (b Tractor) GetNickname() string { return string(b.Nickname) }
+
+func (b Tractor) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
 func (e *Exporter) FilterToUsefulTractors(tractors []*Tractor) []*Tractor {
 	var buyable_tractors []*Tractor = make([]*Tractor, 0, len(tractors))
 	for _, item := range tractors {

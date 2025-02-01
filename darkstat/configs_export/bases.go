@@ -218,6 +218,8 @@ type Base struct {
 	IsPob     bool
 }
 
+func (b Base) GetNickname() string { return string(b.Nickname) }
+
 type CommodityKey string
 
 func GetCommodityKey(nickname string, ship_class cfg.ShipClass) CommodityKey {

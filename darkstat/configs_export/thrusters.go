@@ -28,6 +28,8 @@ type Thruster struct {
 	Infocard Infocard `json:"infocard"`
 }
 
+func (b Thruster) GetNickname() string { return string(b.Nickname) }
+
 func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 	var thrusters []Thruster
 

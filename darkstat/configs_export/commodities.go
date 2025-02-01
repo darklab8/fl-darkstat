@@ -53,6 +53,10 @@ type Commodity struct {
 	Mass                  float64 `json:"mass"`
 }
 
+func (b Commodity) GetNickname() string { return string(b.Nickname) }
+
+func (b Commodity) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
 func GetPricePerVoume(price int, volume float64) float64 {
 	if volume == 0 {
 		return -1

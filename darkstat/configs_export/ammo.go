@@ -30,6 +30,12 @@ type Ammo struct {
 	Mass      float64
 }
 
+func (b Ammo) GetNickname() string { return string(b.Nickname) }
+
+func (b Ammo) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
+func (b Ammo) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
+
 func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 	var tractors []Ammo
 

@@ -25,7 +25,6 @@ type GunDetailed struct {
 	MunitionHitEffect string
 }
 
-func (g Gun) GetNickname() string                 { return g.Nickname }
 func (g Gun) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Gun struct {
@@ -89,6 +88,8 @@ type Gun struct {
 	DiscoGun *DiscoGun
 	Infocard Infocard `json:"infocard"`
 }
+
+func (b Gun) GetNickname() string { return string(b.Nickname) }
 
 type DiscoGun struct {
 	ArmorPen float64

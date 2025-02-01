@@ -6,7 +6,6 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 )
 
-func (g Engine) GetNickname() string                 { return g.Nickname }
 func (g Engine) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Engine struct {
@@ -36,6 +35,8 @@ type Engine struct {
 	*DiscoveryTechCompat
 	Mass float64
 }
+
+func (b Engine) GetNickname() string { return string(b.Nickname) }
 
 func (e *Exporter) GetEngineSpeed(engine_info *equip_mapped.Engine) int {
 	if cruise_speed, ok := engine_info.CruiseSpeed.GetValue(); ok {

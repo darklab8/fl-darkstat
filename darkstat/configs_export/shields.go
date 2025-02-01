@@ -10,7 +10,6 @@ import (
 	"github.com/darklab8/go-typelog/typelog"
 )
 
-func (g Shield) GetNickname() string                 { return g.Nickname }
 func (g Shield) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Shield struct {
@@ -46,6 +45,8 @@ type Shield struct {
 
 	Infocard Infocard `json:"infocard"`
 }
+
+func (b Shield) GetNickname() string { return string(b.Nickname) }
 
 func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 	var shields []Shield
