@@ -247,6 +247,9 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetTractors", func(t *testing.T) {
+		if app_data.Configs.Configs.Discovery == nil {
+			return
+		}
 		_ = FixtureTestItems[configs_export.Tractor](t, httpc, "/tractors", "Tractors", TestOpts{
 			CheckMarketGoods: true,
 		})
