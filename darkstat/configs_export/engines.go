@@ -34,8 +34,6 @@ type Engine struct {
 	Bases                map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 	Mass                 float64 `json:"mass"`
-
-	Infocard Infocard `json:"infocard"`
 }
 
 func (b Engine) GetNickname() string { return string(b.Nickname) }
@@ -96,7 +94,6 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 		engine.Name = e.GetInfocardName(engine.NameID, engine.Nickname)
 
 		e.exportInfocards(InfocardKey(engine.Nickname), engine.InfoID)
-		engine.Infocard = e.Infocards[InfocardKey(engine.Nickname)]
 
 		engine.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, engine.Nickname)
 		engine.NicknameHash = flhash.HashNickname(engine.Nickname)

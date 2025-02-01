@@ -70,8 +70,7 @@ type MissioNFaction struct {
 	MinDifficulty   float64
 	MaxDifficulty   float64
 	Weight          int
-
-	Infocard InfocardKey
+	Infocard        InfocardKey
 
 	MinAward int
 	MaxAward int

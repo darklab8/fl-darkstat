@@ -62,8 +62,6 @@ type Ship struct {
 	*DiscoveryTechCompat `json:"_" swaggerignore:"true"`
 
 	DiscoShip *DiscoShip `json:"discovery_ship"`
-
-	Infocard Infocard `json:"infocard"`
 }
 
 func (b Ship) GetNickname() string { return string(b.Nickname) }
@@ -384,7 +382,6 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 			ship.ThrusterSpeed = append(ship.ThrusterSpeed, thrust_speed)
 		}
 
-		ship.Infocard = e.Infocards[InfocardKey(ship.Nickname)]
 		ships = append(ships, ship)
 	}
 

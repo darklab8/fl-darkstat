@@ -3,20 +3,26 @@ package darkapi
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
+
+type ShipWithInfocard struct {
+	configs_export.Ship
+	Infocard configs_export.Infocard
+}
 
 // ShowAccount godoc
 // @Summary      Getting list of Ships
 // @Tags         ships
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	configs_export.Ship
+// @Success      200  {array}  	ShipWithInfocard
 // @Router       /api/ships [get]
 // @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
 func GetShips(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/ships",
-		Handler: GetItemsT(webapp, api.app_data.Configs.Ships, api.app_data.Configs.FilterToUsefulShips),
+		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Ships, api.app_data.Configs.FilterToUsefulShips),
 	}
 }
 

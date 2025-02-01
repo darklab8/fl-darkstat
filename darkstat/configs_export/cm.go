@@ -28,8 +28,6 @@ type CounterMeasure struct {
 
 	AmmoLimit AmmoLimit `json:"ammo_limit"`
 	Mass      float64   `json:"mass"`
-
-	Infocard Infocard `json:"infocard"`
 }
 
 func (b CounterMeasure) GetNickname() string { return string(b.Nickname) }
@@ -88,7 +86,6 @@ func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 		}
 
 		e.exportInfocards(InfocardKey(cm.Nickname), infocards...)
-		cm.Infocard = e.Infocards[InfocardKey(cm.Nickname)]
 		cm.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, cm.Nickname)
 		tractors = append(tractors, cm)
 	}

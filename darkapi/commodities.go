@@ -3,20 +3,26 @@ package darkapi
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
+
+type CommodityWithInfocard struct {
+	configs_export.Commodity
+	Infocard configs_export.Infocard
+}
 
 // ShowAccount godoc
 // @Summary      Getting list of Commodities
 // @Tags         commodities
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	configs_export.Commodity
+// @Success      200  {array}  	CommodityWithInfocard
 // @Router       /api/commodities [get]
 // @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
 func GetCommodities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/commodities",
-		Handler: GetItemsT(webapp, api.app_data.Configs.Commodities, api.app_data.Configs.FilterToUsefulCommodities),
+		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Commodities, api.app_data.Configs.FilterToUsefulCommodities),
 	}
 }
 

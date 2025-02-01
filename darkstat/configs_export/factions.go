@@ -33,8 +33,6 @@ type Faction struct {
 	InfocardKey InfocardKey  `json:"-" swaggerignore:"true"`
 	Reputations []Reputation `json:"reputations"`
 	Bribes      []Bribe      `json:"bribe"`
-
-	Infocard Infocard `json:"infocard"`
 }
 
 func (b Faction) GetNickname() string { return string(b.Nickname) }
@@ -120,8 +118,6 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 
 			faction.Reputations = append(faction.Reputations, *rep_to_add)
 		}
-
-		faction.Infocard = e.Infocards[InfocardKey(faction.Nickname)]
 
 		factions = append(factions, faction)
 

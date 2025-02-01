@@ -23,8 +23,6 @@ type Thruster struct {
 
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 	Mass                 float64 `json:"mass"`
-
-	Infocard Infocard `json:"infocard"`
 }
 
 func (b Thruster) GetNickname() string { return string(b.Nickname) }
@@ -97,7 +95,6 @@ func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 
 		e.exportInfocards(InfocardKey(thruster.Nickname), thruster.InfoID)
 		thruster.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, thruster.Nickname)
-		thruster.Infocard = e.Infocards[InfocardKey(thruster.Nickname)]
 		thrusters = append(thrusters, thruster)
 	}
 	return thrusters

@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -25,7 +26,12 @@ type TechCompatResp struct {
 	Error      *string                             `json:"error"`
 }
 
-func GetItemsT[T any](webapp *web.Web, items []T, filter func(items []T) []T) func(w http.ResponseWriter, r *http.Request) {
+type Item struct {
+	Nicknamable
+	Infocard configs_export.Infocard
+}
+
+func GetItemsT[T Nicknamable](webapp *web.Web, app_data *router.AppData, items []T, filter func(items []T) []T) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if webapp.AppDataMutex != nil {
 			webapp.AppDataMutex.Lock()
@@ -33,11 +39,22 @@ func GetItemsT[T any](webapp *web.Web, items []T, filter func(items []T) []T) fu
 		}
 
 		param1 := r.URL.Query().Get("filter_to_useful")
+		var result []T
 		if param1 == "true" {
-			ReturnJson(&w, filter(items))
+			result = filter(items)
 		} else {
-			ReturnJson(&w, items)
+			result = items
 		}
+
+		var outputs []Item
+		for _, item := range result {
+			outputs = append(outputs, Item{
+				Nicknamable: item,
+				Infocard:    app_data.Configs.Infocards[configs_export.InfocardKey(item.GetNickname())],
+			})
+		}
+
+		ReturnJson(&w, outputs)
 	}
 }
 
