@@ -14,17 +14,12 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
-type BaseWithInfocard struct {
-	configs_export.Base
-	Infocard configs_export.Infocard
-}
-
 // ShowAccount godoc
 // @Summary      Getting list of NPC Bases
 // @Tags         bases
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	BaseWithInfocard
+// @Success      200  {array}  	configs_export.Base
 // @Router       /api/npc_bases [get]
 // @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
 func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {

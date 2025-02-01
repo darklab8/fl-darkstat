@@ -3,20 +3,14 @@ package darkapi
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
-
-type CmWithInfocard struct {
-	configs_export.CounterMeasure
-	Infocard configs_export.Infocard
-}
 
 // ShowAccount godoc
 // @Summary      Getting list of CounterMeasure
 // @Tags         counter_measures
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	CmWithInfocard
+// @Success      200  {array}  	configs_export.CounterMeasure
 // @Router       /api/counter_measures [get]
 // @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
 func GetCMs(webapp *web.Web, api *Api) *registry.Endpoint {

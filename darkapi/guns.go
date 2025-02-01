@@ -3,20 +3,14 @@ package darkapi
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
-
-type GunWithInfocard struct {
-	configs_export.Gun
-	Infocard configs_export.Infocard
-}
 
 // ShowAccount godoc
 // @Summary      Getting list of Guns
 // @Tags         guns
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	GunWithInfocard
+// @Success      200  {array}  	configs_export.Gun
 // @Router       /api/guns [get]
 // @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
 func GetGuns(webapp *web.Web, api *Api) *registry.Endpoint {
@@ -61,7 +55,7 @@ func PostGunsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         guns
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	GunWithInfocard
+// @Success      200  {array}  	configs_export.Gun
 // @Router       /api/missiles [get]
 // @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
 func GetMissiles(webapp *web.Web, api *Api) *registry.Endpoint {

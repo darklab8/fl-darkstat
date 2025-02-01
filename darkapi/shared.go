@@ -26,11 +26,6 @@ type TechCompatResp struct {
 	Error      *string                             `json:"error"`
 }
 
-type Item struct {
-	Nicknamable
-	Infocard configs_export.Infocard
-}
-
 func GetItemsT[T Nicknamable](webapp *web.Web, app_data *router.AppData, items []T, filter func(items []T) []T) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if webapp.AppDataMutex != nil {
@@ -46,15 +41,7 @@ func GetItemsT[T Nicknamable](webapp *web.Web, app_data *router.AppData, items [
 			result = items
 		}
 
-		var outputs []Item
-		for _, item := range result {
-			outputs = append(outputs, Item{
-				Nicknamable: item,
-				Infocard:    app_data.Configs.Infocards[configs_export.InfocardKey(item.GetNickname())],
-			})
-		}
-
-		ReturnJson(&w, outputs)
+		ReturnJson(&w, result)
 	}
 }
 
@@ -149,7 +136,7 @@ func PostItemsTechCompatT[T TechCompatable](webapp *web.Web, items []T) func(w h
 			if ship, ok := ships_by_nick[input_nickname]; ok {
 				answer.TechCompat = ship.GetDiscoveryTechCompat()
 			} else {
-				answer.Error = ptr.Ptr("not existing ship nickname")
+				answer.Error = ptr.Ptr("not existing nickname")
 			}
 			market_good_answers = append(market_good_answers, answer)
 
