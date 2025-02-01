@@ -16,7 +16,7 @@ import (
 func GetCMs(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/counter_measures",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.CMs, api.app_data.Configs.FilterToUsefulCounterMeasures),
+		Handler: GetItemsT(webapp, api.app_data.Configs.CMs, api.app_data.Configs.FilterToUsefulCounterMeasures),
 	}
 }
 

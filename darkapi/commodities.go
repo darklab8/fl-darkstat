@@ -16,7 +16,7 @@ import (
 func GetCommodities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/commodities",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Commodities, api.app_data.Configs.FilterToUsefulCommodities),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Commodities, api.app_data.Configs.FilterToUsefulCommodities),
 	}
 }
 

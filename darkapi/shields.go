@@ -16,7 +16,7 @@ import (
 func GetShields(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/shields",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Shields, api.app_data.Configs.FilterToUsefulShields),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Shields, api.app_data.Configs.FilterToUsefulShields),
 	}
 }
 

@@ -16,7 +16,7 @@ import (
 func GetMines(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/mines",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Mines, api.app_data.Configs.FilterToUsefulMines),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Mines, api.app_data.Configs.FilterToUsefulMines),
 	}
 }
 

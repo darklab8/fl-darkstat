@@ -16,7 +16,7 @@ import (
 func GetGuns(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/guns",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Guns, api.app_data.Configs.FilterToUsefulGun),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Guns, api.app_data.Configs.FilterToUsefulGun),
 	}
 }
 
@@ -61,7 +61,7 @@ func PostGunsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 func GetMissiles(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/missiles",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Missiles, api.app_data.Configs.FilterToUsefulGun),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Missiles, api.app_data.Configs.FilterToUsefulGun),
 	}
 }
 

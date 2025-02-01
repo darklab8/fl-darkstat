@@ -16,7 +16,7 @@ import (
 func GetShips(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/ships",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Ships, api.app_data.Configs.FilterToUsefulShips),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Ships, api.app_data.Configs.FilterToUsefulShips),
 	}
 }
 

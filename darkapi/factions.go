@@ -17,6 +17,6 @@ import (
 func GetFactions(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/factions",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Factions, configs_export.FilterToUsefulFactions),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Factions, configs_export.FilterToUsefulFactions),
 	}
 }

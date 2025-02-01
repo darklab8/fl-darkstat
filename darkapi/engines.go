@@ -16,7 +16,7 @@ import (
 func GetEngines(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/engines",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Engines, api.app_data.Configs.FilterToUsefulEngines),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Engines, api.app_data.Configs.FilterToUsefulEngines),
 	}
 }
 

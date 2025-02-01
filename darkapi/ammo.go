@@ -16,7 +16,7 @@ import (
 func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/ammos",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Ammos, api.app_data.Configs.FilterToUsefulAmmo),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Ammos, api.app_data.Configs.FilterToUsefulAmmo),
 	}
 }
 

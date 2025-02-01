@@ -16,7 +16,7 @@ import (
 func GetTractors(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/tractors",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Tractors, api.app_data.Configs.FilterToUsefulTractors),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Tractors, api.app_data.Configs.FilterToUsefulTractors),
 	}
 }
 

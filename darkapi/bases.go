@@ -25,7 +25,7 @@ import (
 func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/npc_bases",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Bases, configs_export.FilterToUserfulBases),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Bases, configs_export.FilterToUserfulBases),
 	}
 
 }

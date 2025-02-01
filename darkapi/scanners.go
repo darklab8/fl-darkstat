@@ -16,7 +16,7 @@ import (
 func GetScanners(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/scanners",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Scanners, api.app_data.Configs.FilterToUserfulScanners),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Scanners, api.app_data.Configs.FilterToUserfulScanners),
 	}
 }
 

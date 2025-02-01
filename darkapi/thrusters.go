@@ -16,7 +16,7 @@ import (
 func GetThrusters(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/thrusters",
-		Handler: GetItemsT(webapp, api.app_data, api.app_data.Configs.Thrusters, api.app_data.Configs.FilterToUsefulThrusters),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Thrusters, api.app_data.Configs.FilterToUsefulThrusters),
 	}
 }
 
