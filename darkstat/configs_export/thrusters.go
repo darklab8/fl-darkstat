@@ -6,29 +6,32 @@ import (
 )
 
 type Thruster struct {
-	Name         string
-	Price        int
-	MaxForce     int
-	PowerUsage   int
-	Efficiency   float64
-	Value        float64
-	Rating       float64
-	HitPts       int
-	Lootable     bool
-	Nickname     string
-	NicknameHash flhash.HashCode
-	NameID       int
-	InfoID       int
+	Name         string          `json:"name"`
+	Price        int             `json:"price"`
+	MaxForce     int             `json:"max_force"`
+	PowerUsage   int             `json:"power_usage"`
+	Efficiency   float64         `json:"efficiency"`
+	Value        float64         `json:"value"`
+	HitPts       int             `json:"hit_pts"`
+	Lootable     bool            `json:"lootable"`
+	Nickname     string          `json:"nickname"`
+	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
+	NameID       int             `json:"name_id"`
+	InfoID       int             `json:"info_id"`
 
-	Bases map[cfg.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
-	*DiscoveryTechCompat
-	Mass float64
+	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
+	Mass                 float64 `json:"mass"`
 
 	Infocard Infocard `json:"infocard"`
 }
 
 func (b Thruster) GetNickname() string { return string(b.Nickname) }
+
+func (b Thruster) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
+func (b Thruster) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
 func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 	var thrusters []Thruster
@@ -72,19 +75,26 @@ func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 			  thrust recharge rate).
 		*/
 
+		power_usage_calc := thruster.PowerUsage
+		if power_usage_calc == 0 {
+			power_usage_calc = 1
+		}
 		if thruster.MaxForce > 0 {
-			thruster.Efficiency = float64(thruster.MaxForce) / float64(thruster.PowerUsage)
+			thruster.Efficiency = float64(thruster.MaxForce) / float64(power_usage_calc)
 		} else {
 			thruster.Efficiency = float64(thruster.PowerUsage)
 		}
 
+		price_calc := thruster.Price
+		if price_calc == 0 {
+			price_calc = 1
+		}
 		if thruster.MaxForce > 0 {
-			thruster.Value = float64(thruster.MaxForce) / float64(thruster.Price)
+			thruster.Value = float64(thruster.MaxForce) / float64(price_calc)
 		} else {
 			thruster.Value = float64(thruster.Price) * 1000
 		}
 
-		thruster.Rating = float64(thruster.MaxForce) / float64(thruster.PowerUsage-100) * thruster.Value / 1000
 		e.exportInfocards(InfocardKey(thruster.Nickname), thruster.InfoID)
 		thruster.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, thruster.Nickname)
 		thruster.Infocard = e.Infocards[InfocardKey(thruster.Nickname)]

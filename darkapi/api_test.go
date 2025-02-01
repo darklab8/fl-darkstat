@@ -288,6 +288,61 @@ func TestApi(t *testing.T) {
 		})
 	})
 
+	t.Run("GetCMs", func(t *testing.T) {
+		_ = FixtureTestItems[configs_export.CounterMeasure](t, httpc, "/counter_measures", "CounterMeasures", TestOpts{
+			CheckMarketGoods: true,
+			CheckTechCompat:  true,
+		})
+	})
+
+	t.Run("GetEngines", func(t *testing.T) {
+		if app_data.Configs.Configs.Discovery == nil {
+			return
+		}
+		for _, item := range app_data.Configs.Engines {
+			_, err := json.Marshal(item)
+			if err != nil {
+				fmt.Println("found broken engine")
+			}
+			assert.Nil(t, err)
+		}
+		_ = FixtureTestItems[configs_export.Engine](t, httpc, "/engines", "Engines", TestOpts{
+			CheckMarketGoods: true,
+			CheckTechCompat:  true,
+		})
+	})
+
+	t.Run("GetScanners", func(t *testing.T) {
+		if app_data.Configs.Configs.Discovery == nil {
+			return
+		}
+		_ = FixtureTestItems[configs_export.Scanner](t, httpc, "/scanners", "Scanners", TestOpts{
+			CheckMarketGoods: true,
+			CheckTechCompat:  true,
+		})
+	})
+
+	t.Run("GetShields", func(t *testing.T) {
+		_ = FixtureTestItems[configs_export.Shield](t, httpc, "/shields", "Shields", TestOpts{
+			CheckMarketGoods: true,
+			CheckTechCompat:  true,
+		})
+	})
+
+	t.Run("GetThrusters", func(t *testing.T) {
+		for _, item := range app_data.Configs.Thrusters {
+			_, err := json.Marshal(item)
+			if err != nil {
+				fmt.Println("found broken engine")
+			}
+			assert.Nil(t, err)
+		}
+		_ = FixtureTestItems[configs_export.Thruster](t, httpc, "/thrusters", "Thrusters", TestOpts{
+			CheckMarketGoods: true,
+			CheckTechCompat:  true,
+		})
+	})
+
 	// // Teardown code for given condition goes here
 	web_closer.Close()
 }

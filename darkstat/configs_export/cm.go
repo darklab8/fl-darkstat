@@ -7,30 +7,36 @@ import (
 )
 
 type CounterMeasure struct {
-	Name  string
-	Price int
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 
-	HitPts        int
-	AIRange       int
-	Lifetime      int
-	Range         int
-	DiversionPctg int
+	HitPts        int `json:"hit_pts"`
+	AIRange       int `json:"ai_range"`
+	Lifetime      int `json:"lifetime"`
+	Range         int `json:"range"`
+	DiversionPctg int `json:"diversion_pctg"`
 
-	Lootable     bool
-	Nickname     string
-	NicknameHash flhash.HashCode
-	NameID       int
-	InfoID       int
+	Lootable     bool            `json:"lootable"`
+	Nickname     string          `json:"nickname"`
+	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
+	NameID       int             `json:"name_id"`
+	InfoID       int             `json:"indo_id"`
 
-	Bases map[cfg.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
-	*DiscoveryTechCompat
+	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 
-	AmmoLimit AmmoLimit
-	Mass      float64
+	AmmoLimit AmmoLimit `json:"ammo_limit"`
+	Mass      float64   `json:"mass"`
+
+	Infocard Infocard `json:"infocard"`
 }
 
 func (b CounterMeasure) GetNickname() string { return string(b.Nickname) }
+
+func (b CounterMeasure) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
+func (b CounterMeasure) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
 func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 	var tractors []CounterMeasure
@@ -82,6 +88,7 @@ func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 		}
 
 		e.exportInfocards(InfocardKey(cm.Nickname), infocards...)
+		cm.Infocard = e.Infocards[InfocardKey(cm.Nickname)]
 		cm.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, cm.Nickname)
 		tractors = append(tractors, cm)
 	}

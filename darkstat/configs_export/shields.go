@@ -13,40 +13,43 @@ import (
 func (g Shield) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Shield struct {
-	Name string
+	Name string `json:"name"`
 
-	Class      string
-	Type       string
-	Technology string
-	Price      int
+	Class      string `json:"class"`
+	Type       string `json:"type"`
+	Technology string `json:"technology"`
+	Price      int    `json:"price"`
 
-	Capacity          int
-	RegenerationRate  int
-	ConstantPowerDraw int
-	Value             float64
-	RebuildPowerDraw  int
-	OffRebuildTime    int
+	Capacity          int     `json:"capacity"`
+	RegenerationRate  int     `json:"regeneration_rate"`
+	ConstantPowerDraw int     `json:"constant_power_draw"`
+	Value             float64 `json:"value"`
+	RebuildPowerDraw  int     `json:"rebuild_power_draw"`
+	OffRebuildTime    int     `json:"off_rebuild_time"`
 
-	Toughness float64
-	HitPts    int
-	Lootable  bool
+	Toughness float64 `json:"toughness"`
+	HitPts    int     `json:"hit_pts"`
+	Lootable  bool    `json:"lootable"`
 
-	Nickname     string
-	HpType       string
-	NicknameHash flhash.HashCode
-	HpTypeHash   flhash.HashCode
-	IdsName      int
-	IdsInfo      int
+	Nickname     string          `json:"nickname"`
+	HpType       string          `json:"hp_type"`
+	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
+	HpTypeHash   flhash.HashCode `json:"-" swaggerignore:"true"`
+	IdsName      int             `json:"ids_name"`
+	IdsInfo      int             `json:"ids_info"`
 
-	Bases map[cfg.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
-	*DiscoveryTechCompat
-	Mass float64
+	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
+	Mass                 float64 `json:"mass"`
 
 	Infocard Infocard `json:"infocard"`
 }
 
-func (b Shield) GetNickname() string { return string(b.Nickname) }
+func (b Shield) GetNickname() string                       { return string(b.Nickname) }
+func (b Shield) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
+func (b Shield) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
 func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 	var shields []Shield

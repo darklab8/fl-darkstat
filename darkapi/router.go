@@ -66,6 +66,21 @@ func RegisterApiRoutes(w *web.Web, app_data *router.AppData) *web.Web {
 	api_routes.Register(GetMines(w, api))
 	api_routes.Register(PostMinesMarketGoods(w, api))
 	api_routes.Register(PostMinesTechcompatibilities(w, api))
+	api_routes.Register(GetCMs(w, api))
+	api_routes.Register(PostCMsMarketGoods(w, api))
+	api_routes.Register(PostCMsTechcompatibilities(w, api))
+	api_routes.Register(GetEngines(w, api))
+	api_routes.Register(PostEnginesMarketGoods(w, api))
+	api_routes.Register(PostEnginesTechcompatibilities(w, api))
+	api_routes.Register(GetScanners(w, api))
+	api_routes.Register(PostScannersMarketGoods(w, api))
+	api_routes.Register(PostScannersTechcompatibilities(w, api))
+	api_routes.Register(GetShields(w, api))
+	api_routes.Register(PostShieldsMarketGoods(w, api))
+	api_routes.Register(PostShieldsTechcompatibilities(w, api))
+	api_routes.Register(GetThrusters(w, api))
+	api_routes.Register(PostThrustersMarketGoods(w, api))
+	api_routes.Register(PostThrustersTechcompatibilities(w, api))
 
 	w.GetMux().Handle("GET /swagger/", httpSwagger.Handler(
 		httpSwagger.URL("/swagger/doc.json"),

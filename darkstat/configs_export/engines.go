@@ -9,34 +9,40 @@ import (
 func (g Engine) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Engine struct {
-	Name  string
-	Price int
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 
-	CruiseSpeed      int
-	CruiseChargeTime int
-	LinearDrag       int
-	MaxForce         int
-	ReverseFraction  float64
-	ImpulseSpeed     float64
+	CruiseSpeed      int     `json:"cruise_speed"`
+	CruiseChargeTime int     `json:"cruise_charge_time"`
+	LinearDrag       int     `json:"linear_drag"`
+	MaxForce         int     `json:"max_force"`
+	ReverseFraction  float64 `json:"reverse_fraction"`
+	ImpulseSpeed     float64 `json:"impulse_speed"`
 
-	HpType          string
-	HpTypeHash      flhash.HashCode
-	FlameEffect     string
-	FlameEffectHash flhash.HashCode
-	TrailEffect     string
-	TrailEffectHash flhash.HashCode
+	HpType          string          `json:"hp_type"`
+	HpTypeHash      flhash.HashCode `json:"-" swaggerignore:"true"`
+	FlameEffect     string          `json:"flame_effect"`
+	FlameEffectHash flhash.HashCode `json:"-" swaggerignore:"true"`
+	TrailEffect     string          `json:"trail_effect"`
+	TrailEffectHash flhash.HashCode `json:"-" swaggerignore:"true"`
 
-	Nickname     string
-	NicknameHash flhash.HashCode
-	NameID       int
-	InfoID       int
+	Nickname     string          `json:"nickname"`
+	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
+	NameID       int             `json:"name_id"`
+	InfoID       int             `json:"info_id"`
 
-	Bases map[cfg.BaseUniNick]*MarketGood
-	*DiscoveryTechCompat
-	Mass float64
+	Bases                map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
+	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
+	Mass                 float64 `json:"mass"`
+
+	Infocard Infocard `json:"infocard"`
 }
 
 func (b Engine) GetNickname() string { return string(b.Nickname) }
+
+func (b Engine) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
+func (b Engine) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
 func (e *Exporter) GetEngineSpeed(engine_info *equip_mapped.Engine) int {
 	if cruise_speed, ok := engine_info.CruiseSpeed.GetValue(); ok {
@@ -64,7 +70,11 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 		engine.LinearDrag = engine_info.LinearDrag.Get()
 		engine.MaxForce = engine_info.MaxForce.Get()
 		engine.ReverseFraction = engine_info.ReverseFraction.Get()
-		engine.ImpulseSpeed = float64(engine.MaxForce) / float64(engine.LinearDrag)
+		linear_drag_for_calc := engine.LinearDrag
+		if linear_drag_for_calc == 0 {
+			linear_drag_for_calc = 1
+		}
+		engine.ImpulseSpeed = float64(engine.MaxForce) / float64(linear_drag_for_calc)
 
 		engine.HpType, _ = engine_info.HpType.GetValue()
 		engine.FlameEffect, _ = engine_info.FlameEffect.GetValue()
@@ -86,6 +96,7 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 		engine.Name = e.GetInfocardName(engine.NameID, engine.Nickname)
 
 		e.exportInfocards(InfocardKey(engine.Nickname), engine.InfoID)
+		engine.Infocard = e.Infocards[InfocardKey(engine.Nickname)]
 
 		engine.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, engine.Nickname)
 		engine.NicknameHash = flhash.HashNickname(engine.Nickname)

@@ -6,24 +6,30 @@ import (
 )
 
 type Scanner struct {
-	Name  string
-	Price int
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 
-	Range          int
-	CargoScanRange int
+	Range          int `json:"range"`
+	CargoScanRange int `json:"cargo_scan_range"`
 
-	Lootable     bool
-	Nickname     string
-	NicknameHash flhash.HashCode
-	NameID       int
-	InfoID       int
+	Lootable     bool            `json:"lootable"`
+	Nickname     string          `json:"nickname"`
+	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
+	NameID       int             `json:"name_id"`
+	InfoID       int             `json:"info_id"`
 
-	Bases map[cfg.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
-	*DiscoveryTechCompat
-	Mass     float64
-	Infocard Infocard `json:"infocard"`
+	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
+	Mass                 float64  `json:"mass"`
+	Infocard             Infocard `json:"infocard"`
 }
+
+func (b Scanner) GetNickname() string { return string(b.Nickname) }
+
+func (b Scanner) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
+func (b Scanner) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
 func (e *Exporter) GetScanners(ids []*Tractor) []Scanner {
 	var scanners []Scanner

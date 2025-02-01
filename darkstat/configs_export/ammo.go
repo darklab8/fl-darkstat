@@ -28,6 +28,8 @@ type Ammo struct {
 
 	AmmoLimit AmmoLimit `json:"ammo_limit"`
 	Mass      float64   `json:"mass"`
+
+	Infocard Infocard `json:"infocard"`
 }
 
 func (b Ammo) GetNickname() string { return string(b.Nickname) }
@@ -88,6 +90,7 @@ func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 		}
 
 		e.exportInfocards(InfocardKey(munition.Nickname), munition.InfoID)
+		munition.Infocard = e.Infocards[InfocardKey(munition.Nickname)]
 		munition.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, munition.Nickname)
 		tractors = append(tractors, munition)
 	}
