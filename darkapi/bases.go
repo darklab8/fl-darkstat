@@ -21,10 +21,11 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Base
 // @Router       /api/npc_bases [get]
+// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
 func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/npc_bases",
-		Handler: GetItemsT(webapp, api.app_data.Configs.Bases),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Bases, configs_export.FilterToUserfulBases),
 	}
 
 }

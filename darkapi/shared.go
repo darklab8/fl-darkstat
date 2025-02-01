@@ -25,13 +25,19 @@ type TechCompatResp struct {
 	Error      *string                             `json:"error"`
 }
 
-func GetItemsT[T any](webapp *web.Web, items []T) func(w http.ResponseWriter, r *http.Request) {
+func GetItemsT[T any](webapp *web.Web, items []T, filter func(items []T) []T) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if webapp.AppDataMutex != nil {
 			webapp.AppDataMutex.Lock()
 			defer webapp.AppDataMutex.Unlock()
 		}
-		ReturnJson(&w, items)
+
+		param1 := r.URL.Query().Get("filter_to_useful")
+		if param1 == "true" {
+			ReturnJson(&w, filter(items))
+		} else {
+			ReturnJson(&w, items)
+		}
 	}
 }
 

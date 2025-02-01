@@ -1,6 +1,8 @@
 package darkapi
 
 import (
+	"net/http"
+
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	_ "github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -17,8 +19,15 @@ import (
 // @Router       /api/pobs [get]
 func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url:     "GET " + ApiRoute + "/pobs",
-		Handler: GetItemsT(webapp, api.app_data.Configs.PoBs),
+		Url: "GET " + ApiRoute + "/pobs",
+		Handler: func(w http.ResponseWriter, r *http.Request) {
+			if webapp.AppDataMutex != nil {
+				webapp.AppDataMutex.Lock()
+				defer webapp.AppDataMutex.Unlock()
+			}
+
+			ReturnJson(&w, api.app_data.Configs.PoBs)
+		},
 	}
 }
 
@@ -31,13 +40,20 @@ func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Router       /api/pob_goods [get]
 func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url:     "GET " + ApiRoute + "/pob_goods",
-		Handler: GetItemsT(webapp, api.app_data.Configs.PoBGoods),
+		Url: "GET " + ApiRoute + "/pob_goods",
+		Handler: func(w http.ResponseWriter, r *http.Request) {
+			if webapp.AppDataMutex != nil {
+				webapp.AppDataMutex.Lock()
+				defer webapp.AppDataMutex.Unlock()
+			}
+
+			ReturnJson(&w, api.app_data.Configs.PoBGoods)
+		},
 	}
 }
 
 // ShowAccount godoc
-// @Summary      Getting list of Player Owned Bases in Bases format. Lists only pobs that have known position coordinate
+// @Summary      Getting list of Player Owned Bases in Bases format. Lists only pobs that have known position coordinates
 // @Tags         player_owned_bases
 // @Accept       json
 // @Produce      json
@@ -45,7 +61,14 @@ func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Router       /api/pobs/bases [get]
 func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url:     "GET " + ApiRoute + "/pobs/bases",
-		Handler: GetItemsT(webapp, api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs)),
+		Url: "GET " + ApiRoute + "/pobs/bases",
+		Handler: func(w http.ResponseWriter, r *http.Request) {
+			if webapp.AppDataMutex != nil {
+				webapp.AppDataMutex.Lock()
+				defer webapp.AppDataMutex.Unlock()
+			}
+
+			ReturnJson(&w, api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs))
+		},
 	}
 }

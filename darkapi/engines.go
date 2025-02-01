@@ -12,10 +12,11 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Engine
 // @Router       /api/engines [get]
+// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
 func GetEngines(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/engines",
-		Handler: GetItemsT(webapp, api.app_data.Configs.Engines),
+		Handler: GetItemsT(webapp, api.app_data.Configs.Engines, api.app_data.Configs.FilterToUsefulEngines),
 	}
 }
 

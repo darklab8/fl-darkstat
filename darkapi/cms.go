@@ -12,10 +12,11 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.CounterMeasure
 // @Router       /api/counter_measures [get]
+// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
 func GetCMs(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/counter_measures",
-		Handler: GetItemsT(webapp, api.app_data.Configs.CMs),
+		Handler: GetItemsT(webapp, api.app_data.Configs.CMs, api.app_data.Configs.FilterToUsefulCounterMeasures),
 	}
 }
 
