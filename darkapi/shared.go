@@ -18,13 +18,13 @@ import (
 type MarketGoodResp struct {
 	MarketGoods []*configs_export.MarketGood `json:"market_goods"`
 	Nickname    string                       `json:"nickname"`
-	Error       *string                      `json:"error"`
+	Error       *string                      `json:"error,omitempty"`
 }
 
 type TechCompatResp struct {
 	TechCompat *configs_export.DiscoveryTechCompat `json:"tech_compat"`
 	Nickname   string                              `json:"nickname"`
-	Error      *string                             `json:"error"`
+	Error      *string                             `json:"error,omitempty"`
 }
 
 func GetItemsT[T Nicknamable](webapp *web.Web, items []T, filter func(items []T) []T) func(w http.ResponseWriter, r *http.Request) {
