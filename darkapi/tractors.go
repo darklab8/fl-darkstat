@@ -24,7 +24,7 @@ func GetTractors(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         tractors
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of ship nicknames as input, for example [ai_bomber]" example("ai_bomber")
+// @Param request body []string true "Array of ship nicknames as input, for example [dsy_license_srp_28]"
 // @Success      200  {array}  	MarketGoodResp
 // @Router       /api/tractors/market_goods [post]
 func PostTractorMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {

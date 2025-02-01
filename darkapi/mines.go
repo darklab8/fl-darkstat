@@ -24,7 +24,7 @@ func GetMines(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         mines
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of mine nicknames as input, for example [ai_bomber]" example("ai_bomber")
+// @Param request body []string true "Array of mine nicknames as input, for example [mine02_mark02]"
 // @Success      200  {array}  	MarketGoodResp
 // @Router       /api/mines/market_goods [post]
 func PostMinesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {

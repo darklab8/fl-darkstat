@@ -68,7 +68,7 @@ func GetMissiles(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         guns
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of ship nicknames as input, for example [ai_bomber]" example("ai_bomber")
+// @Param request body []string true "Array of ship nicknames as input, for example [fc_or_gun01_mark02]"
 // @Success      200  {array}  	MarketGoodResp
 // @Router       /api/missiles/market_goods [post]
 func PostMissilesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
@@ -83,7 +83,7 @@ func PostMissilesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         guns
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of missile nicknames as input, for example [ai_bomber]" example("ai_bomber")
+// @Param request body []string true "Array of missile nicknames as input, for example [fc_or_gun01_mark02]"
 // @Success      200  {array}  	TechCompatResp
 // @Router       /api/missiles/tech_compats [post]
 func PostMissilesTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {

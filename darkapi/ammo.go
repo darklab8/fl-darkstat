@@ -25,7 +25,7 @@ func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         ammos
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of ammo nicknames as input, for example [ai_bomber]" example("ai_bomber")
+// @Param request body []string true "Array of ammo nicknames as input, for example [dsy_annihilator_torpedo_ammo]"
 // @Success      200  {array}  	MarketGoodResp
 // @Router       /api/ammos/market_goods [post]
 func PostAmmoMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
@@ -40,7 +40,7 @@ func PostAmmoMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         ammos
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of ammo nicknames as input
+// @Param request body []string true "Array of ammo nicknames as input"
 // @Success      200  {array}  	TechCompatResp
 // @Router       /api/ammos/tech_compats [post]
 func PostAmmoTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
