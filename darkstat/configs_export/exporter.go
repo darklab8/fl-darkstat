@@ -108,9 +108,9 @@ type Exporter struct {
 	Factions     []Faction
 	Infocards    Infocards
 	Commodities  []*Commodity
-	Guns         []Gun      // TODO add to API
-	Missiles     []Gun      // TODO add to API
-	Mines        []Mine     // TODO add to API
+	Guns         []Gun
+	Missiles     []Gun
+	Mines        []Mine
 	Shields      []Shield   // TODO add to API
 	Thrusters    []Thruster // TODO add to API
 	Ships        []Ship
@@ -119,7 +119,7 @@ type Exporter struct {
 	Engines      []Engine         // TODO add to API
 	CMs          []CounterMeasure // TODO add to API
 	Scanners     []Scanner        // TODO add to API
-	Ammos        []Ammo           // TODO add to API
+	Ammos        []Ammo
 	PoBs         []*PoB
 	PoBGoods     []*PoBGood
 

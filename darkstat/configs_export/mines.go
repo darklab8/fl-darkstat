@@ -9,47 +9,51 @@ import (
 )
 
 type Mine struct {
-	Name                string
-	Price               int
-	AmmoPrice           int
-	Nickname            string
-	MineDropperHash     flhash.HashCode
-	ProjectileArchetype string
-	MineHash            flhash.HashCode
-	IdsName             int
-	IdsInfo             int
+	Name                string          `json:"name"`
+	Price               int             `json:"price"`
+	AmmoPrice           int             `json:"ammo_price"`
+	Nickname            string          `json:"nickname"`
+	MineDropperHash     flhash.HashCode `json:"mine_dropper_hash" format:"int64"`
+	ProjectileArchetype string          `json:"projectyle_archetype"`
+	MineHash            flhash.HashCode `json:"mine_hash" format:"int64"`
+	IdsName             int             `json:"ids_name"`
+	IdsInfo             int             `json:"ids_info"`
 
-	HullDamage    int
-	EnergyDamange int
-	ShieldDamage  int
-	PowerUsage    float64
+	HullDamage    int     `json:"hull_damage"`
+	EnergyDamange int     `json:"energy_damage"`
+	ShieldDamage  int     `json:"shield_damage"`
+	PowerUsage    float64 `json:"power_usage"`
 
-	Value              float64
-	Refire             float64
-	DetonationDistance float64
-	Radius             float64
-	SeekDistance       int
-	TopSpeed           int
-	Acceleration       int
-	LinearDrag         float64
-	LifeTime           float64
-	OwnerSafe          int
-	Toughness          float64
+	Value              float64 `json:"value"`
+	Refire             float64 `json:"refire"`
+	DetonationDistance float64 `json:"detonation_distance"`
+	Radius             float64 `json:"radius"`
+	SeekDistance       int     `json:"seek_distance"`
+	TopSpeed           int     `json:"top_speed"`
+	Acceleration       int     `json:"acceleration"`
+	LinearDrag         float64 `json:"linear_drag"`
+	LifeTime           float64 `json:"life_time"`
+	OwnerSafe          int     `json:"owner_safe"`
+	Toughness          float64 `json:"toughness"`
 
-	HitPts   int
-	Lootable bool
+	HitPts   int  `json:"hit_pts"`
+	Lootable bool `json:"lootable"`
 
-	Bases map[cfg.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
-	*DiscoveryTechCompat
+	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 
-	AmmoLimit AmmoLimit
-	Mass      float64
+	AmmoLimit AmmoLimit `json:"ammo_limit"`
+	Mass      float64   `json:"mass"`
 
 	Infocard Infocard `json:"infocard"`
 }
 
 func (b Mine) GetNickname() string { return string(b.Nickname) }
+
+func (b Mine) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
+func (b Mine) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
 type AmmoLimit struct {
 	// Disco stuff

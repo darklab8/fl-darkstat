@@ -28,71 +28,75 @@ type GunDetailed struct {
 func (g Gun) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Gun struct {
-	Nickname     string
-	NicknameHash flhash.HashCode
-	MunitionHash flhash.HashCode
-	HpTypeHash   flhash.HashCode
-	Name         string
-	Type         string
-	Price        int
-	Class        string
-	HpType       string
-	IdsName      int
-	IdsInfo      int
-	Volume       float64
+	Nickname     string          `json:"nickname"`
+	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
+	MunitionHash flhash.HashCode `json:"munition_hash" format:"int64"`
+	HpTypeHash   flhash.HashCode `json:"hp_type_hash" format:"int64"`
+	Name         string          `json:"name"`
+	Type         string          `json:"type"`
+	Price        int             `json:"price"`
+	Class        string          `json:"class"`
+	HpType       string          `json:"hp_type"`
+	IdsName      int             `json:"ids_name"`
+	IdsInfo      int             `json:"ids_info"`
+	Volume       float64         `json:"volume"`
 
-	HitPts       string
-	PowerUsage   float64
-	Refire       float64
-	Range        float64
-	Toughness    float64
-	IsAutoTurret bool
-	Lootable     bool
+	HitPts       string  `json:"hit_pts"`
+	PowerUsage   float64 `json:"power_usage"`
+	Refire       float64 `json:"refire"`
+	Range        float64 `json:"range"`
+	Toughness    float64 `json:"toughness"`
+	IsAutoTurret bool    `json:"is_auto_turret"`
+	Lootable     bool    `json:"lootable"`
 
-	RequiredAmmo bool
+	RequiredAmmo bool `json:"required_ammo"`
 	// AmmoPrice     int
 	// AmmoBases     []*GoodAtBase
 	// AmmoName      string
-	HullDamage      int
-	EnergyDamage    int
-	ShieldDamage    int
-	AvgShieldDamage int
-	DamageType      string
-	LifeTime        float64
-	Speed           float64
-	GunTurnRate     float64
-	DispersionAngle float64
+	HullDamage      int     `json:"hull_damage"`
+	EnergyDamage    int     `json:"energy_damage"`
+	ShieldDamage    int     `json:"shield_damage"`
+	AvgShieldDamage int     `json:"avg_shield_damage"`
+	DamageType      string  `json:"damage_type"`
+	LifeTime        float64 `json:"life_time"`
+	Speed           float64 `json:"speed"`
+	GunTurnRate     float64 `json:"gun_turn_rate"`
+	DispersionAngle float64 `json:"dispersion_angle"`
 
-	HullDamagePerSec       float64
-	AvgShieldDamagePerSec  float64
-	EnergyDamagePerSec     float64
-	PowerUsagePerSec       float64
-	AvgEfficiency          float64
-	HullEfficiency         float64
-	ShieldEfficiency       float64
-	EnergyDamageEfficiency float64
+	HullDamagePerSec       float64 `json:"hull_damage_per_sec"`
+	AvgShieldDamagePerSec  float64 `json:"avg_shield_damage_per_sec"`
+	EnergyDamagePerSec     float64 `json:"energy_damage_per_sec"`
+	PowerUsagePerSec       float64 `json:"power_usage_per_sec"`
+	AvgEfficiency          float64 `json:"avg_efficiency"`
+	HullEfficiency         float64 `json:"hull_efficiency"`
+	ShieldEfficiency       float64 `json:"shield_efficiency"`
+	EnergyDamageEfficiency float64 `json:"energy_damage_efficiency"`
 
-	Bases         map[cfg.BaseUniNick]*MarketGood
-	DamageBonuses []DamageBonus
+	Bases         map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
+	DamageBonuses []DamageBonus                   `json:"damage_bonuses"`
 
 	Missile
-	*DiscoveryTechCompat
+	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 	GunDetailed
 
-	NumBarrels *int
-	BurstFire  *BurstFire
-	AmmoLimit  AmmoLimit
+	NumBarrels *int       `json:"num_barrels,omitempty"`
+	BurstFire  *BurstFire `json:"burst_fire,omitempty"`
+	AmmoLimit  AmmoLimit  `json:"ammo_limit,omitempty"`
 
-	Mass float64
+	Mass float64 `json:"mass"`
 
-	DiscoGun *DiscoGun
-	Infocard Infocard `json:"infocard"`
+	DiscoGun *DiscoGun `json:"disco_gun"`
+	Infocard Infocard  `json:"infocard"`
 }
 
 func (b Gun) GetNickname() string { return string(b.Nickname) }
 
+func (b Gun) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
+
+func (b Gun) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
+
 type DiscoGun struct {
-	ArmorPen float64
+	ArmorPen float64 `json:"armor_pen"`
 }
 
 type BurstFire struct {
@@ -297,10 +301,15 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		gun.BurstFire.SustainedPowerUsagePerSec = float64(gun.PowerUsage) * gun.BurstFire.SustainedRefire * float64(num_barrels)
 	}
 
-	gun.AvgEfficiency = (float64(gun.HullDamage) + float64(gun.AvgShieldDamage)) / (gun.PowerUsage * 2)
-	gun.HullEfficiency = float64(gun.HullDamage) / gun.PowerUsage
-	gun.ShieldEfficiency = float64(gun.AvgShieldDamage) / gun.PowerUsage
-	gun.EnergyDamageEfficiency = float64(gun.EnergyDamage) / gun.PowerUsage
+	power_usage_for_calcs := gun.PowerUsage
+	if power_usage_for_calcs == 0 {
+		power_usage_for_calcs = 1
+	}
+	gun.AvgEfficiency = (float64(gun.HullDamage) + float64(gun.AvgShieldDamage)) / (power_usage_for_calcs * 2)
+	gun.HullEfficiency = float64(gun.HullDamage) / power_usage_for_calcs
+	gun.ShieldEfficiency = float64(gun.AvgShieldDamage) / power_usage_for_calcs
+	gun.EnergyDamageEfficiency = float64(gun.EnergyDamage) / power_usage_for_calcs
+
 	gun.GunTurnRate, _ = gun_info.TurnRate.GetValue()
 	gun.DispersionAngle, _ = gun_info.DispersionAngle.GetValue()
 

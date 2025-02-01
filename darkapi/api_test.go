@@ -31,11 +31,16 @@ func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string
 	res, err := httpc.Get("http://localhost/api" + url)
 	logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
 
+	assert.Equal(t, http.StatusOK, res.StatusCode)
+
 	resBody, err := io.ReadAll(res.Body)
 	logus.Log.CheckPanic(err, "client: could not read response body: %s\n", typelog.OptError(err))
 
 	var items []T
 	err = json.Unmarshal(resBody, &items)
+	if err != nil {
+		fmt.Println("resBody=", string(resBody))
+	}
 	logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))
 
 	assert.Greater(t, len(items), 0)
@@ -249,6 +254,32 @@ func TestApi(t *testing.T) {
 
 	t.Run("GetAmmos", func(t *testing.T) {
 		_ = FixtureTestItems[configs_export.Ammo](t, httpc, "/ammos", "Ammos", TestOpts{
+			CheckMarketGoods: true,
+			CheckTechCompat:  true,
+		})
+	})
+
+	t.Run("GetGuns", func(t *testing.T) {
+		for _, gun := range app_data.Configs.Guns {
+			_, err := json.Marshal(gun)
+			assert.Nil(t, err)
+		}
+
+		_ = FixtureTestItems[configs_export.Gun](t, httpc, "/guns", "Ships", TestOpts{
+			CheckMarketGoods: true,
+			CheckTechCompat:  true,
+		})
+	})
+
+	t.Run("GetMissiles", func(t *testing.T) {
+		_ = FixtureTestItems[configs_export.Gun](t, httpc, "/missiles", "Missiles", TestOpts{
+			CheckMarketGoods: true,
+			CheckTechCompat:  true,
+		})
+	})
+
+	t.Run("GetMines", func(t *testing.T) {
+		_ = FixtureTestItems[configs_export.Mine](t, httpc, "/mines", "Mines", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})

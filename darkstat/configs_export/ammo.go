@@ -7,27 +7,27 @@ import (
 )
 
 type Ammo struct {
-	Name  string
-	Price int
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 
-	HitPts           int
-	Volume           float64
-	MunitionLifetime float64
+	HitPts           int     `json:"hit_pts"`
+	Volume           float64 `json:"volume"`
+	MunitionLifetime float64 `json:"munition_lifetime"`
 
-	Nickname     string
-	NicknameHash flhash.HashCode
-	NameID       int
-	InfoID       int
-	SeekerType   string
-	SeekerRange  int
-	SeekerFovDeg int
+	Nickname     string          `json:"nickname"`
+	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
+	NameID       int             `json:"name_id"`
+	InfoID       int             `json:"info_id"`
+	SeekerType   string          `json:"seeker_type"`
+	SeekerRange  int             `json:"seeker_range"`
+	SeekerFovDeg int             `json:"seeker_fov_deg"`
 
-	Bases map[cfg.BaseUniNick]*MarketGood
+	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
-	*DiscoveryTechCompat
+	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 
-	AmmoLimit AmmoLimit
-	Mass      float64
+	AmmoLimit AmmoLimit `json:"ammo_limit"`
+	Mass      float64   `json:"mass"`
 }
 
 func (b Ammo) GetNickname() string { return string(b.Nickname) }

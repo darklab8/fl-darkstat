@@ -1,7 +1,7 @@
 package configs_export
 
 type Missile struct {
-	MaxAngularVelocity float64
+	MaxAngularVelocity float64 `json:"max_angular_velocity"`
 }
 
 func (e *Exporter) GetMissiles(ids []*Tractor, buyable_ship_tech map[string]bool) []Gun {
