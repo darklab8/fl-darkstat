@@ -47,7 +47,6 @@ func FmtPtrFloat(value *float64, precision int) string {
 templ PoBTableHeaders() {
 	<th style="width:25px;">@frmt.MultiLinestring([]string{"Cargo", "space", "left"})</th>
 	<th style="width:25px;">@frmt.MultiLinestring([]string{"Forum", "thread"})</th>
-	<th style="width:25px;">@frmt.MultiLinestring([]string{"Public", "items", "amount"})</th>
 	<th style="width:25px;">Pos</th>
 	<th style="width:25px;">Level</th>
 	<th style="width:25px;">Money</th>
@@ -65,7 +64,7 @@ templ PoBTableHeaders() {
 	<th style="max-width:100%;"></th>
 }
 
-templ PobTableRow(pob *configs_export.PoB) {
+templ PobTableRow(pob *configs_export.PoBWithoutGoods) {
 	<td> { FmtPtrInt(pob.CargoSpaceLeft)} </td>
 	<td>
 		if pob.ForumThreadUrl != nil {
@@ -74,7 +73,6 @@ templ PobTableRow(pob *configs_export.PoB) {
 			notfound
 		}
 	</td>
-	<td> { strconv.Itoa(len(pob.ShopItems)) } </td>
 	<td> { FmtPtrString(pob.Pos)} </td>
 	<td>{ FmtPtrInt(pob.Level) }</td>
 	<td>{ FmtPtrInt(pob.Money) }</td>
@@ -106,6 +104,7 @@ templ PobTable(pobs []*configs_export.PoB, pinm tab.PinMod, shared *types.Shared
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
+				<th style="width:25px;">@frmt.MultiLinestring([]string{"Public", "items", "amount"})</th>
 				@PoBTableHeaders()
 			</tr>
 		</thead>
@@ -115,7 +114,8 @@ templ PobTable(pobs []*configs_export.PoB, pinm tab.PinMod, shared *types.Shared
 					@tab.PinTd(pob.Nickname, html.UnescapeString(pob.Name), pinm)
 					@tab.PinSelectLeftRight(pinm, PoBDetailedUrl(pob))
 					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
-					@PobTableRow(pob)
+					<td> { strconv.Itoa(len(pob.ShopItems)) } </td>
+					@PobTableRow(&pob.PoBWithoutGoods)
 					@tab.TdInfoCardClick(configs_export.InfocardKey(pob.Nickname), pob.Nickname, pinm, shared, tab.InfocardClickOpts{IsRelayHosted: true})
 				}
 			}

@@ -41,8 +41,7 @@ func (d DefenseMode) ToStr() string {
 	}
 }
 
-// also known as Player Base Station
-type PoB struct {
+type PoBWithoutGoods struct {
 	Nickname string `json:"nickname"`
 	Name     string `json:"name"`
 
@@ -63,9 +62,12 @@ type PoB struct {
 	BasePos     *cfg.Vector `json:"base_pos"`
 	SectorCoord *string     `json:"sector_coord"`
 	Region      *string     `json:"region_name"`
+}
 
+// also known as Player Base Station
+type PoB struct {
+	PoBWithoutGoods
 	ShopItems []*ShopItem `json:"shop_items"`
-	Infocard  Infocard    `json:"infocard"`
 }
 
 func (b PoB) GetNickname() string { return string(b.Nickname) }
@@ -92,8 +94,8 @@ func (good PoBGood) BaseSells() bool { return good.AnyBaseSells }
 func (good PoBGood) BaseBuys() bool  { return good.AnyBaseBuys }
 
 type PoBGoodBase struct {
-	ShopItem *ShopItem `json:"shop_item"`
-	Base     *PoB      `json:"base"`
+	ShopItem *ShopItem        `json:"shop_item"`
+	Base     *PoBWithoutGoods `json:"base"`
 }
 
 // Exporting only with position ones
@@ -120,7 +122,6 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 		if pob.FactionName != nil {
 			base.FactionName = *pob.FactionName
 		}
-		base.Infocard = pob.Infocard
 		bases = append(bases, base)
 
 		for _, pob_good := range pob.ShopItems {
@@ -167,7 +168,7 @@ func (e *Exporter) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				}
 				pobs_goods_by_nick[good.Nickname] = pob_good
 			}
-			pob_good.Bases = append(pob_good.Bases, &PoBGoodBase{Base: pob, ShopItem: good})
+			pob_good.Bases = append(pob_good.Bases, &PoBGoodBase{Base: &pob.PoBWithoutGoods, ShopItem: good})
 		}
 	}
 
@@ -244,13 +245,15 @@ func (e *Exporter) GetPoBs() []*PoB {
 	for _, pob_info := range e.Configs.Discovery.PlayerOwnedBases.Bases {
 
 		var pob *PoB = &PoB{
-			Nickname:       pob_info.Nickname,
-			Name:           pob_info.Name,
-			Pos:            pob_info.Pos,
-			Level:          pob_info.Level,
-			Money:          pob_info.Money,
-			Health:         pob_info.Health,
-			CargoSpaceLeft: pob_info.CargoSpaceLeft,
+			PoBWithoutGoods: PoBWithoutGoods{
+				Nickname:       pob_info.Nickname,
+				Name:           pob_info.Name,
+				Pos:            pob_info.Pos,
+				Level:          pob_info.Level,
+				Money:          pob_info.Money,
+				Health:         pob_info.Health,
+				CargoSpaceLeft: pob_info.CargoSpaceLeft,
+			},
 		}
 		if pob_info.DefenseMode != nil {
 			pob.DefenseMode = (*DefenseMode)(pob_info.DefenseMode)
@@ -353,7 +356,6 @@ func (e *Exporter) GetPoBs() []*PoB {
 		// TODO add pob infocards here
 		e.Infocards[InfocardKey(pob.Nickname)] = sb.Lines
 		e.Configs.Infocards.Infonames[int(flhash.HashNickname(pob.Nickname))] = infocard.Infoname(pob.Name)
-		pob.Infocard = sb.Lines
 
 		pobs = append(pobs, pob)
 	}
