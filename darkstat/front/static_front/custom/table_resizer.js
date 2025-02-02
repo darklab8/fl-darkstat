@@ -1,4 +1,4 @@
-function makeTopBottomTablesResizable() {
+function makeTopBottomTablesResizable() { // eslint-disable-line no-unused-vars
     const element_top = document.querySelector("#table-top")
     const element_bottom = document.querySelector("#table-bottom")
     const currentResizer = document.querySelector('.resizer-top-bottom')
@@ -16,12 +16,12 @@ function makeTopBottomTablesResizable() {
         e.preventDefault()
 
         top_height_perc = 65
-        if (element_top.hasOwnProperty("height_perc")) {
+        if (element_top.hasOwnProperty("height_perc")) {  // eslint-disable-line no-prototype-builtins
             top_height_perc = element_top.height_perc
         }
 
         botttom_height_perc = 35
-        if (element_bottom.hasOwnProperty("height_perc")) {
+        if (element_bottom.hasOwnProperty("height_perc")) {  // eslint-disable-line no-prototype-builtins
             botttom_height_perc = element_bottom.height_perc
         }
 
@@ -51,7 +51,7 @@ function makeTopBottomTablesResizable() {
     }
 }
 
-function makeLeftRightTablesResizable() {
+function makeLeftRightTablesResizable() { // eslint-disable-line no-unused-vars
     const currentResizer = document.querySelector('.resizer-left-right')
     const element_left = document.querySelector("#table-wrapper")
     const element_right = document.querySelector("#infocard_view")

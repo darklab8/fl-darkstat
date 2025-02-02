@@ -3,9 +3,9 @@
  * You should probably account elements with `tr[i].style.display = "none";` too may be here.
  * @param {HTMLTableElement} table
  */
-function TableLen(table) {
+function TableLen(table) { // eslint-disable-line no-unused-vars
     let count = 0;
-    for (let i = 0, row; row = table.rows[i]; i++) {
+    for (let row of table.rows) {
 
         if (!row.classList.contains(HIDDEN_CLS)) {
             count = count + 1;
@@ -21,7 +21,7 @@ var HIDDEN_CLS = "hidden";
  * hide, row or table or anything else
  * @param {string} id
  */
-function Hide(id) {
+function Hide(id) { // eslint-disable-line no-unused-vars
     let element = document.getElementById(id);
     // console.log("Hide.id=" + id)
     if (!element.classList.contains(HIDDEN_CLS)) {
@@ -33,7 +33,7 @@ function Hide(id) {
  * unhide, row or table or anything else
  * @param {string} id
  */
-function Unhide(id) {
+function Unhide(id) { // eslint-disable-line no-unused-vars
     let element = document.getElementById(id);
     // console.log("Unhide.id=" + id)
     if (element.classList.contains(HIDDEN_CLS)) {
@@ -45,11 +45,11 @@ function Unhide(id) {
  * Function helping to persist selected ID
  * when user moves across different tabs
  */
-function LoadSelectedTractorID() {
+function LoadSelectedTractorID() { // eslint-disable-line no-unused-vars
     // console.log("triggered LoadSelectedTractorID")
     let selected_index = sessionStorage.getItem("tractor_id_selected_index");
     if (typeof (selected_index) != 'undefined' && selected_index != null) {
-        tractor_id_elem = document.getElementById("tractor_id_selector");
+        let tractor_id_elem = document.getElementById("tractor_id_selector");
         if (typeof (tractor_id_elem) != 'undefined' && tractor_id_elem != null) {
             tractor_id_elem.selectedIndex = selected_index;
         }
@@ -62,7 +62,7 @@ function LoadSelectedTractorID() {
  * Highlights clicked table row
  * @param {HTMLTableRowElement} row
  */
-function RowHighlighter(row) {
+function RowHighlighter(row) { // eslint-disable-line no-unused-vars
     let table = row.parentElement.parentElement;
 
     let selected_row_id = row.rowIndex;
@@ -79,7 +79,7 @@ function cloneAttributes(target, source) {
     [...source.attributes].forEach(attr => { target.setAttribute(attr.nodeName, attr.nodeValue) })
 }
 
-function LoadTechCompat() {
+function LoadTechCompat() { // eslint-disable-line no-unused-vars
     console.log("loading tech compat attempt")
     let targets1 = document.querySelectorAll("[data-target-1]")
     for (let i = 0; i < targets1.length; i++) {

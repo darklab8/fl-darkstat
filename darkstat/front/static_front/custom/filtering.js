@@ -2,14 +2,15 @@
  * Implements functionality for filtering search bar
  * For table that has also filtering by selected ID tech compatibility, which is needed for Freelancer Discovery
  */
-function FilteringFunction() {
+function FilteringFunction() { // eslint-disable-line no-unused-vars
     // Declare variables
     // console.log("triggered FilteringFunction")
-    let input, filter, filter_infocard, table, tr, i, txtValue, txtValue_infocard;
+    let input, filter, filter_infocard, table, tr, txtValue, txtValue_infocard;
     input = document.getElementById("filterinput");
     if (typeof (input) === 'undefined' || input === null) {
         return;
     }
+    let input_infocard = document.getElementById("filterinput_infocard");
     filter_infocard = input_infocard.value.toUpperCase();
     filter = input.value.toUpperCase();
     table = document.querySelector("#table-top table");
@@ -28,15 +29,15 @@ function FilteringFunction() {
 
     // making invisible info about ID Compatibility if no ID is selected
     if (tractor_id_selected === "") {
-        row = tr[0];
-        cell = row.getElementsByClassName("tech_compat")[0];
+        let row = tr[0];
+        let cell = row.getElementsByClassName("tech_compat")[0];
         if (typeof (cell) != 'undefined') {
             cell.style.display = "none";
         }
 
     } else {
-        row = tr[0];
-        cell = row.getElementsByClassName("tech_compat")[0];
+        let row = tr[0];
+        let cell = row.getElementsByClassName("tech_compat")[0];
         if (typeof (cell) != 'undefined') {
             cell.style.display = "";
         }
@@ -46,12 +47,12 @@ function FilteringFunction() {
     // Loop through all table rows, and hide those who don't match the search query
     for (let i = 1; i < tr.length; i++) {
         // row = document.getElementById("bottominfo_dsy_councilhf")
-        row = tr[i];
+        let row = tr[i];
 
         let txtValues = []
         let tds = row.getElementsByClassName("seo")
         for (let elem of tds) {
-            value = elem.textContent || elem.innerText;
+            let value = elem.textContent || elem.innerText;
             txtValues.push(value)
         }
         txtValue = txtValues.join('');
@@ -64,9 +65,10 @@ function FilteringFunction() {
 
         // Refresh tech compat value
         let techcompat_visible = true;
-        cell = row.getElementsByClassName("tech_compat")[0];
+        let compatibility;
+        let cell = row.getElementsByClassName("tech_compat")[0];
         if (typeof (cell) != 'undefined') {
-            techcompats = JSON.parse(cell.attributes["techcompats"].textContent.replaceAll("'", '"'));
+            let techcompats = JSON.parse(cell.attributes["techcompats"].textContent.replaceAll("'", '"'));
 
             if (tractor_id_selected in techcompats) {
                 compatibility = techcompats[tractor_id_selected] * 100;
@@ -103,7 +105,7 @@ function FilteringFunction() {
  * @param {string} table_selector
  * @param {string} input_selector
  */
-function FilteringForAnyTable(table_selector, input_selector) {
+function FilteringForAnyTable(table_selector, input_selector) { // eslint-disable-line no-unused-vars
     // Declare variables
     // console.log("triggered FilteringFunction")
     let input, filter, table, tr, txtValue;
@@ -115,10 +117,10 @@ function FilteringForAnyTable(table_selector, input_selector) {
 
     // Loop through all table rows, and hide those who don't match the search query
     for (let i = 1; i < tr.length; i++) {
-        row = tr[i];
+        let row = tr[i];
         txtValue = row.textContent || row.innerText;
 
-        if (IsHavingLocksFromOtherFilters(row, 'darkstat_filtering1')) {
+        if (IsHavingLocksFromOtherFilters(row, 'darkstat_filtering1')) { // eslint-disable-line no-undef
             continue
         }
 
@@ -161,8 +163,8 @@ function highlight(input_infocard, infocard) {
     document.getElementsByClassName("infocard")[0].innerHTML = innerHTML
 }
 
-function highlightInfocardHook() {
-    input_infocard = document.getElementById("filterinput_infocard");
+function highlightInfocardHook() {  // eslint-disable-line no-unused-vars
+    let input_infocard = document.getElementById("filterinput_infocard");
     let infocards = document.getElementsByClassName("infocard")
     if (infocards.length > 0) {
         let infocard = infocards[0]

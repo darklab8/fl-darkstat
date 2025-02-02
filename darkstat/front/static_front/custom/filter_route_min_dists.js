@@ -19,29 +19,27 @@ U can https://stackoverflow.com/questions/4258466/can-i-add-arbitrary-properties
 */
 
 
-function FilteringForDistances() {
+function FilteringForDistances() { // eslint-disable-line no-unused-vars
     // Declare variables
-    let input, filter, filter_infocard, table, tr, max_profit;
+    let input, table, tr, max_profit;
 
     input = document.getElementById("input_route_min_dist");
-    min_distance_threshold = input.value;
+    let min_distance_threshold = input.value;
     if (min_distance_threshold === '') {
         min_distance_threshold = 0
     }
 
-    filter_infocard = input_infocard.value.toUpperCase();
-    filter = input.value.toUpperCase();
     table = document.querySelector("#table-top table");
     tr = table.getElementsByTagName("tr");
 
     // Loop through all table rows, and hide those who don't match the search query
     for (let i = 1; i < tr.length; i++) {
-        row = tr[i];
+        let row = tr[i];
 
-        for (let r = 0; r < route_types.length; r++) {
-            cell = row.getElementsByClassName(route_types[r])[0];
+        for (let r = 0; r < route_types.length; r++) { // eslint-disable-line no-undef
+            let cell = row.getElementsByClassName(route_types[r])[0]; // eslint-disable-line no-undef
 
-            routesinfo = JSON.parse(cell.attributes["routesinfo"].textContent);
+            let routesinfo = JSON.parse(cell.attributes["routesinfo"].textContent);
 
             if (routesinfo === null) {
                 continue
@@ -62,31 +60,31 @@ function FilteringForDistances() {
     }
 }
 
-function FilteringForDistAfterRender() {
-    let maximum_time_for_row, table, tr
+function FilteringForDistAfterRender() { // eslint-disable-line no-unused-vars
+    let maximum_time_for_row, table, tr, min_distance_threshold
 
     table = document.querySelector("#table-bottom-main")
     if (table === null || typeof (table) == 'undefined') {
         return
     }
     tr = table.getElementsByTagName("tr");
-    input = document.getElementById("input_route_min_dist");
+    let input = document.getElementById("input_route_min_dist");
     min_distance_threshold = input.value;
     if (min_distance_threshold === '') {
         min_distance_threshold = 0
     }
 
     for (let i = 1; i < tr.length; i++) {
-        row = tr[i];
+        let row = tr[i];
 
-        if (IsHavingLocksFromOtherFilters(row, 'darkstat_filtering2')) {
+        if (IsHavingLocksFromOtherFilters(row, 'darkstat_filtering2')) { // eslint-disable-line no-undef
             continue
         }
 
         maximum_time_for_row = 0
         // Find maximum time
-        for (let r = 0; r < route_types.length; r++) {
-            cell = row.getElementsByClassName(route_types[r])[0];
+        for (let r = 0; r < route_types.length; r++) { // eslint-disable-line no-undef
+            let cell = row.getElementsByClassName(route_types[r])[0]; // eslint-disable-line no-undef
 
             if (Number(cell.attributes["routetime"].textContent) > Number(maximum_time_for_row)) {
                 maximum_time_for_row = cell.attributes["routetime"].textContent

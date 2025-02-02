@@ -1,0 +1,20 @@
+{
+  "name": "fl-darkstat",
+  "version": "1.0.0",
+  "description": "![how it looks](docs/v1.30_all_routes.png)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "AGPL-3.0-or-later",
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0"
+  }
+}

@@ -1,6 +1,9 @@
 version: "3"
 
 tasks:
+  lint:js:
+    cmds:
+      - npx eslint darkstat/front/static_front/custom
   test:
     cmds:
       - task: build-version
