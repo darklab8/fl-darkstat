@@ -1,8 +1,10 @@
 package pob_goods
 
 import (
-	"encoding/base64"
 	"encoding/json"
+	"html"
+	"regexp"
+	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
@@ -68,6 +70,14 @@ func (c *Config) Refresh() {
 	c.Bases = reread.Bases
 }
 
+func NameToNickname(name string) string {
+	name = strings.ToLower(name)
+	name = html.UnescapeString(name)
+	name = regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(name, "")
+	name = strings.ReplaceAll(name, " ", "_")
+	return name
+}
+
 func Read(file *file.File) *Config {
 	byteValue, err := file.ReadBytes()
 	logus.Log.CheckFatal(err, "failed to read file")
@@ -78,7 +88,7 @@ func Read(file *file.File) *Config {
 	for base_name, base := range conf.BasesByName {
 		base.Name = base_name
 
-		hash := base64.StdEncoding.EncodeToString([]byte(base.Name))
+		hash := NameToNickname(base.Name)
 		base.Nickname = hash
 		conf.Bases = append(conf.Bases, base)
 	}
