@@ -1,11 +1,11 @@
 package darkrpc
 
 import (
-	"log"
 	"net/rpc"
 
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
 
 type ServerRpc struct {
@@ -24,11 +24,10 @@ type Reply struct {
 
 // / CLIENT///////////////////
 type ClientRpc struct {
-	client *rpc.Client
-	sock   string
+	sock string
 }
 
-const DarkstatSock = "/tmp/darkstat/rpc.sock"
+const DarkstatRpcSock = "/tmp/darkstat/rpc.sock"
 
 type ClientOpt func(r *ClientRpc)
 
@@ -45,15 +44,18 @@ func NewClient(opts ...ClientOpt) RpcI {
 		opt(cli)
 	}
 
+	return RpcI(cli)
+}
+
+func (r *ClientRpc) getClient() (*rpc.Client, error) {
 	// client, err := rpc.DialHTTP("tcp", "127.0.0.1+":1234") // if serving over http
-	client, err := rpc.Dial("unix", cli.sock) // if connecting over cli over sock
-	if err != nil {
-		log.Fatal("dialing:", err)
+	client, err := rpc.Dial("unix", r.sock) // if connecting over cli over sock
+
+	if logus.Log.CheckWarn(err, "dialing:") {
+		return nil, err
 	}
 
-	cli.client = client
-
-	return RpcI(cli)
+	return client, err
 }
 
 //// Methods
@@ -61,6 +63,7 @@ func NewClient(opts ...ClientOpt) RpcI {
 type RpcI interface {
 	GetBases(args Args, reply *Reply) error
 	GetHealth(args Args, reply *bool) error
+	GetInfo(args GetInfoArgs, reply *GetInfoReply) error
 }
 
 func (t *ServerRpc) GetBases(args Args, reply *Reply) error {
@@ -73,18 +76,29 @@ func (r *ClientRpc) GetBases(args Args, reply *Reply) error {
 	// return r.client.Call("ServerRpc.GetBases", args, &reply)
 
 	// // Asynchronous call
-	divCall := r.client.Go("ServerRpc.GetBases", args, &reply, nil)
+	client, err := r.getClient()
+	if logus.Log.CheckWarn(err, "dialing:") {
+		return err
+	}
+
+	divCall := client.Go("ServerRpc.GetBases", args, &reply, nil)
 	replyCall := <-divCall.Done // will be equal to divCall
 	return replyCall.Error
 }
 
 func (t *ServerRpc) GetHealth(args Args, reply *bool) error {
 	*reply = true
+	logus.Log.Info("rpc server got health checked")
 	return nil
 }
 
 func (r *ClientRpc) GetHealth(args Args, reply *bool) error {
-	divCall := r.client.Go("ServerRpc.GetHealth", args, &reply, nil)
+	client, err := r.getClient()
+	if logus.Log.CheckWarn(err, "dialing:") {
+		return err
+	}
+
+	divCall := client.Go("ServerRpc.GetHealth", args, &reply, nil)
 	replyCall := <-divCall.Done // will be equal to divCall
 	return replyCall.Error
 }

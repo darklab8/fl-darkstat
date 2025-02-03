@@ -128,8 +128,6 @@ func (e *Exporter) GetBases() []*Base {
 			base.SectorCoord = VectorToSectorCoord(system, base.Pos)
 		}
 
-		base.Infocard = e.Infocards[InfocardKey(base.Nickname)]
-
 		results = append(results, base)
 	}
 
@@ -199,7 +197,6 @@ type Base struct {
 	Region             string          `json:"region_name"`
 	StridName          int             `json:"strid_name"`
 	InfocardID         int             `json:"infocard_id"`
-	Infocard           Infocard        `json:"infocard"`
 	InfocardKey        InfocardKey
 	File               utils_types.FilePath `json:"file"`
 	BGCS_base_run_by   string

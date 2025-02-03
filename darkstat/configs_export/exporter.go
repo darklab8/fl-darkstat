@@ -111,14 +111,15 @@ type Exporter struct {
 	Guns         []Gun
 	Missiles     []Gun
 	Mines        []Mine
-	Shields      []Shield   // TODO add to API
-	Thrusters    []Thruster // TODO add to API
+	Shields      []Shield
+	Thrusters    []Thruster
 	Ships        []Ship
 	Tractors     []*Tractor
 	TractorsByID map[cfg.TractorID]*Tractor
-	Engines      []Engine         // TODO add to API
-	CMs          []CounterMeasure // TODO add to API
-	Scanners     []Scanner        // TODO add to API
+	Cloaks       []Cloak
+	Engines      []Engine
+	CMs          []CounterMeasure
+	Scanners     []Scanner
 	Ammos        []Ammo
 	PoBs         []*PoB
 	PoBGoods     []*PoBGood
@@ -276,6 +277,7 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	logus.Log.Info("getting ships")
 	e.Ships = e.GetShips(e.Tractors, e.TractorsByID, e.Thrusters)
 	e.Engines = e.GetEngines(e.Tractors)
+	e.Cloaks = e.GetCloaks(e.Tractors)
 	e.CMs = e.GetCounterMeasures(e.Tractors)
 	e.Scanners = e.GetScanners(e.Tractors)
 	logus.Log.Info("getting ammo")
@@ -378,6 +380,9 @@ func (e *Exporter) EnhanceBasesWithIsTransportReachable(
 		enhance_with_transport_unrechability(item.Bases)
 	}
 	for _, item := range e.Ammos {
+		enhance_with_transport_unrechability(item.Bases)
+	}
+	for _, item := range e.Cloaks {
 		enhance_with_transport_unrechability(item.Bases)
 	}
 }

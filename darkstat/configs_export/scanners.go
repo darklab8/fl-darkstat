@@ -21,8 +21,7 @@ type Scanner struct {
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
-	Mass                 float64  `json:"mass"`
-	Infocard             Infocard `json:"infocard"`
+	Mass                 float64 `json:"mass"`
 }
 
 func (b Scanner) GetNickname() string { return string(b.Nickname) }
@@ -64,7 +63,6 @@ func (e *Exporter) GetScanners(ids []*Tractor) []Scanner {
 
 		e.exportInfocards(InfocardKey(item.Nickname), item.InfoID)
 		item.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, item.Nickname)
-		item.Infocard = e.Infocards[InfocardKey(item.Nickname)]
 		scanners = append(scanners, item)
 	}
 	return scanners

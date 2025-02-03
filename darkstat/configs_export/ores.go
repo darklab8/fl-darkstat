@@ -208,8 +208,6 @@ for Freelancer Discovery we also add possible sub products of refinery at player
 
 			e.Infocards[InfocardKey(base.Nickname)] = sb.Lines
 
-			base.Infocard = sb.Lines
-
 			bases = append(bases, base)
 
 		}

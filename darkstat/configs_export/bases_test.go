@@ -53,7 +53,7 @@ func TestExportBases(t *testing.T) {
 
 	for _, base := range bases {
 		if base.Nickname == "Br01_01_Base" {
-			lines := base.Infocard
+			lines := exporter.Infocards[InfocardKey(base.Nickname)]
 			fmt.Println(base.Nickname, lines)
 			assert.Greater(t, len(lines), 0, "expected finding lines in infocard")
 			break

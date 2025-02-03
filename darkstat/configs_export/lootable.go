@@ -77,8 +77,6 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 
 	e.Infocards[InfocardKey(base.Nickname)] = sb
 
-	base.Infocard = sb
-
 	bases = append(bases, base)
 	return bases
 }

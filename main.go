@@ -167,8 +167,9 @@ func main() {
 		)
 		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 
-		rpc_server := darkrpc.NewRpcServer()
+		rpc_server := darkrpc.NewRpcServer(darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
 		rpc_server.Serve(app_data)
+
 		return func() {
 			relay_closer.Close()
 			web_closer.Close()

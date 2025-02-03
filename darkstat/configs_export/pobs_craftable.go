@@ -141,8 +141,6 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 	e.Infocards[InfocardKey(base.Nickname)] = sb.Lines
 
-	base.Infocard = sb.Lines
-
 	bases = append(bases, base)
 	return bases
 }

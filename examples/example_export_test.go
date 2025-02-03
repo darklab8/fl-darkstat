@@ -31,7 +31,6 @@ func Example_exportingData() {
 	for _, base := range exported.Bases {
 		// do smth with exported bases
 		fmt.Println(base.Name)
-		fmt.Println(base.Infocard)
 		fmt.Println(base.System)
 		fmt.Println(base.SystemNickname)
 		fmt.Printf("%d\n", base.InfocardID)

@@ -19,7 +19,7 @@ func TestRpc(t *testing.T) {
 	args := Args{}
 	client := NewClient(WithSockCli(some_socket))
 
-	t.Run("Get health", func(t *testing.T) {
+	t.Run("GetHealth", func(t *testing.T) {
 		reply := new(bool)
 		err := client.GetHealth(args, reply)
 		logus.Log.CheckPanic(err, "failed to get health")
@@ -29,11 +29,18 @@ func TestRpc(t *testing.T) {
 	})
 
 	// Setup code for given condition goes here
-	t.Run("Check API works", func(t *testing.T) {
+	t.Run("GetBaseCheck", func(t *testing.T) {
 		var reply Reply
 		err := client.GetBases(args, &reply)
 		logus.Log.CheckPanic(err, "failed to get bases")
 		fmt.Println("Bases[0]=", reply.Bases[0])
+	})
+
+	t.Run("GetInfo", func(t *testing.T) {
+		var reply GetInfoReply
+		err := client.GetInfo(GetInfoArgs{Query: "Akabat"}, &reply)
+		logus.Log.CheckPanic(err, "failed to get info")
+		fmt.Println("Content=", reply.Content)
 	})
 
 	// Teardown code for given condition goes here

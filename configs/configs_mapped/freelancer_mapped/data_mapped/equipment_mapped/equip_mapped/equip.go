@@ -172,6 +172,19 @@ type ShieldGenerator struct {
 	Mass               *semantic.Float
 }
 
+type CloakingDevice struct {
+	semantic.Model
+
+	Nickname     *semantic.String
+	IdsName      *semantic.Int
+	IdsInfo      *semantic.Int
+	HitPts       *semantic.Int
+	Volume       *semantic.Float
+	PowerUsage   *semantic.Float
+	CloakInTime  *semantic.Int
+	CloakOutTime *semantic.Int
+}
+
 type Thruster struct {
 	semantic.Model
 
@@ -301,6 +314,7 @@ type Config struct {
 	Scanners []*Scanner
 
 	Tractors []*Tractor
+	Cloaks   []*CloakingDevice
 }
 
 const (
@@ -503,6 +517,18 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				frelconfig.ShieldGens = append(frelconfig.ShieldGens, shield)
 				frelconfig.ShidGenMap[shield.Nickname.Get()] = shield
+			case "[cloakingdevice]":
+				cloak := &CloakingDevice{
+					Nickname:     semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+					IdsName:      semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+					IdsInfo:      semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
+					HitPts:       semantic.NewInt(section, cfg.Key("hit_pts")),
+					PowerUsage:   semantic.NewFloat(section, cfg.Key("power_usage"), semantic.Precision(2)),
+					Volume:       semantic.NewFloat(section, cfg.Key("volume"), semantic.Precision(2)),
+					CloakInTime:  semantic.NewInt(section, cfg.Key("cloakin_time")),
+					CloakOutTime: semantic.NewInt(section, cfg.Key("cloakout_time")),
+				}
+				frelconfig.Cloaks = append(frelconfig.Cloaks, cloak)
 			case "[thruster]":
 				thruster := &Thruster{
 					Nickname:   semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
