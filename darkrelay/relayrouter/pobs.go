@@ -5,14 +5,14 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayfront"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 func (l *Router) LinkPobs(
-	data *router.AppData,
+	data *appdata.AppData,
 ) {
 	shared := data.Shared
 	build := data.Build

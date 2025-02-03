@@ -20,6 +20,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkrpc"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -40,7 +41,7 @@ const (
 	Health  Action = "health"
 )
 
-func GetRelayFs(app_data *router.AppData) *builder.Filesystem {
+func GetRelayFs(app_data *appdata.AppData) *builder.Filesystem {
 	relay_router := relayrouter.NewRouter(app_data)
 	relay_builder := relay_router.Link()
 	relay_fs := relay_builder.BuildAll(true, nil)
@@ -117,7 +118,7 @@ func main() {
 	fmt.Println("act:", action)
 
 	web_darkstat := func() func() {
-		app_data := router.NewAppData()
+		app_data := appdata.NewAppData()
 
 		stat_router := router.NewRouter(app_data)
 		stat_builder := stat_router.Link()
@@ -181,7 +182,7 @@ func main() {
 	switch Action(action) {
 
 	case Build:
-		app_data := router.NewAppData()
+		app_data := appdata.NewAppData()
 		router.NewRouter(app_data).Link().BuildAll(false, nil)
 	case Web:
 		closer := web_darkstat()

@@ -9,8 +9,8 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -154,7 +154,7 @@ func PostItemsTechCompatT[T TechCompatable](webapp *web.Web, items []T) func(w h
 // @Param request body []string true "Array of nicknames as input, for example [fc_or_gun01_mark02]"
 // @Success      200  {array}  	InfocardResp
 // @Router       /api/infocards [post]
-func GetInfocards(webapp *web.Web, app_data *router.AppData, api *Api) *registry.Endpoint {
+func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "POST " + ApiRoute + "/infocards",
 		Handler: func(w http.ResponseWriter, r *http.Request) {

@@ -3,21 +3,21 @@ package relayrouter
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayfront"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type Router struct {
-	AppData *router.AppData
+	AppData *appdata.AppData
 }
 
 type RouterOpt func(l *Router)
 
-func NewRouter(app_data *router.AppData, opts ...RouterOpt) *Router {
+func NewRouter(app_data *appdata.AppData, opts ...RouterOpt) *Router {
 	l := &Router{AppData: app_data}
 	for _, opt := range opts {
 		opt(l)

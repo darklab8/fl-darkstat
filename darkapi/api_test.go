@@ -13,6 +13,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
@@ -107,7 +108,7 @@ func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string
 
 func TestApiHealth(t *testing.T) {
 
-	app_data := &router.AppData{
+	app_data := &appdata.AppData{
 		Configs: configs_export.NewExporter(&configs_mapped.MappedConfigs{}),
 	}
 	stat_fs := &builder.Filesystem{}

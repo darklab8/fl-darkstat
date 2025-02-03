@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/darkstat/router"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
 
@@ -42,7 +42,7 @@ func WithPortSrv(port int) ServerOpt {
 	}
 }
 
-func (r *RpcServer) Serve(app_data *router.AppData) {
+func (r *RpcServer) Serve(app_data *appdata.AppData) {
 	rpcServer := rpc.NewServer()
 	rpc_server := NewRpc(app_data)
 	rpcServer.Register(rpc_server)

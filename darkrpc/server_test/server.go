@@ -7,11 +7,11 @@ import (
 	"syscall"
 
 	"github.com/darklab8/fl-darkstat/darkrpc"
-	"github.com/darklab8/fl-darkstat/darkstat/router"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 )
 
 func main() {
-	app_data := router.NewAppData()
+	app_data := appdata.NewAppData()
 	srv := darkrpc.NewRpcServer()
 	srv.Serve(app_data)
 

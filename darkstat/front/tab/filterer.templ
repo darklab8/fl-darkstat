@@ -43,15 +43,6 @@ templ FilterBar(shared *types.SharedData) {
 	</div>
 }
 
-func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
-	if infocard_lines, ok := infocards[infokey]; ok {
-		if len(infocard_lines) > 0 {
-			return string(infocard_lines[0].ToStr())
-		}
-	}
-	return ""
-}
-
 func GetInfocard(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
 	if infocard_lines, ok := infocards[infokey]; ok {
 		return infocard_lines.StringsJoin("")

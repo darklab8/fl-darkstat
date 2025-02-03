@@ -6,7 +6,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
-	"github.com/darklab8/fl-darkstat/darkstat/router"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
@@ -14,7 +14,7 @@ import (
 const ApiRoute = "/api"
 
 type Api struct {
-	app_data *router.AppData
+	app_data *appdata.AppData
 }
 
 func JsonResponseHeader(w *http.ResponseWriter) {
@@ -34,7 +34,7 @@ func ReturnJson(w *http.ResponseWriter, data any) {
 	}
 }
 
-func RegisterApiRoutes(w *web.Web, app_data *router.AppData) *web.Web {
+func RegisterApiRoutes(w *web.Web, app_data *appdata.AppData) *web.Web {
 	api := &Api{
 		app_data: app_data,
 	}

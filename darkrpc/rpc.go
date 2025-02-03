@@ -3,16 +3,16 @@ package darkrpc
 import (
 	"net/rpc"
 
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
 
 type ServerRpc struct {
-	app_data *router.AppData
+	app_data *appdata.AppData
 }
 
-func NewRpc(app_data *router.AppData) RpcI {
+func NewRpc(app_data *appdata.AppData) RpcI {
 	return &ServerRpc{app_data: app_data}
 }
 
