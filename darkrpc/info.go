@@ -23,6 +23,18 @@ type GetInfoReply struct {
 
 func (t *ServerRpc) IsInfoFound(args GetInfoArgs, name string, nickname string) (bool, bool) {
 	lowered_query := strings.ToLower(args.Query)
+
+	ok1, is_match1 := t.isInfoFound(lowered_query, name, nickname)
+
+	ok2, is_match2 := t.isInfoFound(strings.ReplaceAll(lowered_query, " ", ""), strings.ReplaceAll(name, " ", ""), strings.ReplaceAll(nickname, " ", ""))
+
+	if ok1 {
+		return ok1, is_match1
+	}
+	return ok2, is_match2
+}
+
+func (t *ServerRpc) isInfoFound(lowered_query string, name string, nickname string) (bool, bool) {
 	if strings.Contains(strings.ToLower(name), lowered_query) {
 		return true, false
 	}
