@@ -51,11 +51,27 @@ resource "docker_service" "darkstat" {
       }
       labels {
         label = "caddy_2"
-        value = "${var.rpc_prefix}.${var.zone}"
+        value = "${var.rpc_prefix}.${var.zone}:443"
       }
       labels {
         label = "caddy_2.reverse_proxy"
         value = "{{upstreams h2c 50051}}"
+      }
+      labels {
+        label = "caddy_3"
+        value = "${var.rpc_prefix}.${var.zone}:80"
+      }
+      labels {
+        label = "caddy_3.reverse_proxy.to"
+        value = "{{upstreams 50051}}"
+      }
+      labels {
+        label = "caddy_3.reverse_proxy.transport"
+        value = "http"
+      }
+      labels {
+        label = "caddy_3.reverse_proxy.transport.versions"
+        value = "h1 h2c"
       }
 
       mounts {
