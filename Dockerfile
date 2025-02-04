@@ -22,6 +22,7 @@ COPY configs configs
 COPY darkcore darkcore
 COPY darkapi darkapi
 COPY darkrpc darkrpc
+COPY darkproto darkproto
 
 # building golang gazilion times faster
 ENV GOCACHE=/root/.cache/go-build
