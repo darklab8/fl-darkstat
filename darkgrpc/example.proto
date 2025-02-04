@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option go_package = "github.com/darklab8/fl-darkstat/darkproto";
+option go_package = "github.com/darklab8/fl-darkstat/darkgrpc";
 
-package darkproto;
+package darkgrpc;
 
 // The greeter service definition.
 service DarkGRpc {

@@ -18,7 +18,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkapi"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
-	"github.com/darklab8/fl-darkstat/darkproto/darkgrpc"
+	"github.com/darklab8/fl-darkstat/darkgrpc/darkgrpcsrv"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkrpc"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
@@ -172,7 +172,7 @@ func main() {
 		rpc_server := darkrpc.NewRpcServer(darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
 		rpc_server.Serve(app_data)
 
-		grpc_server := darkgrpc.NewServer(app_data)
+		grpc_server := darkgrpcsrv.NewServer(app_data)
 		go grpc_server.Serve()
 
 		return func() {

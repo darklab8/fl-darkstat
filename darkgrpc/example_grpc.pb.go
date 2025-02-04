@@ -4,7 +4,7 @@
 // - protoc             v3.12.4
 // source: example.proto
 
-package darkproto
+package darkgrpc
 
 import (
 	context "context"
@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	DarkGRpc_GetBases_FullMethodName = "/darkproto.DarkGRpc/GetBases"
+	DarkGRpc_GetBases_FullMethodName = "/darkgrpc.DarkGRpc/GetBases"
 )
 
 // DarkGRpcClient is the client API for DarkGRpc service.
@@ -114,7 +114,7 @@ func _DarkGRpc_GetBases_Handler(srv interface{}, ctx context.Context, dec func(i
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "darkproto.DarkGRpc",
+	ServiceName: "darkgrpc.DarkGRpc",
 	HandlerType: (*DarkGRpcServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

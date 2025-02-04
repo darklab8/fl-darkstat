@@ -1,4 +1,4 @@
-package darkgrpc
+package darkgrpcsrv
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/darklab8/fl-darkstat/darkproto"
+	pb "github.com/darklab8/fl-darkstat/darkgrpc"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"google.golang.org/grpc"
 )

@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/darklab8/fl-darkstat/darkproto"
+	pb "github.com/darklab8/fl-darkstat/darkgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

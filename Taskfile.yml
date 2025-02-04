@@ -135,12 +135,12 @@ tasks:
   proto:
     cmds: # --experimental_allow_proto3_optional
       - >
-        protoc -I darkproto --go_out=darkproto
+        protoc -I darkgrpc --go_out=darkgrpc
         --go_opt=paths=source_relative
-        --go-grpc_out=darkproto
+        --go-grpc_out=darkgrpc
         --go-grpc_opt=paths=source_relative
         --proto_path=.
-        darkproto/example.proto
+        darkgrpc/example.proto
 
   openapi:generate:
     cmds:

@@ -6,8 +6,8 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/darklab8/fl-darkstat/darkproto"
-	"github.com/darklab8/fl-darkstat/darkproto/darkgrpc"
+	pb "github.com/darklab8/fl-darkstat/darkgrpc"
+	"github.com/darklab8/fl-darkstat/darkgrpc/darkgrpcsrv"
 	"google.golang.org/grpc"
 )
 
@@ -26,7 +26,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterDarkGRpcServer(s, &darkgrpc.Server{})
+	pb.RegisterDarkGRpcServer(s, &darkgrpcsrv.Server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
