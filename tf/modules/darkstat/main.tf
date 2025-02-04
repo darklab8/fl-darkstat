@@ -55,7 +55,7 @@ resource "docker_service" "darkstat" {
       }
       labels {
         label = "caddy_2.reverse_proxy"
-        value = "{{upstreams 50051}}"
+        value = "{{upstreams h2c 50051}}"
       }
 
 
