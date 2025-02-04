@@ -52,7 +52,6 @@ module "darkstat_dev" {
   relay_prefix = "darkrelay-dev"
   rpc_prefix   = "darkgrpc-dev"
   zone         = "dd84ai.com"
-  rpc_port     = 50151
 
   password = random_string.random_password.result
   secret   = random_string.random_secret.result

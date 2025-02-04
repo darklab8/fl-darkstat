@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"log"
@@ -9,19 +10,20 @@ import (
 
 	pb "github.com/darklab8/fl-darkstat/darkgrpc"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 )
 
 var (
 	// darkgrpc.dd84ai.com
 	// 37.27.207.42:50051
-	addr = flag.String("addr", "localhost:50051", "the address to connect to")
+	addr = flag.String("addr", "localhost", "the address to connect to")
 )
 
 func main() {
 	flag.Parse()
-	// Set up a connection to the server.
-	conn, err := grpc.NewClient(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	creds := credentials.NewTLS(&tls.Config{InsecureSkipVerify: false}) // for darkstat.dd84ai.com
+	// creds := insecure.NewCredentials() // for darkstat.dd84ai.com:50051
+	conn, err := grpc.NewClient(*addr, grpc.WithTransportCredentials(creds))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -39,4 +41,7 @@ func main() {
 		log.Fatalf("could not greet: %v", err)
 	}
 	log.Printf("Greeting: %s", r.Bases[0])
+	if len(r.Bases) > 0 {
+		fmt.Println("SUCCCCCCESSS")
+	}
 }

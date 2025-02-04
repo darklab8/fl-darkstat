@@ -8,6 +8,12 @@ locals {
     SITE_ROOT          = var.SITE_ROOT # Optional for when needing Site served from /fl-data-discovery/ route instead of just / (it is used to make Relay backend usable for Github pages frontend)
     SITE_HOST          = "https://${var.stat_prefix}.${var.zone}"
     FLDARKSTAT_HEADING = var.FLDARKSTAT_HEADING # Optional for phrases at the top of Darkstat interface
+
+    // grpc debugging
+    GRPC_TRACE                  = "all"
+    GRPC_VERBOSITY              = "DEBUG"
+    GRPC_GO_LOG_SEVERITY_LEVEL  = "info"
+    GRPC_GO_LOG_VERBOSITY_LEVEL = "6"
     },
     var.RELAY_HOST != null ? {
       RELAY_HOST      = var.RELAY_HOST # Required only for Discover Freelancer which have frontend at Github Pages. Path to backend for PoBs data

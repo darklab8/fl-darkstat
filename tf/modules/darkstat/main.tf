@@ -58,7 +58,6 @@ resource "docker_service" "darkstat" {
         value = "{{upstreams h2c 50051}}"
       }
 
-
       mounts {
         target    = "/data"
         source    = var.discovery_path
@@ -92,16 +91,24 @@ resource "docker_service" "darkstat" {
   lifecycle {
     ignore_changes = [
       task_spec[0].restart_policy[0].window,
-      task_spec[0].container_spec[0].env,
+      # task_spec[0].container_spec[0].env,
     ]
   }
   # with usage of docker networking, this is no longer necessary
+
   endpoint_spec {
     mode = "vip"
 
-    ports {
-      target_port    = "50051"
-      published_port = tostring(var.rpc_port)
+    dynamic "ports" {
+      for_each = var.rpc_port != null ? ["rpc_port"] : []
+      content {
+        target_port    = "50051"
+        published_port = tostring(var.rpc_port)
+      }
     }
+    # ports {
+    #   target_port    = "50051"
+    #   published_port = tostring(var.rpc_port)
+    # }
   }
 }

@@ -13,7 +13,12 @@
                 "relay",
             ],
             "env": {
-                "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"
+                "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json",
+                "GRPC_TRACE": "all",
+                "GRPC_VERBOSITY": "DEBUG",
+                "GRPC_GO_LOG_SEVERITY_LEVEL": "info",
+                "GRPC_GO_LOG_VERBOSITY_LEVEL": "6",
+                "GODEBUG": "http2debug=1",
             },
             "showLog": true
         }

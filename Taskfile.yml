@@ -132,7 +132,7 @@ tasks:
       - go tool pprof -alloc_space http://localhost:6060/debug/pprof/heap
       # commands like `top`, `web`, `list FunctionName`
 
-  proto:
+  grpc:build:
     cmds: # --experimental_allow_proto3_optional
       - >
         protoc -I darkgrpc --go_out=darkgrpc
@@ -141,6 +141,10 @@ tasks:
         --go-grpc_opt=paths=source_relative
         --proto_path=.
         darkgrpc/example.proto
+
+  grpc:debug:
+    cmds:
+      - grpcurl -plaintext darkgrpc.dd84ai.com:443 darkgrpc.DarkGRpc/GetBases
 
   openapi:generate:
     cmds:

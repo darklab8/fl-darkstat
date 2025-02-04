@@ -35,7 +35,8 @@ variable "rpc_prefix" {
   type = string
 }
 variable "rpc_port" {
-  type = number
+  type    = number
+  default = null
 }
 variable "zone" {
   type = string
