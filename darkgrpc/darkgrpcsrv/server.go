@@ -9,6 +9,7 @@ import (
 	pb "github.com/darklab8/fl-darkstat/darkgrpc"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -65,6 +66,8 @@ func (r *Server) Serve() {
 	s := grpc.NewServer()
 	pb.RegisterDarkGRpcServer(s, r)
 	log.Printf("server listening at %v", lis.Addr())
+	// Register reflection service on gRPC server.
+	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
