@@ -6,6 +6,7 @@ module "discovery" {
 module "darkstat" {
   source         = "../modules/darkstat"
   environment    = "production"
+  tag            = "production-arm64"
   discovery_path = module.discovery.discovery_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
 
@@ -39,7 +40,7 @@ module "discovery_dev" {
 module "darkstat_dev" {
   source         = "../modules/darkstat"
   environment    = "dev"
-  tag            = "production"
+  tag            = "production-arm64"
   discovery_path = module.discovery_dev.discovery_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
 
