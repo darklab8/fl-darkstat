@@ -96,17 +96,12 @@ resource "docker_service" "darkstat" {
     ]
   }
   # with usage of docker networking, this is no longer necessary
-  # endpoint_spec {
-  #   mode = "vip"
+  endpoint_spec {
+    mode = "vip"
 
-  #   ports {
-  #     target_port    = "8000"
-  #     published_port = tostring(var.darkstat_port)
-  #   }
-
-  #   ports {
-  #     target_port    = "8080"
-  #     published_port = tostring(var.relay_port)
-  #   }
-  # }
+    ports {
+      target_port    = "50051"
+      published_port = tostring(var.rpc_port)
+    }
+  }
 }

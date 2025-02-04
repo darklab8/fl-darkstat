@@ -17,8 +17,9 @@ module "darkstat" {
 
   stat_prefix  = "darkstat"
   relay_prefix = "darkrelay"
-  rpc_prefix   = "darkrpc"
+  rpc_prefix   = "darkgrpc"
   zone         = "dd84ai.com"
+  rpc_port     = 50051
 }
 
 resource "random_string" "random_password" {
@@ -49,8 +50,9 @@ module "darkstat_dev" {
 
   stat_prefix  = "darkstat-dev"
   relay_prefix = "darkrelay-dev"
-  rpc_prefix   = "darkrpc-dev"
+  rpc_prefix   = "darkgrpc-dev"
   zone         = "dd84ai.com"
+  rpc_port     = 50151
 
   password = random_string.random_password.result
   secret   = random_string.random_secret.result

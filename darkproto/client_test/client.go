@@ -13,6 +13,8 @@ import (
 )
 
 var (
+	// darkgrpc.dd84ai.com
+	// 37.27.207.42:50051
 	addr = flag.String("addr", "localhost:50051", "the address to connect to")
 )
 

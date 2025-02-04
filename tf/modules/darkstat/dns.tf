@@ -11,6 +11,11 @@ module "dns" {
     value   = var.ipv4_address
     name    = var.relay_prefix
     proxied = false
+    }, {
+    type    = "A"
+    value   = var.ipv4_address
+    name    = var.rpc_prefix
+    proxied = false
     }
   ]
 }

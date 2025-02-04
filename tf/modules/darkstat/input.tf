@@ -34,6 +34,9 @@ variable "relay_prefix" {
 variable "rpc_prefix" {
   type = string
 }
+variable "rpc_port" {
+  type = number
+}
 variable "zone" {
   type = string
 }
