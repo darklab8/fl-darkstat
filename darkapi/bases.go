@@ -21,7 +21,7 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Base
 // @Router       /api/npc_bases [get]
-// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
+// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
 func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/npc_bases",
@@ -35,7 +35,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         bases
 // @Accept       json
 // @Produce      json
-// @Param request body []cfg.BaseUniNick true "Array of npc base nicknames as input, for example [li01_01_base]" example("li01_01_base")
+// @Param request body []cfg.BaseUniNick true "Array of npc base nicknames as input, for example [li01_01_base]"
 // @Success      200  {array}  	MarketGoodResp
 // @Router       /api/npc_bases/market_goods [post]
 func PostBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {

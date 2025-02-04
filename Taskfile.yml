@@ -132,6 +132,21 @@ tasks:
       - go tool pprof -alloc_space http://localhost:6060/debug/pprof/heap
       # commands like `top`, `web`, `list FunctionName`
 
+  proto:
+    cmds: # --experimental_allow_proto3_optional
+      - >
+        protoc -I darkproto --go_out=darkproto
+        --go_opt=paths=source_relative
+        --go-grpc_out=darkproto
+        --go-grpc_opt=paths=source_relative
+        --proto_path=.
+        darkproto/example.proto
+
+  openapi:generate:
+    cmds:
+      - sdk use java 11.0.25-sem
+      - java -jar openapi-generator-cli.jar generate -i docs/swagger.yaml -g go -o../generated_go
+
 env:
   tag_version: v1.48.0-a4
   DOCKER_HOST: ssh://root@darklab:22

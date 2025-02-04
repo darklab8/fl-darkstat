@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+option go_package = "github.com/darklab8/fl-darkstat/darkproto";
+
+package darkproto;
+
+// The greeter service definition.
+service DarkGRpc {
+  // Sends a greeting
+  rpc GetBases (Empty) returns (GetBasesReply) {}
+}
+
+// The request message containing the user's name.
+message Empty {
+}
+
+message GetBasesReply {
+  repeated Base bases = 1;
+}
+
+message Pos {
+	double X = 1;
+	double Y = 2;
+	double Z = 3;
+}
+
+// The response message containing the greetings
+message Base {
+  string Name = 1; //   Name               string          `json:"name"`       // Infocard Name
+  repeated string Archetypes = 2; //   Archetypes         []string        `json:"archetypes"` // Base Archetypes  
+  string Nickname = 3; //   Nickname           cfg.BaseUniNick `json:"nickname"`
+  int64 NicknameHash = 4; //   NicknameHash       flhash.HashCode `json:"nickname_hash" format:"int64"` // Flhash of nickname
+  string FactionName = 5; //   FactionName        string          `json:"faction_nickname"`
+  string System = 6; //   System             string          `json:"system_name"`
+  string SystemNickname = 7; //   SystemNickname     string          `json:"system_nickname"`
+  int64 SystemNicknameHash = 8; //   SystemNicknameHash flhash.HashCode `json:"system_nickname_hash" format:"int64"`
+  string Region = 9; //   Region             string          `json:"region_name"`
+  int32 StridName = 10; //   StridName          int             `json:"strid_name"`
+  int32 InfocardID = 11; //   InfocardID         int             `json:"infocard_id"`
+  //   InfocardKey        InfocardKey
+  string File = 12; //   File               utils_types.FilePath `json:"file"`
+  string BGCS_base_run_by = 13; //   BGCS_base_run_by   string
+  //   MarketGoodsPerNick map[CommodityKey]*MarketGood `json:"-" swaggerignore:"true"`
+  Pos Pos = 14; //   Pos                cfg.Vector                   `json:"pos"`
+  string SectorCoord = 15; //   SectorCoord        string                       `json:"sector_coord"`
+  
+  bool IsTransportUnreachable = 16; //   IsTransportUnreachable bool `json:"is_transport_unreachable"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
+  
+  //   Missions           *BaseMissions `json:"-" swaggerignore:"true"`
+  //   baseAllTradeRoutes `json:"-" swaggerignore:"true"`
+  //   baseAllRoutes      `json:"-" swaggerignore:"true"`
+  // optional MiningInfo MiningInfo = 17; //   *MiningInfo        `json:"mining_info,omitempty"`
+  
+  bool Reachable = 18; //   Reachable bool `json:"is_reachhable"` // is base IS Rechable by frighter from Manhattan
+  bool IsPob = 19; //   IsPob     bool
+  // }
+}
+
+// message MiningInfo {
+//   int32 DynamicLootMin     = 1;  
+//   int32 DynamicLootMax        = 2;
+//   int32 DynamicLootDifficulty = 3;
+//   optional MarketGood MinedGood = 4;
+// }
+
+// message MarketGood {
+
+// }

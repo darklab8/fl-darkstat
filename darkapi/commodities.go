@@ -12,7 +12,7 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Commodity
 // @Router       /api/commodities [get]
-// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
+// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
 func GetCommodities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/commodities",
@@ -25,7 +25,7 @@ func GetCommodities(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         commodities
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of commodity nicknames as input, for example [commodity_military_salvage]" example("commodity_military_salvage")
+// @Param request body []string true "Array of commodity nicknames as input, for example [commodity_military_salvage]"
 // @Success      200  {array}  	MarketGoodResp
 // @Router       /api/commodities/market_goods [post]
 func PostCommodityMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {

@@ -17,6 +17,7 @@ module "darkstat" {
 
   stat_prefix  = "darkstat"
   relay_prefix = "darkrelay"
+  rpc_prefix   = "darkrpc"
   zone         = "dd84ai.com"
 }
 
@@ -48,6 +49,7 @@ module "darkstat_dev" {
 
   stat_prefix  = "darkstat-dev"
   relay_prefix = "darkrelay-dev"
+  rpc_prefix   = "darkrpc-dev"
   zone         = "dd84ai.com"
 
   password = random_string.random_password.result

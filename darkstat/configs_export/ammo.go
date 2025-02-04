@@ -10,8 +10,8 @@ type Ammo struct {
 	Name  string `json:"name"`
 	Price int    `json:"price"`
 
-	HitPts           int     `json:"hit_pts"`
-	Volume           float64 `json:"volume"`
+	HitPts           int     `json:"hit_pts" validate:"required"`
+	Volume           float64 `json:"volume" validate:"required"`
 	MunitionLifetime float64 `json:"munition_lifetime"`
 
 	Nickname     string          `json:"nickname"`

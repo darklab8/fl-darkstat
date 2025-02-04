@@ -12,7 +12,7 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Gun
 // @Router       /api/guns [get]
-// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
+// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
 func GetGuns(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/guns",
@@ -25,7 +25,7 @@ func GetGuns(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         guns
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of ship nicknames as input, for example [ai_bomber]" example("ai_bomber")
+// @Param request body []string true "Array of ship nicknames as input, for example [ai_bomber]"
 // @Success      200  {array}  	MarketGoodResp
 // @Router       /api/guns/market_goods [post]
 func PostGunsMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
@@ -40,7 +40,7 @@ func PostGunsMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         guns
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of gun nicknames as input, for example [ai_bomber]" example("ai_bomber")
+// @Param request body []string true "Array of gun nicknames as input, for example [ai_bomber]"
 // @Success      200  {array}  	TechCompatResp
 // @Router       /api/guns/tech_compats [post]
 func PostGunsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
@@ -57,7 +57,7 @@ func PostGunsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Produce      json
 // @Success      200  {array}  	configs_export.Gun
 // @Router       /api/missiles [get]
-// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
+// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
 func GetMissiles(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/missiles",

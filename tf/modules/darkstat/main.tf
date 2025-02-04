@@ -49,6 +49,15 @@ resource "docker_service" "darkstat" {
         label = "caddy_1.reverse_proxy"
         value = "{{upstreams 8080}}"
       }
+      labels {
+        label = "caddy_2"
+        value = "${var.rpc_prefix}.${var.zone}"
+      }
+      labels {
+        label = "caddy_2.reverse_proxy"
+        value = "{{upstreams 50051}}"
+      }
+
 
       mounts {
         target    = "/data"

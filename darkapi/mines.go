@@ -12,7 +12,7 @@ import (
 // @Produce      json
 // @Success      200  {array}  	configs_export.Mine
 // @Router       /api/mines [get]
-// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"  example("true")
+// @Param        filter_to_useful    query     string  false  "filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
 func GetMines(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "GET " + ApiRoute + "/mines",
@@ -40,7 +40,7 @@ func PostMinesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         mines
 // @Accept       json
 // @Produce      json
-// @Param request body []string true "Array of gun nicknames as input, for example [ai_bomber]" example("ai_bomber")
+// @Param request body []string true "Array of gun nicknames as input, for example [ai_bomber]"
 // @Success      200  {array}  	TechCompatResp
 // @Router       /api/mines/tech_compats [post]
 func PostMinesTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {

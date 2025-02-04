@@ -31,6 +31,9 @@ variable "stat_prefix" {
 variable "relay_prefix" {
   type = string
 }
+variable "rpc_prefix" {
+  type = string
+}
 variable "zone" {
   type = string
 }
