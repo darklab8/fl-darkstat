@@ -17,8 +17,6 @@ import (
 type Hash struct {
 	Int32  int32  `json:"int32"`
 	Uint32 uint32 `json:"uint32"`
-	Int64  int64  `json:"int64"`
-	Uint64 uint64 `json:"uint64"`
 	Hex    string `json:"hex"`
 }
 
@@ -69,8 +67,6 @@ func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 								hashes[nickname] = Hash{
 									Int32:  int32(hash),
 									Uint32: uint32(hash),
-									Int64:  int64(hash),
-									Uint64: uint64(hash),
 									Hex:    hash.ToHexStr(),
 								}
 								mu.Unlock()
@@ -93,8 +89,6 @@ func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 				hashes[nickname] = Hash{
 					Int32:  int32(hash),
 					Uint32: uint32(hash),
-					Int64:  int64(hash),
-					Uint64: uint64(hash),
 					Hex:    hash.ToHexStr(),
 				}
 			}
