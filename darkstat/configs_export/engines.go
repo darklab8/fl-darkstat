@@ -26,10 +26,9 @@ type Engine struct {
 	TrailEffect     string          `json:"trail_effect"`
 	TrailEffectHash flhash.HashCode `json:"-" swaggerignore:"true"`
 
-	Nickname     string          `json:"nickname"`
-	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
-	NameID       int             `json:"name_id"`
-	InfoID       int             `json:"info_id"`
+	Nickname string `json:"nickname"`
+	NameID   int    `json:"name_id"`
+	InfoID   int    `json:"info_id"`
 
 	Bases                map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
@@ -96,15 +95,9 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 		e.exportInfocards(InfocardKey(engine.Nickname), engine.InfoID)
 
 		engine.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, engine.Nickname)
-		engine.NicknameHash = flhash.HashNickname(engine.Nickname)
 		engine.HpTypeHash = flhash.HashNickname(engine.HpType)
 		engine.FlameEffectHash = flhash.HashNickname(engine.FlameEffect)
 		engine.TrailEffectHash = flhash.HashNickname(engine.TrailEffect)
-
-		e.Hashes[engine.Nickname] = engine.NicknameHash
-		e.Hashes[engine.HpType] = engine.HpTypeHash
-		e.Hashes[engine.FlameEffect] = engine.FlameEffectHash
-		e.Hashes[engine.TrailEffect] = engine.TrailEffectHash
 
 		engines = append(engines, engine)
 	}

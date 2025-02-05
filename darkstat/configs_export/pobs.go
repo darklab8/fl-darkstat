@@ -109,7 +109,6 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 
 		base := &Base{
 			Nickname:           cfg.BaseUniNick(pob.Nickname),
-			NicknameHash:       flhash.HashNickname(pob.Nickname),
 			Name:               fmt.Sprintf("(PoB) %s", pob.Name),
 			Pos:                *pob.BasePos,
 			System:             *pob.SystemName,

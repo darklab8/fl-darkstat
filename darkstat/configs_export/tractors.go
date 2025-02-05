@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/discovery/playercntl_rephacks"
 	"github.com/darklab8/go-typelog/typelog"
@@ -43,12 +42,11 @@ type Tractor struct {
 	MaxLength  int    `json:"max_length"`
 	ReachSpeed int    `json:"reach_speed"`
 
-	Lootable      bool            `json:"lootable"`
-	Nickname      cfg.TractorID   `json:"nickname"`
-	NicknameHash  flhash.HashCode `json:"nickname_hash" format:"int64"`
-	ShortNickname string          `json:"short_nickname"`
-	NameID        int             `json:"name_id"`
-	InfoID        int             `json:"info_id"`
+	Lootable      bool          `json:"lootable"`
+	Nickname      cfg.TractorID `json:"nickname"`
+	ShortNickname string        `json:"short_nickname"`
+	NameID        int           `json:"name_id"`
+	InfoID        int           `json:"info_id"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	DiscoveryIDRephacks
@@ -79,10 +77,6 @@ func (e *Exporter) GetTractors() []*Tractor {
 			logus.Log.Warn("tractor is not having defined ids_name", typelog.Any("nickname", tractor.Nickname))
 		}
 		tractor.Mass, _ = tractor_info.Mass.GetValue()
-
-		tractor.NicknameHash = flhash.HashNickname(string(tractor.Nickname))
-		e.Hashes[string(tractor.Nickname)] = tractor.NicknameHash
-
 		tractor.MaxLength = tractor_info.MaxLength.Get()
 		tractor.ReachSpeed = tractor_info.ReachSpeed.Get()
 		tractor.Lootable = tractor_info.Lootable.Get()

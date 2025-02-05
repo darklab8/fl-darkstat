@@ -4,7 +4,6 @@ import (
 	"math"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -19,19 +18,17 @@ func NameWithSpacesOnly(word string) bool {
 }
 
 type GoodInfo struct {
-	Nickname     string          `json:"nickname"`
-	ShipNickname string          `json:"ship_nickname"` // market good can be ship package, if it is, then ship nickname bought by package is specified
-	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
-	Name         string          `json:"name"`
-	PriceBase    int             `json:"price_base"`
-	HpType       string          `json:"hp_type"`
-	Category     string          `json:"category"`
+	Nickname     string `json:"nickname"`
+	ShipNickname string `json:"ship_nickname"` // market good can be ship package, if it is, then ship nickname bought by package is specified
+	Name         string `json:"name"`
+	PriceBase    int    `json:"price_base"`
+	HpType       string `json:"hp_type"`
+	Category     string `json:"category"`
 }
 
 func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 	var info GoodInfo = GoodInfo{
-		Nickname:     good_nickname,
-		NicknameHash: flhash.HashNickname(good_nickname),
+		Nickname: good_nickname,
 	}
 	if good, found_good := e.Configs.Goods.GoodsMap[good_nickname]; found_good {
 		info.PriceBase = good.Price.Get()
@@ -106,8 +103,6 @@ func (e *Exporter) getMarketGoods() map[cfg.BaseUniNick]map[CommodityKey]*Market
 				ShipClass:     -1,
 			}
 			good_to_add.PriceBaseSellsFor = int(math.Floor(float64(good_to_add.PriceBase) * market_good.PriceModifier.Get()))
-
-			e.Hashes[market_good_nickname] = good_to_add.NicknameHash
 
 			if good_to_add.Category == "commodity" {
 

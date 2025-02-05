@@ -197,8 +197,6 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 			Bases:    make(map[cfg.BaseUniNick]*MarketGood),
 		}
 		ship.NicknameHash = flhash.HashNickname(ship.Nickname)
-		e.Hashes[ship.Nickname] = ship.NicknameHash
-
 		// defer func() {
 		// 	if r := recover(); r != nil {
 		// 		fmt.Println("Recovered in f", r)

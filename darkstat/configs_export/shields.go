@@ -31,12 +31,11 @@ type Shield struct {
 	HitPts    int     `json:"hit_pts"`
 	Lootable  bool    `json:"lootable"`
 
-	Nickname     string          `json:"nickname"`
-	HpType       string          `json:"hp_type"`
-	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
-	HpTypeHash   flhash.HashCode `json:"-" swaggerignore:"true"`
-	IdsName      int             `json:"ids_name"`
-	IdsInfo      int             `json:"ids_info"`
+	Nickname   string          `json:"nickname"`
+	HpType     string          `json:"hp_type"`
+	HpTypeHash flhash.HashCode `json:"-" swaggerignore:"true"`
+	IdsName    int             `json:"ids_name"`
+	IdsInfo    int             `json:"ids_info"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
@@ -61,9 +60,6 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 			Bases:   make(map[cfg.BaseUniNick]*MarketGood),
 		}
 		shield.Mass, _ = shield_gen.Mass.GetValue()
-
-		shield.NicknameHash = flhash.HashNickname(shield.Nickname)
-		e.Hashes[shield.Nickname] = shield.NicknameHash
 
 		shield.Technology, _ = shield_gen.ShieldType.GetValue()
 		shield.Capacity, _ = shield_gen.MaxCapacity.GetValue()
@@ -102,8 +98,6 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 
 		if hp_type, ok := shield_gen.HpType.GetValue(); ok {
 			shield.HpType = hp_type
-			shield.HpTypeHash = flhash.HashNickname(shield.HpType)
-			e.Hashes[shield.HpType] = shield.HpTypeHash
 
 			if parsed_type_class := TypeClassRegex.FindStringSubmatch(hp_type); len(parsed_type_class) > 0 {
 				shield.Type = parsed_type_class[1]

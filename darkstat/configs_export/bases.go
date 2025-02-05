@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
@@ -105,11 +104,9 @@ func (e *Exporter) GetBases() []*Base {
 			Missions:           &BaseMissions{},
 			Name:               name,
 			Nickname:           nickname,
-			NicknameHash:       flhash.HashNickname(nickname.ToStr()),
 			FactionName:        factionName,
 			System:             string(system_name),
 			SystemNickname:     base.System.Get(),
-			SystemNicknameHash: flhash.HashNickname(base.System.Get()),
 			StridName:          base.StridName.Get(),
 			InfocardID:         infocard_id,
 			InfocardKey:        InfocardKey(nickname),
@@ -120,9 +117,6 @@ func (e *Exporter) GetBases() []*Base {
 			Archetypes:         archetypes,
 			Region:             Region,
 		}
-
-		e.Hashes[string(base.Nickname)] = base.NicknameHash
-		e.Hashes[base.SystemNickname] = base.SystemNicknameHash
 
 		if found_system {
 			base.SectorCoord = VectorToSectorCoord(system, base.Pos)
@@ -189,11 +183,9 @@ type Base struct {
 	Name               string          `json:"name"`       // Infocard Name
 	Archetypes         []string        `json:"archetypes"` // Base Archetypes
 	Nickname           cfg.BaseUniNick `json:"nickname"`
-	NicknameHash       flhash.HashCode `json:"nickname_hash" format:"int64"` // Flhash of nickname
 	FactionName        string          `json:"faction_nickname"`
 	System             string          `json:"system_name"`
 	SystemNickname     string          `json:"system_nickname"`
-	SystemNicknameHash flhash.HashCode `json:"system_nickname_hash" format:"int64"`
 	Region             string          `json:"region_name"`
 	StridName          int             `json:"strid_name"`
 	InfocardID         int             `json:"infocard_id"`

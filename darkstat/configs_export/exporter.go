@@ -6,7 +6,6 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
@@ -90,9 +89,7 @@ func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
 type Infocards map[InfocardKey]Infocard
 
 type Exporter struct {
-	Configs *configs_mapped.MappedConfigs
-	Hashes  map[string]flhash.HashCode
-
+	Configs     *configs_mapped.MappedConfigs
 	Bases       []*Base
 	TradeBases  []*Base
 	TravelBases []*Base
@@ -136,7 +133,6 @@ func NewExporter(configs *configs_mapped.MappedConfigs, opts ...OptExport) *Expo
 		Configs:     configs,
 		Infocards:   map[InfocardKey]Infocard{},
 		ship_speeds: trades.VanillaSpeeds,
-		Hashes:      make(map[string]flhash.HashCode),
 	}
 
 	for _, opt := range opts {
@@ -295,20 +291,6 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	e.TradeBases = e.AllRoutes(TradeBases)
 	for _, base := range e.TradeBases {
 		e.TravelBases = append(e.TravelBases, base)
-	}
-
-	for _, system := range e.Configs.Systems.Systems {
-		for zone_nick := range system.ZonesByNick {
-			e.Hashes[zone_nick] = flhash.HashNickname(zone_nick)
-		}
-		for _, object := range system.Objects {
-			nickname, _ := object.Nickname.GetValue()
-			e.Hashes[nickname] = flhash.HashNickname(nickname)
-		}
-	}
-	for _, good := range e.Configs.Goods.Goods {
-		nickname, _ := good.Nickname.GetValue()
-		e.Hashes[nickname] = flhash.HashNickname(nickname)
 	}
 
 	e.EnhanceBasesWithIsTransportReachable(e.Bases, e.Transport, e.Freighter)

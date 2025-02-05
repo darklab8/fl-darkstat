@@ -29,11 +29,9 @@ message Base {
   string Name = 1; //   Name               string          `json:"name"`       // Infocard Name
   repeated string Archetypes = 2; //   Archetypes         []string        `json:"archetypes"` // Base Archetypes  
   string Nickname = 3; //   Nickname           cfg.BaseUniNick `json:"nickname"`
-  int64 NicknameHash = 4; //   NicknameHash       flhash.HashCode `json:"nickname_hash" format:"int64"` // Flhash of nickname
   string FactionName = 5; //   FactionName        string          `json:"faction_nickname"`
   string System = 6; //   System             string          `json:"system_name"`
   string SystemNickname = 7; //   SystemNickname     string          `json:"system_nickname"`
-  int64 SystemNicknameHash = 8; //   SystemNicknameHash flhash.HashCode `json:"system_nickname_hash" format:"int64"`
   string Region = 9; //   Region             string          `json:"region_name"`
   int32 StridName = 10; //   StridName          int             `json:"strid_name"`
   int32 InfocardID = 11; //   InfocardID         int             `json:"infocard_id"`

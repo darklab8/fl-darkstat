@@ -2,7 +2,6 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -16,11 +15,10 @@ type CounterMeasure struct {
 	Range         int `json:"range"`
 	DiversionPctg int `json:"diversion_pctg"`
 
-	Lootable     bool            `json:"lootable"`
-	Nickname     string          `json:"nickname"`
-	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
-	NameID       int             `json:"name_id"`
-	InfoID       int             `json:"indo_id"`
+	Lootable bool   `json:"lootable"`
+	Nickname string `json:"nickname"`
+	NameID   int    `json:"name_id"`
+	InfoID   int    `json:"indo_id"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
@@ -46,8 +44,6 @@ func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 		cm.Mass, _ = cm_info.Mass.GetValue()
 
 		cm.Nickname = cm_info.Nickname.Get()
-		cm.NicknameHash = flhash.HashNickname(cm.Nickname)
-		e.Hashes[cm.Nickname] = cm.NicknameHash
 		cm.HitPts = cm_info.HitPts.Get()
 		cm.AIRange = cm_info.AIRange.Get()
 		cm.Lootable = cm_info.Lootable.Get()

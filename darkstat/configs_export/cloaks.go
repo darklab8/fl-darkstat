@@ -2,7 +2,6 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 )
 
 type Cloak struct {
@@ -43,8 +42,6 @@ func (e *Exporter) GetCloaks(ids []*Tractor) []Cloak {
 		cloak.Volume, _ = cloak_info.Volume.GetValue()
 
 		cloak.Nickname = cloak_info.Nickname.Get()
-		NicknameHash := flhash.HashNickname(cloak.Nickname)
-		e.Hashes[cloak.Nickname] = NicknameHash
 		cloak.NameID, _ = cloak_info.IdsName.GetValue()
 		cloak.InfoID, _ = cloak_info.IdsInfo.GetValue()
 		cloak.HitPts, _ = cloak_info.HitPts.GetValue()

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -36,7 +35,6 @@ func (g MarketGood) GetPriceBaseBuysFor() int {
 
 type Commodity struct {
 	Nickname              string                          `json:"nickname"`
-	NicknameHash          flhash.HashCode                 `json:"nickname_hash" format:"int64"`
 	PriceBase             int                             `json:"price_base"`
 	Name                  string                          `json:"name"`
 	Combinable            bool                            `json:"combinable"`
@@ -79,8 +77,6 @@ func (e *Exporter) GetCommodities() []*Commodity {
 			commodity.Mass, _ = equipment.Mass.GetValue()
 
 			commodity.Nickname = comm.Nickname.Get()
-			commodity.NicknameHash = flhash.HashNickname(commodity.Nickname)
-			e.Hashes[commodity.Nickname] = commodity.NicknameHash
 
 			commodity.Combinable = comm.Combinable.Get()
 

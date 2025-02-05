@@ -4,20 +4,17 @@ import (
 	"math"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
 type Mine struct {
-	Name                string          `json:"name"`
-	Price               int             `json:"price"`
-	AmmoPrice           int             `json:"ammo_price"`
-	Nickname            string          `json:"nickname"`
-	MineDropperHash     flhash.HashCode `json:"mine_dropper_hash" format:"int64"`
-	ProjectileArchetype string          `json:"projectyle_archetype"`
-	MineHash            flhash.HashCode `json:"mine_hash" format:"int64"`
-	IdsName             int             `json:"ids_name"`
-	IdsInfo             int             `json:"ids_info"`
+	Name                string `json:"name"`
+	Price               int    `json:"price"`
+	AmmoPrice           int    `json:"ammo_price"`
+	Nickname            string `json:"nickname"`
+	ProjectileArchetype string `json:"projectyle_archetype"`
+	IdsName             int    `json:"ids_name"`
+	IdsInfo             int    `json:"ids_info"`
 
 	HullDamage    int     `json:"hull_damage"`
 	EnergyDamange int     `json:"energy_damage"`
@@ -69,8 +66,6 @@ func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 		mine.Mass, _ = mine_dropper.Mass.GetValue()
 
 		mine.Nickname = mine_dropper.Nickname.Get()
-		mine.MineDropperHash = flhash.HashNickname(mine.Nickname)
-		e.Hashes[mine.Nickname] = mine.MineDropperHash
 
 		mine.IdsInfo = mine_dropper.IdsInfo.Get()
 		mine.IdsName = mine_dropper.IdsName.Get()
@@ -93,8 +88,6 @@ func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 
 		mine_info := e.Configs.Equip.MinesMap[mine_dropper.ProjectileArchetype.Get()]
 		mine.ProjectileArchetype = mine_info.Nickname.Get()
-		mine.MineHash = flhash.HashNickname(mine.ProjectileArchetype)
-		e.Hashes[mine.ProjectileArchetype] = mine.MineHash
 
 		explosion := e.Configs.Equip.ExplosionMap[mine_info.ExplosionArch.Get()]
 

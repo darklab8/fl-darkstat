@@ -63,7 +63,6 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 			InfocardID:   group.IdsInfo.Get(),
 			InfocardKey:  InfocardKey(nickname),
 		}
-		e.Hashes[faction.Nickname] = faction.NicknameHash
 
 		if rephacks, ok := faction_rephacks[nickname]; ok {
 

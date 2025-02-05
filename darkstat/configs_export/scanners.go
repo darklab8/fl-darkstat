@@ -2,7 +2,6 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 )
 
 type Scanner struct {
@@ -12,11 +11,10 @@ type Scanner struct {
 	Range          int `json:"range"`
 	CargoScanRange int `json:"cargo_scan_range"`
 
-	Lootable     bool            `json:"lootable"`
-	Nickname     string          `json:"nickname"`
-	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
-	NameID       int             `json:"name_id"`
-	InfoID       int             `json:"info_id"`
+	Lootable bool   `json:"lootable"`
+	Nickname string `json:"nickname"`
+	NameID   int    `json:"name_id"`
+	InfoID   int    `json:"info_id"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
@@ -40,8 +38,6 @@ func (e *Exporter) GetScanners(ids []*Tractor) []Scanner {
 		item.Mass, _ = scanner_info.Mass.GetValue()
 
 		item.Nickname = scanner_info.Nickname.Get()
-		item.NicknameHash = flhash.HashNickname(item.Nickname)
-		e.Hashes[item.Nickname] = item.NicknameHash
 
 		item.Lootable = scanner_info.Lootable.Get()
 		item.NameID = scanner_info.IdsName.Get()

@@ -2,7 +2,6 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -14,13 +13,12 @@ type Ammo struct {
 	Volume           float64 `json:"volume" validate:"required"`
 	MunitionLifetime float64 `json:"munition_lifetime"`
 
-	Nickname     string          `json:"nickname"`
-	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
-	NameID       int             `json:"name_id"`
-	InfoID       int             `json:"info_id"`
-	SeekerType   string          `json:"seeker_type"`
-	SeekerRange  int             `json:"seeker_range"`
-	SeekerFovDeg int             `json:"seeker_fov_deg"`
+	Nickname     string `json:"nickname"`
+	NameID       int    `json:"name_id"`
+	InfoID       int    `json:"info_id"`
+	SeekerType   string `json:"seeker_type"`
+	SeekerRange  int    `json:"seeker_range"`
+	SeekerFovDeg int    `json:"seeker_fov_deg"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
@@ -46,8 +44,6 @@ func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 		munition.Mass, _ = munition_info.Mass.GetValue()
 
 		munition.Nickname = munition_info.Nickname.Get()
-		munition.NicknameHash = flhash.HashNickname(munition.Nickname)
-		e.Hashes[munition.Nickname] = munition.NicknameHash
 		munition.NameID, _ = munition_info.IdsName.GetValue()
 		munition.InfoID, _ = munition_info.IdsInfo.GetValue()
 

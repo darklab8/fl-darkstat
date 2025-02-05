@@ -2,22 +2,20 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 )
 
 type Thruster struct {
-	Name         string          `json:"name"`
-	Price        int             `json:"price"`
-	MaxForce     int             `json:"max_force"`
-	PowerUsage   int             `json:"power_usage"`
-	Efficiency   float64         `json:"efficiency"`
-	Value        float64         `json:"value"`
-	HitPts       int             `json:"hit_pts"`
-	Lootable     bool            `json:"lootable"`
-	Nickname     string          `json:"nickname"`
-	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
-	NameID       int             `json:"name_id"`
-	InfoID       int             `json:"info_id"`
+	Name       string  `json:"name"`
+	Price      int     `json:"price"`
+	MaxForce   int     `json:"max_force"`
+	PowerUsage int     `json:"power_usage"`
+	Efficiency float64 `json:"efficiency"`
+	Value      float64 `json:"value"`
+	HitPts     int     `json:"hit_pts"`
+	Lootable   bool    `json:"lootable"`
+	Nickname   string  `json:"nickname"`
+	NameID     int     `json:"name_id"`
+	InfoID     int     `json:"info_id"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
@@ -41,9 +39,6 @@ func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 		thruster.Mass, _ = thruster_info.Mass.GetValue()
 
 		thruster.Nickname = thruster_info.Nickname.Get()
-		thruster.NicknameHash = flhash.HashNickname(thruster.Nickname)
-		e.Hashes[thruster.Nickname] = thruster.NicknameHash
-
 		thruster.MaxForce = thruster_info.MaxForce.Get()
 		thruster.PowerUsage = thruster_info.PowerUsage.Get()
 		thruster.HitPts = thruster_info.HitPts.Get()

@@ -64,7 +64,6 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 			ShipClass:            -1,
 			IsServerSideOverride: true,
 		}
-		e.Hashes[market_good.Nickname] = market_good.NicknameHash
 
 		market_good_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
 		base.MarketGoodsPerNick[market_good_key] = market_good

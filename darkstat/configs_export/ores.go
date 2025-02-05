@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
@@ -65,9 +64,6 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			base_nickname, _ = zone.Nickname.GetValue()
 			base.Nickname = cfg.BaseUniNick(base_nickname)
 
-			base.NicknameHash = flhash.HashNickname(base_nickname)
-			e.Hashes[base_nickname] = base.NicknameHash
-
 			base.InfocardID, _ = zone.IDsInfo.GetValue()
 			base.StridName, _ = zone.IdsName.GetValue()
 
@@ -77,7 +73,6 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			base.FactionName = "Mining Field"
 
 			base.SystemNickname = system.Nickname
-			base.SystemNicknameHash = flhash.HashNickname(base.SystemNickname)
 			if system, ok := e.Configs.Universe.SystemMap[universe_mapped.SystemNickname(base.SystemNickname)]; ok {
 				base.System = e.GetInfocardName(system.StridName.Get(), base.SystemNickname)
 				base.Region = e.GetRegionName(system)

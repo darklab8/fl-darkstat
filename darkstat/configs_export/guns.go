@@ -8,7 +8,6 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -28,18 +27,15 @@ type GunDetailed struct {
 func (g Gun) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Gun struct {
-	Nickname     string          `json:"nickname"`
-	NicknameHash flhash.HashCode `json:"nickname_hash" format:"int64"`
-	MunitionHash flhash.HashCode `json:"munition_hash" format:"int64"`
-	HpTypeHash   flhash.HashCode `json:"hp_type_hash" format:"int64"`
-	Name         string          `json:"name"`
-	Type         string          `json:"type"`
-	Price        int             `json:"price"`
-	Class        string          `json:"class"`
-	HpType       string          `json:"hp_type"`
-	IdsName      int             `json:"ids_name"`
-	IdsInfo      int             `json:"ids_info"`
-	Volume       float64         `json:"volume"`
+	Nickname string  `json:"nickname"`
+	Name     string  `json:"name"`
+	Type     string  `json:"type"`
+	Price    int     `json:"price"`
+	Class    string  `json:"class"`
+	HpType   string  `json:"hp_type"`
+	IdsName  int     `json:"ids_name"`
+	IdsInfo  int     `json:"ids_info"`
+	Volume   float64 `json:"volume"`
 
 	HitPts       string  `json:"hit_pts"`
 	PowerUsage   float64 `json:"power_usage"`
@@ -134,18 +130,17 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 	}()
 
 	gun := Gun{
-		Nickname:     gun_nickname,
-		NicknameHash: flhash.HashNickname(gun_nickname),
-		IdsName:      gun_info.IdsName.Get(),
-		IdsInfo:      gun_info.IdsInfo.Get(),
-		Class:        getGunClass(gun_info),
-		HitPts:       gun_info.HitPts.Get(),
-		PowerUsage:   gun_info.PowerUsage.Get(),
-		Refire:       float64(1 / gun_info.RefireDelay.Get()),
-		Speed:        gun_info.MuzzleVelosity.Get(),
-		Toughness:    gun_info.Toughness.Get(),
-		Lootable:     gun_info.Lootable.Get(),
-		Bases:        make(map[cfg.BaseUniNick]*MarketGood),
+		Nickname:   gun_nickname,
+		IdsName:    gun_info.IdsName.Get(),
+		IdsInfo:    gun_info.IdsInfo.Get(),
+		Class:      getGunClass(gun_info),
+		HitPts:     gun_info.HitPts.Get(),
+		PowerUsage: gun_info.PowerUsage.Get(),
+		Refire:     float64(1 / gun_info.RefireDelay.Get()),
+		Speed:      gun_info.MuzzleVelosity.Get(),
+		Toughness:  gun_info.Toughness.Get(),
+		Lootable:   gun_info.Lootable.Get(),
+		Bases:      make(map[cfg.BaseUniNick]*MarketGood),
 	}
 
 	gun.Mass, _ = gun_info.Mass.GetValue()
@@ -171,7 +166,6 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 	gun.Volume, _ = gun_info.Volume.GetValue()
 
 	gun.HpType, _ = gun_info.HPGunType.GetValue()
-	gun.HpTypeHash = flhash.HashNickname(gun.HpType)
 
 	munition, found_munition := e.Configs.Equip.MunitionMap[gun_info.ProjectileArchetype.Get()]
 
@@ -191,7 +185,6 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		)
 	}
 
-	gun.MunitionHash = flhash.HashNickname(munition.Nickname.Get())
 	gun.FlashParticleName, _ = gun_info.FlashParticleName.GetValue()
 	gun.ConstEffect, _ = munition.ConstEffect.GetValue()
 	gun.MunitionHitEffect, _ = munition.MunitionHitEffect.GetValue()
@@ -334,10 +327,6 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 			}
 		}
 	}
-
-	e.Hashes[gun.Nickname] = gun.NicknameHash
-	e.Hashes[munition.Nickname.Get()] = gun.MunitionHash
-	e.Hashes[gun.HpType] = gun.HpTypeHash
 
 	return gun, nil
 }

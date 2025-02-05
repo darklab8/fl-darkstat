@@ -40,7 +40,7 @@ func (t *ServerRpc) isInfoFound(lowered_query string, name string, nickname stri
 	}
 
 	if strings.Contains(strings.ToLower(nickname), lowered_query) {
-		if _, ok := t.app_data.Configs.Hashes[nickname]; ok && nickname == lowered_query {
+		if nickname == lowered_query {
 			return true, true // perfect nickname match
 		}
 
