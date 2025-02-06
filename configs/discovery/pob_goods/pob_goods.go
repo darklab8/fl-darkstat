@@ -12,12 +12,12 @@ import (
 )
 
 type ShopItem struct {
-	Id        int `json:"id"`
-	Quantity  int `json:"quantity"`
-	Price     int `json:"price"`
-	SellPrice int `json:"sell_price"`
-	MinStock  int `json:"min_stock"`
-	MaxStock  int `json:"max_stock"`
+	Id        int `json:"id"  validate:"required"`
+	Quantity  int `json:"quantity"  validate:"required"`
+	Price     int `json:"price"  validate:"required"`
+	SellPrice int `json:"sell_price" validate:"required"`
+	MinStock  int `json:"min_stock"  validate:"required"`
+	MaxStock  int `json:"max_stock"  validate:"required"`
 }
 
 func (good ShopItem) BaseSells() bool {

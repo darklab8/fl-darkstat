@@ -8,40 +8,40 @@ import (
 )
 
 type Mine struct {
-	Name                string `json:"name"`
-	Price               int    `json:"price"`
-	AmmoPrice           int    `json:"ammo_price"`
-	Nickname            string `json:"nickname"`
-	ProjectileArchetype string `json:"projectyle_archetype"`
-	IdsName             int    `json:"ids_name"`
-	IdsInfo             int    `json:"ids_info"`
+	Name                string `json:"name" validate:"required"`
+	Price               int    `json:"price" validate:"required"`
+	AmmoPrice           int    `json:"ammo_price" validate:"required"`
+	Nickname            string `json:"nickname" validate:"required"`
+	ProjectileArchetype string `json:"projectyle_archetype" validate:"required"`
+	IdsName             int    `json:"ids_name" validate:"required"`
+	IdsInfo             int    `json:"ids_info" validate:"required"`
 
-	HullDamage    int     `json:"hull_damage"`
-	EnergyDamange int     `json:"energy_damage"`
-	ShieldDamage  int     `json:"shield_damage"`
-	PowerUsage    float64 `json:"power_usage"`
+	HullDamage    int     `json:"hull_damage" validate:"required"`
+	EnergyDamange int     `json:"energy_damage" validate:"required"`
+	ShieldDamage  int     `json:"shield_damage" validate:"required"`
+	PowerUsage    float64 `json:"power_usage" validate:"required"`
 
-	Value              float64 `json:"value"`
-	Refire             float64 `json:"refire"`
-	DetonationDistance float64 `json:"detonation_distance"`
-	Radius             float64 `json:"radius"`
-	SeekDistance       int     `json:"seek_distance"`
-	TopSpeed           int     `json:"top_speed"`
-	Acceleration       int     `json:"acceleration"`
-	LinearDrag         float64 `json:"linear_drag"`
-	LifeTime           float64 `json:"life_time"`
-	OwnerSafe          int     `json:"owner_safe"`
-	Toughness          float64 `json:"toughness"`
+	Value              float64 `json:"value" validate:"required"`
+	Refire             float64 `json:"refire" validate:"required"`
+	DetonationDistance float64 `json:"detonation_distance" validate:"required"`
+	Radius             float64 `json:"radius" validate:"required"`
+	SeekDistance       int     `json:"seek_distance" validate:"required"`
+	TopSpeed           int     `json:"top_speed" validate:"required"`
+	Acceleration       int     `json:"acceleration" validate:"required"`
+	LinearDrag         float64 `json:"linear_drag" validate:"required"`
+	LifeTime           float64 `json:"life_time" validate:"required"`
+	OwnerSafe          int     `json:"owner_safe" validate:"required"`
+	Toughness          float64 `json:"toughness" validate:"required"`
 
-	HitPts   int  `json:"hit_pts"`
-	Lootable bool `json:"lootable"`
+	HitPts   int  `json:"hit_pts" validate:"required"`
+	Lootable bool `json:"lootable" validate:"required"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 
-	AmmoLimit AmmoLimit `json:"ammo_limit"`
-	Mass      float64   `json:"mass"`
+	AmmoLimit AmmoLimit `json:"ammo_limit" validate:"required"`
+	Mass      float64   `json:"mass" validate:"required"`
 }
 
 func (b Mine) GetNickname() string { return string(b.Nickname) }

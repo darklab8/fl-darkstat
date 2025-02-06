@@ -15,13 +15,13 @@ import (
 )
 
 type Hash struct {
-	Int32  int32  `json:"int32"`
-	Uint32 uint32 `json:"uint32"`
-	Hex    string `json:"hex"`
+	Int32  int32  `json:"int32"  validate:"required"`
+	Uint32 uint32 `json:"uint32"  validate:"required"`
+	Hex    string `json:"hex"  validate:"required"`
 }
 
 type Hashes struct {
-	HashesByNick map[string]Hash `json:"hashes_by_nick"`
+	HashesByNick map[string]Hash `json:"hashes_by_nick"  validate:"required"`
 }
 
 var hashes map[string]Hash

@@ -16,8 +16,8 @@ type VertexName string
 
 type GameGraph struct {
 	matrix                    map[VertexName]map[VertexName]float64
-	IndexByNick               map[VertexName]int  `json:"index_by_nickname"`
-	NicknameByIndex           map[int]VertexName  `json:"nickname_by_index"`
+	IndexByNick               map[VertexName]int  `json:"index_by_nickname" validate:"required"`
+	NicknameByIndex           map[int]VertexName  `json:"nickname_by_index" validate:"required"`
 	AllowedVertixesForCalcs   map[VertexName]bool // Consider deleting this
 	AvgCruiseSpeed            int
 	idsNamesByNick            map[VertexName]int

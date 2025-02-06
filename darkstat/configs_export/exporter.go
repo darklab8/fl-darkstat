@@ -14,13 +14,13 @@ import (
 type InfocardKey string
 
 type InfocardPhrase struct {
-	Phrase string  `json:"phrase"`
+	Phrase string  `json:"phrase"  validate:"required"`
 	Link   *string `json:"link"`
-	Bold   bool    `json:"bold"`
+	Bold   bool    `json:"bold"  validate:"required"`
 }
 
 type InfocardLine struct {
-	Phrases []InfocardPhrase `json:"phrases"`
+	Phrases []InfocardPhrase `json:"phrases"  validate:"required"`
 }
 
 func (i InfocardLine) ToStr() string {
@@ -400,8 +400,8 @@ func Buyable(Bases map[cfg.BaseUniNick]*MarketGood) bool {
 }
 
 type DiscoveryTechCompat struct {
-	TechcompatByID map[cfg.TractorID]float64 `json:"techchompat_by_id"`
-	TechCell       string                    `json:"tech_cell"`
+	TechcompatByID map[cfg.TractorID]float64 `json:"techchompat_by_id" validate:"required"`
+	TechCell       string                    `json:"tech_cell" validate:"required"`
 }
 
 func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []*Tractor, nickname string) *DiscoveryTechCompat {

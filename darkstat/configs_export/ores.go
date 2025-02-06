@@ -67,8 +67,6 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			base.InfocardID, _ = zone.IDsInfo.GetValue()
 			base.StridName, _ = zone.IdsName.GetValue()
 
-			base.InfocardKey = InfocardKey(base.Nickname)
-
 			base.Archetypes = append(base.Archetypes, "mining_operation")
 			base.FactionName = "Mining Field"
 

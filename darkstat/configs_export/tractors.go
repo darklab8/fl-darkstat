@@ -12,14 +12,14 @@ import (
 )
 
 type Rephack struct {
-	FactionName string                      `json:"faction_name"`
-	FactionNick cfg.FactionNick             `json:"faction_nickname"`
-	Reputation  float64                     `json:"reputation"`
-	RepType     playercntl_rephacks.RepType `json:"rep_type"`
+	FactionName string                      `json:"faction_name" validate:"required"`
+	FactionNick cfg.FactionNick             `json:"faction_nickname" validate:"required"`
+	Reputation  float64                     `json:"reputation" validate:"required"`
+	RepType     playercntl_rephacks.RepType `json:"rep_type" validate:"required"`
 }
 
 type DiscoveryIDRephacks struct {
-	Rephacks map[cfg.FactionNick]Rephack `json:"rephacks"`
+	Rephacks map[cfg.FactionNick]Rephack `json:"rephacks" validate:"required"`
 }
 
 func (r DiscoveryIDRephacks) GetRephacksList() []Rephack {
@@ -37,20 +37,20 @@ func (r DiscoveryIDRephacks) GetRephacksList() []Rephack {
 }
 
 type Tractor struct {
-	Name       string `json:"name"`
-	Price      int    `json:"price"`
-	MaxLength  int    `json:"max_length"`
-	ReachSpeed int    `json:"reach_speed"`
+	Name       string `json:"name" validate:"required"`
+	Price      int    `json:"price" validate:"required"`
+	MaxLength  int    `json:"max_length" validate:"required"`
+	ReachSpeed int    `json:"reach_speed" validate:"required"`
 
-	Lootable      bool          `json:"lootable"`
-	Nickname      cfg.TractorID `json:"nickname"`
-	ShortNickname string        `json:"short_nickname"`
-	NameID        int           `json:"name_id"`
-	InfoID        int           `json:"info_id"`
+	Lootable      bool          `json:"lootable" validate:"required"`
+	Nickname      cfg.TractorID `json:"nickname" validate:"required"`
+	ShortNickname string        `json:"short_nickname" validate:"required"`
+	NameID        int           `json:"name_id" validate:"required"`
+	InfoID        int           `json:"info_id" validate:"required"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	DiscoveryIDRephacks
-	Mass float64 `json:"mass"`
+	Mass float64 `json:"mass" validate:"required"`
 }
 
 func (e *Exporter) GetFactionName(nickname cfg.FactionNick) string {

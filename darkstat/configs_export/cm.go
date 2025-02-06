@@ -6,26 +6,26 @@ import (
 )
 
 type CounterMeasure struct {
-	Name  string `json:"name"`
-	Price int    `json:"price"`
+	Name  string `json:"name"  validate:"required"`
+	Price int    `json:"price"  validate:"required"`
 
-	HitPts        int `json:"hit_pts"`
-	AIRange       int `json:"ai_range"`
-	Lifetime      int `json:"lifetime"`
-	Range         int `json:"range"`
-	DiversionPctg int `json:"diversion_pctg"`
+	HitPts        int `json:"hit_pts"  validate:"required"`
+	AIRange       int `json:"ai_range"  validate:"required"`
+	Lifetime      int `json:"lifetime"  validate:"required"`
+	Range         int `json:"range"  validate:"required"`
+	DiversionPctg int `json:"diversion_pctg"  validate:"required"`
 
-	Lootable bool   `json:"lootable"`
-	Nickname string `json:"nickname"`
-	NameID   int    `json:"name_id"`
-	InfoID   int    `json:"indo_id"`
+	Lootable bool   `json:"lootable"  validate:"required"`
+	Nickname string `json:"nickname"  validate:"required"`
+	NameID   int    `json:"name_id"  validate:"required"`
+	InfoID   int    `json:"indo_id"  validate:"required"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 
-	AmmoLimit AmmoLimit `json:"ammo_limit"`
-	Mass      float64   `json:"mass"`
+	AmmoLimit AmmoLimit `json:"ammo_limit"  validate:"required"`
+	Mass      float64   `json:"mass"  validate:"required"`
 }
 
 func (b CounterMeasure) GetNickname() string { return string(b.Nickname) }

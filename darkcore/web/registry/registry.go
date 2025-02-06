@@ -10,8 +10,8 @@ import (
 
 type ErrorMessage struct {
 	// Refactor to html friendly page.
-	Msg  string `json:"msg"`
-	Type string `json:"type"`
+	Msg  string `json:"msg"  validate:"required"`
+	Type string `json:"type"  validate:"required"`
 }
 
 func NewErrorMsg(err error) string {

@@ -42,7 +42,6 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		Name:               e.Configs.CraftableBaseName(),
 		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 		Nickname:           cfg.BaseUniNick(pob_crafts_nickname),
-		InfocardKey:        InfocardKey(pob_crafts_nickname),
 		SystemNickname:     "neverwhere",
 		System:             "Neverwhere",
 		Region:             "Neverwhere",

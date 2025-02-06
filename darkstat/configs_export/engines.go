@@ -3,36 +3,32 @@ package configs_export
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 )
 
 func (g Engine) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Engine struct {
-	Name  string `json:"name"`
-	Price int    `json:"price"`
+	Name  string `json:"name"  validate:"required"`
+	Price int    `json:"price"  validate:"required"`
 
-	CruiseSpeed      int     `json:"cruise_speed"`
-	CruiseChargeTime int     `json:"cruise_charge_time"`
-	LinearDrag       int     `json:"linear_drag"`
-	MaxForce         int     `json:"max_force"`
-	ReverseFraction  float64 `json:"reverse_fraction"`
-	ImpulseSpeed     float64 `json:"impulse_speed"`
+	CruiseSpeed      int     `json:"cruise_speed"  validate:"required"`
+	CruiseChargeTime int     `json:"cruise_charge_time"  validate:"required"`
+	LinearDrag       int     `json:"linear_drag"  validate:"required"`
+	MaxForce         int     `json:"max_force"  validate:"required"`
+	ReverseFraction  float64 `json:"reverse_fraction"  validate:"required"`
+	ImpulseSpeed     float64 `json:"impulse_speed"  validate:"required"`
 
-	HpType          string          `json:"hp_type"`
-	HpTypeHash      flhash.HashCode `json:"-" swaggerignore:"true"`
-	FlameEffect     string          `json:"flame_effect"`
-	FlameEffectHash flhash.HashCode `json:"-" swaggerignore:"true"`
-	TrailEffect     string          `json:"trail_effect"`
-	TrailEffectHash flhash.HashCode `json:"-" swaggerignore:"true"`
+	HpType      string `json:"hp_type"  validate:"required"`
+	FlameEffect string `json:"flame_effect"  validate:"required"`
+	TrailEffect string `json:"trail_effect"  validate:"required"`
 
-	Nickname string `json:"nickname"`
-	NameID   int    `json:"name_id"`
-	InfoID   int    `json:"info_id"`
+	Nickname string `json:"nickname"  validate:"required"`
+	NameID   int    `json:"name_id"  validate:"required"`
+	InfoID   int    `json:"info_id"  validate:"required"`
 
 	Bases                map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
-	Mass                 float64 `json:"mass"`
+	Mass                 float64 `json:"mass"  validate:"required"`
 }
 
 func (b Engine) GetNickname() string { return string(b.Nickname) }
@@ -95,9 +91,6 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 		e.exportInfocards(InfocardKey(engine.Nickname), engine.InfoID)
 
 		engine.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, engine.Nickname)
-		engine.HpTypeHash = flhash.HashNickname(engine.HpType)
-		engine.FlameEffectHash = flhash.HashNickname(engine.FlameEffect)
-		engine.TrailEffectHash = flhash.HashNickname(engine.TrailEffect)
 
 		engines = append(engines, engine)
 	}

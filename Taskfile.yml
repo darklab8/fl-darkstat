@@ -149,8 +149,11 @@ tasks:
   openapi:generate:
     cmds:
       - sdk use java 11.0.25-sem
-      - java -jar openapi-generator-cli.jar generate -i docs/swagger.yaml -g go -o../generated_go
-
+      - task: swag:build
+      - java -jar openapi-generator-cli.jar generate -i docs/swagger.yaml -g go -o ../generated_go
+      # - java -jar openapi-generator-cli.jar generate -i docs/swagger.yaml -g go -o ./darkapi/clientgo
+      # - java -jar openapi-generator-cli.jar generate -i docs/swagger.yaml -g go-server -o ./darkapi/servergo
+      #- java -jar openapi-generator-cli.jar list
 env:
   tag_version: v1.48.0-a4
   DOCKER_HOST: ssh://root@darklab:22

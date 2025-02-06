@@ -109,7 +109,6 @@ func (e *Exporter) GetBases() []*Base {
 			SystemNickname:     base.System.Get(),
 			StridName:          base.StridName.Get(),
 			InfocardID:         infocard_id,
-			InfocardKey:        InfocardKey(nickname),
 			File:               utils_types.FilePath(base.File.Get()),
 			BGCS_base_run_by:   base.BGCS_base_run_by.Get(),
 			MarketGoodsPerNick: market_goods_per_good_nick,
@@ -180,31 +179,30 @@ func FilterToUserfulBases(bases []*Base) []*Base {
 }
 
 type Base struct {
-	Name               string          `json:"name"`       // Infocard Name
-	Archetypes         []string        `json:"archetypes"` // Base Archetypes
-	Nickname           cfg.BaseUniNick `json:"nickname"`
-	FactionName        string          `json:"faction_nickname"`
-	System             string          `json:"system_name"`
-	SystemNickname     string          `json:"system_nickname"`
-	Region             string          `json:"region_name"`
-	StridName          int             `json:"strid_name"`
-	InfocardID         int             `json:"infocard_id"`
-	InfocardKey        InfocardKey
-	File               utils_types.FilePath `json:"file"`
+	Name               string               `json:"name"  validate:"required"`       // Infocard Name
+	Archetypes         []string             `json:"archetypes"  validate:"required"` // Base Archetypes
+	Nickname           cfg.BaseUniNick      `json:"nickname"  validate:"required"`
+	FactionName        string               `json:"faction_nickname"  validate:"required"`
+	System             string               `json:"system_name"  validate:"required"`
+	SystemNickname     string               `json:"system_nickname"  validate:"required"`
+	Region             string               `json:"region_name"  validate:"required"`
+	StridName          int                  `json:"strid_name"  validate:"required"`
+	InfocardID         int                  `json:"infocard_id"  validate:"required"`
+	File               utils_types.FilePath `json:"file" validate:"required"`
 	BGCS_base_run_by   string
 	MarketGoodsPerNick map[CommodityKey]*MarketGood `json:"-" swaggerignore:"true"`
-	Pos                cfg.Vector                   `json:"pos"`
-	SectorCoord        string                       `json:"sector_coord"`
+	Pos                cfg.Vector                   `json:"pos" validate:"required"`
+	SectorCoord        string                       `json:"sector_coord" validate:"required"`
 
-	IsTransportUnreachable bool `json:"is_transport_unreachable"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
+	IsTransportUnreachable bool `json:"is_transport_unreachable" validate:"required"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
 
 	Missions           *BaseMissions `json:"-" swaggerignore:"true"`
 	baseAllTradeRoutes `json:"-" swaggerignore:"true"`
 	baseAllRoutes      `json:"-" swaggerignore:"true"`
 	*MiningInfo        `json:"mining_info,omitempty"`
 
-	Reachable bool `json:"is_reachhable"` // is base IS Rechable by frighter from Manhattan
-	IsPob     bool
+	Reachable bool `json:"is_reachhable" validate:"required"` // is base IS Rechable by frighter from Manhattan
+	IsPob     bool `validate:"required"`
 }
 
 func (b Base) GetNickname() string { return string(b.Nickname) }

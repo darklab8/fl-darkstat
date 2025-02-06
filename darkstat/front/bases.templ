@@ -217,7 +217,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		<td class="seo">{ strconv.Itoa(base.StridName) }</td>
 		<td class="seo">{ strconv.Itoa(base.InfocardID) }</td>
 		<td>{ frmt.FormatBoolAsYesNo(base.Reachable) }</td>
-		@tab.TdInfoCardClick(base.InfocardKey, base.Nickname.ToStr(), pinm, shared, tab.InfocardClickOpts{})
+		@tab.TdInfoCardClick(configs_export.InfocardKey(base.Nickname), base.Nickname.ToStr(), pinm, shared, tab.InfocardClickOpts{})
 	}
 }
 

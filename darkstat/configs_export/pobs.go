@@ -20,9 +20,9 @@ import (
 
 type ShopItem struct {
 	pob_goods.ShopItem
-	Nickname string `json:"nickname"`
-	Name     string `json:"name"`
-	Category string `json:"category"`
+	Nickname string `json:"nickname" validate:"required"`
+	Name     string `json:"name" validate:"required"`
+	Category string `json:"category" validate:"required"`
 }
 
 type DefenseMode int
@@ -42,8 +42,8 @@ func (d DefenseMode) ToStr() string {
 }
 
 type PoBWithoutGoods struct {
-	Nickname string `json:"nickname"`
-	Name     string `json:"name"`
+	Nickname string `json:"nickname" validate:"required"`
+	Name     string `json:"name" validate:"required"`
 
 	Pos         *string      `json:"pos"`
 	Level       *int         `json:"level"`
@@ -67,25 +67,25 @@ type PoBWithoutGoods struct {
 // also known as Player Base Station
 type PoB struct {
 	PoBWithoutGoods
-	ShopItems []*ShopItem `json:"shop_items"`
+	ShopItems []*ShopItem `json:"shop_items" validate:"required"`
 }
 
 func (b PoB) GetNickname() string { return string(b.Nickname) }
 
 type PoBGood struct {
-	Nickname              string `json:"nickname"`
-	Name                  string `json:"name"`
-	TotalBuyableFromBases int    `json:"total_buyable_from_bases"`
-	TotalSellableToBases  int    `json:"total_sellable_to_bases"`
+	Nickname              string `json:"nickname" validate:"required"`
+	Name                  string `json:"name" validate:"required"`
+	TotalBuyableFromBases int    `json:"total_buyable_from_bases" validate:"required"`
+	TotalSellableToBases  int    `json:"total_sellable_to_bases" validate:"required"`
 
 	BestPriceToBuy  *int `json:"best_price_to_buy"`
 	BestPriceToSell *int `json:"best_price_to_sell"`
 
-	Category string         `json:"category"`
-	Bases    []*PoBGoodBase `json:"bases"`
+	Category string         `json:"category" validate:"required"`
+	Bases    []*PoBGoodBase `json:"bases" validate:"required"`
 
-	AnyBaseSells bool `json:"any_base_sells"`
-	AnyBaseBuys  bool `json:"any_base_buys"`
+	AnyBaseSells bool `json:"any_base_sells" validate:"required"`
+	AnyBaseBuys  bool `json:"any_base_buys" validate:"required"`
 }
 
 func (b PoBGood) GetNickname() string { return string(b.Nickname) }
@@ -94,8 +94,8 @@ func (good PoBGood) BaseSells() bool { return good.AnyBaseSells }
 func (good PoBGood) BaseBuys() bool  { return good.AnyBaseBuys }
 
 type PoBGoodBase struct {
-	ShopItem *ShopItem        `json:"shop_item"`
-	Base     *PoBWithoutGoods `json:"base"`
+	ShopItem *ShopItem        `json:"shop_item" validate:"required"`
+	Base     *PoBWithoutGoods `json:"base" validate:"required"`
 }
 
 // Exporting only with position ones

@@ -48,7 +48,6 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 		Name:               "Lootable",
 		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 		Nickname:           cfg.BaseUniNick(BaseLootableNickname),
-		InfocardKey:        InfocardKey(BaseLootableNickname),
 		SystemNickname:     "neverwhere",
 		System:             "Neverwhere",
 		Region:             "Neverwhere",

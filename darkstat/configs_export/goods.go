@@ -18,12 +18,12 @@ func NameWithSpacesOnly(word string) bool {
 }
 
 type GoodInfo struct {
-	Nickname     string `json:"nickname"`
-	ShipNickname string `json:"ship_nickname"` // market good can be ship package, if it is, then ship nickname bought by package is specified
-	Name         string `json:"name"`
-	PriceBase    int    `json:"price_base"`
-	HpType       string `json:"hp_type"`
-	Category     string `json:"category"`
+	Nickname     string `json:"nickname" validate:"required"`
+	ShipNickname string `json:"ship_nickname" validate:"required"` // market good can be ship package, if it is, then ship nickname bought by package is specified
+	Name         string `json:"name" validate:"required"`
+	PriceBase    int    `json:"price_base" validate:"required"`
+	HpType       string `json:"hp_type" validate:"required"`
+	Category     string `json:"category" validate:"required"`
 }
 
 func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {

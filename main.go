@@ -51,11 +51,6 @@ func GetRelayFs(app_data *appdata.AppData) *builder.Filesystem {
 	return relay_fs
 }
 
-type Account struct {
-	ID   int    `json:"id" example:"1"`
-	Name string `json:"name" example:"account name"`
-}
-
 // @title Darkstat API
 // @version 1.0
 // @description Darkstat API exposed info in json format.

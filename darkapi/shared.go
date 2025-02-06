@@ -17,13 +17,13 @@ import (
 
 type MarketGoodResp struct {
 	MarketGoods []*configs_export.MarketGood `json:"market_goods"`
-	Nickname    string                       `json:"nickname"`
+	Nickname    string                       `json:"nickname"  validate:"required"`
 	Error       *string                      `json:"error,omitempty"`
 }
 
 type TechCompatResp struct {
 	TechCompat *configs_export.DiscoveryTechCompat `json:"tech_compat"`
-	Nickname   string                              `json:"nickname"`
+	Nickname   string                              `json:"nickname"  validate:"required"`
 	Error      *string                             `json:"error,omitempty"`
 }
 

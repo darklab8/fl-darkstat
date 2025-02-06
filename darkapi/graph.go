@@ -15,8 +15,8 @@ import (
 )
 
 type GraphPathReq struct {
-	From string `json:"from" example:"li01_01_base"` // Write NPC base nickname, or PoB nickname (Name in base64 encoding) or Ore field name
-	To   string `json:"to" example:"br01_01_base"`   // Write NPC base nickname, or PoB nickname (Name in base64 encoding) or Ore field name
+	From string `json:"from" example:"li01_01_base" validate:"required"` // Write NPC base nickname, or PoB nickname (Name in base64 encoding) or Ore field name
+	To   string `json:"to" example:"br01_01_base" validate:"required"`   // Write NPC base nickname, or PoB nickname (Name in base64 encoding) or Ore field name
 }
 
 type GraphPathTime struct {
@@ -26,7 +26,7 @@ type GraphPathTime struct {
 }
 
 type GraphPathsResp struct {
-	Route GraphPathReq   `json:"route"` // writes requested input
+	Route GraphPathReq   `json:"route" validate:"required"` // writes requested input
 	Time  *GraphPathTime `json:"time,omitempty"`
 	Error *string        `json:"error,omitempty"` // writes error if requesting not existing nicknames in from/to fields
 }

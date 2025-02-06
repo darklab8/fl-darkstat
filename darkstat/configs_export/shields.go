@@ -13,34 +13,34 @@ import (
 func (g Shield) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Shield struct {
-	Name string `json:"name"`
+	Name string `json:"name" validate:"required"`
 
-	Class      string `json:"class"`
-	Type       string `json:"type"`
-	Technology string `json:"technology"`
-	Price      int    `json:"price"`
+	Class      string `json:"class" validate:"required"`
+	Type       string `json:"type" validate:"required"`
+	Technology string `json:"technology" validate:"required"`
+	Price      int    `json:"price" validate:"required"`
 
-	Capacity          int     `json:"capacity"`
-	RegenerationRate  int     `json:"regeneration_rate"`
-	ConstantPowerDraw int     `json:"constant_power_draw"`
-	Value             float64 `json:"value"`
-	RebuildPowerDraw  int     `json:"rebuild_power_draw"`
-	OffRebuildTime    int     `json:"off_rebuild_time"`
+	Capacity          int     `json:"capacity" validate:"required"`
+	RegenerationRate  int     `json:"regeneration_rate" validate:"required"`
+	ConstantPowerDraw int     `json:"constant_power_draw" validate:"required"`
+	Value             float64 `json:"value" validate:"required"`
+	RebuildPowerDraw  int     `json:"rebuild_power_draw" validate:"required"`
+	OffRebuildTime    int     `json:"off_rebuild_time" validate:"required"`
 
-	Toughness float64 `json:"toughness"`
-	HitPts    int     `json:"hit_pts"`
-	Lootable  bool    `json:"lootable"`
+	Toughness float64 `json:"toughness" validate:"required"`
+	HitPts    int     `json:"hit_pts" validate:"required"`
+	Lootable  bool    `json:"lootable" validate:"required"`
 
-	Nickname   string          `json:"nickname"`
-	HpType     string          `json:"hp_type"`
+	Nickname   string          `json:"nickname" validate:"required"`
+	HpType     string          `json:"hp_type" validate:"required"`
 	HpTypeHash flhash.HashCode `json:"-" swaggerignore:"true"`
-	IdsName    int             `json:"ids_name"`
-	IdsInfo    int             `json:"ids_info"`
+	IdsName    int             `json:"ids_name" validate:"required"`
+	IdsInfo    int             `json:"ids_info" validate:"required"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
-	Mass                 float64 `json:"mass"`
+	Mass                 float64 `json:"mass" validate:"required"`
 }
 
 func (b Shield) GetNickname() string                       { return string(b.Nickname) }
