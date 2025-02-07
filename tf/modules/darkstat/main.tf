@@ -33,6 +33,19 @@ resource "docker_service" "darkstat" {
       env   = local.envs
       #   args = ["sleep", "infinity"]
 
+      dynamic "labels" {
+        for_each = merge({},
+        var.relay_prefix != null ? {
+          "caddy_1" = "${var.relay_prefix}.${var.zone}"
+          "caddy_1.reverse_proxy" = "{{upstreams 8080}}"
+        } : {},
+        )
+        content {
+          label = labels.key
+          value = labels.value
+        }
+      }
+
       labels {
         label = "caddy_0"
         value = "${var.stat_prefix}.${var.zone}"
@@ -40,14 +53,6 @@ resource "docker_service" "darkstat" {
       labels {
         label = "caddy_0.reverse_proxy"
         value = "{{upstreams 8000}}"
-      }
-      labels {
-        label = "caddy_1"
-        value = "${var.relay_prefix}.${var.zone}"
-      }
-      labels {
-        label = "caddy_1.reverse_proxy"
-        value = "{{upstreams 8080}}"
       }
       labels {
         label = "caddy_2"

@@ -9,6 +9,7 @@ module "darkstat" {
   tag            = "production-arm64"
   discovery_path = module.discovery.discovery_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
+  enable_restarts = true
 
   RELAY_HOST         = "https://darkrelay.dd84ai.com"
   SITE_ROOT          = "/fl-data-discovery/"
@@ -20,7 +21,6 @@ module "darkstat" {
   relay_prefix = "darkrelay"
   rpc_prefix   = "darkgrpc"
   zone         = "dd84ai.com"
-  rpc_port     = 50051
 }
 
 resource "random_string" "random_password" {
@@ -53,7 +53,31 @@ module "darkstat_dev" {
   relay_prefix = "darkrelay-dev"
   rpc_prefix   = "darkgrpc-dev"
   zone         = "dd84ai.com"
+  enable_restarts = true
 
   password = random_string.random_password.result
   secret   = random_string.random_secret.result
+}
+
+module "vanilla" {
+  source      = "../modules/vanilla"
+  environment = "production"
+}
+
+module "darkstat_vanilla" {
+  source         = "../modules/darkstat"
+  environment    = "vanilla"
+  tag            = "production-arm64"
+  discovery_path = module.vanilla.vanilla_path
+  ipv4_address   = module.data_cluster.node_darklab.ipv4_address
+
+  SITE_ROOT          = "/fl-data-discovery/"
+  FLDARKSTAT_HEADING = <<-EOT
+  <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for Freelancer Vanilla
+  EOT
+
+  stat_prefix  = "darkstat-vanilla"
+  rpc_prefix   = "darkgrpc-vanilla"
+  zone         = "dd84ai.com"
+  enable_restarts = false
 }

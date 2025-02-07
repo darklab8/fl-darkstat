@@ -6,6 +6,7 @@ locals {
 }
 // ensures to catch new Discovery version
 resource "docker_container" "cron_restart" {
+  count = var.enable_restarts ? 1 : 0
   name    = "${var.environment}-darkstat-cron-restart"
   image   = docker_image.docker_cli.image_id
   restart = "always"

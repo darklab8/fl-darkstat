@@ -30,6 +30,7 @@ variable "stat_prefix" {
 }
 variable "relay_prefix" {
   type = string
+  default = null
 }
 variable "rpc_prefix" {
   type = string
@@ -49,4 +50,7 @@ variable "password" {
 variable "secret" {
   type    = string
   default = null
+}
+variable "enable_restarts" {
+  type = bool
 }
