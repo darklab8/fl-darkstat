@@ -1,9 +1,8 @@
-package darkgrpcsrv
+package darkgrpc
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/darkgrpc"
-	pb "github.com/darklab8/fl-darkstat/darkgrpc"
+	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -15,8 +14,8 @@ func IntTo32(value *int) *int32 {
 	return &q
 }
 
-func NewMarketGood(good *configs_export.MarketGood) *darkgrpc.MarketGood {
-	return &darkgrpc.MarketGood{
+func NewMarketGood(good *configs_export.MarketGood) *pb.MarketGood {
+	return &pb.MarketGood{
 		Nickname: good.Nickname,
 
 		ShipNickname:         good.ShipNickname,

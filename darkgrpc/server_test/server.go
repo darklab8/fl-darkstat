@@ -6,18 +6,14 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/darklab8/fl-darkstat/darkgrpc"
-	"github.com/darklab8/fl-darkstat/darkgrpc/darkgrpcsrv"
+	"github.com/darklab8/fl-darkstat/darkgrpc"
+	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
 	"google.golang.org/grpc"
 )
 
 var (
 	port = flag.Int("port", 50051, "The server port")
 )
-
-// server is used to implement helloworld.GreeterServer.
-
-// SayHello implements helloworld.GreeterServer
 
 func main() {
 	flag.Parse()
@@ -26,7 +22,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterDarkGRpcServer(s, &darkgrpcsrv.Server{})
+	pb.RegisterDarkGRpcServer(s, &darkgrpc.Server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

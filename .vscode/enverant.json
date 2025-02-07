@@ -1,9 +1,9 @@
 {
     # Define path to Freelancer Folder root
     # "FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_online/drive_c/Discovery",
-    "FREELANCER_FOLDER": "${env:HOME}/windows10shared/game-repository",
+    // "FREELANCER_FOLDER": "${env:HOME}/windows10shared/game-repository",
     # "DARKSTAT_TRADE_ROUTES_DETAILED_TRADE_LANE": "true",
-    # "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
+    "FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
     # "FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wineprefix_flsr/drive_c/Freelancer",
     "DEV_ENV": "true",
     "DARKSTAT_LOG_LEVEL": "DEBUG",

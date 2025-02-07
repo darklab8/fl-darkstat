@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v3.12.4
-// source: example.proto
+// source: main.proto
 
-package darkgrpc
+package statproto
 
 import (
 	context "context"
@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	DarkGRpc_GetBases_FullMethodName            = "/darkgrpc.DarkGRpc/GetBases"
-	DarkGRpc_GetBasesMarketGoods_FullMethodName = "/darkgrpc.DarkGRpc/GetBasesMarketGoods"
+	DarkGRpc_GetHealth_FullMethodName           = "/statproto.DarkGRpc/GetHealth"
+	DarkGRpc_GetBases_FullMethodName            = "/statproto.DarkGRpc/GetBases"
+	DarkGRpc_GetBasesMarketGoods_FullMethodName = "/statproto.DarkGRpc/GetBasesMarketGoods"
 )
 
 // DarkGRpcClient is the client API for DarkGRpc service.
@@ -30,6 +31,7 @@ const (
 // The greeter service definition.
 type DarkGRpcClient interface {
 	// Sends a greeting
+	GetHealth(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HealthReply, error)
 	GetBases(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetBasesReply, error)
 	GetBasesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
 }
@@ -40,6 +42,16 @@ type darkGRpcClient struct {
 
 func NewDarkGRpcClient(cc grpc.ClientConnInterface) DarkGRpcClient {
 	return &darkGRpcClient{cc}
+}
+
+func (c *darkGRpcClient) GetHealth(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HealthReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(HealthReply)
+	err := c.cc.Invoke(ctx, DarkGRpc_GetHealth_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *darkGRpcClient) GetBases(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetBasesReply, error) {
@@ -69,6 +81,7 @@ func (c *darkGRpcClient) GetBasesMarketGoods(ctx context.Context, in *GetMarketG
 // The greeter service definition.
 type DarkGRpcServer interface {
 	// Sends a greeting
+	GetHealth(context.Context, *Empty) (*HealthReply, error)
 	GetBases(context.Context, *Empty) (*GetBasesReply, error)
 	GetBasesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
 	mustEmbedUnimplementedDarkGRpcServer()
@@ -81,6 +94,9 @@ type DarkGRpcServer interface {
 // pointer dereference when methods are called.
 type UnimplementedDarkGRpcServer struct{}
 
+func (UnimplementedDarkGRpcServer) GetHealth(context.Context, *Empty) (*HealthReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetHealth not implemented")
+}
 func (UnimplementedDarkGRpcServer) GetBases(context.Context, *Empty) (*GetBasesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBases not implemented")
 }
@@ -106,6 +122,24 @@ func RegisterDarkGRpcServer(s grpc.ServiceRegistrar, srv DarkGRpcServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&DarkGRpc_ServiceDesc, srv)
+}
+
+func _DarkGRpc_GetHealth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkGRpcServer).GetHealth(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DarkGRpc_GetHealth_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkGRpcServer).GetHealth(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _DarkGRpc_GetBases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -148,9 +182,13 @@ func _DarkGRpc_GetBasesMarketGoods_Handler(srv interface{}, ctx context.Context,
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "darkgrpc.DarkGRpc",
+	ServiceName: "statproto.DarkGRpc",
 	HandlerType: (*DarkGRpcServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetHealth",
+			Handler:    _DarkGRpc_GetHealth_Handler,
+		},
 		{
 			MethodName: "GetBases",
 			Handler:    _DarkGRpc_GetBases_Handler,
@@ -161,5 +199,5 @@ var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "example.proto",
+	Metadata: "main.proto",
 }

@@ -59,18 +59,22 @@ If u have problems with configuring development environment, then seek my contac
 - Usable locally for Linux and Windows.
 - Only Freelancer Discovery mod and Vanilla are supported at the moment
 
-# Darkstat has API Swagger documentation
+# Darkstat has API access
+
+# JSON rest one, with swagger documentation
 
 - API has swagger documentation accessable from its interface by button "API" at the top of menu
+  - It is available only for Static Binary and Dockerized deployments currently.
+  - It is known to run in production for Freelancer Discovery, [check here](https://darkstat.dd84ai.com/swagger/index.html)
 
-Hint:
-- You could generate entire API Client out of openapi with commands like
-  - `wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.10.0/openapi-generator-cli-7.10.0.jar -O openapi-generator-cli.jar`
-  - `sdk install java 11.0.25-sem` (assuming sdkman is installed)
-  - `sdk use java 11.0.25-sem`
-  - `java -jar openapi-generator-cli.jar generate -g csharp -i https://darkstat.dd84ai.com/swagger/doc.json -o ./generated_csharp` (example on Discovery deployment)
-  - `java -jar openapi-generator-cli.jar generate -g csharp -i ./docs/swagger.json -o ./generated_csharp` (if locally)
-  - `java -jar openapi-generator-cli.jar list` to get list of possible API client outputs
+# Alternatively we offer Client generation through gRPC!
+
+- With gRPC you can export our proto file and generate client with precise data structs and methods of API for your any language! Be it C#, Javascript, Python or even C++
+  - Full list of supported languages here https://grpc.io/docs/languages/
+  - You get static typing validations
+  - You get performance boosts from using grpc compression stuff
+  - We change server side smth? Just regenerate the lib to keep up with updates ^_^
+  - Import [darkstat proto file](./darkgrpc/darkproto/main.proto) for its usage and generate client lib from it with `protoc` command
 
 # What makes different from regular flstat
 

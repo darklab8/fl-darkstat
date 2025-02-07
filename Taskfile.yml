@@ -135,13 +135,13 @@ tasks:
   grpc:build:
     cmds: # --experimental_allow_proto3_optional
       - >
-        protoc -I darkgrpc --go_out=darkgrpc
+        protoc -I darkgrpc/statproto --go_out=darkgrpc/statproto
         --experimental_allow_proto3_optional
         --go_opt=paths=source_relative
-        --go-grpc_out=darkgrpc
+        --go-grpc_out=darkgrpc/statproto
         --go-grpc_opt=paths=source_relative
         --proto_path=.
-        darkgrpc/example.proto
+        darkgrpc/statproto/main.proto
 
   grpc:debug:
     cmds:

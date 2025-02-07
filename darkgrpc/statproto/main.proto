@@ -1,18 +1,23 @@
 syntax = "proto3";
 
-option go_package = "github.com/darklab8/fl-darkstat/darkgrpc";
+option go_package = "github.com/darklab8/fl-darkstat/darkgrpc/statproto";
 
-package darkgrpc;
+package statproto;
 
 // The greeter service definition.
 service DarkGRpc {
   // Sends a greeting
+  rpc GetHealth (Empty) returns (HealthReply) {}
+
   rpc GetBases (Empty) returns (GetBasesReply) {}
   rpc GetBasesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
 }
 
 // The request message containing the user's name.
 message Empty {
+}
+message HealthReply {
+  bool is_healthy = 1;
 }
 message GetMarketGoodsInput {
   repeated string Nicknames = 1;
@@ -31,11 +36,6 @@ message MarketGoodAnswer {
   string Nickname = 3;
 }
 
-message Pos {
-	double X = 1;
-	double Y = 2;
-	double Z = 3;
-}
 
 // The response message containing the greetings
 message Base {
@@ -57,37 +57,44 @@ message Base {
   bool IsPob = 19;
 }
 
+message MiningInfo {
+  int32 DynamicLootMin = 1;   
+	int32 DynamicLootMax = 2;
+	int32 DynamicLootDifficulty = 3;
+	optional MarketGood MinedGood = 4;         
+}
+
+
 message MarketGood {
   string Nickname = 1;
   string ShipNickname = 2; 
   string Name = 3;     
   int32 PriceBase = 4; 
   string HpType = 5;   
-  string Category =6;
+  string Category = 6;
 
-	int32 LevelRequired = 7;
-	double RepRequired = 8;
-	optional int32 PriceBaseBuysFor = 9; 
-	int32 PriceBaseSellsFor  = 10;
-	double Volume   = 11;   
-	int64 ShipClass  =12;        
-	bool BaseSells    = 13;    
-	bool IsServerSideOverride = 14;
-	bool NotBuyable      = 15;     
-	bool IsTransportUnreachable =16;
+    int32 LevelRequired = 7;
+    double RepRequired = 8;
+    optional int32 PriceBaseBuysFor = 9; 
+    int32 PriceBaseSellsFor  = 10;
+    double Volume   = 11;   
+    int64 ShipClass  = 12;        
+    bool BaseSells    = 13;    
+    bool IsServerSideOverride = 14;
+    bool NotBuyable      = 15;     
+    bool IsTransportUnreachable = 16;
 
-	string BaseNickname = 17; 
-	string BaseName = 18;   
-	string  SystemName =19; 
-	string  Region =20;    
-	string  FactionName = 21; 
-	Pos BasePos =22;     
-	string SectorCoord =23;
+    string BaseNickname = 17; 
+    string BaseName = 18;   
+    string  SystemName = 19; 
+    string  Region = 20;    
+    string  FactionName = 21; 
+    Pos BasePos = 22;     
+    string SectorCoord = 23;
 }
 
-message MiningInfo {
-  int32 DynamicLootMin = 1;   
-	int32 DynamicLootMax = 2;
-	int32 DynamicLootDifficulty = 3;
-	optional MarketGood MinedGood = 4;         
+message Pos {
+  double X = 1;
+  double Y = 2;
+  double Z = 3;
 }
