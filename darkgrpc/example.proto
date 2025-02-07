@@ -8,14 +8,27 @@ package darkgrpc;
 service DarkGRpc {
   // Sends a greeting
   rpc GetBases (Empty) returns (GetBasesReply) {}
+  rpc GetBasesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
 }
 
 // The request message containing the user's name.
 message Empty {
 }
+message GetMarketGoodsInput {
+  repeated string Nicknames = 1;
+}
 
 message GetBasesReply {
-  repeated Base bases = 1;
+  repeated Base Items = 1;
+}
+
+message GetMarketGoodsReply {
+  repeated MarketGoodAnswer Answers = 1;
+}
+message MarketGoodAnswer {
+  repeated MarketGood MarketGoods = 1;
+  optional string Error = 2;
+  string Nickname = 3;
 }
 
 message Pos {
@@ -26,41 +39,55 @@ message Pos {
 
 // The response message containing the greetings
 message Base {
-  string Name = 1; //   Name               string          `json:"name"`       // Infocard Name
-  repeated string Archetypes = 2; //   Archetypes         []string        `json:"archetypes"` // Base Archetypes  
-  string Nickname = 3; //   Nickname           cfg.BaseUniNick `json:"nickname"`
-  string FactionName = 5; //   FactionName        string          `json:"faction_nickname"`
-  string System = 6; //   System             string          `json:"system_name"`
-  string SystemNickname = 7; //   SystemNickname     string          `json:"system_nickname"`
-  string Region = 9; //   Region             string          `json:"region_name"`
-  int32 StridName = 10; //   StridName          int             `json:"strid_name"`
-  int32 InfocardID = 11; //   InfocardID         int             `json:"infocard_id"`
-  //   InfocardKey        InfocardKey
-  string File = 12; //   File               utils_types.FilePath `json:"file"`
-  string BGCS_base_run_by = 13; //   BGCS_base_run_by   string
-  //   MarketGoodsPerNick map[CommodityKey]*MarketGood `json:"-" swaggerignore:"true"`
-  Pos Pos = 14; //   Pos                cfg.Vector                   `json:"pos"`
-  string SectorCoord = 15; //   SectorCoord        string                       `json:"sector_coord"`
-  
-  bool IsTransportUnreachable = 16; //   IsTransportUnreachable bool `json:"is_transport_unreachable"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
-  
-  //   Missions           *BaseMissions `json:"-" swaggerignore:"true"`
-  //   baseAllTradeRoutes `json:"-" swaggerignore:"true"`
-  //   baseAllRoutes      `json:"-" swaggerignore:"true"`
-  // optional MiningInfo MiningInfo = 17; //   *MiningInfo        `json:"mining_info,omitempty"`
-  
-  bool Reachable = 18; //   Reachable bool `json:"is_reachhable"` // is base IS Rechable by frighter from Manhattan
-  bool IsPob = 19; //   IsPob     bool
-  // }
+  string Name = 1;
+  repeated string Archetypes = 2;
+  string Nickname = 3; 
+  string FactionName = 5; 
+  string System = 6; 
+  string SystemNickname = 7; 
+  string Region = 9;
+  int32 StridName = 10; 
+  int32 InfocardID = 11; 
+  string File = 12; 
+  string BGCS_base_run_by = 13;
+  Pos Pos = 14; 
+  string SectorCoord = 15;
+  bool IsTransportUnreachable = 16; 
+  bool Reachable = 18; 
+  bool IsPob = 19;
 }
 
-// message MiningInfo {
-//   int32 DynamicLootMin     = 1;  
-//   int32 DynamicLootMax        = 2;
-//   int32 DynamicLootDifficulty = 3;
-//   optional MarketGood MinedGood = 4;
-// }
+message MarketGood {
+  string Nickname = 1;
+  string ShipNickname = 2; 
+  string Name = 3;     
+  int32 PriceBase = 4; 
+  string HpType = 5;   
+  string Category =6;
 
-// message MarketGood {
+	int32 LevelRequired = 7;
+	double RepRequired = 8;
+	optional int32 PriceBaseBuysFor = 9; 
+	int32 PriceBaseSellsFor  = 10;
+	double Volume   = 11;   
+	int64 ShipClass  =12;        
+	bool BaseSells    = 13;    
+	bool IsServerSideOverride = 14;
+	bool NotBuyable      = 15;     
+	bool IsTransportUnreachable =16;
 
-// }
+	string BaseNickname = 17; 
+	string BaseName = 18;   
+	string  SystemName =19; 
+	string  Region =20;    
+	string  FactionName = 21; 
+	Pos BasePos =22;     
+	string SectorCoord =23;
+}
+
+message MiningInfo {
+  int32 DynamicLootMin = 1;   
+	int32 DynamicLootMax = 2;
+	int32 DynamicLootDifficulty = 3;
+	optional MarketGood MinedGood = 4;         
+}

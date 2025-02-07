@@ -136,6 +136,7 @@ tasks:
     cmds: # --experimental_allow_proto3_optional
       - >
         protoc -I darkgrpc --go_out=darkgrpc
+        --experimental_allow_proto3_optional
         --go_opt=paths=source_relative
         --go-grpc_out=darkgrpc
         --go-grpc_opt=paths=source_relative

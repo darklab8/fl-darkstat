@@ -47,8 +47,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Greeting: %s", r.Bases[0])
-	if len(r.Bases) > 0 {
+	log.Printf("Greeting: %s", r.Items[0])
+	if len(r.Items) > 0 {
 		fmt.Println("SUCCCCCCESSS")
 	}
 }

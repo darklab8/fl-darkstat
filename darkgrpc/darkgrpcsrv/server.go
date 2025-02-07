@@ -1,7 +1,6 @@
 package darkgrpcsrv
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net"
@@ -20,38 +19,6 @@ type Server struct {
 
 func NewServer(app_data *appdata.AppData) *Server {
 	return &Server{app_data: app_data}
-}
-
-// SayHello implements helloworld.GreeterServer
-func (s *Server) GetBases(_ context.Context, in *pb.Empty) (*pb.GetBasesReply, error) {
-	var bases []*pb.Base
-	for _, base := range s.app_data.Configs.Bases {
-		item := &pb.Base{
-			Name:           base.Name,
-			Archetypes:     base.Archetypes,
-			Nickname:       string(base.Nickname),
-			FactionName:    base.FactionName,
-			System:         base.System,
-			SystemNickname: base.SystemNickname,
-			Region:         base.Region,
-			StridName:      int32(base.StridName),
-			InfocardID:     int32(base.InfocardID),
-			File:           base.File.ToString(),
-			BGCSBaseRunBy:  base.BGCS_base_run_by,
-			Pos: &pb.Pos{
-				X: base.Pos.X,
-				Y: base.Pos.Y,
-				Z: base.Pos.Z,
-			},
-			SectorCoord:            base.SectorCoord,
-			IsTransportUnreachable: base.IsTransportUnreachable,
-			Reachable:              base.Reachable,
-			IsPob:                  base.IsPob,
-		}
-
-		bases = append(bases, item)
-	}
-	return &pb.GetBasesReply{Bases: bases}, nil
 }
 
 const Port = 50051
