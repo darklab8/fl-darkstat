@@ -11,6 +11,9 @@ service DarkGRpc {
 
   rpc GetBases (Empty) returns (GetBasesReply) {}
   rpc GetBasesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
+
+  rpc GetCommodities (Empty) returns (GetCommoditiesReply) {}
+  rpc GetCommoditiesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
 }
 
 // The request message containing the user's name.
@@ -97,4 +100,24 @@ message Pos {
   double X = 1;
   double Y = 2;
   double Z = 3;
+}
+
+message GetCommoditiesReply {
+  repeated Commodity Items = 1;
+}
+
+message Commodity {
+	string Nickname = 1;        
+	int32 PriceBase = 2;                                   
+	string Name     = 3;                         
+	bool Combinable = 4;  
+	double Volume   = 5;                                    
+	int64 ShipClass = 6;         
+	int32 NameID      = 7;                                      
+	int32 InfocardID  = 8; 
+	map<string, MarketGood> Bases  = 9;            
+	int32 PriceBestBaseBuysFor     = 10;                          
+	int32 PriceBestBaseSellsFor    = 11;        
+	int32 ProffitMargin            = 12;                          
+	double Mass    = 13;            
 }

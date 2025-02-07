@@ -42,8 +42,8 @@ func (s *Server) GetBases(_ context.Context, in *pb.Empty) (*pb.GetBasesReply, e
 
 func (s *Server) GetBasesMarketGoods(_ context.Context, in *pb.GetMarketGoodsInput) (*pb.GetMarketGoodsReply, error) {
 	bases_by_nick := make(map[string]*configs_export.Base)
-	for _, base := range s.app_data.Configs.Bases {
-		bases_by_nick[string(base.Nickname)] = base
+	for _, item := range s.app_data.Configs.Bases {
+		bases_by_nick[string(item.Nickname)] = item
 	}
 	var answers []*pb.MarketGoodAnswer
 	for _, nickname := range in.Nicknames {
