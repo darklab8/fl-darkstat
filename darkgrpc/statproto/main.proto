@@ -9,58 +9,23 @@ service DarkGRpc {
   // Sends a greeting
   rpc GetHealth (Empty) returns (HealthReply) {}
 
-  rpc GetBases (Empty) returns (GetBasesReply) {}
-  rpc GetBasesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
-
-  rpc GetCommodities (Empty) returns (GetCommoditiesReply) {}
-  rpc GetCommoditiesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
-
-  rpc GetAmmos (Empty) returns (GetAmmoReply) {}
-  rpc GetAmmosMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
-  rpc GetAmmosTechCompat (GetTechCompatInput) returns (GetTechCompatReply) {}
-
+  rpc GetBases (GetBasesInput) returns (GetBasesReply) {}
+  rpc GetCommodities (GetCommoditiesInput) returns (GetCommoditiesReply) {}
+  rpc GetAmmos (GetAmmoInput) returns (GetAmmoReply) {}
   rpc GetCounterMeasures (Empty) returns (GetCounterMeasuresReply) {}
-  rpc GetCounterMeasuresMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
-  rpc GetCounterMeasuresTechCompat (GetTechCompatInput) returns (GetTechCompatReply) {}
-
   rpc GetEngines (Empty) returns (GetEnginesReply) {}
-  rpc GetEnginesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
-  rpc GetEnginesTechCompat (GetTechCompatInput) returns (GetTechCompatReply) {}
-
   rpc GetFactions (Empty) returns (GetFactionsReply) {}
-
   rpc GetGuns (Empty) returns (GetGunsReply) {}
-  rpc GetGunsMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
-  rpc GetGunsTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
-
   rpc GetMines (Empty) returns (GetMinesReply) {}
-  rpc GetMinesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
-  rpc GetMinesTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
-
   rpc GetScanners (Empty) returns (GetScannersReply) {}
-  rpc GetScannersMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
-  rpc GetScannersTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
-
   rpc GetShields (Empty) returns (GetShieldsReply) {}
-  rpc GetShieldsMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
-  rpc GetShieldsTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
-
   rpc GetShips (Empty) returns (GetShipsReply) {}
-  rpc GetShipsMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
-  rpc GetShipsTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
-
   rpc GetThrusters (Empty) returns (GetThrustersReply) {}
-  rpc GetThrustersMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
-  rpc GetThrustersTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
-
   rpc GetTractors (Empty) returns (GetTractorsReply) {}
-  rpc GetTractorsMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
-  rpc GetTractorsTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
-
   rpc GetHashes (Empty) returns (GetHashesReply);
-
   rpc GetPoBs (Empty) returns (GetPoBsReply);
   rpc GetPoBGoods (Empty) returns (GetPoBGoodsReply);
+  rpc GetPoBBases (Empty) returns (GetPoBBasesReply);
 
   rpc GetGraphPaths (GetGraphPathsInput) returns (GetGraphPathsReply);
 }
@@ -71,24 +36,12 @@ message Empty {
 message HealthReply {
   bool is_healthy = 1;
 }
-message GetMarketGoodsInput {
-  repeated string Nicknames = 1;
+message GetBasesInput {
+  bool IncludeMarketGoods = 1;
 }
-
 message GetBasesReply {
   repeated Base Items = 1;
 }
-
-message GetMarketGoodsReply {
-  repeated MarketGoodAnswer Answers = 1;
-}
-
-message MarketGoodAnswer {
-  repeated MarketGood MarketGoods = 1;
-  optional string Error = 2;
-  string Nickname = 3;
-}
-
 
 // The response message containing the greetings
 message Base {
@@ -108,6 +61,8 @@ message Base {
   bool IsTransportUnreachable = 16; 
   bool Reachable = 18; 
   bool IsPob = 19;
+
+  map<string, MarketGood> MarketGoodsPerNick = 20;
 }
 
 message MiningInfo {
@@ -152,6 +107,9 @@ message Pos {
   double Z = 3;
 }
 
+message GetCommoditiesInput {
+  bool IncludeMarketGoods = 1;
+}
 message GetCommoditiesReply {
   repeated Commodity Items = 1;
 }
@@ -172,6 +130,10 @@ message Commodity {
 	double Mass    = 13;            
 }
 
+message GetAmmoInput {
+  bool IncludeMarketGoods = 1;
+  bool IncludeTechCompat = 2;
+}
 message GetAmmoReply {
   repeated Ammo Items = 1;
 }
@@ -249,7 +211,27 @@ message GetEnginesReply {
   repeated Engine Items = 1;
 }
 message Engine {
+	string Name = 1;
+	int64 Price = 2;
 
+	int64 CruiseSpeed      = 3;
+	int64 CruiseChargeTime = 4;
+	int64 LinearDrag       = 5;
+	int64 MaxForce         = 6;
+	double ReverseFraction = 7;
+	double ImpulseSpeed    = 8;
+
+	string HpType          = 9;
+	string FlameEffect     = 10;
+	string TrailEffect     = 11;
+
+	string Nickname        = 12;
+	int64 NameID           = 13;
+	int64 InfoID           = 14;
+
+	map<string, MarketGood> Bases  = 15;            
+	optional DiscoveryTechCompat DiscoveryTechCompat = 16;
+	double Mass            = 17;
 }
 message GetFactionsReply {
   repeated Faction Items = 1;
@@ -318,5 +300,8 @@ message GetGraphPathsInput {
 
 }
 message GetGraphPathsReply {
+
+}
+message GetPoBBasesReply {
 
 }

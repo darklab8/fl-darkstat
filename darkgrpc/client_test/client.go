@@ -26,7 +26,7 @@ func main() {
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.GetBases(ctx, &pb.Empty{})
+	r, err := c.GetBases(ctx, &pb.GetBasesInput{})
 	fmt.Println(r)
 	fmt.Println("err=", err)
 

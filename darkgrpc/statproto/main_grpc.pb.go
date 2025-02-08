@@ -19,46 +19,25 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	DarkGRpc_GetHealth_FullMethodName                     = "/statproto.DarkGRpc/GetHealth"
-	DarkGRpc_GetBases_FullMethodName                      = "/statproto.DarkGRpc/GetBases"
-	DarkGRpc_GetBasesMarketGoods_FullMethodName           = "/statproto.DarkGRpc/GetBasesMarketGoods"
-	DarkGRpc_GetCommodities_FullMethodName                = "/statproto.DarkGRpc/GetCommodities"
-	DarkGRpc_GetCommoditiesMarketGoods_FullMethodName     = "/statproto.DarkGRpc/GetCommoditiesMarketGoods"
-	DarkGRpc_GetAmmos_FullMethodName                      = "/statproto.DarkGRpc/GetAmmos"
-	DarkGRpc_GetAmmosMarketGoods_FullMethodName           = "/statproto.DarkGRpc/GetAmmosMarketGoods"
-	DarkGRpc_GetAmmosTechCompat_FullMethodName            = "/statproto.DarkGRpc/GetAmmosTechCompat"
-	DarkGRpc_GetCounterMeasures_FullMethodName            = "/statproto.DarkGRpc/GetCounterMeasures"
-	DarkGRpc_GetCounterMeasuresMarketGoods_FullMethodName = "/statproto.DarkGRpc/GetCounterMeasuresMarketGoods"
-	DarkGRpc_GetCounterMeasuresTechCompat_FullMethodName  = "/statproto.DarkGRpc/GetCounterMeasuresTechCompat"
-	DarkGRpc_GetEngines_FullMethodName                    = "/statproto.DarkGRpc/GetEngines"
-	DarkGRpc_GetEnginesMarketGoods_FullMethodName         = "/statproto.DarkGRpc/GetEnginesMarketGoods"
-	DarkGRpc_GetEnginesTechCompat_FullMethodName          = "/statproto.DarkGRpc/GetEnginesTechCompat"
-	DarkGRpc_GetFactions_FullMethodName                   = "/statproto.DarkGRpc/GetFactions"
-	DarkGRpc_GetGuns_FullMethodName                       = "/statproto.DarkGRpc/GetGuns"
-	DarkGRpc_GetGunsMarketGoods_FullMethodName            = "/statproto.DarkGRpc/GetGunsMarketGoods"
-	DarkGRpc_GetGunsTechCompat_FullMethodName             = "/statproto.DarkGRpc/GetGunsTechCompat"
-	DarkGRpc_GetMines_FullMethodName                      = "/statproto.DarkGRpc/GetMines"
-	DarkGRpc_GetMinesMarketGoods_FullMethodName           = "/statproto.DarkGRpc/GetMinesMarketGoods"
-	DarkGRpc_GetMinesTechCompat_FullMethodName            = "/statproto.DarkGRpc/GetMinesTechCompat"
-	DarkGRpc_GetScanners_FullMethodName                   = "/statproto.DarkGRpc/GetScanners"
-	DarkGRpc_GetScannersMarketGoods_FullMethodName        = "/statproto.DarkGRpc/GetScannersMarketGoods"
-	DarkGRpc_GetScannersTechCompat_FullMethodName         = "/statproto.DarkGRpc/GetScannersTechCompat"
-	DarkGRpc_GetShields_FullMethodName                    = "/statproto.DarkGRpc/GetShields"
-	DarkGRpc_GetShieldsMarketGoods_FullMethodName         = "/statproto.DarkGRpc/GetShieldsMarketGoods"
-	DarkGRpc_GetShieldsTechCompat_FullMethodName          = "/statproto.DarkGRpc/GetShieldsTechCompat"
-	DarkGRpc_GetShips_FullMethodName                      = "/statproto.DarkGRpc/GetShips"
-	DarkGRpc_GetShipsMarketGoods_FullMethodName           = "/statproto.DarkGRpc/GetShipsMarketGoods"
-	DarkGRpc_GetShipsTechCompat_FullMethodName            = "/statproto.DarkGRpc/GetShipsTechCompat"
-	DarkGRpc_GetThrusters_FullMethodName                  = "/statproto.DarkGRpc/GetThrusters"
-	DarkGRpc_GetThrustersMarketGoods_FullMethodName       = "/statproto.DarkGRpc/GetThrustersMarketGoods"
-	DarkGRpc_GetThrustersTechCompat_FullMethodName        = "/statproto.DarkGRpc/GetThrustersTechCompat"
-	DarkGRpc_GetTractors_FullMethodName                   = "/statproto.DarkGRpc/GetTractors"
-	DarkGRpc_GetTractorsMarketGoods_FullMethodName        = "/statproto.DarkGRpc/GetTractorsMarketGoods"
-	DarkGRpc_GetTractorsTechCompat_FullMethodName         = "/statproto.DarkGRpc/GetTractorsTechCompat"
-	DarkGRpc_GetHashes_FullMethodName                     = "/statproto.DarkGRpc/GetHashes"
-	DarkGRpc_GetPoBs_FullMethodName                       = "/statproto.DarkGRpc/GetPoBs"
-	DarkGRpc_GetPoBGoods_FullMethodName                   = "/statproto.DarkGRpc/GetPoBGoods"
-	DarkGRpc_GetGraphPaths_FullMethodName                 = "/statproto.DarkGRpc/GetGraphPaths"
+	DarkGRpc_GetHealth_FullMethodName          = "/statproto.DarkGRpc/GetHealth"
+	DarkGRpc_GetBases_FullMethodName           = "/statproto.DarkGRpc/GetBases"
+	DarkGRpc_GetCommodities_FullMethodName     = "/statproto.DarkGRpc/GetCommodities"
+	DarkGRpc_GetAmmos_FullMethodName           = "/statproto.DarkGRpc/GetAmmos"
+	DarkGRpc_GetCounterMeasures_FullMethodName = "/statproto.DarkGRpc/GetCounterMeasures"
+	DarkGRpc_GetEngines_FullMethodName         = "/statproto.DarkGRpc/GetEngines"
+	DarkGRpc_GetFactions_FullMethodName        = "/statproto.DarkGRpc/GetFactions"
+	DarkGRpc_GetGuns_FullMethodName            = "/statproto.DarkGRpc/GetGuns"
+	DarkGRpc_GetMines_FullMethodName           = "/statproto.DarkGRpc/GetMines"
+	DarkGRpc_GetScanners_FullMethodName        = "/statproto.DarkGRpc/GetScanners"
+	DarkGRpc_GetShields_FullMethodName         = "/statproto.DarkGRpc/GetShields"
+	DarkGRpc_GetShips_FullMethodName           = "/statproto.DarkGRpc/GetShips"
+	DarkGRpc_GetThrusters_FullMethodName       = "/statproto.DarkGRpc/GetThrusters"
+	DarkGRpc_GetTractors_FullMethodName        = "/statproto.DarkGRpc/GetTractors"
+	DarkGRpc_GetHashes_FullMethodName          = "/statproto.DarkGRpc/GetHashes"
+	DarkGRpc_GetPoBs_FullMethodName            = "/statproto.DarkGRpc/GetPoBs"
+	DarkGRpc_GetPoBGoods_FullMethodName        = "/statproto.DarkGRpc/GetPoBGoods"
+	DarkGRpc_GetPoBBases_FullMethodName        = "/statproto.DarkGRpc/GetPoBBases"
+	DarkGRpc_GetGraphPaths_FullMethodName      = "/statproto.DarkGRpc/GetGraphPaths"
 )
 
 // DarkGRpcClient is the client API for DarkGRpc service.
@@ -69,44 +48,23 @@ const (
 type DarkGRpcClient interface {
 	// Sends a greeting
 	GetHealth(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HealthReply, error)
-	GetBases(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetBasesReply, error)
-	GetBasesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetCommodities(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCommoditiesReply, error)
-	GetCommoditiesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetAmmos(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAmmoReply, error)
-	GetAmmosMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetAmmosTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
+	GetBases(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
+	GetCommodities(ctx context.Context, in *GetCommoditiesInput, opts ...grpc.CallOption) (*GetCommoditiesReply, error)
+	GetAmmos(ctx context.Context, in *GetAmmoInput, opts ...grpc.CallOption) (*GetAmmoReply, error)
 	GetCounterMeasures(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCounterMeasuresReply, error)
-	GetCounterMeasuresMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetCounterMeasuresTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 	GetEngines(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetEnginesReply, error)
-	GetEnginesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetEnginesTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 	GetFactions(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetFactionsReply, error)
 	GetGuns(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetGunsReply, error)
-	GetGunsMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetGunsTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 	GetMines(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetMinesReply, error)
-	GetMinesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetMinesTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 	GetScanners(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetScannersReply, error)
-	GetScannersMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetScannersTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 	GetShields(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetShieldsReply, error)
-	GetShieldsMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetShieldsTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 	GetShips(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetShipsReply, error)
-	GetShipsMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetShipsTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 	GetThrusters(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetThrustersReply, error)
-	GetThrustersMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetThrustersTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 	GetTractors(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetTractorsReply, error)
-	GetTractorsMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
-	GetTractorsTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 	GetHashes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetHashesReply, error)
 	GetPoBs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBsReply, error)
 	GetPoBGoods(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBGoodsReply, error)
+	GetPoBBases(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBBasesReply, error)
 	GetGraphPaths(ctx context.Context, in *GetGraphPathsInput, opts ...grpc.CallOption) (*GetGraphPathsReply, error)
 }
 
@@ -128,7 +86,7 @@ func (c *darkGRpcClient) GetHealth(ctx context.Context, in *Empty, opts ...grpc.
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetBases(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetBasesReply, error) {
+func (c *darkGRpcClient) GetBases(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetBasesReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetBases_FullMethodName, in, out, cOpts...)
@@ -138,17 +96,7 @@ func (c *darkGRpcClient) GetBases(ctx context.Context, in *Empty, opts ...grpc.C
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetBasesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetBasesMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetCommodities(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCommoditiesReply, error) {
+func (c *darkGRpcClient) GetCommodities(ctx context.Context, in *GetCommoditiesInput, opts ...grpc.CallOption) (*GetCommoditiesReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCommoditiesReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetCommodities_FullMethodName, in, out, cOpts...)
@@ -158,40 +106,10 @@ func (c *darkGRpcClient) GetCommodities(ctx context.Context, in *Empty, opts ...
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetCommoditiesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetCommoditiesMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetAmmos(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAmmoReply, error) {
+func (c *darkGRpcClient) GetAmmos(ctx context.Context, in *GetAmmoInput, opts ...grpc.CallOption) (*GetAmmoReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetAmmoReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetAmmos_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetAmmosMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetAmmosMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetAmmosTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetAmmosTechCompat_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -208,50 +126,10 @@ func (c *darkGRpcClient) GetCounterMeasures(ctx context.Context, in *Empty, opts
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetCounterMeasuresMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetCounterMeasuresMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetCounterMeasuresTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetCounterMeasuresTechCompat_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *darkGRpcClient) GetEngines(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetEnginesReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetEnginesReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetEngines_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetEnginesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetEnginesMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetEnginesTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetEnginesTechCompat_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -278,50 +156,10 @@ func (c *darkGRpcClient) GetGuns(ctx context.Context, in *Empty, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetGunsMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetGunsMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetGunsTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetGunsTechCompat_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *darkGRpcClient) GetMines(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetMinesReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetMinesReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetMines_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetMinesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetMinesMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetMinesTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetMinesTechCompat_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -338,50 +176,10 @@ func (c *darkGRpcClient) GetScanners(ctx context.Context, in *Empty, opts ...grp
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetScannersMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetScannersMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetScannersTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetScannersTechCompat_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *darkGRpcClient) GetShields(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetShieldsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetShieldsReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetShields_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetShieldsMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetShieldsMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetShieldsTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetShieldsTechCompat_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -398,26 +196,6 @@ func (c *darkGRpcClient) GetShips(ctx context.Context, in *Empty, opts ...grpc.C
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetShipsMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetShipsMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetShipsTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetShipsTechCompat_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *darkGRpcClient) GetThrusters(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetThrustersReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetThrustersReply)
@@ -428,50 +206,10 @@ func (c *darkGRpcClient) GetThrusters(ctx context.Context, in *Empty, opts ...gr
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetThrustersMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetThrustersMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetThrustersTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetThrustersTechCompat_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *darkGRpcClient) GetTractors(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetTractorsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTractorsReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetTractors_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetTractorsMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMarketGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetTractorsMarketGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetTractorsTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTechCompatReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetTractorsTechCompat_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -508,6 +246,16 @@ func (c *darkGRpcClient) GetPoBGoods(ctx context.Context, in *Empty, opts ...grp
 	return out, nil
 }
 
+func (c *darkGRpcClient) GetPoBBases(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBBasesReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPoBBasesReply)
+	err := c.cc.Invoke(ctx, DarkGRpc_GetPoBBases_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *darkGRpcClient) GetGraphPaths(ctx context.Context, in *GetGraphPathsInput, opts ...grpc.CallOption) (*GetGraphPathsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetGraphPathsReply)
@@ -526,44 +274,23 @@ func (c *darkGRpcClient) GetGraphPaths(ctx context.Context, in *GetGraphPathsInp
 type DarkGRpcServer interface {
 	// Sends a greeting
 	GetHealth(context.Context, *Empty) (*HealthReply, error)
-	GetBases(context.Context, *Empty) (*GetBasesReply, error)
-	GetBasesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetCommodities(context.Context, *Empty) (*GetCommoditiesReply, error)
-	GetCommoditiesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetAmmos(context.Context, *Empty) (*GetAmmoReply, error)
-	GetAmmosMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetAmmosTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
+	GetBases(context.Context, *GetBasesInput) (*GetBasesReply, error)
+	GetCommodities(context.Context, *GetCommoditiesInput) (*GetCommoditiesReply, error)
+	GetAmmos(context.Context, *GetAmmoInput) (*GetAmmoReply, error)
 	GetCounterMeasures(context.Context, *Empty) (*GetCounterMeasuresReply, error)
-	GetCounterMeasuresMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetCounterMeasuresTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	GetEngines(context.Context, *Empty) (*GetEnginesReply, error)
-	GetEnginesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetEnginesTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	GetFactions(context.Context, *Empty) (*GetFactionsReply, error)
 	GetGuns(context.Context, *Empty) (*GetGunsReply, error)
-	GetGunsMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetGunsTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	GetMines(context.Context, *Empty) (*GetMinesReply, error)
-	GetMinesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetMinesTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	GetScanners(context.Context, *Empty) (*GetScannersReply, error)
-	GetScannersMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetScannersTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	GetShields(context.Context, *Empty) (*GetShieldsReply, error)
-	GetShieldsMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetShieldsTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	GetShips(context.Context, *Empty) (*GetShipsReply, error)
-	GetShipsMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetShipsTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	GetThrusters(context.Context, *Empty) (*GetThrustersReply, error)
-	GetThrustersMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetThrustersTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	GetTractors(context.Context, *Empty) (*GetTractorsReply, error)
-	GetTractorsMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
-	GetTractorsTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	GetHashes(context.Context, *Empty) (*GetHashesReply, error)
 	GetPoBs(context.Context, *Empty) (*GetPoBsReply, error)
 	GetPoBGoods(context.Context, *Empty) (*GetPoBGoodsReply, error)
+	GetPoBBases(context.Context, *Empty) (*GetPoBBasesReply, error)
 	GetGraphPaths(context.Context, *GetGraphPathsInput) (*GetGraphPathsReply, error)
 	mustEmbedUnimplementedDarkGRpcServer()
 }
@@ -578,44 +305,20 @@ type UnimplementedDarkGRpcServer struct{}
 func (UnimplementedDarkGRpcServer) GetHealth(context.Context, *Empty) (*HealthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetHealth not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetBases(context.Context, *Empty) (*GetBasesReply, error) {
+func (UnimplementedDarkGRpcServer) GetBases(context.Context, *GetBasesInput) (*GetBasesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBases not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetBasesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBasesMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetCommodities(context.Context, *Empty) (*GetCommoditiesReply, error) {
+func (UnimplementedDarkGRpcServer) GetCommodities(context.Context, *GetCommoditiesInput) (*GetCommoditiesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommodities not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetCommoditiesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCommoditiesMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetAmmos(context.Context, *Empty) (*GetAmmoReply, error) {
+func (UnimplementedDarkGRpcServer) GetAmmos(context.Context, *GetAmmoInput) (*GetAmmoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAmmos not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetAmmosMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAmmosMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetAmmosTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAmmosTechCompat not implemented")
 }
 func (UnimplementedDarkGRpcServer) GetCounterMeasures(context.Context, *Empty) (*GetCounterMeasuresReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCounterMeasures not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetCounterMeasuresMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCounterMeasuresMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetCounterMeasuresTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCounterMeasuresTechCompat not implemented")
-}
 func (UnimplementedDarkGRpcServer) GetEngines(context.Context, *Empty) (*GetEnginesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEngines not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetEnginesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetEnginesMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetEnginesTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetEnginesTechCompat not implemented")
 }
 func (UnimplementedDarkGRpcServer) GetFactions(context.Context, *Empty) (*GetFactionsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFactions not implemented")
@@ -623,65 +326,23 @@ func (UnimplementedDarkGRpcServer) GetFactions(context.Context, *Empty) (*GetFac
 func (UnimplementedDarkGRpcServer) GetGuns(context.Context, *Empty) (*GetGunsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGuns not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetGunsMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetGunsMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetGunsTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetGunsTechCompat not implemented")
-}
 func (UnimplementedDarkGRpcServer) GetMines(context.Context, *Empty) (*GetMinesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMines not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetMinesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMinesMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetMinesTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMinesTechCompat not implemented")
 }
 func (UnimplementedDarkGRpcServer) GetScanners(context.Context, *Empty) (*GetScannersReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetScanners not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetScannersMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetScannersMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetScannersTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetScannersTechCompat not implemented")
-}
 func (UnimplementedDarkGRpcServer) GetShields(context.Context, *Empty) (*GetShieldsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetShields not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetShieldsMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetShieldsMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetShieldsTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetShieldsTechCompat not implemented")
 }
 func (UnimplementedDarkGRpcServer) GetShips(context.Context, *Empty) (*GetShipsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetShips not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetShipsMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetShipsMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetShipsTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetShipsTechCompat not implemented")
-}
 func (UnimplementedDarkGRpcServer) GetThrusters(context.Context, *Empty) (*GetThrustersReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetThrusters not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetThrustersMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetThrustersMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetThrustersTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetThrustersTechCompat not implemented")
-}
 func (UnimplementedDarkGRpcServer) GetTractors(context.Context, *Empty) (*GetTractorsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTractors not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetTractorsMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTractorsMarketGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetTractorsTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTractorsTechCompat not implemented")
 }
 func (UnimplementedDarkGRpcServer) GetHashes(context.Context, *Empty) (*GetHashesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetHashes not implemented")
@@ -691,6 +352,9 @@ func (UnimplementedDarkGRpcServer) GetPoBs(context.Context, *Empty) (*GetPoBsRep
 }
 func (UnimplementedDarkGRpcServer) GetPoBGoods(context.Context, *Empty) (*GetPoBGoodsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPoBGoods not implemented")
+}
+func (UnimplementedDarkGRpcServer) GetPoBBases(context.Context, *Empty) (*GetPoBBasesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPoBBases not implemented")
 }
 func (UnimplementedDarkGRpcServer) GetGraphPaths(context.Context, *GetGraphPathsInput) (*GetGraphPathsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGraphPaths not implemented")
@@ -735,7 +399,7 @@ func _DarkGRpc_GetHealth_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _DarkGRpc_GetBases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetBasesInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -747,31 +411,13 @@ func _DarkGRpc_GetBases_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: DarkGRpc_GetBases_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetBases(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetBasesMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetBasesMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetBasesMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetBasesMarketGoods(ctx, req.(*GetMarketGoodsInput))
+		return srv.(DarkGRpcServer).GetBases(ctx, req.(*GetBasesInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DarkGRpc_GetCommodities_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetCommoditiesInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -783,31 +429,13 @@ func _DarkGRpc_GetCommodities_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: DarkGRpc_GetCommodities_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetCommodities(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetCommoditiesMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetCommoditiesMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetCommoditiesMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetCommoditiesMarketGoods(ctx, req.(*GetMarketGoodsInput))
+		return srv.(DarkGRpcServer).GetCommodities(ctx, req.(*GetCommoditiesInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DarkGRpc_GetAmmos_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetAmmoInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -819,43 +447,7 @@ func _DarkGRpc_GetAmmos_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: DarkGRpc_GetAmmos_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetAmmos(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetAmmosMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetAmmosMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetAmmosMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetAmmosMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetAmmosTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetAmmosTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetAmmosTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetAmmosTechCompat(ctx, req.(*GetTechCompatInput))
+		return srv.(DarkGRpcServer).GetAmmos(ctx, req.(*GetAmmoInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -878,42 +470,6 @@ func _DarkGRpc_GetCounterMeasures_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DarkGRpc_GetCounterMeasuresMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetCounterMeasuresMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetCounterMeasuresMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetCounterMeasuresMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetCounterMeasuresTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetCounterMeasuresTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetCounterMeasuresTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetCounterMeasuresTechCompat(ctx, req.(*GetTechCompatInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _DarkGRpc_GetEngines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
@@ -928,42 +484,6 @@ func _DarkGRpc_GetEngines_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DarkGRpcServer).GetEngines(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetEnginesMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetEnginesMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetEnginesMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetEnginesMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetEnginesTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetEnginesTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetEnginesTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetEnginesTechCompat(ctx, req.(*GetTechCompatInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1004,42 +524,6 @@ func _DarkGRpc_GetGuns_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DarkGRpc_GetGunsMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetGunsMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetGunsMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetGunsMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetGunsTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetGunsTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetGunsTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetGunsTechCompat(ctx, req.(*GetTechCompatInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _DarkGRpc_GetMines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
@@ -1054,42 +538,6 @@ func _DarkGRpc_GetMines_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DarkGRpcServer).GetMines(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetMinesMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetMinesMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetMinesMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetMinesMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetMinesTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetMinesTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetMinesTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetMinesTechCompat(ctx, req.(*GetTechCompatInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1112,42 +560,6 @@ func _DarkGRpc_GetScanners_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DarkGRpc_GetScannersMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetScannersMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetScannersMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetScannersMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetScannersTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetScannersTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetScannersTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetScannersTechCompat(ctx, req.(*GetTechCompatInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _DarkGRpc_GetShields_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
@@ -1162,42 +574,6 @@ func _DarkGRpc_GetShields_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DarkGRpcServer).GetShields(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetShieldsMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetShieldsMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetShieldsMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetShieldsMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetShieldsTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetShieldsTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetShieldsTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetShieldsTechCompat(ctx, req.(*GetTechCompatInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1220,42 +596,6 @@ func _DarkGRpc_GetShips_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DarkGRpc_GetShipsMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetShipsMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetShipsMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetShipsMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetShipsTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetShipsTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetShipsTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetShipsTechCompat(ctx, req.(*GetTechCompatInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _DarkGRpc_GetThrusters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
@@ -1274,42 +614,6 @@ func _DarkGRpc_GetThrusters_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DarkGRpc_GetThrustersMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetThrustersMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetThrustersMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetThrustersMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetThrustersTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetThrustersTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetThrustersTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetThrustersTechCompat(ctx, req.(*GetTechCompatInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _DarkGRpc_GetTractors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
@@ -1324,42 +628,6 @@ func _DarkGRpc_GetTractors_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DarkGRpcServer).GetTractors(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetTractorsMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMarketGoodsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetTractorsMarketGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetTractorsMarketGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetTractorsMarketGoods(ctx, req.(*GetMarketGoodsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetTractorsTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTechCompatInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetTractorsTechCompat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetTractorsTechCompat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetTractorsTechCompat(ctx, req.(*GetTechCompatInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1418,6 +686,24 @@ func _DarkGRpc_GetPoBGoods_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DarkGRpc_GetPoBBases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkGRpcServer).GetPoBBases(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DarkGRpc_GetPoBBases_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkGRpcServer).GetPoBBases(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _DarkGRpc_GetGraphPaths_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetGraphPathsInput)
 	if err := dec(in); err != nil {
@@ -1452,52 +738,20 @@ var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DarkGRpc_GetBases_Handler,
 		},
 		{
-			MethodName: "GetBasesMarketGoods",
-			Handler:    _DarkGRpc_GetBasesMarketGoods_Handler,
-		},
-		{
 			MethodName: "GetCommodities",
 			Handler:    _DarkGRpc_GetCommodities_Handler,
-		},
-		{
-			MethodName: "GetCommoditiesMarketGoods",
-			Handler:    _DarkGRpc_GetCommoditiesMarketGoods_Handler,
 		},
 		{
 			MethodName: "GetAmmos",
 			Handler:    _DarkGRpc_GetAmmos_Handler,
 		},
 		{
-			MethodName: "GetAmmosMarketGoods",
-			Handler:    _DarkGRpc_GetAmmosMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetAmmosTechCompat",
-			Handler:    _DarkGRpc_GetAmmosTechCompat_Handler,
-		},
-		{
 			MethodName: "GetCounterMeasures",
 			Handler:    _DarkGRpc_GetCounterMeasures_Handler,
 		},
 		{
-			MethodName: "GetCounterMeasuresMarketGoods",
-			Handler:    _DarkGRpc_GetCounterMeasuresMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetCounterMeasuresTechCompat",
-			Handler:    _DarkGRpc_GetCounterMeasuresTechCompat_Handler,
-		},
-		{
 			MethodName: "GetEngines",
 			Handler:    _DarkGRpc_GetEngines_Handler,
-		},
-		{
-			MethodName: "GetEnginesMarketGoods",
-			Handler:    _DarkGRpc_GetEnginesMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetEnginesTechCompat",
-			Handler:    _DarkGRpc_GetEnginesTechCompat_Handler,
 		},
 		{
 			MethodName: "GetFactions",
@@ -1508,84 +762,28 @@ var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DarkGRpc_GetGuns_Handler,
 		},
 		{
-			MethodName: "GetGunsMarketGoods",
-			Handler:    _DarkGRpc_GetGunsMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetGunsTechCompat",
-			Handler:    _DarkGRpc_GetGunsTechCompat_Handler,
-		},
-		{
 			MethodName: "GetMines",
 			Handler:    _DarkGRpc_GetMines_Handler,
-		},
-		{
-			MethodName: "GetMinesMarketGoods",
-			Handler:    _DarkGRpc_GetMinesMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetMinesTechCompat",
-			Handler:    _DarkGRpc_GetMinesTechCompat_Handler,
 		},
 		{
 			MethodName: "GetScanners",
 			Handler:    _DarkGRpc_GetScanners_Handler,
 		},
 		{
-			MethodName: "GetScannersMarketGoods",
-			Handler:    _DarkGRpc_GetScannersMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetScannersTechCompat",
-			Handler:    _DarkGRpc_GetScannersTechCompat_Handler,
-		},
-		{
 			MethodName: "GetShields",
 			Handler:    _DarkGRpc_GetShields_Handler,
-		},
-		{
-			MethodName: "GetShieldsMarketGoods",
-			Handler:    _DarkGRpc_GetShieldsMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetShieldsTechCompat",
-			Handler:    _DarkGRpc_GetShieldsTechCompat_Handler,
 		},
 		{
 			MethodName: "GetShips",
 			Handler:    _DarkGRpc_GetShips_Handler,
 		},
 		{
-			MethodName: "GetShipsMarketGoods",
-			Handler:    _DarkGRpc_GetShipsMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetShipsTechCompat",
-			Handler:    _DarkGRpc_GetShipsTechCompat_Handler,
-		},
-		{
 			MethodName: "GetThrusters",
 			Handler:    _DarkGRpc_GetThrusters_Handler,
 		},
 		{
-			MethodName: "GetThrustersMarketGoods",
-			Handler:    _DarkGRpc_GetThrustersMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetThrustersTechCompat",
-			Handler:    _DarkGRpc_GetThrustersTechCompat_Handler,
-		},
-		{
 			MethodName: "GetTractors",
 			Handler:    _DarkGRpc_GetTractors_Handler,
-		},
-		{
-			MethodName: "GetTractorsMarketGoods",
-			Handler:    _DarkGRpc_GetTractorsMarketGoods_Handler,
-		},
-		{
-			MethodName: "GetTractorsTechCompat",
-			Handler:    _DarkGRpc_GetTractorsTechCompat_Handler,
 		},
 		{
 			MethodName: "GetHashes",
@@ -1598,6 +796,10 @@ var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPoBGoods",
 			Handler:    _DarkGRpc_GetPoBGoods_Handler,
+		},
+		{
+			MethodName: "GetPoBBases",
+			Handler:    _DarkGRpc_GetPoBBases_Handler,
 		},
 		{
 			MethodName: "GetGraphPaths",

@@ -37,11 +37,3 @@ func (s *Server) GetCounterMeasures(_ context.Context, in *pb.Empty) (*pb.GetCou
 	}
 	return &pb.GetCounterMeasuresReply{Items: items}, nil
 }
-
-func (s *Server) GetCounterMeasuresMarketGoods(_ context.Context, in *pb.GetMarketGoodsInput) (*pb.GetMarketGoodsReply, error) {
-	return GetMarketGoods(s.app_data.Configs.CMs, in)
-}
-
-func (s *Server) GetCounterMeasuresTechCompat(_ context.Context, in *pb.GetTechCompatInput) (*pb.GetTechCompatReply, error) {
-	return GetTechCompat(s.app_data.Configs.CMs, in)
-}

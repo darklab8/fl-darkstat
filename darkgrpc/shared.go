@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"github.com/darklab8/go-utils/utils/ptr"
 )
 
 func NewInt64(value *int) *int64 {
@@ -62,26 +61,6 @@ type Marketable interface {
 	GetBases() map[cfg.BaseUniNick]*configs_export.MarketGood
 }
 
-func GetMarketGoods[T Marketable](items []T, in *pb.GetMarketGoodsInput) (*pb.GetMarketGoodsReply, error) {
-	items_by_nick := make(map[string]T)
-	for _, item := range items {
-		items_by_nick[string(item.GetNickname())] = item
-	}
-	var answers []*pb.MarketGoodAnswer
-	for _, nickname := range in.Nicknames {
-		answer := &pb.MarketGoodAnswer{Nickname: string(nickname)}
-		if base, ok := items_by_nick[nickname]; ok {
-			for _, good := range base.GetBases() {
-				answer.MarketGoods = append(answer.MarketGoods, NewMarketGood(good))
-			}
-		} else {
-			answer.Error = ptr.Ptr("not existing base")
-		}
-		answers = append(answers, answer)
-	}
-	return &pb.GetMarketGoodsReply{Answers: answers}, nil
-}
-
 func NewBases(Bases map[cfg.BaseUniNick]*configs_export.MarketGood) map[string]*pb.MarketGood {
 	result := make(map[string]*pb.MarketGood)
 	for key, item := range Bases {
@@ -93,27 +72,6 @@ func NewBases(Bases map[cfg.BaseUniNick]*configs_export.MarketGood) map[string]*
 type TechCompatable interface {
 	Nicknamable
 	GetDiscoveryTechCompat() *configs_export.DiscoveryTechCompat
-}
-
-func GetTechCompat[T TechCompatable](items []T, in *pb.GetTechCompatInput) (*pb.GetTechCompatReply, error) {
-	items_by_nick := make(map[string]T)
-	for _, item := range items {
-		items_by_nick[string(item.GetNickname())] = item
-	}
-	var answers []*pb.TechCompatAnswer
-
-	for _, nickname := range in.Nicknames {
-
-		answer := &pb.TechCompatAnswer{Nickname: string(nickname)}
-		if item, ok := items_by_nick[nickname]; ok {
-			answer.TechCompat = NewTechCompat(item.GetDiscoveryTechCompat())
-		} else {
-			answer.Error = ptr.Ptr("not existing nickname")
-		}
-		answers = append(answers, answer)
-
-	}
-	return &pb.GetTechCompatReply{Answers: answers}, nil
 }
 
 func NewTechCompat(tech_compat *configs_export.DiscoveryTechCompat) *pb.DiscoveryTechCompat {

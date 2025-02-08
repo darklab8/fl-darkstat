@@ -6,15 +6,14 @@ import (
 	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
 )
 
-func (s *Server) GetCommodities(_ context.Context, in *pb.Empty) (*pb.GetCommoditiesReply, error) {
+func (s *Server) GetCommodities(_ context.Context, in *pb.GetCommoditiesInput) (*pb.GetCommoditiesReply, error) {
 	if s.app_data != nil {
 		s.app_data.Lock()
 		defer s.app_data.Unlock()
 	}
-
 	var items []*pb.Commodity
 	for _, item := range s.app_data.Configs.Commodities {
-		item := &pb.Commodity{
+		result := &pb.Commodity{
 			Nickname:              item.Nickname,
 			PriceBase:             int64(item.PriceBase),
 			Name:                  item.Name,
@@ -23,18 +22,15 @@ func (s *Server) GetCommodities(_ context.Context, in *pb.Empty) (*pb.GetCommodi
 			ShipClass:             int64(item.ShipClass),
 			NameID:                int64(item.NameID),
 			InfocardID:            int64(item.InfocardID),
-			Bases:                 NewBases(item.Bases),
 			PriceBestBaseBuysFor:  int64(item.PriceBestBaseBuysFor),
 			PriceBestBaseSellsFor: int64(item.PriceBestBaseSellsFor),
 			ProffitMargin:         int64(item.ProffitMargin),
 			Mass:                  item.Mass,
 		}
-
-		items = append(items, item)
+		if in.IncludeMarketGoods {
+			result.Bases = NewBases(item.Bases)
+		}
+		items = append(items, result)
 	}
 	return &pb.GetCommoditiesReply{Items: items}, nil
-}
-
-func (s *Server) GetCommoditiesMarketGoods(_ context.Context, in *pb.GetMarketGoodsInput) (*pb.GetMarketGoodsReply, error) {
-	return GetMarketGoods(s.app_data.Configs.Commodities, in)
 }
