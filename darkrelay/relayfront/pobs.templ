@@ -64,7 +64,7 @@ templ PoBTableHeaders() {
 	<th style="max-width:100%;"></th>
 }
 
-templ PobTableRow(pob *configs_export.PoBWithoutGoods) {
+templ PobTableRow(pob *configs_export.PoBCore) {
 	<td> { FmtPtrInt(pob.CargoSpaceLeft)} </td>
 	<td>
 		if pob.ForumThreadUrl != nil {
@@ -116,7 +116,7 @@ templ PobTable(pobs []*configs_export.PoB, pinm tab.PinMod, shared *types.Shared
 					@tab.PinSelectLeftRight(pinm, PoBDetailedUrl(pob))
 					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					<td> { strconv.Itoa(len(pob.ShopItems)) } </td>
-					@PobTableRow(&pob.PoBWithoutGoods)
+					@PobTableRow(&pob.PoBCore)
 					@tab.TdInfoCardClick(configs_export.InfocardKey(pob.Nickname), pob.Nickname, pinm, shared, tab.InfocardClickOpts{IsRelayHosted: true})
 				}
 			}
