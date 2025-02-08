@@ -24,6 +24,9 @@ const (
 	DarkGRpc_GetBasesMarketGoods_FullMethodName       = "/statproto.DarkGRpc/GetBasesMarketGoods"
 	DarkGRpc_GetCommodities_FullMethodName            = "/statproto.DarkGRpc/GetCommodities"
 	DarkGRpc_GetCommoditiesMarketGoods_FullMethodName = "/statproto.DarkGRpc/GetCommoditiesMarketGoods"
+	DarkGRpc_GetAmmos_FullMethodName                  = "/statproto.DarkGRpc/GetAmmos"
+	DarkGRpc_GetAmmosMarketGoods_FullMethodName       = "/statproto.DarkGRpc/GetAmmosMarketGoods"
+	DarkGRpc_GetAmmosTechCompat_FullMethodName        = "/statproto.DarkGRpc/GetAmmosTechCompat"
 )
 
 // DarkGRpcClient is the client API for DarkGRpc service.
@@ -38,6 +41,9 @@ type DarkGRpcClient interface {
 	GetBasesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
 	GetCommodities(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCommoditiesReply, error)
 	GetCommoditiesMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
+	GetAmmos(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAmmoReply, error)
+	GetAmmosMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error)
+	GetAmmosTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error)
 }
 
 type darkGRpcClient struct {
@@ -98,6 +104,36 @@ func (c *darkGRpcClient) GetCommoditiesMarketGoods(ctx context.Context, in *GetM
 	return out, nil
 }
 
+func (c *darkGRpcClient) GetAmmos(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAmmoReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAmmoReply)
+	err := c.cc.Invoke(ctx, DarkGRpc_GetAmmos_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *darkGRpcClient) GetAmmosMarketGoods(ctx context.Context, in *GetMarketGoodsInput, opts ...grpc.CallOption) (*GetMarketGoodsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMarketGoodsReply)
+	err := c.cc.Invoke(ctx, DarkGRpc_GetAmmosMarketGoods_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *darkGRpcClient) GetAmmosTechCompat(ctx context.Context, in *GetTechCompatInput, opts ...grpc.CallOption) (*GetTechCompatReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTechCompatReply)
+	err := c.cc.Invoke(ctx, DarkGRpc_GetAmmosTechCompat_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DarkGRpcServer is the server API for DarkGRpc service.
 // All implementations must embed UnimplementedDarkGRpcServer
 // for forward compatibility.
@@ -110,6 +146,9 @@ type DarkGRpcServer interface {
 	GetBasesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
 	GetCommodities(context.Context, *Empty) (*GetCommoditiesReply, error)
 	GetCommoditiesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
+	GetAmmos(context.Context, *Empty) (*GetAmmoReply, error)
+	GetAmmosMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error)
+	GetAmmosTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error)
 	mustEmbedUnimplementedDarkGRpcServer()
 }
 
@@ -134,6 +173,15 @@ func (UnimplementedDarkGRpcServer) GetCommodities(context.Context, *Empty) (*Get
 }
 func (UnimplementedDarkGRpcServer) GetCommoditiesMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommoditiesMarketGoods not implemented")
+}
+func (UnimplementedDarkGRpcServer) GetAmmos(context.Context, *Empty) (*GetAmmoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAmmos not implemented")
+}
+func (UnimplementedDarkGRpcServer) GetAmmosMarketGoods(context.Context, *GetMarketGoodsInput) (*GetMarketGoodsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAmmosMarketGoods not implemented")
+}
+func (UnimplementedDarkGRpcServer) GetAmmosTechCompat(context.Context, *GetTechCompatInput) (*GetTechCompatReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAmmosTechCompat not implemented")
 }
 func (UnimplementedDarkGRpcServer) mustEmbedUnimplementedDarkGRpcServer() {}
 func (UnimplementedDarkGRpcServer) testEmbeddedByValue()                  {}
@@ -246,6 +294,60 @@ func _DarkGRpc_GetCommoditiesMarketGoods_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DarkGRpc_GetAmmos_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkGRpcServer).GetAmmos(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DarkGRpc_GetAmmos_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkGRpcServer).GetAmmos(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DarkGRpc_GetAmmosMarketGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMarketGoodsInput)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkGRpcServer).GetAmmosMarketGoods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DarkGRpc_GetAmmosMarketGoods_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkGRpcServer).GetAmmosMarketGoods(ctx, req.(*GetMarketGoodsInput))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DarkGRpc_GetAmmosTechCompat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTechCompatInput)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkGRpcServer).GetAmmosTechCompat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DarkGRpc_GetAmmosTechCompat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkGRpcServer).GetAmmosTechCompat(ctx, req.(*GetTechCompatInput))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DarkGRpc_ServiceDesc is the grpc.ServiceDesc for DarkGRpc service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -272,6 +374,18 @@ var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCommoditiesMarketGoods",
 			Handler:    _DarkGRpc_GetCommoditiesMarketGoods_Handler,
+		},
+		{
+			MethodName: "GetAmmos",
+			Handler:    _DarkGRpc_GetAmmos_Handler,
+		},
+		{
+			MethodName: "GetAmmosMarketGoods",
+			Handler:    _DarkGRpc_GetAmmosMarketGoods_Handler,
+		},
+		{
+			MethodName: "GetAmmosTechCompat",
+			Handler:    _DarkGRpc_GetAmmosTechCompat_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

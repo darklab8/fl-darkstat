@@ -89,3 +89,44 @@ func NewBases(Bases map[cfg.BaseUniNick]*configs_export.MarketGood) map[string]*
 	}
 	return result
 }
+
+type TechCompatable interface {
+	Nicknamable
+	GetDiscoveryTechCompat() *configs_export.DiscoveryTechCompat
+}
+
+func GetTechCompat[T TechCompatable](items []T, in *pb.GetTechCompatInput) (*pb.GetTechCompatReply, error) {
+	items_by_nick := make(map[string]T)
+	for _, item := range items {
+		items_by_nick[string(item.GetNickname())] = item
+	}
+	var answers []*pb.TechCompatAnswer
+
+	for _, nickname := range in.Nicknames {
+
+		answer := &pb.TechCompatAnswer{Nickname: string(nickname)}
+		if item, ok := items_by_nick[nickname]; ok {
+			answer.TechCompat = NewTechCompat(item.GetDiscoveryTechCompat())
+		} else {
+			answer.Error = ptr.Ptr("not existing nickname")
+		}
+		answers = append(answers, answer)
+
+	}
+	return &pb.GetTechCompatReply{Answers: answers}, nil
+}
+
+func NewTechCompat(tech_compat *configs_export.DiscoveryTechCompat) *pb.DiscoveryTechCompat {
+	if tech_compat == nil {
+		return nil
+	}
+
+	answer := &pb.DiscoveryTechCompat{
+		TechcompatByID: make(map[string]float64),
+		TechCell:       tech_compat.TechCell,
+	}
+	for key, value := range tech_compat.TechcompatByID {
+		answer.TechcompatByID[string(key)] = value
+	}
+	return answer
+}

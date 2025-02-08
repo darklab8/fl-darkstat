@@ -14,6 +14,25 @@ service DarkGRpc {
 
   rpc GetCommodities (Empty) returns (GetCommoditiesReply) {}
   rpc GetCommoditiesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
+
+  rpc GetAmmos (Empty) returns (GetAmmoReply) {}
+  rpc GetAmmosMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
+  rpc GetAmmosTechCompat (GetTechCompatInput) returns (GetTechCompatReply) {}
+
+  // Cms
+  // Engines
+  // Factions
+  // Graph
+  // Guns
+  // Mines
+  // Hashes
+  // Mines
+  // Pobs
+  // Scanners
+  // Shields
+  // Ships
+  // Thrusters
+  // Tractors
 }
 
 // The request message containing the user's name.
@@ -33,6 +52,7 @@ message GetBasesReply {
 message GetMarketGoodsReply {
   repeated MarketGoodAnswer Answers = 1;
 }
+
 message MarketGoodAnswer {
   repeated MarketGood MarketGoods = 1;
   optional string Error = 2;
@@ -120,4 +140,51 @@ message Commodity {
 	int32 PriceBestBaseSellsFor    = 11;        
 	int32 ProffitMargin            = 12;                          
 	double Mass    = 13;            
+}
+
+message GetAmmoReply {
+  repeated Ammo Items = 1;
+}
+
+message Ammo {
+	string Name  = 1;
+	int32 Price  = 2;
+
+	int32 HitPts  = 3;
+	double Volume = 4;
+	double MunitionLifetime = 5;
+
+	string Nickname = 6;
+	int32 NameID    = 7;
+	int32 InfoID    = 8;
+	string SeekerType  = 9;
+	int32 SeekerRange  = 10;
+	int32 SeekerFovDeg = 11;
+
+	map<string, MarketGood> Bases  = 12;            
+
+	optional DiscoveryTechCompat DiscoveryTechCompat = 13;
+
+  optional int32 AmountInCatridge = 14;
+  optional int32 MaxCatridges     = 15;
+  double Mass    = 16;
+}
+
+message DiscoveryTechCompat {
+  map<string, double> TechcompatByID = 1;
+  string TechCell = 2;
+}
+
+message TechCompatAnswer {
+  optional DiscoveryTechCompat TechCompat = 1;
+  optional string Error = 2;
+  string Nickname = 3;
+}
+
+message GetTechCompatInput {
+  repeated string Nicknames = 1;
+}
+
+message GetTechCompatReply {
+  repeated TechCompatAnswer Answers = 1;
 }
