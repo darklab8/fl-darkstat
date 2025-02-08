@@ -43,25 +43,25 @@ func TestRpc(t *testing.T) {
 	})
 
 	t.Run("GetCommodities", func(t *testing.T) {
-		res, err := c.GetCommodities(context.Background(), &statproto.GetCommoditiesInput{}, maxSizeOption)
+		res, err := c.GetCommodities(context.Background(), &statproto.GetCommoditiesInput{IncludeMarketGoods: true}, maxSizeOption)
 		logus.Log.CheckPanic(err, "error making rpc call to get commoditieis: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 	})
 
 	t.Run("GetAmmos", func(t *testing.T) {
-		res, err := c.GetAmmos(context.Background(), &statproto.GetAmmoInput{}, maxSizeOption)
+		res, err := c.GetAmmos(context.Background(), &statproto.GetEquipmentInput{}, maxSizeOption)
 		logus.Log.CheckPanic(err, "error making rpc call to get ammos: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 	})
 
 	t.Run("GetCounterMeasures", func(t *testing.T) {
-		res, err := c.GetCounterMeasures(context.Background(), &statproto.Empty{}, maxSizeOption)
+		res, err := c.GetCounterMeasures(context.Background(), &statproto.GetEquipmentInput{}, maxSizeOption)
 		logus.Log.CheckPanic(err, "error making rpc call to get cms: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 	})
 
 	t.Run("GetEngines", func(t *testing.T) {
-		res, err := c.GetEngines(context.Background(), &statproto.Empty{}, maxSizeOption)
+		res, err := c.GetEngines(context.Background(), &statproto.GetEquipmentInput{}, maxSizeOption)
 		logus.Log.CheckPanic(err, "error making rpc call to get cms: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 	})

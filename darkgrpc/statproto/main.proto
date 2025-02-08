@@ -11,9 +11,9 @@ service DarkGRpc {
 
   rpc GetBases (GetBasesInput) returns (GetBasesReply) {}
   rpc GetCommodities (GetCommoditiesInput) returns (GetCommoditiesReply) {}
-  rpc GetAmmos (GetAmmoInput) returns (GetAmmoReply) {}
-  rpc GetCounterMeasures (Empty) returns (GetCounterMeasuresReply) {}
-  rpc GetEngines (Empty) returns (GetEnginesReply) {}
+  rpc GetAmmos (GetEquipmentInput) returns (GetAmmoReply) {}
+  rpc GetCounterMeasures (GetEquipmentInput) returns (GetCounterMeasuresReply) {}
+  rpc GetEngines (GetEquipmentInput) returns (GetEnginesReply) {}
   rpc GetFactions (Empty) returns (GetFactionsReply) {}
   rpc GetGuns (Empty) returns (GetGunsReply) {}
   rpc GetMines (Empty) returns (GetMinesReply) {}
@@ -35,6 +35,10 @@ message Empty {
 }
 message HealthReply {
   bool is_healthy = 1;
+}
+message GetEquipmentInput {
+  bool IncludeMarketGoods = 1;
+  bool IncludeTechCompat = 2;
 }
 message GetBasesInput {
   bool IncludeMarketGoods = 1;
@@ -130,10 +134,6 @@ message Commodity {
 	double Mass    = 13;            
 }
 
-message GetAmmoInput {
-  bool IncludeMarketGoods = 1;
-  bool IncludeTechCompat = 2;
-}
 message GetAmmoReply {
   repeated Ammo Items = 1;
 }

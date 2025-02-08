@@ -50,9 +50,9 @@ type DarkGRpcClient interface {
 	GetHealth(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HealthReply, error)
 	GetBases(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
 	GetCommodities(ctx context.Context, in *GetCommoditiesInput, opts ...grpc.CallOption) (*GetCommoditiesReply, error)
-	GetAmmos(ctx context.Context, in *GetAmmoInput, opts ...grpc.CallOption) (*GetAmmoReply, error)
-	GetCounterMeasures(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCounterMeasuresReply, error)
-	GetEngines(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetEnginesReply, error)
+	GetAmmos(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetAmmoReply, error)
+	GetCounterMeasures(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetCounterMeasuresReply, error)
+	GetEngines(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetEnginesReply, error)
 	GetFactions(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetFactionsReply, error)
 	GetGuns(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetGunsReply, error)
 	GetMines(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetMinesReply, error)
@@ -106,7 +106,7 @@ func (c *darkGRpcClient) GetCommodities(ctx context.Context, in *GetCommoditiesI
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetAmmos(ctx context.Context, in *GetAmmoInput, opts ...grpc.CallOption) (*GetAmmoReply, error) {
+func (c *darkGRpcClient) GetAmmos(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetAmmoReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetAmmoReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetAmmos_FullMethodName, in, out, cOpts...)
@@ -116,7 +116,7 @@ func (c *darkGRpcClient) GetAmmos(ctx context.Context, in *GetAmmoInput, opts ..
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetCounterMeasures(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCounterMeasuresReply, error) {
+func (c *darkGRpcClient) GetCounterMeasures(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetCounterMeasuresReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCounterMeasuresReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetCounterMeasures_FullMethodName, in, out, cOpts...)
@@ -126,7 +126,7 @@ func (c *darkGRpcClient) GetCounterMeasures(ctx context.Context, in *Empty, opts
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetEngines(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetEnginesReply, error) {
+func (c *darkGRpcClient) GetEngines(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetEnginesReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetEnginesReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetEngines_FullMethodName, in, out, cOpts...)
@@ -276,9 +276,9 @@ type DarkGRpcServer interface {
 	GetHealth(context.Context, *Empty) (*HealthReply, error)
 	GetBases(context.Context, *GetBasesInput) (*GetBasesReply, error)
 	GetCommodities(context.Context, *GetCommoditiesInput) (*GetCommoditiesReply, error)
-	GetAmmos(context.Context, *GetAmmoInput) (*GetAmmoReply, error)
-	GetCounterMeasures(context.Context, *Empty) (*GetCounterMeasuresReply, error)
-	GetEngines(context.Context, *Empty) (*GetEnginesReply, error)
+	GetAmmos(context.Context, *GetEquipmentInput) (*GetAmmoReply, error)
+	GetCounterMeasures(context.Context, *GetEquipmentInput) (*GetCounterMeasuresReply, error)
+	GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error)
 	GetFactions(context.Context, *Empty) (*GetFactionsReply, error)
 	GetGuns(context.Context, *Empty) (*GetGunsReply, error)
 	GetMines(context.Context, *Empty) (*GetMinesReply, error)
@@ -311,13 +311,13 @@ func (UnimplementedDarkGRpcServer) GetBases(context.Context, *GetBasesInput) (*G
 func (UnimplementedDarkGRpcServer) GetCommodities(context.Context, *GetCommoditiesInput) (*GetCommoditiesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommodities not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetAmmos(context.Context, *GetAmmoInput) (*GetAmmoReply, error) {
+func (UnimplementedDarkGRpcServer) GetAmmos(context.Context, *GetEquipmentInput) (*GetAmmoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAmmos not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetCounterMeasures(context.Context, *Empty) (*GetCounterMeasuresReply, error) {
+func (UnimplementedDarkGRpcServer) GetCounterMeasures(context.Context, *GetEquipmentInput) (*GetCounterMeasuresReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCounterMeasures not implemented")
 }
-func (UnimplementedDarkGRpcServer) GetEngines(context.Context, *Empty) (*GetEnginesReply, error) {
+func (UnimplementedDarkGRpcServer) GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEngines not implemented")
 }
 func (UnimplementedDarkGRpcServer) GetFactions(context.Context, *Empty) (*GetFactionsReply, error) {
@@ -435,7 +435,7 @@ func _DarkGRpc_GetCommodities_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _DarkGRpc_GetAmmos_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAmmoInput)
+	in := new(GetEquipmentInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -447,13 +447,13 @@ func _DarkGRpc_GetAmmos_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: DarkGRpc_GetAmmos_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetAmmos(ctx, req.(*GetAmmoInput))
+		return srv.(DarkGRpcServer).GetAmmos(ctx, req.(*GetEquipmentInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DarkGRpc_GetCounterMeasures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetEquipmentInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -465,13 +465,13 @@ func _DarkGRpc_GetCounterMeasures_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: DarkGRpc_GetCounterMeasures_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetCounterMeasures(ctx, req.(*Empty))
+		return srv.(DarkGRpcServer).GetCounterMeasures(ctx, req.(*GetEquipmentInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DarkGRpc_GetEngines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetEquipmentInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -483,7 +483,7 @@ func _DarkGRpc_GetEngines_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: DarkGRpc_GetEngines_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetEngines(ctx, req.(*Empty))
+		return srv.(DarkGRpcServer).GetEngines(ctx, req.(*GetEquipmentInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
