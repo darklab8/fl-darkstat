@@ -39,12 +39,15 @@ func NewMarketGood(good *configs_export.MarketGood) *pb.MarketGood {
 		SystemName:             good.SystemName,
 		Region:                 good.Region,
 		FactionName:            good.FactionName,
-		BasePos:                NewPos(good.BasePos),
+		BasePos:                NewPos(&good.BasePos),
 		SectorCoord:            good.SectorCoord,
 	}
 }
 
-func NewPos(pos cfg.Vector) *pb.Pos {
+func NewPos(pos *cfg.Vector) *pb.Pos {
+	if pos == nil {
+		return nil
+	}
 	return &pb.Pos{
 		X: pos.X,
 		Y: pos.Y,

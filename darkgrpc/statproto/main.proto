@@ -10,24 +10,27 @@ service DarkGRpc {
   rpc GetHealth (Empty) returns (HealthReply) {}
 
   rpc GetBases (GetBasesInput) returns (GetBasesReply) {}
+
+  rpc GetPoBs (Empty) returns (GetPoBsReply);
+  rpc GetPoBGoods (Empty) returns (GetPoBGoodsReply);
+  rpc GetPoBBases (GetBasesInput) returns (GetBasesReply);
+
   rpc GetCommodities (GetCommoditiesInput) returns (GetCommoditiesReply) {}
   rpc GetAmmos (GetEquipmentInput) returns (GetAmmoReply) {}
   rpc GetCounterMeasures (GetEquipmentInput) returns (GetCounterMeasuresReply) {}
   rpc GetEngines (GetEquipmentInput) returns (GetEnginesReply) {}
-  rpc GetFactions (Empty) returns (GetFactionsReply) {}
-  rpc GetGuns (Empty) returns (GetGunsReply) {}
-  rpc GetMines (Empty) returns (GetMinesReply) {}
-  rpc GetScanners (Empty) returns (GetScannersReply) {}
-  rpc GetShields (Empty) returns (GetShieldsReply) {}
-  rpc GetShips (Empty) returns (GetShipsReply) {}
-  rpc GetThrusters (Empty) returns (GetThrustersReply) {}
-  rpc GetTractors (Empty) returns (GetTractorsReply) {}
-  rpc GetHashes (Empty) returns (GetHashesReply);
-  rpc GetPoBs (Empty) returns (GetPoBsReply);
-  rpc GetPoBGoods (Empty) returns (GetPoBGoodsReply);
-  rpc GetPoBBases (Empty) returns (GetPoBBasesReply);
 
-  rpc GetGraphPaths (GetGraphPathsInput) returns (GetGraphPathsReply);
+  // rpc GetGuns (GetEquipmentInput) returns (GetGunsReply) {}
+  // rpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}
+  // rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
+  // rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
+  // rpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}
+  // rpc GetThrusters (GetEquipmentInput) returns (GetThrustersReply) {}
+
+  // rpc GetFactions (Empty) returns (GetFactionsReply) {}
+  // rpc GetTractors (Empty) returns (GetTractorsReply) {}
+  // rpc GetHashes (Empty) returns (GetHashesReply);
+  // rpc GetGraphPaths (GetGraphPathsInput) returns (GetGraphPathsReply);
 }
 
 // The request message containing the user's name.
@@ -287,21 +290,68 @@ message GetHashesReply {
 message GetPoBsReply {
   repeated PoB Items = 1;
 }
-message PoB {
+message PoBCore {
+  string Nickname = 1;
+  string Name = 2;
+  optional string Pos = 3;
+  optional int64 Level = 4;
 
+	optional int64 Money = 5;
+	optional double Health = 6;
+	optional int64 DefenseMode = 7;
+
+	optional string SystemNick = 8;
+	optional string SystemName  = 9; 
+	optional string FactionNick = 10;
+	optional string FactionName = 11;
+
+	optional string ForumThreadUrl  = 12;
+	optional int64 CargoSpaceLeft   = 13;
+
+	optional Pos BasePos            = 14;
+	optional string SectorCoord     = 15;
+	optional string Region          = 16;
 }
+message PoB {
+  PoBCore Core = 1;
+  repeated ShopItem ShopItems = 2;
+}
+message ShopItem {
+  string Nickname = 1;
+  string Name = 2;
+  string Category = 3;
+
+  int64 Id = 4;
+  int64 Quantity = 5;
+  int64 Price    = 6;
+	int64 SellPrice = 7;
+	int64 MinStock  = 8;
+	int64 MaxStock  = 9;
+}
+
 message GetPoBGoodsReply {
   repeated PoBGood Items = 1;
 }
 message PoBGood {
-
+  string Nickname = 1;
+  string Name = 2;
+  int64 TotalBuyableFromBases = 3;
+  int64 TotalSellableToBases = 4;
+  optional int64 BestPriceToBuy = 5;
+  optional int64 BestPriceToSell = 6;
+  string Category = 7;
+  bool AnyBaseSells = 8;
+  bool AnyBaseBuys = 9;
+  repeated PoBGoodBase Bases = 10;
 }
+message PoBGoodBase {
+  ShopItem ShopItem = 1;
+  PoBCore Base = 2;
+}
+
 message GetGraphPathsInput {
 
 }
 message GetGraphPathsReply {
-
-}
-message GetPoBBasesReply {
 
 }

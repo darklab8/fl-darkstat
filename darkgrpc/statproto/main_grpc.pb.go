@@ -21,23 +21,13 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	DarkGRpc_GetHealth_FullMethodName          = "/statproto.DarkGRpc/GetHealth"
 	DarkGRpc_GetBases_FullMethodName           = "/statproto.DarkGRpc/GetBases"
+	DarkGRpc_GetPoBs_FullMethodName            = "/statproto.DarkGRpc/GetPoBs"
+	DarkGRpc_GetPoBGoods_FullMethodName        = "/statproto.DarkGRpc/GetPoBGoods"
+	DarkGRpc_GetPoBBases_FullMethodName        = "/statproto.DarkGRpc/GetPoBBases"
 	DarkGRpc_GetCommodities_FullMethodName     = "/statproto.DarkGRpc/GetCommodities"
 	DarkGRpc_GetAmmos_FullMethodName           = "/statproto.DarkGRpc/GetAmmos"
 	DarkGRpc_GetCounterMeasures_FullMethodName = "/statproto.DarkGRpc/GetCounterMeasures"
 	DarkGRpc_GetEngines_FullMethodName         = "/statproto.DarkGRpc/GetEngines"
-	DarkGRpc_GetFactions_FullMethodName        = "/statproto.DarkGRpc/GetFactions"
-	DarkGRpc_GetGuns_FullMethodName            = "/statproto.DarkGRpc/GetGuns"
-	DarkGRpc_GetMines_FullMethodName           = "/statproto.DarkGRpc/GetMines"
-	DarkGRpc_GetScanners_FullMethodName        = "/statproto.DarkGRpc/GetScanners"
-	DarkGRpc_GetShields_FullMethodName         = "/statproto.DarkGRpc/GetShields"
-	DarkGRpc_GetShips_FullMethodName           = "/statproto.DarkGRpc/GetShips"
-	DarkGRpc_GetThrusters_FullMethodName       = "/statproto.DarkGRpc/GetThrusters"
-	DarkGRpc_GetTractors_FullMethodName        = "/statproto.DarkGRpc/GetTractors"
-	DarkGRpc_GetHashes_FullMethodName          = "/statproto.DarkGRpc/GetHashes"
-	DarkGRpc_GetPoBs_FullMethodName            = "/statproto.DarkGRpc/GetPoBs"
-	DarkGRpc_GetPoBGoods_FullMethodName        = "/statproto.DarkGRpc/GetPoBGoods"
-	DarkGRpc_GetPoBBases_FullMethodName        = "/statproto.DarkGRpc/GetPoBBases"
-	DarkGRpc_GetGraphPaths_FullMethodName      = "/statproto.DarkGRpc/GetGraphPaths"
 )
 
 // DarkGRpcClient is the client API for DarkGRpc service.
@@ -49,23 +39,13 @@ type DarkGRpcClient interface {
 	// Sends a greeting
 	GetHealth(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HealthReply, error)
 	GetBases(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
+	GetPoBs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBsReply, error)
+	GetPoBGoods(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBGoodsReply, error)
+	GetPoBBases(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
 	GetCommodities(ctx context.Context, in *GetCommoditiesInput, opts ...grpc.CallOption) (*GetCommoditiesReply, error)
 	GetAmmos(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetAmmoReply, error)
 	GetCounterMeasures(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetCounterMeasuresReply, error)
 	GetEngines(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetEnginesReply, error)
-	GetFactions(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetFactionsReply, error)
-	GetGuns(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetGunsReply, error)
-	GetMines(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetMinesReply, error)
-	GetScanners(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetScannersReply, error)
-	GetShields(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetShieldsReply, error)
-	GetShips(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetShipsReply, error)
-	GetThrusters(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetThrustersReply, error)
-	GetTractors(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetTractorsReply, error)
-	GetHashes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetHashesReply, error)
-	GetPoBs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBsReply, error)
-	GetPoBGoods(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBGoodsReply, error)
-	GetPoBBases(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBBasesReply, error)
-	GetGraphPaths(ctx context.Context, in *GetGraphPathsInput, opts ...grpc.CallOption) (*GetGraphPathsReply, error)
 }
 
 type darkGRpcClient struct {
@@ -90,6 +70,36 @@ func (c *darkGRpcClient) GetBases(ctx context.Context, in *GetBasesInput, opts .
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetBasesReply)
 	err := c.cc.Invoke(ctx, DarkGRpc_GetBases_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *darkGRpcClient) GetPoBs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPoBsReply)
+	err := c.cc.Invoke(ctx, DarkGRpc_GetPoBs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *darkGRpcClient) GetPoBGoods(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBGoodsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPoBGoodsReply)
+	err := c.cc.Invoke(ctx, DarkGRpc_GetPoBGoods_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *darkGRpcClient) GetPoBBases(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBasesReply)
+	err := c.cc.Invoke(ctx, DarkGRpc_GetPoBBases_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -136,136 +146,6 @@ func (c *darkGRpcClient) GetEngines(ctx context.Context, in *GetEquipmentInput, 
 	return out, nil
 }
 
-func (c *darkGRpcClient) GetFactions(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetFactionsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetFactionsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetFactions_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetGuns(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetGunsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGunsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetGuns_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetMines(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetMinesReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMinesReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetMines_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetScanners(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetScannersReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetScannersReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetScanners_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetShields(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetShieldsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetShieldsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetShields_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetShips(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetShipsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetShipsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetShips_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetThrusters(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetThrustersReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetThrustersReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetThrusters_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetTractors(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetTractorsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTractorsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetTractors_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetHashes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetHashesReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetHashesReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetHashes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetPoBs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetPoBsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetPoBs_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetPoBGoods(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBGoodsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetPoBGoodsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetPoBGoods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetPoBBases(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBBasesReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetPoBBasesReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetPoBBases_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *darkGRpcClient) GetGraphPaths(ctx context.Context, in *GetGraphPathsInput, opts ...grpc.CallOption) (*GetGraphPathsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGraphPathsReply)
-	err := c.cc.Invoke(ctx, DarkGRpc_GetGraphPaths_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // DarkGRpcServer is the server API for DarkGRpc service.
 // All implementations must embed UnimplementedDarkGRpcServer
 // for forward compatibility.
@@ -275,23 +155,13 @@ type DarkGRpcServer interface {
 	// Sends a greeting
 	GetHealth(context.Context, *Empty) (*HealthReply, error)
 	GetBases(context.Context, *GetBasesInput) (*GetBasesReply, error)
+	GetPoBs(context.Context, *Empty) (*GetPoBsReply, error)
+	GetPoBGoods(context.Context, *Empty) (*GetPoBGoodsReply, error)
+	GetPoBBases(context.Context, *GetBasesInput) (*GetBasesReply, error)
 	GetCommodities(context.Context, *GetCommoditiesInput) (*GetCommoditiesReply, error)
 	GetAmmos(context.Context, *GetEquipmentInput) (*GetAmmoReply, error)
 	GetCounterMeasures(context.Context, *GetEquipmentInput) (*GetCounterMeasuresReply, error)
 	GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error)
-	GetFactions(context.Context, *Empty) (*GetFactionsReply, error)
-	GetGuns(context.Context, *Empty) (*GetGunsReply, error)
-	GetMines(context.Context, *Empty) (*GetMinesReply, error)
-	GetScanners(context.Context, *Empty) (*GetScannersReply, error)
-	GetShields(context.Context, *Empty) (*GetShieldsReply, error)
-	GetShips(context.Context, *Empty) (*GetShipsReply, error)
-	GetThrusters(context.Context, *Empty) (*GetThrustersReply, error)
-	GetTractors(context.Context, *Empty) (*GetTractorsReply, error)
-	GetHashes(context.Context, *Empty) (*GetHashesReply, error)
-	GetPoBs(context.Context, *Empty) (*GetPoBsReply, error)
-	GetPoBGoods(context.Context, *Empty) (*GetPoBGoodsReply, error)
-	GetPoBBases(context.Context, *Empty) (*GetPoBBasesReply, error)
-	GetGraphPaths(context.Context, *GetGraphPathsInput) (*GetGraphPathsReply, error)
 	mustEmbedUnimplementedDarkGRpcServer()
 }
 
@@ -308,6 +178,15 @@ func (UnimplementedDarkGRpcServer) GetHealth(context.Context, *Empty) (*HealthRe
 func (UnimplementedDarkGRpcServer) GetBases(context.Context, *GetBasesInput) (*GetBasesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBases not implemented")
 }
+func (UnimplementedDarkGRpcServer) GetPoBs(context.Context, *Empty) (*GetPoBsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPoBs not implemented")
+}
+func (UnimplementedDarkGRpcServer) GetPoBGoods(context.Context, *Empty) (*GetPoBGoodsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPoBGoods not implemented")
+}
+func (UnimplementedDarkGRpcServer) GetPoBBases(context.Context, *GetBasesInput) (*GetBasesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPoBBases not implemented")
+}
 func (UnimplementedDarkGRpcServer) GetCommodities(context.Context, *GetCommoditiesInput) (*GetCommoditiesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommodities not implemented")
 }
@@ -319,45 +198,6 @@ func (UnimplementedDarkGRpcServer) GetCounterMeasures(context.Context, *GetEquip
 }
 func (UnimplementedDarkGRpcServer) GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEngines not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetFactions(context.Context, *Empty) (*GetFactionsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFactions not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetGuns(context.Context, *Empty) (*GetGunsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetGuns not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetMines(context.Context, *Empty) (*GetMinesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMines not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetScanners(context.Context, *Empty) (*GetScannersReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetScanners not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetShields(context.Context, *Empty) (*GetShieldsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetShields not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetShips(context.Context, *Empty) (*GetShipsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetShips not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetThrusters(context.Context, *Empty) (*GetThrustersReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetThrusters not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetTractors(context.Context, *Empty) (*GetTractorsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTractors not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetHashes(context.Context, *Empty) (*GetHashesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetHashes not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetPoBs(context.Context, *Empty) (*GetPoBsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPoBs not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetPoBGoods(context.Context, *Empty) (*GetPoBGoodsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPoBGoods not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetPoBBases(context.Context, *Empty) (*GetPoBBasesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPoBBases not implemented")
-}
-func (UnimplementedDarkGRpcServer) GetGraphPaths(context.Context, *GetGraphPathsInput) (*GetGraphPathsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetGraphPaths not implemented")
 }
 func (UnimplementedDarkGRpcServer) mustEmbedUnimplementedDarkGRpcServer() {}
 func (UnimplementedDarkGRpcServer) testEmbeddedByValue()                  {}
@@ -412,6 +252,60 @@ func _DarkGRpc_GetBases_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DarkGRpcServer).GetBases(ctx, req.(*GetBasesInput))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DarkGRpc_GetPoBs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkGRpcServer).GetPoBs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DarkGRpc_GetPoBs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkGRpcServer).GetPoBs(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DarkGRpc_GetPoBGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkGRpcServer).GetPoBGoods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DarkGRpc_GetPoBGoods_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkGRpcServer).GetPoBGoods(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DarkGRpc_GetPoBBases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBasesInput)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkGRpcServer).GetPoBBases(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DarkGRpc_GetPoBBases_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkGRpcServer).GetPoBBases(ctx, req.(*GetBasesInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -488,240 +382,6 @@ func _DarkGRpc_GetEngines_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DarkGRpc_GetFactions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetFactions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetFactions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetFactions(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetGuns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetGuns(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetGuns_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetGuns(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetMines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetMines(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetMines_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetMines(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetScanners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetScanners(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetScanners_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetScanners(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetShields_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetShields(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetShields_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetShields(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetShips_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetShips(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetShips_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetShips(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetThrusters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetThrusters(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetThrusters_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetThrusters(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetTractors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetTractors(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetTractors_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetTractors(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetHashes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetHashes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetHashes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetHashes(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetPoBs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetPoBs(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetPoBs_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetPoBs(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetPoBGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetPoBGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetPoBGoods_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetPoBGoods(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetPoBBases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetPoBBases(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetPoBBases_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetPoBBases(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DarkGRpc_GetGraphPaths_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGraphPathsInput)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DarkGRpcServer).GetGraphPaths(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DarkGRpc_GetGraphPaths_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DarkGRpcServer).GetGraphPaths(ctx, req.(*GetGraphPathsInput))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // DarkGRpc_ServiceDesc is the grpc.ServiceDesc for DarkGRpc service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -738,6 +398,18 @@ var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DarkGRpc_GetBases_Handler,
 		},
 		{
+			MethodName: "GetPoBs",
+			Handler:    _DarkGRpc_GetPoBs_Handler,
+		},
+		{
+			MethodName: "GetPoBGoods",
+			Handler:    _DarkGRpc_GetPoBGoods_Handler,
+		},
+		{
+			MethodName: "GetPoBBases",
+			Handler:    _DarkGRpc_GetPoBBases_Handler,
+		},
+		{
 			MethodName: "GetCommodities",
 			Handler:    _DarkGRpc_GetCommodities_Handler,
 		},
@@ -752,58 +424,6 @@ var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEngines",
 			Handler:    _DarkGRpc_GetEngines_Handler,
-		},
-		{
-			MethodName: "GetFactions",
-			Handler:    _DarkGRpc_GetFactions_Handler,
-		},
-		{
-			MethodName: "GetGuns",
-			Handler:    _DarkGRpc_GetGuns_Handler,
-		},
-		{
-			MethodName: "GetMines",
-			Handler:    _DarkGRpc_GetMines_Handler,
-		},
-		{
-			MethodName: "GetScanners",
-			Handler:    _DarkGRpc_GetScanners_Handler,
-		},
-		{
-			MethodName: "GetShields",
-			Handler:    _DarkGRpc_GetShields_Handler,
-		},
-		{
-			MethodName: "GetShips",
-			Handler:    _DarkGRpc_GetShips_Handler,
-		},
-		{
-			MethodName: "GetThrusters",
-			Handler:    _DarkGRpc_GetThrusters_Handler,
-		},
-		{
-			MethodName: "GetTractors",
-			Handler:    _DarkGRpc_GetTractors_Handler,
-		},
-		{
-			MethodName: "GetHashes",
-			Handler:    _DarkGRpc_GetHashes_Handler,
-		},
-		{
-			MethodName: "GetPoBs",
-			Handler:    _DarkGRpc_GetPoBs_Handler,
-		},
-		{
-			MethodName: "GetPoBGoods",
-			Handler:    _DarkGRpc_GetPoBGoods_Handler,
-		},
-		{
-			MethodName: "GetPoBBases",
-			Handler:    _DarkGRpc_GetPoBBases_Handler,
-		},
-		{
-			MethodName: "GetGraphPaths",
-			Handler:    _DarkGRpc_GetGraphPaths_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -15,33 +15,36 @@ func (s *Server) GetBases(_ context.Context, in *pb.GetBasesInput) (*pb.GetBases
 
 	var bases []*pb.Base
 	for _, base := range s.app_data.Configs.Bases {
-		item := &pb.Base{
-			Name:                   base.Name,
-			Archetypes:             base.Archetypes,
-			Nickname:               string(base.Nickname),
-			FactionName:            base.FactionName,
-			System:                 base.System,
-			SystemNickname:         base.SystemNickname,
-			Region:                 base.Region,
-			StridName:              int64(base.StridName),
-			InfocardID:             int64(base.InfocardID),
-			File:                   base.File.ToString(),
-			BGCSBaseRunBy:          base.BGCS_base_run_by,
-			Pos:                    NewPos(base.Pos),
-			SectorCoord:            base.SectorCoord,
-			IsTransportUnreachable: base.IsTransportUnreachable,
-			Reachable:              base.Reachable,
-			IsPob:                  base.IsPob,
-		}
-
-		if in.IncludeMarketGoods {
-			base.MarketGoodsPerNick = make(map[configs_export.CommodityKey]*configs_export.MarketGood)
-			for key, good := range base.MarketGoodsPerNick {
-				item.MarketGoodsPerNick[string(key)] = NewMarketGood(good)
-			}
-		}
-
-		bases = append(bases, item)
+		bases = append(bases, NewBase(base, in.IncludeMarketGoods))
 	}
 	return &pb.GetBasesReply{Items: bases}, nil
+}
+
+func NewBase(base *configs_export.Base, include_market_goods bool) *pb.Base {
+	item := &pb.Base{
+		Name:                   base.Name,
+		Archetypes:             base.Archetypes,
+		Nickname:               string(base.Nickname),
+		FactionName:            base.FactionName,
+		System:                 base.System,
+		SystemNickname:         base.SystemNickname,
+		Region:                 base.Region,
+		StridName:              int64(base.StridName),
+		InfocardID:             int64(base.InfocardID),
+		File:                   base.File.ToString(),
+		BGCSBaseRunBy:          base.BGCS_base_run_by,
+		Pos:                    NewPos(&base.Pos),
+		SectorCoord:            base.SectorCoord,
+		IsTransportUnreachable: base.IsTransportUnreachable,
+		Reachable:              base.Reachable,
+		IsPob:                  base.IsPob,
+	}
+
+	if include_market_goods {
+		base.MarketGoodsPerNick = make(map[configs_export.CommodityKey]*configs_export.MarketGood)
+		for key, good := range base.MarketGoodsPerNick {
+			item.MarketGoodsPerNick[string(key)] = NewMarketGood(good)
+		}
+	}
+	return item
 }

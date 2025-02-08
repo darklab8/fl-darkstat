@@ -309,7 +309,7 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Player Owned Base**"}
 			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "PoB", false))
-			reply.Content = append(reply.Content, EntityToYamlStrings(item.PoBWithoutGoods)...)
+			reply.Content = append(reply.Content, EntityToYamlStrings(item.PoBCore)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
 				return nil

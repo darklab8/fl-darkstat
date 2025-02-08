@@ -41,7 +41,7 @@ func (d DefenseMode) ToStr() string {
 	}
 }
 
-type PoBWithoutGoods struct {
+type PoBCore struct {
 	Nickname string `json:"nickname" validate:"required"`
 	Name     string `json:"name" validate:"required"`
 
@@ -66,7 +66,7 @@ type PoBWithoutGoods struct {
 
 // also known as Player Base Station
 type PoB struct {
-	PoBWithoutGoods
+	PoBCore
 	ShopItems []*ShopItem `json:"shop_items" validate:"required"`
 }
 
@@ -94,8 +94,8 @@ func (good PoBGood) BaseSells() bool { return good.AnyBaseSells }
 func (good PoBGood) BaseBuys() bool  { return good.AnyBaseBuys }
 
 type PoBGoodBase struct {
-	ShopItem *ShopItem        `json:"shop_item" validate:"required"`
-	Base     *PoBWithoutGoods `json:"base" validate:"required"`
+	ShopItem *ShopItem `json:"shop_item" validate:"required"`
+	Base     *PoBCore  `json:"base" validate:"required"`
 }
 
 // Exporting only with position ones
@@ -167,7 +167,7 @@ func (e *Exporter) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				}
 				pobs_goods_by_nick[good.Nickname] = pob_good
 			}
-			pob_good.Bases = append(pob_good.Bases, &PoBGoodBase{Base: &pob.PoBWithoutGoods, ShopItem: good})
+			pob_good.Bases = append(pob_good.Bases, &PoBGoodBase{Base: &pob.PoBCore, ShopItem: good})
 		}
 	}
 
@@ -244,7 +244,7 @@ func (e *Exporter) GetPoBs() []*PoB {
 	for _, pob_info := range e.Configs.Discovery.PlayerOwnedBases.Bases {
 
 		var pob *PoB = &PoB{
-			PoBWithoutGoods: PoBWithoutGoods{
+			PoBCore: PoBCore{
 				Nickname:       pob_info.Nickname,
 				Name:           pob_info.Name,
 				Pos:            pob_info.Pos,
