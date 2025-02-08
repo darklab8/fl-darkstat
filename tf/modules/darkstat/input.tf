@@ -34,6 +34,7 @@ variable "relay_prefix" {
 }
 variable "rpc_prefix" {
   type = string
+  default = null
 }
 variable "rpc_port" {
   type    = number

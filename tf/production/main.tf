@@ -51,7 +51,6 @@ module "darkstat_dev" {
 
   stat_prefix  = "darkstat-dev"
   relay_prefix = "darkrelay-dev"
-  rpc_prefix   = "darkgrpc-dev"
   zone         = "dd84ai.com"
   enable_restarts = true
 

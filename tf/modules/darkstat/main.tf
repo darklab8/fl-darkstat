@@ -34,49 +34,27 @@ resource "docker_service" "darkstat" {
       #   args = ["sleep", "infinity"]
 
       dynamic "labels" {
-        for_each = merge({},
+        for_each = merge({
+          "caddy_0" = "${var.stat_prefix}.${var.zone}"
+          "caddy_0.reverse_proxy" = "{{upstreams 8000}}"
+        },
         var.relay_prefix != null ? {
           "caddy_1" = "${var.relay_prefix}.${var.zone}"
           "caddy_1.reverse_proxy" = "{{upstreams 8080}}"
+        } : {},
+        var.rpc_prefix != null ? {
+          "caddy_2" = "${var.rpc_prefix}.${var.zone}:443",
+          "caddy_2.reverse_proxy" = "{{upstreams h2c 50051}}"
+          "caddy_3" = "${var.rpc_prefix}.${var.zone}:80"
+          "caddy_3.reverse_proxy.to" = "{{upstreams 50051}}"
+          "caddy_3.reverse_proxy.transport" = "http"
+          "caddy_3.reverse_proxy.transport.versions" = "h1 h2c"
         } : {},
         )
         content {
           label = labels.key
           value = labels.value
         }
-      }
-
-      labels {
-        label = "caddy_0"
-        value = "${var.stat_prefix}.${var.zone}"
-      }
-      labels {
-        label = "caddy_0.reverse_proxy"
-        value = "{{upstreams 8000}}"
-      }
-      labels {
-        label = "caddy_2"
-        value = "${var.rpc_prefix}.${var.zone}:443"
-      }
-      labels {
-        label = "caddy_2.reverse_proxy"
-        value = "{{upstreams h2c 50051}}"
-      }
-      labels {
-        label = "caddy_3"
-        value = "${var.rpc_prefix}.${var.zone}:80"
-      }
-      labels {
-        label = "caddy_3.reverse_proxy.to"
-        value = "{{upstreams 50051}}"
-      }
-      labels {
-        label = "caddy_3.reverse_proxy.transport"
-        value = "http"
-      }
-      labels {
-        label = "caddy_3.reverse_proxy.transport.versions"
-        value = "h1 h2c"
       }
 
       mounts {
@@ -112,6 +90,7 @@ resource "docker_service" "darkstat" {
   lifecycle {
     ignore_changes = [
       task_spec[0].restart_policy[0].window,
+      task_spec[0].container_spec[0].image,
       # task_spec[0].container_spec[0].env,
     ]
   }
