@@ -16,20 +16,20 @@ func (s *Server) GetAmmos(_ context.Context, in *pb.Empty) (*pb.GetAmmoReply, er
 	for _, item := range s.app_data.Configs.Ammos {
 		item := &pb.Ammo{
 			Name:                item.Name, //
-			Price:               int32(item.Price),
-			HitPts:              int32(item.HitPts),
+			Price:               int64(item.Price),
+			HitPts:              int64(item.HitPts),
 			Volume:              item.Volume,
 			MunitionLifetime:    item.MunitionLifetime,
 			Nickname:            item.Nickname,
-			NameID:              int32(item.NameID),
-			InfoID:              int32(item.InfoID),
+			NameID:              int64(item.NameID),
+			InfoID:              int64(item.InfoID),
 			SeekerType:          item.SeekerType,
-			SeekerRange:         int32(item.SeekerRange),
-			SeekerFovDeg:        int32(item.SeekerFovDeg),
+			SeekerRange:         int64(item.SeekerRange),
+			SeekerFovDeg:        int64(item.SeekerFovDeg),
 			Bases:               NewBases(item.Bases),
 			DiscoveryTechCompat: NewTechCompat(item.DiscoveryTechCompat),
-			AmountInCatridge:    IntTo32(item.AmmoLimit.AmountInCatridge),
-			MaxCatridges:        IntTo32(item.AmmoLimit.MaxCatridges),
+			AmountInCatridge:    NewInt64(item.AmmoLimit.AmountInCatridge),
+			MaxCatridges:        NewInt64(item.AmmoLimit.MaxCatridges),
 			Mass:                item.Mass,
 		}
 

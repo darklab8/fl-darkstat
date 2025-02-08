@@ -19,20 +19,50 @@ service DarkGRpc {
   rpc GetAmmosMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
   rpc GetAmmosTechCompat (GetTechCompatInput) returns (GetTechCompatReply) {}
 
-  // Cms
-  // Engines
-  // Factions
-  // Graph
-  // Guns
-  // Mines
-  // Hashes
-  // Mines
-  // Pobs
-  // Scanners
-  // Shields
-  // Ships
-  // Thrusters
-  // Tractors
+  rpc GetCounterMeasures (Empty) returns (GetCounterMeasuresReply) {}
+  rpc GetCounterMeasuresMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
+  rpc GetCounterMeasuresTechCompat (GetTechCompatInput) returns (GetTechCompatReply) {}
+
+  rpc GetEngines (Empty) returns (GetEnginesReply) {}
+  rpc GetEnginesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply) {}
+  rpc GetEnginesTechCompat (GetTechCompatInput) returns (GetTechCompatReply) {}
+
+  rpc GetFactions (Empty) returns (GetFactionsReply) {}
+
+  rpc GetGuns (Empty) returns (GetGunsReply) {}
+  rpc GetGunsMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
+  rpc GetGunsTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
+
+  rpc GetMines (Empty) returns (GetMinesReply) {}
+  rpc GetMinesMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
+  rpc GetMinesTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
+
+  rpc GetScanners (Empty) returns (GetScannersReply) {}
+  rpc GetScannersMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
+  rpc GetScannersTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
+
+  rpc GetShields (Empty) returns (GetShieldsReply) {}
+  rpc GetShieldsMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
+  rpc GetShieldsTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
+
+  rpc GetShips (Empty) returns (GetShipsReply) {}
+  rpc GetShipsMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
+  rpc GetShipsTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
+
+  rpc GetThrusters (Empty) returns (GetThrustersReply) {}
+  rpc GetThrustersMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
+  rpc GetThrustersTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
+
+  rpc GetTractors (Empty) returns (GetTractorsReply) {}
+  rpc GetTractorsMarketGoods (GetMarketGoodsInput) returns (GetMarketGoodsReply);
+  rpc GetTractorsTechCompat (GetTechCompatInput) returns (GetTechCompatReply);
+
+  rpc GetHashes (Empty) returns (GetHashesReply);
+
+  rpc GetPoBs (Empty) returns (GetPoBsReply);
+  rpc GetPoBGoods (Empty) returns (GetPoBGoodsReply);
+
+  rpc GetGraphPaths (GetGraphPathsInput) returns (GetGraphPathsReply);
 }
 
 // The request message containing the user's name.
@@ -69,8 +99,8 @@ message Base {
   string System = 6; 
   string SystemNickname = 7; 
   string Region = 9;
-  int32 StridName = 10; 
-  int32 InfocardID = 11; 
+  int64 StridName = 10; 
+  int64 InfocardID = 11; 
   string File = 12; 
   string BGCS_base_run_by = 13;
   Pos Pos = 14; 
@@ -81,9 +111,9 @@ message Base {
 }
 
 message MiningInfo {
-  int32 DynamicLootMin = 1;   
-	int32 DynamicLootMax = 2;
-	int32 DynamicLootDifficulty = 3;
+  int64 DynamicLootMin = 1;   
+	int64 DynamicLootMax = 2;
+	int64 DynamicLootDifficulty = 3;
 	optional MarketGood MinedGood = 4;         
 }
 
@@ -92,14 +122,14 @@ message MarketGood {
   string Nickname = 1;
   string ShipNickname = 2; 
   string Name = 3;     
-  int32 PriceBase = 4; 
+  int64 PriceBase = 4; 
   string HpType = 5;   
   string Category = 6;
 
-    int32 LevelRequired = 7;
+    int64 LevelRequired = 7;
     double RepRequired = 8;
-    optional int32 PriceBaseBuysFor = 9; 
-    int32 PriceBaseSellsFor  = 10;
+    optional int64 PriceBaseBuysFor = 9; 
+    int64 PriceBaseSellsFor  = 10;
     double Volume   = 11;   
     int64 ShipClass  = 12;        
     bool BaseSells    = 13;    
@@ -128,17 +158,17 @@ message GetCommoditiesReply {
 
 message Commodity {
 	string Nickname = 1;        
-	int32 PriceBase = 2;                                   
+	int64 PriceBase = 2;                                   
 	string Name     = 3;                         
 	bool Combinable = 4;  
 	double Volume   = 5;                                    
 	int64 ShipClass = 6;         
-	int32 NameID      = 7;                                      
-	int32 InfocardID  = 8; 
+	int64 NameID      = 7;                                      
+	int64 InfocardID  = 8; 
 	map<string, MarketGood> Bases  = 9;            
-	int32 PriceBestBaseBuysFor     = 10;                          
-	int32 PriceBestBaseSellsFor    = 11;        
-	int32 ProffitMargin            = 12;                          
+	int64 PriceBestBaseBuysFor     = 10;                          
+	int64 PriceBestBaseSellsFor    = 11;        
+	int64 ProffitMargin            = 12;                          
 	double Mass    = 13;            
 }
 
@@ -148,25 +178,25 @@ message GetAmmoReply {
 
 message Ammo {
 	string Name  = 1;
-	int32 Price  = 2;
+	int64 Price  = 2;
 
-	int32 HitPts  = 3;
+	int64 HitPts  = 3;
 	double Volume = 4;
 	double MunitionLifetime = 5;
 
 	string Nickname = 6;
-	int32 NameID    = 7;
-	int32 InfoID    = 8;
+	int64 NameID    = 7;
+	int64 InfoID    = 8;
 	string SeekerType  = 9;
-	int32 SeekerRange  = 10;
-	int32 SeekerFovDeg = 11;
+	int64 SeekerRange  = 10;
+	int64 SeekerFovDeg = 11;
 
 	map<string, MarketGood> Bases  = 12;            
 
 	optional DiscoveryTechCompat DiscoveryTechCompat = 13;
 
-  optional int32 AmountInCatridge = 14;
-  optional int32 MaxCatridges     = 15;
+  optional int64 AmountInCatridge = 14;
+  optional int64 MaxCatridges     = 15;
   double Mass    = 16;
 }
 
@@ -187,4 +217,106 @@ message GetTechCompatInput {
 
 message GetTechCompatReply {
   repeated TechCompatAnswer Answers = 1;
+}
+
+message GetCounterMeasuresReply {
+  repeated CounterMeasure Items = 1;
+}
+message CounterMeasure {
+	string Name = 1;
+	int64 Price = 2;
+
+	int64 HitPts    = 3;
+	int64  AIRange  = 4;
+	int64  Lifetime = 5;
+	int64  Range    = 6;
+	int64  DiversionPctg = 7;
+
+	bool Lootable   = 8;
+	string Nickname      = 9;
+	int64  NameID        = 10;
+	int64  InfoID        = 11;
+
+	map<string, MarketGood> Bases  = 12;            
+	optional DiscoveryTechCompat DiscoveryTechCompat = 13;
+
+  optional int64 AmountInCatridge = 14;
+  optional int64 MaxCatridges     = 15;
+	double Mass      = 16;
+}
+
+message GetEnginesReply {
+  repeated Engine Items = 1;
+}
+message Engine {
+
+}
+message GetFactionsReply {
+  repeated Faction Items = 1;
+}
+message Faction {
+
+}
+message GetGunsReply {
+  repeated Gun Items = 1;
+}
+message Gun {
+
+}
+message GetMinesReply {
+  repeated Mine Items = 1;
+}
+message Mine {
+
+}
+message GetScannersReply {
+  repeated Scanner Items = 1;
+}
+message Scanner {
+
+}
+message GetShieldsReply {
+  repeated Shield Items = 1;
+}
+message Shield {
+
+}
+message GetShipsReply {
+  repeated Ship Items = 1;
+}
+message Ship {
+
+}
+message GetThrustersReply {
+  repeated Thruster Items = 1;
+}
+message Thruster {
+
+}
+message GetTractorsReply {
+  repeated Tractor Items = 1;
+}
+message Tractor {
+
+}
+message GetHashesReply {
+
+}
+message GetPoBsReply {
+  repeated PoB Items = 1;
+}
+message PoB {
+
+}
+message GetPoBGoodsReply {
+  repeated PoBGood Items = 1;
+}
+message PoBGood {
+
+}
+message GetGraphPathsInput {
+
+}
+message GetGraphPathsReply {
+
 }

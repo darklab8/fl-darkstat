@@ -106,9 +106,17 @@ func TestRpc(t *testing.T) {
 
 	t.Run("GetAmmos", func(t *testing.T) {
 		res, err := c.GetAmmos(context.Background(), &statproto.Empty{}, maxSizeOption)
-		logus.Log.CheckPanic(err, "error making rpc call to get commoditieis: %s\n", typelog.OptError(err))
+		logus.Log.CheckPanic(err, "error making rpc call to get ammos: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 		FixtureMarketGoodsTest(t, c, c.GetAmmosMarketGoods, "Ammos", res.Items[0], res.Items[1])
 		FixtureTechCompatTest(t, c, c.GetAmmosTechCompat, "Ammos", res.Items[0], res.Items[1])
+	})
+
+	t.Run("GetCounterMeasures", func(t *testing.T) {
+		res, err := c.GetCounterMeasures(context.Background(), &statproto.Empty{}, maxSizeOption)
+		logus.Log.CheckPanic(err, "error making rpc call to get cms: %s\n", typelog.OptError(err))
+		assert.Greater(t, len(res.Items), 0)
+		FixtureMarketGoodsTest(t, c, c.GetCounterMeasuresMarketGoods, "CounterMeasures", res.Items[0], res.Items[1])
+		FixtureTechCompatTest(t, c, c.GetCounterMeasuresTechCompat, "CounterMeasures", res.Items[0], res.Items[1])
 	})
 }

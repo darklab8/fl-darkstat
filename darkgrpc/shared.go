@@ -7,11 +7,11 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
-func IntTo32(value *int) *int32 {
+func NewInt64(value *int) *int64 {
 	if value == nil {
 		return nil
 	}
-	q := int32(*value)
+	q := int64(*value)
 	return &q
 }
 
@@ -21,13 +21,13 @@ func NewMarketGood(good *configs_export.MarketGood) *pb.MarketGood {
 
 		ShipNickname:         good.ShipNickname,
 		Name:                 good.Name,
-		PriceBase:            int32(good.PriceBase),
+		PriceBase:            int64(good.PriceBase),
 		HpType:               good.HpType,
 		Category:             good.Category,
-		LevelRequired:        int32(good.LevelRequired),
+		LevelRequired:        int64(good.LevelRequired),
 		RepRequired:          good.RepRequired,
-		PriceBaseBuysFor:     IntTo32(good.PriceBaseBuysFor),
-		PriceBaseSellsFor:    int32(good.PriceBaseSellsFor),
+		PriceBaseBuysFor:     NewInt64(good.PriceBaseBuysFor),
+		PriceBaseSellsFor:    int64(good.PriceBaseSellsFor),
 		Volume:               good.Volume,
 		ShipClass:            int64(good.ShipClass),
 		BaseSells:            good.BaseSells,

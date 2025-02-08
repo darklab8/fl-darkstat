@@ -16,17 +16,17 @@ func (s *Server) GetCommodities(_ context.Context, in *pb.Empty) (*pb.GetCommodi
 	for _, item := range s.app_data.Configs.Commodities {
 		item := &pb.Commodity{
 			Nickname:              item.Nickname,
-			PriceBase:             int32(item.PriceBase),
+			PriceBase:             int64(item.PriceBase),
 			Name:                  item.Name,
 			Combinable:            item.Combinable,
 			Volume:                item.Volume,
 			ShipClass:             int64(item.ShipClass),
-			NameID:                int32(item.NameID),
-			InfocardID:            int32(item.InfocardID),
+			NameID:                int64(item.NameID),
+			InfocardID:            int64(item.InfocardID),
 			Bases:                 NewBases(item.Bases),
-			PriceBestBaseBuysFor:  int32(item.PriceBestBaseBuysFor),
-			PriceBestBaseSellsFor: int32(item.PriceBestBaseSellsFor),
-			ProffitMargin:         int32(item.ProffitMargin),
+			PriceBestBaseBuysFor:  int64(item.PriceBestBaseBuysFor),
+			PriceBestBaseSellsFor: int64(item.PriceBestBaseSellsFor),
+			ProffitMargin:         int64(item.ProffitMargin),
 			Mass:                  item.Mass,
 		}
 
