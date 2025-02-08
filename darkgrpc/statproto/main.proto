@@ -4,9 +4,7 @@ option go_package = "github.com/darklab8/fl-darkstat/darkgrpc/statproto";
 
 package statproto;
 
-// The greeter service definition.
 service DarkGRpc {
-  // Sends a greeting
   rpc GetHealth (Empty) returns (HealthReply) {}
 
   rpc GetBases (GetBasesInput) returns (GetBasesReply) {}
@@ -30,7 +28,8 @@ service DarkGRpc {
   // rpc GetFactions (Empty) returns (GetFactionsReply) {}
   // rpc GetTractors (Empty) returns (GetTractorsReply) {}
   // rpc GetHashes (Empty) returns (GetHashesReply);
-  // rpc GetGraphPaths (GetGraphPathsInput) returns (GetGraphPathsReply);
+
+  rpc GetGraphPaths (GetGraphPathsInput) returns (GetGraphPathsReply);
 }
 
 // The request message containing the user's name.
@@ -350,8 +349,26 @@ message PoBGoodBase {
 }
 
 message GetGraphPathsInput {
-
+  repeated GraphPathQuery Queries = 1;
 }
-message GetGraphPathsReply {
+message GraphPathQuery {
+	string From = 1;
+	string To = 2;
+}
 
+
+message GetGraphPathsReply {
+  repeated GetGraphPathsAnswer Answers = 1;
+}
+
+message GetGraphPathsAnswer {
+  GraphPathQuery Route = 1;
+  optional GraphPathTime Time = 2;
+  optional string Error = 3;
+}
+
+message GraphPathTime {
+	optional int64 Transport = 1;
+	optional int64 Frigate = 2;
+	optional int64 Freighter = 3;
 }

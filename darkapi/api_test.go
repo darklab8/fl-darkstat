@@ -188,7 +188,7 @@ func TestApi(t *testing.T) {
 		items := FixtureTestItems[configs_export.Base](t, httpc, "/npc_bases", "NpcBases", TestOpts{})
 
 		t.Run("GetGraphPaths", func(t *testing.T) {
-			nicknames := []GraphPathReq{
+			nicknames := []appdata.GraphPathReq{
 				{
 					From: string(items[0].Nickname),
 					To:   string(items[1].Nickname),
@@ -204,7 +204,7 @@ func TestApi(t *testing.T) {
 			resBody, err := io.ReadAll(res.Body)
 			logus.Log.CheckPanic(err, "client: could not read response body: %s\n", typelog.OptError(err))
 
-			var items []GraphPathsResp
+			var items []appdata.GraphPathsResp
 			fmt.Println("resBody=", string(resBody))
 			err = json.Unmarshal(resBody, &items)
 			logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))

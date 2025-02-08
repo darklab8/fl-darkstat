@@ -40,6 +40,20 @@ func TestRpc(t *testing.T) {
 		res, err := c.GetBases(context.Background(), &statproto.GetBasesInput{IncludeMarketGoods: true}, maxSizeOption)
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
+
+		t.Run("GetGraphPaths", func(t *testing.T) {
+			res, err := c.GetGraphPaths(context.Background(), &statproto.GetGraphPathsInput{
+				Queries: []*statproto.GraphPathQuery{{
+					From: string(res.Items[0].Nickname),
+					To:   string(res.Items[1].Nickname),
+				}},
+			}, maxSizeOption)
+			logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
+			assert.Greater(t, len(res.Answers), 0)
+			assert.Equal(t, 1, len(res.Answers))
+			assert.Nil(t, res.Answers[0].Error)
+			assert.Greater(t, *res.Answers[0].Time.Transport, int64(0))
+		})
 	})
 
 	t.Run("GetCommodities", func(t *testing.T) {

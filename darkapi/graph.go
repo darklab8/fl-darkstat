@@ -6,30 +6,11 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
-	"github.com/darklab8/go-utils/utils/ptr"
 )
-
-type GraphPathReq struct {
-	From string `json:"from" example:"li01_01_base" validate:"required"` // Write NPC base nickname, or PoB nickname (Name in base64 encoding) or Ore field name
-	To   string `json:"to" example:"br01_01_base" validate:"required"`   // Write NPC base nickname, or PoB nickname (Name in base64 encoding) or Ore field name
-}
-
-type GraphPathTime struct {
-	Transport *cfg.SecondsI `json:"transport"` // time in seconds
-	Frigate   *cfg.SecondsI `json:"frigate"`   // time in seconds
-	Freighter *cfg.SecondsI `json:"freighter"` // time in seconds
-}
-
-type GraphPathsResp struct {
-	Route GraphPathReq   `json:"route" validate:"required"` // writes requested input
-	Time  *GraphPathTime `json:"time,omitempty"`
-	Error *string        `json:"error,omitempty"` // writes error if requesting not existing nicknames in from/to fields
-}
 
 // ShowAccount godoc
 // @Summary      List of time measurements between two NPC bases/PoBs/Ore fields and etc.
@@ -51,7 +32,7 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			var input_routes []GraphPathReq
+			var input_routes []appdata.GraphPathReq
 			body, err := io.ReadAll(r.Body)
 			if logus.Log.CheckError(err, "failed to read body") {
 				resp.WriteHeader(http.StatusBadRequest)
@@ -66,41 +47,7 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 				return
 			}
 
-			var output_routes []GraphPathsResp
-
-			for _, route := range input_routes {
-				result := GraphPathsResp{Route: route}
-
-				var transport_time, frigate_time, freighter_time int
-				var err error
-				transport_time, _ = trades.GetTimeMs(
-					api.app_data.Configs.Transport.Graph,
-					api.app_data.Configs.Transport.Time,
-					route.From,
-					route.To)
-				frigate_time, _ = trades.GetTimeMs(
-					api.app_data.Configs.Frigate.Graph,
-					api.app_data.Configs.Frigate.Time,
-					route.From,
-					route.To)
-				freighter_time, err = trades.GetTimeMs(
-					api.app_data.Configs.Freighter.Graph,
-					api.app_data.Configs.Freighter.Time,
-					route.From,
-					route.To)
-
-				if err != nil {
-					result.Error = ptr.Ptr(err.Error())
-				} else {
-					result.Time = &GraphPathTime{
-						Transport: ptr.Ptr(transport_time / int(trades.PrecisionMultipiler)),
-						Frigate:   ptr.Ptr(frigate_time / int(trades.PrecisionMultipiler)),
-						Freighter: ptr.Ptr(freighter_time / int(trades.PrecisionMultipiler)),
-					}
-				}
-
-				output_routes = append(output_routes, result)
-			}
+			output_routes := api.app_data.GetGraphPaths(input_routes)
 
 			ReturnJson(&resp, output_routes)
 		},

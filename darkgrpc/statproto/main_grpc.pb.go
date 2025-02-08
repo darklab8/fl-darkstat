@@ -28,6 +28,7 @@ const (
 	DarkGRpc_GetAmmos_FullMethodName           = "/statproto.DarkGRpc/GetAmmos"
 	DarkGRpc_GetCounterMeasures_FullMethodName = "/statproto.DarkGRpc/GetCounterMeasures"
 	DarkGRpc_GetEngines_FullMethodName         = "/statproto.DarkGRpc/GetEngines"
+	DarkGRpc_GetGraphPaths_FullMethodName      = "/statproto.DarkGRpc/GetGraphPaths"
 )
 
 // DarkGRpcClient is the client API for DarkGRpc service.
@@ -46,6 +47,7 @@ type DarkGRpcClient interface {
 	GetAmmos(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetAmmoReply, error)
 	GetCounterMeasures(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetCounterMeasuresReply, error)
 	GetEngines(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetEnginesReply, error)
+	GetGraphPaths(ctx context.Context, in *GetGraphPathsInput, opts ...grpc.CallOption) (*GetGraphPathsReply, error)
 }
 
 type darkGRpcClient struct {
@@ -146,6 +148,16 @@ func (c *darkGRpcClient) GetEngines(ctx context.Context, in *GetEquipmentInput, 
 	return out, nil
 }
 
+func (c *darkGRpcClient) GetGraphPaths(ctx context.Context, in *GetGraphPathsInput, opts ...grpc.CallOption) (*GetGraphPathsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGraphPathsReply)
+	err := c.cc.Invoke(ctx, DarkGRpc_GetGraphPaths_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DarkGRpcServer is the server API for DarkGRpc service.
 // All implementations must embed UnimplementedDarkGRpcServer
 // for forward compatibility.
@@ -162,6 +174,7 @@ type DarkGRpcServer interface {
 	GetAmmos(context.Context, *GetEquipmentInput) (*GetAmmoReply, error)
 	GetCounterMeasures(context.Context, *GetEquipmentInput) (*GetCounterMeasuresReply, error)
 	GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error)
+	GetGraphPaths(context.Context, *GetGraphPathsInput) (*GetGraphPathsReply, error)
 	mustEmbedUnimplementedDarkGRpcServer()
 }
 
@@ -198,6 +211,9 @@ func (UnimplementedDarkGRpcServer) GetCounterMeasures(context.Context, *GetEquip
 }
 func (UnimplementedDarkGRpcServer) GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEngines not implemented")
+}
+func (UnimplementedDarkGRpcServer) GetGraphPaths(context.Context, *GetGraphPathsInput) (*GetGraphPathsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGraphPaths not implemented")
 }
 func (UnimplementedDarkGRpcServer) mustEmbedUnimplementedDarkGRpcServer() {}
 func (UnimplementedDarkGRpcServer) testEmbeddedByValue()                  {}
@@ -382,6 +398,24 @@ func _DarkGRpc_GetEngines_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DarkGRpc_GetGraphPaths_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGraphPathsInput)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkGRpcServer).GetGraphPaths(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DarkGRpc_GetGraphPaths_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkGRpcServer).GetGraphPaths(ctx, req.(*GetGraphPathsInput))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DarkGRpc_ServiceDesc is the grpc.ServiceDesc for DarkGRpc service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -424,6 +458,10 @@ var DarkGRpc_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEngines",
 			Handler:    _DarkGRpc_GetEngines_Handler,
+		},
+		{
+			MethodName: "GetGraphPaths",
+			Handler:    _DarkGRpc_GetGraphPaths_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
