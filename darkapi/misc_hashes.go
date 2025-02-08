@@ -28,7 +28,7 @@ var hashes map[string]Hash
 
 // ShowAccount godoc
 // @Summary      Hashes
-// @Tags         hashes
+// @Tags         misc
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  	Hashes

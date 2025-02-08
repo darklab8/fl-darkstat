@@ -17,11 +17,11 @@ import (
 // @Description  You query by nicknames of objects from which base/pob/ore fields to which one
 // @Description  You receive result how many seconds it takes to reach destination for Transport, Frigate and Freighter
 // @Description  If destination is not reachable, you get time equal to Maximum of int32 = 9223372036854775807
-// @Tags         graph
+// @Tags         misc
 // @Accept       json
 // @Produce      json
-// @Param request body []GraphPathReq true "Request body"
-// @Success      200  {array}  	GraphPathsResp
+// @Param request body []appdata.GraphPathReq true "Request body"
+// @Success      200  {array}  	appdata.GraphPathsResp
 // @Router       /api/graph/paths [post]
 func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
@@ -46,7 +46,6 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 				fmt.Fprintf(resp, "input at least some routes into request body")
 				return
 			}
-
 			output_routes := api.app_data.GetGraphPaths(input_routes)
 
 			ReturnJson(&resp, output_routes)
