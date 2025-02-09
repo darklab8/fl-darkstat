@@ -66,6 +66,9 @@ If u have problems with configuring development environment, then seek my contac
 - API has swagger documentation accessable from its interface by button "API" at the top of menu
   - It is available only for Static Binary and Dockerized deployments currently.
   - It is known to run in production for Freelancer Discovery, [check here](https://darkstat.dd84ai.com/swagger/index.html)
+  - accessable locally over https://localhost:8000, or optionally unix socket `/tmp/darkstat/api.sock` for extra performance boosts.
+  - deployed Discovery can be found at https://darkstat.dd84ai.com/swagger/index.html
+  - deployed Vanilla can be found at https://darkstat-vanilla.dd84ai.com/swagger/index.html
 
 # Alternatively we offer Client generation through gRPC!
 
@@ -76,7 +79,7 @@ If u have problems with configuring development environment, then seek my contac
   - We change server side smth? Just regenerate the lib to keep up with updates ^_^
   - Import [darkstat proto file](./darkgrpc/statproto/main.proto) for its usage and generate client lib from it with `protoc` command
   - addresses to connect:
-    - for local instance localhost:50051
+    - for local instance localhost:50051, or optionally unix socket `/tmp/darkstat/grpc.sock` at linux for extra performance boosts.
     - for deployed instances for discovery and vanilla, they are hosted over darkgrpc.dd84ai.com and darkgrpc-vanilla.dd84ai.com accordingly. 80 and 443 ports accordingly
     - [see example in golang](./darkgrpc/server_test.go) of interacting with grpc if desired
     - up to date exposed grpc domains can be found [in this file](./tf/production/main.tf) as rpc_prefix + zone combination
