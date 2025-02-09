@@ -20,5 +20,11 @@ module "dns" {
       name    = var.relay_prefix
       proxied = false
     }] : [],
+    var.apigateway_prefix != null ? [{
+      type    = "A"
+      value   = var.ipv4_address
+      name    = var.apigateway_prefix
+      proxied = false
+    }] : [],
   )
 }

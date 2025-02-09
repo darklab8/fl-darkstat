@@ -50,6 +50,10 @@ resource "docker_service" "darkstat" {
             "caddy_3.reverse_proxy.transport"          = "http"
             "caddy_3.reverse_proxy.transport.versions" = "h1 h2c"
           } : {},
+          var.apigateway_prefix != null ? {
+            "caddy_4"               = "${var.apigateway_prefix}.${var.zone}"
+            "caddy_4.reverse_proxy" = "{{upstreams 8081}}"
+          } : {},
         )
         content {
           label = labels.key

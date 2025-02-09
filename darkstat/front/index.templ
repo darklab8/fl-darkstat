@@ -57,8 +57,8 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				}
 				
 				if settings.IsApiActive() {
-					@tab.Button(tab.NewButtn(ctx,[]string{"Old","API"}, urls.Swagger, url, tab.WithDrectUrl()))
-					@tab.Button(tab.NewButtn(ctx,[]string{"New","API"}, "", url, tab.WithSiteUrl(settings.Env.GrpcGatewayUrl),tab.WithDrectUrl()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"API","1.0"}, urls.Swagger, url, tab.WithDrectUrl()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"API","2.0"}, "", url, tab.WithSiteUrl(settings.Env.GrpcGatewayUrl),tab.WithDrectUrl()))
 				}
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestringWrap([]string{"Show&thinsp;", "All"})
@@ -96,8 +96,8 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				}
 				
 				if settings.IsApiActive() {
-					@tab.Button(tab.NewButtn(ctx,[]string{"Old","API"}, urls.Swagger, url, tab.WithDrectUrl()))
-					@tab.Button(tab.NewButtn(ctx,[]string{"New","API"}, "", url, tab.WithSiteUrl(settings.Env.GrpcGatewayUrl),tab.WithDrectUrl()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"API","1.0"}, urls.Swagger, url, tab.WithDrectUrl()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"API","2.0"}, "", url, tab.WithSiteUrl(settings.Env.GrpcGatewayUrl),tab.WithDrectUrl()))
 				}
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + url.ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestringWrap([]string{"Don't", "Show All"})

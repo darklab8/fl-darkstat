@@ -36,6 +36,10 @@ variable "rpc_prefix" {
   type    = string
   default = null
 }
+variable "apigateway_prefix" {
+  type    = string
+  default = null
+}
 variable "rpc_port" {
   type    = number
   default = null

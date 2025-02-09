@@ -19,7 +19,14 @@ locals {
       RELAY_HOST      = var.RELAY_HOST # Required only for Discover Freelancer which have frontend at Github Pages. Path to backend for PoBs data
       RELAY_LOOP_SECS = "300"          # Optional only for Discover Freelancer, how often to update PoB tab.
     } : {},
-    var.password != null ? { DARKCORE_PASSWORD = var.password } : {},
-    var.secret != null ? { DARKCORE_SECRET = var.secret } : {},
+    var.password != null ? {
+      DARKCORE_PASSWORD = var.password
+    } : {},
+    var.secret != null ? {
+      DARKCORE_SECRET = var.secret
+    } : {},
+    var.apigateway_prefix != null ? {
+      GRPCGATEWAY_URL = "https://${var.apigateway_prefix}.${var.zone}/"
+    } : {},
   )
 }

@@ -17,10 +17,11 @@ module "darkstat" {
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
   EOT
 
-  stat_prefix  = "darkstat"
-  relay_prefix = "darkrelay"
-  rpc_prefix   = "darkgrpc"
-  zone         = "dd84ai.com"
+  stat_prefix       = "darkstat"
+  relay_prefix      = "darkrelay"
+  apigateway_prefix = "apigateway"
+  rpc_prefix        = "darkgrpc"
+  zone              = "dd84ai.com"
 }
 
 resource "random_string" "random_password" {
@@ -75,8 +76,9 @@ module "darkstat_vanilla" {
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for Freelancer Vanilla
   EOT
 
-  stat_prefix     = "darkstat-vanilla"
-  rpc_prefix      = "darkgrpc-vanilla"
-  zone            = "dd84ai.com"
-  enable_restarts = false
+  stat_prefix       = "darkstat-vanilla"
+  rpc_prefix        = "darkgrpc-vanilla"
+  apigateway_prefix = "apigateway-vanilla"
+  zone              = "dd84ai.com"
+  enable_restarts   = false
 }
