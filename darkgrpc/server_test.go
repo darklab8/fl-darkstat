@@ -55,6 +55,12 @@ func TestRpc(t *testing.T) {
 		})
 	})
 
+	t.Run("GetBasesMiningOperations", func(t *testing.T) {
+		res, err := c.GetBasesMiningOperations(context.Background(), &statproto.GetBasesInput{IncludeMarketGoods: true})
+		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
+		assert.Greater(t, len(res.Items), 0)
+	})
+
 	t.Run("GetCommodities", func(t *testing.T) {
 		res, err := c.GetCommodities(context.Background(), &statproto.GetCommoditiesInput{IncludeMarketGoods: true})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
@@ -100,5 +106,11 @@ func TestRpc(t *testing.T) {
 		if app_data.Configs.Configs.Discovery != nil {
 			assert.Greater(t, len(res.Items), 0)
 		}
+	})
+
+	t.Run("GetHashes", func(t *testing.T) {
+		res, err := c.GetHashes(context.Background(), &statproto.Empty{})
+		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
+		assert.Greater(t, len(res.HashesByNick), 0)
 	})
 }

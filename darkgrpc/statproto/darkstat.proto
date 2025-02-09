@@ -51,8 +51,12 @@ service Darkstat {
   // rpc GetThrusters (GetEquipmentInput) returns (GetThrustersReply) {}
 
   // rpc GetFactions (Empty) returns (GetFactionsReply) {}
-  // rpc GetTractors (Empty) returns (GetTractorsReply) {}
-  // rpc GetHashes (Empty) returns (GetHashesReply);
+
+  // Get Tractors. For Discovery those are IDs
+  rpc GetTractors (GetTractorsInput) returns (GetTractorsReply) {}
+
+  rpc GetHashes (Empty) returns (GetHashesReply);
+  // rpc GetInfocards
 
   rpc GetGraphPaths (GetGraphPathsInput) returns (GetGraphPathsReply);
 }
@@ -69,6 +73,10 @@ message GetEquipmentInput {
   bool FilterToUseful = 3;
 }
 message GetBasesInput {
+  bool IncludeMarketGoods = 1;
+  bool FilterToUseful = 2;
+}
+message GetTractorsInput {
   bool IncludeMarketGoods = 1;
   bool FilterToUseful = 2;
 }
@@ -312,10 +320,28 @@ message GetTractorsReply {
   repeated Tractor Items = 1;
 }
 message Tractor {
+	string Name  = 1;
+	int64 Price  = 2;
+
+	int64 MaxLength  = 3;
+	int64 ReachSpeed = 4;
+
+	bool Lootable   = 5;
+	string Nickname = 6;
+	string ShortNickname = 7;
+	int64 NameID      = 8;
+	int64 InfoID      = 9;
+	map<string, MarketGood> Bases  = 10;            
+  double Mass    = 11;
 
 }
 message GetHashesReply {
-
+  map<string,Hash> HashesByNick = 1;
+}
+message Hash {
+  int32 Int32   = 1;
+	uint32 Uint32 = 2;
+	string Hex    = 3;
 }
 message GetPoBsReply {
   repeated PoB Items = 1;

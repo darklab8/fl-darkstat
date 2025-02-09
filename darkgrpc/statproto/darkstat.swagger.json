@@ -276,6 +276,40 @@
         ]
       }
     },
+    "/statproto.Darkstat/GetHashes": {
+      "post": {
+        "summary": "rpc GetInfocards",
+        "operationId": "Darkstat_GetHashes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetHashesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The request message containing the user's name.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoEmpty"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
     "/statproto.Darkstat/GetHealth": {
       "post": {
         "summary": "Just to check if grpc works. Returns boolean value if it is healthy as true",
@@ -370,6 +404,39 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/statprotoEmpty"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetTractors": {
+      "post": {
+        "summary": "Get Tractors. For Discovery those are IDs",
+        "operationId": "Darkstat_GetTractors",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetTractorsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetTractorsInput"
             }
           }
         ],
@@ -887,6 +954,17 @@
         }
       }
     },
+    "statprotoGetHashesReply": {
+      "type": "object",
+      "properties": {
+        "HashesByNick": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoHash"
+          }
+        }
+      }
+    },
     "statprotoGetPoBGoodsReply": {
       "type": "object",
       "properties": {
@@ -907,6 +985,29 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/statprotoPoB"
+          }
+        }
+      }
+    },
+    "statprotoGetTractorsInput": {
+      "type": "object",
+      "properties": {
+        "IncludeMarketGoods": {
+          "type": "boolean"
+        },
+        "FilterToUseful": {
+          "type": "boolean"
+        }
+      }
+    },
+    "statprotoGetTractorsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoTractor"
           }
         }
       }
@@ -936,6 +1037,22 @@
         "Freighter": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "statprotoHash": {
+      "type": "object",
+      "properties": {
+        "Int32": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Uint32": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Hex": {
+          "type": "string"
         }
       }
     },
@@ -1207,6 +1324,53 @@
         "MaxStock": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "statprotoTractor": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MaxLength": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ReachSpeed": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "ShortNickname": {
+          "type": "string"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
         }
       }
     }
