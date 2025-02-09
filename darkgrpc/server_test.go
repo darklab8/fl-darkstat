@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkgrpc/statproto"
@@ -25,8 +26,20 @@ func TestRpc(t *testing.T) {
 	grpc_server := NewServer(app_data, test_port, WithSockAddr(unix_socket))
 	go grpc_server.Serve()
 
-	c := NewClient(fmt.Sprintf("unix:%s", unix_socket))
+	// c := NewClient(fmt.Sprintf("unix:%s", unix_socket))
+	c := NewClient(fmt.Sprintf("localhost:%d", test_port))
 	defer c.Conn.Close()
+
+	for i := 0; i < 10; i++ {
+		res, _ := c.GetHealth(context.Background(), &statproto.Empty{})
+		if res != nil {
+			if res.IsHealthy {
+				break
+			}
+		}
+		fmt.Println("test server is not ready yet. Sleeping")
+		time.Sleep(5 * time.Second)
+	}
 
 	t.Run("GetHealth", func(t *testing.T) {
 		res, err := c.GetHealth(context.Background(), &statproto.Empty{})
