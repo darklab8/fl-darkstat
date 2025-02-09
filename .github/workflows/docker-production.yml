@@ -130,6 +130,12 @@ jobs:
         docker pull darkwind8/darkstat:production
         sleep 5
         docker service update --image darkwind8/darkstat:production dev-darkstat-app
+    - name: Switch service image darkwind8/darkstat for swarm to new one
+      run: |
+        set -ex
+        docker pull darkwind8/darkstat:production
+        sleep 5
+        docker service update --image darkwind8/darkstat:production vanilla-darkstat-app
     needs:
     - build-arm64
     - build-amd64
