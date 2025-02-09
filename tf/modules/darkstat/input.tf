@@ -29,11 +29,11 @@ variable "stat_prefix" {
   type = string
 }
 variable "relay_prefix" {
-  type = string
+  type    = string
   default = null
 }
 variable "rpc_prefix" {
-  type = string
+  type    = string
   default = null
 }
 variable "rpc_port" {
@@ -53,5 +53,6 @@ variable "secret" {
   default = null
 }
 variable "enable_restarts" {
-  type = bool
+  description = "good idea to turn on for mods that periodically load updates, like Discovery or FLSR. No need for Vanilla"
+  type        = bool
 }

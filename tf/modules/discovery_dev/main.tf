@@ -1,5 +1,5 @@
 resource "docker_image" "discovery_dev" {
-  name = "discovery-dev"
+  name = "discovery-dev-${var.environment}"
   build {
     context = path.module
   }
@@ -46,6 +46,6 @@ resource "docker_container" "discovery" {
   }
 }
 
-output "discovery_path" {
+output "freelancer_path" {
   value = local.host_path
 }

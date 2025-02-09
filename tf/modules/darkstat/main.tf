@@ -35,21 +35,21 @@ resource "docker_service" "darkstat" {
 
       dynamic "labels" {
         for_each = merge({
-          "caddy_0" = "${var.stat_prefix}.${var.zone}"
+          "caddy_0"               = "${var.stat_prefix}.${var.zone}"
           "caddy_0.reverse_proxy" = "{{upstreams 8000}}"
-        },
-        var.relay_prefix != null ? {
-          "caddy_1" = "${var.relay_prefix}.${var.zone}"
-          "caddy_1.reverse_proxy" = "{{upstreams 8080}}"
-        } : {},
-        var.rpc_prefix != null ? {
-          "caddy_2" = "${var.rpc_prefix}.${var.zone}:443",
-          "caddy_2.reverse_proxy" = "{{upstreams h2c 50051}}"
-          "caddy_3" = "${var.rpc_prefix}.${var.zone}:80"
-          "caddy_3.reverse_proxy.to" = "{{upstreams 50051}}"
-          "caddy_3.reverse_proxy.transport" = "http"
-          "caddy_3.reverse_proxy.transport.versions" = "h1 h2c"
-        } : {},
+          },
+          var.relay_prefix != null ? {
+            "caddy_1"               = "${var.relay_prefix}.${var.zone}"
+            "caddy_1.reverse_proxy" = "{{upstreams 8080}}"
+          } : {},
+          var.rpc_prefix != null ? {
+            "caddy_2"                                  = "${var.rpc_prefix}.${var.zone}:443",
+            "caddy_2.reverse_proxy"                    = "{{upstreams h2c 50051}}"
+            "caddy_3"                                  = "${var.rpc_prefix}.${var.zone}:80"
+            "caddy_3.reverse_proxy.to"                 = "{{upstreams 50051}}"
+            "caddy_3.reverse_proxy.transport"          = "http"
+            "caddy_3.reverse_proxy.transport.versions" = "h1 h2c"
+          } : {},
         )
         content {
           label = labels.key

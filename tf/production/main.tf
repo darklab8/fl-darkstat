@@ -4,11 +4,11 @@ module "discovery" {
 }
 
 module "darkstat" {
-  source         = "../modules/darkstat"
-  environment    = "production"
-  tag            = "production-arm64"
-  discovery_path = module.discovery.discovery_path
-  ipv4_address   = module.data_cluster.node_darklab.ipv4_address
+  source          = "../modules/darkstat"
+  environment     = "production"
+  tag             = "production-arm64"
+  discovery_path  = module.discovery.freelancer_path
+  ipv4_address    = module.data_cluster.node_darklab.ipv4_address
   enable_restarts = true
 
   RELAY_HOST         = "https://darkrelay.dd84ai.com"
@@ -41,7 +41,7 @@ module "darkstat_dev" {
   source         = "../modules/darkstat"
   environment    = "dev"
   tag            = "production-arm64"
-  discovery_path = module.discovery_dev.discovery_path
+  discovery_path = module.discovery_dev.freelancer_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
 
   SITE_ROOT          = "/"
@@ -49,9 +49,9 @@ module "darkstat_dev" {
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
   EOT
 
-  stat_prefix  = "darkstat-dev"
-  relay_prefix = "darkrelay-dev"
-  zone         = "dd84ai.com"
+  stat_prefix     = "darkstat-dev"
+  relay_prefix    = "darkrelay-dev"
+  zone            = "dd84ai.com"
   enable_restarts = true
 
   password = random_string.random_password.result
@@ -67,7 +67,7 @@ module "darkstat_vanilla" {
   source         = "../modules/darkstat"
   environment    = "vanilla"
   tag            = "production-arm64"
-  discovery_path = module.vanilla.vanilla_path
+  discovery_path = module.vanilla.freelancer_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
 
   SITE_ROOT          = "/fl-data-discovery/"
@@ -75,8 +75,8 @@ module "darkstat_vanilla" {
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for Freelancer Vanilla
   EOT
 
-  stat_prefix  = "darkstat-vanilla"
-  rpc_prefix   = "darkgrpc-vanilla"
-  zone         = "dd84ai.com"
+  stat_prefix     = "darkstat-vanilla"
+  rpc_prefix      = "darkgrpc-vanilla"
+  zone            = "dd84ai.com"
   enable_restarts = false
 }

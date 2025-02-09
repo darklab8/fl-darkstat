@@ -1,5 +1,5 @@
 resource "docker_image" "vanilla" {
-  name = "vanilla"
+  name = "vanilla-${var.environment}"
   build {
     context = path.module
   }
@@ -32,6 +32,6 @@ resource "docker_container" "vanilla" {
   }
 }
 
-output "vanilla_path" {
+output "freelancer_path" {
   value = local.host_path
 }
