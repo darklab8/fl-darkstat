@@ -133,8 +133,14 @@ func TestRpc(t *testing.T) {
 			IncludeBribes:      true,
 		})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
-		if app_data.Configs.Configs.Discovery != nil {
-			assert.Greater(t, len(res.Items), 0)
-		}
+		assert.Greater(t, len(res.Items), 0)
+	})
+	t.Run("GetThrusters", func(t *testing.T) {
+		res, err := c.GetThrusters(context.Background(), &statproto.GetEquipmentInput{
+			IncludeMarketGoods: true,
+			IncludeTechCompat:  true,
+		})
+		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
+		assert.Greater(t, len(res.Items), 0)
 	})
 }

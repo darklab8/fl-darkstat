@@ -48,7 +48,7 @@ service Darkstat {
   // rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
   // rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
   // rpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}
-  // rpc GetThrusters (GetEquipmentInput) returns (GetThrustersReply) {}
+  rpc GetThrusters (GetEquipmentInput) returns (GetThrustersReply) {}
 
   rpc GetFactions (GetFactionsInput) returns (GetFactionsReply) {}
 
@@ -345,6 +345,20 @@ message GetThrustersReply {
   repeated Thruster Items = 1;
 }
 message Thruster {
+  string Name    = 1;
+	int64 Price    = 2;
+	int64 MaxForce = 3;
+	int64 PowerUsage = 4;
+	double Efficiency = 5;
+	double Value      = 6;
+	int64 HitPts      = 7;
+	bool Lootable     = 8;
+	string Nickname   = 9;
+	int64 NameID      = 10;
+	int64 InfoID      = 11;
+	double Mass       = 12;
+  map<string, MarketGood> Bases  = 13;            
+	optional DiscoveryTechCompat DiscoveryTechCompat = 14;
 
 }
 message GetTractorsReply {

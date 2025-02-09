@@ -444,6 +444,39 @@
         ]
       }
     },
+    "/statproto.Darkstat/GetThrusters": {
+      "post": {
+        "summary": "rpc GetGuns (GetEquipmentInput) returns (GetGunsReply) {}\nrpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}\nrpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}\nrpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}\nrpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}",
+        "operationId": "Darkstat_GetThrusters",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetThrustersReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
     "/statproto.Darkstat/GetTractors": {
       "post": {
         "summary": "Get Tractors. For Discovery those are IDs",
@@ -1140,6 +1173,18 @@
         }
       }
     },
+    "statprotoGetThrustersReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoThruster"
+          }
+        }
+      }
+    },
     "statprotoGetTractorsInput": {
       "type": "object",
       "properties": {
@@ -1476,6 +1521,65 @@
         "MaxStock": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "statprotoThruster": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MaxForce": {
+          "type": "string",
+          "format": "int64"
+        },
+        "PowerUsage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Efficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "Value": {
+          "type": "number",
+          "format": "double"
+        },
+        "HitPts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         }
       }
     },
