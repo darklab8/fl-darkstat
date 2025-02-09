@@ -14,6 +14,14 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
+// ShowAccount godoc
+// @Summary      Getting list of NPC Bases Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []cfg.BaseUniNick true "Array of npc base nicknames as input, for example [li01_01_base]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/npc_bases/market_goods [post]
 func PostBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "POST " + ApiRoute + "/npc_bases/market_goods",
@@ -61,6 +69,14 @@ func PostBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Ammo Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ammo nicknames as input, for example [dsy_annihilator_torpedo_ammo]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/ammos/market_goods [post]
 func PostAmmoMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/ammos/market_goods",
@@ -68,6 +84,14 @@ func PostAmmoMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Ammos Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ammo nicknames as input"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/ammos/tech_compats [post]
 func PostAmmoTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/ammos/tech_compats",
@@ -75,6 +99,14 @@ func PostAmmoTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of CounterMeasure Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of counter nicknames as input, for example [ge_s_cm_01]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/counter_measures/market_goods [post]
 func PostCMsMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/counter_measures/market_goods",
@@ -82,6 +114,14 @@ func PostCMsMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of CounterMeasure Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of counter measure nicknames as input"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/counter_measures/tech_compats [post]
 func PostCMsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/counter_measures/tech_compats",
@@ -89,6 +129,14 @@ func PostCMsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Commodities Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of commodity nicknames as input, for example [commodity_military_salvage]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/commodities/market_goods [post]
 func PostCommodityMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/commodities/market_goods",
@@ -96,6 +144,14 @@ func PostCommodityMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Engine Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of engines nicknames as input, for example [ge_kfr_engine_01_add]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/engines/market_goods [post]
 func PostEnginesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/engines/market_goods",
@@ -103,6 +159,14 @@ func PostEnginesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Engine Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of engines nicknames as input"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/engines/tech_compats [post]
 func PostEnginesTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/engines/tech_compats",
@@ -110,6 +174,14 @@ func PostEnginesTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoin
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Guns Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ship nicknames as input, for example [ai_bomber]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/guns/market_goods [post]
 func PostGunsMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/guns/market_goods",
@@ -117,6 +189,14 @@ func PostGunsMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Guns Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of gun nicknames as input, for example [ai_bomber]"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/guns/tech_compats [post]
 func PostGunsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/guns/tech_compats",
@@ -124,6 +204,14 @@ func PostGunsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Missiles Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ship nicknames as input, for example [fc_or_gun01_mark02]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/missiles/market_goods [post]
 func PostMissilesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/missiles/market_goods",
@@ -131,6 +219,14 @@ func PostMissilesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Missiles Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of missile nicknames as input, for example [fc_or_gun01_mark02]"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/missiles/tech_compats [post]
 func PostMissilesTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/missiles/tech_compats",
@@ -138,6 +234,14 @@ func PostMissilesTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoi
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Mines Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of mine nicknames as input, for example [mine02_mark02]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/mines/market_goods [post]
 func PostMinesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/mines/market_goods",
@@ -145,6 +249,14 @@ func PostMinesMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Mines Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of gun nicknames as input, for example [ai_bomber]"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/mines/tech_compats [post]
 func PostMinesTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/mines/tech_compats",
@@ -152,6 +264,14 @@ func PostMinesTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint 
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Scanners Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ammo nicknames as input, for example [dsy_annihilator_torpedo_ammo]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/scanners/market_goods [post]
 func PostScannersMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/scanners/market_goods",
@@ -159,6 +279,14 @@ func PostScannersMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Scanners Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ammo nicknames as input"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/scanners/tech_compats [post]
 func PostScannersTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/scanners/tech_compats",
@@ -166,6 +294,14 @@ func PostScannersTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoi
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Shields Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ammo nicknames as input, for example [ai_shield_hf]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/shields/market_goods [post]
 func PostShieldsMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/shields/market_goods",
@@ -173,6 +309,14 @@ func PostShieldsMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Shields Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ammo nicknames as input"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/shields/tech_compats [post]
 func PostShieldsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/shields/tech_compats",
@@ -180,6 +324,14 @@ func PostShieldsTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoin
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Ship Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ship nicknames as input, for example [ai_bomber]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/ships/market_goods [post]
 func PostShipMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/ships/market_goods",
@@ -187,6 +339,14 @@ func PostShipMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Ship Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ship nicknames as input, for example [ai_bomber]"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/ships/tech_compats [post]
 func PostShipTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/ships/tech_compats",
@@ -194,6 +354,14 @@ func PostShipTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Thrusters Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of thrusters nicknames as input, for example [dsy_thruster_bd]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/thrusters/market_goods [post]
 func PostThrustersMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/thrusters/market_goods",
@@ -201,6 +369,14 @@ func PostThrustersMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Thrusters Tech compats
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of thrusters nicknames as input"
+// @Success      200  {array}  	TechCompatResp
+// @Router       /api/thrusters/tech_compats [post]
 func PostThrustersTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/thrusters/tech_compats",
@@ -208,6 +384,14 @@ func PostThrustersTechcompatibilities(webapp *web.Web, api *Api) *registry.Endpo
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Getting list of Tractor Market Goods
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Param request body []string true "Array of ship nicknames as input, for example [dsy_license_srp_28]"
+// @Success      200  {array}  	MarketGoodResp
+// @Router       /api/tractors/market_goods [post]
 func PostTractorMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url:     "POST " + ApiRoute + "/tractors/market_goods",
