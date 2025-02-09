@@ -50,7 +50,7 @@ service Darkstat {
   // rpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}
   // rpc GetThrusters (GetEquipmentInput) returns (GetThrustersReply) {}
 
-  // rpc GetFactions (Empty) returns (GetFactionsReply) {}
+  rpc GetFactions (GetFactionsInput) returns (GetFactionsReply) {}
 
   // Get Tractors. For Discovery those are IDs
   rpc GetTractors (GetTractorsInput) returns (GetTractorsReply) {}
@@ -132,14 +132,16 @@ message MarketGood {
     bool IsServerSideOverride = 14;
     bool NotBuyable      = 15;     
     bool IsTransportUnreachable = 16;
-
-    string BaseNickname = 17; 
-    string BaseName = 18;   
-    string  SystemName = 19; 
-    string  Region = 20;    
-    string  FactionName = 21; 
-    Pos BasePos = 22;     
-    string SectorCoord = 23;
+    BaseInfo base_info = 17;
+}
+message BaseInfo {
+  string BaseNickname = 1; 
+  string BaseName = 2;   
+  string  SystemName = 3; 
+  string  Region = 4;    
+  string  FactionName = 5; 
+  Pos BasePos = 6;     
+  string SectorCoord = 7;
 }
 
 message Pos {
@@ -274,12 +276,41 @@ message Engine {
 	optional DiscoveryTechCompat DiscoveryTechCompat = 16;
 	double Mass            = 17;
 }
+message GetFactionsInput {
+  bool IncludeReputations = 1;
+  bool IncludeBribes = 2;
+  bool FilterToUseful = 3;
+}
 message GetFactionsReply {
   repeated Faction Items = 1;
 }
 message Faction {
+  string Name = 1;
+  string ShortName = 2;
+  string Nickname = 3;
+  double ObjectDestruction = 4;
+  double MissionSuccess = 5;
+	double MissionFailure = 6;
+	double MissionAbort   = 7;
 
+  int64 InfonameID = 8;
+  int64 InfocardID = 9;
+
+  repeated Reputation Reputations = 10;
+  repeated Bribe Bribes = 11;
 }
+message Reputation {
+  string Name = 1;
+  double Rep = 2;
+  double Empathy = 3;
+  string Nickname = 4;
+}
+message Bribe {
+  string BaseNickname = 1;
+  double Chance = 2;
+  BaseInfo BaseInfo = 3;
+}
+
 message GetGunsReply {
   repeated Gun Items = 1;
 }

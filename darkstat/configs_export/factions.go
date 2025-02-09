@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/mbases_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 )
@@ -18,10 +17,9 @@ type Reputation struct {
 }
 
 type Faction struct {
-	Name         string          `json:"name"  validate:"required"`
-	ShortName    string          `json:"short_name"  validate:"required"`
-	Nickname     string          `json:"nickname"  validate:"required"`
-	NicknameHash flhash.HashCode `json:"-" swaggerignore:"true"`
+	Name      string `json:"name"  validate:"required"`
+	ShortName string `json:"short_name"  validate:"required"`
+	Nickname  string `json:"nickname"  validate:"required"`
 
 	ObjectDestruction float64 `json:"object_destruction"  validate:"required"`
 	MissionSuccess    float64 `json:"mission_success"  validate:"required"`
@@ -57,11 +55,10 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 	for _, group := range e.Configs.InitialWorld.Groups {
 		var nickname string = group.Nickname.Get()
 		faction := Faction{
-			Nickname:     nickname,
-			NicknameHash: flhash.HashFaction(nickname),
-			InfonameID:   group.IdsName.Get(),
-			InfocardID:   group.IdsInfo.Get(),
-			InfocardKey:  InfocardKey(nickname),
+			Nickname:    nickname,
+			InfonameID:  group.IdsName.Get(),
+			InfocardID:  group.IdsInfo.Get(),
+			InfocardKey: InfocardKey(nickname),
 		}
 
 		if rephacks, ok := faction_rephacks[nickname]; ok {

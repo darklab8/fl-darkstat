@@ -34,13 +34,19 @@ func NewMarketGood(good *configs_export.MarketGood) *pb.MarketGood {
 
 		NotBuyable:             good.NotBuyable,
 		IsTransportUnreachable: good.IsTransportUnreachable,
-		BaseNickname:           good.BaseName,
-		BaseName:               good.BaseName,
-		SystemName:             good.SystemName,
-		Region:                 good.Region,
-		FactionName:            good.FactionName,
-		BasePos:                NewPos(&good.BasePos),
-		SectorCoord:            good.SectorCoord,
+		BaseInfo:               NewBaseInfo(good.BaseInfo),
+	}
+}
+
+func NewBaseInfo(BaseInfo configs_export.BaseInfo) *pb.BaseInfo {
+	return &pb.BaseInfo{
+		BaseNickname: BaseInfo.BaseName,
+		BaseName:     BaseInfo.BaseName,
+		SystemName:   BaseInfo.SystemName,
+		Region:       BaseInfo.Region,
+		FactionName:  BaseInfo.FactionName,
+		BasePos:      NewPos(&BaseInfo.BasePos),
+		SectorCoord:  BaseInfo.SectorCoord,
 	}
 }
 

@@ -244,6 +244,38 @@
         ]
       }
     },
+    "/statproto.Darkstat/GetFactions": {
+      "post": {
+        "operationId": "Darkstat_GetFactions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetFactionsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetFactionsInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
     "/statproto.Darkstat/GetGraphPaths": {
       "post": {
         "operationId": "Darkstat_GetGraphPaths",
@@ -607,6 +639,47 @@
       },
       "title": "The response message containing the greetings"
     },
+    "statprotoBaseInfo": {
+      "type": "object",
+      "properties": {
+        "BaseNickname": {
+          "type": "string"
+        },
+        "BaseName": {
+          "type": "string"
+        },
+        "SystemName": {
+          "type": "string"
+        },
+        "Region": {
+          "type": "string"
+        },
+        "FactionName": {
+          "type": "string"
+        },
+        "BasePos": {
+          "$ref": "#/definitions/statprotoPos"
+        },
+        "SectorCoord": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoBribe": {
+      "type": "object",
+      "properties": {
+        "BaseNickname": {
+          "type": "string"
+        },
+        "Chance": {
+          "type": "number",
+          "format": "double"
+        },
+        "BaseInfo": {
+          "$ref": "#/definitions/statprotoBaseInfo"
+        }
+      }
+    },
     "statprotoCommodity": {
       "type": "object",
       "properties": {
@@ -818,6 +891,58 @@
         }
       }
     },
+    "statprotoFaction": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "ShortName": {
+          "type": "string"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "ObjectDestruction": {
+          "type": "number",
+          "format": "double"
+        },
+        "MissionSuccess": {
+          "type": "number",
+          "format": "double"
+        },
+        "MissionFailure": {
+          "type": "number",
+          "format": "double"
+        },
+        "MissionAbort": {
+          "type": "number",
+          "format": "double"
+        },
+        "InfonameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfocardID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Reputations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoReputation"
+          }
+        },
+        "Bribes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoBribe"
+          }
+        }
+      }
+    },
     "statprotoGetAmmoReply": {
       "type": "object",
       "properties": {
@@ -913,6 +1038,32 @@
         },
         "FilterToUseful": {
           "type": "boolean"
+        }
+      }
+    },
+    "statprotoGetFactionsInput": {
+      "type": "object",
+      "properties": {
+        "IncludeReputations": {
+          "type": "boolean"
+        },
+        "IncludeBribes": {
+          "type": "boolean"
+        },
+        "FilterToUseful": {
+          "type": "boolean"
+        }
+      }
+    },
+    "statprotoGetFactionsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoFaction"
+          }
         }
       }
     },
@@ -1122,26 +1273,8 @@
         "IsTransportUnreachable": {
           "type": "boolean"
         },
-        "BaseNickname": {
-          "type": "string"
-        },
-        "BaseName": {
-          "type": "string"
-        },
-        "SystemName": {
-          "type": "string"
-        },
-        "Region": {
-          "type": "string"
-        },
-        "FactionName": {
-          "type": "string"
-        },
-        "BasePos": {
-          "$ref": "#/definitions/statprotoPos"
-        },
-        "SectorCoord": {
-          "type": "string"
+        "baseInfo": {
+          "$ref": "#/definitions/statprotoBaseInfo"
         }
       }
     },
@@ -1286,6 +1419,25 @@
         "Z": {
           "type": "number",
           "format": "double"
+        }
+      }
+    },
+    "statprotoReputation": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Rep": {
+          "type": "number",
+          "format": "double"
+        },
+        "Empathy": {
+          "type": "number",
+          "format": "double"
+        },
+        "Nickname": {
+          "type": "string"
         }
       }
     },

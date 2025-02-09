@@ -126,4 +126,15 @@ func TestRpc(t *testing.T) {
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.HashesByNick), 0)
 	})
+
+	t.Run("GetFactions", func(t *testing.T) {
+		res, err := c.GetFactions(context.Background(), &statproto.GetFactionsInput{
+			IncludeReputations: true,
+			IncludeBribes:      true,
+		})
+		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
+		if app_data.Configs.Configs.Discovery != nil {
+			assert.Greater(t, len(res.Items), 0)
+		}
+	})
 }

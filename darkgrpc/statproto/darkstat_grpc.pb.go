@@ -29,6 +29,7 @@ const (
 	Darkstat_GetAmmos_FullMethodName                 = "/statproto.Darkstat/GetAmmos"
 	Darkstat_GetCounterMeasures_FullMethodName       = "/statproto.Darkstat/GetCounterMeasures"
 	Darkstat_GetEngines_FullMethodName               = "/statproto.Darkstat/GetEngines"
+	Darkstat_GetFactions_FullMethodName              = "/statproto.Darkstat/GetFactions"
 	Darkstat_GetTractors_FullMethodName              = "/statproto.Darkstat/GetTractors"
 	Darkstat_GetHashes_FullMethodName                = "/statproto.Darkstat/GetHashes"
 	Darkstat_GetGraphPaths_FullMethodName            = "/statproto.Darkstat/GetGraphPaths"
@@ -55,6 +56,7 @@ type DarkstatClient interface {
 	GetAmmos(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetAmmoReply, error)
 	GetCounterMeasures(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetCounterMeasuresReply, error)
 	GetEngines(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetEnginesReply, error)
+	GetFactions(ctx context.Context, in *GetFactionsInput, opts ...grpc.CallOption) (*GetFactionsReply, error)
 	// Get Tractors. For Discovery those are IDs
 	GetTractors(ctx context.Context, in *GetTractorsInput, opts ...grpc.CallOption) (*GetTractorsReply, error)
 	GetHashes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetHashesReply, error)
@@ -169,6 +171,16 @@ func (c *darkstatClient) GetEngines(ctx context.Context, in *GetEquipmentInput, 
 	return out, nil
 }
 
+func (c *darkstatClient) GetFactions(ctx context.Context, in *GetFactionsInput, opts ...grpc.CallOption) (*GetFactionsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetFactionsReply)
+	err := c.cc.Invoke(ctx, Darkstat_GetFactions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *darkstatClient) GetTractors(ctx context.Context, in *GetTractorsInput, opts ...grpc.CallOption) (*GetTractorsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTractorsReply)
@@ -220,6 +232,7 @@ type DarkstatServer interface {
 	GetAmmos(context.Context, *GetEquipmentInput) (*GetAmmoReply, error)
 	GetCounterMeasures(context.Context, *GetEquipmentInput) (*GetCounterMeasuresReply, error)
 	GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error)
+	GetFactions(context.Context, *GetFactionsInput) (*GetFactionsReply, error)
 	// Get Tractors. For Discovery those are IDs
 	GetTractors(context.Context, *GetTractorsInput) (*GetTractorsReply, error)
 	GetHashes(context.Context, *Empty) (*GetHashesReply, error)
@@ -263,6 +276,9 @@ func (UnimplementedDarkstatServer) GetCounterMeasures(context.Context, *GetEquip
 }
 func (UnimplementedDarkstatServer) GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEngines not implemented")
+}
+func (UnimplementedDarkstatServer) GetFactions(context.Context, *GetFactionsInput) (*GetFactionsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFactions not implemented")
 }
 func (UnimplementedDarkstatServer) GetTractors(context.Context, *GetTractorsInput) (*GetTractorsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTractors not implemented")
@@ -474,6 +490,24 @@ func _Darkstat_GetEngines_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Darkstat_GetFactions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFactionsInput)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkstatServer).GetFactions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Darkstat_GetFactions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkstatServer).GetFactions(ctx, req.(*GetFactionsInput))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Darkstat_GetTractors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTractorsInput)
 	if err := dec(in); err != nil {
@@ -574,6 +608,10 @@ var Darkstat_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEngines",
 			Handler:    _Darkstat_GetEngines_Handler,
+		},
+		{
+			MethodName: "GetFactions",
+			Handler:    _Darkstat_GetFactions_Handler,
 		},
 		{
 			MethodName: "GetTractors",
