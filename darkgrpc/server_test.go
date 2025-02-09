@@ -143,4 +143,12 @@ func TestRpc(t *testing.T) {
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 	})
+	t.Run("GetShips", func(t *testing.T) {
+		res, err := c.GetShips(context.Background(), &statproto.GetEquipmentInput{
+			IncludeMarketGoods: true,
+			IncludeTechCompat:  true,
+		})
+		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
+		assert.Greater(t, len(res.Items), 0)
+	})
 }

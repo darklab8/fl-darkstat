@@ -444,9 +444,40 @@
         ]
       }
     },
+    "/statproto.Darkstat/GetShips": {
+      "post": {
+        "operationId": "Darkstat_GetShips",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetShipsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
     "/statproto.Darkstat/GetThrusters": {
       "post": {
-        "summary": "rpc GetGuns (GetEquipmentInput) returns (GetGunsReply) {}\nrpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}\nrpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}\nrpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}\nrpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}",
         "operationId": "Darkstat_GetThrusters",
         "responses": {
           "200": {
@@ -836,6 +867,15 @@
         }
       }
     },
+    "statprotoDiscoShip": {
+      "type": "object",
+      "properties": {
+        "ArmorMult": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "statprotoDiscoveryTechCompat": {
       "type": "object",
       "properties": {
@@ -921,6 +961,20 @@
         "Mass": {
           "type": "number",
           "format": "double"
+        }
+      }
+    },
+    "statprotoEquipmentSlot": {
+      "type": "object",
+      "properties": {
+        "SlotName": {
+          "type": "string"
+        },
+        "AllowedEquip": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -1169,6 +1223,18 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/statprotoPoB"
+          }
+        }
+      }
+    },
+    "statprotoGetShipsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoShip"
           }
         }
       }
@@ -1481,6 +1547,159 @@
           "type": "number",
           "format": "double"
         },
+        "Nickname": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoShip": {
+      "type": "object",
+      "properties": {
+        "Nickname": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Class": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Armor": {
+          "type": "string",
+          "format": "int64"
+        },
+        "HoldSize": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Nanobots": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Batteries": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "PowerCapacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "PowerRechargeRate": {
+          "type": "string",
+          "format": "int64"
+        },
+        "CruiseSpeed": {
+          "type": "string",
+          "format": "int64"
+        },
+        "LinearDrag": {
+          "type": "number",
+          "format": "double"
+        },
+        "EngineMaxForce": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ImpulseSpeed": {
+          "type": "number",
+          "format": "double"
+        },
+        "ThrusterSpeed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        },
+        "ReverseFraction": {
+          "type": "number",
+          "format": "double"
+        },
+        "ThrustCapacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ThrustRecharge": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MaxAngularSpeedDegS": {
+          "type": "number",
+          "format": "double"
+        },
+        "AngularDistanceFrom0ToHalfSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "TimeTo90MaxAngularSpeed": {
+          "type": "number",
+          "format": "double"
+        },
+        "NudgeForce": {
+          "type": "number",
+          "format": "double"
+        },
+        "StrafeForce": {
+          "type": "number",
+          "format": "double"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Slots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoEquipmentSlot"
+          }
+        },
+        "BiggestHardpoint": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ShipPackages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoShipPackage"
+          }
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        },
+        "DiscoShip": {
+          "$ref": "#/definitions/statprotoDiscoShip"
+        }
+      }
+    },
+    "statprotoShipPackage": {
+      "type": "object",
+      "properties": {
         "Nickname": {
           "type": "string"
         }

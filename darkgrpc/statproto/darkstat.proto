@@ -47,7 +47,8 @@ service Darkstat {
   // rpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}
   // rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
   // rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
-  // rpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}
+
+  rpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}
   rpc GetThrusters (GetEquipmentInput) returns (GetThrustersReply) {}
 
   rpc GetFactions (GetFactionsInput) returns (GetFactionsReply) {}
@@ -339,7 +340,55 @@ message GetShipsReply {
   repeated Ship Items = 1;
 }
 message Ship {
+	string Nickname  = 1;
+	string Name      = 2;
+	int64 Class      = 3;
+	string Type      = 4;
+	int64 Price      = 5;
+	int64 Armor      = 6;
+	int64 HoldSize   = 7;
+	int64 Nanobots   = 8;
+	int64 Batteries  = 9;
+	double Mass      = 10;
 
+	int64 PowerCapacity     = 11;
+	int64 PowerRechargeRate = 12;
+	int64 CruiseSpeed       = 13;
+	double LinearDrag       = 14;
+	int64 EngineMaxForce    = 15;
+	double ImpulseSpeed     = 16;
+	repeated int64 ThrusterSpeed = 17;
+	double ReverseFraction  = 18;
+	int64 ThrustCapacity    = 19;
+	int64 ThrustRecharge    = 20;
+
+	double MaxAngularSpeedDegS           = 21;
+	double AngularDistanceFrom0ToHalfSec = 22;
+	double TimeTo90MaxAngularSpeed       = 23;
+
+	double NudgeForce  = 24;
+	double StrafeForce = 25;
+	int64 NameID       = 26;
+	int64 InfoID       = 27;
+
+	repeated EquipmentSlot Slots     = 28;
+	repeated string BiggestHardpoint = 29;
+	repeated ShipPackage ShipPackages  = 30;
+
+	map<string, MarketGood> Bases  = 31;            
+	optional DiscoveryTechCompat DiscoveryTechCompat = 32;
+
+	optional DiscoShip DiscoShip = 33;
+}
+message EquipmentSlot {
+  string SlotName   = 1;
+  repeated string AllowedEquip = 2;
+}
+message ShipPackage {
+  string Nickname  = 1;
+}
+message DiscoShip {
+  double ArmorMult = 1;
 }
 message GetThrustersReply {
   repeated Thruster Items = 1;
