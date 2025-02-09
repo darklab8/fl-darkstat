@@ -167,7 +167,7 @@ func main() {
 		rpc_server := darkrpc.NewRpcServer(darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
 		rpc_server.Serve(app_data)
 
-		grpc_server := darkgrpc.NewServer(app_data, darkgrpc.DefaultServerPort)
+		grpc_server := darkgrpc.NewServer(app_data, darkgrpc.DefaultServerPort, darkgrpc.WithSockAddr(darkgrpc.DarkstatGRpcSock))
 		go grpc_server.Serve()
 
 		return func() {

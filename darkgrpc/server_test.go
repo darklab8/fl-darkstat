@@ -16,16 +16,17 @@ import (
 func TestRpc(t *testing.T) {
 
 	test_port := 8524
+	unix_socket := "/tmp/testing_grpc.sock"
 
 	app_data := router.GetAppDataFixture()
 
 	// TODO write some day sock support
 	// some_socket := "/tmp/darkstat/api_test.sock"
 
-	grpc_server := NewServer(app_data, test_port)
+	grpc_server := NewServer(app_data, test_port, WithSockAddr(unix_socket))
 	go grpc_server.Serve()
 
-	c := NewClient(fmt.Sprintf("localhost:%d", test_port))
+	c := NewClient(fmt.Sprintf("unix:%s", unix_socket))
 	defer c.Conn.Close()
 	maxSizeOption := grpc.MaxCallRecvMsgSize(32 * 10e6)
 
