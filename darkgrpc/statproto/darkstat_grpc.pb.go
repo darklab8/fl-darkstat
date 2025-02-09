@@ -19,16 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Darkstat_GetHealth_FullMethodName          = "/statproto.Darkstat/GetHealth"
-	Darkstat_GetBases_FullMethodName           = "/statproto.Darkstat/GetBases"
-	Darkstat_GetPoBs_FullMethodName            = "/statproto.Darkstat/GetPoBs"
-	Darkstat_GetPoBGoods_FullMethodName        = "/statproto.Darkstat/GetPoBGoods"
-	Darkstat_GetPoBBases_FullMethodName        = "/statproto.Darkstat/GetPoBBases"
-	Darkstat_GetCommodities_FullMethodName     = "/statproto.Darkstat/GetCommodities"
-	Darkstat_GetAmmos_FullMethodName           = "/statproto.Darkstat/GetAmmos"
-	Darkstat_GetCounterMeasures_FullMethodName = "/statproto.Darkstat/GetCounterMeasures"
-	Darkstat_GetEngines_FullMethodName         = "/statproto.Darkstat/GetEngines"
-	Darkstat_GetGraphPaths_FullMethodName      = "/statproto.Darkstat/GetGraphPaths"
+	Darkstat_GetHealth_FullMethodName           = "/statproto.Darkstat/GetHealth"
+	Darkstat_GetBases_FullMethodName            = "/statproto.Darkstat/GetBases"
+	Darkstat_GetMiningOperations_FullMethodName = "/statproto.Darkstat/GetMiningOperations"
+	Darkstat_GetPoBs_FullMethodName             = "/statproto.Darkstat/GetPoBs"
+	Darkstat_GetPoBGoods_FullMethodName         = "/statproto.Darkstat/GetPoBGoods"
+	Darkstat_GetPoBBases_FullMethodName         = "/statproto.Darkstat/GetPoBBases"
+	Darkstat_GetCommodities_FullMethodName      = "/statproto.Darkstat/GetCommodities"
+	Darkstat_GetAmmos_FullMethodName            = "/statproto.Darkstat/GetAmmos"
+	Darkstat_GetCounterMeasures_FullMethodName  = "/statproto.Darkstat/GetCounterMeasures"
+	Darkstat_GetEngines_FullMethodName          = "/statproto.Darkstat/GetEngines"
+	Darkstat_GetGraphPaths_FullMethodName       = "/statproto.Darkstat/GetGraphPaths"
 )
 
 // DarkstatClient is the client API for Darkstat service.
@@ -39,6 +40,8 @@ type DarkstatClient interface {
 	GetHealth(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HealthReply, error)
 	// Get all Freelancer NPC Bases
 	GetBases(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
+	// Get all imaginary bases that in place of mining fields. Useful for trading calculations
+	GetMiningOperations(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
 	// Get all Player Owned Bases. Completely all that are public exposed
 	GetPoBs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBsReply, error)
 	// Get all PoB goods, where they are sold and bought. Reverse search by PoBs
@@ -75,6 +78,16 @@ func (c *darkstatClient) GetBases(ctx context.Context, in *GetBasesInput, opts .
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetBasesReply)
 	err := c.cc.Invoke(ctx, Darkstat_GetBases_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *darkstatClient) GetMiningOperations(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBasesReply)
+	err := c.cc.Invoke(ctx, Darkstat_GetMiningOperations_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -169,6 +182,8 @@ type DarkstatServer interface {
 	GetHealth(context.Context, *Empty) (*HealthReply, error)
 	// Get all Freelancer NPC Bases
 	GetBases(context.Context, *GetBasesInput) (*GetBasesReply, error)
+	// Get all imaginary bases that in place of mining fields. Useful for trading calculations
+	GetMiningOperations(context.Context, *GetBasesInput) (*GetBasesReply, error)
 	// Get all Player Owned Bases. Completely all that are public exposed
 	GetPoBs(context.Context, *Empty) (*GetPoBsReply, error)
 	// Get all PoB goods, where they are sold and bought. Reverse search by PoBs
@@ -196,6 +211,9 @@ func (UnimplementedDarkstatServer) GetHealth(context.Context, *Empty) (*HealthRe
 }
 func (UnimplementedDarkstatServer) GetBases(context.Context, *GetBasesInput) (*GetBasesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBases not implemented")
+}
+func (UnimplementedDarkstatServer) GetMiningOperations(context.Context, *GetBasesInput) (*GetBasesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMiningOperations not implemented")
 }
 func (UnimplementedDarkstatServer) GetPoBs(context.Context, *Empty) (*GetPoBsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPoBs not implemented")
@@ -274,6 +292,24 @@ func _Darkstat_GetBases_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DarkstatServer).GetBases(ctx, req.(*GetBasesInput))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Darkstat_GetMiningOperations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBasesInput)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkstatServer).GetMiningOperations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Darkstat_GetMiningOperations_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkstatServer).GetMiningOperations(ctx, req.(*GetBasesInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -436,6 +472,10 @@ var Darkstat_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetBases",
 			Handler:    _Darkstat_GetBases_Handler,
+		},
+		{
+			MethodName: "GetMiningOperations",
+			Handler:    _Darkstat_GetMiningOperations_Handler,
 		},
 		{
 			MethodName: "GetPoBs",

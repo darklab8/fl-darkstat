@@ -14,7 +14,34 @@ func (s *Server) GetBases(_ context.Context, in *pb.GetBasesInput) (*pb.GetBases
 	}
 
 	var bases []*pb.Base
-	for _, base := range s.app_data.Configs.Bases {
+	var items []*configs_export.Base
+	if in.FilterToUseful {
+		items = configs_export.FilterToUserfulBases(s.app_data.Configs.Bases)
+	} else {
+		items = s.app_data.Configs.Bases
+	}
+
+	for _, base := range items {
+		bases = append(bases, NewBase(base, in.IncludeMarketGoods))
+	}
+	return &pb.GetBasesReply{Items: bases}, nil
+}
+
+func (s *Server) GetMiningOperations(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
+	if s.app_data != nil {
+		s.app_data.Lock()
+		defer s.app_data.Unlock()
+	}
+
+	var bases []*pb.Base
+	var input []*configs_export.Base
+	if in.FilterToUseful {
+		input = configs_export.FilterToUserfulBases(s.app_data.Configs.MiningOperations)
+	} else {
+		input = s.app_data.Configs.MiningOperations
+	}
+
+	for _, base := range input {
 		bases = append(bases, NewBase(base, in.IncludeMarketGoods))
 	}
 	return &pb.GetBasesReply{Items: bases}, nil

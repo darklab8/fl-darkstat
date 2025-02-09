@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
 func (s *Server) GetCommodities(_ context.Context, in *pb.GetCommoditiesInput) (*pb.GetCommoditiesReply, error) {
@@ -11,8 +12,16 @@ func (s *Server) GetCommodities(_ context.Context, in *pb.GetCommoditiesInput) (
 		s.app_data.Lock()
 		defer s.app_data.Unlock()
 	}
+
+	var input []*configs_export.Commodity
+	if in.FilterToUseful {
+		input = s.app_data.Configs.FilterToUsefulCommodities(s.app_data.Configs.Commodities)
+	} else {
+		input = s.app_data.Configs.Commodities
+	}
+
 	var items []*pb.Commodity
-	for _, item := range s.app_data.Configs.Commodities {
+	for _, item := range input {
 		result := &pb.Commodity{
 			Nickname:              item.Nickname,
 			PriceBase:             int64(item.PriceBase),

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
 func (s *Server) GetCounterMeasures(_ context.Context, in *pb.GetEquipmentInput) (*pb.GetCounterMeasuresReply, error) {
@@ -12,8 +13,15 @@ func (s *Server) GetCounterMeasures(_ context.Context, in *pb.GetEquipmentInput)
 		defer s.app_data.Unlock()
 	}
 
+	var input []configs_export.CounterMeasure
+	if in.FilterToUseful {
+		input = s.app_data.Configs.FilterToUsefulCounterMeasures(s.app_data.Configs.CMs)
+	} else {
+		input = s.app_data.Configs.CMs
+	}
+
 	var items []*pb.CounterMeasure
-	for _, item := range s.app_data.Configs.CMs {
+	for _, item := range input {
 		result := &pb.CounterMeasure{
 			Name:             item.Name,
 			Price:            int64(item.Price),

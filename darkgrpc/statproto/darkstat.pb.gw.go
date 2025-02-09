@@ -83,6 +83,30 @@ func local_request_Darkstat_GetBases_0(ctx context.Context, marshaler runtime.Ma
 	return msg, metadata, err
 }
 
+func request_Darkstat_GetMiningOperations_0(ctx context.Context, marshaler runtime.Marshaler, client DarkstatClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetBasesInput
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.GetMiningOperations(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_Darkstat_GetMiningOperations_0(ctx context.Context, marshaler runtime.Marshaler, server DarkstatServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetBasesInput
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.GetMiningOperations(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_Darkstat_GetPoBs_0(ctx context.Context, marshaler runtime.Marshaler, client DarkstatClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq Empty
@@ -321,6 +345,26 @@ func RegisterDarkstatHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		}
 		forward_Darkstat_GetBases_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_Darkstat_GetMiningOperations_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/statproto.Darkstat/GetMiningOperations", runtime.WithHTTPPathPattern("/statproto.Darkstat/GetMiningOperations"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Darkstat_GetMiningOperations_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Darkstat_GetMiningOperations_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_Darkstat_GetPoBs_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -555,6 +599,23 @@ func RegisterDarkstatHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		}
 		forward_Darkstat_GetBases_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_Darkstat_GetMiningOperations_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/statproto.Darkstat/GetMiningOperations", runtime.WithHTTPPathPattern("/statproto.Darkstat/GetMiningOperations"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Darkstat_GetMiningOperations_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_Darkstat_GetMiningOperations_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_Darkstat_GetPoBs_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -695,27 +756,29 @@ func RegisterDarkstatHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 }
 
 var (
-	pattern_Darkstat_GetHealth_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetHealth"}, ""))
-	pattern_Darkstat_GetBases_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetBases"}, ""))
-	pattern_Darkstat_GetPoBs_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetPoBs"}, ""))
-	pattern_Darkstat_GetPoBGoods_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetPoBGoods"}, ""))
-	pattern_Darkstat_GetPoBBases_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetPoBBases"}, ""))
-	pattern_Darkstat_GetCommodities_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetCommodities"}, ""))
-	pattern_Darkstat_GetAmmos_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetAmmos"}, ""))
-	pattern_Darkstat_GetCounterMeasures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetCounterMeasures"}, ""))
-	pattern_Darkstat_GetEngines_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetEngines"}, ""))
-	pattern_Darkstat_GetGraphPaths_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetGraphPaths"}, ""))
+	pattern_Darkstat_GetHealth_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetHealth"}, ""))
+	pattern_Darkstat_GetBases_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetBases"}, ""))
+	pattern_Darkstat_GetMiningOperations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetMiningOperations"}, ""))
+	pattern_Darkstat_GetPoBs_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetPoBs"}, ""))
+	pattern_Darkstat_GetPoBGoods_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetPoBGoods"}, ""))
+	pattern_Darkstat_GetPoBBases_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetPoBBases"}, ""))
+	pattern_Darkstat_GetCommodities_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetCommodities"}, ""))
+	pattern_Darkstat_GetAmmos_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetAmmos"}, ""))
+	pattern_Darkstat_GetCounterMeasures_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetCounterMeasures"}, ""))
+	pattern_Darkstat_GetEngines_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetEngines"}, ""))
+	pattern_Darkstat_GetGraphPaths_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"statproto.Darkstat", "GetGraphPaths"}, ""))
 )
 
 var (
-	forward_Darkstat_GetHealth_0          = runtime.ForwardResponseMessage
-	forward_Darkstat_GetBases_0           = runtime.ForwardResponseMessage
-	forward_Darkstat_GetPoBs_0            = runtime.ForwardResponseMessage
-	forward_Darkstat_GetPoBGoods_0        = runtime.ForwardResponseMessage
-	forward_Darkstat_GetPoBBases_0        = runtime.ForwardResponseMessage
-	forward_Darkstat_GetCommodities_0     = runtime.ForwardResponseMessage
-	forward_Darkstat_GetAmmos_0           = runtime.ForwardResponseMessage
-	forward_Darkstat_GetCounterMeasures_0 = runtime.ForwardResponseMessage
-	forward_Darkstat_GetEngines_0         = runtime.ForwardResponseMessage
-	forward_Darkstat_GetGraphPaths_0      = runtime.ForwardResponseMessage
+	forward_Darkstat_GetHealth_0           = runtime.ForwardResponseMessage
+	forward_Darkstat_GetBases_0            = runtime.ForwardResponseMessage
+	forward_Darkstat_GetMiningOperations_0 = runtime.ForwardResponseMessage
+	forward_Darkstat_GetPoBs_0             = runtime.ForwardResponseMessage
+	forward_Darkstat_GetPoBGoods_0         = runtime.ForwardResponseMessage
+	forward_Darkstat_GetPoBBases_0         = runtime.ForwardResponseMessage
+	forward_Darkstat_GetCommodities_0      = runtime.ForwardResponseMessage
+	forward_Darkstat_GetAmmos_0            = runtime.ForwardResponseMessage
+	forward_Darkstat_GetCounterMeasures_0  = runtime.ForwardResponseMessage
+	forward_Darkstat_GetEngines_0          = runtime.ForwardResponseMessage
+	forward_Darkstat_GetGraphPaths_0       = runtime.ForwardResponseMessage
 )

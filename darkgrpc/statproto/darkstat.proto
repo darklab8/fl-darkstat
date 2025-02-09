@@ -16,6 +16,9 @@ With Unix Sockets u get extra performance boosts to pull all the data.
 
 the Grpc api is the one for any new feature additions
 Grpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.
+
+NOTE: Routes have defined input `IncludeMarketGoods` and `IncludeTechCompat` at least.
+Depending on your having them true or not, significantly different amount of data is pushed
 */
 
 service Darkstat {
@@ -24,6 +27,8 @@ service Darkstat {
 
   // Get all Freelancer NPC Bases
   rpc GetBases (GetBasesInput) returns (GetBasesReply);
+  // Get all imaginary bases that in place of mining fields. Useful for trading calculations
+  rpc GetMiningOperations (GetBasesInput) returns (GetBasesReply);
 
   // Get all Player Owned Bases. Completely all that are public exposed
   rpc GetPoBs (Empty) returns (GetPoBsReply);
@@ -62,9 +67,11 @@ message HealthReply {
 message GetEquipmentInput {
   bool IncludeMarketGoods = 1;
   bool IncludeTechCompat = 2;
+  bool FilterToUseful = 3;
 }
 message GetBasesInput {
   bool IncludeMarketGoods = 1;
+  bool FilterToUseful = 2;
 }
 message GetBasesReply {
   repeated Base Items = 1;
@@ -139,6 +146,7 @@ message GetCommoditiesInput {
   //
   // Example: `false`
   bool IncludeMarketGoods = 1;
+  bool FilterToUseful = 2;
 }
 message GetCommoditiesReply {
   repeated Commodity Items = 1;

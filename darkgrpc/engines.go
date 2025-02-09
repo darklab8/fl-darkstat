@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
 func (s *Server) GetEngines(_ context.Context, in *pb.GetEquipmentInput) (*pb.GetEnginesReply, error) {
@@ -12,8 +13,15 @@ func (s *Server) GetEngines(_ context.Context, in *pb.GetEquipmentInput) (*pb.Ge
 		defer s.app_data.Unlock()
 	}
 
+	var input []configs_export.Engine
+	if in.FilterToUseful {
+		input = s.app_data.Configs.FilterToUsefulEngines(s.app_data.Configs.Engines)
+	} else {
+		input = s.app_data.Configs.Engines
+	}
+
 	var items []*pb.Engine
-	for _, item := range s.app_data.Configs.Engines {
+	for _, item := range input {
 		result := &pb.Engine{
 			Name:             item.Name,
 			Price:            int64(item.Price),

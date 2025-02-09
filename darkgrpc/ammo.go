@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
 func (s *Server) GetAmmos(_ context.Context, in *pb.GetEquipmentInput) (*pb.GetAmmoReply, error) {
@@ -12,8 +13,15 @@ func (s *Server) GetAmmos(_ context.Context, in *pb.GetEquipmentInput) (*pb.GetA
 		defer s.app_data.Unlock()
 	}
 
+	var input []configs_export.Ammo
+	if in.FilterToUseful {
+		input = s.app_data.Configs.FilterToUsefulAmmo(s.app_data.Configs.Ammos)
+	} else {
+		input = s.app_data.Configs.Ammos
+	}
+
 	var items []*pb.Ammo
-	for _, item := range s.app_data.Configs.Ammos {
+	for _, item := range input {
 		result := &pb.Ammo{
 			Name:             item.Name, //
 			Price:            int64(item.Price),
