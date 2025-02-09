@@ -7,7 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
-func (s *Server) GetBases(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
+func (s *Server) GetBasesNpc(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
 	if s.app_data != nil {
 		s.app_data.Lock()
 		defer s.app_data.Unlock()
