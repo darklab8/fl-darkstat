@@ -20,6 +20,9 @@ inputs:
   relay-host:
     description: turning of optional dark relay features. necessary only for Discovery
     default: "http://localhost:8080"
+  apigateway-host:
+    description: optional feature to see apigateway
+    default: "http://localhost:8081"
 
 runs:
   using: "composite"
@@ -53,4 +56,5 @@ runs:
         FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
         FLDARKSTAT_HEADING: ${{ inputs.heading }}
         RELAY_HOST: ${{ inputs.relay-host }}
+        GRPCGATEWAY_URL: ${{ inputs. apigateway-host }}
         DEV_ENV: "true"
