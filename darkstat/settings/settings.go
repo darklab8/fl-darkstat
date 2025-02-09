@@ -41,16 +41,15 @@ type DarkstatEnvVars struct {
 
 	IsCPUProfilerEnabled bool
 	IsMemProfilerEnabled bool
+
+	IsStaticSiteGenerator bool
 }
 
 func IsApiActive() bool {
-	if Env.IsDevEnv {
-		return true
+	if Env.IsStaticSiteGenerator && strings.Contains(Env.GrpcGatewayUrl, "localhost") {
+		return false
 	}
-	if !strings.Contains(Env.GrpcGatewayUrl, "localhost") {
-		return true
-	}
-	return false
+	return true
 }
 
 var Env DarkstatEnvVars

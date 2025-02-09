@@ -3,14 +3,35 @@ syntax = "proto3";
 option go_package = "github.com/darklab8/fl-darkstat/darkgrpc/statproto";
 
 package statproto;
+/*
+Newest Darkstat API. it is accessable with gRPC and with regular JSON at this grpc API gateway.
+https://github.com/darklab8/fl-darkstat#alternatively-we-offer-client-generation-through-grpc
+Check documentation how u can generate Client Library for your language of choice, C#, Python, Typescript or even C++.
+Full list of supported languages https://grpc.io/docs/languages/
+Then u will be able to benefit pulling this data with the most comfort.
+Or you can just pull as jsons from this json API as alternative.
+
+In case of local usage, this API is available both at TCP localhost, and over Unix Domain Socket when darkstat is run at Linux ^_^.
+With Unix Sockets u get extra performance boosts to pull all the data.
+
+the Grpc api is the one for any new feature additions
+Grpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.
+*/
 
 service Darkstat {
+  // Just to check if grpc works. Returns boolean value if it is healthy as true
   rpc GetHealth (Empty) returns (HealthReply);
 
+  // Get all Freelancer NPC Bases
   rpc GetBases (GetBasesInput) returns (GetBasesReply);
 
+  // Get all Player Owned Bases. Completely all that are public exposed
   rpc GetPoBs (Empty) returns (GetPoBsReply);
+  // Get all PoB goods, where they are sold and bought. Reverse search by PoBs
   rpc GetPoBGoods (Empty) returns (GetPoBGoodsReply);
+
+  // Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions
+  // Useful for trading calculations
   rpc GetPoBBases (GetBasesInput) returns (GetBasesReply);
 
   rpc GetCommodities (GetCommoditiesInput) returns (GetCommoditiesReply) {}
@@ -114,6 +135,9 @@ message Pos {
 }
 
 message GetCommoditiesInput {
+  // To Include market goods, where the item is sold and bought or not. Adds a lot of extra weight to data
+  //
+  // Example: `false`
   bool IncludeMarketGoods = 1;
 }
 message GetCommoditiesReply {

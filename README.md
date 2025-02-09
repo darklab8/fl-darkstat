@@ -83,6 +83,7 @@ If u have problems with configuring development environment, then seek my contac
     - for deployed instances for discovery and vanilla, they are hosted over darkgrpc.dd84ai.com and darkgrpc-vanilla.dd84ai.com accordingly. 80 and 443 ports accordingly
     - [see example in golang](./darkgrpc/server_test.go) of interacting with grpc if desired
     - up to date exposed grpc domains can be found [in this file](./tf/production/main.tf) as rpc_prefix + zone combination
+  - Make sure to set in your client option to increase accepting data size `grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(32 * 10e6))`.
 
 # What makes different from regular flstat
 

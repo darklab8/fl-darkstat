@@ -2,6 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "darkstat.proto",
+    "description": "Newest Darkstat API. it is accessable with gRPC and with regular JSON at this grpc API gateway.\nhttps://github.com/darklab8/fl-darkstat#alternatively-we-offer-client-generation-through-grpc\nCheck documentation how u can generate Client Library for your language of choice, C#, Python, Typescript or even C++.\nFull list of supported languages https://grpc.io/docs/languages/\nThen u will be able to benefit pulling this data with the most comfort.\nOr you can just pull as jsons from this json API as alternative.\n\nIn case of local usage, this API is available both at TCP localhost, and over Unix Domain Socket when darkstat is run at Linux ^_^.\nWith Unix Sockets u get extra performance boosts to pull all the data.",
     "version": "version not set"
   },
   "tags": [
@@ -50,6 +51,7 @@
     },
     "/statproto.Darkstat/GetBases": {
       "post": {
+        "summary": "Get all Freelancer NPC Bases",
         "operationId": "Darkstat_GetBases",
         "responses": {
           "200": {
@@ -210,6 +212,7 @@
     },
     "/statproto.Darkstat/GetHealth": {
       "post": {
+        "summary": "Just to check if grpc works. Returns boolean value if it is healthy as true",
         "operationId": "Darkstat_GetHealth",
         "responses": {
           "200": {
@@ -243,6 +246,7 @@
     },
     "/statproto.Darkstat/GetPoBBases": {
       "post": {
+        "summary": "Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions\nUseful for trading calculations",
         "operationId": "Darkstat_GetPoBBases",
         "responses": {
           "200": {
@@ -275,6 +279,7 @@
     },
     "/statproto.Darkstat/GetPoBGoods": {
       "post": {
+        "summary": "Get all PoB goods, where they are sold and bought. Reverse search by PoBs",
         "operationId": "Darkstat_GetPoBGoods",
         "responses": {
           "200": {
@@ -308,6 +313,7 @@
     },
     "/statproto.Darkstat/GetPoBs": {
       "post": {
+        "summary": "Get all Player Owned Bases. Completely all that are public exposed",
         "operationId": "Darkstat_GetPoBs",
         "responses": {
           "200": {
@@ -748,7 +754,9 @@
       "type": "object",
       "properties": {
         "IncludeMarketGoods": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Example: `false`",
+          "title": "To Include market goods, where the item is sold and bought or not. Adds a lot of extra weight to data"
         }
       }
     },

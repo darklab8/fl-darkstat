@@ -35,10 +35,16 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DarkstatClient interface {
+	// Just to check if grpc works. Returns boolean value if it is healthy as true
 	GetHealth(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HealthReply, error)
+	// Get all Freelancer NPC Bases
 	GetBases(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
+	// Get all Player Owned Bases. Completely all that are public exposed
 	GetPoBs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBsReply, error)
+	// Get all PoB goods, where they are sold and bought. Reverse search by PoBs
 	GetPoBGoods(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBGoodsReply, error)
+	// Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions
+	// Useful for trading calculations
 	GetPoBBases(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
 	GetCommodities(ctx context.Context, in *GetCommoditiesInput, opts ...grpc.CallOption) (*GetCommoditiesReply, error)
 	GetAmmos(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetAmmoReply, error)
@@ -159,10 +165,16 @@ func (c *darkstatClient) GetGraphPaths(ctx context.Context, in *GetGraphPathsInp
 // All implementations must embed UnimplementedDarkstatServer
 // for forward compatibility.
 type DarkstatServer interface {
+	// Just to check if grpc works. Returns boolean value if it is healthy as true
 	GetHealth(context.Context, *Empty) (*HealthReply, error)
+	// Get all Freelancer NPC Bases
 	GetBases(context.Context, *GetBasesInput) (*GetBasesReply, error)
+	// Get all Player Owned Bases. Completely all that are public exposed
 	GetPoBs(context.Context, *Empty) (*GetPoBsReply, error)
+	// Get all PoB goods, where they are sold and bought. Reverse search by PoBs
 	GetPoBGoods(context.Context, *Empty) (*GetPoBGoodsReply, error)
+	// Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions
+	// Useful for trading calculations
 	GetPoBBases(context.Context, *GetBasesInput) (*GetBasesReply, error)
 	GetCommodities(context.Context, *GetCommoditiesInput) (*GetCommoditiesReply, error)
 	GetAmmos(context.Context, *GetEquipmentInput) (*GetAmmoReply, error)

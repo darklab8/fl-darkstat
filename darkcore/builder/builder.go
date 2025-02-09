@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
+	darkstat_settings "github.com/darklab8/fl-darkstat/darkstat/settings"
+
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/utils/utils_types"
@@ -73,6 +75,10 @@ func chunkSlice(slice []*Component, chunkSize int) [][]*Component {
 // }
 
 func (b *Builder) BuildAll(to_mem bool, filesystem *Filesystem) *Filesystem {
+
+	if !to_mem {
+		darkstat_settings.Env.IsStaticSiteGenerator = true
+	}
 
 	build_root := utils_types.FilePath("build")
 	if filesystem == nil {

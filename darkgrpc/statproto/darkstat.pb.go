@@ -764,8 +764,11 @@ func (x *Pos) GetZ() float64 {
 }
 
 type GetCommoditiesInput struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	IncludeMarketGoods bool                   `protobuf:"varint,1,opt,name=IncludeMarketGoods,proto3" json:"IncludeMarketGoods,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// To Include market goods, where the item is sold and bought or not. Adds a lot of extra weight to data
+	//
+	// Example: `false`
+	IncludeMarketGoods bool `protobuf:"varint,1,opt,name=IncludeMarketGoods,proto3" json:"IncludeMarketGoods,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
