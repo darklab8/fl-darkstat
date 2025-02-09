@@ -4,10 +4,10 @@ option go_package = "github.com/darklab8/fl-darkstat/darkgrpc/statproto";
 
 package statproto;
 
-service DarkGRpc {
-  rpc GetHealth (Empty) returns (HealthReply) {}
+service Darkstat {
+  rpc GetHealth (Empty) returns (HealthReply);
 
-  rpc GetBases (GetBasesInput) returns (GetBasesReply) {}
+  rpc GetBases (GetBasesInput) returns (GetBasesReply);
 
   rpc GetPoBs (Empty) returns (GetPoBsReply);
   rpc GetPoBGoods (Empty) returns (GetPoBGoodsReply);

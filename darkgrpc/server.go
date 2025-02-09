@@ -5,19 +5,25 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 	"os"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkgrpc/staticproto"
+	"github.com/darklab8/fl-darkstat/darkgrpc/statproto"
 	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
+	_ "github.com/darklab8/fl-darkstat/docs"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 )
 
 // server is used to implement helloworld.GreeterServer.
 type Server struct {
-	pb.UnimplementedDarkGRpcServer
+	pb.UnimplementedDarkstatServer
 	app_data     *appdata.AppData
 	port         int
 	sock_address string
@@ -49,8 +55,8 @@ func (r *Server) Serve() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer()
-	pb.RegisterDarkGRpcServer(s, r)
+	s := grpc.NewServer(grpc.MaxRecvMsgSize(32 * 10e6))
+	pb.RegisterDarkstatServer(s, r)
 	log.Printf("server listening at %v", lis.Addr())
 	// Register reflection service on gRPC server.
 	reflection.Register(s)
@@ -66,6 +72,53 @@ func (r *Server) Serve() {
 		go func() {
 			err = s.Serve(sock_listener)
 			logus.Log.CheckError(err, "failed to serve grpc sock")
+		}()
+	}
+
+	{
+		// GRPC GATEWAY https://github.com/grpc-ecosystem/grpc-gateway
+		ctx := context.Background()
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		mux := runtime.NewServeMux()
+		opts := []grpc.DialOption{
+			grpc.WithTransportCredentials(insecure.NewCredentials()),
+			grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(32 * 10e6)),
+		}
+
+		var err error
+		if cfg.IsLinux {
+			err = pb.RegisterDarkstatHandlerFromEndpoint(ctx, mux, fmt.Sprintf("unix:%s", DarkstatGRpcSock), opts)
+		} else {
+			err = pb.RegisterDarkstatHandlerFromEndpoint(ctx, mux, "localhost:50051", opts)
+		}
+		if err != nil {
+
+			panic(err)
+		}
+
+		// Sprinked with API documentation :)
+		mux.HandlePath("GET", "/", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			w.Write([]byte(staticproto.Index))
+		})
+		mux.HandlePath("GET", "/swagger-ui-bundle.js", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			w.Write([]byte(staticproto.JS1))
+		})
+		mux.HandlePath("GET", "/swagger-ui-standalone-preset.js", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			w.Write([]byte(staticproto.JS2))
+		})
+		mux.HandlePath("GET", "/swagger-ui.css", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			w.Write([]byte(staticproto.CSS))
+		})
+		mux.HandlePath("GET", "/docs.json", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			w.Write([]byte(statproto.SwaggerContent))
+		})
+
+		log.Printf("server listening at 8081")
+		go func() {
+			if err := http.ListenAndServe(":8081", mux); err != nil {
+				panic(err)
+			}
 		}()
 	}
 

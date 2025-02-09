@@ -10,7 +10,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/stretchr/testify/assert"
-	"google.golang.org/grpc"
 )
 
 func TestRpc(t *testing.T) {
@@ -28,7 +27,6 @@ func TestRpc(t *testing.T) {
 
 	c := NewClient(fmt.Sprintf("unix:%s", unix_socket))
 	defer c.Conn.Close()
-	maxSizeOption := grpc.MaxCallRecvMsgSize(32 * 10e6)
 
 	t.Run("GetHealth", func(t *testing.T) {
 		res, err := c.GetHealth(context.Background(), &statproto.Empty{})
@@ -38,7 +36,7 @@ func TestRpc(t *testing.T) {
 	})
 
 	t.Run("GetBases", func(t *testing.T) {
-		res, err := c.GetBases(context.Background(), &statproto.GetBasesInput{IncludeMarketGoods: true}, maxSizeOption)
+		res, err := c.GetBases(context.Background(), &statproto.GetBasesInput{IncludeMarketGoods: true})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 
@@ -48,7 +46,7 @@ func TestRpc(t *testing.T) {
 					From: string(res.Items[0].Nickname),
 					To:   string(res.Items[1].Nickname),
 				}},
-			}, maxSizeOption)
+			})
 			logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 			assert.Greater(t, len(res.Answers), 0)
 			assert.Equal(t, 1, len(res.Answers))
@@ -58,38 +56,38 @@ func TestRpc(t *testing.T) {
 	})
 
 	t.Run("GetCommodities", func(t *testing.T) {
-		res, err := c.GetCommodities(context.Background(), &statproto.GetCommoditiesInput{IncludeMarketGoods: true}, maxSizeOption)
+		res, err := c.GetCommodities(context.Background(), &statproto.GetCommoditiesInput{IncludeMarketGoods: true})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 	})
 
 	t.Run("GetAmmos", func(t *testing.T) {
-		res, err := c.GetAmmos(context.Background(), &statproto.GetEquipmentInput{}, maxSizeOption)
+		res, err := c.GetAmmos(context.Background(), &statproto.GetEquipmentInput{})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 	})
 
 	t.Run("GetCounterMeasures", func(t *testing.T) {
-		res, err := c.GetCounterMeasures(context.Background(), &statproto.GetEquipmentInput{}, maxSizeOption)
+		res, err := c.GetCounterMeasures(context.Background(), &statproto.GetEquipmentInput{})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 	})
 
 	t.Run("GetEngines", func(t *testing.T) {
-		res, err := c.GetEngines(context.Background(), &statproto.GetEquipmentInput{}, maxSizeOption)
+		res, err := c.GetEngines(context.Background(), &statproto.GetEquipmentInput{})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		assert.Greater(t, len(res.Items), 0)
 	})
 
 	t.Run("GetPoBs", func(t *testing.T) {
-		res, err := c.GetPoBs(context.Background(), &statproto.Empty{}, maxSizeOption)
+		res, err := c.GetPoBs(context.Background(), &statproto.Empty{})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		if app_data.Configs.Configs.Discovery != nil {
 			assert.Greater(t, len(res.Items), 0)
 		}
 	})
 	t.Run("GetPoBGoods", func(t *testing.T) {
-		res, err := c.GetPoBGoods(context.Background(), &statproto.Empty{}, maxSizeOption)
+		res, err := c.GetPoBGoods(context.Background(), &statproto.Empty{})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		if app_data.Configs.Configs.Discovery != nil {
 			assert.Greater(t, len(res.Items), 0)
@@ -97,7 +95,7 @@ func TestRpc(t *testing.T) {
 	})
 
 	t.Run("GetPoBBases", func(t *testing.T) {
-		res, err := c.GetPoBBases(context.Background(), &statproto.GetBasesInput{IncludeMarketGoods: true}, maxSizeOption)
+		res, err := c.GetPoBBases(context.Background(), &statproto.GetBasesInput{IncludeMarketGoods: true})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
 		if app_data.Configs.Configs.Discovery != nil {
 			assert.Greater(t, len(res.Items), 0)

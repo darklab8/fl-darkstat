@@ -55,7 +55,11 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, urls.PoBs, url, tab.WithRelay()))
 					@tab.Button(tab.NewButtn(ctx,[]string{"PoB&thinsp;","goods"}, urls.PoBGoods, url, tab.WithRelay()))
 				}
-				@tab.Button(tab.NewButtn(ctx,[]string{"API"}, urls.Swagger, url))
+				
+				if settings.IsApiActive() {
+					@tab.Button(tab.NewButtn(ctx,[]string{"Old","API"}, urls.Swagger, url, tab.WithDrectUrl()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"New","API"}, "", url, tab.WithSiteUrl(settings.Env.GrpcGatewayUrl),tab.WithDrectUrl()))
+				}
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestringWrap([]string{"Show&thinsp;", "All"})
 				</button>
@@ -91,7 +95,10 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button(tab.NewButtn(ctx,[]string{"PoB&thinsp;","goods"}, tab.AllItemsUrl(urls.PoBGoods), url, tab.WithRelay()))
 				}
 				
-				@tab.Button(tab.NewButtn(ctx,[]string{"API"}, urls.Swagger, url))
+				if settings.IsApiActive() {
+					@tab.Button(tab.NewButtn(ctx,[]string{"Old","API"}, urls.Swagger, url, tab.WithDrectUrl()))
+					@tab.Button(tab.NewButtn(ctx,[]string{"New","API"}, "", url, tab.WithSiteUrl(settings.Env.GrpcGatewayUrl),tab.WithDrectUrl()))
+				}
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + url.ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestringWrap([]string{"Don't", "Show All"})
 				</button>

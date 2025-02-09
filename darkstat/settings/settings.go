@@ -30,15 +30,27 @@ type DarkstatEnvVars struct {
 	AppVersion        string
 	IsDetailed        bool
 
-	RelayHost     string
-	RelayRoot     string
-	RelayLoopSecs int
+	GrpcGatewayUrl  string
+	GrpcGatewayRoot string
+	RelayHost       string
+	RelayRoot       string
+	RelayLoopSecs   int
 
 	IsDisabledTradeRouting       bool
 	TradeRoutesDetailedTradeLane bool
 
 	IsCPUProfilerEnabled bool
 	IsMemProfilerEnabled bool
+}
+
+func IsApiActive() bool {
+	if Env.IsDevEnv {
+		return true
+	}
+	if !strings.Contains(Env.GrpcGatewayUrl, "localhost") {
+		return true
+	}
+	return false
 }
 
 var Env DarkstatEnvVars
@@ -56,10 +68,10 @@ func init() {
 		AppHeading:        env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr("")),
 		AppVersion:        getAppVersion(),
 		IsDetailed:        env.GetBoolOr("DARKSTAT_DETAILED", false),
-
-		RelayHost:     env.GetStr("RELAY_HOST", enverant.OrStr("")),
-		RelayRoot:     env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
-		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 30),
+		GrpcGatewayUrl:    env.GetStr("GRPCGATEWAY_URL", enverant.OrStr("http://localhost:8081/")),
+		RelayHost:         env.GetStr("RELAY_HOST", enverant.OrStr("")),
+		RelayRoot:         env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
+		RelayLoopSecs:     env.GetIntOr("RELAY_LOOP_SECS", 30),
 
 		TradeRoutesDetailedTradeLane: env.GetBoolOr("DARKSTAT_TRADE_ROUTES_DETAILED_TRADE_LANE", false),
 		IsDisabledTradeRouting:       env.GetBoolOr("CONFIGS_DISABLE_TRADE_ROUTES", false), // BROKEN. DO NOT TURN THIS FEATURE ON.

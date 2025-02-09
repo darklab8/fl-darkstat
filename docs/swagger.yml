@@ -1,0 +1,549 @@
+swagger: "2.0"
+info:
+  title: main.proto
+  version: version not set
+tags:
+  - name: DarkGRpc
+consumes:
+  - application/json
+produces:
+  - application/json
+paths: {}
+definitions:
+  protobufAny:
+    type: object
+    properties:
+      '@type':
+        type: string
+    additionalProperties: {}
+  rpcStatus:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/protobufAny'
+  statprotoAmmo:
+    type: object
+    properties:
+      Name:
+        type: string
+      Price:
+        type: string
+        format: int64
+      HitPts:
+        type: string
+        format: int64
+      Volume:
+        type: number
+        format: double
+      MunitionLifetime:
+        type: number
+        format: double
+      Nickname:
+        type: string
+      NameID:
+        type: string
+        format: int64
+      InfoID:
+        type: string
+        format: int64
+      SeekerType:
+        type: string
+      SeekerRange:
+        type: string
+        format: int64
+      SeekerFovDeg:
+        type: string
+        format: int64
+      Bases:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/statprotoMarketGood'
+      DiscoveryTechCompat:
+        $ref: '#/definitions/statprotoDiscoveryTechCompat'
+      AmountInCatridge:
+        type: string
+        format: int64
+      MaxCatridges:
+        type: string
+        format: int64
+      Mass:
+        type: number
+        format: double
+  statprotoBase:
+    type: object
+    properties:
+      Name:
+        type: string
+      Archetypes:
+        type: array
+        items:
+          type: string
+      Nickname:
+        type: string
+      FactionName:
+        type: string
+      System:
+        type: string
+      SystemNickname:
+        type: string
+      Region:
+        type: string
+      StridName:
+        type: string
+        format: int64
+      InfocardID:
+        type: string
+        format: int64
+      File:
+        type: string
+      BGCSBaseRunBy:
+        type: string
+      Pos:
+        $ref: '#/definitions/statprotoPos'
+      SectorCoord:
+        type: string
+      IsTransportUnreachable:
+        type: boolean
+      Reachable:
+        type: boolean
+      IsPob:
+        type: boolean
+      MarketGoodsPerNick:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/statprotoMarketGood'
+    title: The response message containing the greetings
+  statprotoCommodity:
+    type: object
+    properties:
+      Nickname:
+        type: string
+      PriceBase:
+        type: string
+        format: int64
+      Name:
+        type: string
+      Combinable:
+        type: boolean
+      Volume:
+        type: number
+        format: double
+      ShipClass:
+        type: string
+        format: int64
+      NameID:
+        type: string
+        format: int64
+      InfocardID:
+        type: string
+        format: int64
+      Bases:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/statprotoMarketGood'
+      PriceBestBaseBuysFor:
+        type: string
+        format: int64
+      PriceBestBaseSellsFor:
+        type: string
+        format: int64
+      ProffitMargin:
+        type: string
+        format: int64
+      Mass:
+        type: number
+        format: double
+  statprotoCounterMeasure:
+    type: object
+    properties:
+      Name:
+        type: string
+      Price:
+        type: string
+        format: int64
+      HitPts:
+        type: string
+        format: int64
+      AIRange:
+        type: string
+        format: int64
+      Lifetime:
+        type: string
+        format: int64
+      Range:
+        type: string
+        format: int64
+      DiversionPctg:
+        type: string
+        format: int64
+      Lootable:
+        type: boolean
+      Nickname:
+        type: string
+      NameID:
+        type: string
+        format: int64
+      InfoID:
+        type: string
+        format: int64
+      Bases:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/statprotoMarketGood'
+      DiscoveryTechCompat:
+        $ref: '#/definitions/statprotoDiscoveryTechCompat'
+      AmountInCatridge:
+        type: string
+        format: int64
+      MaxCatridges:
+        type: string
+        format: int64
+      Mass:
+        type: number
+        format: double
+  statprotoDiscoveryTechCompat:
+    type: object
+    properties:
+      TechcompatByID:
+        type: object
+        additionalProperties:
+          type: number
+          format: double
+      TechCell:
+        type: string
+  statprotoEngine:
+    type: object
+    properties:
+      Name:
+        type: string
+      Price:
+        type: string
+        format: int64
+      CruiseSpeed:
+        type: string
+        format: int64
+      CruiseChargeTime:
+        type: string
+        format: int64
+      LinearDrag:
+        type: string
+        format: int64
+      MaxForce:
+        type: string
+        format: int64
+      ReverseFraction:
+        type: number
+        format: double
+      ImpulseSpeed:
+        type: number
+        format: double
+      HpType:
+        type: string
+      FlameEffect:
+        type: string
+      TrailEffect:
+        type: string
+      Nickname:
+        type: string
+      NameID:
+        type: string
+        format: int64
+      InfoID:
+        type: string
+        format: int64
+      Bases:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/statprotoMarketGood'
+      DiscoveryTechCompat:
+        $ref: '#/definitions/statprotoDiscoveryTechCompat'
+      Mass:
+        type: number
+        format: double
+  statprotoGetAmmoReply:
+    type: object
+    properties:
+      Items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoAmmo'
+  statprotoGetBasesReply:
+    type: object
+    properties:
+      Items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoBase'
+  statprotoGetCommoditiesReply:
+    type: object
+    properties:
+      Items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoCommodity'
+  statprotoGetCounterMeasuresReply:
+    type: object
+    properties:
+      Items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoCounterMeasure'
+  statprotoGetEnginesReply:
+    type: object
+    properties:
+      Items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoEngine'
+  statprotoGetGraphPathsAnswer:
+    type: object
+    properties:
+      Route:
+        $ref: '#/definitions/statprotoGraphPathQuery'
+      Time:
+        $ref: '#/definitions/statprotoGraphPathTime'
+      Error:
+        type: string
+  statprotoGetGraphPathsReply:
+    type: object
+    properties:
+      Answers:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoGetGraphPathsAnswer'
+  statprotoGetPoBGoodsReply:
+    type: object
+    properties:
+      Items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoPoBGood'
+  statprotoGetPoBsReply:
+    type: object
+    properties:
+      Items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoPoB'
+  statprotoGraphPathQuery:
+    type: object
+    properties:
+      From:
+        type: string
+      To:
+        type: string
+  statprotoGraphPathTime:
+    type: object
+    properties:
+      Transport:
+        type: string
+        format: int64
+      Frigate:
+        type: string
+        format: int64
+      Freighter:
+        type: string
+        format: int64
+  statprotoHealthReply:
+    type: object
+    properties:
+      isHealthy:
+        type: boolean
+  statprotoMarketGood:
+    type: object
+    properties:
+      Nickname:
+        type: string
+      ShipNickname:
+        type: string
+      Name:
+        type: string
+      PriceBase:
+        type: string
+        format: int64
+      HpType:
+        type: string
+      Category:
+        type: string
+      LevelRequired:
+        type: string
+        format: int64
+      RepRequired:
+        type: number
+        format: double
+      PriceBaseBuysFor:
+        type: string
+        format: int64
+      PriceBaseSellsFor:
+        type: string
+        format: int64
+      Volume:
+        type: number
+        format: double
+      ShipClass:
+        type: string
+        format: int64
+      BaseSells:
+        type: boolean
+      IsServerSideOverride:
+        type: boolean
+      NotBuyable:
+        type: boolean
+      IsTransportUnreachable:
+        type: boolean
+      BaseNickname:
+        type: string
+      BaseName:
+        type: string
+      SystemName:
+        type: string
+      Region:
+        type: string
+      FactionName:
+        type: string
+      BasePos:
+        $ref: '#/definitions/statprotoPos'
+      SectorCoord:
+        type: string
+  statprotoPoB:
+    type: object
+    properties:
+      Core:
+        $ref: '#/definitions/statprotoPoBCore'
+      ShopItems:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoShopItem'
+  statprotoPoBCore:
+    type: object
+    properties:
+      Nickname:
+        type: string
+      Name:
+        type: string
+      Pos:
+        type: string
+      Level:
+        type: string
+        format: int64
+      Money:
+        type: string
+        format: int64
+      Health:
+        type: number
+        format: double
+      DefenseMode:
+        type: string
+        format: int64
+      SystemNick:
+        type: string
+      SystemName:
+        type: string
+      FactionNick:
+        type: string
+      FactionName:
+        type: string
+      ForumThreadUrl:
+        type: string
+      CargoSpaceLeft:
+        type: string
+        format: int64
+      BasePos:
+        $ref: '#/definitions/statprotoPos'
+      SectorCoord:
+        type: string
+      Region:
+        type: string
+  statprotoPoBGood:
+    type: object
+    properties:
+      Nickname:
+        type: string
+      Name:
+        type: string
+      TotalBuyableFromBases:
+        type: string
+        format: int64
+      TotalSellableToBases:
+        type: string
+        format: int64
+      BestPriceToBuy:
+        type: string
+        format: int64
+      BestPriceToSell:
+        type: string
+        format: int64
+      Category:
+        type: string
+      AnyBaseSells:
+        type: boolean
+      AnyBaseBuys:
+        type: boolean
+      Bases:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/statprotoPoBGoodBase'
+  statprotoPoBGoodBase:
+    type: object
+    properties:
+      ShopItem:
+        $ref: '#/definitions/statprotoShopItem'
+      Base:
+        $ref: '#/definitions/statprotoPoBCore'
+  statprotoPos:
+    type: object
+    properties:
+      X:
+        type: number
+        format: double
+      "Y":
+        type: number
+        format: double
+      Z:
+        type: number
+        format: double
+  statprotoShopItem:
+    type: object
+    properties:
+      Nickname:
+        type: string
+      Name:
+        type: string
+      Category:
+        type: string
+      Id:
+        type: string
+        format: int64
+      Quantity:
+        type: string
+        format: int64
+      Price:
+        type: string
+        format: int64
+      SellPrice:
+        type: string
+        format: int64
+      MinStock:
+        type: string
+        format: int64
+      MaxStock:
+        type: string
+        format: int64

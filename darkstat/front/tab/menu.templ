@@ -128,6 +128,8 @@ type Buttn struct {
 	text []string
 	get_url utils_types.FilePath
 	url utils_types.FilePath
+	site_url string
+	direct_button_url bool
 
 	is_relay bool
 	extra_style string
@@ -145,6 +147,19 @@ func WithStyle(style string) ButtnOpt{
 		s.extra_style = style
 	}
 }
+
+func WithSiteUrl(site_url string) ButtnOpt{
+	return func(s *Buttn) {
+		s.site_url = site_url
+	}
+}
+
+func WithDrectUrl() ButtnOpt{
+	return func(s *Buttn) {
+		s.direct_button_url = true
+	}
+}
+
 
 func NewButtn(
 	ctx context.Context,
@@ -166,7 +181,7 @@ func NewButtn(
 
 	button.attrs = make(templ.Attributes)
 	var sb strings.Builder
-	if button.get_url == urls.Swagger {
+	if button.direct_button_url {
 		sb.WriteString("width:100%; border-radius: 20px; height: 100%; ")
 	}
 
@@ -193,10 +208,20 @@ func (opt *Buttn) HxGet() string {
 	return types.GetCtx(opt.ctx).SiteRoot + opt.get_url.ToString()
 }
 
+func (opt *Buttn) SiteUrl(ctx context.Context) string {
+	if opt.site_url != "" {
+		return opt.site_url
+	}
+
+	return types.GetCtx(ctx).SiteUrl + "/"
+}
+
+
+
 templ Button(opt *Buttn) {
-	if opt.get_url == urls.Swagger {
+	if opt.direct_button_url {
 		<a 
-			href={ templ.SafeURL(types.GetCtx(ctx).SiteUrl + "/" + opt.get_url.ToString()) }
+			href={ templ.SafeURL(opt.SiteUrl(ctx) + opt.get_url.ToString()) }
 			style="display: block;"
 		>
 			<button

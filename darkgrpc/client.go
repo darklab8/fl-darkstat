@@ -13,7 +13,7 @@ import (
 
 type Client struct {
 	Conn *grpc.ClientConn
-	pb.DarkGRpcClient
+	pb.DarkstatClient
 }
 
 func NewClient(address string) *Client {
@@ -24,14 +24,17 @@ func NewClient(address string) *Client {
 		creds = insecure.NewCredentials() // for darkstat.dd84ai.com:80
 	}
 
-	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(creds))
+	conn, err := grpc.NewClient(address,
+		grpc.WithTransportCredentials(creds),
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(32*10e6)),
+	)
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	c := pb.NewDarkGRpcClient(conn)
+	c := pb.NewDarkstatClient(conn)
 
 	return &Client{
-		DarkGRpcClient: c,
+		DarkstatClient: c,
 		Conn:           conn,
 	}
 }

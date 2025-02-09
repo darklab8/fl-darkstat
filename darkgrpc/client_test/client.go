@@ -14,7 +14,9 @@ import (
 var (
 	// darkgrpc.dd84ai.com
 	// 37.27.207.42:50051
-	addr = flag.String("addr", fmt.Sprintf("unix:%s", darkgrpc.DarkstatGRpcSock), "the address to connect to")
+	// fmt.Sprintf("unix:%s", darkgrpc.DarkstatGRpcSock)
+	// darkgrpc-staging.dd84ai.com:443
+	addr = flag.String("addr", "darkgrpc-staging.dd84ai.com:443", "the address to connect to")
 )
 
 func main() {
