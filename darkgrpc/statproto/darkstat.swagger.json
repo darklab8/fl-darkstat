@@ -49,10 +49,76 @@
         ]
       }
     },
-    "/statproto.Darkstat/GetBases": {
+    "/statproto.Darkstat/GetBasesMiningOperations": {
+      "post": {
+        "summary": "Get all imaginary bases that in place of mining fields. Useful for trading calculations",
+        "operationId": "Darkstat_GetBasesMiningOperations",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetBasesNpc": {
       "post": {
         "summary": "Get all Freelancer NPC Bases",
-        "operationId": "Darkstat_GetBases",
+        "operationId": "Darkstat_GetBasesNpc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetBasesPoBs": {
+      "post": {
+        "summary": "Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions\nUseful for trading calculations",
+        "operationId": "Darkstat_GetBasesPoBs",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -236,72 +302,6 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/statprotoEmpty"
-            }
-          }
-        ],
-        "tags": [
-          "Darkstat"
-        ]
-      }
-    },
-    "/statproto.Darkstat/GetMiningOperations": {
-      "post": {
-        "summary": "Get all imaginary bases that in place of mining fields. Useful for trading calculations",
-        "operationId": "Darkstat_GetMiningOperations",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/statprotoGetBasesReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/statprotoGetBasesInput"
-            }
-          }
-        ],
-        "tags": [
-          "Darkstat"
-        ]
-      }
-    },
-    "/statproto.Darkstat/GetPoBBases": {
-      "post": {
-        "summary": "Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions\nUseful for trading calculations",
-        "operationId": "Darkstat_GetPoBBases",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/statprotoGetBasesReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/statprotoGetBasesInput"
             }
           }
         ],

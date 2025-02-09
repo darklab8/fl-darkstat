@@ -8,7 +8,7 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
-func (s *Server) GetPoBBases(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
+func (s *Server) GetBasesPoBs(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
 	if s.app_data != nil {
 		s.app_data.Lock()
 		defer s.app_data.Unlock()

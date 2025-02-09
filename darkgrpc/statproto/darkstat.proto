@@ -26,18 +26,17 @@ service Darkstat {
   rpc GetHealth (Empty) returns (HealthReply);
 
   // Get all Freelancer NPC Bases
-  rpc GetBases (GetBasesInput) returns (GetBasesReply);
+  rpc GetBasesNpc (GetBasesInput) returns (GetBasesReply);
   // Get all imaginary bases that in place of mining fields. Useful for trading calculations
-  rpc GetMiningOperations (GetBasesInput) returns (GetBasesReply);
+  rpc GetBasesMiningOperations (GetBasesInput) returns (GetBasesReply);
+  // Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions
+  // Useful for trading calculations
+  rpc GetBasesPoBs (GetBasesInput) returns (GetBasesReply);
 
   // Get all Player Owned Bases. Completely all that are public exposed
   rpc GetPoBs (Empty) returns (GetPoBsReply);
   // Get all PoB goods, where they are sold and bought. Reverse search by PoBs
   rpc GetPoBGoods (Empty) returns (GetPoBGoodsReply);
-
-  // Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions
-  // Useful for trading calculations
-  rpc GetPoBBases (GetBasesInput) returns (GetBasesReply);
 
   rpc GetCommodities (GetCommoditiesInput) returns (GetCommoditiesReply) {}
   rpc GetAmmos (GetEquipmentInput) returns (GetAmmoReply) {}

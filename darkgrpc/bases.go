@@ -27,7 +27,7 @@ func (s *Server) GetBases(_ context.Context, in *pb.GetBasesInput) (*pb.GetBases
 	return &pb.GetBasesReply{Items: bases}, nil
 }
 
-func (s *Server) GetMiningOperations(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
+func (s *Server) GetBasesMiningOperations(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
 	if s.app_data != nil {
 		s.app_data.Lock()
 		defer s.app_data.Unlock()
