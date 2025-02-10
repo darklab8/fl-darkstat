@@ -14,7 +14,7 @@ module "darkstat" {
   RELAY_HOST         = "https://darkrelay.dd84ai.com"
   SITE_ROOT          = "/fl-data-discovery/"
   FLDARKSTAT_HEADING = <<-EOT
-  <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
+  <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Disco</a>
   EOT
 
   stat_prefix       = "darkstat"
@@ -47,7 +47,7 @@ module "darkstat_dev" {
 
   SITE_ROOT          = "/"
   FLDARKSTAT_HEADING = <<-EOT
-  <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
+  <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Disco</a>
   EOT
 
   stat_prefix     = "darkstat-dev"
