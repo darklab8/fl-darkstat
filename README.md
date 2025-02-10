@@ -49,6 +49,11 @@ See demos:
 
 If u have problems with configuring development environment, then seek my contacts below to help you through it ^_^
 
+# Development, how to regenerate proto related code
+
+- task grpc:docker:gateway // for docker way to run file updates for grpc and its gateway // assumes docker is available of unix socket
+- task grpc:protoc:gateway // to run grpc file updates locally without docker. // assumes u did same stuff as `protoc` stage in Dockerfile
+
 # Features
 
 - Long term maintance support for dozen of years. Minimum dependencies software with Golang and Htmx.

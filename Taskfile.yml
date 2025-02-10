@@ -132,7 +132,7 @@ tasks:
       - go tool pprof -alloc_space http://localhost:6060/debug/pprof/heap
       # commands like `top`, `web`, `list FunctionName`
 
-  grpc:build:
+  grpc:protoc:simple:
     cmds: # --experimental_allow_proto3_optional
       - >
         protoc -I darkgrpc/statproto
@@ -144,17 +144,16 @@ tasks:
         --proto_path=.
         darkgrpc/statproto/darkstat.proto
 
-  grpc:gateway:
-    # TODO put all this stuff into docker builder to regenerate this
-    #    stuff as a code docker-compose command
-    # requires installed stuf for grpc
-    # https://grpc.io/docs/languages/go/quickstart/
-    # requires having installed stuff of grpc gateway to regenerate files
-    # go install \
-    # github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
-    # github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
-    # google.golang.org/protobuf/cmd/protoc-gen-go \
-    # google.golang.org/grpc/cmd/protoc-gen-go-grpc
+  grpc:docker:gateway:
+    desc: regenerating all the grpc stuff but with iac documented way
+    env:
+      DOCKER_HOST: unix:///var/run/docker.sock
+    cmds:
+      - docker build --target protoc --tag protoc .
+      - docker run -it --rm -v $(pwd):/code protoc
+
+  grpc:protoc:gateway:
+    desc: regenerating all the grpc stuff from proto file ;)
     cmds:
       - >
         protoc -I darkgrpc/statproto
