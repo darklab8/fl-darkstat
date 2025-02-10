@@ -57,6 +57,8 @@ jobs:
         FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
         DARKSTAT_DETAILED: 'false'
         RELAY_HOST: https://darkrelay-staging.dd84ai.com
+        GRPCGATEWAY_URL: https://darkstat-staging.dd84ai.com
+
     - name: Upload artifacts for deployment to Github Pages
       uses: actions/upload-pages-artifact@v3
       with:
