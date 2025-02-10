@@ -145,12 +145,13 @@ tasks:
         darkgrpc/statproto/darkstat.proto
 
   grpc:docker:gateway:
+    # NOTE: updates dependencies to latest from time to time!
     desc: regenerating all the grpc stuff but with iac documented way
     env:
       DOCKER_HOST: unix:///var/run/docker.sock
     cmds:
       - docker build --target protoc --tag protoc .
-      - docker run -it --rm -v $(pwd):/code protoc
+      - docker run --rm -v $(pwd):/code protoc
 
   grpc:protoc:gateway:
     desc: regenerating all the grpc stuff from proto file ;)
