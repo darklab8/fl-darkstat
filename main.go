@@ -149,6 +149,9 @@ func main() {
 						app_data.Configs.PoBs = app_data.Configs.GetPoBs()
 						app_data.Configs.PoBGoods = app_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
 						relay_fs2 := GetRelayFs(stat_router.AppData)
+						for key, _ := range relay_fs.Files {
+							delete(relay_fs.Files, key)
+						}
 						relay_fs.Files = relay_fs2.Files
 						logus.Log.Info("refreshed content")
 						runtime.GC()

@@ -42,9 +42,8 @@ service Darkstat {
   rpc GetAmmos (GetEquipmentInput) returns (GetAmmoReply) {}
   rpc GetCounterMeasures (GetEquipmentInput) returns (GetCounterMeasuresReply) {}
   rpc GetEngines (GetEquipmentInput) returns (GetEnginesReply) {}
-
-  // rpc GetGuns (GetEquipmentInput) returns (GetGunsReply) {}
-
+  rpc GetGuns (GetGunsInput) returns (GetGunsReply) {}
+  rpc GetMissiles (GetGunsInput) returns (GetGunsReply) {}
   rpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}
   rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
   rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
@@ -72,6 +71,12 @@ message GetEquipmentInput {
   bool IncludeMarketGoods = 1;
   bool IncludeTechCompat = 2;
   bool FilterToUseful = 3;
+}
+message GetGunsInput {
+  bool IncludeMarketGoods = 1;
+  bool IncludeTechCompat = 2;
+  bool FilterToUseful = 3;
+  bool IncludeDamageBonuses = 4;
 }
 message GetBasesInput {
   bool IncludeMarketGoods = 1;
@@ -313,7 +318,83 @@ message GetGunsReply {
   repeated Gun Items = 1;
 }
 message Gun {
+  map<string, MarketGood> Bases  = 1;            
+	optional DiscoveryTechCompat DiscoveryTechCompat = 2;
 
+	string Nickname = 3;
+	string Name     = 4;
+	string Type     = 5;
+	int64 Price     = 6;
+	string Class    = 7;
+	string HpType   = 8;
+	int64 IdsName   = 9;
+	int64 IdsInfo   = 10;
+	double Volume   = 11;
+
+	string HitPts       = 12;
+	double PowerUsage   = 13;
+	double Refire       = 14;
+	double Range        = 15;
+	double Toughness    = 16;
+	bool IsAutoTurret   = 17;
+	bool Lootable       = 18;
+
+	bool RequiredAmmo   = 19;
+	int64 HullDamage      = 20;
+	int64 EnergyDamage    = 21;
+	int64 ShieldDamage    = 22;
+	int64 AvgShieldDamage = 23;
+	string DamageType      = 24;
+	double LifeTime        = 25;
+	double Speed           = 26;
+	double GunTurnRate     = 27;
+	double DispersionAngle = 28;
+
+	double HullDamagePerSec       = 29;
+	double AvgShieldDamagePerSec  = 30;
+	double EnergyDamagePerSec     = 31;
+	double PowerUsagePerSec       = 32;
+	double AvgEfficiency          = 33;
+	double HullEfficiency         = 34;
+	double ShieldEfficiency       = 35;
+	double EnergyDamageEfficiency = 36;
+	repeated DamageBonus DamageBonuses = 37;
+
+  // has data defined but only for missile guns :)
+	Missile Missile = 38;
+	GunDetailed GunDetailed = 39;
+
+	optional int64 NumBarrels = 40;
+	optional BurstFire BurstFire = 41;
+	AmmoLimit  AmmoLimit = 42;
+
+	double Mass = 43;
+	optional DiscoGun DiscoGun = 44;
+}
+message DamageBonus {
+  string Type = 1;
+  double Modifier = 2;
+}
+message Missile {
+  double MaxAngularVelocity = 1;
+}
+message GunDetailed {
+  string FlashParticleName = 1;
+	string ConstEffect  = 2;
+	string MunitionHitEffect = 3; 
+}
+message BurstFire {
+  double SustainedRefire = 1;
+	int64 Ammo             = 2;
+	double ReloadTime       = 3;
+
+	double SustainedHullDamagePerSec      = 4;
+	double SustainedAvgShieldDamagePerSec = 5;
+	double SustainedEnergyDamagePerSec    = 6;
+	double SustainedPowerUsagePerSec      = 7;
+}
+message DiscoGun {
+  double ArmorPen = 1;
 }
 message GetMinesReply {
   repeated Mine Items = 1;

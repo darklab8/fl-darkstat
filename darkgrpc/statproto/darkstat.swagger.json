@@ -308,6 +308,38 @@
         ]
       }
     },
+    "/statproto.Darkstat/GetGuns": {
+      "post": {
+        "operationId": "Darkstat_GetGuns",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGunsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGunsInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
     "/statproto.Darkstat/GetHashes": {
       "post": {
         "summary": "rpc GetInfocards",
@@ -400,6 +432,38 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetMissiles": {
+      "post": {
+        "operationId": "Darkstat_GetMissiles",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGunsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGunsInput"
             }
           }
         ],
@@ -848,6 +912,39 @@
         }
       }
     },
+    "statprotoBurstFire": {
+      "type": "object",
+      "properties": {
+        "SustainedRefire": {
+          "type": "number",
+          "format": "double"
+        },
+        "Ammo": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ReloadTime": {
+          "type": "number",
+          "format": "double"
+        },
+        "SustainedHullDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "SustainedAvgShieldDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "SustainedEnergyDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "SustainedPowerUsagePerSec": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "statprotoCommodity": {
       "type": "object",
       "properties": {
@@ -961,6 +1058,27 @@
           "$ref": "#/definitions/statprotoAmmoLimit"
         },
         "Mass": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoDamageBonus": {
+      "type": "object",
+      "properties": {
+        "Type": {
+          "type": "string"
+        },
+        "Modifier": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoDiscoGun": {
+      "type": "object",
+      "properties": {
+        "ArmorPen": {
           "type": "number",
           "format": "double"
         }
@@ -1291,6 +1409,35 @@
         }
       }
     },
+    "statprotoGetGunsInput": {
+      "type": "object",
+      "properties": {
+        "IncludeMarketGoods": {
+          "type": "boolean"
+        },
+        "IncludeTechCompat": {
+          "type": "boolean"
+        },
+        "FilterToUseful": {
+          "type": "boolean"
+        },
+        "IncludeDamageBonuses": {
+          "type": "boolean"
+        }
+      }
+    },
+    "statprotoGetGunsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoGun"
+          }
+        }
+      }
+    },
     "statprotoGetHashesReply": {
       "type": "object",
       "properties": {
@@ -1434,6 +1581,191 @@
         "Freighter": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "statprotoGun": {
+      "type": "object",
+      "properties": {
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Class": {
+          "type": "string"
+        },
+        "HpType": {
+          "type": "string"
+        },
+        "IdsName": {
+          "type": "string",
+          "format": "int64"
+        },
+        "IdsInfo": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Volume": {
+          "type": "number",
+          "format": "double"
+        },
+        "HitPts": {
+          "type": "string"
+        },
+        "PowerUsage": {
+          "type": "number",
+          "format": "double"
+        },
+        "Refire": {
+          "type": "number",
+          "format": "double"
+        },
+        "Range": {
+          "type": "number",
+          "format": "double"
+        },
+        "Toughness": {
+          "type": "number",
+          "format": "double"
+        },
+        "IsAutoTurret": {
+          "type": "boolean"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "RequiredAmmo": {
+          "type": "boolean"
+        },
+        "HullDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "EnergyDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ShieldDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "AvgShieldDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "DamageType": {
+          "type": "string"
+        },
+        "LifeTime": {
+          "type": "number",
+          "format": "double"
+        },
+        "Speed": {
+          "type": "number",
+          "format": "double"
+        },
+        "GunTurnRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "DispersionAngle": {
+          "type": "number",
+          "format": "double"
+        },
+        "HullDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "AvgShieldDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "EnergyDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "PowerUsagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "AvgEfficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "HullEfficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "ShieldEfficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "EnergyDamageEfficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "DamageBonuses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoDamageBonus"
+          }
+        },
+        "Missile": {
+          "$ref": "#/definitions/statprotoMissile",
+          "title": "has data defined but only for missile guns :)"
+        },
+        "GunDetailed": {
+          "$ref": "#/definitions/statprotoGunDetailed"
+        },
+        "NumBarrels": {
+          "type": "string",
+          "format": "int64"
+        },
+        "BurstFire": {
+          "$ref": "#/definitions/statprotoBurstFire"
+        },
+        "AmmoLimit": {
+          "$ref": "#/definitions/statprotoAmmoLimit"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "DiscoGun": {
+          "$ref": "#/definitions/statprotoDiscoGun"
+        }
+      }
+    },
+    "statprotoGunDetailed": {
+      "type": "object",
+      "properties": {
+        "FlashParticleName": {
+          "type": "string"
+        },
+        "ConstEffect": {
+          "type": "string"
+        },
+        "MunitionHitEffect": {
+          "type": "string"
         }
       }
     },
@@ -1634,6 +1966,15 @@
         },
         "DiscoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        }
+      }
+    },
+    "statprotoMissile": {
+      "type": "object",
+      "properties": {
+        "MaxAngularVelocity": {
+          "type": "number",
+          "format": "double"
         }
       }
     },
