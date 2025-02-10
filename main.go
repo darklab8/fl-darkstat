@@ -88,9 +88,9 @@ func main() {
 		}()
 	}
 
-	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteUrl, "https://", "")
+	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteHost, "https://", "")
 	docs.SwaggerInfo.Host = strings.ReplaceAll(docs.SwaggerInfo.Host, "http://", "")
-	if strings.Contains(settings.Env.SiteUrl, "https") {
+	if strings.Contains(settings.Env.SiteHost, "https") {
 		docs.SwaggerInfo.Schemes = []string{"https"}
 	}
 

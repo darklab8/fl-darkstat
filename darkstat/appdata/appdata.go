@@ -50,7 +50,7 @@ func NewBuilder(mapped *configs_mapped.MappedConfigs) *builder.Builder {
 			siteRoot + urls.VanillaIndex.ToString(),
 		},
 		TractorTabName: tractor_tab_name,
-		SiteUrl:        settings.Env.SiteUrl,
+		SiteHost:       settings.Env.SiteHost,
 		SiteRoot:       siteRoot,
 		StaticRoot:     siteRoot + staticPrefix,
 		Heading:        settings.Env.AppHeading,

@@ -26,7 +26,7 @@ type GlobalParams struct {
 	Buildpath      utils_types.FilePath
 	Theme          Theme
 	Themes         []string
-	SiteUrl        string
+	SiteHost       string
 	SiteRoot       string
 	StaticRoot     string
 	Heading        string

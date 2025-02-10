@@ -213,7 +213,7 @@ func (opt *Buttn) SiteUrl(ctx context.Context) string {
 		return opt.site_url
 	}
 
-	return types.GetCtx(ctx).SiteUrl + "/"
+	return types.GetCtx(ctx).SiteHost + "/"
 }
 
 
