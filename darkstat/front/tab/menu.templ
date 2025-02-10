@@ -19,7 +19,7 @@ templ Heading(shared *types.SharedData) {
 			min-height: 30px;
 		}
 		.right {
-			margin: 10px;
+			margin: 4px;
 			display: flex;
 			flex-direction: column;
 		}
@@ -34,6 +34,7 @@ templ Heading(shared *types.SharedData) {
 		}
 		#heading_string {
 			align-self: flex-end;
+			font-size: 0.85em;
 		}
 	</style>
 	<div class="heading">
@@ -47,7 +48,7 @@ templ Heading(shared *types.SharedData) {
 				</div>
 			}
 			<div id="time">
-				Darkstat { settings.Env.AppVersion } refreshed at { types.GetCtx(ctx).Timestamp.Format("02 Jan 2006 15:04:05") } UTC
+				{ settings.Env.AppVersion } refreshed at { types.GetCtx(ctx).Timestamp.Format("2006-01-02T15:04") }UTC
 			</div>
 			<div id="heading_string">
 				@templ.Raw(types.GetCtx(ctx).Heading)
