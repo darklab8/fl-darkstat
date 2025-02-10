@@ -66,6 +66,19 @@ func TestRpc(t *testing.T) {
 			assert.Nil(t, res.Answers[0].Error)
 			assert.Greater(t, *res.Answers[0].Time.Transport, int64(0))
 		})
+
+		t.Run("GetInfocards", func(t *testing.T) {
+			res, err := c.GetInfocards(context.Background(), &statproto.GetInfocardsInput{
+				Nicknames: []string{res.Items[0].Nickname, res.Items[2].Nickname, "not_existing"}})
+
+			logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
+			assert.Greater(t, len(res.Answers), 0)
+			assert.Equal(t, 3, len(res.Answers))
+			assert.Nil(t, res.Answers[0].Error)
+			assert.Nil(t, res.Answers[1].Error)
+			assert.NotNil(t, res.Answers[2].Error)
+			assert.Greater(t, len(res.Answers[0].Infocard.Lines), 0)
+		})
 	})
 
 	t.Run("GetBasesMiningOperations", func(t *testing.T) {
