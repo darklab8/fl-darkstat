@@ -376,6 +376,38 @@
         ]
       }
     },
+    "/statproto.Darkstat/GetMines": {
+      "post": {
+        "operationId": "Darkstat_GetMines",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetMinesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
     "/statproto.Darkstat/GetPoBGoods": {
       "post": {
         "summary": "Get all PoB goods, where they are sold and bought. Reverse search by PoBs",
@@ -688,6 +720,18 @@
         "DiscoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         },
+        "AmmoLimit": {
+          "$ref": "#/definitions/statprotoAmmoLimit"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoAmmoLimit": {
+      "type": "object",
+      "properties": {
         "AmountInCatridge": {
           "type": "string",
           "format": "int64"
@@ -695,10 +739,6 @@
         "MaxCatridges": {
           "type": "string",
           "format": "int64"
-        },
-        "Mass": {
-          "type": "number",
-          "format": "double"
         }
       }
     },
@@ -917,13 +957,8 @@
         "DiscoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         },
-        "AmountInCatridge": {
-          "type": "string",
-          "format": "int64"
-        },
-        "MaxCatridges": {
-          "type": "string",
-          "format": "int64"
+        "AmmoLimit": {
+          "$ref": "#/definitions/statprotoAmmoLimit"
         },
         "Mass": {
           "type": "number",
@@ -1267,6 +1302,18 @@
         }
       }
     },
+    "statprotoGetMinesReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoMine"
+          }
+        }
+      }
+    },
     "statprotoGetPoBGoodsReply": {
       "type": "object",
       "properties": {
@@ -1474,6 +1521,119 @@
         },
         "baseInfo": {
           "$ref": "#/definitions/statprotoBaseInfo"
+        }
+      }
+    },
+    "statprotoMine": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "AmmoPrice": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "ProjectileArchetype": {
+          "type": "string"
+        },
+        "IdsName": {
+          "type": "string",
+          "format": "int64"
+        },
+        "IdsInfo": {
+          "type": "string",
+          "format": "int64"
+        },
+        "HullDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "EnergyDamange": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ShieldDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "PowerUsage": {
+          "type": "number",
+          "format": "double"
+        },
+        "Value": {
+          "type": "number",
+          "format": "double"
+        },
+        "Refire": {
+          "type": "number",
+          "format": "double"
+        },
+        "DetonationDistance": {
+          "type": "number",
+          "format": "double"
+        },
+        "Radius": {
+          "type": "number",
+          "format": "double"
+        },
+        "SeekDistance": {
+          "type": "string",
+          "format": "int64"
+        },
+        "TopSpeed": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Acceleration": {
+          "type": "string",
+          "format": "int64"
+        },
+        "LinearDrag": {
+          "type": "number",
+          "format": "double"
+        },
+        "LifeTime": {
+          "type": "number",
+          "format": "double"
+        },
+        "OwnerSafe": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Toughness": {
+          "type": "number",
+          "format": "double"
+        },
+        "HitPts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "AmmoLimit": {
+          "$ref": "#/definitions/statprotoAmmoLimit"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         }
       }
     },

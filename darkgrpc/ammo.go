@@ -34,8 +34,7 @@ func (s *Server) GetAmmos(_ context.Context, in *pb.GetEquipmentInput) (*pb.GetA
 			SeekerType:       item.SeekerType,
 			SeekerRange:      int64(item.SeekerRange),
 			SeekerFovDeg:     int64(item.SeekerFovDeg),
-			AmountInCatridge: NewInt64(item.AmmoLimit.AmountInCatridge),
-			MaxCatridges:     NewInt64(item.AmmoLimit.MaxCatridges),
+			AmmoLimit:        NewAmmoLimit(item.AmmoLimit),
 			Mass:             item.Mass,
 		}
 		if in.IncludeMarketGoods {
@@ -47,4 +46,11 @@ func (s *Server) GetAmmos(_ context.Context, in *pb.GetEquipmentInput) (*pb.GetA
 		items = append(items, result)
 	}
 	return &pb.GetAmmoReply{Items: items}, nil
+}
+
+func NewAmmoLimit(AmmoLimit configs_export.AmmoLimit) *pb.AmmoLimit {
+	return &pb.AmmoLimit{
+		AmountInCatridge: NewInt64(AmmoLimit.AmountInCatridge),
+		MaxCatridges:     NewInt64(AmmoLimit.MaxCatridges),
+	}
 }

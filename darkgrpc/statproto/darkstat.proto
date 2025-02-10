@@ -44,8 +44,8 @@ service Darkstat {
   rpc GetEngines (GetEquipmentInput) returns (GetEnginesReply) {}
 
   // rpc GetGuns (GetEquipmentInput) returns (GetGunsReply) {}
-  // rpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}
 
+  rpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}
   rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
   rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
   rpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}
@@ -201,8 +201,7 @@ message Ammo {
 
 	optional DiscoveryTechCompat DiscoveryTechCompat = 13;
 
-  optional int64 AmountInCatridge = 14;
-  optional int64 MaxCatridges     = 15;
+  AmmoLimit AmmoLimit = 14;
   double Mass    = 16;
 }
 
@@ -245,9 +244,7 @@ message CounterMeasure {
 
 	map<string, MarketGood> Bases  = 12;            
 	optional DiscoveryTechCompat DiscoveryTechCompat = 13;
-
-  optional int64 AmountInCatridge = 14;
-  optional int64 MaxCatridges     = 15;
+  AmmoLimit AmmoLimit = 14;
 	double Mass      = 16;
 }
 
@@ -322,7 +319,42 @@ message GetMinesReply {
   repeated Mine Items = 1;
 }
 message Mine {
+	string Name  = 1;
+	int64 Price  = 2;
+	int64 AmmoPrice  = 3;
+	string Nickname  = 4;
+	string ProjectileArchetype = 5;
+	int64 IdsName         = 6;
+	int64 IdsInfo         = 7;
 
+	int64 HullDamage    =8;
+	int64 EnergyDamange = 9;
+	int64 ShieldDamage  = 10;
+	double PowerUsage   = 11;
+
+	double Value            = 12;
+	double Refire           = 13;
+	double DetonationDistance = 14;
+	double Radius             = 15;
+	int64 SeekDistance        = 16;
+	int64 TopSpeed            = 17;
+	int64 Acceleration        = 18;
+	double LinearDrag         = 19;
+	double LifeTime           = 20;
+	int64 OwnerSafe           = 21;
+	double Toughness          = 22;
+
+	int64 HitPts    = 23;
+	bool Lootable  = 24;
+	AmmoLimit AmmoLimit = 25;
+	double Mass     = 26;
+
+  map<string, MarketGood> Bases  = 27;            
+	optional DiscoveryTechCompat DiscoveryTechCompat = 28;
+}
+message AmmoLimit {
+  optional int64 AmountInCatridge = 1;
+  optional int64 MaxCatridges     = 2;
 }
 message GetScannersReply {
   repeated Scanner Items = 1;

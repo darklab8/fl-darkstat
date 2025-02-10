@@ -29,6 +29,7 @@ const (
 	Darkstat_GetAmmos_FullMethodName                 = "/statproto.Darkstat/GetAmmos"
 	Darkstat_GetCounterMeasures_FullMethodName       = "/statproto.Darkstat/GetCounterMeasures"
 	Darkstat_GetEngines_FullMethodName               = "/statproto.Darkstat/GetEngines"
+	Darkstat_GetMines_FullMethodName                 = "/statproto.Darkstat/GetMines"
 	Darkstat_GetScanners_FullMethodName              = "/statproto.Darkstat/GetScanners"
 	Darkstat_GetShields_FullMethodName               = "/statproto.Darkstat/GetShields"
 	Darkstat_GetShips_FullMethodName                 = "/statproto.Darkstat/GetShips"
@@ -60,6 +61,7 @@ type DarkstatClient interface {
 	GetAmmos(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetAmmoReply, error)
 	GetCounterMeasures(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetCounterMeasuresReply, error)
 	GetEngines(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetEnginesReply, error)
+	GetMines(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetMinesReply, error)
 	GetScanners(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetScannersReply, error)
 	GetShields(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetShieldsReply, error)
 	GetShips(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetShipsReply, error)
@@ -179,6 +181,16 @@ func (c *darkstatClient) GetEngines(ctx context.Context, in *GetEquipmentInput, 
 	return out, nil
 }
 
+func (c *darkstatClient) GetMines(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetMinesReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMinesReply)
+	err := c.cc.Invoke(ctx, Darkstat_GetMines_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *darkstatClient) GetScanners(ctx context.Context, in *GetEquipmentInput, opts ...grpc.CallOption) (*GetScannersReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetScannersReply)
@@ -280,6 +292,7 @@ type DarkstatServer interface {
 	GetAmmos(context.Context, *GetEquipmentInput) (*GetAmmoReply, error)
 	GetCounterMeasures(context.Context, *GetEquipmentInput) (*GetCounterMeasuresReply, error)
 	GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error)
+	GetMines(context.Context, *GetEquipmentInput) (*GetMinesReply, error)
 	GetScanners(context.Context, *GetEquipmentInput) (*GetScannersReply, error)
 	GetShields(context.Context, *GetEquipmentInput) (*GetShieldsReply, error)
 	GetShips(context.Context, *GetEquipmentInput) (*GetShipsReply, error)
@@ -328,6 +341,9 @@ func (UnimplementedDarkstatServer) GetCounterMeasures(context.Context, *GetEquip
 }
 func (UnimplementedDarkstatServer) GetEngines(context.Context, *GetEquipmentInput) (*GetEnginesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEngines not implemented")
+}
+func (UnimplementedDarkstatServer) GetMines(context.Context, *GetEquipmentInput) (*GetMinesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMines not implemented")
 }
 func (UnimplementedDarkstatServer) GetScanners(context.Context, *GetEquipmentInput) (*GetScannersReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetScanners not implemented")
@@ -554,6 +570,24 @@ func _Darkstat_GetEngines_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Darkstat_GetMines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEquipmentInput)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkstatServer).GetMines(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Darkstat_GetMines_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkstatServer).GetMines(ctx, req.(*GetEquipmentInput))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Darkstat_GetScanners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetEquipmentInput)
 	if err := dec(in); err != nil {
@@ -744,6 +778,10 @@ var Darkstat_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEngines",
 			Handler:    _Darkstat_GetEngines_Handler,
+		},
+		{
+			MethodName: "GetMines",
+			Handler:    _Darkstat_GetMines_Handler,
 		},
 		{
 			MethodName: "GetScanners",

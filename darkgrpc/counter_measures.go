@@ -23,20 +23,19 @@ func (s *Server) GetCounterMeasures(_ context.Context, in *pb.GetEquipmentInput)
 	var items []*pb.CounterMeasure
 	for _, item := range input {
 		result := &pb.CounterMeasure{
-			Name:             item.Name,
-			Price:            int64(item.Price),
-			HitPts:           int64(item.HitPts),
-			AIRange:          int64(item.AIRange),
-			Lifetime:         int64(item.Lifetime),
-			Range:            int64(item.Range),
-			DiversionPctg:    int64(item.DiversionPctg),
-			Lootable:         item.Lootable,
-			Nickname:         item.Nickname,
-			NameID:           int64(item.NameID),
-			InfoID:           int64(item.InfoID),
-			AmountInCatridge: NewInt64(item.AmmoLimit.AmountInCatridge),
-			MaxCatridges:     NewInt64(item.AmmoLimit.MaxCatridges),
-			Mass:             item.Mass,
+			Name:          item.Name,
+			Price:         int64(item.Price),
+			HitPts:        int64(item.HitPts),
+			AIRange:       int64(item.AIRange),
+			Lifetime:      int64(item.Lifetime),
+			Range:         int64(item.Range),
+			DiversionPctg: int64(item.DiversionPctg),
+			Lootable:      item.Lootable,
+			Nickname:      item.Nickname,
+			NameID:        int64(item.NameID),
+			InfoID:        int64(item.InfoID),
+			AmmoLimit:     NewAmmoLimit(item.AmmoLimit),
+			Mass:          item.Mass,
 		}
 		if in.IncludeMarketGoods {
 			result.Bases = NewBases(item.Bases)
