@@ -17,8 +17,12 @@ With Unix Sockets u get extra performance boosts to pull all the data.
 the Grpc api is the one for any new feature additions
 Grpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.
 
-NOTE: Routes have defined input `IncludeMarketGoods` and `IncludeTechCompat` at least.
+`NOTE`: Routes have defined input "IncludeMarketGoods" and "IncludeTechCompat" at least.
 Depending on your having them true or not, significantly different amount of data is pushed
+
+`WARNING`: if u will be using this Swagger interface to make test call for example.
+make sure to turn off booleans like IncludeMarketGoods, IncludeTechCompat and etc. When they are enabled, they overload swagger interface with too much data ;)
+Or just call test examples over curl/postman instead (with preferably disabled prettifying)
 */
 
 service Darkstat {
