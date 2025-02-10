@@ -444,6 +444,38 @@
         ]
       }
     },
+    "/statproto.Darkstat/GetShields": {
+      "post": {
+        "operationId": "Darkstat_GetShields",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetShieldsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
     "/statproto.Darkstat/GetShips": {
       "post": {
         "operationId": "Darkstat_GetShips",
@@ -1227,6 +1259,18 @@
         }
       }
     },
+    "statprotoGetShieldsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoShield"
+          }
+        }
+      }
+    },
     "statprotoGetShipsReply": {
       "type": "object",
       "properties": {
@@ -1549,6 +1593,89 @@
         },
         "Nickname": {
           "type": "string"
+        }
+      }
+    },
+    "statprotoShield": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Class": {
+          "type": "string"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Technology": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Capacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "RegenerationRate": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ConstantPowerDraw": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Value": {
+          "type": "number",
+          "format": "double"
+        },
+        "RebuildPowerDraw": {
+          "type": "string",
+          "format": "int64"
+        },
+        "OffRebuildTime": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Toughness": {
+          "type": "number",
+          "format": "double"
+        },
+        "HitPts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "HpType": {
+          "type": "string"
+        },
+        "IdsName": {
+          "type": "string",
+          "format": "int64"
+        },
+        "IdsInfo": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         }
       }
     },

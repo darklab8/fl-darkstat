@@ -46,8 +46,8 @@ service Darkstat {
   // rpc GetGuns (GetEquipmentInput) returns (GetGunsReply) {}
   // rpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}
   // rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
-  // rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
 
+  rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
   rpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}
   rpc GetThrusters (GetEquipmentInput) returns (GetThrustersReply) {}
 
@@ -334,7 +334,32 @@ message GetShieldsReply {
   repeated Shield Items = 1;
 }
 message Shield {
+	string Name  = 1;
 
+	string Class = 2;
+	string Type  = 3;
+	string Technology = 4;
+	int64 Price       = 5;
+
+	int64 Capacity          = 6;
+	int64 RegenerationRate  = 7;
+	int64 ConstantPowerDraw = 8;
+	double Value            = 9;
+	int64 RebuildPowerDraw  = 10;
+	int64 OffRebuildTime    = 11;
+
+	double Toughness        = 12;
+	int64 HitPts            = 13;
+	bool Lootable           = 14;
+
+	string Nickname         = 15;
+	string HpType           = 16;
+	int64 IdsName           = 17;
+	int64 IdsInfo           = 18;
+	double Mass             = 19;
+
+	map<string, MarketGood> Bases  = 20;            
+	optional DiscoveryTechCompat DiscoveryTechCompat = 21;
 }
 message GetShipsReply {
   repeated Ship Items = 1;
