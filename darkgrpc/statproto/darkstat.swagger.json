@@ -444,6 +444,38 @@
         ]
       }
     },
+    "/statproto.Darkstat/GetScanners": {
+      "post": {
+        "operationId": "Darkstat_GetScanners",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetScannersReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
     "/statproto.Darkstat/GetShields": {
       "post": {
         "operationId": "Darkstat_GetShields",
@@ -1259,6 +1291,18 @@
         }
       }
     },
+    "statprotoGetScannersReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoScanner"
+          }
+        }
+      }
+    },
     "statprotoGetShieldsReply": {
       "type": "object",
       "properties": {
@@ -1593,6 +1637,53 @@
         },
         "Nickname": {
           "type": "string"
+        }
+      }
+    },
+    "statprotoScanner": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Range": {
+          "type": "string",
+          "format": "int64"
+        },
+        "CargoScanRange": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         }
       }
     },

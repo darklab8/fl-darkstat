@@ -45,8 +45,8 @@ service Darkstat {
 
   // rpc GetGuns (GetEquipmentInput) returns (GetGunsReply) {}
   // rpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}
-  // rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
 
+  rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
   rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
   rpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}
   rpc GetThrusters (GetEquipmentInput) returns (GetThrustersReply) {}
@@ -328,7 +328,18 @@ message GetScannersReply {
   repeated Scanner Items = 1;
 }
 message Scanner {
+	string Name = 1;
+	int64 Price = 2;
+	int64 Range  = 3;
+	int64 CargoScanRange = 4;
+	bool Lootable   = 5;
+	string Nickname = 6;
+	int64 NameID    = 7;
+	int64 InfoID    = 8;
+	double Mass     = 9;
 
+  map<string, MarketGood> Bases  = 10;            
+	optional DiscoveryTechCompat DiscoveryTechCompat = 11;
 }
 message GetShieldsReply {
   repeated Shield Items = 1;
