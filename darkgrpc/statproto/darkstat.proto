@@ -54,16 +54,38 @@ service Darkstat {
 
   // Get Tractors. For Discovery those are IDs
   rpc GetTractors (GetTractorsInput) returns (GetTractorsReply) {}
-
   rpc GetHashes (Empty) returns (GetHashesReply);
-  // rpc GetInfocards
-
+  rpc GetInfocards (GetInfocardsInput) returns (GetInfocardsReply);
   rpc GetGraphPaths (GetGraphPathsInput) returns (GetGraphPathsReply);
 }
 
 // The request message containing the user's name.
 message Empty {
 }
+message GetInfocardsInput {
+  repeated string Nicknames = 1;
+}
+message GetInfocardsReply {
+  repeated GetInfocardAnswer Answers = 1;
+}
+
+message GetInfocardAnswer {
+  string Query = 1;
+  optional Infocard Infocard = 2;
+  optional string Error = 3;
+}
+message Infocard {
+  repeated InfocardLine Lines  = 1;
+}
+message InfocardLine {
+  repeated InfocardPhrase Phrases = 1;
+}
+message InfocardPhrase {
+  string Phrase = 1;
+  optional string Link = 2;
+  bool Bold = 3;
+}
+
 message HealthReply {
   bool is_healthy = 1;
 }

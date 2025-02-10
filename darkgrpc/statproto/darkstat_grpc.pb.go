@@ -39,6 +39,7 @@ const (
 	Darkstat_GetFactions_FullMethodName              = "/statproto.Darkstat/GetFactions"
 	Darkstat_GetTractors_FullMethodName              = "/statproto.Darkstat/GetTractors"
 	Darkstat_GetHashes_FullMethodName                = "/statproto.Darkstat/GetHashes"
+	Darkstat_GetInfocards_FullMethodName             = "/statproto.Darkstat/GetInfocards"
 	Darkstat_GetGraphPaths_FullMethodName            = "/statproto.Darkstat/GetGraphPaths"
 )
 
@@ -74,6 +75,7 @@ type DarkstatClient interface {
 	// Get Tractors. For Discovery those are IDs
 	GetTractors(ctx context.Context, in *GetTractorsInput, opts ...grpc.CallOption) (*GetTractorsReply, error)
 	GetHashes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetHashesReply, error)
+	GetInfocards(ctx context.Context, in *GetInfocardsInput, opts ...grpc.CallOption) (*GetInfocardsReply, error)
 	GetGraphPaths(ctx context.Context, in *GetGraphPathsInput, opts ...grpc.CallOption) (*GetGraphPathsReply, error)
 }
 
@@ -285,6 +287,16 @@ func (c *darkstatClient) GetHashes(ctx context.Context, in *Empty, opts ...grpc.
 	return out, nil
 }
 
+func (c *darkstatClient) GetInfocards(ctx context.Context, in *GetInfocardsInput, opts ...grpc.CallOption) (*GetInfocardsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetInfocardsReply)
+	err := c.cc.Invoke(ctx, Darkstat_GetInfocards_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *darkstatClient) GetGraphPaths(ctx context.Context, in *GetGraphPathsInput, opts ...grpc.CallOption) (*GetGraphPathsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetGraphPathsReply)
@@ -327,6 +339,7 @@ type DarkstatServer interface {
 	// Get Tractors. For Discovery those are IDs
 	GetTractors(context.Context, *GetTractorsInput) (*GetTractorsReply, error)
 	GetHashes(context.Context, *Empty) (*GetHashesReply, error)
+	GetInfocards(context.Context, *GetInfocardsInput) (*GetInfocardsReply, error)
 	GetGraphPaths(context.Context, *GetGraphPathsInput) (*GetGraphPathsReply, error)
 	mustEmbedUnimplementedDarkstatServer()
 }
@@ -397,6 +410,9 @@ func (UnimplementedDarkstatServer) GetTractors(context.Context, *GetTractorsInpu
 }
 func (UnimplementedDarkstatServer) GetHashes(context.Context, *Empty) (*GetHashesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetHashes not implemented")
+}
+func (UnimplementedDarkstatServer) GetInfocards(context.Context, *GetInfocardsInput) (*GetInfocardsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInfocards not implemented")
 }
 func (UnimplementedDarkstatServer) GetGraphPaths(context.Context, *GetGraphPathsInput) (*GetGraphPathsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGraphPaths not implemented")
@@ -782,6 +798,24 @@ func _Darkstat_GetHashes_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Darkstat_GetInfocards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInfocardsInput)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DarkstatServer).GetInfocards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Darkstat_GetInfocards_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DarkstatServer).GetInfocards(ctx, req.(*GetInfocardsInput))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Darkstat_GetGraphPaths_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetGraphPathsInput)
 	if err := dec(in); err != nil {
@@ -886,6 +920,10 @@ var Darkstat_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetHashes",
 			Handler:    _Darkstat_GetHashes_Handler,
+		},
+		{
+			MethodName: "GetInfocards",
+			Handler:    _Darkstat_GetInfocards_Handler,
 		},
 		{
 			MethodName: "GetGraphPaths",

@@ -342,7 +342,6 @@
     },
     "/statproto.Darkstat/GetHashes": {
       "post": {
-        "summary": "rpc GetInfocards",
         "operationId": "Darkstat_GetHashes",
         "responses": {
           "200": {
@@ -400,6 +399,38 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/statprotoEmpty"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetInfocards": {
+      "post": {
+        "operationId": "Darkstat_GetInfocards",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetInfocardsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetInfocardsInput"
             }
           }
         ],
@@ -1449,6 +1480,43 @@
         }
       }
     },
+    "statprotoGetInfocardAnswer": {
+      "type": "object",
+      "properties": {
+        "Query": {
+          "type": "string"
+        },
+        "Infocard": {
+          "$ref": "#/definitions/statprotoInfocard"
+        },
+        "Error": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoGetInfocardsInput": {
+      "type": "object",
+      "properties": {
+        "Nicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "statprotoGetInfocardsReply": {
+      "type": "object",
+      "properties": {
+        "Answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoGetInfocardAnswer"
+          }
+        }
+      }
+    },
     "statprotoGetMinesReply": {
       "type": "object",
       "properties": {
@@ -1789,6 +1857,44 @@
       "type": "object",
       "properties": {
         "isHealthy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "statprotoInfocard": {
+      "type": "object",
+      "properties": {
+        "Lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoInfocardLine"
+          }
+        }
+      }
+    },
+    "statprotoInfocardLine": {
+      "type": "object",
+      "properties": {
+        "Phrases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoInfocardPhrase"
+          }
+        }
+      }
+    },
+    "statprotoInfocardPhrase": {
+      "type": "object",
+      "properties": {
+        "Phrase": {
+          "type": "string"
+        },
+        "Link": {
+          "type": "string"
+        },
+        "Bold": {
           "type": "boolean"
         }
       }
