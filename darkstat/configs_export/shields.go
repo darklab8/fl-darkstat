@@ -64,14 +64,14 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 		shield.Technology, _ = shield_gen.ShieldType.GetValue()
 		shield.Capacity, _ = shield_gen.MaxCapacity.GetValue()
 
-		shield.RegenerationRate = shield_gen.RegenerationRate.Get()
-		shield.ConstantPowerDraw = shield_gen.ConstPowerDraw.Get()
-		shield.RebuildPowerDraw = shield_gen.RebuildPowerDraw.Get()
+		shield.RegenerationRate, _ = shield_gen.RegenerationRate.GetValue()
+		shield.ConstantPowerDraw, _ = shield_gen.ConstPowerDraw.GetValue()
+		shield.RebuildPowerDraw, _ = shield_gen.RebuildPowerDraw.GetValue()
 		shield.OffRebuildTime, _ = shield_gen.OfflineRebuildTime.GetValue()
 
 		shield.Lootable, _ = shield_gen.Lootable.GetValue()
 		shield.Toughness, _ = shield_gen.Toughness.GetValue()
-		shield.HitPts = shield_gen.HitPts.Get()
+		shield.HitPts, _ = shield_gen.HitPts.GetValue()
 
 		if good_info, ok := e.Configs.Goods.GoodsMap[shield.Nickname]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
