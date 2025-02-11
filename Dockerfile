@@ -16,8 +16,8 @@ FROM dependencies AS protoc
 
 RUN apt-get install unzip -y
 WORKDIR /install
-RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v29.3/protoc-29.3-linux-x86_64.zip -O protoc.zip && \
-    unzip -p protoc.zip bin/protoc > /usr/bin/protoc && chmod 777 /usr/bin/protoc && rm protoc.zip
+COPY docker/install_protoc.py .
+RUN python3 install_protoc.py
 
 COPY ./docker/go.mod ./docker/go.sum ./docker/installer.go ./
 RUN go mod tidy
