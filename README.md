@@ -82,7 +82,7 @@ If u have problems with configuring development environment, then seek my contac
   - You get static typing validations
   - You get performance boosts from using grpc compression stuff
   - We change server side smth? Just regenerate the lib to keep up with updates ^_^
-  - Import [darkstat proto file](./darkgrpc/statproto/main.proto) for its usage and generate client lib from it with `protoc` command
+  - Import [darkstat proto file](./darkgrpc/statproto/darkstat.proto) for its usage and generate client lib from it with `protoc` command
   - addresses to connect:
     - for local instance localhost:50051, or optionally unix socket `/tmp/darkstat/grpc.sock` at linux for extra performance boosts.
     - for deployed instances for discovery and vanilla, they are hosted over darkgrpc.dd84ai.com and darkgrpc-vanilla.dd84ai.com accordingly. 80 and 443 ports accordingly
