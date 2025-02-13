@@ -10,7 +10,6 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	statsettings "github.com/darklab8/fl-darkstat/darkstat/settings"
@@ -60,17 +59,12 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 			fmt.Println("setting tempus cookie for succesful oauth login", "host=", r.Host)
 			http.SetCookie(w, tempus_cookie)
 
-			tempus_as_query_param := ""
-			if settings.Env.IsDevEnv {
-				tempus_as_query_param = fmt.Sprintf("/?tempus=%s", tempus_value)
-			}
-
 			// http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
 			// redirect with delay instead
 			buf := bytes.NewBuffer([]byte{})
 			RedirectPage(
 				"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
-				statsettings.Env.SiteUrl+tempus_as_query_param).Render(context.Background(), buf)
+				statsettings.Env.SiteUrl+fmt.Sprintf("/?tempus=%s", tempus_value)).Render(context.Background(), buf)
 			fmt.Fprint(w, buf.String())
 		},
 	}
