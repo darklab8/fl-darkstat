@@ -63,6 +63,8 @@ func NewWeb(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
 	w.registry.Register(NewEndpointStatic(w))
 
 	w.registry.Register(NewEndpointPing(w))
+	w.registry.Register(NewOauthStart(w))
+	w.registry.Register(NewOauthAccept(w))
 
 	return w
 }

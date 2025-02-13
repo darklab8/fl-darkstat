@@ -8,6 +8,7 @@
     # "FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wineprefix_flsr/drive_c/Freelancer",
     "DEV_ENV": "true",
     "DARKSTAT_LOG_LEVEL": "DEBUG",
+    "DARKCORE_LOG_LEVEL": "DEBUG",
     "UTILS_LOG_LEVEL": "DEBUG",
     "CONFIGS_LOG_LEVEL": "INFO",
     # if u wish to speed up rerender by magnitude, then keep uncommended trade route calculations disabling
