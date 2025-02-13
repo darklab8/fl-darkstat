@@ -28,5 +28,8 @@ locals {
     var.apigateway_prefix != null ? {
       GRPCGATEWAY_URL = "https://${var.apigateway_prefix}.${var.zone}/"
     } : {},
+    var.disco_oauth == true ? {
+      DARKCORE_DISCO_OAUTH = "true"
+    } : {},
   )
 }

@@ -60,3 +60,9 @@ variable "enable_restarts" {
   description = "good idea to turn on for mods that periodically load updates, like Discovery or FLSR. No need for Vanilla"
   type        = bool
 }
+variable "disco_oauth" {
+  description = "https://github.com/darklab8/fl-darkstat/pull/106"
+  type        = bool
+  default     = false
+}
+
