@@ -189,6 +189,6 @@ env:
 
   # necessary env params for Oauth local development
   # DARKCORE_PASSWORD: "1233"
-  # DARKCORE_SECRET: "passphrasewgichneedstobe32bytes!"
+  # DARKCORE_SECRET: "passphrasewhichneedstobe32bytes!"
   # DARKCORE_DISCO_OAUTH: "true"
   # SITE_URL: "darkstat.mydd84ai.com:8000"

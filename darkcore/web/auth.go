@@ -50,12 +50,6 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			tempus_token = tempus_cookie.Value
 		}
 
-		// local development apperently needs to acquire it from query param
-		// as cookies aren't transfered at all between http pages
-		if tempus_cookie := r.URL.Query().Get("tempus"); tempus_cookie != "" {
-			tempus_token = tempus_cookie
-		}
-
 		logus.Log.Debug("check auth",
 			typelog.Any("query_password", query_password),
 			typelog.Any("cookie_password", cookie_password),

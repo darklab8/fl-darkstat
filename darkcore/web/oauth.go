@@ -55,7 +55,7 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 			}
 
 			tempus_value := NewTempusToken()
-			tempus_cookie := &http.Cookie{Name: "tempus", Value: tempus_value, Expires: time.Now().Add(1 * time.Hour)}
+			tempus_cookie := &http.Cookie{Name: "tempus", Value: tempus_value, Expires: time.Now().Add(1 * time.Hour), Path: "/"}
 			fmt.Println("setting tempus cookie for succesful oauth login", "host=", r.Host)
 			http.SetCookie(w, tempus_cookie)
 
@@ -64,7 +64,7 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 			buf := bytes.NewBuffer([]byte{})
 			RedirectPage(
 				"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
-				statsettings.Env.SiteUrl+fmt.Sprintf("/?tempus=%s", tempus_value)).Render(context.Background(), buf)
+				statsettings.Env.SiteUrl).Render(context.Background(), buf)
 			fmt.Fprint(w, buf.String())
 		},
 	}
