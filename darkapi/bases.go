@@ -82,7 +82,7 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 			if filter_to_useful {
 				result = configs_export.FitlerToUsefulOres(api.app_data.Configs.MiningOperations)
 			} else {
-				result = api.app_data.Configs.Bases
+				result = api.app_data.Configs.MiningOperations
 			}
 
 			var output []*Base
