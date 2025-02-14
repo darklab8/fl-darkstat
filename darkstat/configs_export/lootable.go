@@ -50,7 +50,7 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 		Nickname:           cfg.BaseUniNick(BaseLootableNickname),
 		SystemNickname:     "neverwhere",
 		System:             "Neverwhere",
-		Region:             "Neverwhere",
+		Region:             "NEVERWHERE",
 		FactionName:        BaseLootableFaction,
 	}
 

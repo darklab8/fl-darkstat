@@ -44,7 +44,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		Nickname:           cfg.BaseUniNick(pob_crafts_nickname),
 		SystemNickname:     "neverwhere",
 		System:             "Neverwhere",
-		Region:             "Neverwhere",
+		Region:             "NEVERWHERE",
 		FactionName:        "Player Crafts",
 	}
 
