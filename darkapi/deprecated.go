@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkapi/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -64,7 +65,7 @@ func PostBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 				base_market_goods = append(base_market_goods, answer)
 
 			}
-			ReturnJson(&w, base_market_goods)
+			apiutils.ReturnJson(&w, base_market_goods)
 		},
 	}
 }

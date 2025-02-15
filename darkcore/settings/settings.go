@@ -9,18 +9,20 @@ import (
 
 type DarkcoreEnvVars struct {
 	utils_settings.UtilsEnvs
-	Password        string
-	Secret          string
-	ExtraCookieHost string
+	Password            string
+	Secret              string
+	ExtraCookieHost     string
+	IsDiscoOauthEnabled bool
 }
 
 var Env DarkcoreEnvVars
 
 func GetEnvs(envs *enverant.Enverant) DarkcoreEnvVars {
 	Env = DarkcoreEnvVars{
-		UtilsEnvs: utils_settings.GetEnvs(envs),
-		Password:  envs.GetStrOr("DARKCORE_PASSWORD", ""),
-		Secret:    envs.GetStrOr("DARKCORE_SECRET", "passphrasewhichneedstobe32bytes!"),
+		UtilsEnvs:           utils_settings.GetEnvs(envs),
+		Password:            envs.GetStrOr("DARKCORE_PASSWORD", ""),
+		Secret:              envs.GetStrOr("DARKCORE_SECRET", "passphrasewhichneedstobe32bytes!"),
+		IsDiscoOauthEnabled: envs.GetBool("DARKCORE_DISCO_OAUTH"),
 	}
 	return Env
 }

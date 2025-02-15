@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkapi/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -40,7 +41,7 @@ func GetItemsT[T Nicknamable](webapp *web.Web, items []T, filter func(items []T)
 			result = items
 		}
 
-		ReturnJson(&w, result)
+		apiutils.ReturnJson(&w, result)
 	}
 }
 
@@ -93,7 +94,7 @@ func PostItemsMarketGoodsT[T Marketable](webapp *web.Web, items []T) func(w http
 			market_good_answers = append(market_good_answers, answer)
 
 		}
-		ReturnJson(&w, market_good_answers)
+		apiutils.ReturnJson(&w, market_good_answers)
 	}
 }
 
@@ -140,6 +141,6 @@ func PostItemsTechCompatT[T TechCompatable](webapp *web.Web, items []T) func(w h
 			market_good_answers = append(market_good_answers, answer)
 
 		}
-		ReturnJson(&w, market_good_answers)
+		apiutils.ReturnJson(&w, market_good_answers)
 	}
 }

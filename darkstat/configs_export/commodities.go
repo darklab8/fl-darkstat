@@ -227,7 +227,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 					BaseNickname: pob_crafts_nickname,
 					BaseName:     e.Configs.CraftableBaseName(),
 					SystemName:   "Neverwhere",
-					Region:       "Neverwhere",
+					Region:       "NEVERWHERE",
 					FactionName:  "Neverwhere",
 				},
 			}
@@ -248,7 +248,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 				BaseNickname: BaseLootableNickname,
 				BaseName:     BaseLootableName,
 				SystemName:   "Neverwhere",
-				Region:       "Neverwhere",
+				Region:       "NEVERWHERE",
 				FactionName:  BaseLootableFaction,
 			},
 		}

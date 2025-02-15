@@ -3,6 +3,7 @@ package darkapi
 import (
 	"net/http"
 
+	"github.com/darklab8/fl-darkstat/darkapi/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -52,7 +53,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 				}
 				output = append(output, answer)
 			}
-			ReturnJson(&w, output)
+			apiutils.ReturnJson(&w, output)
 		},
 	}
 
@@ -82,7 +83,7 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 			if filter_to_useful {
 				result = configs_export.FitlerToUsefulOres(api.app_data.Configs.MiningOperations)
 			} else {
-				result = api.app_data.Configs.Bases
+				result = api.app_data.Configs.MiningOperations
 			}
 
 			var output []*Base
@@ -97,7 +98,7 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 				}
 				output = append(output, answer)
 			}
-			ReturnJson(&w, output)
+			apiutils.ReturnJson(&w, output)
 		},
 	}
 }

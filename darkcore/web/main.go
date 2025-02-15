@@ -47,7 +47,7 @@ func WithSiteRoot(site_root string) WebOpt {
 	}
 }
 
-func NewWeb(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
+func NewWebBasic(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
 	w := &Web{
 		filesystems: filesystems,
 		registry:    registry.NewRegister(),
@@ -57,12 +57,18 @@ func NewWeb(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
 	for _, opt := range opts {
 		opt(w)
 	}
+	return w
+}
 
+func NewWeb(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
+	w := NewWebBasic(filesystems, opts...)
 	fmt.Println("site_root", w.site_root)
 
 	w.registry.Register(NewEndpointStatic(w))
 
 	w.registry.Register(NewEndpointPing(w))
+	w.registry.Register(NewOauthStart(w))
+	w.registry.Register(NewOauthAccept(w))
 
 	return w
 }

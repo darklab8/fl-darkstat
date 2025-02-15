@@ -1,7 +1,11 @@
 package web
 
 import (
+	"bytes"
+	"context"
+	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
@@ -11,6 +15,13 @@ import (
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		logus.Log.Warn("auth for page url", typelog.String("r.URL.Path", r.URL.Path))
+		if strings.HasPrefix(r.URL.Path, "/oauth") {
+			next.ServeHTTP(w, r)
+			return
+		}
+
 		var query_password string
 		var cookie_password string
 
@@ -64,6 +75,14 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 			next.ServeHTTP(w, r)
 			return
+		}
+
+		if settings.Env.IsDiscoOauthEnabled {
+			buf := bytes.NewBuffer([]byte{})
+			RedirectPage(
+				"Password is incorrect, sending to oauth in 3 seconds",
+				"/oauth").Render(context.Background(), buf)
+			fmt.Fprint(w, buf.String())
 		}
 
 		http.Error(w, "Password is incorrect", http.StatusForbidden)
