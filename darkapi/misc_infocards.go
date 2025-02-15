@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/darklab8/fl-darkstat/darkapi/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
@@ -54,7 +55,7 @@ func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registr
 				}
 			}
 
-			ReturnJson(&w, outputs)
+			apiutils.ReturnJson(&w, outputs)
 		},
 	}
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/iniload"
+	"github.com/darklab8/fl-darkstat/darkapi/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
@@ -45,7 +46,7 @@ func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 
 			hashes = GetHashesData(api.app_data)
 
-			ReturnJson(&w, Hashes{HashesByNick: hashes})
+			apiutils.ReturnJson(&w, Hashes{HashesByNick: hashes})
 		},
 	}
 }

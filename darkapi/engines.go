@@ -3,6 +3,7 @@ package darkapi
 import (
 	"net/http"
 
+	"github.com/darklab8/fl-darkstat/darkapi/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -60,7 +61,7 @@ func GetEngines(webapp *web.Web, api *Api) *registry.Endpoint {
 				output = append(output, answer)
 			}
 
-			ReturnJson(&w, output)
+			apiutils.ReturnJson(&w, output)
 		},
 	}
 }

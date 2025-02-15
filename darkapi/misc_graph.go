@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/darklab8/fl-darkstat/darkapi/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
@@ -48,7 +49,7 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 			}
 			output_routes := api.app_data.GetGraphPaths(input_routes)
 
-			ReturnJson(&resp, output_routes)
+			apiutils.ReturnJson(&resp, output_routes)
 		},
 	}
 }

@@ -3,6 +3,7 @@ package darkapi
 import (
 	"net/http"
 
+	"github.com/darklab8/fl-darkstat/darkapi/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	_ "github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -26,7 +27,7 @@ func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			ReturnJson(&w, api.app_data.Configs.PoBs)
+			apiutils.ReturnJson(&w, api.app_data.Configs.PoBs)
 		},
 	}
 }
@@ -47,7 +48,7 @@ func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			ReturnJson(&w, api.app_data.Configs.PoBGoods)
+			apiutils.ReturnJson(&w, api.app_data.Configs.PoBGoods)
 		},
 	}
 }
@@ -68,7 +69,7 @@ func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			ReturnJson(&w, api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs))
+			apiutils.ReturnJson(&w, api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs))
 		},
 	}
 }
