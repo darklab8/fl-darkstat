@@ -65,13 +65,17 @@ type DiscoveryConfig struct {
 }
 
 type MappedConfigsRelay struct {
-	InitialWorld     *initialworld.Config
-	Infocards        *infocard.Config
-	Universe         *universe_mapped.Config
-	Equip            *equip_mapped.Config
-	Goods            *equipment_mapped.Config
+	InitialWorld *initialworld.Config
+	Infocards    *infocard.Config
+	Universe     *universe_mapped.Config
+	Equip        *equip_mapped.Config
+	Goods        *equipment_mapped.Config
+	Discovery    *DiscoveryRelay
+	Shiparch     *ship_mapped.Config
+}
+
+type DiscoveryRelay struct {
 	PlayerOwnedBases *pob_goods.Config
-	Shiparch         *ship_mapped.Config
 }
 
 type MappedConfigs struct {

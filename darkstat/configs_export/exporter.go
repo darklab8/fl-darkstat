@@ -135,20 +135,26 @@ type Exporter struct {
 type OptExport func(e *Exporter)
 
 func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Exporter {
+	mapped_relay := &configs_mapped.MappedConfigsRelay{
+		InitialWorld: mapped.InitialWorld,
+		Infocards:    mapped.Infocards,
+		Universe:     mapped.Universe,
+		Equip:        mapped.Equip,
+		Goods:        mapped.Goods,
+		Shiparch:     mapped.Shiparch,
+	}
+	if mapped.Discovery != nil {
+		mapped_relay.Discovery = &configs_mapped.DiscoveryRelay{
+			PlayerOwnedBases: mapped.Discovery.PlayerOwnedBases,
+		}
+	}
+
 	e := &Exporter{
 		mapped:      mapped,
 		ship_speeds: trades.VanillaSpeeds,
 		ExporterRelay: &ExporterRelay{
 			Infocards: map[InfocardKey]Infocard{},
-			Mapped: &configs_mapped.MappedConfigsRelay{
-				InitialWorld:     mapped.InitialWorld,
-				Infocards:        mapped.Infocards,
-				Universe:         mapped.Universe,
-				Equip:            mapped.Equip,
-				Goods:            mapped.Goods,
-				PlayerOwnedBases: mapped.Discovery.PlayerOwnedBases,
-				Shiparch:         mapped.Shiparch,
-			},
+			Mapped:    mapped_relay,
 		},
 	}
 
@@ -309,6 +315,7 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	wg.Wait()
 
 	logus.Log.Info("getting pob to bases")
+	// TODO refactor. all my ram allocated problems are majorly here.
 	BasesFromPobs := e.PoBsToBases(e.PoBs)
 	TradeBases := append(e.Bases, BasesFromPobs...)
 	e.TradeBases, e.Commodities = e.TradePaths(TradeBases, e.Commodities)

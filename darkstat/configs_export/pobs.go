@@ -244,7 +244,7 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		ships_by_hash[hash] = item
 	}
 
-	for _, pob_info := range e.Mapped.PlayerOwnedBases.Bases {
+	for _, pob_info := range e.Mapped.Discovery.PlayerOwnedBases.Bases {
 
 		var pob *PoB = &PoB{
 			PoBCore: PoBCore{
