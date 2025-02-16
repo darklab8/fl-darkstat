@@ -150,7 +150,7 @@ func main() {
 						defer app_data.Unlock()
 
 						// TODO minimize usage of data here.
-						relay_data.Configs.Mapped.PlayerOwnedBases.Refresh()
+						relay_data.Configs.Mapped.Discovery.PlayerOwnedBases.Refresh()
 						relay_data.Configs.PoBs = relay_data.Configs.GetPoBs()
 						relay_data.Configs.PoBGoods = relay_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
 						relay_fs2 := GetRelayFs(relay_data)
