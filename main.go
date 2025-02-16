@@ -117,6 +117,7 @@ func main() {
 	web_darkstat := func() func() {
 		app_data := appdata.NewAppData()
 		relay_data := appdata.NewRelayData(app_data)
+		app_data.Configs.Clean()
 
 		stat_router := router.NewRouter(app_data)
 		stat_builder := stat_router.Link()
