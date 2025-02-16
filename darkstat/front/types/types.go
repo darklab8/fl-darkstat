@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/discovery/techcompat"
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -70,6 +69,6 @@ type DiscoveryData struct {
 type SharedData struct {
 	DiscoveryData
 	FLSRData
-	Mapped            *configs_mapped.MappedConfigs
-	CraftableBaseName string
+	CraftableBaseName     string
+	AverageTradeLaneSpeed int
 }

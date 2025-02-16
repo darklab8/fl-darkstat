@@ -31,7 +31,7 @@ func (b Scanner) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.Discov
 func (e *Exporter) GetScanners(ids []*Tractor) []Scanner {
 	var scanners []Scanner
 
-	for _, scanner_info := range e.Configs.Equip.Scanners {
+	for _, scanner_info := range e.mapped.Equip.Scanners {
 		item := Scanner{
 			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
@@ -45,7 +45,7 @@ func (e *Exporter) GetScanners(ids []*Tractor) []Scanner {
 		item.Range = scanner_info.Range.Get()
 		item.CargoScanRange = scanner_info.CargoScanRange.Get()
 
-		if good_info, ok := e.Configs.Goods.GoodsMap[item.Nickname]; ok {
+		if good_info, ok := e.mapped.Goods.GoodsMap[item.Nickname]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
 				item.Price = price
 				item.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
@@ -58,7 +58,7 @@ func (e *Exporter) GetScanners(ids []*Tractor) []Scanner {
 		item.Name = e.GetInfocardName(item.NameID, item.Nickname)
 
 		e.exportInfocards(InfocardKey(item.Nickname), item.InfoID)
-		item.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, item.Nickname)
+		item.DiscoveryTechCompat = CalculateTechCompat(e.mapped.Discovery, ids, item.Nickname)
 		scanners = append(scanners, item)
 	}
 	return scanners

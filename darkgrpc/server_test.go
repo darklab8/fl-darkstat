@@ -114,14 +114,14 @@ func TestRpc(t *testing.T) {
 	t.Run("GetPoBs", func(t *testing.T) {
 		res, err := c.GetPoBs(context.Background(), &statproto.Empty{})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.IsDiscovery {
 			assert.Greater(t, len(res.Items), 0)
 		}
 	})
 	t.Run("GetPoBGoods", func(t *testing.T) {
 		res, err := c.GetPoBGoods(context.Background(), &statproto.Empty{})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.IsDiscovery {
 			assert.Greater(t, len(res.Items), 0)
 		}
 	})
@@ -129,7 +129,7 @@ func TestRpc(t *testing.T) {
 	t.Run("GetPoBBases", func(t *testing.T) {
 		res, err := c.GetBasesPoBs(context.Background(), &statproto.GetBasesInput{IncludeMarketGoods: true})
 		logus.Log.CheckPanic(err, "error making rpc call to get items: %s\n", typelog.OptError(err))
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.IsDiscovery {
 			assert.Greater(t, len(res.Items), 0)
 		}
 	})

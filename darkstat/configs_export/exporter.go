@@ -73,7 +73,7 @@ func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
 	}
 
 	for _, info_id := range infocard_ids {
-		if value, ok := e.Configs.Infocards.Infocards[info_id]; ok {
+		if value, ok := e.mapped.Infocards.Infocards[info_id]; ok {
 			for _, line := range value.Lines {
 				e.Infocards[InfocardKey(nickname)] = append(e.Infocards[InfocardKey(nickname)], NewInfocardSimpleLine(line))
 			}
@@ -88,8 +88,17 @@ func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
 
 type Infocards map[InfocardKey]Infocard
 
+type ExporterRelay struct {
+	Mapped    *configs_mapped.MappedConfigsRelay
+	PoBs      []*PoB
+	PoBGoods  []*PoBGood
+	Infocards Infocards
+}
+
 type Exporter struct {
-	Configs     *configs_mapped.MappedConfigs
+	*ExporterRelay
+	mapped      *configs_mapped.MappedConfigs
+	IsDiscovery bool
 	Bases       []*Base
 	TradeBases  []*Base
 	TravelBases []*Base
@@ -103,7 +112,6 @@ type Exporter struct {
 	Frigate     *GraphResults
 
 	Factions     []Faction
-	Infocards    Infocards
 	Commodities  []*Commodity
 	Guns         []Gun
 	Missiles     []Gun
@@ -118,8 +126,6 @@ type Exporter struct {
 	CMs          []CounterMeasure
 	Scanners     []Scanner
 	Ammos        []Ammo
-	PoBs         []*PoB
-	PoBGoods     []*PoBGood
 
 	findable_in_loot_cache map[string]bool
 	craftable_cached       map[string]bool
@@ -128,11 +134,28 @@ type Exporter struct {
 
 type OptExport func(e *Exporter)
 
-func NewExporter(configs *configs_mapped.MappedConfigs, opts ...OptExport) *Exporter {
+func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Exporter {
+	mapped_relay := &configs_mapped.MappedConfigsRelay{
+		InitialWorld: mapped.InitialWorld,
+		Infocards:    mapped.Infocards,
+		Universe:     mapped.Universe,
+		Equip:        mapped.Equip,
+		Goods:        mapped.Goods,
+		Shiparch:     mapped.Shiparch,
+	}
+	if mapped.Discovery != nil {
+		mapped_relay.Discovery = &configs_mapped.DiscoveryRelay{
+			PlayerOwnedBases: mapped.Discovery.PlayerOwnedBases,
+		}
+	}
+
 	e := &Exporter{
-		Configs:     configs,
-		Infocards:   map[InfocardKey]Infocard{},
+		mapped:      mapped,
 		ship_speeds: trades.VanillaSpeeds,
+		ExporterRelay: &ExporterRelay{
+			Infocards: map[InfocardKey]Infocard{},
+			Mapped:    mapped_relay,
+		},
 	}
 
 	for _, opt := range opts {
@@ -157,7 +180,7 @@ func NewGraphResults(
 ) *GraphResults {
 	logus.Log.Info("mapping configs to graph")
 	graph := trades.MapConfigsToFGraph(
-		e.Configs,
+		e.mapped,
 		avgCruiserSpeed,
 		can_visit_freighter_only_jhs,
 		mining_bases_by_system,
@@ -181,8 +204,16 @@ type ExportOptions struct {
 	trades.MappingOptions
 }
 
+func (e *Exporter) Clean() {
+	e.mapped = nil
+}
+
 func (e *Exporter) Export(options ExportOptions) *Exporter {
 	var wg sync.WaitGroup
+
+	if e.mapped.Discovery != nil {
+		e.IsDiscovery = true
+	}
 
 	logus.Log.Info("getting bases")
 	e.Bases = e.GetBases()
@@ -198,7 +229,7 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	EnhanceBasesWithServerOverrides(e.Bases, e.Commodities)
 
 	e.MiningOperations = e.GetOres(e.Commodities)
-	if e.Configs.Discovery != nil {
+	if e.mapped.Discovery != nil {
 		e.PoBs = e.GetPoBs()
 		e.PoBGoods = e.GetPoBGoods(e.PoBs)
 	}
@@ -219,11 +250,11 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 			Nickname: cfg.BaseUniNick(base.Nickname),
 		})
 	}
-	if e.Configs.Discovery != nil {
+	if e.mapped.Discovery != nil {
 		e.ship_speeds = trades.DiscoverySpeeds
 	}
 
-	if e.Configs.FLSR != nil {
+	if e.mapped.FLSR != nil {
 		e.ship_speeds = trades.FLSRSpeeds
 	}
 
@@ -284,6 +315,7 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	wg.Wait()
 
 	logus.Log.Info("getting pob to bases")
+	// TODO refactor. all my ram allocated problems are majorly here.
 	BasesFromPobs := e.PoBsToBases(e.PoBs)
 	TradeBases := append(e.Bases, BasesFromPobs...)
 	e.TradeBases, e.Commodities = e.TradePaths(TradeBases, e.Commodities)
@@ -369,8 +401,8 @@ func (e *Exporter) EnhanceBasesWithIsTransportReachable(
 	}
 }
 
-func Export(configs *configs_mapped.MappedConfigs, options ExportOptions) *Exporter {
-	return NewExporter(configs).Export(options)
+func Export(mapped *configs_mapped.MappedConfigs, options ExportOptions) *Exporter {
+	return NewExporter(mapped).Export(options)
 }
 
 func Empty(phrase string) bool {
@@ -426,5 +458,8 @@ func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []*Tract
 }
 
 func (e *Exporter) GetInfocardName(ids_name int, nickname string) string {
-	return e.Configs.GetInfocardName(ids_name, nickname)
+	return e.mapped.GetInfocardName(ids_name, nickname)
+}
+func (e *ExporterRelay) GetInfocardName(ids_name int, nickname string) string {
+	return e.Mapped.GetInfocardName(ids_name, nickname)
 }

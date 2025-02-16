@@ -255,7 +255,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetPoBs", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		_ = FixtureTestItems[configs_export.PoB](t, httpc, "/pobs", "Pobs", TestOpts{})
@@ -263,7 +263,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetPoBGoods", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		_ = FixtureTestItems[configs_export.PoBGood](t, httpc, "/pob_goods", "PoBGodds", TestOpts{})
@@ -277,7 +277,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetTractors", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		_ = FixtureTestItems[configs_export.Tractor](t, httpc, "/tractors", "Tractors", TestOpts{
@@ -326,7 +326,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetEngines", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		for _, item := range app_data.Configs.Engines {
@@ -343,7 +343,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetScanners", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		_ = FixtureTestItems[configs_export.Scanner](t, httpc, "/scanners", "Scanners", TestOpts{

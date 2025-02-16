@@ -37,7 +37,7 @@ func (b CounterMeasure) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b
 func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 	var tractors []CounterMeasure
 
-	for _, cm_info := range e.Configs.Equip.CounterMeasureDroppers {
+	for _, cm_info := range e.mapped.Equip.CounterMeasureDroppers {
 		cm := CounterMeasure{
 			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
@@ -50,7 +50,7 @@ func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 		cm.NameID = cm_info.IdsName.Get()
 		cm.InfoID = cm_info.IdsInfo.Get()
 
-		if good_info, ok := e.Configs.Goods.GoodsMap[cm.Nickname]; ok {
+		if good_info, ok := e.mapped.Goods.GoodsMap[cm.Nickname]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
 				cm.Price = price
 				cm.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
@@ -63,7 +63,7 @@ func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 		cm.Name = e.GetInfocardName(cm.NameID, cm.Nickname)
 
 		infocards := []int{cm.InfoID}
-		if ammo_info, ok := e.Configs.Equip.CounterMeasureMap[cm_info.ProjectileArchetype.Get()]; ok {
+		if ammo_info, ok := e.mapped.Equip.CounterMeasureMap[cm_info.ProjectileArchetype.Get()]; ok {
 
 			if value, ok := ammo_info.AmmoLimitAmountInCatridge.GetValue(); ok {
 				cm.AmmoLimit.AmountInCatridge = ptr.Ptr(value)
@@ -82,7 +82,7 @@ func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 		}
 
 		e.exportInfocards(InfocardKey(cm.Nickname), infocards...)
-		cm.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, cm.Nickname)
+		cm.DiscoveryTechCompat = CalculateTechCompat(e.mapped.Discovery, ids, cm.Nickname)
 		tractors = append(tractors, cm)
 	}
 	return tractors

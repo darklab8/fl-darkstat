@@ -64,7 +64,22 @@ type DiscoveryConfig struct {
 	PlayerOwnedBases   *pob_goods.Config
 }
 
+type MappedConfigsRelay struct {
+	InitialWorld *initialworld.Config
+	Infocards    *infocard.Config
+	Universe     *universe_mapped.Config
+	Equip        *equip_mapped.Config
+	Goods        *equipment_mapped.Config
+	Discovery    *DiscoveryRelay
+	Shiparch     *ship_mapped.Config
+}
+
+type DiscoveryRelay struct {
+	PlayerOwnedBases *pob_goods.Config
+}
+
 type MappedConfigs struct {
+	*MappedConfigsRelay
 	FreelancerINI *exe_mapped.Config
 
 	Universe *universe_mapped.Config
@@ -98,7 +113,9 @@ type MappedConfigs struct {
 }
 
 func NewMappedConfigs() *MappedConfigs {
-	return &MappedConfigs{}
+	return &MappedConfigs{
+		MappedConfigsRelay: &MappedConfigsRelay{},
+	}
 }
 
 func (configs *MappedConfigs) GetAvgTradeLaneSpeed() int {

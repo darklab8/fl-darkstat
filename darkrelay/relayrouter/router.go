@@ -12,12 +12,12 @@ import (
 )
 
 type Router struct {
-	AppData *appdata.AppData
+	AppData *appdata.AppDataRelay
 }
 
 type RouterOpt func(l *Router)
 
-func NewRouter(app_data *appdata.AppData, opts ...RouterOpt) *Router {
+func NewRouter(app_data *appdata.AppDataRelay, opts ...RouterOpt) *Router {
 	l := &Router{AppData: app_data}
 	for _, opt := range opts {
 		opt(l)
