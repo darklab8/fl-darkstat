@@ -69,7 +69,7 @@ templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared
 	</table>
 }
 
-templ PoBGoodsT(configs *configs_export.Exporter, mode2 tab.ShowEmpty, shared *types.SharedData) {
+templ PoBGoodsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shared *types.SharedData) {
 	@front.TabMenu(urls.PoBGoods, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">

@@ -14,16 +14,16 @@ func (e *Exporter) pob_produced() map[string]bool {
 
 	e.craftable_cached = make(map[string]bool)
 
-	if e.Configs.Discovery != nil {
-		for _, recipe := range e.Configs.Discovery.BaseRecipeItems.Recipes {
+	if e.mapped.Discovery != nil {
+		for _, recipe := range e.mapped.Discovery.BaseRecipeItems.Recipes {
 			for _, produced := range recipe.ProcucedItem {
 				e.craftable_cached[produced.Get()] = true
 			}
 		}
 	}
 
-	if e.Configs.FLSR != nil {
-		for _, recipe := range e.Configs.FLSR.FLSRRecipes.Products {
+	if e.mapped.FLSR != nil {
+		for _, recipe := range e.mapped.FLSR.FLSRRecipes.Products {
 			e.craftable_cached[recipe.Product.Get()] = true
 		}
 	}
@@ -39,7 +39,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 	pob_produced := e.pob_produced()
 
 	base := &Base{
-		Name:               e.Configs.CraftableBaseName(),
+		Name:               e.mapped.CraftableBaseName(),
 		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 		Nickname:           cfg.BaseUniNick(pob_crafts_nickname),
 		SystemNickname:     "neverwhere",
@@ -62,8 +62,8 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		base.MarketGoodsPerNick[market_good_key] = market_good
 
 		var infocard_addition InfocardBuilder
-		if e.Configs.Discovery != nil {
-			if recipes, ok := e.Configs.Discovery.BaseRecipeItems.RecipePerProduced[market_good.Nickname]; ok {
+		if e.mapped.Discovery != nil {
+			if recipes, ok := e.mapped.Discovery.BaseRecipeItems.RecipePerProduced[market_good.Nickname]; ok {
 				infocard_addition.WriteLineStr(`CRAFTING RECIPES:`)
 				for _, recipe := range recipes {
 					sector := recipe.Model.RenderModel()
@@ -75,9 +75,9 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 				}
 			}
 		}
-		if e.Configs.FLSR != nil {
-			if e.Configs.FLSR.FLSRRecipes != nil {
-				if recipes, ok := e.Configs.FLSR.FLSRRecipes.ProductsByNick[market_good.Nickname]; ok {
+		if e.mapped.FLSR != nil {
+			if e.mapped.FLSR.FLSRRecipes != nil {
+				if recipes, ok := e.mapped.FLSR.FLSRRecipes.ProductsByNick[market_good.Nickname]; ok {
 					infocard_addition.WriteLineStr(`CRAFTING RECIPES:`)
 					for _, recipe := range recipes {
 						sector := recipe.Model.RenderModel()

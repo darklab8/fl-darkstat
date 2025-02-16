@@ -4,27 +4,24 @@ import (
 	"sort"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 )
 
 type TechCompatOrderer struct {
 	cached_techcell_nil []CompatibleIDsForTractor
-	configs             *configs_mapped.MappedConfigs
 	exporter            *Exporter
 }
 
 func NewOrderedTechCompat(e *Exporter) *TechCompatOrderer {
 	orderer := &TechCompatOrderer{
-		configs:  e.Configs,
 		exporter: e,
 	}
 
 	orderer.cached_techcell_nil = append(orderer.cached_techcell_nil, CompatibleIDsForTractor{
-		TechCompat: e.Configs.Discovery.Techcompat.General.UnlistedTech.Get(),
+		TechCompat: e.mapped.Discovery.Techcompat.General.UnlistedTech.Get(),
 		Tractor:    &Tractor{Name: "Most Factions"},
 	})
 
-	for _, faction := range e.Configs.Discovery.Techcompat.Factions {
+	for _, faction := range e.mapped.Discovery.Techcompat.Factions {
 		if unlisted_faction_modifier, ok := faction.DefaultUnlisted.GetValue(); ok {
 			orderer.cached_techcell_nil = append(orderer.cached_techcell_nil, CompatibleIDsForTractor{
 				TechCompat: unlisted_faction_modifier,

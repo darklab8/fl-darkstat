@@ -26,9 +26,9 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 		comm_by_nick[GetCommodityKey(comm.Nickname, comm.ShipClass)] = comm
 	}
 
-	for _, system := range e.Configs.Systems.Systems {
+	for _, system := range e.mapped.Systems.Systems {
 
-		system_uni, system_uni_ok := e.Configs.Universe.SystemMap[universe_mapped.SystemNickname(system.Nickname)]
+		system_uni, system_uni_ok := e.mapped.Universe.SystemMap[universe_mapped.SystemNickname(system.Nickname)]
 
 		for _, asteroids := range system.Asteroids {
 
@@ -71,7 +71,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 			base.FactionName = "Mining Field"
 
 			base.SystemNickname = system.Nickname
-			if system, ok := e.Configs.Universe.SystemMap[universe_mapped.SystemNickname(base.SystemNickname)]; ok {
+			if system, ok := e.mapped.Universe.SystemMap[universe_mapped.SystemNickname(base.SystemNickname)]; ok {
 				base.System = e.GetInfocardName(system.StridName.Get(), base.SystemNickname)
 				base.Region = e.GetRegionName(system)
 				base.SectorCoord = VectorToSectorCoord(system_uni, base.Pos)
@@ -79,7 +79,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 
 			logus.Log.Debug("GetOres", typelog.String("commodity=", commodity))
 
-			equipment := e.Configs.Equip.CommoditiesMap[commodity]
+			equipment := e.mapped.Equip.CommoditiesMap[commodity]
 			for _, volume_info := range equipment.Volumes {
 
 				market_good := &MarketGood{
@@ -113,14 +113,14 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 
 			}
 
-			if e.Configs.Discovery != nil {
-				if recipes, ok := e.Configs.Discovery.BaseRecipeItems.RecipePerConsumed[commodity]; ok {
+			if e.mapped.Discovery != nil {
+				if recipes, ok := e.mapped.Discovery.BaseRecipeItems.RecipePerConsumed[commodity]; ok {
 					for _, recipe := range recipes {
 						recipe_produces_only_commodities := true
 
 						for _, produced := range recipe.ProcucedItem {
 
-							_, is_commodity := e.Configs.Equip.CommoditiesMap[produced.Get()]
+							_, is_commodity := e.mapped.Equip.CommoditiesMap[produced.Get()]
 							if !is_commodity {
 								recipe_produces_only_commodities = false
 								break
@@ -135,7 +135,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 								if _, ok := added_goods[commodity_produced]; ok {
 									continue
 								}
-								equipment := e.Configs.Equip.CommoditiesMap[commodity_produced]
+								equipment := e.mapped.Equip.CommoditiesMap[commodity_produced]
 								for _, volume_info := range equipment.Volumes {
 									market_good := &MarketGood{
 										GoodInfo:          e.GetGoodInfo(commodity_produced),
@@ -179,7 +179,7 @@ It is a mining field with droppable ores`))
 			sb.WriteLineStr((""))
 			sb.WriteLineStr(("Trade routes shown do not account for a time it takes to mine those ores."))
 
-			if e.Configs.Discovery != nil {
+			if e.mapped.Discovery != nil {
 				sb.WriteLineStr("")
 				sb.WriteLine(InfocardPhrase{Link: ptr.Ptr("https://discoverygc.com/wiki2/Mining"), Phrase: "Check mining tutorial"}, InfocardPhrase{Phrase: " to see how they can be mined"})
 

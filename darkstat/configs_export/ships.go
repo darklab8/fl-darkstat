@@ -111,7 +111,7 @@ func (s *Ship) getThrusterSpeed(
 	// var found_thruster1 *equip_mapped.Thruster # debug data
 	// var found_thruster2 *Thruster # debug data
 
-	for _, thruster := range e.Configs.Equip.Thrusters {
+	for _, thruster := range e.mapped.Equip.Thrusters {
 		thrust_usage := thruster.PowerUsage.Get()
 
 		seconds_thrust_usage := int(ThrustCapacity / (float64(thrust_usage*thruster_amount) - ThrustRecharge))
@@ -157,12 +157,12 @@ func (s *Ship) getThrusterSpeed(
 		if i < len(equipped_thrusters) {
 			thruster := equipped_thrusters[i]
 			thruster_price := 0
-			if good_info, ok := e.Configs.Goods.GoodsMap[thruster.Nickname.Get()]; ok {
+			if good_info, ok := e.mapped.Goods.GoodsMap[thruster.Nickname.Get()]; ok {
 				if price, ok := good_info.Price.GetValue(); ok {
 					thruster_price = price
 				}
 			}
-			if e.Configs.Discovery != nil && thruster_price == 0 {
+			if e.mapped.Discovery != nil && thruster_price == 0 {
 				total_thruster_force += thruster.MaxForce.Get()
 				continue
 			}
@@ -188,7 +188,7 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 		ThrusterMap[thruster.Nickname] = &thruster
 	}
 
-	for _, ship_info := range e.Configs.Shiparch.Ships {
+	for _, ship_info := range e.mapped.Shiparch.Ships {
 		ship := Ship{
 			Nickname: ship_info.Nickname.Get(),
 			Bases:    make(map[cfg.BaseUniNick]*MarketGood),
@@ -228,11 +228,11 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 
 		ship.Name = e.GetInfocardName(ship.NameID, ship.Nickname)
 
-		if ship_hull_good, ok := e.Configs.Goods.ShipHullsMapByShip[ship.Nickname]; ok {
+		if ship_hull_good, ok := e.mapped.Goods.ShipHullsMapByShip[ship.Nickname]; ok {
 			ship.Price = ship_hull_good.Price.Get()
 
 			ship_hull_nickname := ship_hull_good.Nickname.Get()
-			if ship_package_goods, ok := e.Configs.Goods.ShipsMapByHull[ship_hull_nickname]; ok {
+			if ship_package_goods, ok := e.mapped.Goods.ShipsMapByHull[ship_hull_nickname]; ok {
 
 				for _, ship_package_good := range ship_package_goods {
 					var equipped_thrusters []*equip_mapped.Thruster
@@ -244,22 +244,22 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 						// addon = ge_s_scanner_01, internal, 1
 						addon_nickname := addon.ItemNickname.Get()
 
-						if good_info, ok := e.Configs.Goods.GoodsMap[addon_nickname]; ok {
+						if good_info, ok := e.mapped.Goods.GoodsMap[addon_nickname]; ok {
 							if addon_price, ok := good_info.Price.GetValue(); ok {
 								ship.Price += addon_price
 							}
 						}
-						if thruster, ok := e.Configs.Equip.ThrusterMap[addon_nickname]; ok {
+						if thruster, ok := e.mapped.Equip.ThrusterMap[addon_nickname]; ok {
 							equipped_thrusters = append(equipped_thrusters, thruster)
 						}
-						if power, ok := e.Configs.Equip.PowersMap[addon_nickname]; ok {
+						if power, ok := e.mapped.Equip.PowersMap[addon_nickname]; ok {
 							ship.PowerCapacity = power.Capacity.Get()
 							ship.PowerRechargeRate = power.ChargeRate.Get()
 
 							ship.ThrustCapacity = power.ThrustCapacity.Get()
 							ship.ThrustRecharge = power.ThrustRecharge.Get()
 						}
-						if engine, ok := e.Configs.Equip.EnginesMap[addon_nickname]; ok {
+						if engine, ok := e.mapped.Equip.EnginesMap[addon_nickname]; ok {
 							ship.CruiseSpeed = e.GetEngineSpeed(engine)
 							engine_linear_drag, _ := engine.LinearDrag.GetValue()
 							ship_linear_drag, _ := ship_info.LinearDrag.GetValue()
@@ -351,9 +351,9 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 			infocards = append(infocards, id)
 		}
 		e.exportInfocards(InfocardKey(ship.Nickname), infocards...)
-		ship.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, ship.Nickname)
+		ship.DiscoveryTechCompat = CalculateTechCompat(e.mapped.Discovery, ids, ship.Nickname)
 
-		if e.Configs.Discovery != nil {
+		if e.mapped.Discovery != nil {
 			armor_mult, _ := ship_info.ArmorMult.GetValue()
 			ship.DiscoShip = &DiscoShip{ArmorMult: armor_mult}
 		}

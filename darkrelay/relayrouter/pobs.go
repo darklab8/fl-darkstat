@@ -12,7 +12,7 @@ import (
 )
 
 func (l *Router) LinkPobs(
-	data *appdata.AppData,
+	data *appdata.AppDataRelay,
 ) {
 	shared := data.Shared
 	build := data.Build

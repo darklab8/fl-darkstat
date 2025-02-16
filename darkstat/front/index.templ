@@ -51,7 +51,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				}
 				@tab.Button(tab.NewButtn(ctx,[]string{"Engines"}, urls.Engines, url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Scan","ners"}, urls.Scanners, url))
-				if settings.IsRelayActive(shared.Mapped) {
+				if shared.ShowDisco {
 					@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, urls.PoBs, url, tab.WithRelay()))
 					@tab.Button(tab.NewButtn(ctx,[]string{"PoB&thinsp;","goods"}, urls.PoBGoods, url, tab.WithRelay()))
 				}
@@ -90,7 +90,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				}
 				@tab.Button(tab.NewButtn(ctx,[]string{"Engines"}, tab.AllItemsUrl(urls.Engines), url))
 				@tab.Button(tab.NewButtn(ctx,[]string{"Scan","ners"}, tab.AllItemsUrl(urls.Scanners), url))
-				if settings.IsRelayActive(shared.Mapped) {
+				if shared.ShowDisco {
 					@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, tab.AllItemsUrl(urls.PoBs), url, tab.WithRelay()))
 					@tab.Button(tab.NewButtn(ctx,[]string{"PoB&thinsp;","goods"}, tab.AllItemsUrl(urls.PoBGoods), url, tab.WithRelay()))
 				}

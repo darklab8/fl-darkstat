@@ -9,10 +9,10 @@ func (e *Exporter) findable_in_loot() map[string]bool {
 
 	e.findable_in_loot_cache = make(map[string]bool)
 
-	for _, system := range e.Configs.Systems.Systems {
+	for _, system := range e.mapped.Systems.Systems {
 		for _, wreck := range system.Wrecks {
 			louadout_nickname := wreck.Loadout.Get()
-			if loadout, ok := e.Configs.Loadouts.LoadoutsByNick[louadout_nickname]; ok {
+			if loadout, ok := e.mapped.Loadouts.LoadoutsByNick[louadout_nickname]; ok {
 				for _, cargo := range loadout.Cargos {
 					e.findable_in_loot_cache[cargo.Nickname.Get()] = true
 				}
@@ -20,9 +20,9 @@ func (e *Exporter) findable_in_loot() map[string]bool {
 		}
 	}
 
-	for _, npc_arch := range e.Configs.NpcShips.NpcShips {
+	for _, npc_arch := range e.mapped.NpcShips.NpcShips {
 		loadout_nickname := npc_arch.Loadout.Get()
-		if loadout, ok := e.Configs.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
+		if loadout, ok := e.mapped.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
 			for _, cargo := range loadout.Cargos {
 				e.findable_in_loot_cache[cargo.Nickname.Get()] = true
 			}

@@ -699,7 +699,7 @@ templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs
 				font-size: 1.0em;
 			}
 		</style>
-		<p>{ ">" } AvgTradeLaneSpeed: { strconv.Itoa(shared.Mapped.GetAvgTradeLaneSpeed()) }</p>
+		<p>{ ">" } AvgTradeLaneSpeed: { strconv.Itoa(shared.AverageTradeLaneSpeed) }</p>
 		<p>{ ">" } JumpHoleDelaySec: { strconv.Itoa(trades.JumpHoleDelaySec) }</p>
 		<p>{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
 		<p>{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>

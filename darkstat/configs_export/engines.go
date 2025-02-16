@@ -41,7 +41,7 @@ func (e *Exporter) GetEngineSpeed(engine_info *equip_mapped.Engine) int {
 	if cruise_speed, ok := engine_info.CruiseSpeed.GetValue(); ok {
 		return cruise_speed
 	} else {
-		if cruise_speed, ok := e.Configs.Consts.EngineEquipConsts.CRUISING_SPEED.GetValue(); ok {
+		if cruise_speed, ok := e.mapped.Consts.EngineEquipConsts.CRUISING_SPEED.GetValue(); ok {
 			return cruise_speed
 		}
 	}
@@ -51,7 +51,7 @@ func (e *Exporter) GetEngineSpeed(engine_info *equip_mapped.Engine) int {
 func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 	var engines []Engine
 
-	for _, engine_info := range e.Configs.Equip.Engines {
+	for _, engine_info := range e.mapped.Equip.Engines {
 		engine := Engine{
 			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
@@ -76,7 +76,7 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 		engine.NameID = engine_info.IdsName.Get()
 		engine.InfoID = engine_info.IdsInfo.Get()
 
-		if good_info, ok := e.Configs.Goods.GoodsMap[engine.Nickname]; ok {
+		if good_info, ok := e.mapped.Goods.GoodsMap[engine.Nickname]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
 				engine.Price = price
 				engine.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
@@ -90,7 +90,7 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 
 		e.exportInfocards(InfocardKey(engine.Nickname), engine.InfoID)
 
-		engine.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, engine.Nickname)
+		engine.DiscoveryTechCompat = CalculateTechCompat(e.mapped.Discovery, ids, engine.Nickname)
 
 		engines = append(engines, engine)
 	}
