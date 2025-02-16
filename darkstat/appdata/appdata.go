@@ -20,7 +20,6 @@ import (
 )
 
 type AppData struct {
-	Mapped  *configs_mapped.MappedConfigs
 	Build   *builder.Builder
 	Configs *configs_export.Exporter
 	Shared  *types.SharedData
@@ -31,12 +30,14 @@ type AppData struct {
 func (a *AppData) Lock()   { a.mu.Lock() }
 func (a *AppData) Unlock() { a.mu.Unlock() }
 
-func NewBuilder(mapped *configs_mapped.MappedConfigs) *builder.Builder {
+type IsDiscovery bool
+
+func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 	var build *builder.Builder
 	timer_building_creation := timeit.NewTimer("building creation")
 
 	tractor_tab_name := settings.Env.TractorTabName
-	if mapped.Discovery != nil {
+	if is_discovery {
 		tractor_tab_name = "IDs"
 	}
 	staticPrefix := "static/"
@@ -102,13 +103,13 @@ func NewMapped() *configs_mapped.MappedConfigs {
 func NewAppData() *AppData {
 	mapped := NewMapped()
 	configs := configs_export.NewExporter(mapped)
-	build := NewBuilder(mapped)
+	build := NewBuilder(mapped.Discovery != nil)
 
 	var data *configs_export.Exporter
 	timeit.NewTimerMF("exporting data", func() { data = configs.Export(configs_export.ExportOptions{}) })
 
 	var shared *types.SharedData = &types.SharedData{
-		Mapped: mapped,
+		AverageTradeLaneSpeed: mapped.GetAvgTradeLaneSpeed(),
 	}
 
 	timeit.NewTimerMF("filtering to useful stuff", func() {
@@ -138,14 +139,22 @@ func NewAppData() *AppData {
 		Build:   build,
 		Configs: data,
 		Shared:  shared,
-		Mapped:  mapped,
 	}
 }
 
-func (a *AppData) Refresh() {
-	updated := NewAppData()
-	a.Build = updated.Build
-	a.Mapped = updated.Mapped
-	a.Shared = updated.Shared
-	a.Configs = updated.Configs
+func NewRelayData(app_data *AppData) *AppDataRelay {
+	return &AppDataRelay{
+		Build:   app_data.Build,
+		Configs: app_data.Configs.ExporterRelay,
+		Shared:  app_data.Shared,
+		mu:      &app_data.mu,
+	}
+}
+
+type AppDataRelay struct {
+	Build   *builder.Builder
+	Configs *configs_export.ExporterRelay
+	Shared  *types.SharedData
+
+	mu *sync.Mutex
 }

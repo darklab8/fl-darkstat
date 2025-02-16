@@ -126,7 +126,7 @@ templ PobTable(pobs []*configs_export.PoB, pinm tab.PinMod, shared *types.Shared
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ PoBsT(configs *configs_export.Exporter, mode2 tab.ShowEmpty, shared *types.SharedData) {
+templ PoBsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shared *types.SharedData) {
 	@front.TabMenu(urls.PoBs, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">
