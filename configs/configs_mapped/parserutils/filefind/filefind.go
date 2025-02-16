@@ -45,6 +45,10 @@ func FindConfigs(folderpath utils_types.FilePath) *Filesystem {
 
 		// Disco dev files
 		if strings.Contains(path, "SERVICE") {
+			return nil
+		}
+		// https://github.com/darklab8/fl-darkstat/issues/107
+		if strings.Contains(strings.ToLower(path), "flmmbak") {
 			fmt.Println()
 			return nil
 		}
