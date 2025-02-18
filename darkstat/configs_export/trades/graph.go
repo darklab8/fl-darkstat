@@ -14,12 +14,16 @@ import (
 
 type VertexName string
 
+type Intg = uint32
+
+const intgmax = Intg(math.MaxUint32)
+
 type GameGraph struct {
-	matrix                    map[VertexName]map[VertexName]float64
-	IndexByNick               map[VertexName]int  `json:"index_by_nickname" validate:"required"`
-	NicknameByIndex           map[int]VertexName  `json:"nickname_by_index" validate:"required"`
+	matrix                    map[Intg]map[Intg]float64
+	IndexByNick               map[VertexName]Intg `json:"index_by_nickname" validate:"required"`
+	NicknameByIndex           map[Intg]VertexName `json:"nickname_by_index" validate:"required"`
 	AllowedVertixesForCalcs   map[VertexName]bool // Consider deleting this
-	AvgCruiseSpeed            int
+	AvgCruiseSpeed            Intg
 	idsNamesByNick            map[VertexName]int
 	IsTradelane               map[VertexName]bool
 	CanVisitFreightersOnlyJHs WithFreighterPaths
@@ -31,34 +35,49 @@ func (g *GameGraph) WipeMatrix() {
 
 func NewGameGraph(avgCruiseSpeed int, canVisitFreighterOnlyJHs WithFreighterPaths) *GameGraph {
 	return &GameGraph{
-		matrix:                    make(map[VertexName]map[VertexName]float64),
-		IndexByNick:               map[VertexName]int{},
-		NicknameByIndex:           make(map[int]VertexName),
+		matrix:                    make(map[Intg]map[Intg]float64),
+		IndexByNick:               map[VertexName]Intg{},
+		NicknameByIndex:           make(map[Intg]VertexName),
 		AllowedVertixesForCalcs:   make(map[VertexName]bool),
-		AvgCruiseSpeed:            avgCruiseSpeed,
+		AvgCruiseSpeed:            Intg(avgCruiseSpeed),
 		idsNamesByNick:            make(map[VertexName]int),
 		IsTradelane:               make(map[VertexName]bool),
 		CanVisitFreightersOnlyJHs: canVisitFreighterOnlyJHs,
 	}
 }
 
+func (graph *GameGraph) GetVertexIndexByName(key VertexName) Intg {
+
+	value, ok := graph.IndexByNick[key]
+
+	if !ok {
+		value = Intg(len(graph.IndexByNick))
+		graph.IndexByNick[key] = value
+		graph.NicknameByIndex[value] = key
+	}
+
+	return value
+}
+
 func (f *GameGraph) SetEdge(keya string, keyb string, distance float64) {
-	vertex, vertex_exists := f.matrix[VertexName(keya)]
+	keya_index := f.GetVertexIndexByName(VertexName(keya))
+	vertex, vertex_exists := f.matrix[keya_index]
 	if !vertex_exists {
-		vertex = make(map[VertexName]float64)
-		f.matrix[VertexName(keya)] = vertex
+		vertex = make(map[Intg]float64)
+		f.matrix[keya_index] = vertex
 	}
 
-	if _, vert_target_exists := f.matrix[VertexName(keyb)]; !vert_target_exists {
-		f.matrix[VertexName(keyb)] = make(map[VertexName]float64)
+	keyb_index := f.GetVertexIndexByName(VertexName(keyb))
+	if _, vert_target_exists := f.matrix[keyb_index]; !vert_target_exists {
+		f.matrix[keyb_index] = make(map[Intg]float64)
 	}
 
-	_, already_set := vertex[VertexName(keyb)]
+	_, already_set := vertex[keyb_index]
 	if already_set {
 		return // otherwise u will overwrite tradelane distances.
 	}
 
-	vertex[VertexName(keyb)] = distance
+	vertex[keyb_index] = distance
 }
 
 func (f *GameGraph) SetIdsName(keya string, ids_name int) {
@@ -69,7 +88,7 @@ func (f *GameGraph) SetIstRadelane(keya string) {
 	f.IsTradelane[VertexName(keya)] = true
 }
 
-func GetTimeMs(f *GameGraph, dist [][]int, keya string, keyb string) (cfg.MillisecondsI, error) {
+func GetTimeMs(f *GameGraph, dist [][]Intg, keya string, keyb string) (cfg.MillisecondsI, error) {
 	sourse_index, source_found := f.IndexByNick[VertexName(keya)]
 	target_index, target_found := f.IndexByNick[VertexName(keyb)]
 	_ = source_found
@@ -84,18 +103,18 @@ func GetTimeMs(f *GameGraph, dist [][]int, keya string, keyb string) (cfg.Millis
 	}
 	return dist[sourse_index][target_index], nil
 }
-func GetTimeMs2(f *GameGraph, dist [][]int, keya string, keyb string) cfg.MillisecondsI {
+func GetTimeMs2(f *GameGraph, dist [][]Intg, keya string, keyb string) cfg.MillisecondsI {
 	result, _ := GetTimeMs(f, dist, keya, keyb)
 	return result
 }
 
 type Path struct {
-	Node     int
-	NextNode int
-	Dist     int
+	Node     Intg
+	NextNode Intg
+	Dist     Intg
 }
 
-func GetPath(graph *GameGraph, parents [][]Parent, dist [][]int, source_key string, target_key string) []Path {
+func GetPath(graph *GameGraph, parents [][]Parent, dist [][]Intg, source_key string, target_key string) []Path {
 	// fmt.Println("get_path", source_key, target_key)
 	S := []Path{}
 	u, found_u := graph.IndexByNick[VertexName(target_key)] // target
@@ -105,7 +124,7 @@ func GetPath(graph *GameGraph, parents [][]Parent, dist [][]int, source_key stri
 	_ = found_u
 	source := graph.IndexByNick[VertexName(source_key)]
 
-	distance_skipped_buffer := 0
+	distance_skipped_buffer := Intg(0)
 
 	add_node := func(parent Parent) {
 		path_to_add := Path{
@@ -161,14 +180,14 @@ type DetailedPath struct {
 	NextName    string
 	PrevIdsName int
 	NextIdsName int
-	PrevNode    int
-	NextNode    int
-	Dist        int
+	PrevNode    Intg
+	NextNode    Intg
+	Dist        Intg
 	TimeMinutes int
 	TimeSeconds int
 }
 
-func (graph *GameGraph) GetPaths(parents [][]Parent, dist [][]int, source_key string, target_key string) []DetailedPath {
+func (graph *GameGraph) GetPaths(parents [][]Parent, dist [][]Intg, source_key string, target_key string) []DetailedPath {
 	var detailed_paths []DetailedPath
 
 	paths := GetPath(graph, parents, dist, source_key, target_key)

@@ -167,7 +167,7 @@ func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Expor
 type GraphResults struct {
 	e       *Exporter
 	Graph   *trades.GameGraph
-	Time    [][]int
+	Time    [][]trades.Intg
 	Parents [][]trades.Parent
 }
 

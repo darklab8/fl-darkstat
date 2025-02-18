@@ -15,7 +15,7 @@ type FactionNick string
 type Milliseconds = float64
 type Seconds = float64
 
-type MillisecondsI = int
+type MillisecondsI = uint32
 type SecondsI = int
 
 type BaseUniNick string

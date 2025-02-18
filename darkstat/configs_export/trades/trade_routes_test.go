@@ -53,9 +53,9 @@ func TestTradeRoutes(t *testing.T) {
 		fmt.Println(`GetTimeMs2(graph, dist, "li01_01_base", "li01_02_base")`, dist1)
 		fmt.Println(`GetTimeMs2(graph, dist, "li01_01_base", "br01_01_base")`, dist2)
 		fmt.Println(`GetTimeMs2(graph, dist, "li01_01_base", "li12_02_base")`, dist3)
-		assert.Greater(t, dist1, 0)
-		assert.Greater(t, dist2, 0)
-		assert.Greater(t, dist3, 0)
+		assert.Greater(t, dist1, Intg(0))
+		assert.Greater(t, dist2, Intg(0))
+		assert.Greater(t, dist3, Intg(0))
 
 		fmt.Println("detailed_path")
 		// paths := graph.GetPaths(parents, dist, "li01_01_base", "br01_01_base")

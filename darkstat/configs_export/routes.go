@@ -57,7 +57,7 @@ func (t *Route) GetCruiseSpeed() int {
 	if t.is_disabled {
 		return 0
 	}
-	return t.g.Graph.AvgCruiseSpeed
+	return int(t.g.Graph.AvgCruiseSpeed)
 }
 
 func (t *Route) GetCanVisitFreighterOnlyJH() bool {
