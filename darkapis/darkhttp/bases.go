@@ -21,7 +21,7 @@ type Base struct {
 // @Tags         bases
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	darkapi.Base
+// @Success      200  {array}  	darkhttp.Base
 // @Router       /api/npc_bases [post]
 // @Param request body pb.GetBasesInput true "input variables"
 func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
@@ -78,7 +78,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         bases
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	darkapi.Base
+// @Success      200  {array}  	darkhttp.Base
 // @Router       /api/mining_operations [post]
 // @Param request body pb.GetBasesInput true "input variables"
 func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
@@ -133,7 +133,7 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         bases
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	darkapi.Base
+// @Success      200  {array}  	darkhttp.Base
 // @Router       /api/pobs/bases [post]
 // @Param request body pb.GetBasesInput true "input variables"
 func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {

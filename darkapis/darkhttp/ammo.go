@@ -22,11 +22,9 @@ type Ammo struct {
 // @Tags         equipment
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	darkapi.Ammo
-// @Router       /api/ammos [get]
-// @Param        filter_to_useful    query     string  false  "insert 'true' if wish to filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
-// @Param        include_market_goods    query     string  false  "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
-// @Param        include_tech_compat    query     string  false  "insert 'true' if wish to include tech compat info too for the item. Such data can add a lot of extra weight"
+// @Success      200  {array}  	darkhttp.Ammo
+// @Router       /api/ammos [post]
+// @Param request body pb.GetEquipmentInput true "input variables"
 func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "" + ApiRoute + "/ammos",

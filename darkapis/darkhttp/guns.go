@@ -20,7 +20,7 @@ type Gun struct {
 // @Tags         equipment
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	darkapi.Gun
+// @Success      200  {array}  	darkhttp.Gun
 // @Router       /api/guns [get]
 // @Param        filter_to_useful    query     string  false  "insert 'true' if wish to filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
 // @Param        include_market_goods    query     string  false  "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
@@ -74,7 +74,7 @@ func GunHandler(webapp *web.Web, api *Api, guns []configs_export.Gun) func(w htt
 // @Tags         equipment
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	darkapi.Gun
+// @Success      200  {array}  	darkhttp.Gun
 // @Router       /api/missiles [get]
 // @Param        filter_to_useful    query     string  false  "insert 'true' if wish to filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
 // @Param        include_market_goods    query     string  false  "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
