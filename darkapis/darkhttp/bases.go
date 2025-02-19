@@ -16,6 +16,22 @@ type Base struct {
 	MarketGoods []*configs_export.MarketGood `json:"market_goods"`
 }
 
+func GetBasesInput(w http.ResponseWriter, r *http.Request) (*pb.GetBasesInput, error) {
+	var in *pb.GetBasesInput = &pb.GetBasesInput{}
+	if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return in, err
+	}
+
+	if r.URL.Query().Get("filter_to_useful") == "true" {
+		in.FilterToUseful = true
+	}
+	if r.URL.Query().Get("include_market_goods") == "true" {
+		in.IncludeMarketGoods = true
+	}
+	return in, nil
+}
+
 // ShowAccount godoc
 // @Summary      Getting list of NPC Bases
 // @Tags         bases
@@ -37,22 +53,14 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			var in pb.GetBasesInput
-			if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+			var in *pb.GetBasesInput
+			in, err := GetBasesInput(w, r)
+			if err != nil {
 				return
-			}
-			filter_to_useful := in.FilterToUseful
-			include_market_goods := in.IncludeMarketGoods
-			if r.URL.Query().Get("filter_to_useful") == "true" {
-				filter_to_useful = true
-			}
-			if r.URL.Query().Get("include_market_goods") == "true" {
-				include_market_goods = true
 			}
 
 			var result []*configs_export.Base
-			if filter_to_useful {
+			if in.FilterToUseful {
 				result = configs_export.FilterToUserfulBases(api.app_data.Configs.Bases)
 			} else {
 				result = api.app_data.Configs.Bases
@@ -64,7 +72,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 				answer := &Base{
 					Base: item,
 				}
-				if include_market_goods {
+				if in.IncludeMarketGoods {
 					for _, good := range darkgrpc.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
@@ -97,22 +105,14 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 				webapp.AppDataMutex.Lock()
 				defer webapp.AppDataMutex.Unlock()
 			}
-			var in pb.GetBasesInput
-			if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+			var in *pb.GetBasesInput
+			in, err := GetBasesInput(w, r)
+			if err != nil {
 				return
-			}
-			filter_to_useful := in.FilterToUseful
-			include_market_goods := in.IncludeMarketGoods
-			if r.URL.Query().Get("filter_to_useful") == "true" {
-				filter_to_useful = true
-			}
-			if r.URL.Query().Get("include_market_goods") == "true" {
-				include_market_goods = true
 			}
 
 			var result []*configs_export.Base
-			if filter_to_useful {
+			if in.FilterToUseful {
 				result = configs_export.FitlerToUsefulOres(api.app_data.Configs.MiningOperations)
 			} else {
 				result = api.app_data.Configs.MiningOperations
@@ -124,7 +124,7 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 				answer := &Base{
 					Base: item,
 				}
-				if include_market_goods {
+				if in.IncludeMarketGoods {
 					for _, good := range darkgrpc.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
@@ -156,15 +156,12 @@ func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 				webapp.AppDataMutex.Lock()
 				defer webapp.AppDataMutex.Unlock()
 			}
-			var in pb.GetBasesInput
-			if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+			var in *pb.GetBasesInput
+			in, err := GetBasesInput(w, r)
+			if err != nil {
 				return
 			}
-			include_market_goods := in.IncludeMarketGoods
-			if r.URL.Query().Get("include_market_goods") == "true" {
-				include_market_goods = true
-			}
+
 			var result []*configs_export.Base = api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs)
 			result = darkgrpc.FilterNicknames(in.FilterNicknames, result)
 
@@ -173,7 +170,7 @@ func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 				answer := &Base{
 					Base: item,
 				}
-				if include_market_goods {
+				if in.IncludeMarketGoods {
 					for _, good := range darkgrpc.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}

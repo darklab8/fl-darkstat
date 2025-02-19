@@ -12,6 +12,9 @@ import (
 
 const URLPing core_types.Url = "GET /ping"
 
+// ShowAccount godoc
+// @Summary      Check Darkstat health
+// @Router       /ping [get]
 func NewEndpointPing(w *Web) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: URLPing,

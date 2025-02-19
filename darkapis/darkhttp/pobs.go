@@ -41,7 +41,7 @@ func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Router       /api/pob_goods [post]
 func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/pob_goods",
+		Url: "" + ApiRoute + "/pob_goods",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()
