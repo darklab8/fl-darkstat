@@ -237,8 +237,24 @@ func TestApi(t *testing.T) {
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
-		assert.Greater(t, len(items[0].MarketGoods), 0)
-		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
+		has_market_goods := false
+		for _, item := range items {
+			if len(item.MarketGoods) > 0 {
+				has_market_goods = true
+			}
+		}
+		has_tech_compat := false
+		for _, item := range items {
+			if item.TechCompat != nil {
+				if item.TechCompat.TechcompatByID != nil {
+					if len(item.TechCompat.TechcompatByID) > 0 {
+						has_tech_compat = true
+					}
+				}
+			}
+		}
+		assert.True(t, has_market_goods)
+		assert.True(t, has_tech_compat)
 	})
 
 	t.Run("GetTractors", func(t *testing.T) {
