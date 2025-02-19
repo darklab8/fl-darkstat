@@ -1,4 +1,4 @@
-package services
+package darkgrpc
 
 import "github.com/darklab8/fl-darkstat/darkstat/configs_export"
 

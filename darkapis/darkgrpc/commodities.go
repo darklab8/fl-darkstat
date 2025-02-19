@@ -4,7 +4,6 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
-	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -20,7 +19,7 @@ func (s *Server) GetCommodities(_ context.Context, in *pb.GetCommoditiesInput) (
 	} else {
 		input = s.app_data.Configs.Commodities
 	}
-	input = services.FilterNicknames(in.FilterNicknames, input)
+	input = FilterNicknames(in.FilterNicknames, input)
 
 	var items []*pb.Commodity
 	for _, item := range input {

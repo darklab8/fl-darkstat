@@ -3,9 +3,9 @@ package darkhttp
 import (
 	"net/http"
 
+	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
-	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -58,7 +58,7 @@ func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.Ammos
 			}
-			result = services.FilterNicknames(in.FilterNicknames, result)
+			result = darkgrpc.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Ammo
 			for _, item := range result {
@@ -66,7 +66,7 @@ func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 					Ammo: &item,
 				}
 				if include_market_goods {
-					for _, good := range services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.Bases) {
+					for _, good := range darkgrpc.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.Bases) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
 				}

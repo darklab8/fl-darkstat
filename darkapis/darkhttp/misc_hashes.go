@@ -3,8 +3,8 @@ package darkhttp
 import (
 	"net/http"
 
+	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
-	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 )
@@ -24,8 +24,8 @@ func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 				webapp.AppDataMutex.Lock()
 				defer webapp.AppDataMutex.Unlock()
 			}
-			hashes := services.GetHashesData(api.app_data)
-			apiutils.ReturnJson(&w, services.Hashes{HashesByNick: hashes})
+			hashes := darkgrpc.GetHashesData(api.app_data)
+			apiutils.ReturnJson(&w, darkgrpc.Hashes{HashesByNick: hashes})
 		},
 	}
 }
