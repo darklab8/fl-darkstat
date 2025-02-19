@@ -26,7 +26,7 @@ type Base struct {
 // @Param request body pb.GetBasesInput true "input variables"
 func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/npc_bases",
+		Url: "" + ApiRoute + "/npc_bases",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()
@@ -37,6 +37,12 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 			ReadJsonInput(w, r, &in)
 			filter_to_useful := in.FilterToUseful
 			include_market_goods := in.IncludeMarketGoods
+			if r.URL.Query().Get("filter_to_useful") == "true" {
+				filter_to_useful = true
+			}
+			if r.URL.Query().Get("include_market_goods") == "true" {
+				include_market_goods = true
+			}
 
 			var result []*configs_export.Base
 			if filter_to_useful {
@@ -72,7 +78,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Param request body pb.GetBasesInput true "input variables"
 func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/mining_operations",
+		Url: "" + ApiRoute + "/mining_operations",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()
@@ -82,6 +88,12 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 			ReadJsonInput(w, r, &in)
 			filter_to_useful := in.FilterToUseful
 			include_market_goods := in.IncludeMarketGoods
+			if r.URL.Query().Get("filter_to_useful") == "true" {
+				filter_to_useful = true
+			}
+			if r.URL.Query().Get("include_market_goods") == "true" {
+				include_market_goods = true
+			}
 
 			var result []*configs_export.Base
 			if filter_to_useful {
@@ -102,6 +114,27 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 				output = append(output, answer)
 			}
 			apiutils.ReturnJson(&w, output)
+		},
+	}
+}
+
+// ShowAccount godoc
+// @Summary      Getting list of Player Owned Bases in Bases format. Lists only pobs that have known position coordinates
+// @Tags         bases
+// @Accept       json
+// @Produce      json
+// @Success      200  {array}  	configs_export.Base
+// @Router       /api/pobs/bases [get]
+func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
+	return &registry.Endpoint{
+		Url: "GET " + ApiRoute + "/pobs/bases",
+		Handler: func(w http.ResponseWriter, r *http.Request) {
+			if webapp.AppDataMutex != nil {
+				webapp.AppDataMutex.Lock()
+				defer webapp.AppDataMutex.Unlock()
+			}
+
+			apiutils.ReturnJson(&w, api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs))
 		},
 	}
 }

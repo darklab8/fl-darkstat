@@ -38,7 +38,7 @@ func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Accept       json
 // @Produce      json
 // @Success      200  {array}  	configs_export.PoBGood
-// @Router       /api/pob_goods [get]
+// @Router       /api/pob_goods [post]
 func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET " + ApiRoute + "/pob_goods",
@@ -49,27 +49,6 @@ func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 			}
 
 			apiutils.ReturnJson(&w, api.app_data.Configs.PoBGoods)
-		},
-	}
-}
-
-// ShowAccount godoc
-// @Summary      Getting list of Player Owned Bases in Bases format. Lists only pobs that have known position coordinates
-// @Tags         bases
-// @Accept       json
-// @Produce      json
-// @Success      200  {array}  	configs_export.Base
-// @Router       /api/pobs/bases [get]
-func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
-	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/pobs/bases",
-		Handler: func(w http.ResponseWriter, r *http.Request) {
-			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
-			}
-
-			apiutils.ReturnJson(&w, api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs))
 		},
 	}
 }
