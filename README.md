@@ -82,11 +82,11 @@ If u have problems with configuring development environment, then seek my contac
   - You get static typing validations
   - You get performance boosts from using grpc compression stuff
   - We change server side smth? Just regenerate the lib to keep up with updates ^_^
-  - Import [darkstat proto file](./darkgrpc/statproto/darkstat.proto) for its usage and generate client lib from it with `protoc` command
+  - Import [darkstat proto file](./darkapis/darkgrpc/statproto/darkstat.proto) for its usage and generate client lib from it with `protoc` command
   - addresses to connect:
     - for local instance localhost:50051, or optionally unix socket `/tmp/darkstat/grpc.sock` at linux for extra performance boosts.
     - for deployed instances for discovery and vanilla, they are hosted over darkgrpc.dd84ai.com and darkgrpc-vanilla.dd84ai.com accordingly. 80 and 443 ports accordingly
-    - [see example in golang](./darkgrpc/server_test.go) of interacting with grpc if desired
+    - [see example in golang](./darkapis/darkgrpc/server_test.go) of interacting with grpc if desired
     - up to date exposed grpc domains can be found [in this file](./tf/production/main.tf) as rpc_prefix + zone combination
   - Make sure to set in your client option to increase accepting data size `grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(32 * 10e6))`.
   - NOTE: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLY FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers

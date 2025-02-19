@@ -15,12 +15,12 @@ import (
 
 	// _ "net/http/pprof"
 
-	"github.com/darklab8/fl-darkstat/darkapi"
+	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
+	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
+	"github.com/darklab8/fl-darkstat/darkapis/darkrpc"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
-	"github.com/darklab8/fl-darkstat/darkgrpc"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
-	"github.com/darklab8/fl-darkstat/darkrpc"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
@@ -126,7 +126,7 @@ func main() {
 		app_data.Unlock()
 		runtime.GC()
 
-		web_server := darkapi.RegisterApiRoutes(web.NewWeb(
+		web_server := darkhttp.RegisterApiRoutes(web.NewWeb(
 			[]*builder.Filesystem{stat_fs, relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),

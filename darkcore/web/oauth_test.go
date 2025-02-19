@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/darklab8/fl-darkstat/darkapi/apiutils"
+	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
