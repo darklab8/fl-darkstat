@@ -17,11 +17,11 @@ With Unix Sockets u get extra performance boosts to pull all the data.
 the Grpc api is the one for any new feature additions
 Grpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.
 
-`NOTE`: Routes have defined input "IncludeMarketGoods" and "IncludeTechCompat" at least.
+`NOTE`: Routes have defined input "include_market_goods" and "include_tech_compat" at least.
 Depending on your having them true or not, significantly different amount of data is pushed
 
 `WARNING`: if u will be using this Swagger interface to make test call for example.
-make sure to turn off booleans like IncludeMarketGoods, IncludeTechCompat and etc. When they are enabled, they overload swagger interface with too much data ;)
+make sure to turn off booleans like include_market_goods, include_tech_compat and etc. When they are enabled, they overload swagger interface with too much data ;)
 Or just call test examples over curl/postman instead (with preferably disabled prettifying)
 
 `NOTE`: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLY FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers
@@ -69,16 +69,16 @@ service Darkstat {
 message Empty {
 }
 message GetInfocardsInput {
-  repeated string Nicknames = 1;
+  repeated string nicknames = 1;
 }
 message GetInfocardsReply {
   repeated GetInfocardAnswer Answers = 1;
 }
 
 message GetInfocardAnswer {
-  string Query = 1;
-  optional Infocard Infocard = 2;
-  optional string Error = 3;
+  string query = 1;
+  optional Infocard infocard = 2;
+  optional string error = 3;
 }
 message Infocard {
   repeated InfocardLine Lines  = 1;
@@ -96,23 +96,30 @@ message HealthReply {
   bool is_healthy = 1;
 }
 message GetEquipmentInput {
-  bool IncludeMarketGoods = 1;
-  bool IncludeTechCompat = 2;
-  bool FilterToUseful = 3;
+  bool include_market_goods = 1;
+  bool include_tech_compat = 2;
+  bool filter_to_useful = 3;
 }
 message GetGunsInput {
-  bool IncludeMarketGoods = 1;
-  bool IncludeTechCompat = 2;
-  bool FilterToUseful = 3;
-  bool IncludeDamageBonuses = 4;
+  bool include_market_goods = 1;
+  bool include_tech_compat = 2;
+  bool filter_to_useful = 3;
+  bool include_damage_bonuses = 4;
 }
+
 message GetBasesInput {
-  bool IncludeMarketGoods = 1;
-  bool FilterToUseful = 2;
+  //  "insert 'true' if wish to filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
+  bool include_market_goods = 1;
+  // "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+  bool filter_to_useful = 2;
+  // filters by base nicknames
+  repeated string filter_nicknames = 3;
+  // filters market goods in bases to specific category. valid categories are written in market goods in same named attribute.
+  repeated string filter_market_good_category = 4;
 }
 message GetTractorsInput {
-  bool IncludeMarketGoods = 1;
-  bool FilterToUseful = 2;
+  bool include_market_goods = 1;
+  bool filter_to_useful = 2;
 }
 message GetBasesReply {
   repeated Base Items = 1;
@@ -188,8 +195,8 @@ message GetCommoditiesInput {
   // To Include market goods, where the item is sold and bought or not. Adds a lot of extra weight to data
   //
   // Example: `false`
-  bool IncludeMarketGoods = 1;
-  bool FilterToUseful = 2;
+  bool include_market_goods = 1;
+  bool filter_to_useful = 2;
 }
 message GetCommoditiesReply {
   repeated Commodity Items = 1;
@@ -250,7 +257,7 @@ message TechCompatAnswer {
 }
 
 message GetTechCompatInput {
-  repeated string Nicknames = 1;
+  repeated string nicknames = 1;
 }
 
 message GetTechCompatReply {
@@ -308,9 +315,9 @@ message Engine {
 	double Mass            = 17;
 }
 message GetFactionsInput {
-  bool IncludeReputations = 1;
-  bool IncludeBribes = 2;
-  bool FilterToUseful = 3;
+  bool include_reputations = 1;
+  bool include_bribes = 2;
+  bool filter_to_useful = 3;
 }
 message GetFactionsReply {
   repeated Faction Items = 1;

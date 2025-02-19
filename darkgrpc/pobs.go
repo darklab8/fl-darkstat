@@ -16,7 +16,7 @@ func (s *Server) GetBasesPoBs(_ context.Context, in *pb.GetBasesInput) (*pb.GetB
 
 	var bases []*pb.Base
 	for _, base := range s.app_data.Configs.PoBsToBases(s.app_data.Configs.PoBs) {
-		bases = append(bases, NewBase(base, in.IncludeMarketGoods))
+		bases = append(bases, NewBase(base, in.IncludeMarketGoods, in.FilterMarketGoodCategory))
 	}
 	return &pb.GetBasesReply{Items: bases}, nil
 }

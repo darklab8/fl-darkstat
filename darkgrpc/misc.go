@@ -3,8 +3,8 @@ package darkgrpc
 import (
 	"context"
 
-	"github.com/darklab8/fl-darkstat/darkapi"
 	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/public/services"
 )
 
 func (s *Server) GetHashes(_ context.Context, in *pb.Empty) (*pb.GetHashesReply, error) {
@@ -15,7 +15,7 @@ func (s *Server) GetHashes(_ context.Context, in *pb.Empty) (*pb.GetHashesReply,
 
 	answer := &pb.GetHashesReply{HashesByNick: make(map[string]*pb.Hash)}
 
-	hashes := darkapi.GetHashesData(s.app_data)
+	hashes := services.GetHashesData(s.app_data)
 
 	for key, hash := range hashes {
 		answer.HashesByNick[key] = &pb.Hash{

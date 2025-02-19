@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "darkstat.proto",
-    "description": "Newest Darkstat API. it is accessable with gRPC and with regular JSON at this grpc API gateway.\nhttps://github.com/darklab8/fl-darkstat#alternatively-we-offer-client-generation-through-grpc\nCheck documentation how u can generate Client Library for your language of choice, C#, Python, Typescript or even C++.\nFull list of supported languages https://grpc.io/docs/languages/\nThen u will be able to benefit pulling this data with the most comfort.\nOr you can just pull as jsons from this json API as alternative.\n\nIn case of local usage, this API is available both at TCP localhost, and over Unix Domain Socket when darkstat is run at Linux ^_^.\nWith Unix Sockets u get extra performance boosts to pull all the data.\n\nthe Grpc api is the one for any new feature additions\nGrpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.\n\n`NOTE`: Routes have defined input \"IncludeMarketGoods\" and \"IncludeTechCompat\" at least.\nDepending on your having them true or not, significantly different amount of data is pushed\n\n`WARNING`: if u will be using this Swagger interface to make test call for example.\nmake sure to turn off booleans like IncludeMarketGoods, IncludeTechCompat and etc. When they are enabled, they overload swagger interface with too much data ;)\nOr just call test examples over curl/postman instead (with preferably disabled prettifying)\n\n`NOTE`: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLY FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers",
+    "description": "Newest Darkstat API. it is accessable with gRPC and with regular JSON at this grpc API gateway.\nhttps://github.com/darklab8/fl-darkstat#alternatively-we-offer-client-generation-through-grpc\nCheck documentation how u can generate Client Library for your language of choice, C#, Python, Typescript or even C++.\nFull list of supported languages https://grpc.io/docs/languages/\nThen u will be able to benefit pulling this data with the most comfort.\nOr you can just pull as jsons from this json API as alternative.\n\nIn case of local usage, this API is available both at TCP localhost, and over Unix Domain Socket when darkstat is run at Linux ^_^.\nWith Unix Sockets u get extra performance boosts to pull all the data.\n\nthe Grpc api is the one for any new feature additions\nGrpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.\n\n`NOTE`: Routes have defined input \"include_market_goods\" and \"include_tech_compat\" at least.\nDepending on your having them true or not, significantly different amount of data is pushed\n\n`WARNING`: if u will be using this Swagger interface to make test call for example.\nmake sure to turn off booleans like include_market_goods, include_tech_compat and etc. When they are enabled, they overload swagger interface with too much data ;)\nOr just call test examples over curl/postman instead (with preferably disabled prettifying)\n\n`NOTE`: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLY FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers",
     "version": "version not set"
   },
   "tags": [
@@ -1293,11 +1293,27 @@
     "statprotoGetBasesInput": {
       "type": "object",
       "properties": {
-        "IncludeMarketGoods": {
-          "type": "boolean"
+        "includeMarketGoods": {
+          "type": "boolean",
+          "title": "\"insert 'true' if wish to filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan\""
         },
-        "FilterToUseful": {
-          "type": "boolean"
+        "filterToUseful": {
+          "type": "boolean",
+          "title": "\"insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight\""
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by base nicknames"
+        },
+        "filterMarketGoodCategory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "filters market goods in bases to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },
@@ -1316,12 +1332,12 @@
     "statprotoGetCommoditiesInput": {
       "type": "object",
       "properties": {
-        "IncludeMarketGoods": {
+        "includeMarketGoods": {
           "type": "boolean",
           "description": "Example: `false`",
           "title": "To Include market goods, where the item is sold and bought or not. Adds a lot of extra weight to data"
         },
-        "FilterToUseful": {
+        "filterToUseful": {
           "type": "boolean"
         }
       }
@@ -1365,13 +1381,13 @@
     "statprotoGetEquipmentInput": {
       "type": "object",
       "properties": {
-        "IncludeMarketGoods": {
+        "includeMarketGoods": {
           "type": "boolean"
         },
-        "IncludeTechCompat": {
+        "includeTechCompat": {
           "type": "boolean"
         },
-        "FilterToUseful": {
+        "filterToUseful": {
           "type": "boolean"
         }
       }
@@ -1379,13 +1395,13 @@
     "statprotoGetFactionsInput": {
       "type": "object",
       "properties": {
-        "IncludeReputations": {
+        "includeReputations": {
           "type": "boolean"
         },
-        "IncludeBribes": {
+        "includeBribes": {
           "type": "boolean"
         },
-        "FilterToUseful": {
+        "filterToUseful": {
           "type": "boolean"
         }
       }
@@ -1443,16 +1459,16 @@
     "statprotoGetGunsInput": {
       "type": "object",
       "properties": {
-        "IncludeMarketGoods": {
+        "includeMarketGoods": {
           "type": "boolean"
         },
-        "IncludeTechCompat": {
+        "includeTechCompat": {
           "type": "boolean"
         },
-        "FilterToUseful": {
+        "filterToUseful": {
           "type": "boolean"
         },
-        "IncludeDamageBonuses": {
+        "includeDamageBonuses": {
           "type": "boolean"
         }
       }
@@ -1483,13 +1499,13 @@
     "statprotoGetInfocardAnswer": {
       "type": "object",
       "properties": {
-        "Query": {
+        "query": {
           "type": "string"
         },
-        "Infocard": {
+        "infocard": {
           "$ref": "#/definitions/statprotoInfocard"
         },
-        "Error": {
+        "error": {
           "type": "string"
         }
       }
@@ -1497,7 +1513,7 @@
     "statprotoGetInfocardsInput": {
       "type": "object",
       "properties": {
-        "Nicknames": {
+        "nicknames": {
           "type": "array",
           "items": {
             "type": "string"
@@ -1604,10 +1620,10 @@
     "statprotoGetTractorsInput": {
       "type": "object",
       "properties": {
-        "IncludeMarketGoods": {
+        "includeMarketGoods": {
           "type": "boolean"
         },
-        "FilterToUseful": {
+        "filterToUseful": {
           "type": "boolean"
         }
       }

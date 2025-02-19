@@ -2,6 +2,7 @@ package darkapi
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -143,4 +144,15 @@ func PostItemsTechCompatT[T TechCompatable](webapp *web.Web, items []T) func(w h
 		}
 		apiutils.ReturnJson(&w, market_good_answers)
 	}
+}
+
+func ReadJsonInput[T any](w http.ResponseWriter, r *http.Request, data *T) error {
+	// Try to decode the request body into the struct. If there is an error,
+	// respond to the client with the error message and a 400 status code.
+	err := json.NewDecoder(r.Body).Decode(data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return errors.New("failed to read body")
+	}
+	return nil
 }

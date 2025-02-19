@@ -5,6 +5,7 @@ import (
 
 	pb "github.com/darklab8/fl-darkstat/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/public/services"
 )
 
 func (s *Server) GetBasesNpc(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
@@ -20,9 +21,10 @@ func (s *Server) GetBasesNpc(_ context.Context, in *pb.GetBasesInput) (*pb.GetBa
 	} else {
 		items = s.app_data.Configs.Bases
 	}
+	items = services.FilterNicknames(in.FilterNicknames, items)
 
 	for _, base := range items {
-		bases = append(bases, NewBase(base, in.IncludeMarketGoods))
+		bases = append(bases, NewBase(base, in.IncludeMarketGoods, in.FilterMarketGoodCategory))
 	}
 	return &pb.GetBasesReply{Items: bases}, nil
 }
@@ -42,12 +44,12 @@ func (s *Server) GetBasesMiningOperations(_ context.Context, in *pb.GetBasesInpu
 	}
 
 	for _, base := range input {
-		bases = append(bases, NewBase(base, in.IncludeMarketGoods))
+		bases = append(bases, NewBase(base, in.IncludeMarketGoods, in.FilterMarketGoodCategory))
 	}
 	return &pb.GetBasesReply{Items: bases}, nil
 }
 
-func NewBase(base *configs_export.Base, include_market_goods bool) *pb.Base {
+func NewBase(base *configs_export.Base, include_market_goods bool, filter_market_good_category []string) *pb.Base {
 	item := &pb.Base{
 		Name:                   base.Name,
 		Archetypes:             base.Archetypes,
@@ -69,9 +71,11 @@ func NewBase(base *configs_export.Base, include_market_goods bool) *pb.Base {
 
 	if include_market_goods {
 		base.MarketGoodsPerNick = make(map[configs_export.CommodityKey]*configs_export.MarketGood)
-		for key, good := range base.MarketGoodsPerNick {
+		for key, good := range services.FilterMarketGoodCategory(filter_market_good_category, base.MarketGoodsPerNick) {
 			item.MarketGoodsPerNick[string(key)] = NewMarketGood(good)
 		}
+
 	}
+
 	return item
 }

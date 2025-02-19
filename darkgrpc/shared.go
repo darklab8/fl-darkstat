@@ -61,26 +61,12 @@ func NewPos(pos *cfg.Vector) *pb.Pos {
 	}
 }
 
-type Nicknamable interface {
-	GetNickname() string
-}
-
-type Marketable interface {
-	Nicknamable
-	GetBases() map[cfg.BaseUniNick]*configs_export.MarketGood
-}
-
 func NewBases(Bases map[cfg.BaseUniNick]*configs_export.MarketGood) map[string]*pb.MarketGood {
 	result := make(map[string]*pb.MarketGood)
 	for key, item := range Bases {
 		result[string(key)] = NewMarketGood(item)
 	}
 	return result
-}
-
-type TechCompatable interface {
-	Nicknamable
-	GetDiscoveryTechCompat() *configs_export.DiscoveryTechCompat
 }
 
 func NewTechCompat(tech_compat *configs_export.DiscoveryTechCompat) *pb.DiscoveryTechCompat {
