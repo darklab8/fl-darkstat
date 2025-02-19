@@ -1,0 +1,2729 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "darkstat.proto",
+    "description": "Newest Darkstat API. it is accessable with gRPC and with regular JSON at this grpc API gateway.\nhttps://github.com/darklab8/fl-darkstat#alternatively-we-offer-client-generation-through-grpc\nCheck documentation how u can generate Client Library for your language of choice, C#, Python, Typescript or even C++.\nFull list of supported languages https://grpc.io/docs/languages/\nThen u will be able to benefit pulling this data with the most comfort.\nOr you can just pull as jsons from this json API as alternative.\n\nIn case of local usage, this API is available both at TCP localhost, and over Unix Domain Socket when darkstat is run at Linux ^_^.\nWith Unix Sockets u get extra performance boosts to pull all the data.\n\nthe Grpc api is the one for any new feature additions\nGrpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.\n\n`NOTE`: Routes have defined input \"include_market_goods\" and \"include_tech_compat\" at least.\nDepending on your having them true or not, significantly different amount of data is pushed\n\n`WARNING`: if u will be using this Swagger interface to make test call for example.\nmake sure to turn off booleans like include_market_goods, include_tech_compat and etc. When they are enabled, they overload swagger interface with too much data ;)\nOr just call test examples over curl/postman instead (with preferably disabled prettifying)\n\n`NOTE`: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLY FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Darkstat"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/statproto.Darkstat/GetAmmos": {
+      "post": {
+        "operationId": "Darkstat_GetAmmos",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetAmmoReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetBasesMiningOperations": {
+      "post": {
+        "summary": "Get all imaginary bases that in place of mining fields. Useful for trading calculations",
+        "operationId": "Darkstat_GetBasesMiningOperations",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetBasesNpc": {
+      "post": {
+        "summary": "Get all Freelancer NPC Bases",
+        "operationId": "Darkstat_GetBasesNpc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetBasesPoBs": {
+      "post": {
+        "summary": "Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions\nUseful for trading calculations",
+        "operationId": "Darkstat_GetBasesPoBs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetBasesInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetCommodities": {
+      "post": {
+        "operationId": "Darkstat_GetCommodities",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetCommoditiesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetCommoditiesInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetCounterMeasures": {
+      "post": {
+        "operationId": "Darkstat_GetCounterMeasures",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetCounterMeasuresReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetEngines": {
+      "post": {
+        "operationId": "Darkstat_GetEngines",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEnginesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetFactions": {
+      "post": {
+        "operationId": "Darkstat_GetFactions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetFactionsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetFactionsInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetGraphPaths": {
+      "post": {
+        "operationId": "Darkstat_GetGraphPaths",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGraphPathsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGraphPathsInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetGuns": {
+      "post": {
+        "operationId": "Darkstat_GetGuns",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGunsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGunsInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetHashes": {
+      "post": {
+        "operationId": "Darkstat_GetHashes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetHashesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The request message containing the user's name.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoEmpty"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetHealth": {
+      "post": {
+        "summary": "Just to check if grpc works. Returns boolean value if it is healthy as true",
+        "operationId": "Darkstat_GetHealth",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoHealthReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The request message containing the user's name.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoEmpty"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetInfocards": {
+      "post": {
+        "operationId": "Darkstat_GetInfocards",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetInfocardsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetInfocardsInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetMines": {
+      "post": {
+        "operationId": "Darkstat_GetMines",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetMinesReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetMissiles": {
+      "post": {
+        "operationId": "Darkstat_GetMissiles",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGunsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetGunsInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetPoBGoods": {
+      "post": {
+        "summary": "Get all PoB goods, where they are sold and bought. Reverse search by PoBs",
+        "operationId": "Darkstat_GetPoBGoods",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetPoBGoodsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The request message containing the user's name.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoEmpty"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetPoBs": {
+      "post": {
+        "summary": "Get all Player Owned Bases. Completely all that are public exposed",
+        "operationId": "Darkstat_GetPoBs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetPoBsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The request message containing the user's name.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoEmpty"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetScanners": {
+      "post": {
+        "operationId": "Darkstat_GetScanners",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetScannersReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetShields": {
+      "post": {
+        "operationId": "Darkstat_GetShields",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetShieldsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetShips": {
+      "post": {
+        "operationId": "Darkstat_GetShips",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetShipsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetThrusters": {
+      "post": {
+        "operationId": "Darkstat_GetThrusters",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetThrustersReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetEquipmentInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    },
+    "/statproto.Darkstat/GetTractors": {
+      "post": {
+        "summary": "Get Tractors. For Discovery those are IDs",
+        "operationId": "Darkstat_GetTractors",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/statprotoGetTractorsReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/statprotoGetTractorsInput"
+            }
+          }
+        ],
+        "tags": [
+          "Darkstat"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "statprotoAmmo": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "HitPts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Volume": {
+          "type": "number",
+          "format": "double"
+        },
+        "MunitionLifetime": {
+          "type": "number",
+          "format": "double"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "SeekerType": {
+          "type": "string"
+        },
+        "SeekerRange": {
+          "type": "string",
+          "format": "int64"
+        },
+        "SeekerFovDeg": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        },
+        "AmmoLimit": {
+          "$ref": "#/definitions/statprotoAmmoLimit"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoAmmoLimit": {
+      "type": "object",
+      "properties": {
+        "AmountInCatridge": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MaxCatridges": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "statprotoBase": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Archetypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "FactionName": {
+          "type": "string"
+        },
+        "System": {
+          "type": "string"
+        },
+        "SystemNickname": {
+          "type": "string"
+        },
+        "Region": {
+          "type": "string"
+        },
+        "StridName": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfocardID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "File": {
+          "type": "string"
+        },
+        "BGCSBaseRunBy": {
+          "type": "string"
+        },
+        "Pos": {
+          "$ref": "#/definitions/statprotoPos"
+        },
+        "SectorCoord": {
+          "type": "string"
+        },
+        "IsTransportUnreachable": {
+          "type": "boolean"
+        },
+        "Reachable": {
+          "type": "boolean"
+        },
+        "IsPob": {
+          "type": "boolean"
+        },
+        "MarketGoodsPerNick": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        }
+      },
+      "title": "The response message containing the greetings"
+    },
+    "statprotoBaseInfo": {
+      "type": "object",
+      "properties": {
+        "BaseNickname": {
+          "type": "string"
+        },
+        "BaseName": {
+          "type": "string"
+        },
+        "SystemName": {
+          "type": "string"
+        },
+        "Region": {
+          "type": "string"
+        },
+        "FactionName": {
+          "type": "string"
+        },
+        "BasePos": {
+          "$ref": "#/definitions/statprotoPos"
+        },
+        "SectorCoord": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoBribe": {
+      "type": "object",
+      "properties": {
+        "BaseNickname": {
+          "type": "string"
+        },
+        "Chance": {
+          "type": "number",
+          "format": "double"
+        },
+        "BaseInfo": {
+          "$ref": "#/definitions/statprotoBaseInfo"
+        }
+      }
+    },
+    "statprotoBurstFire": {
+      "type": "object",
+      "properties": {
+        "SustainedRefire": {
+          "type": "number",
+          "format": "double"
+        },
+        "Ammo": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ReloadTime": {
+          "type": "number",
+          "format": "double"
+        },
+        "SustainedHullDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "SustainedAvgShieldDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "SustainedEnergyDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "SustainedPowerUsagePerSec": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoCommodity": {
+      "type": "object",
+      "properties": {
+        "Nickname": {
+          "type": "string"
+        },
+        "PriceBase": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Combinable": {
+          "type": "boolean"
+        },
+        "Volume": {
+          "type": "number",
+          "format": "double"
+        },
+        "ShipClass": {
+          "type": "string",
+          "format": "int64"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfocardID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "PriceBestBaseBuysFor": {
+          "type": "string",
+          "format": "int64"
+        },
+        "PriceBestBaseSellsFor": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ProffitMargin": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoCounterMeasure": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "HitPts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "AIRange": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lifetime": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Range": {
+          "type": "string",
+          "format": "int64"
+        },
+        "DiversionPctg": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        },
+        "AmmoLimit": {
+          "$ref": "#/definitions/statprotoAmmoLimit"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoDamageBonus": {
+      "type": "object",
+      "properties": {
+        "Type": {
+          "type": "string"
+        },
+        "Modifier": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoDiscoGun": {
+      "type": "object",
+      "properties": {
+        "ArmorPen": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoDiscoShip": {
+      "type": "object",
+      "properties": {
+        "ArmorMult": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoDiscoveryTechCompat": {
+      "type": "object",
+      "properties": {
+        "TechcompatByID": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "TechCell": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoEmpty": {
+      "type": "object",
+      "description": "The request message containing the user's name."
+    },
+    "statprotoEngine": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "CruiseSpeed": {
+          "type": "string",
+          "format": "int64"
+        },
+        "CruiseChargeTime": {
+          "type": "string",
+          "format": "int64"
+        },
+        "LinearDrag": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MaxForce": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ReverseFraction": {
+          "type": "number",
+          "format": "double"
+        },
+        "ImpulseSpeed": {
+          "type": "number",
+          "format": "double"
+        },
+        "HpType": {
+          "type": "string"
+        },
+        "FlameEffect": {
+          "type": "string"
+        },
+        "TrailEffect": {
+          "type": "string"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoEquipmentSlot": {
+      "type": "object",
+      "properties": {
+        "SlotName": {
+          "type": "string"
+        },
+        "AllowedEquip": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "statprotoFaction": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "ShortName": {
+          "type": "string"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "ObjectDestruction": {
+          "type": "number",
+          "format": "double"
+        },
+        "MissionSuccess": {
+          "type": "number",
+          "format": "double"
+        },
+        "MissionFailure": {
+          "type": "number",
+          "format": "double"
+        },
+        "MissionAbort": {
+          "type": "number",
+          "format": "double"
+        },
+        "InfonameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfocardID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Reputations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoReputation"
+          }
+        },
+        "Bribes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoBribe"
+          }
+        }
+      }
+    },
+    "statprotoGetAmmoReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoAmmo"
+          }
+        }
+      }
+    },
+    "statprotoGetBasesInput": {
+      "type": "object",
+      "properties": {
+        "includeMarketGoods": {
+          "type": "boolean",
+          "title": "\"insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight\""
+        },
+        "filterToUseful": {
+          "type": "boolean",
+          "title": "Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found"
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by base nicknames"
+        },
+        "filterMarketGoodCategory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
+        }
+      }
+    },
+    "statprotoGetBasesReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoBase"
+          }
+        }
+      }
+    },
+    "statprotoGetCommoditiesInput": {
+      "type": "object",
+      "properties": {
+        "includeMarketGoods": {
+          "type": "boolean",
+          "description": "Example: `false`",
+          "title": "To Include market goods, where the item is sold and bought or not. Adds a lot of extra weight to data"
+        },
+        "filterToUseful": {
+          "type": "boolean"
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by item nicknames"
+        }
+      }
+    },
+    "statprotoGetCommoditiesReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoCommodity"
+          }
+        }
+      }
+    },
+    "statprotoGetCounterMeasuresReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoCounterMeasure"
+          }
+        }
+      }
+    },
+    "statprotoGetEnginesReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoEngine"
+          }
+        }
+      }
+    },
+    "statprotoGetEquipmentInput": {
+      "type": "object",
+      "properties": {
+        "includeMarketGoods": {
+          "type": "boolean",
+          "title": "\"insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight\""
+        },
+        "includeTechCompat": {
+          "type": "boolean",
+          "title": "insert 'true' if wish to include tech compatibility data. can be adding a lot of extra weight"
+        },
+        "filterToUseful": {
+          "type": "boolean",
+          "title": "Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found"
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by item nicknames"
+        }
+      }
+    },
+    "statprotoGetFactionsInput": {
+      "type": "object",
+      "properties": {
+        "includeReputations": {
+          "type": "boolean"
+        },
+        "includeBribes": {
+          "type": "boolean"
+        },
+        "filterToUseful": {
+          "type": "boolean"
+        }
+      }
+    },
+    "statprotoGetFactionsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoFaction"
+          }
+        }
+      }
+    },
+    "statprotoGetGraphPathsAnswer": {
+      "type": "object",
+      "properties": {
+        "Route": {
+          "$ref": "#/definitions/statprotoGraphPathQuery"
+        },
+        "Time": {
+          "$ref": "#/definitions/statprotoGraphPathTime"
+        },
+        "Error": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoGetGraphPathsInput": {
+      "type": "object",
+      "properties": {
+        "Queries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoGraphPathQuery"
+          }
+        }
+      }
+    },
+    "statprotoGetGraphPathsReply": {
+      "type": "object",
+      "properties": {
+        "Answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoGetGraphPathsAnswer"
+          }
+        }
+      }
+    },
+    "statprotoGetGunsInput": {
+      "type": "object",
+      "properties": {
+        "includeMarketGoods": {
+          "type": "boolean",
+          "title": "\"insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight\""
+        },
+        "includeTechCompat": {
+          "type": "boolean"
+        },
+        "filterToUseful": {
+          "type": "boolean",
+          "title": "Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found"
+        },
+        "includeDamageBonuses": {
+          "type": "boolean"
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by item nicknames"
+        }
+      }
+    },
+    "statprotoGetGunsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoGun"
+          }
+        }
+      }
+    },
+    "statprotoGetHashesReply": {
+      "type": "object",
+      "properties": {
+        "HashesByNick": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoHash"
+          }
+        }
+      }
+    },
+    "statprotoGetInfocardAnswer": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "infocard": {
+          "$ref": "#/definitions/statprotoInfocard"
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoGetInfocardsInput": {
+      "type": "object",
+      "properties": {
+        "nicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "statprotoGetInfocardsReply": {
+      "type": "object",
+      "properties": {
+        "Answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoGetInfocardAnswer"
+          }
+        }
+      }
+    },
+    "statprotoGetMinesReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoMine"
+          }
+        }
+      }
+    },
+    "statprotoGetPoBGoodsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoPoBGood"
+          }
+        }
+      }
+    },
+    "statprotoGetPoBsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoPoB"
+          }
+        }
+      }
+    },
+    "statprotoGetScannersReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoScanner"
+          }
+        }
+      }
+    },
+    "statprotoGetShieldsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoShield"
+          }
+        }
+      }
+    },
+    "statprotoGetShipsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoShip"
+          }
+        }
+      }
+    },
+    "statprotoGetThrustersReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoThruster"
+          }
+        }
+      }
+    },
+    "statprotoGetTractorsInput": {
+      "type": "object",
+      "properties": {
+        "includeMarketGoods": {
+          "type": "boolean",
+          "title": "By default not outputing market goods in case u wish to save network"
+        },
+        "filterToUseful": {
+          "type": "boolean",
+          "title": "Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found"
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by item nicknames"
+        }
+      }
+    },
+    "statprotoGetTractorsReply": {
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoTractor"
+          }
+        }
+      }
+    },
+    "statprotoGraphPathQuery": {
+      "type": "object",
+      "properties": {
+        "From": {
+          "type": "string"
+        },
+        "To": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoGraphPathTime": {
+      "type": "object",
+      "properties": {
+        "Transport": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Frigate": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Freighter": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "statprotoGun": {
+      "type": "object",
+      "properties": {
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Class": {
+          "type": "string"
+        },
+        "HpType": {
+          "type": "string"
+        },
+        "IdsName": {
+          "type": "string",
+          "format": "int64"
+        },
+        "IdsInfo": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Volume": {
+          "type": "number",
+          "format": "double"
+        },
+        "HitPts": {
+          "type": "string"
+        },
+        "PowerUsage": {
+          "type": "number",
+          "format": "double"
+        },
+        "Refire": {
+          "type": "number",
+          "format": "double"
+        },
+        "Range": {
+          "type": "number",
+          "format": "double"
+        },
+        "Toughness": {
+          "type": "number",
+          "format": "double"
+        },
+        "IsAutoTurret": {
+          "type": "boolean"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "RequiredAmmo": {
+          "type": "boolean"
+        },
+        "HullDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "EnergyDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ShieldDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "AvgShieldDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "DamageType": {
+          "type": "string"
+        },
+        "LifeTime": {
+          "type": "number",
+          "format": "double"
+        },
+        "Speed": {
+          "type": "number",
+          "format": "double"
+        },
+        "GunTurnRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "DispersionAngle": {
+          "type": "number",
+          "format": "double"
+        },
+        "HullDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "AvgShieldDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "EnergyDamagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "PowerUsagePerSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "AvgEfficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "HullEfficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "ShieldEfficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "EnergyDamageEfficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "DamageBonuses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoDamageBonus"
+          }
+        },
+        "Missile": {
+          "$ref": "#/definitions/statprotoMissile",
+          "title": "has data defined but only for missile guns :)"
+        },
+        "GunDetailed": {
+          "$ref": "#/definitions/statprotoGunDetailed"
+        },
+        "NumBarrels": {
+          "type": "string",
+          "format": "int64"
+        },
+        "BurstFire": {
+          "$ref": "#/definitions/statprotoBurstFire"
+        },
+        "AmmoLimit": {
+          "$ref": "#/definitions/statprotoAmmoLimit"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "DiscoGun": {
+          "$ref": "#/definitions/statprotoDiscoGun"
+        }
+      }
+    },
+    "statprotoGunDetailed": {
+      "type": "object",
+      "properties": {
+        "FlashParticleName": {
+          "type": "string"
+        },
+        "ConstEffect": {
+          "type": "string"
+        },
+        "MunitionHitEffect": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoHash": {
+      "type": "object",
+      "properties": {
+        "Int32": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Uint32": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Hex": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoHealthReply": {
+      "type": "object",
+      "properties": {
+        "isHealthy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "statprotoInfocard": {
+      "type": "object",
+      "properties": {
+        "Lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoInfocardLine"
+          }
+        }
+      }
+    },
+    "statprotoInfocardLine": {
+      "type": "object",
+      "properties": {
+        "Phrases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoInfocardPhrase"
+          }
+        }
+      }
+    },
+    "statprotoInfocardPhrase": {
+      "type": "object",
+      "properties": {
+        "Phrase": {
+          "type": "string"
+        },
+        "Link": {
+          "type": "string"
+        },
+        "Bold": {
+          "type": "boolean"
+        }
+      }
+    },
+    "statprotoMarketGood": {
+      "type": "object",
+      "properties": {
+        "Nickname": {
+          "type": "string"
+        },
+        "ShipNickname": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "PriceBase": {
+          "type": "string",
+          "format": "int64"
+        },
+        "HpType": {
+          "type": "string"
+        },
+        "Category": {
+          "type": "string"
+        },
+        "LevelRequired": {
+          "type": "string",
+          "format": "int64"
+        },
+        "RepRequired": {
+          "type": "number",
+          "format": "double"
+        },
+        "PriceBaseBuysFor": {
+          "type": "string",
+          "format": "int64"
+        },
+        "PriceBaseSellsFor": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Volume": {
+          "type": "number",
+          "format": "double"
+        },
+        "ShipClass": {
+          "type": "string",
+          "format": "int64"
+        },
+        "BaseSells": {
+          "type": "boolean"
+        },
+        "IsServerSideOverride": {
+          "type": "boolean"
+        },
+        "NotBuyable": {
+          "type": "boolean"
+        },
+        "IsTransportUnreachable": {
+          "type": "boolean"
+        },
+        "baseInfo": {
+          "$ref": "#/definitions/statprotoBaseInfo"
+        }
+      }
+    },
+    "statprotoMine": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "AmmoPrice": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "ProjectileArchetype": {
+          "type": "string"
+        },
+        "IdsName": {
+          "type": "string",
+          "format": "int64"
+        },
+        "IdsInfo": {
+          "type": "string",
+          "format": "int64"
+        },
+        "HullDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "EnergyDamange": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ShieldDamage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "PowerUsage": {
+          "type": "number",
+          "format": "double"
+        },
+        "Value": {
+          "type": "number",
+          "format": "double"
+        },
+        "Refire": {
+          "type": "number",
+          "format": "double"
+        },
+        "DetonationDistance": {
+          "type": "number",
+          "format": "double"
+        },
+        "Radius": {
+          "type": "number",
+          "format": "double"
+        },
+        "SeekDistance": {
+          "type": "string",
+          "format": "int64"
+        },
+        "TopSpeed": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Acceleration": {
+          "type": "string",
+          "format": "int64"
+        },
+        "LinearDrag": {
+          "type": "number",
+          "format": "double"
+        },
+        "LifeTime": {
+          "type": "number",
+          "format": "double"
+        },
+        "OwnerSafe": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Toughness": {
+          "type": "number",
+          "format": "double"
+        },
+        "HitPts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "AmmoLimit": {
+          "$ref": "#/definitions/statprotoAmmoLimit"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        }
+      }
+    },
+    "statprotoMissile": {
+      "type": "object",
+      "properties": {
+        "MaxAngularVelocity": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoPoB": {
+      "type": "object",
+      "properties": {
+        "Core": {
+          "$ref": "#/definitions/statprotoPoBCore"
+        },
+        "ShopItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoShopItem"
+          }
+        }
+      }
+    },
+    "statprotoPoBCore": {
+      "type": "object",
+      "properties": {
+        "Nickname": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Pos": {
+          "type": "string"
+        },
+        "Level": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Money": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Health": {
+          "type": "number",
+          "format": "double"
+        },
+        "DefenseMode": {
+          "type": "string",
+          "format": "int64"
+        },
+        "SystemNick": {
+          "type": "string"
+        },
+        "SystemName": {
+          "type": "string"
+        },
+        "FactionNick": {
+          "type": "string"
+        },
+        "FactionName": {
+          "type": "string"
+        },
+        "ForumThreadUrl": {
+          "type": "string"
+        },
+        "CargoSpaceLeft": {
+          "type": "string",
+          "format": "int64"
+        },
+        "BasePos": {
+          "$ref": "#/definitions/statprotoPos"
+        },
+        "SectorCoord": {
+          "type": "string"
+        },
+        "Region": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoPoBGood": {
+      "type": "object",
+      "properties": {
+        "Nickname": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "TotalBuyableFromBases": {
+          "type": "string",
+          "format": "int64"
+        },
+        "TotalSellableToBases": {
+          "type": "string",
+          "format": "int64"
+        },
+        "BestPriceToBuy": {
+          "type": "string",
+          "format": "int64"
+        },
+        "BestPriceToSell": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Category": {
+          "type": "string"
+        },
+        "AnyBaseSells": {
+          "type": "boolean"
+        },
+        "AnyBaseBuys": {
+          "type": "boolean"
+        },
+        "Bases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoPoBGoodBase"
+          }
+        }
+      }
+    },
+    "statprotoPoBGoodBase": {
+      "type": "object",
+      "properties": {
+        "ShopItem": {
+          "$ref": "#/definitions/statprotoShopItem"
+        },
+        "Base": {
+          "$ref": "#/definitions/statprotoPoBCore"
+        }
+      }
+    },
+    "statprotoPos": {
+      "type": "object",
+      "properties": {
+        "X": {
+          "type": "number",
+          "format": "double"
+        },
+        "Y": {
+          "type": "number",
+          "format": "double"
+        },
+        "Z": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "statprotoReputation": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Rep": {
+          "type": "number",
+          "format": "double"
+        },
+        "Empathy": {
+          "type": "number",
+          "format": "double"
+        },
+        "Nickname": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoScanner": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Range": {
+          "type": "string",
+          "format": "int64"
+        },
+        "CargoScanRange": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        }
+      }
+    },
+    "statprotoShield": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Class": {
+          "type": "string"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Technology": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Capacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "RegenerationRate": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ConstantPowerDraw": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Value": {
+          "type": "number",
+          "format": "double"
+        },
+        "RebuildPowerDraw": {
+          "type": "string",
+          "format": "int64"
+        },
+        "OffRebuildTime": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Toughness": {
+          "type": "number",
+          "format": "double"
+        },
+        "HitPts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "HpType": {
+          "type": "string"
+        },
+        "IdsName": {
+          "type": "string",
+          "format": "int64"
+        },
+        "IdsInfo": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        }
+      }
+    },
+    "statprotoShip": {
+      "type": "object",
+      "properties": {
+        "Nickname": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Class": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Armor": {
+          "type": "string",
+          "format": "int64"
+        },
+        "HoldSize": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Nanobots": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Batteries": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "PowerCapacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "PowerRechargeRate": {
+          "type": "string",
+          "format": "int64"
+        },
+        "CruiseSpeed": {
+          "type": "string",
+          "format": "int64"
+        },
+        "LinearDrag": {
+          "type": "number",
+          "format": "double"
+        },
+        "EngineMaxForce": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ImpulseSpeed": {
+          "type": "number",
+          "format": "double"
+        },
+        "ThrusterSpeed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        },
+        "ReverseFraction": {
+          "type": "number",
+          "format": "double"
+        },
+        "ThrustCapacity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ThrustRecharge": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MaxAngularSpeedDegS": {
+          "type": "number",
+          "format": "double"
+        },
+        "AngularDistanceFrom0ToHalfSec": {
+          "type": "number",
+          "format": "double"
+        },
+        "TimeTo90MaxAngularSpeed": {
+          "type": "number",
+          "format": "double"
+        },
+        "NudgeForce": {
+          "type": "number",
+          "format": "double"
+        },
+        "StrafeForce": {
+          "type": "number",
+          "format": "double"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Slots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoEquipmentSlot"
+          }
+        },
+        "BiggestHardpoint": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ShipPackages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoShipPackage"
+          }
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        },
+        "DiscoShip": {
+          "$ref": "#/definitions/statprotoDiscoShip"
+        }
+      }
+    },
+    "statprotoShipPackage": {
+      "type": "object",
+      "properties": {
+        "Nickname": {
+          "type": "string"
+        }
+      }
+    },
+    "statprotoShopItem": {
+      "type": "object",
+      "properties": {
+        "Nickname": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Category": {
+          "type": "string"
+        },
+        "Id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Quantity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "SellPrice": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MinStock": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MaxStock": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "statprotoThruster": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MaxForce": {
+          "type": "string",
+          "format": "int64"
+        },
+        "PowerUsage": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Efficiency": {
+          "type": "number",
+          "format": "double"
+        },
+        "Value": {
+          "type": "number",
+          "format": "double"
+        },
+        "HitPts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "DiscoveryTechCompat": {
+          "$ref": "#/definitions/statprotoDiscoveryTechCompat"
+        }
+      }
+    },
+    "statprotoTractor": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MaxLength": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ReachSpeed": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Lootable": {
+          "type": "boolean"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "ShortNickname": {
+          "type": "string"
+        },
+        "NameID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "InfoID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Bases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/statprotoMarketGood"
+          }
+        },
+        "Mass": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    }
+  }
+}

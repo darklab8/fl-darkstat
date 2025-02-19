@@ -38,9 +38,7 @@ COPY darkstat darkstat
 COPY darkrelay darkrelay
 COPY configs configs
 COPY darkcore darkcore
-COPY darkapi darkapi
-COPY darkrpc darkrpc
-COPY darkgrpc darkgrpc
+COPY darkapis darkapis
 
 # regen grpc+gateway code. Supposedly should be not changed :)
 RUN task grpc:protoc:gateway
