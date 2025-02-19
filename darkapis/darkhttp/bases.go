@@ -33,7 +33,10 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 			}
 
 			var in pb.GetBasesInput
-			ReadJsonInput(w, r, &in)
+			if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
 			filter_to_useful := in.FilterToUseful
 			include_market_goods := in.IncludeMarketGoods
 			if r.URL.Query().Get("filter_to_useful") == "true" {
@@ -87,7 +90,10 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 			var in pb.GetBasesInput
-			ReadJsonInput(w, r, &in)
+			if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
 			filter_to_useful := in.FilterToUseful
 			include_market_goods := in.IncludeMarketGoods
 			if r.URL.Query().Get("filter_to_useful") == "true" {
