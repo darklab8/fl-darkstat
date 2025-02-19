@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/darklab8/fl-darkstat/public/darkgrpc"
-	pb "github.com/darklab8/fl-darkstat/public/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 )
 
 var (

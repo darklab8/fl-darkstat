@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/darklab8/fl-darkstat/public/darkgrpc/statproto";
+option go_package = "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto";
 
 package statproto;
 /*
