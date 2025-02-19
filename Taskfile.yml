@@ -135,14 +135,14 @@ tasks:
   grpc:protoc:simple:
     cmds: # --experimental_allow_proto3_optional
       - >
-        protoc -I darkgrpc/statproto
-        --go_out=darkgrpc/statproto
+        protoc -I darkapis/darkgrpc/statproto
+        --go_out=darkapis/darkgrpc/statproto
         --experimental_allow_proto3_optional
         --go_opt=paths=source_relative
-        --go-grpc_out=darkgrpc/statproto
+        --go-grpc_out=darkapis/darkgrpc/statproto
         --go-grpc_opt=paths=source_relative
         --proto_path=.
-        darkgrpc/statproto/darkstat.proto
+        darkapis/darkgrpc/statproto/darkstat.proto
 
   grpc:docker:gateway:
     # NOTE: updates dependencies to latest from time to time!
@@ -157,18 +157,18 @@ tasks:
     desc: regenerating all the grpc stuff from proto file ;)
     cmds:
       - >
-        protoc -I darkgrpc/statproto
+        protoc -I darkapis/darkgrpc/statproto
         --experimental_allow_proto3_optional
-        --go_out=darkgrpc/statproto/
+        --go_out=darkapis/darkgrpc/statproto/
         --go_opt=paths=source_relative
-        --go-grpc_out darkgrpc/statproto/
+        --go-grpc_out darkapis/darkgrpc/statproto/
         --go-grpc_opt paths=source_relative
-        --grpc-gateway_out ./darkgrpc/statproto/
+        --grpc-gateway_out ./darkapis/darkgrpc/statproto/
         --grpc-gateway_opt paths=source_relative
         --grpc-gateway_opt generate_unbound_methods=true
-        --openapiv2_out ./darkgrpc/statproto/
+        --openapiv2_out ./darkapis/darkgrpc/statproto/
         --openapiv2_opt generate_unbound_methods=true
-        darkgrpc/statproto/darkstat.proto
+        darkapis/darkgrpc/statproto/darkstat.proto
 
   grpc:debug:
     cmds:
