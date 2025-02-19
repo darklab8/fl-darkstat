@@ -3,6 +3,8 @@ package darkhttp
 import (
 	"net/http"
 
+	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
@@ -21,10 +23,12 @@ type Thruster struct {
 // @Accept       json
 // @Produce      json
 // @Success      200  {array}  	darkhttp.Thruster
-// @Router       /api/thrusters [get]
-// @Param        filter_to_useful    query     string  false  "insert 'true' if wish to filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
-// @Param        include_market_goods    query     string  false  "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
-// @Param        include_tech_compat    query     string  false  "insert 'true' if wish to include tech compat info too for the item. Such data can add a lot of extra weight"
+// @Router       /api/thrusters [post]
+// @Param request body pb.GetEquipmentInput true "input variables"
+// @Description  include_market_goods: "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+// @Description  include_tech_compat: insert 'true' if wish to include tech compatibility data. can be adding a lot of extra weight
+// @Description  filter_to_useful: Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
+// @Description  filter_nicknames: filters by item nicknames
 func GetThrusters(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET " + ApiRoute + "/thrusters",
@@ -34,28 +38,31 @@ func GetThrusters(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			filter_to_useful := r.URL.Query().Get("filter_to_useful") == "true"
-			include_market_goods := r.URL.Query().Get("include_market_goods") == "true"
-			include_tech_compat := r.URL.Query().Get("include_tech_compat") == "true"
+			var in *pb.GetEquipmentInput
+			in, err := GetEquipmentInput(w, r)
+			if err != nil {
+				return
+			}
 
 			var result []configs_export.Thruster
-			if filter_to_useful {
+			if in.FilterToUseful {
 				result = api.app_data.Configs.FilterToUsefulThrusters(api.app_data.Configs.Thrusters)
 			} else {
 				result = api.app_data.Configs.Thrusters
 			}
+			result = darkgrpc.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Thruster
 			for _, item := range result {
 				answer := &Thruster{
 					Thruster: &item,
 				}
-				if include_market_goods {
+				if in.IncludeMarketGoods {
 					for _, good := range item.Bases {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
 				}
-				if include_tech_compat {
+				if in.IncludeTechCompat {
 					answer.TechCompat = item.DiscoveryTechCompat
 				}
 				output = append(output, answer)

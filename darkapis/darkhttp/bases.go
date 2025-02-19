@@ -23,7 +23,11 @@ type Base struct {
 // @Produce      json
 // @Success      200  {array}  	darkhttp.Base
 // @Router       /api/npc_bases [post]
-// @Param request body pb.GetBasesInput true "input variables, description in Models of api 2.0"
+// @Param request body pb.GetBasesInput true "input variables"
+// @Description  include_market_goods: "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+// @Description  filter_to_useful: Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
+// @Description  filter_nicknames: filters by item nicknames (in those case by base nicknames)
+// @Description  filter_market_good_category: filters market goods to specific category. valid categories are written in market goods in same named attribute. for example 'commodity'
 func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "" + ApiRoute + "/npc_bases",
@@ -80,7 +84,11 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Produce      json
 // @Success      200  {array}  	darkhttp.Base
 // @Router       /api/mining_operations [post]
-// @Param request body pb.GetBasesInput true "input variables, description in Models of api 2.0"
+// @Param request body pb.GetBasesInput true "input variables"
+// @Description  include_market_goods: "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+// @Description  filter_to_useful: Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
+// @Description  filter_nicknames: filters by item nicknames (in those case by base nicknames)
+// @Description  filter_market_good_category: filters market goods to specific category. valid categories are written in market goods in same named attribute. for example 'commodity'
 func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "" + ApiRoute + "/mining_operations",
@@ -135,7 +143,11 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Produce      json
 // @Success      200  {array}  	darkhttp.Base
 // @Router       /api/pobs/bases [post]
-// @Param request body pb.GetBasesInput true "input variables, description in Models of api 2.0"
+// @Param request body pb.GetBasesInput true "input variables"
+// @Description  include_market_goods: "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+// @Description  filter_to_useful: Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
+// @Description  filter_nicknames: filters by item nicknames (in those case by base nicknames)
+// @Description  filter_market_good_category: filters market goods to specific category. valid categories are written in market goods in same named attribute. for example 'commodity'
 func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "" + ApiRoute + "/pobs/bases",

@@ -1393,7 +1393,8 @@
           "title": "\"insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight\""
         },
         "includeTechCompat": {
-          "type": "boolean"
+          "type": "boolean",
+          "title": "insert 'true' if wish to include tech compatibility data. can be adding a lot of extra weight"
         },
         "filterToUseful": {
           "type": "boolean",

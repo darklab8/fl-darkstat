@@ -42,7 +42,11 @@ func GetEquipmentInput(w http.ResponseWriter, r *http.Request) (*pb.GetEquipment
 // @Produce      json
 // @Success      200  {array}  	darkhttp.Ammo
 // @Router       /api/ammos [post]
-// @Param request body pb.GetEquipmentInput true "input variables, description in Models of api 2.0"
+// @Param request body pb.GetEquipmentInput true "input variables"
+// @Description  include_market_goods: "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+// @Description  include_tech_compat: insert 'true' if wish to include tech compatibility data. can be adding a lot of extra weight
+// @Description  filter_to_useful: Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
+// @Description  filter_nicknames: filters by item nicknames
 func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "" + ApiRoute + "/ammos",

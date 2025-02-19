@@ -23,10 +23,12 @@ type CounterMeasure struct {
 // @Accept       json
 // @Produce      json
 // @Success      200  {array}  	darkhttp.CounterMeasure
-// @Router       /api/counter_measures [get]
-// @Param        filter_to_useful    query     string  false  "insert 'true' if wish to filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
-// @Param        include_market_goods    query     string  false  "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
-// @Param        include_tech_compat    query     string  false  "insert 'true' if wish to include tech compat info too for the item. Such data can add a lot of extra weight"
+// @Router       /api/counter_measures [post]
+// @Param request body pb.GetEquipmentInput true "input variables"
+// @Description  include_market_goods: "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+// @Description  include_tech_compat: insert 'true' if wish to include tech compatibility data. can be adding a lot of extra weight
+// @Description  filter_to_useful: Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
+// @Description  filter_nicknames: filters by item nicknames
 func GetCMs(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET " + ApiRoute + "/counter_measures",

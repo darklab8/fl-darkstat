@@ -45,11 +45,12 @@ service Darkstat {
   rpc GetPoBGoods (Empty) returns (GetPoBGoodsReply);
 
   rpc GetCommodities (GetCommoditiesInput) returns (GetCommoditiesReply) {}
+  rpc GetGuns (GetGunsInput) returns (GetGunsReply) {}
+  rpc GetMissiles (GetGunsInput) returns (GetGunsReply) {}
+
   rpc GetAmmos (GetEquipmentInput) returns (GetAmmoReply) {}
   rpc GetCounterMeasures (GetEquipmentInput) returns (GetCounterMeasuresReply) {}
   rpc GetEngines (GetEquipmentInput) returns (GetEnginesReply) {}
-  rpc GetGuns (GetGunsInput) returns (GetGunsReply) {}
-  rpc GetMissiles (GetGunsInput) returns (GetGunsReply) {}
   rpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}
   rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
   rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
@@ -98,6 +99,7 @@ message HealthReply {
 message GetEquipmentInput {
   // "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
   bool include_market_goods = 1;
+  // insert 'true' if wish to include tech compatibility data. can be adding a lot of extra weight
   bool include_tech_compat = 2;
   // Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
   bool filter_to_useful = 3;

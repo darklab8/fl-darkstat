@@ -14,7 +14,7 @@ import (
 // @Tags         misc
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  	services.Hashes
+// @Success      200  {object}  	darkgrpc.Hashes
 // @Router       /api/hashes [get]
 func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
