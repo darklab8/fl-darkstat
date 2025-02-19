@@ -31,7 +31,7 @@ type CounterMeasure struct {
 // @Description  filter_nicknames: filters by item nicknames
 func GetCMs(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/counter_measures",
+		Url: "" + ApiRoute + "/counter_measures",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()

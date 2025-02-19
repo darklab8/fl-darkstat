@@ -31,7 +31,7 @@ type Engine struct {
 // @Description  filter_nicknames: filters by item nicknames
 func GetEngines(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/engines",
+		Url: "" + ApiRoute + "/engines",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()

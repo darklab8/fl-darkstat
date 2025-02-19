@@ -31,7 +31,7 @@ type Scanner struct {
 // @Description  filter_nicknames: filters by item nicknames
 func GetScanners(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/scanners",
+		Url: "" + ApiRoute + "/scanners",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()

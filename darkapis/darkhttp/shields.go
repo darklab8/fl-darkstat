@@ -24,14 +24,14 @@ type Shield struct {
 // @Produce      json
 // @Success      200  {array}  	darkhttp.Shield
 // @Router       /api/shields [post]
-// @Param request body pb.GetEquipmentInput true "input variables, description in Models of api 2.0"// @Param request body pb.GetEquipmentInput true "input variables"
+// @Param request body pb.GetEquipmentInput true "input variables"
 // @Description  include_market_goods: "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
 // @Description  include_tech_compat: insert 'true' if wish to include tech compatibility data. can be adding a lot of extra weight
 // @Description  filter_to_useful: Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
 // @Description  filter_nicknames: filters by item nicknames
 func GetShields(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/shields",
+		Url: "" + ApiRoute + "/shields",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()

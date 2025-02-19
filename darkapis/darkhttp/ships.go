@@ -31,7 +31,7 @@ type Ship struct {
 // @Description  filter_nicknames: filters by item nicknames
 func GetShips(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/ships",
+		Url: "" + ApiRoute + "/ships",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()

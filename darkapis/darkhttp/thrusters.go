@@ -31,7 +31,7 @@ type Thruster struct {
 // @Description  filter_nicknames: filters by item nicknames
 func GetThrusters(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/thrusters",
+		Url: "" + ApiRoute + "/thrusters",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()

@@ -31,7 +31,7 @@ type Mine struct {
 // @Description  filter_nicknames: filters by item nicknames
 func GetMines(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/mines",
+		Url: "" + ApiRoute + "/mines",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()
