@@ -29,7 +29,16 @@ type TestOpts struct {
 }
 
 func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string, test_name string, opts TestOpts) []T {
-	res, err := httpc.Get("http://localhost/api" + url)
+	body := map[string]any{}
+
+	if opts.CheckMarketGoods {
+		body["include_market_goods"] = true
+	}
+	if opts.CheckTechCompat {
+		body["include_tech_compat"] = true
+	}
+	post_body, err := json.Marshal(body)
+	res, err := httpc.Post("http://localhost/api"+url, ApplicationJson, bytes.NewBuffer(post_body))
 	logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
 
 	assert.Equal(t, http.StatusOK, res.StatusCode)
@@ -46,62 +55,6 @@ func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string
 
 	assert.Greater(t, len(items), 0)
 	fmt.Println(items[0])
-
-	if opts.CheckMarketGoods {
-		t.Run("Get"+test_name+"MarketGoods", func(t *testing.T) {
-			var nickname []string = []string{
-				items[0].GetNickname(),
-				items[1].GetNickname(),
-			}
-
-			post_body, err := json.Marshal(nickname)
-			logus.Log.CheckPanic(err, "unable to marshal post body", typelog.OptError(err))
-
-			res, err := httpc.Post("http://localhost/api"+url+"/market_goods", ApplicationJson, bytes.NewBuffer(post_body))
-			logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
-
-			resBody, err := io.ReadAll(res.Body)
-			logus.Log.CheckPanic(err, "client: could not read response body: %s\n", typelog.OptError(err))
-
-			var items []MarketGoodResp
-			fmt.Println("resBody=", string(resBody))
-			err = json.Unmarshal(resBody, &items)
-			logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))
-
-			assert.Greater(t, len(items), 0)
-
-			assert.Nil(t, items[0].Error)
-			assert.Nil(t, items[1].Error)
-		})
-	}
-
-	if opts.CheckTechCompat {
-		t.Run("Get"+test_name+"TechCompats", func(t *testing.T) {
-			var nickname []string = []string{
-				items[0].GetNickname(),
-				items[1].GetNickname(),
-			}
-
-			post_body, err := json.Marshal(nickname)
-			logus.Log.CheckPanic(err, "unable to marshal post body", typelog.OptError(err))
-
-			res, err := httpc.Post("http://localhost/api"+url+"/tech_compats", ApplicationJson, bytes.NewBuffer(post_body))
-			logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
-
-			resBody, err := io.ReadAll(res.Body)
-			logus.Log.CheckPanic(err, "client: could not read response body: %s\n", typelog.OptError(err))
-
-			var items []TechCompatResp
-			fmt.Println("resBody=", string(resBody))
-			err = json.Unmarshal(resBody, &items)
-			logus.Log.CheckPanic(err, "can not unmarshal", typelog.OptError(err))
-
-			assert.Greater(t, len(items), 0)
-
-			assert.Nil(t, items[0].Error)
-			assert.Nil(t, items[1].Error)
-		})
-	}
 
 	return items
 }
@@ -185,7 +138,10 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetBases", func(t *testing.T) {
-		items := FixtureTestItems[configs_export.Base](t, httpc, "/npc_bases", "NpcBases", TestOpts{})
+		items := FixtureTestItems[Base](t, httpc, "/npc_bases", "NpcBases", TestOpts{
+			CheckMarketGoods: true,
+		})
+		assert.Greater(t, len(items[0].MarketGoods), 0)
 
 		t.Run("GetGraphPaths", func(t *testing.T) {
 			nicknames := []appdata.GraphPathReq{
@@ -245,9 +201,16 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetCommodities", func(t *testing.T) {
-		_ = FixtureTestItems[configs_export.Commodity](t, httpc, "/commodities", "Commodities", TestOpts{
+		items := FixtureTestItems[Commodity](t, httpc, "/commodities", "Commodities", TestOpts{
 			CheckMarketGoods: true,
 		})
+		has_market_goods := false
+		for _, item := range items {
+			if len(item.MarketGoods) > 0 {
+				has_market_goods = true
+			}
+		}
+		assert.True(t, has_market_goods)
 	})
 
 	t.Run("GetFactions", func(t *testing.T) {
@@ -270,26 +233,31 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetShips", func(t *testing.T) {
-		_ = FixtureTestItems[configs_export.Ship](t, httpc, "/ships", "Ships", TestOpts{
+		items := FixtureTestItems[Ship](t, httpc, "/ships", "Ships", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		assert.Greater(t, len(items[0].MarketGoods), 0)
+		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
 	})
 
 	t.Run("GetTractors", func(t *testing.T) {
 		if app_data.Configs.Configs.Discovery == nil {
 			return
 		}
-		_ = FixtureTestItems[configs_export.Tractor](t, httpc, "/tractors", "Tractors", TestOpts{
+		items := FixtureTestItems[Tractor](t, httpc, "/tractors", "Tractors", TestOpts{
 			CheckMarketGoods: true,
 		})
+		assert.Greater(t, len(items[0].MarketGoods), 0)
 	})
 
 	t.Run("GetAmmos", func(t *testing.T) {
-		_ = FixtureTestItems[configs_export.Ammo](t, httpc, "/ammos", "Ammos", TestOpts{
+		items := FixtureTestItems[Ammo](t, httpc, "/ammos", "Ammos", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		assert.Greater(t, len(items[0].MarketGoods), 0)
+		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
 	})
 
 	t.Run("GetGuns", func(t *testing.T) {
@@ -298,31 +266,51 @@ func TestApi(t *testing.T) {
 			assert.Nil(t, err)
 		}
 
-		_ = FixtureTestItems[configs_export.Gun](t, httpc, "/guns", "Ships", TestOpts{
+		items := FixtureTestItems[Gun](t, httpc, "/guns", "Ships", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		has_market_goods := false
+		for _, item := range items {
+			if len(item.MarketGoods) > 0 {
+				has_market_goods = true
+			}
+		}
+		has_tech_compat := false
+		for _, item := range items {
+			if len(item.TechCompat.TechcompatByID) > 0 {
+				has_tech_compat = true
+			}
+		}
+		assert.True(t, has_market_goods)
+		assert.True(t, has_tech_compat)
 	})
 
 	t.Run("GetMissiles", func(t *testing.T) {
-		_ = FixtureTestItems[configs_export.Gun](t, httpc, "/missiles", "Missiles", TestOpts{
+		items := FixtureTestItems[Gun](t, httpc, "/missiles", "Missiles", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		assert.Greater(t, len(items[0].MarketGoods), 0)
+		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
 	})
 
 	t.Run("GetMines", func(t *testing.T) {
-		_ = FixtureTestItems[configs_export.Mine](t, httpc, "/mines", "Mines", TestOpts{
+		items := FixtureTestItems[Mine](t, httpc, "/mines", "Mines", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		assert.Greater(t, len(items[0].MarketGoods), 0)
+		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
 	})
 
 	t.Run("GetCMs", func(t *testing.T) {
-		_ = FixtureTestItems[configs_export.CounterMeasure](t, httpc, "/counter_measures", "CounterMeasures", TestOpts{
+		items := FixtureTestItems[CounterMeasure](t, httpc, "/counter_measures", "CounterMeasures", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		assert.Greater(t, len(items[0].MarketGoods), 0)
+		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
 	})
 
 	t.Run("GetEngines", func(t *testing.T) {
@@ -336,27 +324,57 @@ func TestApi(t *testing.T) {
 			}
 			assert.Nil(t, err)
 		}
-		_ = FixtureTestItems[configs_export.Engine](t, httpc, "/engines", "Engines", TestOpts{
+		items := FixtureTestItems[Engine](t, httpc, "/engines", "Engines", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		has_market_goods := false
+		for _, item := range items {
+			if len(item.MarketGoods) > 0 {
+				has_market_goods = true
+			}
+		}
+		has_tech_compat := false
+		for _, item := range items {
+			if len(item.TechCompat.TechcompatByID) > 0 {
+				has_tech_compat = true
+			}
+		}
+		assert.True(t, has_market_goods)
+		assert.True(t, has_tech_compat)
 	})
 
 	t.Run("GetScanners", func(t *testing.T) {
 		if app_data.Configs.Configs.Discovery == nil {
 			return
 		}
-		_ = FixtureTestItems[configs_export.Scanner](t, httpc, "/scanners", "Scanners", TestOpts{
+		items := FixtureTestItems[Scanner](t, httpc, "/scanners", "Scanners", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		has_market_goods := false
+		for _, item := range items {
+			if len(item.MarketGoods) > 0 {
+				has_market_goods = true
+			}
+		}
+		has_tech_compat := false
+		for _, item := range items {
+			if len(item.TechCompat.TechcompatByID) > 0 {
+				has_tech_compat = true
+			}
+		}
+		assert.True(t, has_market_goods)
+		assert.True(t, has_tech_compat)
 	})
 
 	t.Run("GetShields", func(t *testing.T) {
-		_ = FixtureTestItems[configs_export.Shield](t, httpc, "/shields", "Shields", TestOpts{
+		items := FixtureTestItems[Shield](t, httpc, "/shields", "Shields", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		assert.Greater(t, len(items[0].MarketGoods), 0)
+		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
 	})
 
 	t.Run("GetThrusters", func(t *testing.T) {
@@ -367,10 +385,12 @@ func TestApi(t *testing.T) {
 			}
 			assert.Nil(t, err)
 		}
-		_ = FixtureTestItems[configs_export.Thruster](t, httpc, "/thrusters", "Thrusters", TestOpts{
+		items := FixtureTestItems[Thruster](t, httpc, "/thrusters", "Thrusters", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
+		assert.Greater(t, len(items[0].MarketGoods), 0)
+		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
 	})
 
 	// // Teardown code for given condition goes here
