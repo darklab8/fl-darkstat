@@ -1295,11 +1295,11 @@
       "properties": {
         "includeMarketGoods": {
           "type": "boolean",
-          "title": "\"insert 'true' if wish to filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan\""
+          "title": "\"insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight\""
         },
         "filterToUseful": {
           "type": "boolean",
-          "title": "\"insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight\""
+          "title": "Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found"
         },
         "filterNicknames": {
           "type": "array",
@@ -1396,13 +1396,15 @@
       "type": "object",
       "properties": {
         "includeMarketGoods": {
-          "type": "boolean"
+          "type": "boolean",
+          "title": "\"insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight\""
         },
         "includeTechCompat": {
           "type": "boolean"
         },
         "filterToUseful": {
-          "type": "boolean"
+          "type": "boolean",
+          "title": "Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found"
         },
         "filterNicknames": {
           "type": "array",
@@ -1488,13 +1490,15 @@
       "type": "object",
       "properties": {
         "includeMarketGoods": {
-          "type": "boolean"
+          "type": "boolean",
+          "title": "\"insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight\""
         },
         "includeTechCompat": {
           "type": "boolean"
         },
         "filterToUseful": {
-          "type": "boolean"
+          "type": "boolean",
+          "title": "Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found"
         },
         "includeDamageBonuses": {
           "type": "boolean"
@@ -1663,10 +1667,12 @@
       "type": "object",
       "properties": {
         "includeMarketGoods": {
-          "type": "boolean"
+          "type": "boolean",
+          "title": "By default not outputing market goods in case u wish to save network"
         },
         "filterToUseful": {
-          "type": "boolean"
+          "type": "boolean",
+          "title": "Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found"
         },
         "filterNicknames": {
           "type": "array",

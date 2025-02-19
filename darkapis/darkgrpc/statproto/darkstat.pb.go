@@ -399,10 +399,12 @@ func (x *HealthReply) GetIsHealthy() bool {
 }
 
 type GetEquipmentInput struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	IncludeMarketGoods bool                   `protobuf:"varint,1,opt,name=include_market_goods,json=includeMarketGoods,proto3" json:"include_market_goods,omitempty"`
-	IncludeTechCompat  bool                   `protobuf:"varint,2,opt,name=include_tech_compat,json=includeTechCompat,proto3" json:"include_tech_compat,omitempty"`
-	FilterToUseful     bool                   `protobuf:"varint,3,opt,name=filter_to_useful,json=filterToUseful,proto3" json:"filter_to_useful,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+	IncludeMarketGoods bool `protobuf:"varint,1,opt,name=include_market_goods,json=includeMarketGoods,proto3" json:"include_market_goods,omitempty"`
+	IncludeTechCompat  bool `protobuf:"varint,2,opt,name=include_tech_compat,json=includeTechCompat,proto3" json:"include_tech_compat,omitempty"`
+	// Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
+	FilterToUseful bool `protobuf:"varint,3,opt,name=filter_to_useful,json=filterToUseful,proto3" json:"filter_to_useful,omitempty"`
 	// filters by item nicknames
 	FilterNicknames []string `protobuf:"bytes,4,rep,name=filter_nicknames,json=filterNicknames,proto3" json:"filter_nicknames,omitempty"`
 	// filters market goods to specific category. valid categories are written in market goods in same named attribute.
@@ -477,11 +479,13 @@ func (x *GetEquipmentInput) GetFilterMarketGoodCategory() []string {
 }
 
 type GetGunsInput struct {
-	state                protoimpl.MessageState `protogen:"open.v1"`
-	IncludeMarketGoods   bool                   `protobuf:"varint,1,opt,name=include_market_goods,json=includeMarketGoods,proto3" json:"include_market_goods,omitempty"`
-	IncludeTechCompat    bool                   `protobuf:"varint,2,opt,name=include_tech_compat,json=includeTechCompat,proto3" json:"include_tech_compat,omitempty"`
-	FilterToUseful       bool                   `protobuf:"varint,3,opt,name=filter_to_useful,json=filterToUseful,proto3" json:"filter_to_useful,omitempty"`
-	IncludeDamageBonuses bool                   `protobuf:"varint,4,opt,name=include_damage_bonuses,json=includeDamageBonuses,proto3" json:"include_damage_bonuses,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+	IncludeMarketGoods bool `protobuf:"varint,1,opt,name=include_market_goods,json=includeMarketGoods,proto3" json:"include_market_goods,omitempty"`
+	IncludeTechCompat  bool `protobuf:"varint,2,opt,name=include_tech_compat,json=includeTechCompat,proto3" json:"include_tech_compat,omitempty"`
+	// Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
+	FilterToUseful       bool `protobuf:"varint,3,opt,name=filter_to_useful,json=filterToUseful,proto3" json:"filter_to_useful,omitempty"`
+	IncludeDamageBonuses bool `protobuf:"varint,4,opt,name=include_damage_bonuses,json=includeDamageBonuses,proto3" json:"include_damage_bonuses,omitempty"`
 	// filters by item nicknames
 	FilterNicknames []string `protobuf:"bytes,5,rep,name=filter_nicknames,json=filterNicknames,proto3" json:"filter_nicknames,omitempty"`
 	// filters market goods to specific category. valid categories are written in market goods in same named attribute.
@@ -564,9 +568,9 @@ func (x *GetGunsInput) GetFilterMarketGoodCategory() []string {
 
 type GetBasesInput struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// "insert 'true' if wish to filter items only to useful, usually they are sold, or have goods, or craftable or findable in loot, or bases that are flight reachable from manhattan"
-	IncludeMarketGoods bool `protobuf:"varint,1,opt,name=include_market_goods,json=includeMarketGoods,proto3" json:"include_market_goods,omitempty"`
 	// "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
+	IncludeMarketGoods bool `protobuf:"varint,1,opt,name=include_market_goods,json=includeMarketGoods,proto3" json:"include_market_goods,omitempty"`
+	// Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
 	FilterToUseful bool `protobuf:"varint,2,opt,name=filter_to_useful,json=filterToUseful,proto3" json:"filter_to_useful,omitempty"`
 	// filters by base nicknames
 	FilterNicknames []string `protobuf:"bytes,3,rep,name=filter_nicknames,json=filterNicknames,proto3" json:"filter_nicknames,omitempty"`
@@ -635,9 +639,11 @@ func (x *GetBasesInput) GetFilterMarketGoodCategory() []string {
 }
 
 type GetTractorsInput struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	IncludeMarketGoods bool                   `protobuf:"varint,1,opt,name=include_market_goods,json=includeMarketGoods,proto3" json:"include_market_goods,omitempty"`
-	FilterToUseful     bool                   `protobuf:"varint,2,opt,name=filter_to_useful,json=filterToUseful,proto3" json:"filter_to_useful,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// By default not outputing market goods in case u wish to save network
+	IncludeMarketGoods bool `protobuf:"varint,1,opt,name=include_market_goods,json=includeMarketGoods,proto3" json:"include_market_goods,omitempty"`
+	// Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
+	FilterToUseful bool `protobuf:"varint,2,opt,name=filter_to_useful,json=filterToUseful,proto3" json:"filter_to_useful,omitempty"`
 	// filters by item nicknames
 	FilterNicknames []string `protobuf:"bytes,3,rep,name=filter_nicknames,json=filterNicknames,proto3" json:"filter_nicknames,omitempty"`
 	// filters market goods to specific category. valid categories are written in market goods in same named attribute.

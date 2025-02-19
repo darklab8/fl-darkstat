@@ -24,7 +24,7 @@ type Ammo struct {
 // @Produce      json
 // @Success      200  {array}  	darkhttp.Ammo
 // @Router       /api/ammos [post]
-// @Param request body pb.GetEquipmentInput true "input variables"
+// @Param request body pb.GetEquipmentInput true "input variables, description in Models of api 2.0"
 func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "" + ApiRoute + "/ammos",
