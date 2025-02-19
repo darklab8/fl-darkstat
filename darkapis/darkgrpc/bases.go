@@ -4,7 +4,6 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
-	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -21,7 +20,7 @@ func (s *Server) GetBasesNpc(_ context.Context, in *pb.GetBasesInput) (*pb.GetBa
 	} else {
 		items = s.app_data.Configs.Bases
 	}
-	items = services.FilterNicknames(in.FilterNicknames, items)
+	// items = services.FilterNicknames(in.FilterNicknames, items)
 
 	for _, base := range items {
 		bases = append(bases, NewBase(base, in.IncludeMarketGoods, in.FilterMarketGoodCategory))
@@ -71,10 +70,12 @@ func NewBase(base *configs_export.Base, include_market_goods bool, filter_market
 
 	if include_market_goods {
 		base.MarketGoodsPerNick = make(map[configs_export.CommodityKey]*configs_export.MarketGood)
-		for key, good := range services.FilterMarketGoodCategory(filter_market_good_category, base.MarketGoodsPerNick) {
+		for key, good := range base.MarketGoodsPerNick {
 			item.MarketGoodsPerNick[string(key)] = NewMarketGood(good)
 		}
-
+		// for key, good := range services.FilterMarketGoodCategory(filter_market_good_category, base.MarketGoodsPerNick) {
+		// 	item.MarketGoodsPerNick[string(key)] = NewMarketGood(good)
+		// }
 	}
 
 	return item

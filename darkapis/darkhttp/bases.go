@@ -5,7 +5,6 @@ import (
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
-	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -50,7 +49,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.Bases
 			}
-			result = services.FilterNicknames(in.FilterNicknames, result)
+			// result = services.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Base
 			for _, item := range result {
@@ -58,7 +57,10 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 					Base: item,
 				}
 				if include_market_goods {
-					answer.MarketGoods = services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick)
+					for _, good := range item.MarketGoodsPerNick {
+						answer.MarketGoods = append(answer.MarketGoods, good)
+					}
+					// answer.MarketGoods = services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick)
 				}
 				output = append(output, answer)
 			}
@@ -101,7 +103,7 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.MiningOperations
 			}
-			result = services.FilterNicknames(in.FilterNicknames, result)
+			// result = services.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Base
 			for _, item := range result {
@@ -109,7 +111,10 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 					Base: item,
 				}
 				if include_market_goods {
-					answer.MarketGoods = services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick)
+					for _, good := range item.MarketGoodsPerNick {
+						answer.MarketGoods = append(answer.MarketGoods, good)
+					}
+					// answer.MarketGoods = services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick)
 				}
 				output = append(output, answer)
 			}

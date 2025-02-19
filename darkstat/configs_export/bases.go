@@ -209,6 +209,8 @@ func (b Base) GetNickname() string { return string(b.Nickname) }
 
 type CommodityKey string
 
+func (c CommodityKey) ToStr() string { return string(c) }
+
 func GetCommodityKey(nickname string, ship_class cfg.ShipClass) CommodityKey {
 	return CommodityKey(fmt.Sprintf("%s_%d", nickname, ship_class))
 }
