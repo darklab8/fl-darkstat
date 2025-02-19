@@ -52,7 +52,7 @@ func (s *Server) GetMines(_ context.Context, in *pb.GetEquipmentInput) (*pb.GetM
 			Mass:                item.Mass,
 		}
 		if in.IncludeMarketGoods {
-			result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
+			result.Bases = NewBases(item.Bases)
 		}
 		if in.IncludeTechCompat {
 			result.DiscoveryTechCompat = NewTechCompat(item.DiscoveryTechCompat)

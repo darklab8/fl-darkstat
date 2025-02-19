@@ -17,6 +17,24 @@ type Ammo struct {
 	TechCompat  *configs_export.DiscoveryTechCompat `json:"tech_compat"`
 }
 
+func GetEquipmentInput(w http.ResponseWriter, r *http.Request) (*pb.GetEquipmentInput, error) {
+	var in *pb.GetEquipmentInput = &pb.GetEquipmentInput{}
+	if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return in, err
+	}
+	if r.URL.Query().Get("filter_to_useful") == "true" {
+		in.FilterToUseful = true
+	}
+	if r.URL.Query().Get("include_market_goods") == "true" {
+		in.IncludeMarketGoods = true
+	}
+	if r.URL.Query().Get("include_tech_compat") == "true" {
+		in.IncludeTechCompat = true
+	}
+	return in, nil
+}
+
 // ShowAccount godoc
 // @Summary      Getting list of Ammos
 // @Tags         equipment
@@ -34,26 +52,14 @@ func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			var in pb.GetEquipmentInput
-			if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+			var in *pb.GetEquipmentInput
+			in, err := GetEquipmentInput(w, r)
+			if err != nil {
 				return
-			}
-			filter_to_useful := in.FilterToUseful
-			include_market_goods := in.IncludeMarketGoods
-			include_tech_compat := in.IncludeTechCompat
-			if r.URL.Query().Get("filter_to_useful") == "true" {
-				filter_to_useful = true
-			}
-			if r.URL.Query().Get("include_market_goods") == "true" {
-				include_market_goods = true
-			}
-			if r.URL.Query().Get("include_tech_compat") == "true" {
-				include_tech_compat = true
 			}
 
 			var result []configs_export.Ammo
-			if filter_to_useful {
+			if in.FilterToUseful {
 				result = api.app_data.Configs.FilterToUsefulAmmo(api.app_data.Configs.Ammos)
 			} else {
 				result = api.app_data.Configs.Ammos
@@ -65,12 +71,12 @@ func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 				answer := &Ammo{
 					Ammo: &item,
 				}
-				if include_market_goods {
-					for _, good := range darkgrpc.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.Bases) {
+				if in.IncludeMarketGoods {
+					for _, good := range item.Bases {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
 				}
-				if include_tech_compat {
+				if in.IncludeTechCompat {
 					answer.TechCompat = item.DiscoveryTechCompat
 				}
 				output = append(output, answer)

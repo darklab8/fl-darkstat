@@ -41,7 +41,7 @@ func (s *Server) GetEngines(_ context.Context, in *pb.GetEquipmentInput) (*pb.Ge
 			Mass:             item.Mass,
 		}
 		if in.IncludeMarketGoods {
-			result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
+			result.Bases = NewBases(item.Bases)
 		}
 		if in.IncludeTechCompat {
 			result.DiscoveryTechCompat = NewTechCompat(item.DiscoveryTechCompat)

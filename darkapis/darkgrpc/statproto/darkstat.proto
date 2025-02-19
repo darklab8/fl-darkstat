@@ -104,8 +104,6 @@ message GetEquipmentInput {
 
   // filters by item nicknames
   repeated string filter_nicknames = 4;
-  // filters market goods to specific category. valid categories are written in market goods in same named attribute.
-  repeated string filter_market_good_category = 5;
 }
 message GetGunsInput {
   // "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
@@ -117,8 +115,6 @@ message GetGunsInput {
 
   // filters by item nicknames
   repeated string filter_nicknames = 5;
-  // filters market goods to specific category. valid categories are written in market goods in same named attribute.
-  repeated string filter_market_good_category = 6;
 }
 
 message GetBasesInput {
@@ -139,8 +135,6 @@ message GetTractorsInput {
 
   // filters by item nicknames
   repeated string filter_nicknames = 3;
-  // filters market goods to specific category. valid categories are written in market goods in same named attribute.
-  repeated string filter_market_good_category = 4;
 }
 message GetBasesReply {
   repeated Base Items = 1;
@@ -221,8 +215,6 @@ message GetCommoditiesInput {
 
   // filters by item nicknames
   repeated string filter_nicknames = 3;
-  // filters market goods to specific category. valid categories are written in market goods in same named attribute.
-  repeated string filter_market_good_category = 4;
 }
 message GetCommoditiesReply {
   repeated Commodity Items = 1;

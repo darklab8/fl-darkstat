@@ -3,6 +3,8 @@ package darkhttp
 import (
 	"net/http"
 
+	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
@@ -34,28 +36,31 @@ func GetCMs(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			filter_to_useful := r.URL.Query().Get("filter_to_useful") == "true"
-			include_market_goods := r.URL.Query().Get("include_market_goods") == "true"
-			include_tech_compat := r.URL.Query().Get("include_tech_compat") == "true"
+			var in *pb.GetEquipmentInput
+			in, err := GetEquipmentInput(w, r)
+			if err != nil {
+				return
+			}
 
 			var result []configs_export.CounterMeasure
-			if filter_to_useful {
+			if in.FilterToUseful {
 				result = api.app_data.Configs.FilterToUsefulCounterMeasures(api.app_data.Configs.CMs)
 			} else {
 				result = api.app_data.Configs.CMs
 			}
+			result = darkgrpc.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*CounterMeasure
 			for _, item := range result {
 				answer := &CounterMeasure{
 					CounterMeasure: &item,
 				}
-				if include_market_goods {
+				if in.IncludeMarketGoods {
 					for _, good := range item.Bases {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
 				}
-				if include_tech_compat {
+				if in.IncludeTechCompat {
 					answer.TechCompat = item.DiscoveryTechCompat
 				}
 				output = append(output, answer)

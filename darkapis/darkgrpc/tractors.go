@@ -35,7 +35,7 @@ func (s *Server) GetTractors(_ context.Context, in *pb.GetTractorsInput) (*pb.Ge
 			Mass:       item.Mass,
 		}
 		if in.IncludeMarketGoods {
-			result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
+			result.Bases = NewBases(item.Bases)
 		}
 		items = append(items, result)
 	}

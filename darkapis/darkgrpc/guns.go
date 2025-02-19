@@ -122,7 +122,7 @@ func NewGun(item configs_export.Gun, in *pb.GetGunsInput) *pb.Gun {
 		}
 	}
 	if in.IncludeMarketGoods {
-		result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
+		result.Bases = NewBases(item.Bases)
 	}
 	if in.IncludeTechCompat {
 		result.DiscoveryTechCompat = NewTechCompat(item.DiscoveryTechCompat)

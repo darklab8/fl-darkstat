@@ -61,9 +61,9 @@ func NewPos(pos *cfg.Vector) *pb.Pos {
 	}
 }
 
-func NewBases(Bases map[cfg.BaseUniNick]*configs_export.MarketGood, filter_market_good_category []string) map[string]*pb.MarketGood {
+func NewBases(Bases map[cfg.BaseUniNick]*configs_export.MarketGood) map[string]*pb.MarketGood {
 	result := make(map[string]*pb.MarketGood)
-	for key, item := range FilterMarketGoodCategory(filter_market_good_category, Bases) {
+	for key, item := range Bases {
 		result[string(key)] = NewMarketGood(item)
 	}
 	return result

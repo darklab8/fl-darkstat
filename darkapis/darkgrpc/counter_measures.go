@@ -39,7 +39,7 @@ func (s *Server) GetCounterMeasures(_ context.Context, in *pb.GetEquipmentInput)
 			Mass:          item.Mass,
 		}
 		if in.IncludeMarketGoods {
-			result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
+			result.Bases = NewBases(item.Bases)
 		}
 		if in.IncludeTechCompat {
 			result.DiscoveryTechCompat = NewTechCompat(item.DiscoveryTechCompat)

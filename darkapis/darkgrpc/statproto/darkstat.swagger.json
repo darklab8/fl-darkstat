@@ -1346,13 +1346,6 @@
             "type": "string"
           },
           "title": "filters by item nicknames"
-        },
-        "filterMarketGoodCategory": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },
@@ -1412,13 +1405,6 @@
             "type": "string"
           },
           "title": "filters by item nicknames"
-        },
-        "filterMarketGoodCategory": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },
@@ -1509,13 +1495,6 @@
             "type": "string"
           },
           "title": "filters by item nicknames"
-        },
-        "filterMarketGoodCategory": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },
@@ -1680,13 +1659,6 @@
             "type": "string"
           },
           "title": "filters by item nicknames"
-        },
-        "filterMarketGoodCategory": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },
