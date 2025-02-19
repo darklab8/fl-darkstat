@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -14,15 +15,15 @@ func (s *Server) GetBasesNpc(_ context.Context, in *pb.GetBasesInput) (*pb.GetBa
 	}
 
 	var bases []*pb.Base
-	var items []*configs_export.Base
+	var input []*configs_export.Base
 	if in.FilterToUseful {
-		items = configs_export.FilterToUserfulBases(s.app_data.Configs.Bases)
+		input = configs_export.FilterToUserfulBases(s.app_data.Configs.Bases)
 	} else {
-		items = s.app_data.Configs.Bases
+		input = s.app_data.Configs.Bases
 	}
-	// items = services.FilterNicknames(in.FilterNicknames, items)
+	input = services.FilterNicknames(in.FilterNicknames, input)
 
-	for _, base := range items {
+	for _, base := range input {
 		bases = append(bases, NewBase(base, in.IncludeMarketGoods, in.FilterMarketGoodCategory))
 	}
 	return &pb.GetBasesReply{Items: bases}, nil
@@ -41,7 +42,23 @@ func (s *Server) GetBasesMiningOperations(_ context.Context, in *pb.GetBasesInpu
 	} else {
 		input = s.app_data.Configs.MiningOperations
 	}
+	input = services.FilterNicknames(in.FilterNicknames, input)
 
+	for _, base := range input {
+		bases = append(bases, NewBase(base, in.IncludeMarketGoods, in.FilterMarketGoodCategory))
+	}
+	return &pb.GetBasesReply{Items: bases}, nil
+}
+
+func (s *Server) GetBasesPoBs(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
+	if s.app_data != nil {
+		s.app_data.Lock()
+		defer s.app_data.Unlock()
+	}
+
+	var input []*configs_export.Base = s.app_data.Configs.PoBsToBases(s.app_data.Configs.PoBs)
+	input = services.FilterNicknames(in.FilterNicknames, input)
+	var bases []*pb.Base
 	for _, base := range input {
 		bases = append(bases, NewBase(base, in.IncludeMarketGoods, in.FilterMarketGoodCategory))
 	}
@@ -70,12 +87,9 @@ func NewBase(base *configs_export.Base, include_market_goods bool, filter_market
 
 	if include_market_goods {
 		base.MarketGoodsPerNick = make(map[configs_export.CommodityKey]*configs_export.MarketGood)
-		for key, good := range base.MarketGoodsPerNick {
-			item.MarketGoodsPerNick[string(key)] = NewMarketGood(good)
+		for key, good := range services.FilterMarketGoodCategory(filter_market_good_category, base.MarketGoodsPerNick) {
+			item.MarketGoodsPerNick[key] = NewMarketGood(good)
 		}
-		// for key, good := range services.FilterMarketGoodCategory(filter_market_good_category, base.MarketGoodsPerNick) {
-		// 	item.MarketGoodsPerNick[string(key)] = NewMarketGood(good)
-		// }
 	}
 
 	return item

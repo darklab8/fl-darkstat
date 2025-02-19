@@ -8,19 +8,6 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
-func (s *Server) GetBasesPoBs(_ context.Context, in *pb.GetBasesInput) (*pb.GetBasesReply, error) {
-	if s.app_data != nil {
-		s.app_data.Lock()
-		defer s.app_data.Unlock()
-	}
-
-	var bases []*pb.Base
-	for _, base := range s.app_data.Configs.PoBsToBases(s.app_data.Configs.PoBs) {
-		bases = append(bases, NewBase(base, in.IncludeMarketGoods, in.FilterMarketGoodCategory))
-	}
-	return &pb.GetBasesReply{Items: bases}, nil
-}
-
 func (s *Server) GetPoBs(_ context.Context, in *pb.Empty) (*pb.GetPoBsReply, error) {
 	if s.app_data != nil {
 		s.app_data.Lock()

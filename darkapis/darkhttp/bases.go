@@ -5,6 +5,7 @@ import (
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
+	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -52,7 +53,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.Bases
 			}
-			// result = services.FilterNicknames(in.FilterNicknames, result)
+			result = services.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Base
 			for _, item := range result {
@@ -60,10 +61,9 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 					Base: item,
 				}
 				if include_market_goods {
-					for _, good := range item.MarketGoodsPerNick {
+					for _, good := range services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
-					// answer.MarketGoods = services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick)
 				}
 				output = append(output, answer)
 			}
@@ -109,7 +109,7 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.MiningOperations
 			}
-			// result = services.FilterNicknames(in.FilterNicknames, result)
+			result = services.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Base
 			for _, item := range result {
@@ -117,10 +117,9 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 					Base: item,
 				}
 				if include_market_goods {
-					for _, good := range item.MarketGoodsPerNick {
+					for _, good := range services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
-					// answer.MarketGoods = services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick)
 				}
 				output = append(output, answer)
 			}
@@ -134,18 +133,43 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 // @Tags         bases
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	configs_export.Base
-// @Router       /api/pobs/bases [get]
+// @Success      200  {array}  	darkapi.Base
+// @Router       /api/pobs/bases [post]
+// @Param request body pb.GetBasesInput true "input variables"
 func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/pobs/bases",
+		Url: "" + ApiRoute + "/pobs/bases",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()
 				defer webapp.AppDataMutex.Unlock()
 			}
+			var in pb.GetBasesInput
+			if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			include_market_goods := in.IncludeMarketGoods
+			if r.URL.Query().Get("include_market_goods") == "true" {
+				include_market_goods = true
+			}
+			var result []*configs_export.Base = api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs)
+			result = services.FilterNicknames(in.FilterNicknames, result)
 
-			apiutils.ReturnJson(&w, api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs))
+			var output []*Base
+			for _, item := range result {
+				answer := &Base{
+					Base: item,
+				}
+				if include_market_goods {
+					for _, good := range services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
+						answer.MarketGoods = append(answer.MarketGoods, good)
+					}
+				}
+				output = append(output, answer)
+			}
+
+			apiutils.ReturnJson(&w, output)
 		},
 	}
 }
