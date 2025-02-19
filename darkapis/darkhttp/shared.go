@@ -27,25 +27,6 @@ type TechCompatResp struct {
 	Error      *string                             `json:"error,omitempty"`
 }
 
-func GetItemsT[T Nicknamable](webapp *web.Web, items []T, filter func(items []T) []T) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if webapp.AppDataMutex != nil {
-			webapp.AppDataMutex.Lock()
-			defer webapp.AppDataMutex.Unlock()
-		}
-
-		param1 := r.URL.Query().Get("filter_to_useful")
-		var result []T
-		if param1 == "true" {
-			result = filter(items)
-		} else {
-			result = items
-		}
-
-		apiutils.ReturnJson(&w, result)
-	}
-}
-
 type Nicknamable interface {
 	GetNickname() string
 }

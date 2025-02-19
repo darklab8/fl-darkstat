@@ -17,10 +17,10 @@ import (
 // @Accept       json
 // @Produce      json
 // @Success      200  {array}  	configs_export.PoB
-// @Router       /api/pobs [get]
+// @Router       /api/pobs [post]
 func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/pobs",
+		Url: "" + ApiRoute + "/pobs",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()

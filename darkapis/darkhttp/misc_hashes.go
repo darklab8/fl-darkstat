@@ -15,10 +15,10 @@ import (
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  	darkgrpc.Hashes
-// @Router       /api/hashes [get]
+// @Router       /api/hashes [post]
 func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/hashes",
+		Url: "" + ApiRoute + "/hashes",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()
