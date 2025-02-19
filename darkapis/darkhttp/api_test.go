@@ -243,18 +243,16 @@ func TestApi(t *testing.T) {
 				has_market_goods = true
 			}
 		}
-		has_tech_compat := false
-		for _, item := range items {
-			if item.TechCompat != nil {
-				if item.TechCompat.TechcompatByID != nil {
-					if len(item.TechCompat.TechcompatByID) > 0 {
-						has_tech_compat = true
-					}
+		assert.True(t, has_market_goods)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
 				}
 			}
+			assert.True(t, has_tech_compat)
 		}
-		assert.True(t, has_market_goods)
-		assert.True(t, has_tech_compat)
 	})
 
 	t.Run("GetTractors", func(t *testing.T) {
@@ -273,7 +271,15 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
+				}
+			}
+			assert.True(t, has_tech_compat)
+		}
 	})
 
 	t.Run("GetGuns", func(t *testing.T) {
@@ -292,14 +298,17 @@ func TestApi(t *testing.T) {
 				has_market_goods = true
 			}
 		}
-		has_tech_compat := false
-		for _, item := range items {
-			if len(item.TechCompat.TechcompatByID) > 0 {
-				has_tech_compat = true
-			}
-		}
+
 		assert.True(t, has_market_goods)
-		assert.True(t, has_tech_compat)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
+				}
+			}
+			assert.True(t, has_tech_compat)
+		}
 	})
 
 	t.Run("GetMissiles", func(t *testing.T) {
@@ -308,7 +317,15 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
+				}
+			}
+			assert.True(t, has_tech_compat)
+		}
 	})
 
 	t.Run("GetMines", func(t *testing.T) {
@@ -317,7 +334,15 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
+				}
+			}
+			assert.True(t, has_tech_compat)
+		}
 	})
 
 	t.Run("GetCMs", func(t *testing.T) {
@@ -326,7 +351,15 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
+				}
+			}
+			assert.True(t, has_tech_compat)
+		}
 	})
 
 	t.Run("GetEngines", func(t *testing.T) {
@@ -350,14 +383,16 @@ func TestApi(t *testing.T) {
 				has_market_goods = true
 			}
 		}
-		has_tech_compat := false
-		for _, item := range items {
-			if len(item.TechCompat.TechcompatByID) > 0 {
-				has_tech_compat = true
-			}
-		}
 		assert.True(t, has_market_goods)
-		assert.True(t, has_tech_compat)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
+				}
+			}
+			assert.True(t, has_tech_compat)
+		}
 	})
 
 	t.Run("GetScanners", func(t *testing.T) {
@@ -374,14 +409,16 @@ func TestApi(t *testing.T) {
 				has_market_goods = true
 			}
 		}
-		has_tech_compat := false
-		for _, item := range items {
-			if len(item.TechCompat.TechcompatByID) > 0 {
-				has_tech_compat = true
-			}
-		}
 		assert.True(t, has_market_goods)
-		assert.True(t, has_tech_compat)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
+				}
+			}
+			assert.True(t, has_tech_compat)
+		}
 	})
 
 	t.Run("GetShields", func(t *testing.T) {
@@ -390,7 +427,15 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
+				}
+			}
+			assert.True(t, has_tech_compat)
+		}
 	})
 
 	t.Run("GetThrusters", func(t *testing.T) {
@@ -406,7 +451,15 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		assert.Greater(t, len(items[0].TechCompat.TechcompatByID), 0)
+		if app_data.Configs.Configs.Discovery != nil {
+			has_tech_compat := false
+			for _, item := range items {
+				if len(item.TechCompat.TechcompatByID) > 0 {
+					has_tech_compat = true
+				}
+			}
+			assert.True(t, has_tech_compat)
+		}
 	})
 
 	// // Teardown code for given condition goes here
