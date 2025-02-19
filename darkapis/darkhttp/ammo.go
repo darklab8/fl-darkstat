@@ -3,7 +3,9 @@ package darkhttp
 import (
 	"net/http"
 
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
+	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -27,16 +29,30 @@ type Ammo struct {
 // @Param        include_tech_compat    query     string  false  "insert 'true' if wish to include tech compat info too for the item. Such data can add a lot of extra weight"
 func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "GET " + ApiRoute + "/ammos",
+		Url: "" + ApiRoute + "/ammos",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.Lock()
 				defer webapp.AppDataMutex.Unlock()
 			}
 
-			filter_to_useful := r.URL.Query().Get("filter_to_useful") == "true"
-			include_market_goods := r.URL.Query().Get("include_market_goods") == "true"
-			include_tech_compat := r.URL.Query().Get("include_tech_compat") == "true"
+			var in pb.GetEquipmentInput
+			if err := ReadJsonInput(w, r, &in); err != nil && r.Method == "POST" {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			filter_to_useful := in.FilterToUseful
+			include_market_goods := in.IncludeMarketGoods
+			include_tech_compat := in.IncludeTechCompat
+			if r.URL.Query().Get("filter_to_useful") == "true" {
+				filter_to_useful = true
+			}
+			if r.URL.Query().Get("include_market_goods") == "true" {
+				include_market_goods = true
+			}
+			if r.URL.Query().Get("include_tech_compat") == "true" {
+				include_tech_compat = true
+			}
 
 			var result []configs_export.Ammo
 			if filter_to_useful {
@@ -44,6 +60,7 @@ func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.Ammos
 			}
+			result = services.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Ammo
 			for _, item := range result {
@@ -51,7 +68,7 @@ func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 					Ammo: &item,
 				}
 				if include_market_goods {
-					for _, good := range item.Bases {
+					for _, good := range services.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.Bases) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
 				}

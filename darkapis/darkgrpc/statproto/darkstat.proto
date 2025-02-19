@@ -99,12 +99,22 @@ message GetEquipmentInput {
   bool include_market_goods = 1;
   bool include_tech_compat = 2;
   bool filter_to_useful = 3;
+
+  // filters by item nicknames
+  repeated string filter_nicknames = 4;
+  // filters market goods to specific category. valid categories are written in market goods in same named attribute.
+  repeated string filter_market_good_category = 5;
 }
 message GetGunsInput {
   bool include_market_goods = 1;
   bool include_tech_compat = 2;
   bool filter_to_useful = 3;
   bool include_damage_bonuses = 4;
+
+  // filters by item nicknames
+  repeated string filter_nicknames = 5;
+  // filters market goods to specific category. valid categories are written in market goods in same named attribute.
+  repeated string filter_market_good_category = 6;
 }
 
 message GetBasesInput {
@@ -114,12 +124,17 @@ message GetBasesInput {
   bool filter_to_useful = 2;
   // filters by base nicknames
   repeated string filter_nicknames = 3;
-  // filters market goods in bases to specific category. valid categories are written in market goods in same named attribute.
+  // filters market goods to specific category. valid categories are written in market goods in same named attribute.
   repeated string filter_market_good_category = 4;
 }
 message GetTractorsInput {
   bool include_market_goods = 1;
   bool filter_to_useful = 2;
+
+  // filters by item nicknames
+  repeated string filter_nicknames = 3;
+  // filters market goods to specific category. valid categories are written in market goods in same named attribute.
+  repeated string filter_market_good_category = 4;
 }
 message GetBasesReply {
   repeated Base Items = 1;
@@ -197,6 +212,11 @@ message GetCommoditiesInput {
   // Example: `false`
   bool include_market_goods = 1;
   bool filter_to_useful = 2;
+
+  // filters by item nicknames
+  repeated string filter_nicknames = 3;
+  // filters market goods to specific category. valid categories are written in market goods in same named attribute.
+  repeated string filter_market_good_category = 4;
 }
 message GetCommoditiesReply {
   repeated Commodity Items = 1;

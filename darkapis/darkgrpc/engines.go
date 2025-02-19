@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -19,6 +20,7 @@ func (s *Server) GetEngines(_ context.Context, in *pb.GetEquipmentInput) (*pb.Ge
 	} else {
 		input = s.app_data.Configs.Engines
 	}
+	input = services.FilterNicknames(in.FilterNicknames, input)
 
 	var items []*pb.Engine
 	for _, item := range input {
@@ -40,7 +42,7 @@ func (s *Server) GetEngines(_ context.Context, in *pb.GetEquipmentInput) (*pb.Ge
 			Mass:             item.Mass,
 		}
 		if in.IncludeMarketGoods {
-			result.Bases = NewBases(item.Bases)
+			result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
 		}
 		if in.IncludeTechCompat {
 			result.DiscoveryTechCompat = NewTechCompat(item.DiscoveryTechCompat)

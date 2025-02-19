@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -19,6 +20,7 @@ func (s *Server) GetCounterMeasures(_ context.Context, in *pb.GetEquipmentInput)
 	} else {
 		input = s.app_data.Configs.CMs
 	}
+	input = services.FilterNicknames(in.FilterNicknames, input)
 
 	var items []*pb.CounterMeasure
 	for _, item := range input {
@@ -38,7 +40,7 @@ func (s *Server) GetCounterMeasures(_ context.Context, in *pb.GetEquipmentInput)
 			Mass:          item.Mass,
 		}
 		if in.IncludeMarketGoods {
-			result.Bases = NewBases(item.Bases)
+			result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
 		}
 		if in.IncludeTechCompat {
 			result.DiscoveryTechCompat = NewTechCompat(item.DiscoveryTechCompat)

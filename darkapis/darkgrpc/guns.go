@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -18,6 +19,8 @@ func (s *Server) GetGuns(_ context.Context, in *pb.GetGunsInput) (*pb.GetGunsRep
 	} else {
 		input = s.app_data.Configs.Guns
 	}
+	input = services.FilterNicknames(in.FilterNicknames, input)
+
 	var items []*pb.Gun
 	for _, item := range input {
 
@@ -37,6 +40,8 @@ func (s *Server) GetMissiles(_ context.Context, in *pb.GetGunsInput) (*pb.GetGun
 	} else {
 		input = s.app_data.Configs.Missiles
 	}
+	input = services.FilterNicknames(in.FilterNicknames, input)
+
 	var items []*pb.Gun
 	for _, item := range input {
 
@@ -118,7 +123,7 @@ func NewGun(item configs_export.Gun, in *pb.GetGunsInput) *pb.Gun {
 		}
 	}
 	if in.IncludeMarketGoods {
-		result.Bases = NewBases(item.Bases)
+		result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
 	}
 	if in.IncludeTechCompat {
 		result.DiscoveryTechCompat = NewTechCompat(item.DiscoveryTechCompat)

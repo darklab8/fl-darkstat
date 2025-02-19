@@ -1313,7 +1313,7 @@
           "items": {
             "type": "string"
           },
-          "description": "filters market goods in bases to specific category. valid categories are written in market goods in same named attribute."
+          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },
@@ -1339,6 +1339,20 @@
         },
         "filterToUseful": {
           "type": "boolean"
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by item nicknames"
+        },
+        "filterMarketGoodCategory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },
@@ -1389,6 +1403,20 @@
         },
         "filterToUseful": {
           "type": "boolean"
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by item nicknames"
+        },
+        "filterMarketGoodCategory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },
@@ -1470,6 +1498,20 @@
         },
         "includeDamageBonuses": {
           "type": "boolean"
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by item nicknames"
+        },
+        "filterMarketGoodCategory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },
@@ -1625,6 +1667,20 @@
         },
         "filterToUseful": {
           "type": "boolean"
+        },
+        "filterNicknames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "filters by item nicknames"
+        },
+        "filterMarketGoodCategory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "filters market goods to specific category. valid categories are written in market goods in same named attribute."
         }
       }
     },

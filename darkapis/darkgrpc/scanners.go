@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -19,6 +20,7 @@ func (s *Server) GetScanners(_ context.Context, in *pb.GetEquipmentInput) (*pb.G
 	} else {
 		input = s.app_data.Configs.Scanners
 	}
+	input = services.FilterNicknames(in.FilterNicknames, input)
 
 	var items []*pb.Scanner
 	for _, item := range input {
@@ -34,7 +36,7 @@ func (s *Server) GetScanners(_ context.Context, in *pb.GetEquipmentInput) (*pb.G
 			Mass:           item.Mass,
 		}
 		if in.IncludeMarketGoods {
-			result.Bases = NewBases(item.Bases)
+			result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
 		}
 		if in.IncludeTechCompat {
 			result.DiscoveryTechCompat = NewTechCompat(item.DiscoveryTechCompat)

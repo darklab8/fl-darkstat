@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkapis/services"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
@@ -19,6 +20,7 @@ func (s *Server) GetTractors(_ context.Context, in *pb.GetTractorsInput) (*pb.Ge
 	} else {
 		input = s.app_data.Configs.Tractors
 	}
+	input = services.FilterNicknames(in.FilterNicknames, input)
 
 	var items []*pb.Tractor
 	for _, item := range input {
@@ -34,7 +36,7 @@ func (s *Server) GetTractors(_ context.Context, in *pb.GetTractorsInput) (*pb.Ge
 			Mass:       item.Mass,
 		}
 		if in.IncludeMarketGoods {
-			result.Bases = NewBases(item.Bases)
+			result.Bases = NewBases(item.Bases, in.FilterMarketGoodCategory)
 		}
 		items = append(items, result)
 	}
