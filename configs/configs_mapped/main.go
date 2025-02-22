@@ -64,6 +64,9 @@ type DiscoveryConfig struct {
 	PlayerOwnedBases   *pob_goods.Config
 }
 
+// MappedConfigsRelay is subset of MappedConfigs made for the purpose of RAM optimizations
+// We keep those configs in memory during running app, and deallocate everything else.
+// Helps to save at least 300mb of RAM usage in Disco :)
 type MappedConfigsRelay struct {
 	InitialWorld *initialworld.Config
 	Infocards    *infocard.Config
