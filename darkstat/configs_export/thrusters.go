@@ -32,7 +32,7 @@ func (b Thruster) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.Disco
 func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 	var thrusters []Thruster
 
-	for _, thruster_info := range e.mapped.Equip.Thrusters {
+	for _, thruster_info := range e.Mapped.Equip().Thrusters {
 		thruster := Thruster{
 			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
@@ -46,7 +46,7 @@ func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 		thruster.NameID = thruster_info.IdsName.Get()
 		thruster.InfoID = thruster_info.IdsInfo.Get()
 
-		if good_info, ok := e.mapped.Goods.GoodsMap[thruster.Nickname]; ok {
+		if good_info, ok := e.Mapped.Goods.GoodsMap[thruster.Nickname]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
 				thruster.Price = price
 				thruster.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
@@ -89,7 +89,7 @@ func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 		}
 
 		e.exportInfocards(InfocardKey(thruster.Nickname), thruster.InfoID)
-		thruster.DiscoveryTechCompat = CalculateTechCompat(e.mapped.Discovery, ids, thruster.Nickname)
+		thruster.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, thruster.Nickname)
 		thrusters = append(thrusters, thruster)
 	}
 	return thrusters

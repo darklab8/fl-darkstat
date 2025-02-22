@@ -73,7 +73,7 @@ func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
 	}
 
 	for _, info_id := range infocard_ids {
-		if value, ok := e.mapped.Infocards.Infocards[info_id]; ok {
+		if value, ok := e.Mapped.Infocards.Infocards[info_id]; ok {
 			for _, line := range value.Lines {
 				e.Infocards[InfocardKey(nickname)] = append(e.Infocards[InfocardKey(nickname)], NewInfocardSimpleLine(line))
 			}
@@ -89,7 +89,7 @@ func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
 type Infocards map[InfocardKey]Infocard
 
 type ExporterRelay struct {
-	Mapped    *configs_mapped.MappedConfigsRelay
+	Mapped    *configs_mapped.MappedConfigs
 	PoBs      []*PoB
 	PoBGoods  []*PoBGood
 	Infocards Infocards
@@ -97,7 +97,7 @@ type ExporterRelay struct {
 
 type Exporter struct {
 	*ExporterRelay
-	mapped      *configs_mapped.MappedConfigs
+	Mapped      *configs_mapped.MappedConfigs
 	IsDiscovery bool
 	Bases       []*Base
 	TradeBases  []*Base
@@ -135,31 +135,12 @@ type Exporter struct {
 type OptExport func(e *Exporter)
 
 func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Exporter {
-	mapped_relay := &configs_mapped.MappedConfigsRelay{
-		InitialWorld: mapped.InitialWorld,
-		Infocards:    mapped.Infocards,
-		Universe:     mapped.Universe,
-		Equip:        mapped.Equip,
-		Goods:        mapped.Goods,
-		Shiparch:     mapped.Shiparch,
-		Systems: &configs_mapped.SystemsRelay{
-			BasesByBases:    mapped.Systems.BasesByBases,
-			BasesByDockWith: mapped.Systems.BasesByBases,
-			JumpholesByNick: mapped.Systems.JumpholesByNick,
-		},
-	}
-	if mapped.Discovery != nil {
-		mapped_relay.Discovery = &configs_mapped.DiscoveryRelay{
-			PlayerOwnedBases: mapped.Discovery.PlayerOwnedBases,
-		}
-	}
-
 	e := &Exporter{
-		mapped:      mapped,
+		Mapped:      mapped,
 		ship_speeds: trades.VanillaSpeeds,
 		ExporterRelay: &ExporterRelay{
 			Infocards: map[InfocardKey]Infocard{},
-			Mapped:    mapped_relay,
+			Mapped:    mapped,
 		},
 	}
 
@@ -185,7 +166,7 @@ func NewGraphResults(
 ) *GraphResults {
 	logus.Log.Info("mapping configs to graph")
 	graph := trades.MapConfigsToFGraph(
-		e.mapped,
+		e.Mapped,
 		avgCruiserSpeed,
 		can_visit_freighter_only_jhs,
 		mining_bases_by_system,
@@ -209,14 +190,10 @@ type ExportOptions struct {
 	trades.MappingOptions
 }
 
-func (e *Exporter) Clean() {
-	e.mapped = nil
-}
-
 func (e *Exporter) Export(options ExportOptions) *Exporter {
 	var wg sync.WaitGroup
 
-	if e.mapped.Discovery != nil {
+	if e.Mapped.Discovery != nil {
 		e.IsDiscovery = true
 	}
 
@@ -234,7 +211,7 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	EnhanceBasesWithServerOverrides(e.Bases, e.Commodities)
 
 	e.MiningOperations = e.GetOres(e.Commodities)
-	if e.mapped.Discovery != nil {
+	if e.Mapped.Discovery != nil {
 		e.PoBs = e.GetPoBs()
 		e.PoBGoods = e.GetPoBGoods(e.PoBs)
 	}
@@ -255,11 +232,11 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 			Nickname: cfg.BaseUniNick(base.Nickname),
 		})
 	}
-	if e.mapped.Discovery != nil {
+	if e.Mapped.Discovery != nil {
 		e.ship_speeds = trades.DiscoverySpeeds
 	}
 
-	if e.mapped.FLSR != nil {
+	if e.Mapped.FLSR != nil {
 		e.ship_speeds = trades.FLSRSpeeds
 	}
 
@@ -463,7 +440,7 @@ func CalculateTechCompat(Discovery *configs_mapped.DiscoveryConfig, ids []*Tract
 }
 
 func (e *Exporter) GetInfocardName(ids_name int, nickname string) string {
-	return e.mapped.GetInfocardName(ids_name, nickname)
+	return e.Mapped.GetInfocardName(ids_name, nickname)
 }
 func (e *ExporterRelay) GetInfocardName(ids_name int, nickname string) string {
 	return e.Mapped.GetInfocardName(ids_name, nickname)

@@ -18,12 +18,12 @@ func Example_importIniSection() {
 	// can be having imperfections related to how to handle comments. To improve some day
 
 	freelancer_folder := configs_settings.Env.FreelancerFolder
-	configs := configs_mapped.NewMappedConfigs()
+	mapped := configs_mapped.NewMappedConfigs()
 	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
 
 	// Reading to ini universal custom format and mapping to ORM objects
 	// which have both reading and writing back capabilities
-	configs.Read(freelancer_folder)
+	mapped.Read(freelancer_folder)
 
 	// TODO Adding Section manually
 	// var new_section *inireader.Section = &inireader.Section{}
@@ -51,8 +51,8 @@ hp_gun_type = some_hp_type
 	fmt.Println(mapped_equip.Guns[0].HPGunType.Get())
 
 	// Adding to main Freelancer instance..
-	configs.Equip.Files[0].Sections = append(configs.Equip.Files[0].Sections, mapped_equip.Guns[0].Model.RenderModel())
+	mapped.Equip().Files[0].Sections = append(mapped.Equip().Files[0].Sections, mapped_equip.Guns[0].Model.RenderModel())
 
 	// Write without Dry Run for writing to files modified values back!
-	configs.Write(configs_mapped.IsDruRun(true))
+	mapped.Write(configs_mapped.IsDruRun(true))
 }

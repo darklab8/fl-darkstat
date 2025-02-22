@@ -29,7 +29,7 @@ func GetConfigsExport() *configs_export.Exporter {
 	configs := configs_export.NewExporter(mapped)
 	configs.Export(configs_export.ExportOptions{})
 	timer_export.Close()
-	configs.Clean()
+	configs.Mapped.Clean()
 	return configs
 }
 

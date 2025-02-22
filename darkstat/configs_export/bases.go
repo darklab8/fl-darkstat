@@ -12,7 +12,7 @@ import (
 )
 
 func (e *Exporter) TraderExists(base_nickname string) bool {
-	universe_base, ok := e.mapped.Universe.BasesMap[universe_mapped.BaseNickname(base_nickname)]
+	universe_base, ok := e.Mapped.Universe.BasesMap[universe_mapped.BaseNickname(base_nickname)]
 	if !ok {
 		return true
 	}
@@ -37,16 +37,16 @@ func VectorToSectorCoord(system *universe_mapped.System, pos cfg.Vector) string 
 }
 
 func (e *Exporter) GetBases() []*Base {
-	results := make([]*Base, 0, len(e.mapped.Universe.Bases))
+	results := make([]*Base, 0, len(e.Mapped.Universe.Bases))
 
 	commodities_per_base := e.getMarketGoods()
 
-	for _, base := range e.mapped.Universe.Bases {
+	for _, base := range e.Mapped.Universe.Bases {
 		var name string = e.GetInfocardName(base.StridName.Get(), base.Nickname.Get())
 
 		var system_name infocard.Infoname
 		var Region string
-		system, found_system := e.mapped.Universe.SystemMap[universe_mapped.SystemNickname(base.System.Get())]
+		system, found_system := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(base.System.Get())]
 
 		if found_system {
 
@@ -61,7 +61,7 @@ func (e *Exporter) GetBases() []*Base {
 
 		var archetypes []string
 
-		if system, ok := e.mapped.Systems.SystemsMap[base.System.Get()]; ok {
+		if system, ok := e.Mapped.Systems.SystemsMap[base.System.Get()]; ok {
 			if system_base, ok := system.BasesByBases[base.Nickname.Get()]; ok {
 				infocard_id = system_base.IDsInfo.Get()
 				reputation_nickname = system_base.RepNickname.Get()
@@ -80,12 +80,12 @@ func (e *Exporter) GetBases() []*Base {
 
 		infocard_ids = append(infocard_ids, infocard_id)
 
-		if infocard_middle_id, exists := e.mapped.InfocardmapINI.InfocardMapTable.Map[infocard_id]; exists {
+		if infocard_middle_id, exists := e.Mapped.InfocardmapINI.InfocardMapTable.Map[infocard_id]; exists {
 			infocard_ids = append(infocard_ids, infocard_middle_id)
 		}
 
 		var factionName string
-		if group, exists := e.mapped.InitialWorld.GroupsMap[reputation_nickname]; exists {
+		if group, exists := e.Mapped.InitialWorld.GroupsMap[reputation_nickname]; exists {
 			infocard_ids = append(infocard_ids, group.IdsInfo.Get())
 			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
 		}

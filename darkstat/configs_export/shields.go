@@ -51,7 +51,7 @@ func (b Shield) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.Discove
 func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 	var shields []Shield
 
-	for _, shield_gen := range e.mapped.Equip.ShieldGens {
+	for _, shield_gen := range e.Mapped.Equip().ShieldGens {
 		shield := Shield{
 			Nickname: shield_gen.Nickname.Get(),
 
@@ -73,7 +73,7 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 		shield.Toughness, _ = shield_gen.Toughness.GetValue()
 		shield.HitPts, _ = shield_gen.HitPts.GetValue()
 
-		if good_info, ok := e.mapped.Goods.GoodsMap[shield.Nickname]; ok {
+		if good_info, ok := e.Mapped.Goods.GoodsMap[shield.Nickname]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
 				shield.Price = price
 				shield.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
@@ -106,7 +106,7 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 		}
 
 		e.exportInfocards(InfocardKey(shield.Nickname), shield.IdsInfo)
-		shield.DiscoveryTechCompat = CalculateTechCompat(e.mapped.Discovery, ids, shield.Nickname)
+		shield.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, shield.Nickname)
 
 		shields = append(shields, shield)
 	}

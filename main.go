@@ -117,7 +117,7 @@ func main() {
 	web_darkstat := func() func() {
 		app_data := appdata.NewAppData()
 		relay_data := appdata.NewRelayData(app_data)
-		app_data.Configs.Clean()
+		app_data.Configs.Mapped.Clean()
 
 		stat_router := router.NewRouter(app_data)
 		stat_builder := stat_router.Link()
@@ -134,7 +134,7 @@ func main() {
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
 		), app_data)
-		web_closer := web_server.Serve(web.WebServeOpts{SockAddress: web.DarkstatAPISock})
+		web_closer := web_server.Serve(web.WebServeOpts{SockAddress: web.DarkstatHttpSock})
 
 		if app_data.Configs.IsDiscovery {
 			go func() {

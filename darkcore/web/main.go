@@ -147,4 +147,4 @@ func (s ServerClose) Close() {
 	os.Remove(s.sock_adrr)
 }
 
-const DarkstatAPISock = "/tmp/darkstat/api.sock"
+const DarkstatHttpSock = "/tmp/darkstat/http.sock"

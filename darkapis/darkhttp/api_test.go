@@ -168,6 +168,9 @@ func TestApi(t *testing.T) {
 			assert.Greater(t, len(items), 0)
 			assert.Equal(t, 1, len(items))
 
+			if items[0].Error != nil {
+				fmt.Println("items[0].Error=", *items[0].Error)
+			}
 			assert.Nil(t, items[0].Error)
 		})
 

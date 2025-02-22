@@ -54,7 +54,7 @@ type Tractor struct {
 }
 
 func (e *Exporter) GetFactionName(nickname cfg.FactionNick) string {
-	if group, ok := e.mapped.InitialWorld.GroupsMap[string(nickname)]; ok {
+	if group, ok := e.Mapped.InitialWorld.GroupsMap[string(nickname)]; ok {
 		return e.GetInfocardName(group.IdsName.Get(), string(nickname))
 	}
 	return ""
@@ -63,7 +63,7 @@ func (e *Exporter) GetFactionName(nickname cfg.FactionNick) string {
 func (e *Exporter) GetTractors() []*Tractor {
 	var tractors []*Tractor
 
-	for tractor_id, tractor_info := range e.mapped.Equip.Tractors {
+	for tractor_id, tractor_info := range e.Mapped.Equip().Tractors {
 		tractor := &Tractor{
 			Nickname:      cfg.TractorID(tractor_info.Nickname.Get()),
 			ShortNickname: fmt.Sprintf("i%d", tractor_id),
@@ -83,7 +83,7 @@ func (e *Exporter) GetTractors() []*Tractor {
 		tractor.NameID, _ = tractor_info.IdsName.GetValue()
 		tractor.InfoID, _ = tractor_info.IdsInfo.GetValue()
 
-		if good_info, ok := e.mapped.Goods.GoodsMap[string(tractor.Nickname)]; ok {
+		if good_info, ok := e.Mapped.Goods.GoodsMap[string(tractor.Nickname)]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
 				tractor.Price = price
 				tractor.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
@@ -97,9 +97,9 @@ func (e *Exporter) GetTractors() []*Tractor {
 
 		e.exportInfocards(InfocardKey(tractor.Nickname), tractor.InfoID)
 
-		if e.mapped.Discovery != nil {
+		if e.Mapped.Discovery != nil {
 
-			for faction_nick, faction := range e.mapped.Discovery.PlayercntlRephacks.DefaultReps {
+			for faction_nick, faction := range e.Mapped.Discovery.PlayercntlRephacks.DefaultReps {
 				tractor.Rephacks[faction_nick] = Rephack{
 					Reputation:  faction.Rep.Get(),
 					RepType:     faction.GetRepType(),
@@ -108,10 +108,10 @@ func (e *Exporter) GetTractors() []*Tractor {
 				}
 			}
 
-			if faction, ok := e.mapped.Discovery.PlayercntlRephacks.RephacksByID[tractor.Nickname]; ok {
+			if faction, ok := e.Mapped.Discovery.PlayercntlRephacks.RephacksByID[tractor.Nickname]; ok {
 
 				if inherited_id, ok := faction.Inherits.GetValue(); ok {
-					if faction, ok := e.mapped.Discovery.PlayercntlRephacks.RephacksByID[cfg.TractorID(inherited_id)]; ok {
+					if faction, ok := e.Mapped.Discovery.PlayercntlRephacks.RephacksByID[cfg.TractorID(inherited_id)]; ok {
 						for faction_nick, rep := range faction.Reps {
 							tractor.Rephacks[faction_nick] = Rephack{
 								Reputation:  rep.Rep.Get(),

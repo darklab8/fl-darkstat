@@ -141,7 +141,7 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 				market_good.BaseSells = true
 			}
 			if market_good.Category == "commodity" {
-				equipment := e.mapped.Equip.CommoditiesMap[market_good.Nickname]
+				equipment := e.Mapped.Equip().CommoditiesMap[market_good.Nickname]
 				for _, volume := range equipment.Volumes {
 					volumed_good := market_good
 					volumed_good.Volume = volume.Volume.Get()
@@ -231,7 +231,7 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		factions_by_hash[group_hash] = group_info
 	}
 	goods_by_hash := make(map[flhash.HashCode]*equip_mapped.Item)
-	for _, item := range e.Mapped.Equip.Items {
+	for _, item := range e.Mapped.Equip().Items {
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
 		goods_by_hash[hash] = item
@@ -386,31 +386,31 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 	// TODO refactor copy repeated code may be
 	systems_by_hash := make(map[flhash.HashCode]*universe_mapped.System)
 	factions_by_hash := make(map[flhash.HashCode]*initialworld.Group)
-	for _, system_info := range e.mapped.Universe.Systems {
+	for _, system_info := range e.Mapped.Universe.Systems {
 		nickname := system_info.Nickname.Get()
 		system_hash := flhash.HashNickname(nickname)
 		systems_by_hash[system_hash] = system_info
 	}
-	for _, group_info := range e.mapped.InitialWorld.Groups {
+	for _, group_info := range e.Mapped.InitialWorld.Groups {
 		nickname := group_info.Nickname.Get()
 		group_hash := flhash.HashFaction(nickname)
 		factions_by_hash[group_hash] = group_info
 	}
 	goods_by_hash := make(map[flhash.HashCode]*equip_mapped.Item)
-	for _, item := range e.mapped.Equip.Items {
+	for _, item := range e.Mapped.Equip().Items {
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
 		goods_by_hash[hash] = item
 		e.exportInfocards(InfocardKey(nickname), item.IdsInfo.Get())
 	}
 	ships_by_hash := make(map[flhash.HashCode]*equipment_mapped.Ship)
-	for _, item := range e.mapped.Goods.Ships {
+	for _, item := range e.Mapped.Goods.Ships {
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
 		ships_by_hash[hash] = item
 	}
 
-	for _, pob_info := range e.mapped.Discovery.PlayerOwnedBases.Bases {
+	for _, pob_info := range e.Mapped.Discovery.PlayerOwnedBases.Bases {
 		for _, shop_item := range pob_info.ShopItems {
 			var good *ShopItem = &ShopItem{ShopItem: shop_item}
 			if item, ok := goods_by_hash[flhash.HashCode(shop_item.Id)]; ok {
@@ -419,9 +419,9 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 				good.Category = item.Category
 			} else {
 				if ship, ok := ships_by_hash[flhash.HashCode(shop_item.Id)]; ok {
-					ship_hull := e.mapped.Goods.ShipHullsMap[ship.Hull.Get()]
+					ship_hull := e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()]
 					ship_nickname := ship_hull.Ship.Get()
-					shiparch := e.mapped.Shiparch.ShipsMap[ship_nickname]
+					shiparch := e.Mapped.Shiparch.ShipsMap[ship_nickname]
 					good.Nickname = ship_nickname
 					good.Category = "ship"
 					good.Name = e.GetInfocardName(shiparch.IdsName.Get(), ship_nickname)
