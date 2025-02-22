@@ -2,7 +2,6 @@
   "swagger": "2.0",
   "info": {
     "title": "darkstat.proto",
-    "description": "Newest Darkstat API. it is accessable with gRPC and with regular JSON at this grpc API gateway.\nhttps://github.com/darklab8/fl-darkstat#alternatively-we-offer-client-generation-through-grpc\nCheck documentation how u can generate Client Library for your language of choice, C#, Python, Typescript or even C++.\nFull list of supported languages https://grpc.io/docs/languages/\nThen u will be able to benefit pulling this data with the most comfort.\nOr you can just pull as jsons from this json API as alternative.\n\nIn case of local usage, this API is available both at TCP localhost, and over Unix Domain Socket when darkstat is run at Linux ^_^.\nWith Unix Sockets u get extra performance boosts to pull all the data.\n\nthe Grpc api is the one for any new feature additions\nGrpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.\n\n`NOTE`: Routes have defined input \"include_market_goods\" and \"include_tech_compat\" at least.\nDepending on your having them true or not, significantly different amount of data is pushed\n\n`WARNING`: if u will be using this Swagger interface to make test call for example.\nmake sure to turn off booleans like include_market_goods, include_tech_compat and etc. When they are enabled, they overload swagger interface with too much data ;)\nOr just call test examples over curl/postman instead (with preferably disabled prettifying)\n\n`NOTE`: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLY FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers",
     "version": "version not set"
   },
   "tags": [
@@ -84,7 +83,7 @@
     },
     "/statproto.Darkstat/GetBasesNpc": {
       "post": {
-        "summary": "Get all Freelancer NPC Bases",
+        "summary": "Get all Freelancer NPC bases",
         "operationId": "Darkstat_GetBasesNpc",
         "responses": {
           "200": {
@@ -117,7 +116,7 @@
     },
     "/statproto.Darkstat/GetBasesPoBs": {
       "post": {
-        "summary": "Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions\nUseful for trading calculations",
+        "summary": "Get all Player Owned bases in the same format as Npc bases. Returns only PoBs which have known positions\nUseful for trading calculations",
         "operationId": "Darkstat_GetBasesPoBs",
         "responses": {
           "200": {
@@ -539,7 +538,7 @@
     },
     "/statproto.Darkstat/GetPoBs": {
       "post": {
-        "summary": "Get all Player Owned Bases. Completely all that are public exposed",
+        "summary": "Get all Player Owned bases. Completely all that are public exposed",
         "operationId": "Darkstat_GetPoBs",
         "responses": {
           "200": {
@@ -765,60 +764,60 @@
     "statprotoAmmo": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "HitPts": {
+        "hitPts": {
           "type": "string",
           "format": "int64"
         },
-        "Volume": {
+        "volume": {
           "type": "number",
           "format": "double"
         },
-        "MunitionLifetime": {
+        "munitionLifetime": {
           "type": "number",
           "format": "double"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "NameID": {
+        "nameId": {
           "type": "string",
           "format": "int64"
         },
-        "InfoID": {
+        "infoId": {
           "type": "string",
           "format": "int64"
         },
-        "SeekerType": {
+        "seekerType": {
           "type": "string"
         },
-        "SeekerRange": {
+        "seekerRange": {
           "type": "string",
           "format": "int64"
         },
-        "SeekerFovDeg": {
+        "seekerFovDeg": {
           "type": "string",
           "format": "int64"
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "DiscoveryTechCompat": {
+        "discoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         },
-        "AmmoLimit": {
+        "ammoLimit": {
           "$ref": "#/definitions/statprotoAmmoLimit"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         }
@@ -827,11 +826,11 @@
     "statprotoAmmoLimit": {
       "type": "object",
       "properties": {
-        "AmountInCatridge": {
+        "amountInCatridge": {
           "type": "string",
           "format": "int64"
         },
-        "MaxCatridges": {
+        "maxCatridges": {
           "type": "string",
           "format": "int64"
         }
@@ -840,60 +839,60 @@
     "statprotoBase": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Archetypes": {
+        "archetypes": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "FactionName": {
+        "factionName": {
           "type": "string"
         },
-        "System": {
+        "system": {
           "type": "string"
         },
-        "SystemNickname": {
+        "systemNickname": {
           "type": "string"
         },
-        "Region": {
+        "region": {
           "type": "string"
         },
-        "StridName": {
+        "stridName": {
           "type": "string",
           "format": "int64"
         },
-        "InfocardID": {
+        "infocardId": {
           "type": "string",
           "format": "int64"
         },
-        "File": {
+        "file": {
           "type": "string"
         },
-        "BGCSBaseRunBy": {
+        "bgcsBaseRunBy": {
           "type": "string"
         },
-        "Pos": {
+        "pos": {
           "$ref": "#/definitions/statprotoPos"
         },
-        "SectorCoord": {
+        "sectorCoord": {
           "type": "string"
         },
-        "IsTransportUnreachable": {
+        "isTransportUnreachable": {
           "type": "boolean"
         },
-        "Reachable": {
+        "reachable": {
           "type": "boolean"
         },
-        "IsPob": {
+        "isPob": {
           "type": "boolean"
         },
-        "MarketGoodsPerNick": {
+        "marketGoodsPerNick": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
@@ -905,25 +904,25 @@
     "statprotoBaseInfo": {
       "type": "object",
       "properties": {
-        "BaseNickname": {
+        "baseNickname": {
           "type": "string"
         },
-        "BaseName": {
+        "baseName": {
           "type": "string"
         },
-        "SystemName": {
+        "systemName": {
           "type": "string"
         },
-        "Region": {
+        "region": {
           "type": "string"
         },
-        "FactionName": {
+        "factionName": {
           "type": "string"
         },
-        "BasePos": {
+        "basePos": {
           "$ref": "#/definitions/statprotoPos"
         },
-        "SectorCoord": {
+        "sectorCoord": {
           "type": "string"
         }
       }
@@ -931,14 +930,14 @@
     "statprotoBribe": {
       "type": "object",
       "properties": {
-        "BaseNickname": {
+        "baseNickname": {
           "type": "string"
         },
-        "Chance": {
+        "chance": {
           "type": "number",
           "format": "double"
         },
-        "BaseInfo": {
+        "baseInfo": {
           "$ref": "#/definitions/statprotoBaseInfo"
         }
       }
@@ -946,31 +945,31 @@
     "statprotoBurstFire": {
       "type": "object",
       "properties": {
-        "SustainedRefire": {
+        "sustainedRefire": {
           "type": "number",
           "format": "double"
         },
-        "Ammo": {
+        "ammo": {
           "type": "string",
           "format": "int64"
         },
-        "ReloadTime": {
+        "reloadTime": {
           "type": "number",
           "format": "double"
         },
-        "SustainedHullDamagePerSec": {
+        "sustainedHullDamagePerSec": {
           "type": "number",
           "format": "double"
         },
-        "SustainedAvgShieldDamagePerSec": {
+        "sustainedAvgShieldDamagePerSec": {
           "type": "number",
           "format": "double"
         },
-        "SustainedEnergyDamagePerSec": {
+        "sustainedEnergyDamagePerSec": {
           "type": "number",
           "format": "double"
         },
-        "SustainedPowerUsagePerSec": {
+        "sustainedPowerUsagePerSec": {
           "type": "number",
           "format": "double"
         }
@@ -979,54 +978,54 @@
     "statprotoCommodity": {
       "type": "object",
       "properties": {
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "PriceBase": {
+        "priceBase": {
           "type": "string",
           "format": "int64"
         },
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Combinable": {
+        "combinable": {
           "type": "boolean"
         },
-        "Volume": {
+        "volume": {
           "type": "number",
           "format": "double"
         },
-        "ShipClass": {
+        "shipClass": {
           "type": "string",
           "format": "int64"
         },
-        "NameID": {
+        "nameId": {
           "type": "string",
           "format": "int64"
         },
-        "InfocardID": {
+        "infocardId": {
           "type": "string",
           "format": "int64"
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "PriceBestBaseBuysFor": {
+        "priceBestBaseBuysFor": {
           "type": "string",
           "format": "int64"
         },
-        "PriceBestBaseSellsFor": {
+        "priceBestBaseSellsFor": {
           "type": "string",
           "format": "int64"
         },
-        "ProffitMargin": {
+        "proffitMargin": {
           "type": "string",
           "format": "int64"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         }
@@ -1035,60 +1034,60 @@
     "statprotoCounterMeasure": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "HitPts": {
+        "hitPts": {
           "type": "string",
           "format": "int64"
         },
-        "AIRange": {
+        "aiRange": {
           "type": "string",
           "format": "int64"
         },
-        "Lifetime": {
+        "lifetime": {
           "type": "string",
           "format": "int64"
         },
-        "Range": {
+        "range": {
           "type": "string",
           "format": "int64"
         },
-        "DiversionPctg": {
+        "diversionPctg": {
           "type": "string",
           "format": "int64"
         },
-        "Lootable": {
+        "lootable": {
           "type": "boolean"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "NameID": {
+        "nameId": {
           "type": "string",
           "format": "int64"
         },
-        "InfoID": {
+        "infoId": {
           "type": "string",
           "format": "int64"
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "DiscoveryTechCompat": {
+        "discoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         },
-        "AmmoLimit": {
+        "ammoLimit": {
           "$ref": "#/definitions/statprotoAmmoLimit"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         }
@@ -1097,10 +1096,10 @@
     "statprotoDamageBonus": {
       "type": "object",
       "properties": {
-        "Type": {
+        "type": {
           "type": "string"
         },
-        "Modifier": {
+        "modifier": {
           "type": "number",
           "format": "double"
         }
@@ -1109,7 +1108,7 @@
     "statprotoDiscoGun": {
       "type": "object",
       "properties": {
-        "ArmorPen": {
+        "armorPen": {
           "type": "number",
           "format": "double"
         }
@@ -1118,7 +1117,7 @@
     "statprotoDiscoShip": {
       "type": "object",
       "properties": {
-        "ArmorMult": {
+        "armorMult": {
           "type": "number",
           "format": "double"
         }
@@ -1127,14 +1126,14 @@
     "statprotoDiscoveryTechCompat": {
       "type": "object",
       "properties": {
-        "TechcompatByID": {
+        "techcompatById": {
           "type": "object",
           "additionalProperties": {
             "type": "number",
             "format": "double"
           }
         },
-        "TechCell": {
+        "techCell": {
           "type": "string"
         }
       }
@@ -1146,67 +1145,67 @@
     "statprotoEngine": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "CruiseSpeed": {
+        "cruiseSpeed": {
           "type": "string",
           "format": "int64"
         },
-        "CruiseChargeTime": {
+        "cruiseChargeTime": {
           "type": "string",
           "format": "int64"
         },
-        "LinearDrag": {
+        "linearDrag": {
           "type": "string",
           "format": "int64"
         },
-        "MaxForce": {
+        "maxForce": {
           "type": "string",
           "format": "int64"
         },
-        "ReverseFraction": {
+        "reverseFraction": {
           "type": "number",
           "format": "double"
         },
-        "ImpulseSpeed": {
+        "impulseSpeed": {
           "type": "number",
           "format": "double"
         },
-        "HpType": {
+        "hpType": {
           "type": "string"
         },
-        "FlameEffect": {
+        "flameEffect": {
           "type": "string"
         },
-        "TrailEffect": {
+        "trailEffect": {
           "type": "string"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "NameID": {
+        "nameId": {
           "type": "string",
           "format": "int64"
         },
-        "InfoID": {
+        "infoId": {
           "type": "string",
           "format": "int64"
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "DiscoveryTechCompat": {
+        "discoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         }
@@ -1215,10 +1214,10 @@
     "statprotoEquipmentSlot": {
       "type": "object",
       "properties": {
-        "SlotName": {
+        "slotName": {
           "type": "string"
         },
-        "AllowedEquip": {
+        "allowedEquip": {
           "type": "array",
           "items": {
             "type": "string"
@@ -1229,47 +1228,47 @@
     "statprotoFaction": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "ShortName": {
+        "shortName": {
           "type": "string"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "ObjectDestruction": {
+        "objectDestruction": {
           "type": "number",
           "format": "double"
         },
-        "MissionSuccess": {
+        "missionSuccess": {
           "type": "number",
           "format": "double"
         },
-        "MissionFailure": {
+        "missionFailure": {
           "type": "number",
           "format": "double"
         },
-        "MissionAbort": {
+        "missionAbort": {
           "type": "number",
           "format": "double"
         },
-        "InfonameID": {
+        "infonameId": {
           "type": "string",
           "format": "int64"
         },
-        "InfocardID": {
+        "infocardId": {
           "type": "string",
           "format": "int64"
         },
-        "Reputations": {
+        "reputations": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/statprotoReputation"
           }
         },
-        "Bribes": {
+        "bribes": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1281,7 +1280,7 @@
     "statprotoGetAmmoReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1320,7 +1319,7 @@
     "statprotoGetBasesReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1352,7 +1351,7 @@
     "statprotoGetCommoditiesReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1364,7 +1363,7 @@
     "statprotoGetCounterMeasuresReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1376,7 +1375,7 @@
     "statprotoGetEnginesReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1426,7 +1425,7 @@
     "statprotoGetFactionsReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1438,13 +1437,13 @@
     "statprotoGetGraphPathsAnswer": {
       "type": "object",
       "properties": {
-        "Route": {
+        "route": {
           "$ref": "#/definitions/statprotoGraphPathQuery"
         },
-        "Time": {
+        "time": {
           "$ref": "#/definitions/statprotoGraphPathTime"
         },
-        "Error": {
+        "error": {
           "type": "string"
         }
       }
@@ -1452,7 +1451,7 @@
     "statprotoGetGraphPathsInput": {
       "type": "object",
       "properties": {
-        "Queries": {
+        "queries": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1464,7 +1463,7 @@
     "statprotoGetGraphPathsReply": {
       "type": "object",
       "properties": {
-        "Answers": {
+        "answers": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1502,7 +1501,7 @@
     "statprotoGetGunsReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1514,7 +1513,7 @@
     "statprotoGetHashesReply": {
       "type": "object",
       "properties": {
-        "HashesByNick": {
+        "hashesByNick": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoHash"
@@ -1550,7 +1549,7 @@
     "statprotoGetInfocardsReply": {
       "type": "object",
       "properties": {
-        "Answers": {
+        "answers": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1562,7 +1561,7 @@
     "statprotoGetMinesReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1574,7 +1573,7 @@
     "statprotoGetPoBGoodsReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1586,7 +1585,7 @@
     "statprotoGetPoBsReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1598,7 +1597,7 @@
     "statprotoGetScannersReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1610,7 +1609,7 @@
     "statprotoGetShieldsReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1622,7 +1621,7 @@
     "statprotoGetShipsReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1634,7 +1633,7 @@
     "statprotoGetThrustersReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1666,7 +1665,7 @@
     "statprotoGetTractorsReply": {
       "type": "object",
       "properties": {
-        "Items": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1678,10 +1677,10 @@
     "statprotoGraphPathQuery": {
       "type": "object",
       "properties": {
-        "From": {
+        "from": {
           "type": "string"
         },
-        "To": {
+        "to": {
           "type": "string"
         }
       }
@@ -1689,15 +1688,15 @@
     "statprotoGraphPathTime": {
       "type": "object",
       "properties": {
-        "Transport": {
+        "transport": {
           "type": "string",
           "format": "int64"
         },
-        "Frigate": {
+        "frigate": {
           "type": "string",
           "format": "int64"
         },
-        "Freighter": {
+        "freighter": {
           "type": "string",
           "format": "int64"
         }
@@ -1706,170 +1705,170 @@
     "statprotoGun": {
       "type": "object",
       "properties": {
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "DiscoveryTechCompat": {
+        "discoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Type": {
+        "type": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "Class": {
+        "class": {
           "type": "string"
         },
-        "HpType": {
+        "hpType": {
           "type": "string"
         },
-        "IdsName": {
+        "idsName": {
           "type": "string",
           "format": "int64"
         },
-        "IdsInfo": {
+        "idsInfo": {
           "type": "string",
           "format": "int64"
         },
-        "Volume": {
+        "volume": {
           "type": "number",
           "format": "double"
         },
-        "HitPts": {
+        "hitPts": {
           "type": "string"
         },
-        "PowerUsage": {
+        "powerUsage": {
           "type": "number",
           "format": "double"
         },
-        "Refire": {
+        "refire": {
           "type": "number",
           "format": "double"
         },
-        "Range": {
+        "range": {
           "type": "number",
           "format": "double"
         },
-        "Toughness": {
+        "toughness": {
           "type": "number",
           "format": "double"
         },
-        "IsAutoTurret": {
+        "isAutoTurret": {
           "type": "boolean"
         },
-        "Lootable": {
+        "lootable": {
           "type": "boolean"
         },
-        "RequiredAmmo": {
+        "requiredAmmo": {
           "type": "boolean"
         },
-        "HullDamage": {
+        "hullDamage": {
           "type": "string",
           "format": "int64"
         },
-        "EnergyDamage": {
+        "energyDamage": {
           "type": "string",
           "format": "int64"
         },
-        "ShieldDamage": {
+        "shieldDamage": {
           "type": "string",
           "format": "int64"
         },
-        "AvgShieldDamage": {
+        "avgShieldDamage": {
           "type": "string",
           "format": "int64"
         },
-        "DamageType": {
+        "damageType": {
           "type": "string"
         },
-        "LifeTime": {
+        "lifeTime": {
           "type": "number",
           "format": "double"
         },
-        "Speed": {
+        "speed": {
           "type": "number",
           "format": "double"
         },
-        "GunTurnRate": {
+        "gunTurnRate": {
           "type": "number",
           "format": "double"
         },
-        "DispersionAngle": {
+        "dispersionAngle": {
           "type": "number",
           "format": "double"
         },
-        "HullDamagePerSec": {
+        "hullDamagePerSec": {
           "type": "number",
           "format": "double"
         },
-        "AvgShieldDamagePerSec": {
+        "avgShieldDamagePerSec": {
           "type": "number",
           "format": "double"
         },
-        "EnergyDamagePerSec": {
+        "energyDamagePerSec": {
           "type": "number",
           "format": "double"
         },
-        "PowerUsagePerSec": {
+        "powerUsagePerSec": {
           "type": "number",
           "format": "double"
         },
-        "AvgEfficiency": {
+        "avgEfficiency": {
           "type": "number",
           "format": "double"
         },
-        "HullEfficiency": {
+        "hullEfficiency": {
           "type": "number",
           "format": "double"
         },
-        "ShieldEfficiency": {
+        "shieldEfficiency": {
           "type": "number",
           "format": "double"
         },
-        "EnergyDamageEfficiency": {
+        "energyDamageEfficiency": {
           "type": "number",
           "format": "double"
         },
-        "DamageBonuses": {
+        "damageBonuses": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/statprotoDamageBonus"
           }
         },
-        "Missile": {
+        "missile": {
           "$ref": "#/definitions/statprotoMissile",
-          "title": "has data defined but only for missile guns :)"
+          "title": "has data defined but only for Missile guns :)"
         },
-        "GunDetailed": {
+        "gunDetailed": {
           "$ref": "#/definitions/statprotoGunDetailed"
         },
-        "NumBarrels": {
+        "numBarrels": {
           "type": "string",
           "format": "int64"
         },
-        "BurstFire": {
+        "burstFire": {
           "$ref": "#/definitions/statprotoBurstFire"
         },
-        "AmmoLimit": {
+        "ammoLimit": {
           "$ref": "#/definitions/statprotoAmmoLimit"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         },
-        "DiscoGun": {
+        "discoGun": {
           "$ref": "#/definitions/statprotoDiscoGun"
         }
       }
@@ -1877,13 +1876,13 @@
     "statprotoGunDetailed": {
       "type": "object",
       "properties": {
-        "FlashParticleName": {
+        "flashParticleName": {
           "type": "string"
         },
-        "ConstEffect": {
+        "constEffect": {
           "type": "string"
         },
-        "MunitionHitEffect": {
+        "munitionHitEffect": {
           "type": "string"
         }
       }
@@ -1891,15 +1890,15 @@
     "statprotoHash": {
       "type": "object",
       "properties": {
-        "Int32": {
+        "int32": {
           "type": "integer",
           "format": "int32"
         },
-        "Uint32": {
+        "uint32": {
           "type": "integer",
           "format": "int64"
         },
-        "Hex": {
+        "hex": {
           "type": "string"
         }
       }
@@ -1915,7 +1914,7 @@
     "statprotoInfocard": {
       "type": "object",
       "properties": {
-        "Lines": {
+        "lines": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1927,7 +1926,7 @@
     "statprotoInfocardLine": {
       "type": "object",
       "properties": {
-        "Phrases": {
+        "phrases": {
           "type": "array",
           "items": {
             "type": "object",
@@ -1939,13 +1938,13 @@
     "statprotoInfocardPhrase": {
       "type": "object",
       "properties": {
-        "Phrase": {
+        "phrase": {
           "type": "string"
         },
-        "Link": {
+        "link": {
           "type": "string"
         },
-        "Bold": {
+        "bold": {
           "type": "boolean"
         }
       }
@@ -1953,59 +1952,59 @@
     "statprotoMarketGood": {
       "type": "object",
       "properties": {
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "ShipNickname": {
+        "shipNickname": {
           "type": "string"
         },
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "PriceBase": {
+        "priceBase": {
           "type": "string",
           "format": "int64"
         },
-        "HpType": {
+        "hpType": {
           "type": "string"
         },
-        "Category": {
+        "category": {
           "type": "string"
         },
-        "LevelRequired": {
+        "levelRequired": {
           "type": "string",
           "format": "int64"
         },
-        "RepRequired": {
+        "repRequired": {
           "type": "number",
           "format": "double"
         },
-        "PriceBaseBuysFor": {
+        "priceBaseBuysFor": {
           "type": "string",
           "format": "int64"
         },
-        "PriceBaseSellsFor": {
+        "priceBaseSellsFor": {
           "type": "string",
           "format": "int64"
         },
-        "Volume": {
+        "volume": {
           "type": "number",
           "format": "double"
         },
-        "ShipClass": {
+        "shipClass": {
           "type": "string",
           "format": "int64"
         },
-        "BaseSells": {
+        "baseSells": {
           "type": "boolean"
         },
-        "IsServerSideOverride": {
+        "isServerSideOverride": {
           "type": "boolean"
         },
-        "NotBuyable": {
+        "notBuyable": {
           "type": "boolean"
         },
-        "IsTransportUnreachable": {
+        "isTransportUnreachable": {
           "type": "boolean"
         },
         "baseInfo": {
@@ -2016,112 +2015,112 @@
     "statprotoMine": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "AmmoPrice": {
+        "ammoPrice": {
           "type": "string",
           "format": "int64"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "ProjectileArchetype": {
+        "projectileArchetype": {
           "type": "string"
         },
-        "IdsName": {
+        "idsName": {
           "type": "string",
           "format": "int64"
         },
-        "IdsInfo": {
+        "idsInfo": {
           "type": "string",
           "format": "int64"
         },
-        "HullDamage": {
+        "hullDamage": {
           "type": "string",
           "format": "int64"
         },
-        "EnergyDamange": {
+        "energyDamange": {
           "type": "string",
           "format": "int64"
         },
-        "ShieldDamage": {
+        "shieldDamage": {
           "type": "string",
           "format": "int64"
         },
-        "PowerUsage": {
+        "powerUsage": {
           "type": "number",
           "format": "double"
         },
-        "Value": {
+        "value": {
           "type": "number",
           "format": "double"
         },
-        "Refire": {
+        "refire": {
           "type": "number",
           "format": "double"
         },
-        "DetonationDistance": {
+        "detonationDistance": {
           "type": "number",
           "format": "double"
         },
-        "Radius": {
+        "radius": {
           "type": "number",
           "format": "double"
         },
-        "SeekDistance": {
+        "seekDistance": {
           "type": "string",
           "format": "int64"
         },
-        "TopSpeed": {
+        "topSpeed": {
           "type": "string",
           "format": "int64"
         },
-        "Acceleration": {
+        "acceleration": {
           "type": "string",
           "format": "int64"
         },
-        "LinearDrag": {
+        "linearDrag": {
           "type": "number",
           "format": "double"
         },
-        "LifeTime": {
+        "lifeTime": {
           "type": "number",
           "format": "double"
         },
-        "OwnerSafe": {
+        "ownerSafe": {
           "type": "string",
           "format": "int64"
         },
-        "Toughness": {
+        "toughness": {
           "type": "number",
           "format": "double"
         },
-        "HitPts": {
+        "hitPts": {
           "type": "string",
           "format": "int64"
         },
-        "Lootable": {
+        "lootable": {
           "type": "boolean"
         },
-        "AmmoLimit": {
+        "ammoLimit": {
           "$ref": "#/definitions/statprotoAmmoLimit"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "DiscoveryTechCompat": {
+        "discoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         }
       }
@@ -2129,7 +2128,7 @@
     "statprotoMissile": {
       "type": "object",
       "properties": {
-        "MaxAngularVelocity": {
+        "maxAngularVelocity": {
           "type": "number",
           "format": "double"
         }
@@ -2138,10 +2137,10 @@
     "statprotoPoB": {
       "type": "object",
       "properties": {
-        "Core": {
+        "core": {
           "$ref": "#/definitions/statprotoPoBCore"
         },
-        "ShopItems": {
+        "shopItems": {
           "type": "array",
           "items": {
             "type": "object",
@@ -2153,57 +2152,57 @@
     "statprotoPoBCore": {
       "type": "object",
       "properties": {
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Pos": {
+        "pos": {
           "type": "string"
         },
-        "Level": {
+        "level": {
           "type": "string",
           "format": "int64"
         },
-        "Money": {
+        "money": {
           "type": "string",
           "format": "int64"
         },
-        "Health": {
+        "health": {
           "type": "number",
           "format": "double"
         },
-        "DefenseMode": {
+        "defenseMode": {
           "type": "string",
           "format": "int64"
         },
-        "SystemNick": {
+        "systemNick": {
           "type": "string"
         },
-        "SystemName": {
+        "systemName": {
           "type": "string"
         },
-        "FactionNick": {
+        "factionNick": {
           "type": "string"
         },
-        "FactionName": {
+        "factionName": {
           "type": "string"
         },
-        "ForumThreadUrl": {
+        "forumThreadUrl": {
           "type": "string"
         },
-        "CargoSpaceLeft": {
+        "cargoSpaceLeft": {
           "type": "string",
           "format": "int64"
         },
-        "BasePos": {
+        "basePos": {
           "$ref": "#/definitions/statprotoPos"
         },
-        "SectorCoord": {
+        "sectorCoord": {
           "type": "string"
         },
-        "Region": {
+        "region": {
           "type": "string"
         }
       }
@@ -2211,38 +2210,38 @@
     "statprotoPoBGood": {
       "type": "object",
       "properties": {
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "TotalBuyableFromBases": {
+        "totalBuyableFromBases": {
           "type": "string",
           "format": "int64"
         },
-        "TotalSellableToBases": {
+        "totalSellableToBases": {
           "type": "string",
           "format": "int64"
         },
-        "BestPriceToBuy": {
+        "bestPriceToBuy": {
           "type": "string",
           "format": "int64"
         },
-        "BestPriceToSell": {
+        "bestPriceToSell": {
           "type": "string",
           "format": "int64"
         },
-        "Category": {
+        "category": {
           "type": "string"
         },
-        "AnyBaseSells": {
+        "anyBaseSells": {
           "type": "boolean"
         },
-        "AnyBaseBuys": {
+        "anyBaseBuys": {
           "type": "boolean"
         },
-        "Bases": {
+        "bases": {
           "type": "array",
           "items": {
             "type": "object",
@@ -2254,10 +2253,10 @@
     "statprotoPoBGoodBase": {
       "type": "object",
       "properties": {
-        "ShopItem": {
+        "shopItem": {
           "$ref": "#/definitions/statprotoShopItem"
         },
-        "Base": {
+        "base": {
           "$ref": "#/definitions/statprotoPoBCore"
         }
       }
@@ -2265,15 +2264,15 @@
     "statprotoPos": {
       "type": "object",
       "properties": {
-        "X": {
+        "x": {
           "type": "number",
           "format": "double"
         },
-        "Y": {
+        "y": {
           "type": "number",
           "format": "double"
         },
-        "Z": {
+        "z": {
           "type": "number",
           "format": "double"
         }
@@ -2282,18 +2281,18 @@
     "statprotoReputation": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Rep": {
+        "rep": {
           "type": "number",
           "format": "double"
         },
-        "Empathy": {
+        "empathy": {
           "type": "number",
           "format": "double"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         }
       }
@@ -2301,46 +2300,46 @@
     "statprotoScanner": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "Range": {
+        "range": {
           "type": "string",
           "format": "int64"
         },
-        "CargoScanRange": {
+        "cargoScanRange": {
           "type": "string",
           "format": "int64"
         },
-        "Lootable": {
+        "lootable": {
           "type": "boolean"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "NameID": {
+        "nameId": {
           "type": "string",
           "format": "int64"
         },
-        "InfoID": {
+        "infoId": {
           "type": "string",
           "format": "int64"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "DiscoveryTechCompat": {
+        "discoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         }
       }
@@ -2348,82 +2347,82 @@
     "statprotoShield": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Class": {
+        "class": {
           "type": "string"
         },
-        "Type": {
+        "type": {
           "type": "string"
         },
-        "Technology": {
+        "technology": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "Capacity": {
+        "capacity": {
           "type": "string",
           "format": "int64"
         },
-        "RegenerationRate": {
+        "regenerationRate": {
           "type": "string",
           "format": "int64"
         },
-        "ConstantPowerDraw": {
+        "constantPowerDraw": {
           "type": "string",
           "format": "int64"
         },
-        "Value": {
+        "value": {
           "type": "number",
           "format": "double"
         },
-        "RebuildPowerDraw": {
+        "rebuildPowerDraw": {
           "type": "string",
           "format": "int64"
         },
-        "OffRebuildTime": {
+        "offRebuildTime": {
           "type": "string",
           "format": "int64"
         },
-        "Toughness": {
+        "toughness": {
           "type": "number",
           "format": "double"
         },
-        "HitPts": {
+        "hitPts": {
           "type": "string",
           "format": "int64"
         },
-        "Lootable": {
+        "lootable": {
           "type": "boolean"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "HpType": {
+        "hpType": {
           "type": "string"
         },
-        "IdsName": {
+        "idsName": {
           "type": "string",
           "format": "int64"
         },
-        "IdsInfo": {
+        "idsInfo": {
           "type": "string",
           "format": "int64"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "DiscoveryTechCompat": {
+        "discoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         }
       }
@@ -2431,144 +2430,144 @@
     "statprotoShip": {
       "type": "object",
       "properties": {
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Class": {
+        "class": {
           "type": "string",
           "format": "int64"
         },
-        "Type": {
+        "type": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "Armor": {
+        "armor": {
           "type": "string",
           "format": "int64"
         },
-        "HoldSize": {
+        "holdSize": {
           "type": "string",
           "format": "int64"
         },
-        "Nanobots": {
+        "nanobots": {
           "type": "string",
           "format": "int64"
         },
-        "Batteries": {
+        "batteries": {
           "type": "string",
           "format": "int64"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         },
-        "PowerCapacity": {
+        "powerCapacity": {
           "type": "string",
           "format": "int64"
         },
-        "PowerRechargeRate": {
+        "powerRechargeRate": {
           "type": "string",
           "format": "int64"
         },
-        "CruiseSpeed": {
+        "cruiseSpeed": {
           "type": "string",
           "format": "int64"
         },
-        "LinearDrag": {
+        "linearDrag": {
           "type": "number",
           "format": "double"
         },
-        "EngineMaxForce": {
+        "engineMaxForce": {
           "type": "string",
           "format": "int64"
         },
-        "ImpulseSpeed": {
+        "impulseSpeed": {
           "type": "number",
           "format": "double"
         },
-        "ThrusterSpeed": {
+        "thrusterSpeed": {
           "type": "array",
           "items": {
             "type": "string",
             "format": "int64"
           }
         },
-        "ReverseFraction": {
+        "reverseFraction": {
           "type": "number",
           "format": "double"
         },
-        "ThrustCapacity": {
+        "thrustCapacity": {
           "type": "string",
           "format": "int64"
         },
-        "ThrustRecharge": {
+        "thrustRecharge": {
           "type": "string",
           "format": "int64"
         },
-        "MaxAngularSpeedDegS": {
+        "maxAngularSpeedDegS": {
           "type": "number",
           "format": "double"
         },
-        "AngularDistanceFrom0ToHalfSec": {
+        "angularDistanceFrom0ToHalfSec": {
           "type": "number",
           "format": "double"
         },
-        "TimeTo90MaxAngularSpeed": {
+        "timeTo90MaxAngularSpeed": {
           "type": "number",
           "format": "double"
         },
-        "NudgeForce": {
+        "nudgeForce": {
           "type": "number",
           "format": "double"
         },
-        "StrafeForce": {
+        "strafeForce": {
           "type": "number",
           "format": "double"
         },
-        "NameID": {
+        "nameId": {
           "type": "string",
           "format": "int64"
         },
-        "InfoID": {
+        "infoId": {
           "type": "string",
           "format": "int64"
         },
-        "Slots": {
+        "slots": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/statprotoEquipmentSlot"
           }
         },
-        "BiggestHardpoint": {
+        "biggestHardpoint": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "ShipPackages": {
+        "shipPackages": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/statprotoShipPackage"
           }
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "DiscoveryTechCompat": {
+        "discoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         },
-        "DiscoShip": {
+        "discoShip": {
           "$ref": "#/definitions/statprotoDiscoShip"
         }
       }
@@ -2576,7 +2575,7 @@
     "statprotoShipPackage": {
       "type": "object",
       "properties": {
-        "Nickname": {
+        "nickname": {
           "type": "string"
         }
       }
@@ -2584,36 +2583,36 @@
     "statprotoShopItem": {
       "type": "object",
       "properties": {
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Category": {
+        "category": {
           "type": "string"
         },
-        "Id": {
+        "id": {
           "type": "string",
           "format": "int64"
         },
-        "Quantity": {
+        "quantity": {
           "type": "string",
           "format": "int64"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "SellPrice": {
+        "sellPrice": {
           "type": "string",
           "format": "int64"
         },
-        "MinStock": {
+        "minStock": {
           "type": "string",
           "format": "int64"
         },
-        "MaxStock": {
+        "maxStock": {
           "type": "string",
           "format": "int64"
         }
@@ -2622,58 +2621,58 @@
     "statprotoThruster": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "MaxForce": {
+        "maxForce": {
           "type": "string",
           "format": "int64"
         },
-        "PowerUsage": {
+        "powerUsage": {
           "type": "string",
           "format": "int64"
         },
-        "Efficiency": {
+        "efficiency": {
           "type": "number",
           "format": "double"
         },
-        "Value": {
+        "value": {
           "type": "number",
           "format": "double"
         },
-        "HitPts": {
+        "hitPts": {
           "type": "string",
           "format": "int64"
         },
-        "Lootable": {
+        "lootable": {
           "type": "boolean"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "NameID": {
+        "nameId": {
           "type": "string",
           "format": "int64"
         },
-        "InfoID": {
+        "infoId": {
           "type": "string",
           "format": "int64"
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "DiscoveryTechCompat": {
+        "discoveryTechCompat": {
           "$ref": "#/definitions/statprotoDiscoveryTechCompat"
         }
       }
@@ -2681,45 +2680,45 @@
     "statprotoTractor": {
       "type": "object",
       "properties": {
-        "Name": {
+        "name": {
           "type": "string"
         },
-        "Price": {
+        "price": {
           "type": "string",
           "format": "int64"
         },
-        "MaxLength": {
+        "maxLength": {
           "type": "string",
           "format": "int64"
         },
-        "ReachSpeed": {
+        "reachSpeed": {
           "type": "string",
           "format": "int64"
         },
-        "Lootable": {
+        "lootable": {
           "type": "boolean"
         },
-        "Nickname": {
+        "nickname": {
           "type": "string"
         },
-        "ShortNickname": {
+        "shortNickname": {
           "type": "string"
         },
-        "NameID": {
+        "nameId": {
           "type": "string",
           "format": "int64"
         },
-        "InfoID": {
+        "infoId": {
           "type": "string",
           "format": "int64"
         },
-        "Bases": {
+        "bases": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/statprotoMarketGood"
           }
         },
-        "Mass": {
+        "mass": {
           "type": "number",
           "format": "double"
         }

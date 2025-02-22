@@ -75,11 +75,11 @@ func NewTechCompat(tech_compat *configs_export.DiscoveryTechCompat) *pb.Discover
 	}
 
 	answer := &pb.DiscoveryTechCompat{
-		TechcompatByID: make(map[string]float64),
+		TechcompatById: make(map[string]float64),
 		TechCell:       tech_compat.TechCell,
 	}
 	for key, value := range tech_compat.TechcompatByID {
-		answer.TechcompatByID[string(key)] = value
+		answer.TechcompatById[string(key)] = value
 	}
 	return answer
 }

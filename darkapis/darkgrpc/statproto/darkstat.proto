@@ -1,79 +1,78 @@
 syntax = "proto3";
 
-option go_package = "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto";
-
 package statproto;
+
+option go_package = "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto";
 /*
-Newest Darkstat API. it is accessable with gRPC and with regular JSON at this grpc API gateway.
-https://github.com/darklab8/fl-darkstat#alternatively-we-offer-client-generation-through-grpc
-Check documentation how u can generate Client Library for your language of choice, C#, Python, Typescript or even C++.
-Full list of supported languages https://grpc.io/docs/languages/
-Then u will be able to benefit pulling this data with the most comfort.
-Or you can just pull as jsons from this json API as alternative.
+   Newest Darkstat API. it is accessable with gRPC and with regular JSON at this grpc API gateway.
+   https://github.com/darklab8/fl-darkstat#alternatively-we-offer-client-generation-through-grpc
+   Check documentation how u can generate Client Library for your language of choice, C#, Python, typescript or even C++.
+   Full list of supported languages https://grpc.io/docs/languages/
+   Then u will be able to benefit pulling this data with the most comfort.
+   Or you can just pull as jsons from this json API as alternative.
 
-In case of local usage, this API is available both at TCP localhost, and over Unix Domain Socket when darkstat is run at Linux ^_^.
-With Unix Sockets u get extra performance boosts to pull all the data.
+   In case of local usage, this API is available both at TCP localhost, and over Unix Domain Socket when darkstat is run at Linux ^_^.
+   With Unix Sockets u get extra performance boosts to pull all the data.
 
-the Grpc api is the one for any new feature additions
-Grpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.
+   the Grpc api is the one for any new feature additions
+   Grpc API gateway to access same data over regular json POST requests is automatically syncronized with Grpc RPC calls available.
 
-`NOTE`: Routes have defined input "include_market_goods" and "include_tech_compat" at least.
-Depending on your having them true or not, significantly different amount of data is pushed
+   `NOTE`: Routes have defined input "include_market_goods" and "include_tech_compat" at least.
+   Depending on your having them true or not, significantly different amount of data is pushed
 
-`WARNING`: if u will be using this Swagger interface to make test call for example.
-make sure to turn off booleans like include_market_goods, include_tech_compat and etc. When they are enabled, they overload swagger interface with too much data ;)
-Or just call test examples over curl/postman instead (with preferably disabled prettifying)
+   `WARNING`: if u will be using this Swagger interface to make test call for example.
+   make sure to turn off booleans like include_market_goods, include_tech_compat and etc. When they are enabled, they overload swagger interface with too much data ;)
+   Or just call test examples over curl/postman instead (with preferably disabled prettifying)
 
-`NOTE`: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLY FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers
+   `NOTE`: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLy FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers
 */
 
 service Darkstat {
   // Just to check if grpc works. Returns boolean value if it is healthy as true
-  rpc GetHealth (Empty) returns (HealthReply);
+  rpc GetHealth(Empty) returns (HealthReply);
 
-  // Get all Freelancer NPC Bases
-  rpc GetBasesNpc (GetBasesInput) returns (GetBasesReply);
+  // Get all Freelancer NPC bases
+  rpc GetBasesNpc(GetBasesInput) returns (GetBasesReply);
   // Get all imaginary bases that in place of mining fields. Useful for trading calculations
-  rpc GetBasesMiningOperations (GetBasesInput) returns (GetBasesReply);
-  // Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions
+  rpc GetBasesMiningOperations(GetBasesInput) returns (GetBasesReply);
+  // Get all Player Owned bases in the same format as Npc bases. Returns only PoBs which have known positions
   // Useful for trading calculations
-  rpc GetBasesPoBs (GetBasesInput) returns (GetBasesReply);
+  rpc GetBasesPoBs(GetBasesInput) returns (GetBasesReply);
 
-  // Get all Player Owned Bases. Completely all that are public exposed
-  rpc GetPoBs (Empty) returns (GetPoBsReply);
+  // Get all Player Owned bases. Completely all that are public exposed
+  rpc GetPoBs(Empty) returns (GetPoBsReply);
   // Get all PoB goods, where they are sold and bought. Reverse search by PoBs
-  rpc GetPoBGoods (Empty) returns (GetPoBGoodsReply);
+  rpc GetPoBGoods(Empty) returns (GetPoBGoodsReply);
 
-  rpc GetCommodities (GetCommoditiesInput) returns (GetCommoditiesReply) {}
-  rpc GetGuns (GetGunsInput) returns (GetGunsReply) {}
-  rpc GetMissiles (GetGunsInput) returns (GetGunsReply) {}
+  rpc GetCommodities(GetCommoditiesInput) returns (GetCommoditiesReply) {}
+  rpc GetGuns(GetGunsInput) returns (GetGunsReply) {}
+  rpc GetMissiles(GetGunsInput) returns (GetGunsReply) {}
 
-  rpc GetAmmos (GetEquipmentInput) returns (GetAmmoReply) {}
-  rpc GetCounterMeasures (GetEquipmentInput) returns (GetCounterMeasuresReply) {}
-  rpc GetEngines (GetEquipmentInput) returns (GetEnginesReply) {}
-  rpc GetMines (GetEquipmentInput) returns (GetMinesReply) {}
-  rpc GetScanners (GetEquipmentInput) returns (GetScannersReply) {}
-  rpc GetShields (GetEquipmentInput) returns (GetShieldsReply) {}
-  rpc GetShips (GetEquipmentInput) returns (GetShipsReply) {}
-  rpc GetThrusters (GetEquipmentInput) returns (GetThrustersReply) {}
+  rpc GetAmmos(GetEquipmentInput) returns (GetAmmoReply) {}
+  rpc GetCounterMeasures(GetEquipmentInput) returns (GetCounterMeasuresReply) {}
+  rpc GetEngines(GetEquipmentInput) returns (GetEnginesReply) {}
+  rpc GetMines(GetEquipmentInput) returns (GetMinesReply) {}
+  rpc GetScanners(GetEquipmentInput) returns (GetScannersReply) {}
+  rpc GetShields(GetEquipmentInput) returns (GetShieldsReply) {}
+  rpc GetShips(GetEquipmentInput) returns (GetShipsReply) {}
+  rpc GetThrusters(GetEquipmentInput) returns (GetThrustersReply) {}
 
-  rpc GetFactions (GetFactionsInput) returns (GetFactionsReply) {}
+  rpc GetFactions(GetFactionsInput) returns (GetFactionsReply) {}
 
   // Get Tractors. For Discovery those are IDs
-  rpc GetTractors (GetTractorsInput) returns (GetTractorsReply) {}
-  rpc GetHashes (Empty) returns (GetHashesReply);
-  rpc GetInfocards (GetInfocardsInput) returns (GetInfocardsReply);
-  rpc GetGraphPaths (GetGraphPathsInput) returns (GetGraphPathsReply);
+  rpc GetTractors(GetTractorsInput) returns (GetTractorsReply) {}
+  rpc GetHashes(Empty) returns (GetHashesReply);
+  rpc GetInfocards(GetInfocardsInput) returns (GetInfocardsReply);
+  rpc GetGraphPaths(GetGraphPathsInput) returns (GetGraphPathsReply);
 }
 
 // The request message containing the user's name.
-message Empty {
-}
+message Empty {}
 message GetInfocardsInput {
   repeated string nicknames = 1;
 }
 message GetInfocardsReply {
-  repeated GetInfocardAnswer Answers = 1;
+  repeated GetInfocardAnswer answers = 1;
 }
 
 message GetInfocardAnswer {
@@ -82,15 +81,15 @@ message GetInfocardAnswer {
   optional string error = 3;
 }
 message Infocard {
-  repeated InfocardLine Lines  = 1;
+  repeated InfocardLine lines = 1;
 }
 message InfocardLine {
-  repeated InfocardPhrase Phrases = 1;
+  repeated InfocardPhrase phrases = 1;
 }
 message InfocardPhrase {
-  string Phrase = 1;
-  optional string Link = 2;
-  bool Bold = 3;
+  string phrase = 1;
+  optional string link = 2;
+  bool bold = 3;
 }
 
 message HealthReply {
@@ -139,73 +138,72 @@ message GetTractorsInput {
   repeated string filter_nicknames = 3;
 }
 message GetBasesReply {
-  repeated Base Items = 1;
+  repeated Base items = 1;
 }
 
 // The response message containing the greetings
 message Base {
-  string Name = 1;
-  repeated string Archetypes = 2;
-  string Nickname = 3; 
-  string FactionName = 5; 
-  string System = 6; 
-  string SystemNickname = 7; 
-  string Region = 9;
-  int64 StridName = 10; 
-  int64 InfocardID = 11; 
-  string File = 12; 
-  string BGCS_base_run_by = 13;
-  Pos Pos = 14; 
-  string SectorCoord = 15;
-  bool IsTransportUnreachable = 16; 
-  bool Reachable = 18; 
-  bool IsPob = 19;
+  string name = 1;
+  repeated string archetypes = 2;
+  string nickname = 3;
+  string faction_name = 5;
+  string system = 6;
+  string system_nickname = 7;
+  string region = 9;
+  int64 strid_name = 10;
+  int64 infocard_id = 11;
+  string file = 12;
+  string bgcs_base_run_by = 13;
+  Pos pos = 14;
+  string sector_coord = 15;
+  bool is_transport_unreachable = 16;
+  bool reachable = 18;
+  bool is_pob = 19;
 
-  map<string, MarketGood> MarketGoodsPerNick = 20;
+  map<string, MarketGood> market_goods_per_nick = 20;
 }
 
 message MiningInfo {
-  int64 DynamicLootMin = 1;   
-	int64 DynamicLootMax = 2;
-	int64 DynamicLootDifficulty = 3;
-	optional MarketGood MinedGood = 4;         
+  int64 dynamic_loot_min = 1;
+  int64 dynamic_loot_max = 2;
+  int64 dynamic_loot_difficulty = 3;
+  optional MarketGood mined_good = 4;
 }
-
 
 message MarketGood {
-  string Nickname = 1;
-  string ShipNickname = 2; 
-  string Name = 3;     
-  int64 PriceBase = 4; 
-  string HpType = 5;   
-  string Category = 6;
+  string nickname = 1;
+  string ship_nickname = 2;
+  string name = 3;
+  int64 price_base = 4;
+  string hp_type = 5;
+  string category = 6;
 
-    int64 LevelRequired = 7;
-    double RepRequired = 8;
-    optional int64 PriceBaseBuysFor = 9; 
-    int64 PriceBaseSellsFor  = 10;
-    double Volume   = 11;   
-    int64 ShipClass  = 12;        
-    bool BaseSells    = 13;    
-    bool IsServerSideOverride = 14;
-    bool NotBuyable      = 15;     
-    bool IsTransportUnreachable = 16;
-    BaseInfo base_info = 17;
+  int64 level_required = 7;
+  double rep_required = 8;
+  optional int64 price_base_buys_for = 9;
+  int64 price_base_sells_for = 10;
+  double volume = 11;
+  int64 ship_class = 12;
+  bool base_sells = 13;
+  bool is_server_side_override = 14;
+  bool not_buyable = 15;
+  bool is_transport_unreachable = 16;
+  BaseInfo base_info = 17;
 }
 message BaseInfo {
-  string BaseNickname = 1; 
-  string BaseName = 2;   
-  string  SystemName = 3; 
-  string  Region = 4;    
-  string  FactionName = 5; 
-  Pos BasePos = 6;     
-  string SectorCoord = 7;
+  string base_nickname = 1;
+  string base_name = 2;
+  string system_name = 3;
+  string region = 4;
+  string faction_name = 5;
+  Pos base_pos = 6;
+  string sector_coord = 7;
 }
 
 message Pos {
-  double X = 1;
-  double Y = 2;
-  double Z = 3;
+  double x = 1;
+  double y = 2;
+  double z = 3;
 }
 
 message GetCommoditiesInput {
@@ -219,61 +217,61 @@ message GetCommoditiesInput {
   repeated string filter_nicknames = 3;
 }
 message GetCommoditiesReply {
-  repeated Commodity Items = 1;
+  repeated Commodity items = 1;
 }
 
 message Commodity {
-	string Nickname = 1;        
-	int64 PriceBase = 2;                                   
-	string Name     = 3;                         
-	bool Combinable = 4;  
-	double Volume   = 5;                                    
-	int64 ShipClass = 6;         
-	int64 NameID      = 7;                                      
-	int64 InfocardID  = 8; 
-	map<string, MarketGood> Bases  = 9;            
-	int64 PriceBestBaseBuysFor     = 10;                          
-	int64 PriceBestBaseSellsFor    = 11;        
-	int64 ProffitMargin            = 12;                          
-	double Mass    = 13;            
+  string nickname = 1;
+  int64 price_base = 2;
+  string name = 3;
+  bool combinable = 4;
+  double volume = 5;
+  int64 ship_class = 6;
+  int64 name_id = 7;
+  int64 infocard_id = 8;
+  map<string, MarketGood> bases = 9;
+  int64 price_best_base_buys_for = 10;
+  int64 price_best_base_sells_for = 11;
+  int64 proffit_margin = 12;
+  double mass = 13;
 }
 
 message GetAmmoReply {
-  repeated Ammo Items = 1;
+  repeated Ammo items = 1;
 }
 
 message Ammo {
-	string Name  = 1;
-	int64 Price  = 2;
+  string name = 1;
+  int64 price = 2;
 
-	int64 HitPts  = 3;
-	double Volume = 4;
-	double MunitionLifetime = 5;
+  int64 hit_pts = 3;
+  double volume = 4;
+  double munition_lifetime = 5;
 
-	string Nickname = 6;
-	int64 NameID    = 7;
-	int64 InfoID    = 8;
-	string SeekerType  = 9;
-	int64 SeekerRange  = 10;
-	int64 SeekerFovDeg = 11;
+  string nickname = 6;
+  int64 name_id = 7;
+  int64 info_id = 8;
+  string seeker_type = 9;
+  int64 seeker_range = 10;
+  int64 seeker_fov_deg = 11;
 
-	map<string, MarketGood> Bases  = 12;            
+  map<string, MarketGood> bases = 12;
 
-	optional DiscoveryTechCompat DiscoveryTechCompat = 13;
+  optional DiscoveryTechCompat discovery_tech_compat = 13;
 
-  AmmoLimit AmmoLimit = 14;
-  double Mass    = 16;
+  AmmoLimit ammo_limit = 14;
+  double mass = 16;
 }
 
 message DiscoveryTechCompat {
-  map<string, double> TechcompatByID = 1;
-  string TechCell = 2;
+  map<string, double> techcompat_by_id = 1;
+  string tech_cell = 2;
 }
 
 message TechCompatAnswer {
-  optional DiscoveryTechCompat TechCompat = 1;
-  optional string Error = 2;
-  string Nickname = 3;
+  optional DiscoveryTechCompat tech_compat = 1;
+  optional string error = 2;
+  string nickname = 3;
 }
 
 message GetTechCompatInput {
@@ -281,58 +279,58 @@ message GetTechCompatInput {
 }
 
 message GetTechCompatReply {
-  repeated TechCompatAnswer Answers = 1;
+  repeated TechCompatAnswer answers = 1;
 }
 
 message GetCounterMeasuresReply {
-  repeated CounterMeasure Items = 1;
+  repeated CounterMeasure items = 1;
 }
 message CounterMeasure {
-	string Name = 1;
-	int64 Price = 2;
+  string name = 1;
+  int64 price = 2;
 
-	int64 HitPts    = 3;
-	int64  AIRange  = 4;
-	int64  Lifetime = 5;
-	int64  Range    = 6;
-	int64  DiversionPctg = 7;
+  int64 hit_pts = 3;
+  int64 ai_range = 4;
+  int64 lifetime = 5;
+  int64 range = 6;
+  int64 diversion_pctg = 7;
 
-	bool Lootable   = 8;
-	string Nickname      = 9;
-	int64  NameID        = 10;
-	int64  InfoID        = 11;
+  bool lootable = 8;
+  string nickname = 9;
+  int64 name_id = 10;
+  int64 info_id = 11;
 
-	map<string, MarketGood> Bases  = 12;            
-	optional DiscoveryTechCompat DiscoveryTechCompat = 13;
-  AmmoLimit AmmoLimit = 14;
-	double Mass      = 16;
+  map<string, MarketGood> bases = 12;
+  optional DiscoveryTechCompat discovery_tech_compat = 13;
+  AmmoLimit ammo_limit = 14;
+  double mass = 16;
 }
 
 message GetEnginesReply {
-  repeated Engine Items = 1;
+  repeated Engine items = 1;
 }
 message Engine {
-	string Name = 1;
-	int64 Price = 2;
+  string name = 1;
+  int64 price = 2;
 
-	int64 CruiseSpeed      = 3;
-	int64 CruiseChargeTime = 4;
-	int64 LinearDrag       = 5;
-	int64 MaxForce         = 6;
-	double ReverseFraction = 7;
-	double ImpulseSpeed    = 8;
+  int64 cruise_speed = 3;
+  int64 cruise_charge_time = 4;
+  int64 linear_drag = 5;
+  int64 max_force = 6;
+  double reverse_fraction = 7;
+  double impulse_speed = 8;
 
-	string HpType          = 9;
-	string FlameEffect     = 10;
-	string TrailEffect     = 11;
+  string hp_type = 9;
+  string flame_effect = 10;
+  string trail_effect = 11;
 
-	string Nickname        = 12;
-	int64 NameID           = 13;
-	int64 InfoID           = 14;
+  string nickname = 12;
+  int64 name_id = 13;
+  int64 info_id = 14;
 
-	map<string, MarketGood> Bases  = 15;            
-	optional DiscoveryTechCompat DiscoveryTechCompat = 16;
-	double Mass            = 17;
+  map<string, MarketGood> bases = 15;
+  optional DiscoveryTechCompat discovery_tech_compat = 16;
+  double mass = 17;
 }
 message GetFactionsInput {
   bool include_reputations = 1;
@@ -340,390 +338,387 @@ message GetFactionsInput {
   bool filter_to_useful = 3;
 }
 message GetFactionsReply {
-  repeated Faction Items = 1;
+  repeated Faction items = 1;
 }
 message Faction {
-  string Name = 1;
-  string ShortName = 2;
-  string Nickname = 3;
-  double ObjectDestruction = 4;
-  double MissionSuccess = 5;
-	double MissionFailure = 6;
-	double MissionAbort   = 7;
+  string name = 1;
+  string short_name = 2;
+  string nickname = 3;
+  double object_destruction = 4;
+  double mission_success = 5;
+  double mission_failure = 6;
+  double mission_abort = 7;
 
-  int64 InfonameID = 8;
-  int64 InfocardID = 9;
+  int64 infoname_id = 8;
+  int64 infocard_id = 9;
 
-  repeated Reputation Reputations = 10;
-  repeated Bribe Bribes = 11;
+  repeated Reputation reputations = 10;
+  repeated Bribe bribes = 11;
 }
 message Reputation {
-  string Name = 1;
-  double Rep = 2;
-  double Empathy = 3;
-  string Nickname = 4;
+  string name = 1;
+  double rep = 2;
+  double empathy = 3;
+  string nickname = 4;
 }
 message Bribe {
-  string BaseNickname = 1;
-  double Chance = 2;
-  BaseInfo BaseInfo = 3;
+  string base_nickname = 1;
+  double chance = 2;
+  BaseInfo base_info = 3;
 }
 
 message GetGunsReply {
-  repeated Gun Items = 1;
+  repeated Gun items = 1;
 }
 message Gun {
-  map<string, MarketGood> Bases  = 1;            
-	optional DiscoveryTechCompat DiscoveryTechCompat = 2;
+  map<string, MarketGood> bases = 1;
+  optional DiscoveryTechCompat discovery_tech_compat = 2;
 
-	string Nickname = 3;
-	string Name     = 4;
-	string Type     = 5;
-	int64 Price     = 6;
-	string Class    = 7;
-	string HpType   = 8;
-	int64 IdsName   = 9;
-	int64 IdsInfo   = 10;
-	double Volume   = 11;
+  string nickname = 3;
+  string name = 4;
+  string type = 5;
+  int64 price = 6;
+  string class = 7;
+  string hp_type = 8;
+  int64 ids_name = 9;
+  int64 ids_info = 10;
+  double volume = 11;
 
-	string HitPts       = 12;
-	double PowerUsage   = 13;
-	double Refire       = 14;
-	double Range        = 15;
-	double Toughness    = 16;
-	bool IsAutoTurret   = 17;
-	bool Lootable       = 18;
+  string hit_pts = 12;
+  double power_usage = 13;
+  double refire = 14;
+  double range = 15;
+  double toughness = 16;
+  bool is_auto_turret = 17;
+  bool lootable = 18;
 
-	bool RequiredAmmo   = 19;
-	int64 HullDamage      = 20;
-	int64 EnergyDamage    = 21;
-	int64 ShieldDamage    = 22;
-	int64 AvgShieldDamage = 23;
-	string DamageType      = 24;
-	double LifeTime        = 25;
-	double Speed           = 26;
-	double GunTurnRate     = 27;
-	double DispersionAngle = 28;
+  bool required_ammo = 19;
+  int64 hull_damage = 20;
+  int64 energy_damage = 21;
+  int64 shield_damage = 22;
+  int64 avg_shield_damage = 23;
+  string damage_type = 24;
+  double life_time = 25;
+  double speed = 26;
+  double gun_turn_rate = 27;
+  double dispersion_angle = 28;
 
-	double HullDamagePerSec       = 29;
-	double AvgShieldDamagePerSec  = 30;
-	double EnergyDamagePerSec     = 31;
-	double PowerUsagePerSec       = 32;
-	double AvgEfficiency          = 33;
-	double HullEfficiency         = 34;
-	double ShieldEfficiency       = 35;
-	double EnergyDamageEfficiency = 36;
-	repeated DamageBonus DamageBonuses = 37;
+  double hull_damage_per_sec = 29;
+  double avg_shield_damage_per_sec = 30;
+  double energy_damage_per_sec = 31;
+  double power_usage_per_sec = 32;
+  double avg_efficiency = 33;
+  double hull_efficiency = 34;
+  double shield_efficiency = 35;
+  double energy_damage_efficiency = 36;
+  repeated DamageBonus damage_bonuses = 37;
 
-  // has data defined but only for missile guns :)
-	Missile Missile = 38;
-	GunDetailed GunDetailed = 39;
+  // has data defined but only for Missile guns :)
+  Missile missile = 38;
+  GunDetailed gun_detailed = 39;
 
-	optional int64 NumBarrels = 40;
-	optional BurstFire BurstFire = 41;
-	AmmoLimit  AmmoLimit = 42;
+  optional int64 num_barrels = 40;
+  optional BurstFire burst_fire = 41;
+  AmmoLimit ammo_limit = 42;
 
-	double Mass = 43;
-	optional DiscoGun DiscoGun = 44;
+  double mass = 43;
+  optional DiscoGun disco_gun = 44;
 }
 message DamageBonus {
-  string Type = 1;
-  double Modifier = 2;
+  string type = 1;
+  double modifier = 2;
 }
 message Missile {
-  double MaxAngularVelocity = 1;
+  double max_angular_velocity = 1;
 }
 message GunDetailed {
-  string FlashParticleName = 1;
-	string ConstEffect  = 2;
-	string MunitionHitEffect = 3; 
+  string flash_particle_name = 1;
+  string const_effect = 2;
+  string munition_hit_effect = 3;
 }
 message BurstFire {
-  double SustainedRefire = 1;
-	int64 Ammo             = 2;
-	double ReloadTime       = 3;
+  double sustained_refire = 1;
+  int64 ammo = 2;
+  double reload_time = 3;
 
-	double SustainedHullDamagePerSec      = 4;
-	double SustainedAvgShieldDamagePerSec = 5;
-	double SustainedEnergyDamagePerSec    = 6;
-	double SustainedPowerUsagePerSec      = 7;
+  double sustained_hull_damage_per_sec = 4;
+  double sustained_avg_shield_damage_per_sec = 5;
+  double sustained_energy_damage_per_sec = 6;
+  double sustained_power_usage_per_sec = 7;
 }
 message DiscoGun {
-  double ArmorPen = 1;
+  double armor_pen = 1;
 }
 message GetMinesReply {
-  repeated Mine Items = 1;
+  repeated Mine items = 1;
 }
 message Mine {
-	string Name  = 1;
-	int64 Price  = 2;
-	int64 AmmoPrice  = 3;
-	string Nickname  = 4;
-	string ProjectileArchetype = 5;
-	int64 IdsName         = 6;
-	int64 IdsInfo         = 7;
+  string name = 1;
+  int64 price = 2;
+  int64 ammo_price = 3;
+  string nickname = 4;
+  string projectile_archetype = 5;
+  int64 ids_name = 6;
+  int64 ids_info = 7;
 
-	int64 HullDamage    =8;
-	int64 EnergyDamange = 9;
-	int64 ShieldDamage  = 10;
-	double PowerUsage   = 11;
+  int64 hull_damage = 8;
+  int64 energy_damange = 9;
+  int64 shield_damage = 10;
+  double power_usage = 11;
 
-	double Value            = 12;
-	double Refire           = 13;
-	double DetonationDistance = 14;
-	double Radius             = 15;
-	int64 SeekDistance        = 16;
-	int64 TopSpeed            = 17;
-	int64 Acceleration        = 18;
-	double LinearDrag         = 19;
-	double LifeTime           = 20;
-	int64 OwnerSafe           = 21;
-	double Toughness          = 22;
+  double value = 12;
+  double refire = 13;
+  double detonation_distance = 14;
+  double radius = 15;
+  int64 seek_distance = 16;
+  int64 top_speed = 17;
+  int64 acceleration = 18;
+  double linear_drag = 19;
+  double life_time = 20;
+  int64 owner_safe = 21;
+  double toughness = 22;
 
-	int64 HitPts    = 23;
-	bool Lootable  = 24;
-	AmmoLimit AmmoLimit = 25;
-	double Mass     = 26;
+  int64 hit_pts = 23;
+  bool lootable = 24;
+  AmmoLimit ammo_limit = 25;
+  double mass = 26;
 
-  map<string, MarketGood> Bases  = 27;            
-	optional DiscoveryTechCompat DiscoveryTechCompat = 28;
+  map<string, MarketGood> bases = 27;
+  optional DiscoveryTechCompat discovery_tech_compat = 28;
 }
 message AmmoLimit {
-  optional int64 AmountInCatridge = 1;
-  optional int64 MaxCatridges     = 2;
+  optional int64 amount_in_catridge = 1;
+  optional int64 max_catridges = 2;
 }
 message GetScannersReply {
-  repeated Scanner Items = 1;
+  repeated Scanner items = 1;
 }
 message Scanner {
-	string Name = 1;
-	int64 Price = 2;
-	int64 Range  = 3;
-	int64 CargoScanRange = 4;
-	bool Lootable   = 5;
-	string Nickname = 6;
-	int64 NameID    = 7;
-	int64 InfoID    = 8;
-	double Mass     = 9;
+  string name = 1;
+  int64 price = 2;
+  int64 range = 3;
+  int64 cargo_scan_range = 4;
+  bool lootable = 5;
+  string nickname = 6;
+  int64 name_id = 7;
+  int64 info_id = 8;
+  double mass = 9;
 
-  map<string, MarketGood> Bases  = 10;            
-	optional DiscoveryTechCompat DiscoveryTechCompat = 11;
+  map<string, MarketGood> bases = 10;
+  optional DiscoveryTechCompat discovery_tech_compat = 11;
 }
 message GetShieldsReply {
-  repeated Shield Items = 1;
+  repeated Shield items = 1;
 }
 message Shield {
-	string Name  = 1;
+  string name = 1;
 
-	string Class = 2;
-	string Type  = 3;
-	string Technology = 4;
-	int64 Price       = 5;
+  string class = 2;
+  string type = 3;
+  string technology = 4;
+  int64 price = 5;
 
-	int64 Capacity          = 6;
-	int64 RegenerationRate  = 7;
-	int64 ConstantPowerDraw = 8;
-	double Value            = 9;
-	int64 RebuildPowerDraw  = 10;
-	int64 OffRebuildTime    = 11;
+  int64 capacity = 6;
+  int64 regeneration_rate = 7;
+  int64 constant_power_draw = 8;
+  double value = 9;
+  int64 rebuild_power_draw = 10;
+  int64 off_rebuild_time = 11;
 
-	double Toughness        = 12;
-	int64 HitPts            = 13;
-	bool Lootable           = 14;
+  double toughness = 12;
+  int64 hit_pts = 13;
+  bool lootable = 14;
 
-	string Nickname         = 15;
-	string HpType           = 16;
-	int64 IdsName           = 17;
-	int64 IdsInfo           = 18;
-	double Mass             = 19;
+  string nickname = 15;
+  string hp_type = 16;
+  int64 ids_name = 17;
+  int64 ids_info = 18;
+  double mass = 19;
 
-	map<string, MarketGood> Bases  = 20;            
-	optional DiscoveryTechCompat DiscoveryTechCompat = 21;
+  map<string, MarketGood> bases = 20;
+  optional DiscoveryTechCompat discovery_tech_compat = 21;
 }
 message GetShipsReply {
-  repeated Ship Items = 1;
+  repeated Ship items = 1;
 }
 message Ship {
-	string Nickname  = 1;
-	string Name      = 2;
-	int64 Class      = 3;
-	string Type      = 4;
-	int64 Price      = 5;
-	int64 Armor      = 6;
-	int64 HoldSize   = 7;
-	int64 Nanobots   = 8;
-	int64 Batteries  = 9;
-	double Mass      = 10;
+  string nickname = 1;
+  string name = 2;
+  int64 class = 3;
+  string type = 4;
+  int64 price = 5;
+  int64 armor = 6;
+  int64 hold_size = 7;
+  int64 nanobots = 8;
+  int64 batteries = 9;
+  double mass = 10;
 
-	int64 PowerCapacity     = 11;
-	int64 PowerRechargeRate = 12;
-	int64 CruiseSpeed       = 13;
-	double LinearDrag       = 14;
-	int64 EngineMaxForce    = 15;
-	double ImpulseSpeed     = 16;
-	repeated int64 ThrusterSpeed = 17;
-	double ReverseFraction  = 18;
-	int64 ThrustCapacity    = 19;
-	int64 ThrustRecharge    = 20;
+  int64 power_capacity = 11;
+  int64 power_recharge_rate = 12;
+  int64 cruise_speed = 13;
+  double linear_drag = 14;
+  int64 engine_max_force = 15;
+  double impulse_speed = 16;
+  repeated int64 thruster_speed = 17;
+  double reverse_fraction = 18;
+  int64 thrust_capacity = 19;
+  int64 thrust_recharge = 20;
 
-	double MaxAngularSpeedDegS           = 21;
-	double AngularDistanceFrom0ToHalfSec = 22;
-	double TimeTo90MaxAngularSpeed       = 23;
+  double max_angular_speed_deg_s = 21;
+  double angular_distance_from0_to_half_sec = 22;
+  double time_to90_max_angular_speed = 23;
 
-	double NudgeForce  = 24;
-	double StrafeForce = 25;
-	int64 NameID       = 26;
-	int64 InfoID       = 27;
+  double nudge_force = 24;
+  double strafe_force = 25;
+  int64 name_id = 26;
+  int64 info_id = 27;
 
-	repeated EquipmentSlot Slots     = 28;
-	repeated string BiggestHardpoint = 29;
-	repeated ShipPackage ShipPackages  = 30;
+  repeated EquipmentSlot slots = 28;
+  repeated string biggest_hardpoint = 29;
+  repeated ShipPackage ship_packages = 30;
 
-	map<string, MarketGood> Bases  = 31;            
-	optional DiscoveryTechCompat DiscoveryTechCompat = 32;
+  map<string, MarketGood> bases = 31;
+  optional DiscoveryTechCompat discovery_tech_compat = 32;
 
-	optional DiscoShip DiscoShip = 33;
+  optional DiscoShip disco_ship = 33;
 }
 message EquipmentSlot {
-  string SlotName   = 1;
-  repeated string AllowedEquip = 2;
+  string slot_name = 1;
+  repeated string allowed_equip = 2;
 }
 message ShipPackage {
-  string Nickname  = 1;
+  string nickname = 1;
 }
 message DiscoShip {
-  double ArmorMult = 1;
+  double armor_mult = 1;
 }
 message GetThrustersReply {
-  repeated Thruster Items = 1;
+  repeated Thruster items = 1;
 }
 message Thruster {
-  string Name    = 1;
-	int64 Price    = 2;
-	int64 MaxForce = 3;
-	int64 PowerUsage = 4;
-	double Efficiency = 5;
-	double Value      = 6;
-	int64 HitPts      = 7;
-	bool Lootable     = 8;
-	string Nickname   = 9;
-	int64 NameID      = 10;
-	int64 InfoID      = 11;
-	double Mass       = 12;
-  map<string, MarketGood> Bases  = 13;            
-	optional DiscoveryTechCompat DiscoveryTechCompat = 14;
-
+  string name = 1;
+  int64 price = 2;
+  int64 max_force = 3;
+  int64 power_usage = 4;
+  double efficiency = 5;
+  double value = 6;
+  int64 hit_pts = 7;
+  bool lootable = 8;
+  string nickname = 9;
+  int64 name_id = 10;
+  int64 info_id = 11;
+  double mass = 12;
+  map<string, MarketGood> bases = 13;
+  optional DiscoveryTechCompat discovery_tech_compat = 14;
 }
 message GetTractorsReply {
-  repeated Tractor Items = 1;
+  repeated Tractor items = 1;
 }
 message Tractor {
-	string Name  = 1;
-	int64 Price  = 2;
+  string name = 1;
+  int64 price = 2;
 
-	int64 MaxLength  = 3;
-	int64 ReachSpeed = 4;
+  int64 max_length = 3;
+  int64 reach_speed = 4;
 
-	bool Lootable   = 5;
-	string Nickname = 6;
-	string ShortNickname = 7;
-	int64 NameID      = 8;
-	int64 InfoID      = 9;
-	map<string, MarketGood> Bases  = 10;            
-  double Mass    = 11;
-
+  bool lootable = 5;
+  string nickname = 6;
+  string short_nickname = 7;
+  int64 name_id = 8;
+  int64 info_id = 9;
+  map<string, MarketGood> bases = 10;
+  double mass = 11;
 }
 message GetHashesReply {
-  map<string,Hash> HashesByNick = 1;
+  map<string, Hash> hashes_by_nick = 1;
 }
 message Hash {
-  int32 Int32   = 1;
-	uint32 Uint32 = 2;
-	string Hex    = 3;
+  int32 int32 = 1;
+  uint32 uint32 = 2;
+  string hex = 3;
 }
 message GetPoBsReply {
-  repeated PoB Items = 1;
+  repeated PoB items = 1;
 }
 message PoBCore {
-  string Nickname = 1;
-  string Name = 2;
-  optional string Pos = 3;
-  optional int64 Level = 4;
+  string nickname = 1;
+  string name = 2;
+  optional string pos = 3;
+  optional int64 level = 4;
 
-	optional int64 Money = 5;
-	optional double Health = 6;
-	optional int64 DefenseMode = 7;
+  optional int64 money = 5;
+  optional double health = 6;
+  optional int64 defense_mode = 7;
 
-	optional string SystemNick = 8;
-	optional string SystemName  = 9; 
-	optional string FactionNick = 10;
-	optional string FactionName = 11;
+  optional string system_nick = 8;
+  optional string system_name = 9;
+  optional string faction_nick = 10;
+  optional string faction_name = 11;
 
-	optional string ForumThreadUrl  = 12;
-	optional int64 CargoSpaceLeft   = 13;
+  optional string forum_thread_url = 12;
+  optional int64 cargo_space_left = 13;
 
-	optional Pos BasePos            = 14;
-	optional string SectorCoord     = 15;
-	optional string Region          = 16;
+  optional Pos base_pos = 14;
+  optional string sector_coord = 15;
+  optional string region = 16;
 }
 message PoB {
-  PoBCore Core = 1;
-  repeated ShopItem ShopItems = 2;
+  PoBCore core = 1;
+  repeated ShopItem shop_items = 2;
 }
 message ShopItem {
-  string Nickname = 1;
-  string Name = 2;
-  string Category = 3;
+  string nickname = 1;
+  string name = 2;
+  string category = 3;
 
-  int64 Id = 4;
-  int64 Quantity = 5;
-  int64 Price    = 6;
-	int64 SellPrice = 7;
-	int64 MinStock  = 8;
-	int64 MaxStock  = 9;
+  int64 id = 4;
+  int64 quantity = 5;
+  int64 price = 6;
+  int64 sell_price = 7;
+  int64 min_stock = 8;
+  int64 max_stock = 9;
 }
 
 message GetPoBGoodsReply {
-  repeated PoBGood Items = 1;
+  repeated PoBGood items = 1;
 }
 message PoBGood {
-  string Nickname = 1;
-  string Name = 2;
-  int64 TotalBuyableFromBases = 3;
-  int64 TotalSellableToBases = 4;
-  optional int64 BestPriceToBuy = 5;
-  optional int64 BestPriceToSell = 6;
-  string Category = 7;
-  bool AnyBaseSells = 8;
-  bool AnyBaseBuys = 9;
-  repeated PoBGoodBase Bases = 10;
+  string nickname = 1;
+  string name = 2;
+  int64 total_buyable_from_bases = 3;
+  int64 total_sellable_to_bases = 4;
+  optional int64 best_price_to_buy = 5;
+  optional int64 best_price_to_sell = 6;
+  string category = 7;
+  bool any_base_sells = 8;
+  bool any_base_buys = 9;
+  repeated PoBGoodBase bases = 10;
 }
 message PoBGoodBase {
-  ShopItem ShopItem = 1;
-  PoBCore Base = 2;
+  ShopItem shop_item = 1;
+  PoBCore base = 2;
 }
 
 message GetGraphPathsInput {
-  repeated GraphPathQuery Queries = 1;
+  repeated GraphPathQuery queries = 1;
 }
 message GraphPathQuery {
-	string From = 1;
-	string To = 2;
+  string from = 1;
+  string to = 2;
 }
 
-
 message GetGraphPathsReply {
-  repeated GetGraphPathsAnswer Answers = 1;
+  repeated GetGraphPathsAnswer answers = 1;
 }
 
 message GetGraphPathsAnswer {
-  GraphPathQuery Route = 1;
-  optional GraphPathTime Time = 2;
-  optional string Error = 3;
+  GraphPathQuery route = 1;
+  optional GraphPathTime time = 2;
+  optional string error = 3;
 }
 
 message GraphPathTime {
-	optional int64 Transport = 1;
-	optional int64 Frigate = 2;
-	optional int64 Freighter = 3;
+  optional int64 transport = 1;
+  optional int64 frigate = 2;
+  optional int64 freighter = 3;
 }

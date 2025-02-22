@@ -49,14 +49,14 @@ const (
 type DarkstatClient interface {
 	// Just to check if grpc works. Returns boolean value if it is healthy as true
 	GetHealth(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HealthReply, error)
-	// Get all Freelancer NPC Bases
+	// Get all Freelancer NPC bases
 	GetBasesNpc(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
 	// Get all imaginary bases that in place of mining fields. Useful for trading calculations
 	GetBasesMiningOperations(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
-	// Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions
+	// Get all Player Owned bases in the same format as Npc bases. Returns only PoBs which have known positions
 	// Useful for trading calculations
 	GetBasesPoBs(ctx context.Context, in *GetBasesInput, opts ...grpc.CallOption) (*GetBasesReply, error)
-	// Get all Player Owned Bases. Completely all that are public exposed
+	// Get all Player Owned bases. Completely all that are public exposed
 	GetPoBs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBsReply, error)
 	// Get all PoB goods, where they are sold and bought. Reverse search by PoBs
 	GetPoBGoods(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetPoBGoodsReply, error)
@@ -313,14 +313,14 @@ func (c *darkstatClient) GetGraphPaths(ctx context.Context, in *GetGraphPathsInp
 type DarkstatServer interface {
 	// Just to check if grpc works. Returns boolean value if it is healthy as true
 	GetHealth(context.Context, *Empty) (*HealthReply, error)
-	// Get all Freelancer NPC Bases
+	// Get all Freelancer NPC bases
 	GetBasesNpc(context.Context, *GetBasesInput) (*GetBasesReply, error)
 	// Get all imaginary bases that in place of mining fields. Useful for trading calculations
 	GetBasesMiningOperations(context.Context, *GetBasesInput) (*GetBasesReply, error)
-	// Get all Player Owned Bases in the same format as Npc Bases. Returns only PoBs which have known positions
+	// Get all Player Owned bases in the same format as Npc bases. Returns only PoBs which have known positions
 	// Useful for trading calculations
 	GetBasesPoBs(context.Context, *GetBasesInput) (*GetBasesReply, error)
-	// Get all Player Owned Bases. Completely all that are public exposed
+	// Get all Player Owned bases. Completely all that are public exposed
 	GetPoBs(context.Context, *Empty) (*GetPoBsReply, error)
 	// Get all PoB goods, where they are sold and bought. Reverse search by PoBs
 	GetPoBGoods(context.Context, *Empty) (*GetPoBGoodsReply, error)

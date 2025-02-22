@@ -30,8 +30,8 @@ func (s *Server) GetTractors(_ context.Context, in *pb.GetTractorsInput) (*pb.Ge
 			ReachSpeed: int64(item.ReachSpeed),
 			Lootable:   item.Lootable,
 			Nickname:   string(item.Nickname),
-			NameID:     int64(item.NameID),
-			InfoID:     int64(item.InfoID),
+			NameId:     int64(item.NameID),
+			InfoId:     int64(item.InfoID),
 			Mass:       item.Mass,
 		}
 		if in.IncludeMarketGoods {

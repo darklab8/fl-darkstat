@@ -30,8 +30,8 @@ func (s *Server) GetFactions(_ context.Context, in *pb.GetFactionsInput) (*pb.Ge
 			MissionSuccess:    item.MissionSuccess,
 			MissionFailure:    item.MissionFailure,
 			MissionAbort:      item.MissionAbort,
-			InfonameID:        int64(item.InfonameID),
-			InfocardID:        int64(item.InfocardID),
+			InfonameId:        int64(item.InfonameID),
+			InfocardId:        int64(item.InfocardID),
 		}
 		if in.IncludeBribes {
 			for _, bribe := range item.Bribes {

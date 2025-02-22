@@ -48,8 +48,8 @@ func (s *Server) GetShips(_ context.Context, in *pb.GetEquipmentInput) (*pb.GetS
 			TimeTo90MaxAngularSpeed:       item.TimeTo90MaxAngularSpeed,
 			NudgeForce:                    item.NudgeForce,
 			StrafeForce:                   item.StrafeForce,
-			NameID:                        int64(item.NameID),
-			InfoID:                        int64(item.InfoID),
+			NameId:                        int64(item.NameID),
+			InfoId:                        int64(item.InfoID),
 		}
 		for _, thruster_speed := range item.ThrusterSpeed {
 			result.ThrusterSpeed = append(result.ThrusterSpeed, int64(thruster_speed))

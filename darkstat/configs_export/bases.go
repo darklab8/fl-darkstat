@@ -182,7 +182,7 @@ type Base struct {
 	Name               string               `json:"name"  validate:"required"`       // Infocard Name
 	Archetypes         []string             `json:"archetypes"  validate:"required"` // Base Archetypes
 	Nickname           cfg.BaseUniNick      `json:"nickname"  validate:"required"`
-	FactionName        string               `json:"faction_nickname"  validate:"required"`
+	FactionName        string               `json:"faction_name"  validate:"required"`
 	System             string               `json:"system_name"  validate:"required"`
 	SystemNickname     string               `json:"system_nickname"  validate:"required"`
 	Region             string               `json:"region_name"  validate:"required"`
