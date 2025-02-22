@@ -19,7 +19,7 @@ type Intg = uint32
 const intgmax = Intg(math.MaxUint32)
 
 type GameGraph struct {
-	matrix                    map[Intg]map[Intg]float64
+	matrix                    map[VertexName]map[VertexName]float64
 	IndexByNick               map[VertexName]Intg `json:"index_by_nickname" validate:"required"`
 	NicknameByIndex           map[Intg]VertexName `json:"nickname_by_index" validate:"required"`
 	AllowedVertixesForCalcs   map[VertexName]bool // Consider deleting this
@@ -35,7 +35,7 @@ func (g *GameGraph) WipeMatrix() {
 
 func NewGameGraph(avgCruiseSpeed int, canVisitFreighterOnlyJHs WithFreighterPaths) *GameGraph {
 	return &GameGraph{
-		matrix:                    make(map[Intg]map[Intg]float64),
+		matrix:                    make(map[VertexName]map[VertexName]float64),
 		IndexByNick:               map[VertexName]Intg{},
 		NicknameByIndex:           make(map[Intg]VertexName),
 		AllowedVertixesForCalcs:   make(map[VertexName]bool),
@@ -60,24 +60,22 @@ func (graph *GameGraph) GetVertexIndexByName(key VertexName) Intg {
 }
 
 func (f *GameGraph) SetEdge(keya string, keyb string, distance float64) {
-	keya_index := f.GetVertexIndexByName(VertexName(keya))
-	vertex, vertex_exists := f.matrix[keya_index]
+	vertex, vertex_exists := f.matrix[VertexName(keya)]
 	if !vertex_exists {
-		vertex = make(map[Intg]float64)
-		f.matrix[keya_index] = vertex
+		vertex = make(map[VertexName]float64)
+		f.matrix[VertexName(keya)] = vertex
 	}
 
-	keyb_index := f.GetVertexIndexByName(VertexName(keyb))
-	if _, vert_target_exists := f.matrix[keyb_index]; !vert_target_exists {
-		f.matrix[keyb_index] = make(map[Intg]float64)
+	if _, vert_target_exists := f.matrix[VertexName(keyb)]; !vert_target_exists {
+		f.matrix[VertexName(keyb)] = make(map[VertexName]float64)
 	}
 
-	_, already_set := vertex[keyb_index]
+	_, already_set := vertex[VertexName(keyb)]
 	if already_set {
 		return // otherwise u will overwrite tradelane distances.
 	}
 
-	vertex[keyb_index] = distance
+	vertex[VertexName(keyb)] = distance
 }
 
 func (f *GameGraph) SetIdsName(keya string, ids_name int) {

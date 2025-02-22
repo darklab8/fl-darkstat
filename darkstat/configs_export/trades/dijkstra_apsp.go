@@ -81,8 +81,8 @@ func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *Dijkstr
 
 	for vertex_source, vertex := range graph.matrix {
 		for vertex_target, weight := range vertex {
-			i := vertex_source
-			j := vertex_target
+			i := graph.IndexByNick[vertex_source]
+			j := graph.IndexByNick[vertex_target]
 
 			g.addEdge(i, j, Intg(weight))
 		}

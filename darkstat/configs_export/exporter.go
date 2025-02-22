@@ -142,6 +142,11 @@ func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Expor
 		Equip:        mapped.Equip,
 		Goods:        mapped.Goods,
 		Shiparch:     mapped.Shiparch,
+		Systems: &configs_mapped.SystemsRelay{
+			BasesByBases:    mapped.Systems.BasesByBases,
+			BasesByDockWith: mapped.Systems.BasesByBases,
+			JumpholesByNick: mapped.Systems.JumpholesByNick,
+		},
 	}
 	if mapped.Discovery != nil {
 		mapped_relay.Discovery = &configs_mapped.DiscoveryRelay{
@@ -165,7 +170,7 @@ func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Expor
 }
 
 type GraphResults struct {
-	e       *Exporter
+	e       *ExporterRelay
 	Graph   *trades.GameGraph
 	Time    [][]trades.Intg
 	Parents [][]trades.Parent
@@ -193,7 +198,7 @@ func NewGraphResults(
 
 	graph.WipeMatrix()
 	return &GraphResults{
-		e:       e,
+		e:       e.ExporterRelay,
 		Graph:   graph,
 		Time:    dists,
 		Parents: parents,

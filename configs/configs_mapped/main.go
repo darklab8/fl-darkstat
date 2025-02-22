@@ -72,6 +72,12 @@ type MappedConfigsRelay struct {
 	Goods        *equipment_mapped.Config
 	Discovery    *DiscoveryRelay
 	Shiparch     *ship_mapped.Config
+	Systems      *SystemsRelay
+}
+type SystemsRelay struct {
+	BasesByBases    map[string]*systems_mapped.Base
+	BasesByDockWith map[string]*systems_mapped.Base
+	JumpholesByNick map[string]*systems_mapped.Jumphole
 }
 
 type DiscoveryRelay struct {

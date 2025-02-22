@@ -84,17 +84,18 @@ func (t *Route) GetPaths() []PathWithNavmap {
 			DetailedPath: path,
 		}
 
-		if jh, ok := t.g.e.mapped.Systems.JumpholesByNick[path.NextName]; ok {
+		if jh, ok := t.g.e.Mapped.Systems.JumpholesByNick[path.NextName]; ok {
 			pos := jh.Pos.Get()
 
-			system_uni := t.g.e.mapped.Universe.SystemMap[universe_mapped.SystemNickname(jh.System.Nickname)]
+			system_uni := t.g.e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(jh.System.Nickname)]
 			augmented_path.SectorCoord = VectorToSectorCoord(system_uni, pos)
 			augmented_path.Pos = pos
 		}
-		if base, ok := t.g.e.mapped.Systems.BasesByDockWith[path.NextName]; ok {
+
+		if base, ok := t.g.e.Mapped.Systems.BasesByDockWith[path.NextName]; ok {
 			pos := base.Pos.Get()
 
-			system_uni := t.g.e.mapped.Universe.SystemMap[universe_mapped.SystemNickname(base.System.Nickname)]
+			system_uni := t.g.e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(base.System.Nickname)]
 			augmented_path.SectorCoord = VectorToSectorCoord(system_uni, pos)
 			augmented_path.Pos = pos
 		}
@@ -105,7 +106,7 @@ func (t *Route) GetPaths() []PathWithNavmap {
 }
 
 func (t *Route) GetNameByIdsName(ids_name int) string {
-	return string(t.g.e.mapped.Infocards.Infonames[ids_name])
+	return string(t.g.e.Mapped.Infocards.Infonames[ids_name])
 }
 
 func (t *Route) GetTimeMs() cfg.MillisecondsI {
