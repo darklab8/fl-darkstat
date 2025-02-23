@@ -102,7 +102,7 @@ type MappedConfigs struct {
 // decision is made by using memory profiler, command in taskfile
 func (m *MappedConfigs) Market() *market_mapped.Config {
 	if m.market == nil {
-		logus.Log.Panic("you deallocated mapped.equip as no longer necessary stuff")
+		logus.Log.Panic("you already deallocated mapped.equip as no longer necessary stuff")
 	}
 	return m.market
 }
@@ -111,27 +111,16 @@ func (m *MappedConfigs) Market() *market_mapped.Config {
 // decision is made by using memory profiler, command in taskfile
 func (m *MappedConfigs) Equip() *equip_mapped.Config {
 	if m.equip == nil {
-		logus.Log.Panic("you deallocated mapped.equip as no longer necessary stuff")
+		logus.Log.Panic("you already deallocated mapped.equip as no longer necessary stuff")
 	}
-	//Allocate back if necessary.
-	// if m.equip == nil {
-	// 	files_equip := getConfigs(m.filesystem, m.FreelancerINI.Equips)
-	// 	var wg sync.WaitGroup
-	// 	wg.Add(len(files_equip))
-	// 	for _, file := range files_equip {
-	// 		go func(file *iniload.IniLoader) {
-	// 			file.Scan()
-	// 			wg.Done()
-	// 		}(file)
-	// 	}
-	// 	wg.Wait()
-	// 	m.equip = equip_mapped.Read(files_equip)
-	// }
 	return m.equip
 }
 
 func (m *MappedConfigs) Clean() {
-	// Deallocate not often used stuff here
+	// Deallocate not often used stuff here.
+	// We deallocate stuff needed only one time during Export() operation pretty much.
+	// Technically more clean solution would be passing around those parsed configs... but it requires too much variable passing around.
+	// one may be it will be done :)
 	m.equip = nil
 	m.market = nil
 }
