@@ -2,14 +2,13 @@ package trades
 
 import (
 	"fmt"
-	"math"
 	"testing"
 )
 
 // // Driver Code
 func TestDijkstraAPSP(t *testing.T) {
-	var vertices int = 4
-	var matrix [][]int = [][]int{
+	var vertices Intg = 4
+	var matrix [][]Intg = [][]Intg{
 		{0, 0, 2, 0},
 		{4, 0, 3, 0},
 		{0, 0, 0, 2},
@@ -30,15 +29,15 @@ func TestDijkstraAPSP(t *testing.T) {
 	fmt.Println("Distance matrix:")
 
 	fmt.Printf("   \t")
-	for i := 0; i < vertices; i++ {
+	for i := Intg(0); i < vertices; i++ {
 		fmt.Printf("%3d\t", i)
 	}
 
-	for i := 0; i < vertices; i++ {
+	for i := Intg(0); i < vertices; i++ {
 		fmt.Println()
 		fmt.Printf("%3d\t", i)
-		for j := 0; j < vertices; j++ {
-			if distances[i][j] == math.MaxInt {
+		for j := Intg(0); j < vertices; j++ {
+			if distances[i][j] == intgmax {
 				fmt.Printf(" X\t")
 			} else {
 				fmt.Printf("%3d\t",
@@ -59,7 +58,7 @@ func TestDijkstraAPSPWithGraph(t *testing.T) {
 
 	for i := 0; i < 4; i++ {
 		for j := 0; j < 4; j++ {
-			if dist[i][j] == math.MaxInt {
+			if dist[i][j] == intgmax {
 				fmt.Printf("%7s", "INF")
 			} else {
 				fmt.Printf("%7d", dist[i][j])

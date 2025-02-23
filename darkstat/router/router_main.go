@@ -18,7 +18,8 @@ import (
 )
 
 type Router struct {
-	AppData *appdata.AppData
+	AppData              *appdata.AppData
+	is_static_assets_gen bool
 }
 
 type RouterOpt func(l *Router)
@@ -34,6 +35,10 @@ func NewRouter(AppData *appdata.AppData, opts ...RouterOpt) *Router {
 
 func WithAppData(AppData *appdata.AppData) RouterOpt {
 	return func(l *Router) { l.AppData = AppData }
+}
+
+func WithStaticAssetsGen() RouterOpt {
+	return func(l *Router) { l.is_static_assets_gen = true }
 }
 
 func (l *Router) Link() *builder.Builder {

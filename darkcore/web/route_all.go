@@ -83,3 +83,33 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 		},
 	}
 }
+
+// Example how to write route for appdata
+// func NewBaseTravelRoutes(w *Web) *registry.Endpoint {
+// 	return &registry.Endpoint{
+// 		Url: "GET /" + front.UrlBaseTravelRoutesPrfx + "{base_nickname}",
+// 		Handler: func(resp http.ResponseWriter, req *http.Request) {
+// 			fmt.Println("Getting Requested Base Travel Routes")
+// 			if w.AppDataMutex != nil {
+// 				w.AppDataMutex.Lock()
+// 				defer w.AppDataMutex.Unlock()
+// 			}
+// 			base_nickname := req.PathValue("base_nickname")
+
+// 			for _, base := range w.data.Configs.TravelBases {
+
+// 				if strings.ToLower(base.Nickname.ToStr()) == base_nickname {
+// 					buf := bytes.NewBuffer([]byte{})
+// 					component := front.BaseRoutes(base.Name, w.data.Configs.GetTravelRoutes(base), front.BaseAllRoutes, w.data.Shared)
+// 					ctx := context.WithValue(context.Background(), core_types.GlobalParamsCtxKey, w.data.Build.GetParams())
+// 					err := component.Render(ctx, buf)
+// 					logus.Log.CheckError(err, "failed to render")
+// 					fmt.Fprint(resp, buf.String())
+// 					return
+// 				}
+// 			}
+
+// 			logus.Log.Error("failed to find any base with such nicknames i guess?", typelog.Any("bases_len", len(w.data.Configs.TravelBases)))
+// 		},
+// 	}
+// }

@@ -71,7 +71,7 @@ If u have problems with configuring development environment, then seek my contac
 - API has swagger documentation accessable from its interface by button "API" at the top of menu
   - It is available only for Static Binary and Dockerized deployments currently.
   - It is known to run in production for Freelancer Discovery, [check here](https://darkstat.dd84ai.com/swagger/index.html)
-  - accessable locally over https://localhost:8000, or optionally unix socket `/tmp/darkstat/api.sock` for extra performance boosts.
+  - accessable locally over https://localhost:8000, or optionally unix socket `/tmp/darkstat/http.sock` for extra performance boosts.
   - deployed Discovery can be found at https://darkstat.dd84ai.com/swagger/index.html
   - deployed Vanilla can be found at https://darkstat-vanilla.dd84ai.com/swagger/index.html
 

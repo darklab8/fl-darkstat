@@ -15,6 +15,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
+	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 )
 
 type Mutex interface {
@@ -23,6 +24,7 @@ type Mutex interface {
 }
 
 type Web struct {
+	data         *appdata.AppData
 	filesystems  []*builder.Filesystem
 	registry     *registry.Registion
 	mux          *http.ServeMux
@@ -34,6 +36,12 @@ type Web struct {
 func (w *Web) GetMux() *http.ServeMux { return w.mux }
 
 type WebOpt func(w *Web)
+
+func WithAppData(data *appdata.AppData) WebOpt {
+	return func(w *Web) {
+		w.data = data
+	}
+}
 
 func WithMutexableData(app_data_mutex Mutex) WebOpt {
 	return func(w *Web) {
@@ -64,8 +72,8 @@ func NewWeb(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
 	w := NewWebBasic(filesystems, opts...)
 	fmt.Println("site_root", w.site_root)
 
+	// w.registry.Register(NewBaseTravelRoutes(w)) // example how to write route for appdata
 	w.registry.Register(NewEndpointStatic(w))
-
 	w.registry.Register(NewEndpointPing(w))
 	w.registry.Register(NewOauthStart(w))
 	w.registry.Register(NewOauthAccept(w))
@@ -147,4 +155,4 @@ func (s ServerClose) Close() {
 	os.Remove(s.sock_adrr)
 }
 
-const DarkstatAPISock = "/tmp/darkstat/api.sock"
+const DarkstatHttpSock = "/tmp/darkstat/http.sock"

@@ -17,6 +17,8 @@ type Builder struct {
 	static_files []StaticFile
 }
 
+func (b *Builder) GetParams() Params { return b.params }
+
 type StaticFile struct {
 	path    utils_types.FilePath
 	content []byte

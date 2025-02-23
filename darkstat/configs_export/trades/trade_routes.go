@@ -108,7 +108,7 @@ type MappingOptions struct {
 }
 
 func MapConfigsToFGraph(
-	configs *configs_mapped.MappedConfigs,
+	mapped *configs_mapped.MappedConfigs,
 	avgCruiseSpeed int,
 	with_freighter_paths WithFreighterPaths,
 	extra_bases_by_system map[string][]ExtraBase,
@@ -117,11 +117,11 @@ func MapConfigsToFGraph(
 	if opts.TradeRoutesDetailedTradeLane == nil {
 		opts.TradeRoutesDetailedTradeLane = ptr.Ptr(settings.Env.TradeRoutesDetailedTradeLane)
 	}
-	average_trade_lane_speed := configs.GetAvgTradeLaneSpeed()
+	average_trade_lane_speed := mapped.GetAvgTradeLaneSpeed()
 
 	graph := NewGameGraph(avgCruiseSpeed, with_freighter_paths)
-	for _, system := range configs.Systems.Systems {
-		system_speed_multiplier := configs.Overrides.GetSystemSpeedMultiplier(system.Nickname)
+	for _, system := range mapped.Systems.Systems {
+		system_speed_multiplier := mapped.Overrides.GetSystemSpeedMultiplier(system.Nickname)
 
 		var system_objects []SystemObject = make([]SystemObject, 0, 50)
 
@@ -166,19 +166,19 @@ func MapConfigsToFGraph(
 			}
 
 			object_nickname := system_obj.Nickname.Get()
-			if _, ok := configs.InitialWorld.LockedGates[flhash.HashNickname(object_nickname)]; ok {
+			if _, ok := mapped.InitialWorld.LockedGates[flhash.HashNickname(object_nickname)]; ok {
 				continue
 			}
 
 			// get all objects with same Base?
 			// Check if any of them has docking sphere medium
 
-			if configs.Discovery != nil {
+			if mapped.Discovery != nil {
 				is_dockable_by_transports := false
 				if bases, ok := system.AllBasesByDockWith[system_base_base]; ok {
 					for _, base_obj := range bases {
 						base_archetype := base_obj.Archetype.Get()
-						if solar, ok := configs.Solararch.SolarsByNick[base_archetype]; ok {
+						if solar, ok := mapped.Solararch.SolarsByNick[base_archetype]; ok {
 							if solar.IsDockableByCaps() {
 								is_dockable_by_transports = true
 							}
@@ -224,7 +224,7 @@ func MapConfigsToFGraph(
 			jh_archetype := jumphole.Archetype.Get()
 
 			// Check Solar if this is Dockable
-			if solar, ok := configs.Solararch.SolarsByNick[jh_archetype]; ok {
+			if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
 				if len(solar.DockingSpheres) == 0 {
 					continue
 				}
@@ -232,7 +232,7 @@ func MapConfigsToFGraph(
 
 			// Check locked_gate if it is enterable.
 			hash_id := flhash.HashNickname(object.nickname)
-			if _, ok := configs.InitialWorld.LockedGates[hash_id]; ok {
+			if _, ok := mapped.InitialWorld.LockedGates[hash_id]; ok {
 				continue
 			}
 
@@ -240,9 +240,9 @@ func MapConfigsToFGraph(
 				continue
 			}
 
-			if configs.Discovery != nil {
+			if mapped.Discovery != nil {
 				is_dockable_by_transports := false
-				if solar, ok := configs.Solararch.SolarsByNick[jh_archetype]; ok {
+				if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
 					// strings.Contains(jh_archetype, "_fighter") || // Atmospheric entry points. Dockable only by fighters/freighters
 					// included into `IsDockableByCaps` as they don't have capital docking_sphere dockings
 					if solar.IsDockableByCaps() {
@@ -376,4 +376,4 @@ func (graph *GameGraph) GetTimeForDist(dist cfg.Milliseconds) cfg.Seconds {
 }
 
 // makes time in ms. Higher int value help having better calcs.
-const PrecisionMultipiler = cfg.Milliseconds(1000)
+const PrecisionMultipiler = cfg.Milliseconds(100)

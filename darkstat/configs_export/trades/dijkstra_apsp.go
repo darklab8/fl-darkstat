@@ -2,7 +2,6 @@ package trades
 
 import (
 	"container/heap"
-	"math"
 )
 
 // Written based on https://www.geeksforgeeks.org/implementation-of-johnsons-algorithm-for-all-pairs-shortest-paths/
@@ -10,36 +9,36 @@ import (
 // It is now DijkstraAPSP https://en.wikipedia.org/wiki/Parallel_all-pairs_shortest_path_algorithm
 
 type Neighbour struct {
-	destination int
-	weight      int
+	destination Intg
+	weight      Intg
 }
 
-func NewNeighbour(destination int, weight int) *Neighbour {
+func NewNeighbour(destination Intg, weight Intg) *Neighbour {
 	return &Neighbour{destination: destination,
 		weight: weight,
 	}
 }
 
 type DijkstraAPSP struct {
-	vertices         int
+	vertices         Intg
 	adjacencyList    [][]*Neighbour
-	allowed_base_ids map[int]bool
+	allowed_base_ids map[Intg]bool
 }
 
-const INF = math.MaxInt
-const INFthreshold = math.MaxInt / 1000
+const INF = intgmax
+const INFthreshold = intgmax / int32(PrecisionMultipiler)
 
 // On using the below constructor,
 // edges must be added manually
 // to the graph using addEdge()
-func NewDijkstraApsp(vertices int) *DijkstraAPSP {
+func NewDijkstraApsp(vertices Intg) *DijkstraAPSP {
 	g := &DijkstraAPSP{
 		vertices:         vertices,
-		allowed_base_ids: make(map[int]bool),
+		allowed_base_ids: make(map[Intg]bool),
 	}
 
 	g.adjacencyList = make([][]*Neighbour, vertices)
-	for i := 0; i < vertices; i++ {
+	for i := Intg(0); i < vertices; i++ {
 		g.adjacencyList[i] = make([]*Neighbour, 0)
 	}
 
@@ -49,11 +48,11 @@ func NewDijkstraApsp(vertices int) *DijkstraAPSP {
 // // On using the below constructor,
 // // edges will be added automatically
 // // to the graph using the adjacency matrix
-func NewDijkstraApspFromMatrix(vertices int, adjacencyMatrix [][]int) *DijkstraAPSP {
+func NewDijkstraApspFromMatrix(vertices Intg, adjacencyMatrix [][]Intg) *DijkstraAPSP {
 	g := NewDijkstraApsp(vertices)
 
-	for i := 0; i < vertices; i++ {
-		for j := 0; j < vertices; j++ {
+	for i := Intg(0); i < vertices; i++ {
+		for j := Intg(0); j < vertices; j++ {
 			if adjacencyMatrix[i][j] != 0 {
 				g.addEdge(i, j, adjacencyMatrix[i][j])
 			}
@@ -66,15 +65,15 @@ type DijkstraOption func(graph *DijkstraAPSP)
 
 func WithPathDistsForAllNodes() DijkstraOption {
 	return func(graph *DijkstraAPSP) {
-		graph.allowed_base_ids = make(map[int]bool)
+		graph.allowed_base_ids = make(map[Intg]bool)
 	}
 }
 
 func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *DijkstraAPSP {
-	vertices := len(graph.matrix)
+	vertices := Intg(len(graph.matrix))
 	g := NewDijkstraApsp(vertices)
 
-	index := 0
+	index := int32(0)
 	for vertex, _ := range graph.matrix {
 		graph.IndexByNick[vertex] = index
 		graph.NicknameByIndex[index] = vertex
@@ -86,12 +85,12 @@ func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *Dijkstr
 		g.allowed_base_ids[graph.IndexByNick[base_nick]] = true
 	}
 
-	for vertex_name, vertex := range graph.matrix {
+	for vertex_source, vertex := range graph.matrix {
 		for vertex_target, weight := range vertex {
-			i := graph.IndexByNick[vertex_name]
+			i := graph.IndexByNick[vertex_source]
 			j := graph.IndexByNick[vertex_target]
 
-			g.addEdge(i, j, int(weight))
+			g.addEdge(i, j, Intg(weight))
 		}
 	}
 
@@ -102,7 +101,7 @@ func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *Dijkstr
 	return g
 }
 
-func (g *DijkstraAPSP) addEdge(source int, destination int, weight int) {
+func (g *DijkstraAPSP) addEdge(source Intg, destination Intg, weight Intg) {
 	g.adjacencyList[source] = append(g.adjacencyList[source], NewNeighbour(destination, weight))
 }
 
@@ -113,14 +112,14 @@ func ArraysFill[T any](array []T, value T) {
 }
 
 type Parent struct {
-	node   int
-	weight int
+	node   Intg
+	weight Intg
 }
 
 // // Time complexity of this
 // // implementation of dijkstra is O(V^2).
-func (g *DijkstraAPSP) dijkstra(source int) ([]int, []Parent) {
-	var distance []int = make([]int, g.vertices)
+func (g *DijkstraAPSP) dijkstra(source Intg) ([]Intg, []Parent) {
+	var distance []Intg = make([]Intg, g.vertices)
 
 	// this page https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
 	// helped to modify algorithm so it would return reconstructed paths.
@@ -129,7 +128,7 @@ func (g *DijkstraAPSP) dijkstra(source int) ([]int, []Parent) {
 	var parents []Parent = make([]Parent, g.vertices)
 	// The starting vertex does not
 	// have a parent
-	for s := 0; s < g.vertices; s++ {
+	for s := Intg(0); s < g.vertices; s++ {
 		parents[s].node = NO_PARENT
 	}
 
@@ -172,26 +171,26 @@ func (g *DijkstraAPSP) dijkstra(source int) ([]int, []Parent) {
 }
 
 type DijkstraResult struct {
-	source         int
-	dist_result    []int
+	source         Intg
+	dist_result    []Intg
 	parents_result []Parent
 }
 
 const NO_PARENT = -1
 
-func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]Parent) {
-	var distances [][]int = make([][]int, g.vertices)
+func (g *DijkstraAPSP) DijkstraApsp() ([][]Intg, [][]Parent) {
+	var distances [][]Intg = make([][]Intg, g.vertices)
 	var parents [][]Parent = make([][]Parent, g.vertices)
 
 	// Performance optimization of the algorithm
 	// By skipping heaviest calculations for all shortest paths
 	// originiating from vertexes not needed.
 	// As those vertex are important only as intermediate travel point.
-	skip_not_allowed_vertex := func(source int) ([]int, bool) {
+	skip_not_allowed_vertex := func(source Intg) ([]Intg, bool) {
 		if len(g.allowed_base_ids) > 0 {
 			_, is_base := g.allowed_base_ids[source]
 			if !is_base {
-				dist := make([]int, g.vertices)
+				dist := make([]Intg, g.vertices)
 				ArraysFill(dist, INF)
 				dist[source] = 0
 				return dist, true
@@ -204,7 +203,7 @@ func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]Parent) {
 	is_sequential := false
 
 	if is_sequential {
-		for s := 0; s < g.vertices; s++ {
+		for s := Intg(0); s < g.vertices; s++ {
 			if dist_result, is_skipped := skip_not_allowed_vertex(s); is_skipped {
 				distances[s] = dist_result
 				continue
@@ -216,13 +215,13 @@ func (g *DijkstraAPSP) DijkstraApsp() ([][]int, [][]Parent) {
 	} else {
 		dijkstra_results := make(chan *DijkstraResult)
 		awaited := 0
-		for s := 0; s < g.vertices; s++ {
+		for s := Intg(0); s < g.vertices; s++ {
 			if dist_result, is_skipped := skip_not_allowed_vertex(s); is_skipped {
 				distances[s] = dist_result
 				continue
 			}
 			awaited += 1
-			go func(s int) {
+			go func(s Intg) {
 				dist_result, parents_result := g.dijkstra(s)
 				dijkstra_results <- &DijkstraResult{
 					source:         s,

@@ -50,9 +50,9 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 	}
 
 	// for faction, at base, chance
-	faction_rephacks := mbases_mapped.FactionBribes(e.Configs.MBases)
+	faction_rephacks := mbases_mapped.FactionBribes(e.Mapped.MBases)
 
-	for _, group := range e.Configs.InitialWorld.Groups {
+	for _, group := range e.Mapped.InitialWorld.Groups {
 		var nickname string = group.Nickname.Get()
 		faction := Faction{
 			Nickname:    nickname,
@@ -79,7 +79,7 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 
 		faction.ShortName = e.GetInfocardName(group.IdsShortName.Get(), faction.Nickname)
 
-		empathy_rates, empathy_exists := e.Configs.Empathy.RepoChangeMap[faction.Nickname]
+		empathy_rates, empathy_exists := e.Mapped.Empathy.RepoChangeMap[faction.Nickname]
 
 		if empathy_exists {
 			faction.ObjectDestruction = empathy_rates.ObjectDestruction.Get()
@@ -93,7 +93,7 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 			rep_to_add.Nickname = reputation.TargetNickname.Get()
 			rep_to_add.Rep = reputation.Rep.Get()
 
-			target_faction := e.Configs.InitialWorld.GroupsMap[rep_to_add.Nickname]
+			target_faction := e.Mapped.InitialWorld.GroupsMap[rep_to_add.Nickname]
 			defer func() {
 				if r := recover(); r != nil {
 					fmt.Println("Recovered in f", r)

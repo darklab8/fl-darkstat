@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld"
@@ -98,6 +99,10 @@ type PoBGoodBase struct {
 	Base     *PoBCore  `json:"base" validate:"required"`
 }
 
+type PoBsToBasesInput struct {
+	Equip *equip_mapped.Config
+}
+
 // Exporting only with position ones
 func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 	var bases []*Base
@@ -137,7 +142,7 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 				market_good.BaseSells = true
 			}
 			if market_good.Category == "commodity" {
-				equipment := e.Configs.Equip.CommoditiesMap[market_good.Nickname]
+				equipment := e.Mapped.Equip().CommoditiesMap[market_good.Nickname]
 				for _, volume := range equipment.Volumes {
 					volumed_good := market_good
 					volumed_good.Volume = volume.Volume.Get()
@@ -152,7 +157,7 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 	return bases
 }
 
-func (e *Exporter) GetPoBGoods(pobs []*PoB) []*PoBGood {
+func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 	pobs_goods_by_nick := make(map[string]*PoBGood)
 	var pob_goods []*PoBGood
 
@@ -211,37 +216,51 @@ func (e *Exporter) GetPoBGoods(pobs []*PoB) []*PoBGood {
 	return pob_goods
 }
 
-func (e *Exporter) GetPoBs() []*PoB {
-	var pobs []*PoB
+type HashesByCat struct {
+	systems_by_hash  map[flhash.HashCode]*universe_mapped.System
+	factions_by_hash map[flhash.HashCode]*initialworld.Group
+	goods_by_hash    map[flhash.HashCode]*equip_mapped.Item
+	ships_by_hash    map[flhash.HashCode]*equipment_mapped.Ship
+}
 
+func NewHashesCategories(Mapped *configs_mapped.MappedConfigs) HashesByCat {
 	systems_by_hash := make(map[flhash.HashCode]*universe_mapped.System)
 	factions_by_hash := make(map[flhash.HashCode]*initialworld.Group)
-	for _, system_info := range e.Configs.Universe.Systems {
+	for _, system_info := range Mapped.Universe.Systems {
 		nickname := system_info.Nickname.Get()
 		system_hash := flhash.HashNickname(nickname)
 		systems_by_hash[system_hash] = system_info
 	}
-	for _, group_info := range e.Configs.InitialWorld.Groups {
+	for _, group_info := range Mapped.InitialWorld.Groups {
 		nickname := group_info.Nickname.Get()
 		group_hash := flhash.HashFaction(nickname)
 		factions_by_hash[group_hash] = group_info
 	}
 	goods_by_hash := make(map[flhash.HashCode]*equip_mapped.Item)
-	for _, item := range e.Configs.Equip.Items {
+	for _, item := range Mapped.Equip().Items {
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
 		goods_by_hash[hash] = item
-		e.exportInfocards(InfocardKey(nickname), item.IdsInfo.Get())
 	}
 
 	ships_by_hash := make(map[flhash.HashCode]*equipment_mapped.Ship)
-	for _, item := range e.Configs.Goods.Ships {
+	for _, item := range Mapped.Goods.Ships {
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
 		ships_by_hash[hash] = item
 	}
+	return HashesByCat{
+		systems_by_hash:  systems_by_hash,
+		factions_by_hash: factions_by_hash,
+		goods_by_hash:    goods_by_hash,
+		ships_by_hash:    ships_by_hash,
+	}
+}
 
-	for _, pob_info := range e.Configs.Discovery.PlayerOwnedBases.Bases {
+func (e *ExporterRelay) GetPoBs() []*PoB {
+	var pobs []*PoB
+
+	for _, pob_info := range e.Mapped.Discovery.PlayerOwnedBases.Bases {
 
 		var pob *PoB = &PoB{
 			PoBCore: PoBCore{
@@ -263,7 +282,7 @@ func (e *Exporter) GetPoBs() []*PoB {
 
 		pob.ForumThreadUrl = pob_info.ForumThreadUrl
 		if pob_info.SystemHash != nil {
-			if system, ok := systems_by_hash[*pob_info.SystemHash]; ok {
+			if system, ok := e.hashes.systems_by_hash[*pob_info.SystemHash]; ok {
 				pob.SystemNick = ptr.Ptr(system.Nickname.Get())
 				pob.SystemName = ptr.Ptr(e.GetInfocardName(system.StridName.Get(), system.Nickname.Get()))
 
@@ -275,7 +294,7 @@ func (e *Exporter) GetPoBs() []*PoB {
 		}
 
 		if pob_info.AffiliationHash != nil {
-			if faction, ok := factions_by_hash[*pob_info.AffiliationHash]; ok {
+			if faction, ok := e.hashes.factions_by_hash[*pob_info.AffiliationHash]; ok {
 				pob.FactionNick = ptr.Ptr(faction.Nickname.Get())
 				pob.FactionName = ptr.Ptr(e.GetInfocardName(faction.IdsName.Get(), faction.Nickname.Get()))
 			}
@@ -284,15 +303,15 @@ func (e *Exporter) GetPoBs() []*PoB {
 		for _, shop_item := range pob_info.ShopItems {
 			good := &ShopItem{ShopItem: shop_item}
 
-			if item, ok := goods_by_hash[flhash.HashCode(shop_item.Id)]; ok {
+			if item, ok := e.hashes.goods_by_hash[flhash.HashCode(shop_item.Id)]; ok {
 				good.Nickname = item.Nickname.Get()
 				good.Name = e.GetInfocardName(item.IdsName.Get(), item.Nickname.Get())
 				good.Category = item.Category
 			} else {
-				if ship, ok := ships_by_hash[flhash.HashCode(shop_item.Id)]; ok {
-					ship_hull := e.Configs.Goods.ShipHullsMap[ship.Hull.Get()]
+				if ship, ok := e.hashes.ships_by_hash[flhash.HashCode(shop_item.Id)]; ok {
+					ship_hull := e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()]
 					ship_nickname := ship_hull.Ship.Get()
-					shiparch := e.Configs.Shiparch.ShipsMap[ship_nickname]
+					shiparch := e.Mapped.Shiparch.ShipsMap[ship_nickname]
 					good.Nickname = ship_nickname
 					good.Category = "ship"
 					good.Name = e.GetInfocardName(shiparch.IdsName.Get(), ship_nickname)
@@ -330,7 +349,7 @@ func (e *Exporter) GetPoBs() []*PoB {
 		}
 		if len(pob_info.SrpFactionHashList) > 0 || len(pob_info.SrpTagList) > 0 || len(pob_info.SrpNameList) > 0 {
 			sb.WriteLine(InfocardPhrase{Phrase: "Docking allias(srp,ignore rep):", Bold: true})
-			sb.WriteLineStr(e.fmt_factions_to_str(factions_by_hash, pob_info.SrpFactionHashList))
+			sb.WriteLineStr(e.fmt_factions_to_str(e.hashes.factions_by_hash, pob_info.SrpFactionHashList))
 			sb.WriteLineStr(fmt.Sprintf("tags: %s", fmt_docking_tags(pob_info.SrpTagList)))
 			sb.WriteLineStr(fmt.Sprintf("names: %s", fmt_docking_tags(pob_info.SrpNameList)))
 			sb.WriteLineStr("")
@@ -338,7 +357,7 @@ func (e *Exporter) GetPoBs() []*PoB {
 
 		if len(pob_info.AllyFactionHashList) > 0 || len(pob_info.AllyTagList) > 0 || len(pob_info.AllyNameList) > 0 {
 			sb.WriteLine(InfocardPhrase{Phrase: "Docking allias(IFF rep still affects):", Bold: true})
-			sb.WriteLineStr(e.fmt_factions_to_str(factions_by_hash, pob_info.AllyFactionHashList))
+			sb.WriteLineStr(e.fmt_factions_to_str(e.hashes.factions_by_hash, pob_info.AllyFactionHashList))
 			sb.WriteLineStr(fmt.Sprintf("tags: %s", fmt_docking_tags(pob_info.AllyTagList)))
 			sb.WriteLineStr(fmt.Sprintf("names: %s", fmt_docking_tags(pob_info.AllyNameList)))
 			sb.WriteLineStr("")
@@ -346,15 +365,14 @@ func (e *Exporter) GetPoBs() []*PoB {
 
 		if len(pob_info.HostileFactionHashList) > 0 || len(pob_info.HostileTagList) > 0 || len(pob_info.HostileNameList) > 0 {
 			sb.WriteLine(InfocardPhrase{Phrase: "Docking enemies:", Bold: true})
-			sb.WriteLineStr(e.fmt_factions_to_str(factions_by_hash, pob_info.HostileFactionHashList))
+			sb.WriteLineStr(e.fmt_factions_to_str(e.hashes.factions_by_hash, pob_info.HostileFactionHashList))
 			sb.WriteLineStr(fmt.Sprintf("tags: %s", fmt_docking_tags(pob_info.HostileTagList)))
 			sb.WriteLineStr(fmt.Sprintf("names: %s", fmt_docking_tags(pob_info.HostileNameList)))
 			sb.WriteLineStr("")
 		}
 
-		// TODO add pob infocards here
 		e.Infocards[InfocardKey(pob.Nickname)] = sb.Lines
-		e.Configs.Infocards.Infonames[int(flhash.HashNickname(pob.Nickname))] = infocard.Infoname(pob.Name)
+		e.Mapped.Infocards.Infonames[int(flhash.HashNickname(pob.Nickname))] = infocard.Infoname(pob.Name)
 
 		pobs = append(pobs, pob)
 	}
@@ -384,31 +402,31 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 	// TODO refactor copy repeated code may be
 	systems_by_hash := make(map[flhash.HashCode]*universe_mapped.System)
 	factions_by_hash := make(map[flhash.HashCode]*initialworld.Group)
-	for _, system_info := range e.Configs.Universe.Systems {
+	for _, system_info := range e.Mapped.Universe.Systems {
 		nickname := system_info.Nickname.Get()
 		system_hash := flhash.HashNickname(nickname)
 		systems_by_hash[system_hash] = system_info
 	}
-	for _, group_info := range e.Configs.InitialWorld.Groups {
+	for _, group_info := range e.Mapped.InitialWorld.Groups {
 		nickname := group_info.Nickname.Get()
 		group_hash := flhash.HashFaction(nickname)
 		factions_by_hash[group_hash] = group_info
 	}
 	goods_by_hash := make(map[flhash.HashCode]*equip_mapped.Item)
-	for _, item := range e.Configs.Equip.Items {
+	for _, item := range e.Mapped.Equip().Items {
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
 		goods_by_hash[hash] = item
 		e.exportInfocards(InfocardKey(nickname), item.IdsInfo.Get())
 	}
 	ships_by_hash := make(map[flhash.HashCode]*equipment_mapped.Ship)
-	for _, item := range e.Configs.Goods.Ships {
+	for _, item := range e.Mapped.Goods.Ships {
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
 		ships_by_hash[hash] = item
 	}
 
-	for _, pob_info := range e.Configs.Discovery.PlayerOwnedBases.Bases {
+	for _, pob_info := range e.Mapped.Discovery.PlayerOwnedBases.Bases {
 		for _, shop_item := range pob_info.ShopItems {
 			var good *ShopItem = &ShopItem{ShopItem: shop_item}
 			if item, ok := goods_by_hash[flhash.HashCode(shop_item.Id)]; ok {
@@ -417,9 +435,9 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 				good.Category = item.Category
 			} else {
 				if ship, ok := ships_by_hash[flhash.HashCode(shop_item.Id)]; ok {
-					ship_hull := e.Configs.Goods.ShipHullsMap[ship.Hull.Get()]
+					ship_hull := e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()]
 					ship_nickname := ship_hull.Ship.Get()
-					shiparch := e.Configs.Shiparch.ShipsMap[ship_nickname]
+					shiparch := e.Mapped.Shiparch.ShipsMap[ship_nickname]
 					good.Nickname = ship_nickname
 					good.Category = "ship"
 					good.Name = e.GetInfocardName(shiparch.IdsName.Get(), ship_nickname)
@@ -457,7 +475,7 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 	return e.pob_buyable_cache
 }
 
-func (e *Exporter) fmt_factions_to_str(factions_by_hash map[flhash.HashCode]*initialworld.Group, faction_hashes []*flhash.HashCode) string {
+func (e *ExporterRelay) fmt_factions_to_str(factions_by_hash map[flhash.HashCode]*initialworld.Group, faction_hashes []*flhash.HashCode) string {
 	var sb strings.Builder
 
 	sb.WriteString("factions: [")

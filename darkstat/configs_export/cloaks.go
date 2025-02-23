@@ -32,7 +32,7 @@ func (b Cloak) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.Discover
 func (e *Exporter) GetCloaks(ids []*Tractor) []Cloak {
 	var items []Cloak
 
-	for _, cloak_info := range e.Configs.Equip.Cloaks {
+	for _, cloak_info := range e.Mapped.Equip().Cloaks {
 		cloak := Cloak{
 			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
@@ -51,7 +51,7 @@ func (e *Exporter) GetCloaks(ids []*Tractor) []Cloak {
 		}
 
 		cloak.Price = -1
-		if good_info, ok := e.Configs.Goods.GoodsMap[cloak_info.Nickname.Get()]; ok {
+		if good_info, ok := e.Mapped.Goods.GoodsMap[cloak_info.Nickname.Get()]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
 				cloak.Price = price
 				cloak.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
@@ -62,7 +62,7 @@ func (e *Exporter) GetCloaks(ids []*Tractor) []Cloak {
 		}
 
 		e.exportInfocards(InfocardKey(cloak.Nickname), cloak.InfoID)
-		cloak.DiscoveryTechCompat = CalculateTechCompat(e.Configs.Discovery, ids, cloak.Nickname)
+		cloak.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, cloak.Nickname)
 		items = append(items, cloak)
 	}
 	return items

@@ -8,12 +8,13 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"runtime/debug"
 	"runtime/pprof"
 	"strings"
 	"syscall"
 	"time"
 
-	// _ "net/http/pprof"
+	_ "net/http/pprof"
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
@@ -40,9 +41,10 @@ const (
 	Version Action = "version"
 	Relay   Action = "relay"
 	Health  Action = "health"
+	Configs Action = "configs"
 )
 
-func GetRelayFs(app_data *appdata.AppData) *builder.Filesystem {
+func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 	relay_router := relayrouter.NewRouter(app_data)
 	relay_builder := relay_router.Link()
 	relay_fs := relay_builder.BuildAll(true, nil)
@@ -65,9 +67,9 @@ func GetRelayFs(app_data *appdata.AppData) *builder.Filesystem {
 
 // @BasePath /
 func main() {
-	// go func() {
-	// 	log.Println(http.ListenAndServe("localhost:6060", nil))
-	// }()
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 	if settings.Env.IsCPUProfilerEnabled {
 		// task profiler:cpu after that
 		f, err := os.Create("prof.prof")
@@ -115,6 +117,8 @@ func main() {
 
 	web_darkstat := func() func() {
 		app_data := appdata.NewAppData()
+		relay_data := appdata.NewRelayData(app_data)
+		app_data.Configs.Mapped.Clean()
 
 		stat_router := router.NewRouter(app_data)
 		stat_builder := stat_router.Link()
@@ -122,7 +126,7 @@ func main() {
 		stat_fs := stat_builder.BuildAll(true, nil)
 
 		app_data.Lock()
-		relay_fs := GetRelayFs(stat_router.AppData)
+		relay_fs := GetRelayFs(relay_data)
 		app_data.Unlock()
 		runtime.GC()
 
@@ -130,25 +134,28 @@ func main() {
 			[]*builder.Filesystem{stat_fs, relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
+			web.WithAppData(app_data),
 		), app_data)
-		web_closer := web_server.Serve(web.WebServeOpts{SockAddress: web.DarkstatAPISock})
+		web_closer := web_server.Serve(web.WebServeOpts{SockAddress: web.DarkstatHttpSock})
 
-		if settings.IsRelayActive(app_data.Mapped) {
+		if app_data.Configs.IsDiscovery {
 			go func() {
 				for {
 					func() {
 						defer func() {
 							if r := recover(); r != nil {
-								fmt.Println("Recovered in f, trying to update app data", r)
+								fmt.Println("Recovered in f, trying to update app data", r, string(debug.Stack()))
 							}
 						}()
 						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 						app_data.Lock()
 						defer app_data.Unlock()
-						app_data.Mapped.Discovery.PlayerOwnedBases.Refresh()
-						app_data.Configs.PoBs = app_data.Configs.GetPoBs()
-						app_data.Configs.PoBGoods = app_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
-						relay_fs2 := GetRelayFs(stat_router.AppData)
+
+						// TODO minimize usage of data here.
+						relay_data.Configs.Mapped.Discovery.PlayerOwnedBases.Refresh()
+						relay_data.Configs.PoBs = relay_data.Configs.GetPoBs()
+						relay_data.Configs.PoBGoods = relay_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
+						relay_fs2 := GetRelayFs(relay_data)
 						for key, _ := range relay_fs.Files {
 							delete(relay_fs.Files, key)
 						}
@@ -164,6 +171,7 @@ func main() {
 			[]*builder.Filesystem{relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
+			web.WithAppData(app_data),
 		)
 		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 
@@ -185,7 +193,7 @@ func main() {
 
 	case Build:
 		app_data := appdata.NewAppData()
-		router.NewRouter(app_data).Link().BuildAll(false, nil)
+		router.NewRouter(app_data, router.WithStaticAssetsGen()).Link().BuildAll(false, nil)
 	case Web:
 		closer := web_darkstat()
 
@@ -208,6 +216,8 @@ func main() {
 			logus.Log.Panic("status code is not 200", typelog.Any("code", resp.StatusCode))
 		}
 		fmt.Println("service is healthy")
+	case Configs:
+		main_configs()
 	default:
 
 		closer := web_darkstat()

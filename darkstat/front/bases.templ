@@ -692,6 +692,15 @@ templ BaseTrades(name string, trade_routes []*configs_export.ComboTradeRoute, ta
 	}
 }
 
+templ TradeRouteInfo2(FromBase *configs_export.Base, ToBase *configs_export.Base, e *configs_export.Exporter, shared *types.SharedData) {
+	@TradeRouteInfo(
+		configs_export.NewRoute(e.Transport, FromBase.Nickname.ToStr(), ToBase.Nickname.ToStr()),
+		configs_export.NewRoute(e.Frigate, FromBase.Nickname.ToStr(), ToBase.Nickname.ToStr()),
+		configs_export.NewRoute(e.Freighter, FromBase.Nickname.ToStr(), ToBase.Nickname.ToStr()),
+		shared,
+	)
+}
+
 templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs_export.Route, FreighterRoute *configs_export.Route, shared *types.SharedData) {
 	@tab.InfocardShared() {
 		<style>
@@ -699,7 +708,7 @@ templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs
 				font-size: 1.0em;
 			}
 		</style>
-		<p>{ ">" } AvgTradeLaneSpeed: { strconv.Itoa(shared.Mapped.GetAvgTradeLaneSpeed()) }</p>
+		<p>{ ">" } AvgTradeLaneSpeed: { strconv.Itoa(shared.AverageTradeLaneSpeed) }</p>
 		<p>{ ">" } JumpHoleDelaySec: { strconv.Itoa(trades.JumpHoleDelaySec) }</p>
 		<p>{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
 		<p>{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>

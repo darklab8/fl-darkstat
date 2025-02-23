@@ -6,7 +6,6 @@ import (
 
 	_ "embed"
 
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	darkcore_settings "github.com/darklab8/fl-darkstat/darkcore/settings"
 
@@ -91,16 +90,6 @@ func (e DarkstatEnvVars) GetSiteRootAcceptors() []string {
 	}
 
 	return strings.Split(e.SiteRootAcceptors, ",")
-}
-
-func IsRelayActive(configs *configs_mapped.MappedConfigs) bool {
-	if configs.Discovery != nil {
-		fmt.Println("discovery always wishes to see pobs")
-		return true
-	}
-
-	fmt.Println("relay is disabled")
-	return false
 }
 
 func getAppVersion() string {

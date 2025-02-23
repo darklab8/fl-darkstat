@@ -14,7 +14,7 @@ import (
 // and then removes the items in priority order.
 func TestHeap(t *testing.T) {
 	// Some items and their priorities.
-	items := map[int]int{
+	items := map[Intg]Intg{
 		0: 3, 1: 2, 2: 4,
 	}
 

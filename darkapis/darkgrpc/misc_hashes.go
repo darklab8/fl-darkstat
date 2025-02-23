@@ -7,9 +7,11 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/iniload"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
@@ -68,7 +70,11 @@ func GetHashesData(app_data *appdata.AppData) map[string]Hash {
 	wg.Wait()
 	runtime.GC()
 
-	for _, group := range app_data.Mapped.InitialWorld.Groups {
+	filesystem = filefind.FindConfigs(configs_settings.Env.FreelancerFolder)
+	fileref := filesystem.GetFile(initialworld.FILENAME)
+	InitialWorld := initialworld.Read(iniload.NewLoader(fileref).Scan())
+
+	for _, group := range InitialWorld.Groups {
 		var nickname string = group.Nickname.Get()
 		hash := flhash.HashFaction(nickname)
 		hashes[nickname] = Hash{

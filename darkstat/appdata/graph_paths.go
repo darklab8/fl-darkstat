@@ -29,7 +29,7 @@ func (app_data *AppData) GetGraphPaths(input_routes []GraphPathReq) []GraphPaths
 	for _, route := range input_routes {
 		result := GraphPathsResp{Query: route}
 
-		var transport_time, frigate_time, freighter_time int
+		var transport_time, frigate_time, freighter_time int32
 		var err error
 		transport_time, _ = trades.GetTimeMs(
 			app_data.Configs.Transport.Graph,
@@ -51,9 +51,9 @@ func (app_data *AppData) GetGraphPaths(input_routes []GraphPathReq) []GraphPaths
 			result.Error = ptr.Ptr(err.Error())
 		} else {
 			result.Time = &GraphPathTime{
-				Transport: ptr.Ptr(transport_time / int(trades.PrecisionMultipiler)),
-				Frigate:   ptr.Ptr(frigate_time / int(trades.PrecisionMultipiler)),
-				Freighter: ptr.Ptr(freighter_time / int(trades.PrecisionMultipiler)),
+				Transport: ptr.Ptr(int(transport_time) / int(trades.PrecisionMultipiler)),
+				Frigate:   ptr.Ptr(int(frigate_time) / int(trades.PrecisionMultipiler)),
+				Freighter: ptr.Ptr(int(freighter_time) / int(trades.PrecisionMultipiler)),
 			}
 		}
 

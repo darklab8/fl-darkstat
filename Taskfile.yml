@@ -129,8 +129,11 @@ tasks:
   profiler:web:
     cmds:
       # https://www.codereliant.io/memory-leaks-with-pprof/
-      - go tool pprof -alloc_space http://localhost:6060/debug/pprof/heap
+      - go tool pprof -inuse_space -http=":8001" http://localhost:6060/debug/pprof/heap
       # commands like `top`, `web`, `list FunctionName`
+      # go tool pprof -raw -output=cpu.txt http://localhost:6060/debug/pprof/profile?seconds=5
+      # with menu go tool pprof -http=":8001" http://localhost:6060/debug/pprof/profile?seconds=5
+      # go tool pprof -alloc_space -http=":8001" http://localhost:6060/debug/pprof/heap
 
   grpc:protoc:simple:
     cmds: # --experimental_allow_proto3_optional

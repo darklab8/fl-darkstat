@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
@@ -62,7 +61,7 @@ func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string
 func TestApiHealth(t *testing.T) {
 
 	app_data := &appdata.AppData{
-		Configs: configs_export.NewExporter(&configs_mapped.MappedConfigs{}),
+		Configs: &configs_export.Exporter{},
 	}
 	stat_fs := &builder.Filesystem{}
 
@@ -168,6 +167,9 @@ func TestApi(t *testing.T) {
 			assert.Greater(t, len(items), 0)
 			assert.Equal(t, 1, len(items))
 
+			if items[0].Error != nil {
+				fmt.Println("items[0].Error=", *items[0].Error)
+			}
 			assert.Nil(t, items[0].Error)
 		})
 
@@ -218,7 +220,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetPoBs", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		_ = FixtureTestItems[configs_export.PoB](t, httpc, "/pobs", "Pobs", TestOpts{})
@@ -226,7 +228,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetPoBGoods", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		_ = FixtureTestItems[configs_export.PoBGood](t, httpc, "/pob_goods", "PoBGodds", TestOpts{})
@@ -244,7 +246,7 @@ func TestApi(t *testing.T) {
 			}
 		}
 		assert.True(t, has_market_goods)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {
@@ -256,7 +258,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetTractors", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		items := FixtureTestItems[Tractor](t, httpc, "/tractors", "Tractors", TestOpts{
@@ -271,7 +273,7 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {
@@ -300,7 +302,7 @@ func TestApi(t *testing.T) {
 		}
 
 		assert.True(t, has_market_goods)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {
@@ -317,7 +319,7 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {
@@ -334,7 +336,7 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {
@@ -351,7 +353,7 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {
@@ -363,7 +365,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetEngines", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		for _, item := range app_data.Configs.Engines {
@@ -384,7 +386,7 @@ func TestApi(t *testing.T) {
 			}
 		}
 		assert.True(t, has_market_goods)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {
@@ -396,7 +398,7 @@ func TestApi(t *testing.T) {
 	})
 
 	t.Run("GetScanners", func(t *testing.T) {
-		if app_data.Configs.Configs.Discovery == nil {
+		if !app_data.Configs.IsDiscovery {
 			return
 		}
 		items := FixtureTestItems[Scanner](t, httpc, "/scanners", "Scanners", TestOpts{
@@ -410,7 +412,7 @@ func TestApi(t *testing.T) {
 			}
 		}
 		assert.True(t, has_market_goods)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {
@@ -427,7 +429,7 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {
@@ -451,7 +453,7 @@ func TestApi(t *testing.T) {
 			CheckTechCompat:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
-		if app_data.Configs.Configs.Discovery != nil {
+		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
 				if len(item.TechCompat.TechcompatByID) > 0 {

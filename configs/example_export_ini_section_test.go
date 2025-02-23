@@ -15,14 +15,14 @@ import (
 func Example_extractIniSection() {
 
 	freelancer_folder := configs_settings.Env.FreelancerFolder
-	configs := configs_mapped.NewMappedConfigs()
+	mapped := configs_mapped.NewMappedConfigs()
 	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
 
 	// Reading to ini universal custom format and mapping to ORM objects
 	// which have both reading and writing back capabilities
-	configs.Read(freelancer_folder)
+	mapped.Read(freelancer_folder)
 
-	order_gun := configs.Equip.GunMap["fc_or_gun01_mark02"]
+	order_gun := mapped.Equip().GunMap["fc_or_gun01_mark02"]
 	var output strings.Builder
 
 	order_gun_section := order_gun.Model.RenderModel()
@@ -32,7 +32,7 @@ func Example_extractIniSection() {
 		output.WriteString(fmt.Sprintf("%s\n", param.ToString(inireader.WithComments(true))))
 	}
 
-	order_munition := configs.Equip.MunitionMap[order_gun.ProjectileArchetype.Get()]
+	order_munition := mapped.Equip().MunitionMap[order_gun.ProjectileArchetype.Get()]
 
 	order_munition_section := order_munition.Model.RenderModel()
 	output.WriteString(fmt.Sprintf("%s\n", string(order_munition_section.OriginalType)))

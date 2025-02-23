@@ -65,13 +65,14 @@ type DiscoveryConfig struct {
 }
 
 type MappedConfigs struct {
+	filesystem    *filefind.Filesystem
 	FreelancerINI *exe_mapped.Config
 
 	Universe *universe_mapped.Config
 	Systems  *systems_mapped.Config
 
-	Market   *market_mapped.Config
-	Equip    *equip_mapped.Config
+	market   *market_mapped.Config
+	equip    *equip_mapped.Config
 	Goods    *equipment_mapped.Config
 	Shiparch *ship_mapped.Config
 
@@ -97,6 +98,61 @@ type MappedConfigs struct {
 	Overrides overrides.Overrides
 }
 
+// Market() is RAM hungry, so we are going to deallocate it when it is no longer necessary in Clean()
+// decision is made by using memory profiler, command in taskfile
+func (m *MappedConfigs) Market() *market_mapped.Config {
+	if m.market == nil {
+		logus.Log.Panic("you already deallocated mapped.equip as no longer necessary stuff")
+	}
+	return m.market
+}
+
+// Equip() is RAM hungry, so we are going to deallocate it when it is no longer necessary in Clean()
+// decision is made by using memory profiler, command in taskfile
+func (m *MappedConfigs) Equip() *equip_mapped.Config {
+	if m.equip == nil {
+		logus.Log.Panic("you already deallocated mapped.equip as no longer necessary stuff")
+	}
+	return m.equip
+}
+
+func (m *MappedConfigs) Clean() {
+	// Deallocate not often used stuff here.
+	// We deallocate stuff needed only one time during Export() operation pretty much.
+	// Technically more clean solution would be passing around those parsed configs... but it requires too much variable passing around.
+	// one may be it will be done :)
+	m.equip = nil
+	m.market = nil
+	m.Systems.SystemsMap = nil
+	m.Systems.Systems = nil
+	m.Systems.BasesByBases = nil
+	m.Systems.BasesByNick = nil
+	m.filesystem = nil
+	m.FreelancerINI = nil
+	m.InfocardmapINI = nil
+	m.Empathy = nil
+	m.MBases = nil
+	m.Consts = nil
+	m.WeaponMods = nil
+	m.Loadouts = nil
+	m.Solararch = nil
+	m.NpcShips = nil
+	m.FactionProps = nil
+	m.DiffToMoney = nil
+	m.InitialWorld = nil
+
+	m.Goods.Commodities = nil
+	m.Goods.CommoditiesMap = nil
+	m.Goods.Files = nil
+	m.Goods.Goods = nil
+	m.Goods.GoodsMap = nil
+	m.Goods.Ships = nil
+	m.Goods.ShipsMap = nil
+	m.Goods.ShipsMapByHull = nil
+	m.Goods.ShipHulls = nil
+	m.Goods.ShipHullsMapByShip = nil
+}
+
 func NewMappedConfigs() *MappedConfigs {
 	return &MappedConfigs{}
 }
@@ -116,16 +172,17 @@ func getConfigs(filesystem *filefind.Filesystem, paths []*semantic.Path) []*inil
 	})
 }
 
-func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
+func (m *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 	logus.Log.Info("Parse START for FreelancerFolderLocation=", utils_logus.FilePath(file1path))
 	filesystem := filefind.FindConfigs(file1path)
-	p.FreelancerINI = exe_mapped.Read(iniload.NewLoader(filesystem.GetFile(exe_mapped.FILENAME_FL_INI)).Scan())
+	m.filesystem = filesystem
+	m.FreelancerINI = exe_mapped.Read(iniload.NewLoader(filesystem.GetFile(exe_mapped.FILENAME_FL_INI)).Scan())
 
-	files_goods := getConfigs(filesystem, p.FreelancerINI.Goods)
-	files_market := getConfigs(filesystem, p.FreelancerINI.Markets)
-	files_equip := getConfigs(filesystem, p.FreelancerINI.Equips)
-	files_shiparch := getConfigs(filesystem, p.FreelancerINI.Ships)
-	files_loadouts := getConfigs(filesystem, p.FreelancerINI.Loadouts)
+	files_goods := getConfigs(filesystem, m.FreelancerINI.Goods)
+	files_market := getConfigs(filesystem, m.FreelancerINI.Markets)
+	files_equip := getConfigs(filesystem, m.FreelancerINI.Equips)
+	files_shiparch := getConfigs(filesystem, m.FreelancerINI.Ships)
+	files_loadouts := getConfigs(filesystem, m.FreelancerINI.Loadouts)
 	file_universe := iniload.NewLoader(filesystem.GetFile(universe_mapped.FILENAME))
 	file_interface := iniload.NewLoader(filesystem.GetFile(interface_mapped.FILENAME_FL_INI))
 	file_initialworld := iniload.NewLoader(filesystem.GetFile(initialworld.FILENAME))
@@ -167,14 +224,14 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 	if filesystem.GetFile("flsr-launcher.ini") != nil ||
 		filesystem.GetFile("flsr-texts.dll") != nil ||
 		filesystem.GetFile("flsr-dialogs.dll") != nil {
-		p.FLSR = &SiriusRevivalConfig{}
+		m.FLSR = &SiriusRevivalConfig{}
 		flsr_recipes_file := filesystem.GetFile(flsr_recipes.FILENAME)
 		if flsr_recipes_file != nil {
-			p.FLSR.FLSRRecipes = flsr_recipes.Read(iniload.NewLoader(flsr_recipes_file).Scan())
+			m.FLSR.FLSRRecipes = flsr_recipes.Read(iniload.NewLoader(flsr_recipes_file).Scan())
 		}
 	}
 	if techcom := filesystem.GetFile("launcherconfig.xml"); techcom != nil {
-		p.Discovery = &DiscoveryConfig{}
+		m.Discovery = &DiscoveryConfig{}
 		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
 		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
 		file_base_recipe_items = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_items.cfg"))
@@ -193,14 +250,14 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 			latest_patch_file_fp := latest_patch_file.GetFilepath()
 			patch_data, err := os.ReadFile(latest_patch_file_fp.ToString())
 			if !logus.Log.CheckError(err, "failed to unmarshal patch") {
-				json.Unmarshal(patch_data, &p.Discovery.LatestPatch)
+				json.Unmarshal(patch_data, &m.Discovery.LatestPatch)
 			}
-			fmt.Println("p.Discovery.LatestPatch=", p.Discovery.LatestPatch)
+			fmt.Println("p.Discovery.LatestPatch=", m.Discovery.LatestPatch)
 		}
 	}
 
 	var infocards_override *file.File
-	if p.Discovery != nil {
+	if m.Discovery != nil {
 		infocards_override = file.NewWebFile("https://discoverygc.com/gameconfigpublic/infocard_overrides.cfg")
 	}
 
@@ -219,7 +276,7 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 	overrides_file := filesystem.GetFile(overrides.FILENAME)
 	if overrides_file != nil {
 		logus.Log.Info("found overrides file")
-		p.Overrides = overrides.Read(overrides_file.GetFilepath())
+		m.Overrides = overrides.Read(overrides_file.GetFilepath())
 	}
 
 	timeit.NewTimerF(func() {
@@ -228,120 +285,120 @@ func (p *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		wg.Add(1)
 		go func() {
 			timeit.NewTimerF(func() {
-				p.Universe = universe_mapped.Read(file_universe, filesystem)
-				p.Systems = systems_mapped.Read(p.Universe, filesystem)
+				m.Universe = universe_mapped.Read(file_universe, filesystem)
+				m.Systems = systems_mapped.Read(m.Universe, filesystem)
 			}, timeit.WithMsg("map systems"))
 			wg.Done()
 		}()
 
 		wg.Add(1)
 		go func() {
-			p.Market = market_mapped.Read(files_market)
+			m.market = market_mapped.Read(files_market)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.Equip = equip_mapped.Read(files_equip)
+			m.equip = equip_mapped.Read(files_equip)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.Goods = equipment_mapped.Read(files_goods)
+			m.Goods = equipment_mapped.Read(files_goods)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.Shiparch = ship_mapped.Read(files_shiparch)
+			m.Shiparch = ship_mapped.Read(files_shiparch)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.InfocardmapINI = interface_mapped.Read(file_interface)
+			m.InfocardmapINI = interface_mapped.Read(file_interface)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.Infocards, _ = infocard_mapped.Read(filesystem, p.FreelancerINI, infocards_override)
+			m.Infocards, _ = infocard_mapped.Read(filesystem, m.FreelancerINI, infocards_override)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.InitialWorld = initialworld.Read(file_initialworld)
+			m.InitialWorld = initialworld.Read(file_initialworld)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.Empathy = empathy_mapped.Read(file_empathy)
+			m.Empathy = empathy_mapped.Read(file_empathy)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.MBases = mbases_mapped.Read(file_mbases)
+			m.MBases = mbases_mapped.Read(file_mbases)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.Consts = const_mapped.Read(file_consts)
+			m.Consts = const_mapped.Read(file_consts)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.WeaponMods = weaponmoddb.Read(file_weaponmoddb)
+			m.WeaponMods = weaponmoddb.Read(file_weaponmoddb)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
-			p.NpcRankToDiff = npcranktodiff.Read(file_npcranktodiff)
-			p.DiffToMoney = diff2money.Read(file_diff2money)
+			m.NpcRankToDiff = npcranktodiff.Read(file_npcranktodiff)
+			m.DiffToMoney = diff2money.Read(file_diff2money)
 			wg.Done()
 		}()
 
 		wg.Add(1)
 		go func() {
-			p.FactionProps = faction_props_mapped.Read(file_faction_props)
-			p.NpcShips = npc_ships.Read(file_npc_ships)
+			m.FactionProps = faction_props_mapped.Read(file_faction_props)
+			m.NpcShips = npc_ships.Read(file_npc_ships)
 			wg.Done()
 		}()
 
 		wg.Add(1)
 		go func() {
-			p.Solararch = solararch_mapped.Read(file_solararch)
+			m.Solararch = solararch_mapped.Read(file_solararch)
 			wg.Done()
 		}()
 
 		wg.Add(1)
 		go func() {
-			p.Loadouts = loadouts_mapped.Read(files_loadouts)
+			m.Loadouts = loadouts_mapped.Read(files_loadouts)
 			wg.Done()
 		}()
 
-		if p.Discovery != nil {
+		if m.Discovery != nil {
 			wg.Add(4)
 			go func() {
-				p.Discovery.Techcompat = techcompat.Read(file_techcompat)
+				m.Discovery.Techcompat = techcompat.Read(file_techcompat)
 				wg.Done()
 			}()
 			go func() {
-				p.Discovery.Prices = discoprices.Read(file_prices)
+				m.Discovery.Prices = discoprices.Read(file_prices)
 				wg.Done()
 			}()
 			go func() {
-				p.Discovery.BaseRecipeItems = base_recipe_items.Read(file_base_recipe_items)
+				m.Discovery.BaseRecipeItems = base_recipe_items.Read(file_base_recipe_items)
 				wg.Done()
 			}()
 			go func() {
-				p.Discovery.PlayercntlRephacks = playercntl_rephacks.Read(file_playercntl_rephacks)
+				m.Discovery.PlayercntlRephacks = playercntl_rephacks.Read(file_playercntl_rephacks)
 				wg.Done()
 			}()
 			file_public_bases := file.NewWebFile("https://discoverygc.com/forums/base_admin.php?action=getjson")
-			p.Discovery.PlayerOwnedBases = pob_goods.Read(file_public_bases)
+			m.Discovery.PlayerOwnedBases = pob_goods.Read(file_public_bases)
 		}
 		wg.Wait()
 	}, timeit.WithMsg("Mapped stuff"))
 
 	logus.Log.Info("Parse OK for FreelancerFolderLocation=", utils_logus.FilePath(file1path))
 
-	return p
+	return m
 }
 
 type IsDruRun bool
@@ -352,8 +409,8 @@ func (p *MappedConfigs) Write(is_dry_run IsDruRun) {
 
 	files = append(files, p.Universe.Write())
 	files = append(files, p.Systems.Write()...)
-	files = append(files, p.Market.Write()...)
-	files = append(files, p.Equip.Write()...)
+	files = append(files, p.market.Write()...)
+	files = append(files, p.equip.Write()...)
 	files = append(files, p.Goods.Write()...)
 	files = append(files, p.Shiparch.Write()...)
 	files = append(files, p.InfocardmapINI.Write())
