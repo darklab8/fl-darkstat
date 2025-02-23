@@ -124,7 +124,7 @@ func (l *Router) LinkBases(
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
-					front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, shared),
+					front.TradeRouteInfo2(combo_route.Transport.FromBase, combo_route.Freighter.ToBase, data, shared),
 				),
 			)
 		}
