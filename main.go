@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"runtime/debug"
 	"runtime/pprof"
 	"strings"
 	"syscall"
@@ -142,7 +143,7 @@ func main() {
 					func() {
 						defer func() {
 							if r := recover(); r != nil {
-								fmt.Println("Recovered in f, trying to update app data", r)
+								fmt.Println("Recovered in f, trying to update app data", r, string(debug.Stack()))
 							}
 						}()
 						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))

@@ -90,6 +90,7 @@ type Infocards map[InfocardKey]Infocard
 
 type ExporterRelay struct {
 	Mapped    *configs_mapped.MappedConfigs
+	hashes    HashesByCat
 	PoBs      []*PoB
 	PoBGoods  []*PoBGood
 	Infocards Infocards
@@ -141,6 +142,7 @@ func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Expor
 		ExporterRelay: &ExporterRelay{
 			Infocards: map[InfocardKey]Infocard{},
 			Mapped:    mapped,
+			hashes:    NewHashesCategories(mapped),
 		},
 	}
 

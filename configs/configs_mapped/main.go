@@ -129,9 +129,7 @@ func (m *MappedConfigs) Clean() {
 	m.Systems.BasesByNick = nil
 	m.filesystem = nil
 	m.FreelancerINI = nil
-	m.Goods = nil
 	m.InfocardmapINI = nil
-	m.InitialWorld = nil
 	m.Empathy = nil
 	m.MBases = nil
 	m.Consts = nil
@@ -141,6 +139,18 @@ func (m *MappedConfigs) Clean() {
 	m.NpcShips = nil
 	m.FactionProps = nil
 	m.DiffToMoney = nil
+	m.InitialWorld = nil
+
+	m.Goods.Commodities = nil
+	m.Goods.CommoditiesMap = nil
+	m.Goods.Files = nil
+	m.Goods.Goods = nil
+	m.Goods.GoodsMap = nil
+	m.Goods.Ships = nil
+	m.Goods.ShipsMap = nil
+	m.Goods.ShipsMapByHull = nil
+	m.Goods.ShipHulls = nil
+	m.Goods.ShipHullsMapByShip = nil
 }
 
 func NewMappedConfigs() *MappedConfigs {
