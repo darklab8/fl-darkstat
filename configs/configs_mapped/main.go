@@ -123,6 +123,24 @@ func (m *MappedConfigs) Clean() {
 	// one may be it will be done :)
 	m.equip = nil
 	m.market = nil
+	m.Systems.SystemsMap = nil
+	m.Systems.Systems = nil
+	m.Systems.BasesByBases = nil
+	m.Systems.BasesByNick = nil
+	m.filesystem = nil
+	m.FreelancerINI = nil
+	m.Goods = nil
+	m.InfocardmapINI = nil
+	m.InitialWorld = nil
+	m.Empathy = nil
+	m.MBases = nil
+	m.Consts = nil
+	m.WeaponMods = nil
+	m.Loadouts = nil
+	m.Solararch = nil
+	m.NpcShips = nil
+	m.FactionProps = nil
+	m.DiffToMoney = nil
 }
 
 func NewMappedConfigs() *MappedConfigs {
