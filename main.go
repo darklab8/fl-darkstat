@@ -16,6 +16,8 @@ import (
 
 	_ "net/http/pprof"
 
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
 	"github.com/darklab8/fl-darkstat/darkapis/darkrpc"
@@ -23,12 +25,15 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/docs"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
+	"github.com/darklab8/go-utils/utils/timeit"
+	"github.com/darklab8/go-utils/utils/utils_logus"
 )
 
 type Action string
@@ -51,6 +56,49 @@ func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 	relay_router = nil
 	relay_builder = nil
 	return relay_fs
+}
+
+// *configs_export.Exporter
+func GetConfigsExport() *configs_export.Exporter {
+	timer_mapping := timeit.NewTimerMain(timeit.WithMsg("read mapping"))
+	freelancer_folder := configs_settings.Env.FreelancerFolder
+	mapped := configs_mapped.NewMappedConfigs()
+	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
+	mapped.Read(freelancer_folder)
+	timer_mapping.Close()
+
+	timer_export := timeit.NewTimerMain(timeit.WithMsg("read mapping"))
+	configs := configs_export.NewExporter(mapped)
+	configs.Export(configs_export.ExportOptions{})
+	timer_export.Close()
+	configs.Mapped.Clean()
+	return configs
+}
+
+// from configs. Refactor to integrate it
+// go run . configs
+// go tool pprof -alloc_space -http=":8001" -nodefraction=0 http://localhost:6060/debug/pprof/heap
+func main_configs() {
+	for i := 0; i < 1; i++ {
+		timer_total := timeit.NewTimer("total time")
+		var configs *configs_export.Exporter
+
+		func() {
+			configs = GetConfigsExport()
+		}()
+
+		runtime.GC()
+		_ = configs
+
+		fmt.Println("configs are prepared")
+
+		timer_total.Close()
+
+		for {
+			fmt.Println(configs.Bases[0])
+			time.Sleep(time.Hour)
+		}
+	}
 }
 
 // @title Darkstat API

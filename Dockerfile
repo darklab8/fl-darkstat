@@ -33,7 +33,7 @@ WORKDIR /code
 FROM protoc AS build
 
 RUN mkdir data
-COPY main.go main.configs.go Taskfile.yml ./
+COPY main.go Taskfile.yml ./
 COPY darkstat darkstat
 COPY darkrelay darkrelay
 COPY configs configs
@@ -50,7 +50,7 @@ RUN swag init --parseDependency
 
 ARG BUILD_VERSION
 RUN echo "${BUILD_VERSION}" > darkstat/settings/version.txt
-RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go main.configs.go
+RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
 FROM debian:11.6-slim AS runner
 WORKDIR /code
