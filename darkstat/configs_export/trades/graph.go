@@ -14,9 +14,9 @@ import (
 
 type VertexName string
 
-type Intg = uint32
+type Intg = int32
 
-const intgmax = Intg(math.MaxUint32)
+const intgmax = Intg(math.MaxInt32)
 
 type GameGraph struct {
 	matrix                    map[VertexName]map[VertexName]float64

@@ -2,7 +2,6 @@ package trades
 
 import (
 	"container/heap"
-	"math"
 )
 
 // Written based on https://www.geeksforgeeks.org/implementation-of-johnsons-algorithm-for-all-pairs-shortest-paths/
@@ -27,7 +26,7 @@ type DijkstraAPSP struct {
 }
 
 const INF = intgmax
-const INFthreshold = intgmax / uint32(PrecisionMultipiler)
+const INFthreshold = intgmax / int32(PrecisionMultipiler)
 
 // On using the below constructor,
 // edges must be added manually
@@ -73,6 +72,13 @@ func WithPathDistsForAllNodes() DijkstraOption {
 func NewDijkstraApspFromGraph(graph *GameGraph, opts ...DijkstraOption) *DijkstraAPSP {
 	vertices := Intg(len(graph.matrix))
 	g := NewDijkstraApsp(vertices)
+
+	index := int32(0)
+	for vertex, _ := range graph.matrix {
+		graph.IndexByNick[vertex] = index
+		graph.NicknameByIndex[index] = vertex
+		index++
+	}
 
 	// TODO make path reconstructions working with it
 	for base_nick, _ := range graph.AllowedVertixesForCalcs {
@@ -170,7 +176,7 @@ type DijkstraResult struct {
 	parents_result []Parent
 }
 
-const NO_PARENT = math.MaxUint32 - 42
+const NO_PARENT = -1
 
 func (g *DijkstraAPSP) DijkstraApsp() ([][]Intg, [][]Parent) {
 	var distances [][]Intg = make([][]Intg, g.vertices)

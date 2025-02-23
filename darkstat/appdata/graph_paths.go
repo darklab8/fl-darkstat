@@ -29,7 +29,7 @@ func (app_data *AppData) GetGraphPaths(input_routes []GraphPathReq) []GraphPaths
 	for _, route := range input_routes {
 		result := GraphPathsResp{Query: route}
 
-		var transport_time, frigate_time, freighter_time uint32
+		var transport_time, frigate_time, freighter_time int32
 		var err error
 		transport_time, _ = trades.GetTimeMs(
 			app_data.Configs.Transport.Graph,

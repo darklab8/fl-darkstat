@@ -376,4 +376,4 @@ func (graph *GameGraph) GetTimeForDist(dist cfg.Milliseconds) cfg.Seconds {
 }
 
 // makes time in ms. Higher int value help having better calcs.
-const PrecisionMultipiler = cfg.Milliseconds(1000)
+const PrecisionMultipiler = cfg.Milliseconds(100)
