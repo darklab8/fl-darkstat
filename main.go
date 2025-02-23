@@ -134,6 +134,7 @@ func main() {
 			[]*builder.Filesystem{stat_fs, relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
+			web.WithAppData(app_data),
 		), app_data)
 		web_closer := web_server.Serve(web.WebServeOpts{SockAddress: web.DarkstatHttpSock})
 
@@ -170,6 +171,7 @@ func main() {
 			[]*builder.Filesystem{relay_fs},
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
+			web.WithAppData(app_data),
 		)
 		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 
@@ -191,7 +193,7 @@ func main() {
 
 	case Build:
 		app_data := appdata.NewAppData()
-		router.NewRouter(app_data).Link().BuildAll(false, nil)
+		router.NewRouter(app_data, router.WithStaticAssetsGen()).Link().BuildAll(false, nil)
 	case Web:
 		closer := web_darkstat()
 

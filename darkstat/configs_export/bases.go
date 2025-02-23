@@ -198,7 +198,6 @@ type Base struct {
 
 	Missions           *BaseMissions `json:"-" swaggerignore:"true"`
 	baseAllTradeRoutes `json:"-" swaggerignore:"true"`
-	baseAllRoutes      `json:"-" swaggerignore:"true"`
 	*MiningInfo        `json:"mining_info,omitempty"`
 
 	Reachable bool `json:"is_reachhable" validate:"required"` // is base IS Rechable by frighter from Manhattan

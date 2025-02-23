@@ -117,24 +117,21 @@ func (t *Route) GetTimeS() cfg.Seconds {
 	return float64(t.GetTimeMs())/trades.PrecisionMultipiler + float64(trades.BaseDockingDelay)
 }
 
-func (e *Exporter) AllRoutes(
-	bases []*Base,
-) []*Base {
-	for _, from_base := range bases {
-		for _, to_base := range bases {
-			// it can fly everywhere so we use it for checking
-			freighter_route := NewBaseRoute(e.Freighter, from_base, to_base)
+func (e *Exporter) GetTravelRoutes(from_base *Base) []*ComboRoute {
+	var AllRoutes []*ComboRoute
+	for _, to_base := range e.TravelBases {
+		// it can fly everywhere so we use it for checking
+		freighter_route := NewBaseRoute(e.Freighter, from_base, to_base)
 
-			if freighter_route.GetTimeMs() > trades.INF/2 {
-				continue
-			}
-
-			from_base.AllRoutes = append(from_base.AllRoutes, &ComboRoute{
-				Transport: NewBaseRoute(e.Transport, from_base, to_base),
-				Frigate:   NewBaseRoute(e.Frigate, from_base, to_base),
-				Freighter: freighter_route,
-			})
+		if freighter_route.GetTimeMs() > trades.INF/2 {
+			continue
 		}
+
+		AllRoutes = append(AllRoutes, &ComboRoute{
+			Transport: NewBaseRoute(e.Transport, from_base, to_base),
+			Frigate:   NewBaseRoute(e.Frigate, from_base, to_base),
+			Freighter: freighter_route,
+		})
 	}
-	return bases
+	return AllRoutes
 }

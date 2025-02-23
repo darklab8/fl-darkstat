@@ -304,10 +304,7 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	TradeBases := append(e.Bases, BasesFromPobs...)
 	e.TradeBases, e.Commodities = e.TradePaths(TradeBases, e.Commodities)
 	e.MiningOperations, e.Commodities = e.TradePaths(e.MiningOperations, e.Commodities)
-	e.TradeBases = e.AllRoutes(TradeBases)
-	for _, base := range e.TradeBases {
-		e.TravelBases = append(e.TravelBases, base)
-	}
+	e.TravelBases = e.TradeBases
 
 	e.EnhanceBasesWithIsTransportReachable(e.Bases, e.Transport, e.Freighter)
 	e.Bases = e.EnhanceBasesWithPobCrafts(e.Bases)

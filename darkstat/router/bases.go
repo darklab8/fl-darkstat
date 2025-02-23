@@ -104,9 +104,11 @@ func (l *Router) LinkBases(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
 				front.BaseTrades(base.Name, base.TradeRoutes, front.BaseTabTrades, shared),
 			),
+		)
+		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseAllRoutes)),
-				front.BaseRoutes(base.Name, base.AllRoutes, front.BaseAllRoutes, shared),
+				front.BaseRoutes(base.Name, base, data, front.BaseAllRoutes, shared),
 			),
 		)
 		for _, combo_route := range base.TradeRoutes {
@@ -117,7 +119,8 @@ func (l *Router) LinkBases(
 				),
 			)
 		}
-		for _, combo_route := range base.AllRoutes {
+
+		for _, combo_route := range data.GetTravelRoutes(base) {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
