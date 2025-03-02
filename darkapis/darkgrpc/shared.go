@@ -43,7 +43,7 @@ func NewBaseInfo(BaseInfo configs_export.BaseInfo) *pb.BaseInfo {
 		BaseNickname: BaseInfo.BaseName,
 		BaseName:     BaseInfo.BaseName,
 		SystemName:   BaseInfo.SystemName,
-		Region:       BaseInfo.Region,
+		RegionName:   BaseInfo.Region,
 		FactionName:  BaseInfo.FactionName,
 		BasePos:      NewPos(&BaseInfo.BasePos),
 		SectorCoord:  BaseInfo.SectorCoord,

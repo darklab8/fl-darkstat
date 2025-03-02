@@ -147,9 +147,9 @@ message Base {
   repeated string archetypes = 2;
   string nickname = 3;
   string faction_name = 5;
-  string system = 6;
+  string system_name = 6;
   string system_nickname = 7;
-  string region = 9;
+  string region_name = 9;
   int64 strid_name = 10;
   int64 infocard_id = 11;
   string file = 12;
@@ -157,10 +157,10 @@ message Base {
   Pos pos = 14;
   string sector_coord = 15;
   bool is_transport_unreachable = 16;
-  bool reachable = 18;
-  bool is_pob = 19;
+  bool is_reachhable = 18;
+  bool IsPob = 19;
 
-  map<string, MarketGood> market_goods_per_nick = 20;
+  repeated MarketGood market_goods = 20;
 }
 
 message MiningInfo {
@@ -194,16 +194,16 @@ message BaseInfo {
   string base_nickname = 1;
   string base_name = 2;
   string system_name = 3;
-  string region = 4;
+  string region_name = 4;
   string faction_name = 5;
   Pos base_pos = 6;
   string sector_coord = 7;
 }
 
 message Pos {
-  double x = 1;
-  double y = 2;
-  double z = 3;
+  double X = 1;
+  double Y = 2;
+  double Z = 3;
 }
 
 message GetCommoditiesInput {

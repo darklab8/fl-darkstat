@@ -59,26 +59,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 				return
 			}
 
-			var result []*configs_export.Base
-			if in.FilterToUseful {
-				result = configs_export.FilterToUserfulBases(api.app_data.Configs.Bases)
-			} else {
-				result = api.app_data.Configs.Bases
-			}
-			result = darkgrpc.FilterNicknames(in.FilterNicknames, result)
-
-			var output []*Base
-			for _, item := range result {
-				answer := &Base{
-					Base: item,
-				}
-				if in.IncludeMarketGoods {
-					for _, good := range darkgrpc.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
-						answer.MarketGoods = append(answer.MarketGoods, good)
-					}
-				}
-				output = append(output, answer)
-			}
+			var output []*pb.Base = darkgrpc.GetBasesNpc(api.app_data, in)
 			apiutils.ReturnJson(&w, output)
 		},
 	}

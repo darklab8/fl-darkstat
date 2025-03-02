@@ -854,13 +854,13 @@
         "factionName": {
           "type": "string"
         },
-        "system": {
+        "systemName": {
           "type": "string"
         },
         "systemNickname": {
           "type": "string"
         },
-        "region": {
+        "regionName": {
           "type": "string"
         },
         "stridName": {
@@ -886,15 +886,16 @@
         "isTransportUnreachable": {
           "type": "boolean"
         },
-        "reachable": {
+        "isReachhable": {
           "type": "boolean"
         },
-        "isPob": {
+        "IsPob": {
           "type": "boolean"
         },
-        "marketGoodsPerNick": {
-          "type": "object",
-          "additionalProperties": {
+        "marketGoods": {
+          "type": "array",
+          "items": {
+            "type": "object",
             "$ref": "#/definitions/statprotoMarketGood"
           }
         }
@@ -913,7 +914,7 @@
         "systemName": {
           "type": "string"
         },
-        "region": {
+        "regionName": {
           "type": "string"
         },
         "factionName": {
@@ -2264,15 +2265,15 @@
     "statprotoPos": {
       "type": "object",
       "properties": {
-        "x": {
+        "X": {
           "type": "number",
           "format": "double"
         },
-        "y": {
+        "Y": {
           "type": "number",
           "format": "double"
         },
-        "z": {
+        "Z": {
           "type": "number",
           "format": "double"
         }
