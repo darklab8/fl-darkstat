@@ -16,24 +16,22 @@ import (
 
 	_ "net/http/pprof"
 
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
-	"github.com/darklab8/fl-darkstat/configs/configs_settings"
+	"github.com/darklab8/fl-darkstat/configs"
 	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
 	"github.com/darklab8/fl-darkstat/darkapis/darkrpc"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkmap"
+	"github.com/darklab8/fl-darkstat/darkmap/darkcli"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/docs"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
-	"github.com/darklab8/go-utils/utils/timeit"
-	"github.com/darklab8/go-utils/utils/utils_logus"
 )
 
 type Action string
@@ -47,6 +45,7 @@ const (
 	Relay   Action = "relay"
 	Health  Action = "health"
 	Configs Action = "configs"
+	Darkmap Action = "darkmap"
 )
 
 func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
@@ -56,49 +55,6 @@ func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 	relay_router = nil
 	relay_builder = nil
 	return relay_fs
-}
-
-// *configs_export.Exporter
-func GetConfigsExport() *configs_export.Exporter {
-	timer_mapping := timeit.NewTimerMain(timeit.WithMsg("read mapping"))
-	freelancer_folder := configs_settings.Env.FreelancerFolder
-	mapped := configs_mapped.NewMappedConfigs()
-	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
-	mapped.Read(freelancer_folder)
-	timer_mapping.Close()
-
-	timer_export := timeit.NewTimerMain(timeit.WithMsg("read mapping"))
-	configs := configs_export.NewExporter(mapped)
-	configs.Export(configs_export.ExportOptions{})
-	timer_export.Close()
-	configs.Mapped.Clean()
-	return configs
-}
-
-// from configs. Refactor to integrate it
-// go run . configs
-// go tool pprof -alloc_space -http=":8001" -nodefraction=0 http://localhost:6060/debug/pprof/heap
-func main_configs() {
-	for i := 0; i < 1; i++ {
-		timer_total := timeit.NewTimer("total time")
-		var configs *configs_export.Exporter
-
-		func() {
-			configs = GetConfigsExport()
-		}()
-
-		runtime.GC()
-		_ = configs
-
-		fmt.Println("configs are prepared")
-
-		timer_total.Close()
-
-		for {
-			fmt.Println(configs.Bases[0])
-			time.Sleep(time.Hour)
-		}
-	}
 }
 
 // @title Darkstat API
@@ -155,13 +111,6 @@ func main() {
 			panic(r)
 		}
 	}()
-
-	var action string
-	argsWithoutProg := os.Args[1:]
-	if len(argsWithoutProg) == 1 {
-		action = argsWithoutProg[0]
-	}
-	fmt.Println("act:", action)
 
 	web_darkstat := func() func() {
 		app_data := appdata.NewAppData()
@@ -237,44 +186,76 @@ func main() {
 		}
 	}
 
-	switch Action(action) {
-
-	case Build:
-		app_data := appdata.NewAppData()
-		router.NewRouter(app_data, router.WithStaticAssetsGen()).Link().BuildAll(false, nil)
-	case Web:
-		closer := web_darkstat()
-
-		ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-		defer stop()
-		<-ctx.Done()
-		closer()
-	case Version:
-		fmt.Println("version=", settings.Env.AppVersion)
-	case Health:
-		tr := &http.Transport{
-			MaxIdleConns:       10,
-			IdleConnTimeout:    10 * time.Second,
-			DisableCompression: true,
-		}
-		client := &http.Client{Transport: tr}
-		resp, err := client.Get(fmt.Sprintf("http://localhost:8000/index.html?password=%s", settings.Env.DarkcoreEnvVars.Password))
-		logus.Log.CheckPanic(err, "failed to health check")
-		if resp.StatusCode != 200 {
-			logus.Log.Panic("status code is not 200", typelog.Any("code", resp.StatusCode))
-		}
-		fmt.Println("service is healthy")
-	case Configs:
-		main_configs()
-	default:
-
-		closer := web_darkstat()
-
-		ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-		defer stop()
-		<-ctx.Done()
-		closer()
-		fmt.Println("trying gracefully shutting down")
-	}
-
+	parser := darkcli.NewParser(
+		[]darkcli.Action{
+			{
+				Nickname:    "build",
+				Description: "build darkstat to static assets: html, css, js files",
+				Func: func(info darkcli.ActionInfo) error {
+					app_data := appdata.NewAppData()
+					router.NewRouter(app_data, router.WithStaticAssetsGen()).Link().BuildAll(false, nil)
+					return nil
+				},
+			},
+			{
+				Nickname:    "web",
+				Description: "run as standalone application that serves darkstat from memory",
+				Func: func(info darkcli.ActionInfo) error {
+					closer := web_darkstat()
+					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+					defer stop()
+					<-ctx.Done()
+					closer()
+					return nil
+				},
+			},
+			{
+				Nickname:    "version",
+				Description: "get darkstat version",
+				Func: func(info darkcli.ActionInfo) error {
+					fmt.Println("version=", settings.Env.AppVersion)
+					return nil
+				},
+			},
+			{
+				Nickname:    "health",
+				Description: "check darkstat is healthy. Useful for container health checks",
+				Func: func(info darkcli.ActionInfo) error {
+					tr := &http.Transport{
+						MaxIdleConns:       10,
+						IdleConnTimeout:    10 * time.Second,
+						DisableCompression: true,
+					}
+					client := &http.Client{Transport: tr}
+					resp, err := client.Get(fmt.Sprintf("http://localhost:8000/index.html?password=%s", settings.Env.DarkcoreEnvVars.Password))
+					logus.Log.CheckPanic(err, "failed to health check")
+					if resp.StatusCode != 200 {
+						logus.Log.Panic("status code is not 200", typelog.Any("code", resp.StatusCode))
+					}
+					fmt.Println("service is healthy")
+					return nil
+				},
+			},
+			{
+				Nickname:    "configs",
+				Description: "run config parsing to debug configs lib stuff for its data or memory profiling. For situations when unit testing is not enough.",
+				Func: func(info darkcli.ActionInfo) error {
+					configs.CliConfigs()
+					return nil
+				},
+			},
+			{
+				Nickname:    "darkmap",
+				Description: "darkmap group of commands. See `darkmap help` to discovery its commands",
+				Func: func(info darkcli.ActionInfo) error {
+					darkmap.DarkmapCliGroup(info.CmdArgs[1:])
+					return nil
+				},
+			},
+		},
+		darkcli.ParserOpts{
+			DefaultAction: ptr.Ptr("web"),
+		},
+	)
+	parser.Run(os.Args[1:])
 }

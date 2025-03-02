@@ -1,0 +1,74 @@
+version: "3"
+
+# u can embed version like this
+# go build -ldflags="-w -s -X 'github.com/darklab8/fl-darkstat/darkmap/settings.Version=some_vers'"
+
+tasks:
+  test:
+    cmds:
+      - go test ./... -coverprofile=cover.out {{.CLI_ARGS}}
+    vars:
+      PWD:
+        sh: echo '$(pwd)'
+
+  test:cover:
+    cmds:
+      - go tool cover -html=cover.out
+
+  test:cover:total:
+    cmds:
+      - task: test
+      - go tool cover -func cover.out
+
+  build:
+    cmds:
+      - templ generate
+      - go run . build
+
+  web:
+    cmds:
+      - templ generate
+      - go run . web
+
+  dev:templ:
+    cmds:
+      - templ generate -watch --cmd="go run . web"
+
+  dev:watch:
+    cmds:
+      # pip install watchdog[watchmedo]
+      - >
+        ~/venv/bin/watchmedo auto-restart 
+        --patterns "*.templ;*.go;*.css;*.js;enverant.json" 
+        -i "*_templ.go"
+        --recursive
+        -- sh -c "task web; sleep infinity"
+
+  build:test:
+    cmds:
+      - mkdir -p dist
+      - rm dist/darkmap-linux-amd64 | true
+      - GOOS=linux GOARCH=amd64 go build -v -o dist/darkmap-linux-amd64 main.go
+
+  build:bins:
+    cmds:
+      - mkdir -p dist
+      - rm dist/* | true
+
+      - GOOS=linux GOARCH=amd64 go build -v -o dist/darkmap-linux-amd64 main.go
+      - GOOS=linux GOARCH=arm64 go build -v -o dist/darkmap-linux-arm64 main.go
+      - GOOS=windows GOARCH=amd64 go build -v -o dist/darkmap-windows-amd64.exe main.go
+      - GOOS=windows GOARCH=arm64 go build -v -o dist/darkmap-windows-arm64.exe main.go
+
+      # We can build for those too, but i don't think they are needed
+      # - GOOS=linux GOARCH=386 go build -v -o dist/darkmap-linux-386 main.go
+      # - GOOS=linux GOARCH=arm go build -v -o dist/darkmap-linux-arm main.go
+      # - GOOS=windows GOARCH=386 go build -v -o dist/darkmap-windows-386.exe main.go
+      # - GOOS=windows GOARCH=arm go build -v -o dist/darkmap-windows-arm.exe main.go
+      # - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkmap-macos-amd64 main.go
+      # - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkmap-macos-arm64 main.go
+
+  hook:prod:
+    cmds:
+      - sudo rm /usr/local/bin/darkmap | true
+      - sudo ln -s {{.PWD}}/dist/darkmap-linux-amd64 /usr/local/bin/darkmap

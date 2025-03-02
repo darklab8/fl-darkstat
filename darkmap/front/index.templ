@@ -1,0 +1,80 @@
+package front
+
+import (
+	"github.com/darklab8/fl-darkstat/darkcore/core_front"
+	"github.com/darklab8/fl-darkstat/darkcore/core_static"
+	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
+    "github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+)
+
+templ Html5() {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			@core_front.StaticFile(core_static.FaviconIco)
+			<title>{ "darkmap" }</title>
+			@core_front.StaticFile(core_static.ResetCSS)
+			@core_front.StaticFile(core_static.SortableJS)
+			@core_front.StaticFile(core_static.HtmxJS)
+			@core_front.StaticFile(core_static.HtmxPreloadJS)
+			@core_front.StaticFile(static_front.CommonCSS)
+			@core_front.StaticFile(static_front.CustomCSS)
+			@core_front.StaticFile(static_front.CustomJS)
+			<script>
+
+			</script>
+			<style>
+				html {
+					background-image: url(../static/blue_space_with_planets_by_darkdissolution-updCont.jpg);
+					background-size: cover;
+					background-repeat: no-repeat;
+					background-color: rgb(9, 15, 24);
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+				}
+			</style>
+		</head>
+		<body hx-ext="preload">
+			{ children... }
+		</body>
+	</html>
+}
+
+templ Grid() {
+	<style>
+		background- {
+			display: block;
+			height: 100vh;
+			width: 100vw;
+			display: flex;
+			justify-content: center;
+		}
+		map- {
+			height: calc(100vh - 2.4em);
+			top: 2.4em;
+			width: calc(100vh - 2.4em);
+			margin: 0 auto;
+			border: 0.2em rgb(25, 47, 96) solid;
+			box-sizing: border-box;
+			background-color: black;
+			background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../static/SiriusMap.jpg);
+			background-size: cover;
+		}
+	</style>
+	<background->
+		<map->
+			{ children... }
+		</map->
+	</background->
+}
+
+templ Index(data *export_front.Export) {
+	@Html5() {
+		@Grid() {
+			@GalalaxyMap(data)
+		}
+	}
+}
