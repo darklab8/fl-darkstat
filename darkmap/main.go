@@ -10,6 +10,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
+	stat_settings "github.com/darklab8/fl-darkstat/darkstat/settings"
+
 	"github.com/darklab8/go-utils/utils/cantil"
 	"github.com/darklab8/go-utils/utils/timeit"
 )
@@ -61,6 +63,7 @@ func DarkmapCliGroup(Args []string) {
 		},
 		cantil.ParserOpts{
 			ParentArgs: []string{"darkmap"},
+			Enverants:  stat_settings.Enverants,
 		},
 	)
 	parser.Run(Args)

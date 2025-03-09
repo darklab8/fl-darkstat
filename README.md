@@ -37,11 +37,11 @@ See demos:
   - check specific version in [go.mod](./go.mod)
   - In case of emergency we could use vendored in version perhaps
 - check [environment variables to set](.vscode/enverant.json)
-
   - set your own environment variable FREELANCER_FOLDER to Freelancer Folder
   - ensure it was set. `echo $FREELANCER_FOLDER` at Linux or `echo %FREELANCER_FOLDER%` at windows
     - optionally is enough to change value in [enverant.json](.vscode/enverant.json) for that
-  - Check to have set other values from [enverant.json](.vscode/enverant.json) ! Some options make development way more pleasant by speeding up rerender by disabling unnecessary features!
+  - Check to have set other values from [enverant.json](.vscode/enverant.json)
+  - full list of variable possible to set available in help command `go run . help`
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
 
   - run some command, for example `task web`
@@ -113,6 +113,7 @@ If u have problems with configuring development environment, then seek my contac
   - optionally launch from anywhere, just add env variable FREELANCER_FOLDER with location to freelancer folder root.
 - visit http://localhost:8000/ as printed in console to see web site locally
 - Launching from `cmd` or any other console at Freelancer Discovery folder path is preferable. Because u will see detailed log output.
+  - optionally see all list of possible env vars and sub commands by running `darkstat help` command
 
 P.S. The tool uses lazy filesystem approach by grabbing first file with matching name. I did not use full paths.
 So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery folder
@@ -123,6 +124,7 @@ So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery f
 - Configuration for its running check in terraform infra code of [module darkstat](./tf/modules/darkstat)
   - you need to point at least volume -v /data:/path_to_frelancer_folder
   - and point required environment variables [as described there](./tf/modules/darkstat/variables.tf)
+    - get full list of possible environment variables and commands with command like `docker run -it darkwind8/darkstat:production help`
   - docker images are built for amd64 and arm64 :)
 
 # Acknowledments
