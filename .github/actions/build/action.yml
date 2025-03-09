@@ -51,10 +51,10 @@ runs:
       shell: bash
       run: darkstat build
       env:
-        SITE_HOST: ${{ inputs.site-host }}
-        SITE_ROOT: ${{ inputs.site-root }}
-        FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
-        FLDARKSTAT_HEADING: ${{ inputs.heading }}
-        RELAY_HOST: ${{ inputs.relay-host }}
-        GRPCGATEWAY_URL: ${{ inputs. apigateway-host }}
-        DEV_ENV: "true"
+        DARKSTAT_SITE_HOST: ${{ inputs.site-host }}
+        DARKSTAT_SITE_ROOT: ${{ inputs.site-root }}
+        CONFIGS_FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
+        DARKSTAT_FLDARKSTAT_HEADING: ${{ inputs.heading }}
+        DARKSTAT_RELAY_HOST: ${{ inputs.relay-host }}
+        DARKSTAT_GRPCGATEWAY_URL: ${{ inputs. apigateway-host }}
+        UTILS_DEV_ENV: "true"
