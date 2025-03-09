@@ -34,24 +34,19 @@ DarkstatBuildAssetsSteps = lambda a: darkstat.BuildArgs {
             name = "Test things"
             run = "task test"
             env = {
-                FLDARKDATA_LOG_LEVEL = "DEBUG"
-                FREELANCER_FOLDER = r"${{ github.workspace }}/fl-data"
+                CONFIGS_FREELANCER_FOLDER = r"${{ github.workspace }}/fl-data"
             }
         }
         ga.Step {
             name = "build"
             run = "task build"
             env = {
-                SITE_HOST = a.site_host
-                SITE_ROOT = a.site_root
-                FREELANCER_FOLDER = a.freelancer_folder
-                FLDARKSTAT_HEADING = a.heading
-                if a.is_detailed:
-                    DARKSTAT_DETAILED = "true"
-                else:
-                    DARKSTAT_DETAILED = "false"
+                DARKSTAT_SITE_HOST = a.site_host
+                DARKSTAT_SITE_ROOT = a.site_root
+                CONFIGS_FREELANCER_FOLDER = a.freelancer_folder
+                DARKSTAT_FLDARKSTAT_HEADING = a.heading
                 if a.relay_host != "":
-                    RELAY_HOST = a.relay_host
+                    DARKSTAT_RELAY_HOST = a.relay_host
             }
         }
     ]
