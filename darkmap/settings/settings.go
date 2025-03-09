@@ -32,8 +32,8 @@ func init() {
 	}
 	env := enverant.NewEnverant()
 	Env = DarkstatEnvVars{
-		UtilsEnvs:   utils_settings.GetEnvs(env),
-		ConfEnvVars: configs_settings.GetEnvs(env),
+		UtilsEnvs:   utils_settings.GetEnvs(),
+		ConfEnvVars: configs_settings.GetEnvs(),
 		SiteRoot:    env.GetStr("SITE_ROOT", enverant.OrStr("/")),
 		AppVersion:  GolangVersion,
 	}

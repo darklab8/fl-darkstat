@@ -5,7 +5,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -205,11 +204,6 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 				<th style="width:25px;">Technology</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">HpType</th>
-				if settings.Env.IsDetailed {
-					<th style="width:25px;">Flash particle name</th>
-					<th style="width:25px;">Const effect</th>
-					<th style="width:25px;">Munition hit effect</th>
-				}
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Info ID</th>
 				<th style="max-width:100%;"></th>
@@ -282,11 +276,6 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *t
 			{ gun.Nickname }
 		</td>
 		<td class="seo">{ gun.HpType } </td>
-		if settings.Env.IsDetailed {
-			<td class="seo">{ gun.FlashParticleName } </td>
-			<td class="seo">{ gun.ConstEffect } </td>
-			<td class="seo">{ gun.MunitionHitEffect } </td>
-		}
 		<td class="seo">{ strconv.Itoa(gun.IdsName) } </td>
 		<td class="seo">{ strconv.Itoa(gun.IdsInfo) } </td>
 		@tab.TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, shared, tab.InfocardClickOpts{})

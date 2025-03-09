@@ -26,10 +26,8 @@ type DarkstatEnvVars struct {
 	SiteRoot       string
 	SiteUrl        string
 
-	SiteRootAcceptors string
-	AppHeading        string
-	AppVersion        string
-	IsDetailed        bool
+	AppHeading string
+	AppVersion string
 
 	GrpcGatewayUrl  string
 	GrpcGatewayRoot string
@@ -37,13 +35,13 @@ type DarkstatEnvVars struct {
 	RelayRoot       string
 	RelayLoopSecs   int
 
-	IsDisabledTradeRouting       bool
 	TradeRoutesDetailedTradeLane bool
 
 	IsCPUProfilerEnabled bool
 	IsMemProfilerEnabled bool
 
 	IsStaticSiteGenerator bool
+	Enver                 *enverant.Enverant
 }
 
 func IsApiActive() bool {
@@ -54,42 +52,39 @@ func IsApiActive() bool {
 }
 
 var Env DarkstatEnvVars
+var Enverants []*enverant.Enverant
 
 func init() {
-	env := enverant.NewEnverant()
+	env := enverant.NewEnverant(enverant.WithPrefix("DARKSTAT_"), enverant.WithDescription("DARKSTAT set of envs for web interface for Freelancer game data navigation"))
+
+	site_host := env.GetStr("SITE_HOST", enverant.OrStr(""), enverant.WithDesc("to show correct Swagger url/some buttons/links. Expects values with https part"))
+	site_root := env.GetStr("SITE_ROOT", enverant.OrStr("/"), enverant.WithDesc("useful if wishing serving darkstat from github pages sub urls. Makes sure correct link addresses"))
 	Env = DarkstatEnvVars{
-		UtilsEnvs:         utils_settings.GetEnvs(env),
-		ConfEnvVars:       configs_settings.GetEnvs(env),
-		DarkcoreEnvVars:   darkcore_settings.GetEnvs(env),
-		TractorTabName:    env.GetStr("DARKSTAT_TRACTOR_TAB_NAME", enverant.OrStr("Tractors")),
-		SiteHost:          env.GetStr("SITE_HOST", enverant.OrStr("")),
-		SiteRoot:          env.GetStr("SITE_ROOT", enverant.OrStr("/")),
-		SiteUrl:           env.GetStrOr("SITE_URL", env.GetStr("SITE_HOST", enverant.OrStr(""))+env.GetStr("SITE_ROOT", enverant.OrStr("/"))),
-		SiteRootAcceptors: env.GetStr("SITE_ROOT_ACCEPTORS", enverant.OrStr("")),
-		AppHeading:        env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr("")),
-		AppVersion:        getAppVersion(),
-		IsDetailed:        env.GetBoolOr("DARKSTAT_DETAILED", false),
-		GrpcGatewayUrl:    env.GetStr("GRPCGATEWAY_URL", enverant.OrStr("http://localhost:8081/")),
-		RelayHost:         env.GetStr("RELAY_HOST", enverant.OrStr("")),
-		RelayRoot:         env.GetStr("RELAY_ROOT", enverant.OrStr("/")),
-		RelayLoopSecs:     env.GetIntOr("RELAY_LOOP_SECS", 30),
+		Enver:           env,
+		UtilsEnvs:       utils_settings.GetEnvs(),
+		ConfEnvVars:     configs_settings.GetEnvs(),
+		DarkcoreEnvVars: darkcore_settings.GetEnvs(),
+		TractorTabName:  env.GetStr("TRACTOR_TAB_NAME", enverant.OrStr("Tractors"), enverant.WithDesc("name of Tractors tab to show in darkstat web")),
 
-		TradeRoutesDetailedTradeLane: env.GetBoolOr("DARKSTAT_TRADE_ROUTES_DETAILED_TRADE_LANE", false),
-		IsDisabledTradeRouting:       env.GetBoolOr("CONFIGS_DISABLE_TRADE_ROUTES", false), // BROKEN. DO NOT TURN THIS FEATURE ON.
+		SiteHost:       site_host,
+		SiteRoot:       site_root,
+		SiteUrl:        env.GetStrOr("SITE_URL", site_host+site_root, enverant.WithDesc("combined shortcut of site_host + site_root")),
+		AppHeading:     env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr(""), enverant.WithDesc("What to show at the top of darkstat web UI. Possible to input any html")),
+		AppVersion:     getAppVersion(),
+		GrpcGatewayUrl: env.GetStr("GRPCGATEWAY_URL", enverant.OrStr("http://localhost:8081/"), enverant.WithDesc("grpc gateway url. for menu buttons at least of API to lead to it")),
 
-		IsCPUProfilerEnabled: env.GetBoolOr("IS_CPU_PROFILER_ENABLED", false),
-		IsMemProfilerEnabled: env.GetBoolOr("IS_MEM_PROFILER_ENABLED", false),
+		RelayHost:     env.GetStr("RELAY_HOST", enverant.OrStr(""), enverant.WithDesc("used to define relay url like with htpps included. Makes sure that u deployed darkstat as static assets, they will still lead to relay backend to serve dynamic data. Useful for Discovery related deployment")),
+		RelayRoot:     env.GetStr("RELAY_ROOT", enverant.OrStr("/"), enverant.WithDesc("if u ever will need to serve relay from non root path, u could use it to make sure requests go correct path.")),
+		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 30, enverant.WithDesc("How often to update backend info during active app. Used for discovery to update PoB related info on a run")),
+
+		TradeRoutesDetailedTradeLane: env.GetBoolOr("TRADE_ROUTES_DETAILED_TRADE_LANE", false, enverant.WithDesc("experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")),
+	}
+	Enverants = append(Enverants, Env.Enver, Env.DarkcoreEnvVars.Enver, Env.ConfEnvVars.Enver, Env.UtilsEnvs.Enver)
+	for _, enver := range Enverants {
+		enver.ValidetNoUnused()
 	}
 
 	fmt.Sprintln("conf=", Env)
-}
-
-func (e DarkstatEnvVars) GetSiteRootAcceptors() []string {
-	if e.SiteRootAcceptors == "" {
-		return []string{}
-	}
-
-	return strings.Split(e.SiteRootAcceptors, ",")
 }
 
 func getAppVersion() string {

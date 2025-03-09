@@ -19,8 +19,8 @@ var Env DarkrelayEnvVars
 func init() {
 	env := enverant.NewEnverant()
 	Env = DarkrelayEnvVars{
-		UtilsEnvs:   utils_settings.GetEnvs(env),
-		ConfEnvVars: configs_settings.GetEnvs(env),
+		UtilsEnvs:   utils_settings.GetEnvs(),
+		ConfEnvVars: configs_settings.GetEnvs(),
 		AppVersion:  env.GetStrOr("BUILD_VERSION", "v0.0.0-dev"),
 	}
 	fmt.Sprintln("conf=", Env)

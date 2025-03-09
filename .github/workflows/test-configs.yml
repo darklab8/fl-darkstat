@@ -47,4 +47,4 @@ jobs:
       run: go test ./...
       env:
         # CONFIGS_LOG_LEVEL: "DEBUG"
-        FREELANCER_FOLDER: ${{ github.workspace }}/${{ matrix.freelancer-mod }}
+        CONFIGS_FREELANCER_FOLDER: ${{ github.workspace }}/${{ matrix.freelancer-mod }}

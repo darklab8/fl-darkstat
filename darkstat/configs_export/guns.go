@@ -18,12 +18,6 @@ type DamageBonus struct {
 	Modifier float64 `json:"modifier" validate:"required"`
 }
 
-type GunDetailed struct {
-	FlashParticleName string `json:"flash_particle_name" validate:"required"`
-	ConstEffect       string `json:"const_effect" validate:"required"`
-	MunitionHitEffect string `json:"munition_hit_effect" validate:"required"`
-}
-
 func (g Gun) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Gun struct {
@@ -73,7 +67,6 @@ type Gun struct {
 
 	Missile
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
-	GunDetailed
 
 	NumBarrels *int       `json:"num_barrels,omitempty"`
 	BurstFire  *BurstFire `json:"burst_fire,omitempty"`
@@ -184,10 +177,6 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 			typelog.Bool("found_munition", found_munition),
 		)
 	}
-
-	gun.FlashParticleName, _ = gun_info.FlashParticleName.GetValue()
-	gun.ConstEffect, _ = munition.ConstEffect.GetValue()
-	gun.MunitionHitEffect, _ = munition.MunitionHitEffect.GetValue()
 
 	if hull_damange, ok := munition.HullDamage.GetValue(); ok {
 		// regular gun or turret

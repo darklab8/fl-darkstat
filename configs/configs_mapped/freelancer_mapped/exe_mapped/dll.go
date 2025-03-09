@@ -16,7 +16,6 @@ import (
 	"unicode/utf16"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
-	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/go-typelog/typelog"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind"
@@ -273,17 +272,7 @@ func ParseDLLs(dll_fnames []*file.File) *infocard.Config {
 		// then we go with global_offset from (idx) instead of (idx+1) as Alex had.
 		global_offset := int(math.Pow(2, 16)) * (idx)
 
-		func() {
-			defer func() {
-				if r := recover(); r != nil {
-					logus.Log.Error("unable to read dll. Recovered by skipping dll.", typelog.String("filepath", name.GetFilepath().ToString()), typelog.Any("recover", r))
-					if configs_settings.Env.Strict {
-						panic(r)
-					}
-				}
-			}()
-			ParseDLL(data, out, global_offset)
-		}()
+		ParseDLL(data, out, global_offset)
 
 	}
 

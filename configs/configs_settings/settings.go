@@ -2,7 +2,6 @@ package configs_settings
 
 import (
 	"os"
-	"runtime"
 
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
@@ -11,48 +10,32 @@ import (
 
 type ConfEnvVars struct {
 	utils_settings.UtilsEnvs
-	FallbackInfonamesToNickname bool
-	Strict                      bool
-	FreelancerFolder            utils_types.FilePath
-	FreelancerFolderFailback    utils_types.FilePath
-	MaxCores                    *int
+	FreelancerFolder         utils_types.FilePath
+	FreelancerFolderFailback utils_types.FilePath
+	Enver                    *enverant.Enverant
 }
 
 var Env ConfEnvVars
 
 func init() {
-	Env = GetEnvs(enverant.NewEnverant())
+	Env = GetEnvs()
 }
 
-func GetEnvs(envs *enverant.Enverant) ConfEnvVars {
+func GetEnvs() ConfEnvVars {
+	envs := enverant.NewEnverant(enverant.WithPrefix("CONFIGS_"), enverant.WithDescription("CONFIGS set of envs for freelancer configs parsing library"))
 	Env = ConfEnvVars{
-		UtilsEnvs:                   utils_settings.GetEnvs(envs),
-		FallbackInfonamesToNickname: envs.GetBool("CONFIGS_FALLBACK_TO_NICKNAMES", enverant.OrBool(false)),
-		Strict:                      envs.GetBool("CONFIGS_STRICT", enverant.OrBool(true)),
-		FreelancerFolder:            getGameLocation(envs),
-		FreelancerFolderFailback:    utils_types.FilePath(envs.GetStrOr("FREELANCER_FOLDER_FAILBACK", "")),
-		MaxCores:                    envs.GetPtrInt("CONFIGS_MAX_CORES"),
+		UtilsEnvs:                utils_settings.GetEnvs(),
+		FreelancerFolder:         getGameLocation(envs),
+		FreelancerFolderFailback: utils_types.FilePath(envs.GetStrOr("FREELANCER_FOLDER_FAILBACK", "", enverant.WithDesc("if some configs aren't defined in first freelancer folder, grab from this one. Useful for FLSR usage in CI"))),
+		Enver:                    envs,
 	}
 
 	return Env
 }
 
-func GetMaxCores() int {
-	numCPUs := runtime.NumCPU()
-	if Env.MaxCores == nil {
-		return numCPUs
-	}
-
-	if *Env.MaxCores > numCPUs {
-		return numCPUs
-	}
-
-	return *Env.MaxCores
-}
-
 func getGameLocation(envs *enverant.Enverant) utils_types.FilePath {
 	var folder utils_types.FilePath = utils_types.FilePath(
-		envs.GetStr("FREELANCER_FOLDER", enverant.OrStr("")),
+		envs.GetStr("FREELANCER_FOLDER", enverant.OrStr(""), enverant.WithDesc("path to Freelancer folder root for data parsing. By default grabs current workdir")),
 	)
 
 	if folder == "" {
