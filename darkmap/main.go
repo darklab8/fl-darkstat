@@ -8,21 +8,21 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
-	"github.com/darklab8/fl-darkstat/darkmap/darkcli"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
+	"github.com/darklab8/go-utils/utils/cantil"
 	"github.com/darklab8/go-utils/utils/timeit"
 )
 
 func DarkmapCliGroup(Args []string) {
 
 	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
-	parser := darkcli.NewParser(
-		[]darkcli.Action{
+	parser := cantil.NewConsoleParser(
+		[]cantil.Action{
 			{
 				Nickname:    "build",
 				Description: "build darkmap to static assets: html, css, js files",
-				Func: func(info darkcli.ActionInfo) error {
+				Func: func(info cantil.ActionInfo) error {
 					linker.NewLinker().Link().BuildAll(false, nil)
 					return nil
 				},
@@ -30,7 +30,7 @@ func DarkmapCliGroup(Args []string) {
 			{
 				Nickname:    "web",
 				Description: "run as standalone application that serves map from memory",
-				Func: func(info darkcli.ActionInfo) error {
+				Func: func(info cantil.ActionInfo) error {
 					var fs *builder.Filesystem
 					timer_web := timeit.NewTimer("total time for web web := func()")
 
@@ -59,7 +59,7 @@ func DarkmapCliGroup(Args []string) {
 				},
 			},
 		},
-		darkcli.ParserOpts{
+		cantil.ParserOpts{
 			ParentArgs: []string{"darkmap"},
 		},
 	)

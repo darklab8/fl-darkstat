@@ -22,7 +22,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap"
-	"github.com/darklab8/fl-darkstat/darkmap/darkcli"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
@@ -30,6 +29,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/docs"
 	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/utils/cantil"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -166,12 +166,12 @@ func main() {
 		}
 	}
 
-	parser := darkcli.NewParser(
-		[]darkcli.Action{
+	parser := cantil.NewConsoleParser(
+		[]cantil.Action{
 			{
 				Nickname:    "build",
 				Description: "build darkstat to static assets: html, css, js files",
-				Func: func(info darkcli.ActionInfo) error {
+				Func: func(info cantil.ActionInfo) error {
 					app_data := appdata.NewAppData()
 					router.NewRouter(app_data, router.WithStaticAssetsGen()).Link().BuildAll(false, nil)
 					return nil
@@ -180,7 +180,7 @@ func main() {
 			{
 				Nickname:    "web",
 				Description: "run as standalone application that serves darkstat from memory",
-				Func: func(info darkcli.ActionInfo) error {
+				Func: func(info cantil.ActionInfo) error {
 					closer := web_darkstat()
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 					defer stop()
@@ -192,7 +192,7 @@ func main() {
 			{
 				Nickname:    "version",
 				Description: "get darkstat version",
-				Func: func(info darkcli.ActionInfo) error {
+				Func: func(info cantil.ActionInfo) error {
 					fmt.Println("version=", settings.Env.AppVersion)
 					return nil
 				},
@@ -200,7 +200,7 @@ func main() {
 			{
 				Nickname:    "health",
 				Description: "check darkstat is healthy. Useful for container health checks",
-				Func: func(info darkcli.ActionInfo) error {
+				Func: func(info cantil.ActionInfo) error {
 					tr := &http.Transport{
 						MaxIdleConns:       10,
 						IdleConnTimeout:    10 * time.Second,
@@ -219,7 +219,7 @@ func main() {
 			{
 				Nickname:    "configs",
 				Description: "run config parsing to debug configs lib stuff for its data or memory profiling. For situations when unit testing is not enough.",
-				Func: func(info darkcli.ActionInfo) error {
+				Func: func(info cantil.ActionInfo) error {
 					configs.CliConfigs()
 					return nil
 				},
@@ -227,14 +227,15 @@ func main() {
 			{
 				Nickname:    "darkmap",
 				Description: "darkmap group of commands. See `darkmap help` to discovery its commands",
-				Func: func(info darkcli.ActionInfo) error {
+				Func: func(info cantil.ActionInfo) error {
 					darkmap.DarkmapCliGroup(info.CmdArgs[1:])
 					return nil
 				},
 			},
 		},
-		darkcli.ParserOpts{
+		cantil.ParserOpts{
 			DefaultAction: ptr.Ptr("web"),
+			Enverants:     settings.Enverants,
 		},
 	)
 	parser.Run(os.Args[1:])

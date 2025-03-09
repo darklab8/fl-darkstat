@@ -1,4 +1,7 @@
-package darkcli
+package cantil
+
+/*
+ */
 
 import (
 	"fmt"
@@ -18,7 +21,7 @@ type ParserOpts struct {
 	DefaultAction *string  // by default will be "help"
 }
 
-func NewParser(
+func NewConsoleParser(
 	actions []Action,
 	opts ParserOpts,
 ) *Parser {
