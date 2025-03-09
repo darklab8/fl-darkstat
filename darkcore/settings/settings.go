@@ -13,22 +13,25 @@ type DarkcoreEnvVars struct {
 	Secret              string
 	ExtraCookieHost     string
 	IsDiscoOauthEnabled bool
+	Enver               *enverant.Enverant
 }
 
 var Env DarkcoreEnvVars
 
-func GetEnvs(envs *enverant.Enverant) DarkcoreEnvVars {
+func GetEnvs() DarkcoreEnvVars {
+	envs := enverant.NewEnverant(enverant.WithPrefix("DARKCORE_"), enverant.WithDescription("DARKCORE set of envs for a web framework based on templ to implement static site generator with backend fallback"))
+
 	Env = DarkcoreEnvVars{
-		UtilsEnvs:           utils_settings.GetEnvs(envs),
-		Password:            envs.GetStrOr("DARKCORE_PASSWORD", ""),
-		Secret:              envs.GetStrOr("DARKCORE_SECRET", "passphrasewhichneedstobe32bytes!"),
-		IsDiscoOauthEnabled: envs.GetBool("DARKCORE_DISCO_OAUTH"),
+		UtilsEnvs:           utils_settings.GetEnvs(),
+		Password:            envs.GetStrOr("PASSWORD", "", enverant.WithDesc("protect access to web interface of darkstat with ?password=query_param")),
+		Secret:              envs.GetStrOr("SECRET", "passphrasewhichneedstobe32bytes!", enverant.WithDesc("secret to persist authentifications with query param password or oauth, required if using auths")),
+		IsDiscoOauthEnabled: envs.GetBool("DISCO_OAUTH", enverant.WithDesc("an option to turn auth of darkstat for Discovery freelancer a protected dev instance of darkstat")),
+		Enver:               envs,
 	}
 	return Env
 }
 
 func init() {
-	env := enverant.NewEnverant()
-	Env = GetEnvs(env)
+	Env = GetEnvs()
 	fmt.Sprintln("conf=", Env)
 }

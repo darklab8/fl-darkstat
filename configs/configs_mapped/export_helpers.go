@@ -5,14 +5,9 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
-	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 )
 
 func (configs *MappedConfigs) GetInfocardName(ids_name int, nickname string) string {
-	if configs_settings.Env.FallbackInfonamesToNickname {
-		return fmt.Sprintf("[%s]", nickname)
-	}
-
 	if infoname, ok := configs.Infocards.Infonames[ids_name]; ok {
 		return strings.ReplaceAll(string(infoname), "\r", "")
 	} else {

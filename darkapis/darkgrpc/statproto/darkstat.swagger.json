@@ -1851,9 +1851,6 @@
           "$ref": "#/definitions/statprotoMissile",
           "title": "has data defined but only for Missile guns :)"
         },
-        "gunDetailed": {
-          "$ref": "#/definitions/statprotoGunDetailed"
-        },
         "numBarrels": {
           "type": "string",
           "format": "int64"
@@ -1870,20 +1867,6 @@
         },
         "discoGun": {
           "$ref": "#/definitions/statprotoDiscoGun"
-        }
-      }
-    },
-    "statprotoGunDetailed": {
-      "type": "object",
-      "properties": {
-        "flashParticleName": {
-          "type": "string"
-        },
-        "constEffect": {
-          "type": "string"
-        },
-        "munitionHitEffect": {
-          "type": "string"
         }
       }
     },

@@ -415,7 +415,6 @@ message Gun {
 
   // has data defined but only for Missile guns :)
   Missile missile = 38;
-  GunDetailed gun_detailed = 39;
 
   optional int64 num_barrels = 40;
   optional BurstFire burst_fire = 41;
@@ -430,11 +429,6 @@ message DamageBonus {
 }
 message Missile {
   double max_angular_velocity = 1;
-}
-message GunDetailed {
-  string flash_particle_name = 1;
-  string const_effect = 2;
-  string munition_hit_effect = 3;
 }
 message BurstFire {
   double sustained_refire = 1;

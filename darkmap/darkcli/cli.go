@@ -2,7 +2,9 @@ package darkcli
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -64,15 +66,33 @@ func (p *Parser) Run(args []string) error {
 }
 
 func (p *Parser) PrintHelp() {
+	fmt.Println("HELP INFO")
 
-	fmt.Println("you called commands:", p.ParentArgs)
-	fmt.Println(`
-but missed one more cli argument or called help
-Input extra argument
-Possible commands:`)
+	fmt.Println()
+	fmt.Println("possible environment variables:")
+	for _, enver := range settings.Enverants {
+		fmt.Println()
+		if enver.Description != "" {
+			fmt.Println(enver.Description)
+		} else {
+			fmt.Println("ENVERANT env block:")
+		}
+
+		for _, env_var := range enver.GetParams() {
+			fmt.Printf(" %s - [%s] %s (default: %v)\n", env_var.PrefixedKey, env_var.VarType.ToStr(), env_var.Description, env_var.Default)
+		}
+	}
+
+	fmt.Println()
+	fmt.Println("Possible commands:")
 	for _, command := range p.actions_by_nick {
 		fmt.Printf("  %s - %s\n", command.Nickname, command.Description)
 	}
+
+	fmt.Println()
+	fmt.Println("your called args", os.Args[1:])
+	fmt.Println("command parent args:", p.ParentArgs)
+	fmt.Println(`missed one more cli argument or called help. Input extra argument if necessary`)
 }
 
 type Action struct {

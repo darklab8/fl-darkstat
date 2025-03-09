@@ -9,7 +9,6 @@ import (
 	"os/signal"
 	"runtime"
 	"runtime/debug"
-	"runtime/pprof"
 	"strings"
 	"syscall"
 	"time"
@@ -74,25 +73,6 @@ func main() {
 	go func() {
 		log.Println(http.ListenAndServe("localhost:6060", nil))
 	}()
-	if settings.Env.IsCPUProfilerEnabled {
-		// task profiler:cpu after that
-		f, err := os.Create("prof.prof")
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-
-	}
-	if settings.Env.IsMemProfilerEnabled {
-		// task profiler:mem after that
-		go func() {
-			time.Sleep(time.Second * 30)
-			f, _ := os.Create("mem.pprof")
-			pprof.WriteHeapProfile(f)
-			f.Close()
-		}()
-	}
 
 	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteHost, "https://", "")
 	docs.SwaggerInfo.Host = strings.ReplaceAll(docs.SwaggerInfo.Host, "http://", "")

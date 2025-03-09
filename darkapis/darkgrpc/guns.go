@@ -90,11 +90,6 @@ func NewGun(item configs_export.Gun, in *pb.GetGunsInput) *pb.Gun {
 		Missile: &pb.Missile{
 			MaxAngularVelocity: item.MaxAngularVelocity,
 		},
-		GunDetailed: &pb.GunDetailed{
-			FlashParticleName: item.FlashParticleName,
-			ConstEffect:       item.ConstEffect,
-			MunitionHitEffect: item.MunitionHitEffect,
-		},
 		AmmoLimit: NewAmmoLimit(item.AmmoLimit),
 	}
 	if item.BurstFire != nil {

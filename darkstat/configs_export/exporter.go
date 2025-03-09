@@ -8,7 +8,6 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
 )
 
 type InfocardKey string
@@ -242,18 +241,15 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 		e.ship_speeds = trades.FLSRSpeeds
 	}
 
-	if !settings.Env.IsDisabledTradeRouting {
-
+	{
 		wg.Add(1)
 		go func() {
 			logus.Log.Info("graph launching for tranposrt")
-
 			e.Transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false), extra_graph_bases, options.MappingOptions)
 			// e.Freighter = e.Transport
 			// e.Frigate = e.Transport
 			wg.Done()
 			logus.Log.Info("graph finished for tranposrt")
-
 		}()
 		wg.Add(1)
 		go func() {
