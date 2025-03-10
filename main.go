@@ -70,6 +70,7 @@ func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 
 // @BasePath /
 func main() {
+	fmt.Println("args=", os.Args[1:])
 	go func() {
 		log.Println(http.ListenAndServe("localhost:6060", nil))
 	}()
