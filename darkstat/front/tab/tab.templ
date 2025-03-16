@@ -24,6 +24,11 @@ templ TabContent() {
 		th, td {
 			border-width: 1px;
 			border-style: solid;
+		}
+		td {
+			border-color: var(--color_td_border);
+		}
+		th {
 			border-color: var(--color_border);
 		}
 		table {
@@ -35,7 +40,7 @@ templ TabContent() {
 
 			cursor: pointer;
 
-			background: var(--color_background);
+			background: var(--color_th_background);
 			position: sticky;
 			top: 0; /* Don't forget this, required for the stickiness */
 			
@@ -47,7 +52,7 @@ templ TabContent() {
 			padding: 5px;
 		}
 		td {
-			border-color: var(--color_border);
+			border-color: var(--color_td_border);
 		}
 		
 		tbody tr:nth-child(odd) {

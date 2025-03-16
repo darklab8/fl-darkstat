@@ -208,7 +208,7 @@ templ PoBShopItems(name string, shop_items []*configs_export.ShopItem) {
 				<td> { strconv.Itoa(good.Quantity) }</td>
 				<td> { strconv.Itoa(good.SellPrice) }</td>
 				<td> { strconv.Itoa(good.Price) }</td>
-				<td> { FormatPoBSells(good) }</td>
+				@FormatPoBSells(good)
 				<td> { strconv.Itoa(good.MinStock) }</td>
 				<td> { strconv.Itoa(good.MaxStock) }</td>
 				<td>
@@ -227,12 +227,30 @@ type ShopItemI interface {
 	BaseBuys() bool
 }
 
-func FormatPoBSells(good ShopItemI) string {
-	if good.BaseSells() && good.BaseBuys() { return "sells & buys"}
+templ FormatPoBSells2(good ShopItemI) {
+	if good.BaseSells() && good.BaseBuys() { 
+		<td>
+		{ "sells & buys" }
+		</td>
+	} else if good.BaseSells() { 
+		<td>{ "sells only" }</td>  
+	} else if good.BaseBuys() {
+		<td>{ "buys only" }</td>
+	} else {
+		<td>{ "unidentified" }</td>
+	}
+}
 
-	if good.BaseSells() { return "sells only" }
-
-	if good.BaseBuys() { return "buys only" }
-
-	return "unidentified"
+templ FormatPoBSells(good ShopItemI) {
+	if good.BaseSells() && good.BaseBuys() { 
+		<td style="background:linear-gradient(90deg, var(--color_fmt_sb_sells) 0 50%, var(--color_fmt_sb_buys) 50% 100%)">
+		{ "sells & buys" }
+		</td>
+	} else if good.BaseSells() { 
+		<td style="background:var(--color_fmt_sb_sells)">{ "sells only" }</td>  
+	} else if good.BaseBuys() {
+		<td style="background:var(--color_fmt_sb_buys)">{ "buys only" }</td>
+	} else {
+		<td style="background:var(--color_fmt_sb_neither)">{ "unidentified" }</td>
+	}
 }

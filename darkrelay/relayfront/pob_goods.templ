@@ -56,7 +56,7 @@ templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared
 					if good.BestPriceToSell != nil {
 						{ strconv.Itoa(*good.BestPriceToSell) }
 					}</td>
-					<td> { FormatPoBSells(good) }</td>
+					@FormatPoBSells2(good)
 					<td>
 						@frmt.WriteLimit(200) {
 							{ good.Nickname }
@@ -147,7 +147,7 @@ templ PoBGoodPobs(name string, pobs []*configs_export.PoBGoodBase) {
 				<td> { strconv.Itoa(pob.ShopItem.Quantity) }</td>
 				<td> { strconv.Itoa(pob.ShopItem.SellPrice) }</td>
 				<td> { strconv.Itoa(pob.ShopItem.Price) }</td>
-				<td> { FormatPoBSells(pob.ShopItem) }</td>
+				@FormatPoBSells(pob.ShopItem)
 				<td> { strconv.Itoa(pob.ShopItem.MinStock) }</td>
 				<td> { strconv.Itoa(pob.ShopItem.MaxStock) }</td>
 				@PobTableRow(pob.Base)

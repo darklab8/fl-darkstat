@@ -15,7 +15,13 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 			<meta charset="UTF-8"/>
 			@core_front.StaticFile(core_static.FaviconIco)
 			<title>{ "darkstat" }</title>
-			<style></style>
+			<style>
+				:root {
+					--color_fmt_sb_sells: rgba(0, 255, 0, 0.2);
+					--color_fmt_sb_buys: rgba(255, 255, 0, 0.2);
+					--color_fmt_sb_neither: rgba(255, 0, 0, 0.1);
+				}
+			</style>
 			// For loading https://htmx.org/examples/tabs-hateoas/
 			switch theme {
 				case types.ThemeDark:
@@ -23,9 +29,11 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 						:root {
 							--color_background_filter_bars: #0e0e0e;
 							--color_background: #1D1D1D;
+							--color_th_background: #353535;
 							--color_alternate_row: #1F1F1F;
 							--color_border: #474747;
 							--color_th_border: #8B8B8B;
+							--color_td_border: #393939;
 							--color_hover: #303030;
 							--color_scrollbar_thing: #888;
 							--color_scrollbar_background: #353535;
@@ -35,6 +43,10 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 							--color_hover_link: #57A5F2;
 							--color_time: #4b4b4b;
 							--infocard_text_highlight: #6b6d1e;
+
+							--color_fmt_sb_sells: rgba(0, 255, 0, 0.13);
+							--color_fmt_sb_buys: rgba(255, 255, 0, 0.13);
+							--color_fmt_sb_neither: rgba(255, 0, 0, 0.07);
 						}
 					</style>
 				case types.ThemeVanilla:
@@ -42,9 +54,11 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 						:root {
 							--color_background_filter_bars: #fdf7ec;
 							--color_background: #F6ECDA;
+							--color_th_background: #F6ECDA;
 							--color_alternate_row: #F5EaDA;
 							--color_border: #A68E64;
 							--color_th_border: #A68E64;
+							--color_td_border: #A68E64;
 							--color_hover: #f3d195;
 							--color_scrollbar_thing: #6e5d40;
 							--color_scrollbar_background: #ddbe87;
@@ -61,9 +75,11 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 						:root {
 							--color_background_filter_bars: #ffffff;
 							--color_background: #EFEFEF;
+							--color_th_background: #EFEFEF;
 							--color_alternate_row: #E6E6E6;
 							--color_border: #D7D7D7;
 							--color_th_border: #D7D7D7;
+							--color_td_border: #D7D7D7;
 							--color_hover: #CCC;
 							--color_scrollbar_thing: #999;
 							--color_scrollbar_background: #E1E1E1;
