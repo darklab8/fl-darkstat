@@ -86,6 +86,7 @@ type Explosion struct {
 	HullDamage    *semantic.Int
 	EnergyDamange *semantic.Int
 	Radius        *semantic.Int
+	WeaponType    *semantic.String
 
 	ArmorPen *semantic.Float // Disco only
 }
@@ -456,6 +457,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				explosion.Nickname = semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				explosion.HullDamage = semantic.NewInt(section, cfg.Key("hull_damage"))
 				explosion.EnergyDamange = semantic.NewInt(section, cfg.Key("energy_damage"))
+				explosion.WeaponType = semantic.NewString(section, cfg.Key("weapon_type"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				explosion.Radius = semantic.NewInt(section, cfg.Key("radius"))
 				frelconfig.Explosions = append(frelconfig.Explosions, explosion)
 				frelconfig.ExplosionMap[explosion.Nickname.Get()] = explosion

@@ -178,10 +178,15 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		)
 	}
 
+	gun.DamageType = "undefined"
+
 	if hull_damange, ok := munition.HullDamage.GetValue(); ok {
 		// regular gun or turret
 		gun.HullDamage = hull_damange
 		gun.EnergyDamage = munition.EnergyDamange.Get()
+		if weapon_type, ok := munition.WeaponType.GetValue(); ok {
+			gun.DamageType = weapon_type
+		}
 	} else {
 
 		if explosion_arch, ok := munition.ExplosionArch.GetValue(); ok {
@@ -189,6 +194,9 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 			explosion := e.Mapped.Equip().ExplosionMap[explosion_arch]
 			gun.HullDamage = explosion.HullDamage.Get()
 			gun.EnergyDamage = explosion.EnergyDamange.Get()
+			if weapon_type, ok := explosion.WeaponType.GetValue(); ok {
+				gun.DamageType = weapon_type
+			}
 		} else {
 			// healing gun
 			gun.HullDamage = -1
@@ -205,11 +213,6 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 	}
 	if value, ok := munition.AmmoLimitMaxCatridges.GetValue(); ok {
 		gun.AmmoLimit.MaxCatridges = ptr.Ptr(value)
-	}
-
-	gun.DamageType = "undefined"
-	if weapon_type, ok := munition.WeaponType.GetValue(); ok {
-		gun.DamageType = weapon_type
 	}
 
 	if lifetime, ok := munition.LifeTime.GetValue(); ok {
