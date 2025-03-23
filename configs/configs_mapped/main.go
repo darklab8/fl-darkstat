@@ -121,7 +121,35 @@ func (m *MappedConfigs) Clean() {
 	// We deallocate stuff needed only one time during Export() operation pretty much.
 	// Technically more clean solution would be passing around those parsed configs... but it requires too much variable passing around.
 	// one may be it will be done :)
-	m.equip = nil
+	m.equip.Files = nil
+	// Commodities    []*Commodity
+	// CommoditiesMap map[string]*Commodity
+	m.equip.Guns = nil
+	m.equip.GunMap = nil
+	m.equip.Munitions = nil
+	m.equip.MunitionMap = nil
+	m.equip.Explosions = nil
+	m.equip.ExplosionMap = nil
+	m.equip.MineDroppers = nil
+	m.equip.Mines = nil
+	m.equip.MinesMap = nil
+	m.equip.Items = nil
+	m.equip.ItemsMap = nil
+	m.equip.ShieldGens = nil
+	m.equip.ShidGenMap = nil
+	m.equip.Thrusters = nil
+	m.equip.ThrusterMap = nil
+	m.equip.Engines = nil
+	m.equip.EnginesMap = nil
+	m.equip.Powers = nil
+	m.equip.PowersMap = nil
+	m.equip.CounterMeasureDroppers = nil
+	m.equip.CounterMeasure = nil
+	m.equip.CounterMeasureMap = nil
+	m.equip.Scanners = nil
+	m.equip.Tractors = nil
+	m.equip.Cloaks = nil
+
 	m.market = nil
 	m.Systems.SystemsMap = nil
 	m.Systems.Systems = nil

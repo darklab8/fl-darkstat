@@ -695,6 +695,8 @@ message PoBGood {
   bool any_base_sells = 8;
   bool any_base_buys = 9;
   repeated PoBGoodBase bases = 10;
+  double volume = 11;
+  int64 ship_class = 12;
 }
 message PoBGoodBase {
   ShopItem shop_item = 1;

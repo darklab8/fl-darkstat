@@ -2233,6 +2233,14 @@
             "type": "object",
             "$ref": "#/definitions/statprotoPoBGoodBase"
           }
+        },
+        "volume": {
+          "type": "number",
+          "format": "double"
+        },
+        "shipClass": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },

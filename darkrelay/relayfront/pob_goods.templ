@@ -10,6 +10,7 @@ import (
 	"strings"
 	"strconv"
 	"html"
+	"fmt"
 )
 
 func PoBGoodDetailedUrl(good *configs_export.PoBGood) string {
@@ -30,6 +31,8 @@ templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared
 				<th style="width:10px;">@frmt.MultiLinestring([]string{"Total","sellable", "to bases"})</th>
 				<th style="width:10px;">@frmt.MultiLinestring([]string{"Best price","to buy","from bases"})</th>
 				<th style="width:10px;">@frmt.MultiLinestring([]string{"Best price","to sell","to bases"})</th>
+				<th style="width:10px;">@frmt.MultiLinestring([]string{"Volume"})</th>
+				<th style="width:10px;">@frmt.MultiLinestring([]string{"Ship", "Class"})</th>
 				<th style="width:75px;">
 					@frmt.MultiLinestring([]string{"Base", "Sells"})
 				</th>
@@ -40,7 +43,7 @@ templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared
 		<tbody>
 			for _, good := range pob_goods {
 				@tab.TrFromMainTb2(tab.NewTr(good.Nickname, PoBGoodDetailedUrl(good), pinm, tab.WithFromRelay()), false) {
-					@tab.PinTd(good.Nickname, good.Name, pinm)
+					@tab.PinTd(good.Nickname, good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass), pinm)
 					@tab.PinSelectLeftRight(pinm, PoBGoodDetailedUrl(good))
 					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					<td>
@@ -56,6 +59,8 @@ templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared
 					if good.BestPriceToSell != nil {
 						{ strconv.Itoa(*good.BestPriceToSell) }
 					}</td>
+					<td>{ fmt.Sprintf("%.2f", good.Volume) }</td>
+					<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
 					@FormatPoBSells2(good)
 					<td>
 						@frmt.WriteLimit(200) {

@@ -26,7 +26,7 @@ func SortedMarketGoods(goods_per_nick map[configs_export.CommodityKey]*configs_e
 }
 
 func FormattedShipClassOfCommodity(ship_class cfg.ShipClass) string {
-	if ship_class >= 0 {
+	if ship_class > 0 {
 		return " (" + ship_class.ToStr() + ")"
 	} else {
 		return ""
@@ -34,7 +34,7 @@ func FormattedShipClassOfCommodity(ship_class cfg.ShipClass) string {
 }
 
 func FormattedShipClassOfCommodity2(ship_class cfg.ShipClass) string {
-	if ship_class >= 0 {
+	if ship_class > 0 {
 		return fmt.Sprintf("%d,%s", ship_class, ship_class.ToStr())
 	} else {
 		return "nil"

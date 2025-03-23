@@ -95,6 +95,8 @@ func (s *Server) GetPoBGoods(_ context.Context, in *pb.Empty) (*pb.GetPoBGoodsRe
 			Category:              base.Category,
 			AnyBaseSells:          base.AnyBaseSells,
 			AnyBaseBuys:           base.AnyBaseBuys,
+			Volume:                base.Volume,
+			ShipClass:             int64(base.ShipClass),
 		}
 
 		for _, shop_item := range base.Bases {

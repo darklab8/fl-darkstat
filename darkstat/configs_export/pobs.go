@@ -85,8 +85,10 @@ type PoBGood struct {
 	Category string         `json:"category" validate:"required"`
 	Bases    []*PoBGoodBase `json:"bases" validate:"required"`
 
-	AnyBaseSells bool `json:"any_base_sells" validate:"required"`
-	AnyBaseBuys  bool `json:"any_base_buys" validate:"required"`
+	AnyBaseSells bool          `json:"any_base_sells" validate:"required"`
+	AnyBaseBuys  bool          `json:"any_base_buys" validate:"required"`
+	Volume       float64       `json:"volume" validate:"required"`
+	ShipClass    cfg.ShipClass `json:"ship_class"  validate:"required"`
 }
 
 func (b PoBGood) GetNickname() string { return string(b.Nickname) }
@@ -210,10 +212,26 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 			}
 		}
 
-		pob_goods = append(pob_goods, item)
+		if equipment, ok := e.Mapped.Equip().CommoditiesMap[item.Nickname]; ok {
+			// then it is commodity that can be duplicated through volumes
+			for _, volume_info := range equipment.Volumes {
+				copied := GetPtrStructCopy(item)
+				copied.Volume = volume_info.Volume.Get()
+				copied.ShipClass = volume_info.GetShipClass()
+				pob_goods = append(pob_goods, copied)
+			}
+		} else {
+			pob_goods = append(pob_goods, item)
+		}
+
 	}
 
 	return pob_goods
+}
+func GetPtrStructCopy[T any](b *T) *T {
+	a := new(T)
+	*a = *b
+	return a
 }
 
 type HashesByCat struct {
