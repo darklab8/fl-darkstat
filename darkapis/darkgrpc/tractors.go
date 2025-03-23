@@ -37,6 +37,18 @@ func (s *Server) GetTractors(_ context.Context, in *pb.GetTractorsInput) (*pb.Ge
 		if in.IncludeMarketGoods {
 			result.Bases = NewBases(item.Bases)
 		}
+		if in.IncludeRephacks {
+			rephacks := item.GetRephacksList()
+			for _, rephack := range rephacks {
+				result.Rephacks = append(result.Rephacks, &pb.Rephack{
+					FactionName:     rephack.FactionName,
+					FactionNickname: string(rephack.FactionNick),
+					Reputation:      rephack.Reputation,
+					RepType:         int32(rephack.RepType),
+				})
+			}
+
+		}
 		items = append(items, result)
 	}
 	return &pb.GetTractorsReply{Items: items}, nil

@@ -15,6 +15,7 @@ type Tractor struct {
 	*configs_export.Tractor
 	MarketGoods []*configs_export.MarketGood        `json:"market_goods"`
 	TechCompat  *configs_export.DiscoveryTechCompat `json:"tech_compat"`
+	Rephacks    []*configs_export.Rephack           `json:"rephacks"`
 }
 
 // ShowAccount godoc
@@ -28,6 +29,7 @@ type Tractor struct {
 // @Description  include_market_goods: "insert 'true' if wish to include market goods under 'market goods' key or not. Such data can add a lot of extra weight"
 // @Description  filter_to_useful: Apply filtering same as darkstat does by default for its tab. Usually means showing only items that can be bought/crafted/or found
 // @Description  filter_nicknames: filters by item nicknames
+// @Description  include_rephacks: "insert 'true' if wish to include ID rephacks usable for Freelancer Discovery
 func GetTractors(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "" + ApiRoute + "/tractors",
@@ -48,6 +50,9 @@ func GetTractors(webapp *web.Web, api *Api) *registry.Endpoint {
 			if r.URL.Query().Get("include_market_goods") == "true" {
 				in.IncludeMarketGoods = true
 			}
+			if r.URL.Query().Get("include_rephacks") == "true" {
+				in.IncludeMarketGoods = true
+			}
 
 			var result []*configs_export.Tractor
 			if in.FilterToUseful {
@@ -66,6 +71,9 @@ func GetTractors(webapp *web.Web, api *Api) *registry.Endpoint {
 					for _, good := range item.Bases {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
+				}
+				if in.IncludeRephacks {
+					answer.Rephacks = answer.GetRephacksList()
 				}
 				output = append(output, answer)
 			}

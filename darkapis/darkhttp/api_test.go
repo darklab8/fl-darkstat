@@ -25,6 +25,7 @@ import (
 type TestOpts struct {
 	CheckMarketGoods bool
 	CheckTechCompat  bool
+	IncludeRephacks  bool
 }
 
 func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string, test_name string, opts TestOpts) []T {
@@ -35,6 +36,9 @@ func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string
 	}
 	if opts.CheckTechCompat {
 		body["include_tech_compat"] = true
+	}
+	if opts.IncludeRephacks {
+		body["include_rephacks"] = true
 	}
 	post_body, err := json.Marshal(body)
 	res, err := httpc.Post("http://localhost/api"+url, ApplicationJson, bytes.NewBuffer(post_body))
@@ -263,8 +267,18 @@ func TestApi(t *testing.T) {
 		}
 		items := FixtureTestItems[Tractor](t, httpc, "/tractors", "Tractors", TestOpts{
 			CheckMarketGoods: true,
+			IncludeRephacks:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
+
+		var found Tractor
+		for _, tractor := range items {
+			if len(tractor.Rephacks) > 0 {
+				found = tractor
+				break
+			}
+		}
+		assert.Greater(t, len(found.Rephacks), 0)
 	})
 
 	t.Run("GetAmmos", func(t *testing.T) {

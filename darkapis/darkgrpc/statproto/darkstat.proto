@@ -136,6 +136,7 @@ message GetTractorsInput {
 
   // filters by item nicknames
   repeated string filter_nicknames = 3;
+  bool include_rephacks = 4;
 }
 message GetBasesReply {
   repeated Base items = 1;
@@ -622,6 +623,13 @@ message Tractor {
   int64 info_id = 9;
   map<string, MarketGood> bases = 10;
   double mass = 11;
+  repeated Rephack rephacks = 12;
+}
+message Rephack {
+  string faction_name = 1;
+  string faction_nickname = 2;
+  double reputation = 3;
+  int32 rep_type = 4; // check configs/discovery/playercntl_replhacks/id_rephacks.go::RepType.ToStr() for explanations
 }
 message GetHashesReply {
   map<string, Hash> hashes_by_nick = 1;

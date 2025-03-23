@@ -19,12 +19,12 @@ type Rephack struct {
 }
 
 type DiscoveryIDRephacks struct {
-	Rephacks map[cfg.FactionNick]Rephack `json:"rephacks" validate:"required"`
+	Rephacks map[cfg.FactionNick]*Rephack `json:"rephacks" validate:"required"`
 }
 
-func (r DiscoveryIDRephacks) GetRephacksList() []Rephack {
+func (r DiscoveryIDRephacks) GetRephacksList() []*Rephack {
 
-	var result []Rephack
+	var result []*Rephack
 	for _, rephack := range r.Rephacks {
 
 		result = append(result, rephack)
@@ -33,7 +33,6 @@ func (r DiscoveryIDRephacks) GetRephacksList() []Rephack {
 		return result[i].Reputation > result[j].Reputation
 	})
 	return result
-
 }
 
 type Tractor struct {
@@ -68,7 +67,7 @@ func (e *Exporter) GetTractors() []*Tractor {
 			Nickname:      cfg.TractorID(tractor_info.Nickname.Get()),
 			ShortNickname: fmt.Sprintf("i%d", tractor_id),
 			DiscoveryIDRephacks: DiscoveryIDRephacks{
-				Rephacks: make(map[cfg.FactionNick]Rephack),
+				Rephacks: make(map[cfg.FactionNick]*Rephack),
 			},
 			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
@@ -100,7 +99,7 @@ func (e *Exporter) GetTractors() []*Tractor {
 		if e.Mapped.Discovery != nil {
 
 			for faction_nick, faction := range e.Mapped.Discovery.PlayercntlRephacks.DefaultReps {
-				tractor.Rephacks[faction_nick] = Rephack{
+				tractor.Rephacks[faction_nick] = &Rephack{
 					Reputation:  faction.Rep.Get(),
 					RepType:     faction.GetRepType(),
 					FactionNick: faction_nick,
@@ -113,7 +112,7 @@ func (e *Exporter) GetTractors() []*Tractor {
 				if inherited_id, ok := faction.Inherits.GetValue(); ok {
 					if faction, ok := e.Mapped.Discovery.PlayercntlRephacks.RephacksByID[cfg.TractorID(inherited_id)]; ok {
 						for faction_nick, rep := range faction.Reps {
-							tractor.Rephacks[faction_nick] = Rephack{
+							tractor.Rephacks[faction_nick] = &Rephack{
 								Reputation:  rep.Rep.Get(),
 								RepType:     rep.GetRepType(),
 								FactionNick: faction_nick,
@@ -124,7 +123,7 @@ func (e *Exporter) GetTractors() []*Tractor {
 				}
 
 				for faction_nick, rep := range faction.Reps {
-					tractor.Rephacks[faction_nick] = Rephack{
+					tractor.Rephacks[faction_nick] = &Rephack{
 						Reputation:  rep.Rep.Get(),
 						RepType:     rep.GetRepType(),
 						FactionNick: faction_nick,

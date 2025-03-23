@@ -1659,6 +1659,9 @@
             "type": "string"
           },
           "title": "filters by item nicknames"
+        },
+        "includeRephacks": {
+          "type": "boolean"
         }
       }
     },
@@ -2261,6 +2264,26 @@
         }
       }
     },
+    "statprotoRephack": {
+      "type": "object",
+      "properties": {
+        "factionName": {
+          "type": "string"
+        },
+        "factionNickname": {
+          "type": "string"
+        },
+        "reputation": {
+          "type": "number",
+          "format": "double"
+        },
+        "repType": {
+          "type": "integer",
+          "format": "int32",
+          "title": "check configs/discovery/playercntl_replhacks/id_rephacks.go::RepType.ToStr() for explanations"
+        }
+      }
+    },
     "statprotoReputation": {
       "type": "object",
       "properties": {
@@ -2704,6 +2727,13 @@
         "mass": {
           "type": "number",
           "format": "double"
+        },
+        "rephacks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/statprotoRephack"
+          }
         }
       }
     }
