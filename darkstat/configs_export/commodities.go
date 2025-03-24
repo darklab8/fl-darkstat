@@ -11,14 +11,14 @@ import (
 type MarketGood struct {
 	GoodInfo
 
-	LevelRequired        int           `json:"level_required" validate:"required"`
-	RepRequired          float64       `json:"rep_required" validate:"required"`
-	PriceBaseBuysFor     *int          `json:"price_base_buys_for"`
-	PriceBaseSellsFor    int           `json:"price_base_sells_for" validate:"required"`
-	Volume               float64       `json:"volume" validate:"required"`
-	ShipClass            cfg.ShipClass `json:"ship_class" validate:"required"` // Discovery specific value. Volume can be different based on ship class. Duplicating market goods with different volumes for that
-	BaseSells            bool          `json:"base_sells" validate:"required"`
-	IsServerSideOverride bool          `json:"is_server_override" validate:"required"`
+	LevelRequired        int            `json:"level_required" validate:"required"`
+	RepRequired          float64        `json:"rep_required" validate:"required"`
+	PriceBaseBuysFor     *int           `json:"price_base_buys_for"`
+	PriceBaseSellsFor    int            `json:"price_base_sells_for" validate:"required"`
+	Volume               float64        `json:"volume" validate:"required"`
+	ShipClass            *cfg.ShipClass `json:"ship_class"` // Discovery specific value. Volume can be different based on ship class. Duplicating market goods with different volumes for that
+	BaseSells            bool           `json:"base_sells" validate:"required"`
+	IsServerSideOverride bool           `json:"is_server_override" validate:"required"`
 
 	NotBuyable             bool `json:"_" swaggerignore:"true"`
 	IsTransportUnreachable bool `json:"_" swaggerignore:"true"`
@@ -39,7 +39,7 @@ type Commodity struct {
 	Name                  string                          `json:"name"  validate:"required"`
 	Combinable            bool                            `json:"combinable"  validate:"required"`
 	Volume                float64                         `json:"volume"  validate:"required"`
-	ShipClass             cfg.ShipClass                   `json:"ship_class"  validate:"required"`
+	ShipClass             *cfg.ShipClass                  `json:"ship_class"`
 	NameID                int                             `json:"name_id"  validate:"required"`
 	InfocardID            int                             `json:"infocard_id"  validate:"required"`
 	Infocard              InfocardKey                     `json:"infocard_key"  validate:"required"`
@@ -127,7 +127,7 @@ type GetCommodityAtBasesInput struct {
 	Nickname  string
 	Price     int
 	Volume    float64
-	ShipClass cfg.ShipClass
+	ShipClass *cfg.ShipClass
 }
 
 func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesInput) map[cfg.BaseUniNick]*MarketGood {

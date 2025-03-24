@@ -184,7 +184,7 @@ message MarketGood {
   optional int64 price_base_buys_for = 9;
   int64 price_base_sells_for = 10;
   double volume = 11;
-  int64 ship_class = 12;
+  optional int64 ship_class = 12;
   bool base_sells = 13;
   bool is_server_side_override = 14;
   bool not_buyable = 15;
@@ -227,7 +227,7 @@ message Commodity {
   string name = 3;
   bool combinable = 4;
   double volume = 5;
-  int64 ship_class = 6;
+  optional int64 ship_class = 6;
   int64 name_id = 7;
   int64 infocard_id = 8;
   map<string, MarketGood> bases = 9;
@@ -696,7 +696,7 @@ message PoBGood {
   bool any_base_buys = 9;
   repeated PoBGoodBase bases = 10;
   double volume = 11;
-  int64 ship_class = 12;
+  optional int64 ship_class = 12;
 }
 message PoBGoodBase {
   ShopItem shop_item = 1;

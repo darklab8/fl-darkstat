@@ -85,10 +85,10 @@ type PoBGood struct {
 	Category string         `json:"category" validate:"required"`
 	Bases    []*PoBGoodBase `json:"bases" validate:"required"`
 
-	AnyBaseSells bool          `json:"any_base_sells" validate:"required"`
-	AnyBaseBuys  bool          `json:"any_base_buys" validate:"required"`
-	Volume       float64       `json:"volume" validate:"required"`
-	ShipClass    cfg.ShipClass `json:"ship_class"  validate:"required"`
+	AnyBaseSells bool           `json:"any_base_sells" validate:"required"`
+	AnyBaseBuys  bool           `json:"any_base_buys" validate:"required"`
+	Volume       float64        `json:"volume" validate:"required"`
+	ShipClass    *cfg.ShipClass `json:"ship_class"`
 }
 
 func (b PoBGood) GetNickname() string { return string(b.Nickname) }
@@ -134,7 +134,6 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 			market_good := &MarketGood{
 				GoodInfo:             e.GetGoodInfo(pob_good.Nickname),
 				IsServerSideOverride: true,
-				ShipClass:            -1,
 			}
 			if pob_good.BaseBuys() {
 				market_good.PriceBaseBuysFor = ptr.Ptr(pob_good.SellPrice)

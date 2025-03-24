@@ -60,7 +60,6 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 		market_good := &MarketGood{
 			GoodInfo:             e.GetGoodInfo(wreck),
 			BaseSells:            true,
-			ShipClass:            -1,
 			IsServerSideOverride: true,
 		}
 

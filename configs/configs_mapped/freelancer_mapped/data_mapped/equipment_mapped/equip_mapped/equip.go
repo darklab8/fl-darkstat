@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
+	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
@@ -41,12 +42,12 @@ type Volume struct {
 	Volume    *semantic.Float
 }
 
-func (volume Volume) GetShipClass() cfg.ShipClass {
+func (volume Volume) GetShipClass() *cfg.ShipClass {
 	if value, ok := volume.ShipClass.GetValue(); ok {
-		return cfg.ShipClass(value)
+		return ptr.Ptr(cfg.ShipClass(value))
 	}
 
-	return -1
+	return nil
 }
 
 type Munition struct {

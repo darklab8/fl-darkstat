@@ -1,6 +1,10 @@
 package cfg
 
-import "github.com/darklab8/go-utils/utils/ptr"
+import (
+	"strconv"
+
+	"github.com/darklab8/go-utils/utils/ptr"
+)
 
 type Vector struct {
 	X float64
@@ -23,6 +27,14 @@ type BaseUniNick string
 func (b BaseUniNick) ToStr() string { return string(b) }
 
 type ShipClass int64
+
+func ShipClassToKey(s *ShipClass) string {
+	if s == nil {
+		return "nil"
+	}
+
+	return strconv.Itoa(int(*s))
+}
 
 func (s ShipClass) ToStr() string {
 	switch s {

@@ -4,6 +4,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/go-utils/utils/ptr"
 )
 
 func NewInt64(value *int) *int64 {
@@ -28,7 +29,7 @@ func NewMarketGood(good *configs_export.MarketGood) *pb.MarketGood {
 		PriceBaseBuysFor:     NewInt64(good.PriceBaseBuysFor),
 		PriceBaseSellsFor:    int64(good.PriceBaseSellsFor),
 		Volume:               good.Volume,
-		ShipClass:            int64(good.ShipClass),
+		ShipClass:            NewShipClass(good.ShipClass),
 		BaseSells:            good.BaseSells,
 		IsServerSideOverride: good.IsServerSideOverride,
 
@@ -36,6 +37,14 @@ func NewMarketGood(good *configs_export.MarketGood) *pb.MarketGood {
 		IsTransportUnreachable: good.IsTransportUnreachable,
 		BaseInfo:               NewBaseInfo(good.BaseInfo),
 	}
+}
+
+func NewShipClass(ship_class *cfg.ShipClass) *int64 {
+	if ship_class == nil {
+		return nil
+	}
+
+	return ptr.Ptr(int64(*ship_class))
 }
 
 func NewBaseInfo(BaseInfo configs_export.BaseInfo) *pb.BaseInfo {

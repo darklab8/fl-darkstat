@@ -25,18 +25,18 @@ func SortedMarketGoods(goods_per_nick map[configs_export.CommodityKey]*configs_e
 	return market_goods
 }
 
-func FormattedShipClassOfCommodity(ship_class cfg.ShipClass) string {
-	if ship_class > 0 {
-		return " (" + ship_class.ToStr() + ")"
-	} else {
+func FormattedShipClassOfCommodity(ship_class *cfg.ShipClass) string {
+	if ship_class == nil {
 		return ""
 	}
+
+	return " (" + ship_class.ToStr() + ")"
 }
 
-func FormattedShipClassOfCommodity2(ship_class cfg.ShipClass) string {
-	if ship_class > 0 {
-		return fmt.Sprintf("%d,%s", ship_class, ship_class.ToStr())
-	} else {
+func FormattedShipClassOfCommodity2(ship_class *cfg.ShipClass) string {
+	if ship_class == nil {
 		return "nil"
 	}
+
+	return fmt.Sprintf("%d,%s", *ship_class, ship_class.ToStr())
 }

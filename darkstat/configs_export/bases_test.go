@@ -113,7 +113,7 @@ MarketGood = li01_01_base, commodity_basic_alloys, 1150, 1550, 1
 		}
 	}
 
-	commodity_nickname := GetCommodityKey("commodity_basic_alloys", -1)
+	commodity_nickname := GetCommodityKey("commodity_basic_alloys", nil)
 	alloy := targetbase.MarketGoodsPerNick[commodity_nickname]
 	assert.Equal(t, 1550, alloy.PriceBaseSellsFor)
 	assert.True(t, alloy.IsServerSideOverride)

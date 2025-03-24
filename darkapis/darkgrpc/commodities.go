@@ -29,7 +29,7 @@ func (s *Server) GetCommodities(_ context.Context, in *pb.GetCommoditiesInput) (
 			Name:                  item.Name,
 			Combinable:            item.Combinable,
 			Volume:                item.Volume,
-			ShipClass:             int64(item.ShipClass),
+			ShipClass:             NewShipClass(item.ShipClass),
 			NameId:                int64(item.NameID),
 			InfocardId:            int64(item.InfocardID),
 			PriceBestBaseBuysFor:  int64(item.PriceBestBaseBuysFor),

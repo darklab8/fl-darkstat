@@ -54,7 +54,6 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		market_good := &MarketGood{
 			GoodInfo:             e.GetGoodInfo(produced),
 			BaseSells:            true,
-			ShipClass:            -1,
 			IsServerSideOverride: true,
 		}
 
