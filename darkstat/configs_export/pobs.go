@@ -221,9 +221,12 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				pob_goods = append(pob_goods, copied)
 			}
 		} else {
+			items_map := e.Mapped.Equip()
+			if equip, ok := items_map.ItemsMap[item.Nickname]; ok {
+				item.Volume = equip.Volume.Get()
+			}
 			pob_goods = append(pob_goods, item)
 		}
-
 	}
 
 	return pob_goods

@@ -17,6 +17,7 @@ type Item struct {
 	Nickname *semantic.String
 	IdsName  *semantic.Int
 	IdsInfo  *semantic.Int
+	Volume   *semantic.Float
 }
 
 type Commodity struct {
@@ -351,6 +352,7 @@ func Read(files []*iniload.IniLoader) *Config {
 			item.Nickname = semantic.NewString(section, cfg.Key("nickname"), semantic.OptsS(semantic.Optional()), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 			item.IdsName = semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional())
 			item.IdsInfo = semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional())
+			item.Volume = semantic.NewFloat(section, cfg.Key("volume"), semantic.Precision(6))
 			frelconfig.Items = append(frelconfig.Items, item)
 			frelconfig.ItemsMap[item.Nickname.Get()] = item
 
@@ -627,6 +629,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				frelconfig.Scanners = append(frelconfig.Scanners, item)
 			}
+
 		}
 	}
 

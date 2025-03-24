@@ -133,8 +133,8 @@ func (m *MappedConfigs) Clean() {
 	m.equip.MineDroppers = nil
 	m.equip.Mines = nil
 	m.equip.MinesMap = nil
-	m.equip.Items = nil
-	m.equip.ItemsMap = nil
+	// m.equip.Items = nil
+	// m.equip.ItemsMap = nil
 	m.equip.ShieldGens = nil
 	m.equip.ShidGenMap = nil
 	m.equip.Thrusters = nil
