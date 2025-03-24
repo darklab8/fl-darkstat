@@ -211,5 +211,5 @@ type CommodityKey string
 func (c CommodityKey) ToStr() string { return string(c) }
 
 func GetCommodityKey(nickname string, ship_class *cfg.ShipClass) CommodityKey {
-	return CommodityKey(fmt.Sprintf("%s_%d", nickname, cfg.ShipClassToKey(ship_class)))
+	return CommodityKey(fmt.Sprintf("%s_%s", nickname, cfg.ShipClassToKey(ship_class)))
 }
