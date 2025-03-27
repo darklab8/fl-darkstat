@@ -67,3 +67,9 @@ th {
 .line_underline {
     text-decoration: underline;
 }
+
+.techcell {
+    display: block;
+    max-width: 150px;
+    overflow: hidden;
+}

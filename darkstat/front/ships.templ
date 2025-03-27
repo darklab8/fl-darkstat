@@ -139,9 +139,19 @@ func thruster_speeds_to_str(thrust_speeds []int) string {
 	return strings.Join(as_str, ",")
 }
 
+func FullShipName(ship_name string, ship_nickname string, shared *types.SharedData) string {
+	infocard_name := tab.GetShipName(shared.Infocards, configs_export.InfocardKey(ship_nickname))
+
+	if strings.Contains(strings.ToLower(ship_name), strings.ToLower(infocard_name)) {
+		return ship_name
+	}
+
+	return fmt.Sprintf("%s \"%s\" ", ship_name, infocard_name)
+}
+
 templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
 	@tab.TrFromMainTb2(tab.NewTr(ship.Nickname, ShipDetailedUrl(ship, mode), pinm), prerender) {
-		@tab.PinTd2(ship.Nickname, ship.Name, pinm, ShipPinnedUrl(ship, mode))
+		@tab.PinTd2(ship.Nickname, FullShipName(ship.Name, ship.Nickname, shared), pinm, ShipPinnedUrl(ship, mode))
 		@tab.PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
 		@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, ship.Nickname))
 		<td class="seo">{ strconv.Itoa(ship.Class) }</td>
