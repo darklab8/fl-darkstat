@@ -17,41 +17,9 @@ func (l *Router) LinkBases(
 	data *configs_export.Exporter,
 	shared *types.SharedData,
 ) {
-
 	sort.Slice(data.Bases, func(i, j int) bool {
 		return data.Bases[i].Name < data.Bases[j].Name
 	})
-
-	sort.Slice(data.MiningOperations, func(i, j int) bool {
-		base_i := data.GetBaseTradePaths(data.MiningOperations[i])
-		base_j := data.GetBaseTradePaths(data.MiningOperations[j])
-
-		if base_i.BestTransportRoute == nil && base_j.BestTransportRoute == nil {
-			return true
-		}
-		if base_i.BestTransportRoute == nil {
-			return false
-		}
-		if base_j.BestTransportRoute == nil {
-			return true
-		}
-		return base_i.BestTransportRoute.GetProffitPerTime() > base_j.BestTransportRoute.GetProffitPerTime()
-	})
-	sort.Slice(data.TradeBases, func(i, j int) bool {
-		base_i := data.GetBaseTradePaths(data.TradeBases[i])
-		base_j := data.GetBaseTradePaths(data.TradeBases[j])
-		if base_i.BestTransportRoute == nil && base_j.BestTransportRoute == nil {
-			return true
-		}
-		if base_i.BestTransportRoute == nil {
-			return false
-		}
-		if base_j.BestTransportRoute == nil {
-			return true
-		}
-		return base_i.BestTransportRoute.GetProffitPerTime() > base_j.BestTransportRoute.GetProffitPerTime()
-	})
-
 	sort.Slice(data.TravelBases, func(i, j int) bool {
 		return data.TravelBases[i].Name < data.TravelBases[j].Name
 	})

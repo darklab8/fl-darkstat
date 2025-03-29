@@ -129,15 +129,4 @@ templ BaseRoutes(name string, base *configs_export.Base, data *configs_export.Ex
 			</tr>
 		}
 	}
-	if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
-		<script type="text/javascript">
-			// To prevent the variables from leaking into the global scope,
-		// this script is wrapped in an IIFE (Immediately Invoked Function Expression).
-			(() => {
-				FilteringForDistAfterRender()
-				const input_field = document.querySelector('#input_route_min_dist')
-				input_field.addEventListener('keyup', FilteringForDistAfterRender)
-			})()
-		</script>
-	}
 }
