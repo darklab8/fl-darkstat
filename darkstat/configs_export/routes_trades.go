@@ -47,14 +47,14 @@ func (t *TradeRoute) GetProffitPerTime() float64 {
 // memory optimized version of GetProffitPerTime
 // WARNING: Duplicates GetProffitPerTime in code logic.
 // TODO... deduplicate code logic?
-func GetProffitPerTime2(g *GraphResults, BuyingGood *MarketGood, SellingGood *MarketGood, Commodity *Commodity) float64 {
+func GetProffitPerTime2(g *GraphResults, BuyingGood *MarketGood, SellingGood *MarketGood) float64 {
 	if g == nil {
 		return 0
 	}
 	if SellingGood.GetPriceBaseBuysFor()-BuyingGood.PriceBaseSellsFor == 0 {
 		return 0
 	}
-	ProffitPerV := float64(SellingGood.GetPriceBaseBuysFor()-BuyingGood.PriceBaseSellsFor) / float64(Commodity.Volume)
+	ProffitPerV := float64(SellingGood.GetPriceBaseBuysFor()-BuyingGood.PriceBaseSellsFor) / float64(SellingGood.Volume)
 	time_ms := trades.GetTimeMs2(g.Graph, g.Time, BuyingGood.BaseNickname.ToStr(), SellingGood.BaseNickname.ToStr())
 	time_s := float64(time_ms)/trades.PrecisionMultipiler + float64(trades.BaseDockingDelay)
 	return ProffitPerV / time_s
@@ -127,6 +127,10 @@ func (e *TradePathExporter) GetBaseTradePaths(base *Base) []*ComboTradeRoute {
 			continue
 		}
 		for _, selling_good_at_base := range commodity.Bases {
+			if buying_good.Nickname == selling_good_at_base.Nickname && buying_good.ShipClass != selling_good_at_base.ShipClass {
+				continue
+			}
+
 			trade_route := &ComboTradeRoute{
 				Transport: NewTradeRoute(e.Transport, buying_good, selling_good_at_base),
 				Frigate:   NewTradeRoute(e.Frigate, buying_good, selling_good_at_base),
@@ -174,9 +178,9 @@ func (e *TradePathExporter) GetBaseBestPath(base *Base) *BaseBestPathTimes {
 			continue
 		}
 		for _, selling_good_at_base := range commodity.Bases {
-			TransportProfitPerTime := GetProffitPerTime2(e.Transport, buying_good, selling_good_at_base, commodity)
-			FrigateProfitPerTime := GetProffitPerTime2(e.Frigate, buying_good, selling_good_at_base, commodity)
-			FreighterProfitPerTime := GetProffitPerTime2(e.Freighter, buying_good, selling_good_at_base, commodity)
+			TransportProfitPerTime := GetProffitPerTime2(e.Transport, buying_good, selling_good_at_base)
+			FrigateProfitPerTime := GetProffitPerTime2(e.Frigate, buying_good, selling_good_at_base)
+			FreighterProfitPerTime := GetProffitPerTime2(e.Freighter, buying_good, selling_good_at_base)
 			if TransportProfitPerTime <= 0 {
 				continue
 			}
