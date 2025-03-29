@@ -97,6 +97,7 @@ type ExporterRelay struct {
 
 type Exporter struct {
 	*ExporterRelay
+	*TradePathExporter
 	Mapped      *configs_mapped.MappedConfigs
 	IsDiscovery bool
 	Bases       []*Base
@@ -296,11 +297,16 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 
 	logus.Log.Info("getting pob to bases")
 	// TODO refactor. all my ram allocated problems are majorly here.
+
 	BasesFromPobs := e.PoBsToBases(e.PoBs)
-	TradeBases := append(e.Bases, BasesFromPobs...)
-	e.TradeBases, e.Commodities = e.TradePaths(TradeBases, e.Commodities)
-	e.MiningOperations, e.Commodities = e.TradePaths(e.MiningOperations, e.Commodities)
+	e.TradeBases = append(e.Bases, BasesFromPobs...)
 	e.TravelBases = e.TradeBases
+
+	e.TradePathExporter = newTradePathExporter(
+		e,
+		e.Commodities,
+		append(e.TradeBases, e.MiningOperations...),
+	)
 
 	e.EnhanceBasesWithIsTransportReachable(e.Bases, e.Transport, e.Freighter)
 	e.Bases = e.EnhanceBasesWithPobCrafts(e.Bases)

@@ -145,7 +145,8 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 			if market_good.Category == "commodity" {
 				equipment := e.Mapped.Equip().CommoditiesMap[market_good.Nickname]
 				for _, volume := range equipment.Volumes {
-					volumed_good := market_good
+					var volumed_good *MarketGood = &MarketGood{}
+					*volumed_good = *market_good
 					volumed_good.Volume = volume.Volume.Get()
 					volumed_good.ShipClass = volume.GetShipClass()
 					base.MarketGoodsPerNick[GetCommodityKey(volumed_good.Nickname, volumed_good.ShipClass)] = volumed_good
