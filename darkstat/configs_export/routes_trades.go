@@ -10,12 +10,11 @@ import (
 
 type TradeRoute struct {
 	Route       *Route
-	Commodity   *Commodity
 	BuyingGood  *MarketGood
 	SellingGood *MarketGood
 }
 
-func NewTradeRoute(g *GraphResults, buying_good *MarketGood, selling_good *MarketGood, commodity *Commodity) *TradeRoute {
+func NewTradeRoute(g *GraphResults, buying_good *MarketGood, selling_good *MarketGood) *TradeRoute {
 	if g == nil {
 		return &TradeRoute{Route: &Route{is_disabled: true}}
 	}
@@ -24,7 +23,6 @@ func NewTradeRoute(g *GraphResults, buying_good *MarketGood, selling_good *Marke
 		Route:       NewRoute(g, buying_good.BaseNickname.ToStr(), selling_good.BaseNickname.ToStr()),
 		BuyingGood:  buying_good,
 		SellingGood: selling_good,
-		Commodity:   commodity,
 	}
 
 	return route
@@ -39,7 +37,7 @@ func (t *TradeRoute) GetProffitPerV() float64 {
 		return 0
 	}
 
-	return float64(t.SellingGood.GetPriceBaseBuysFor()-t.BuyingGood.PriceBaseSellsFor) / float64(t.Commodity.Volume)
+	return float64(t.SellingGood.GetPriceBaseBuysFor()-t.BuyingGood.PriceBaseSellsFor) / float64(t.SellingGood.Volume)
 }
 
 func (t *TradeRoute) GetProffitPerTime() float64 {
@@ -130,9 +128,9 @@ func (e *TradePathExporter) GetBaseTradePaths(base *Base) []*ComboTradeRoute {
 		}
 		for _, selling_good_at_base := range commodity.Bases {
 			trade_route := &ComboTradeRoute{
-				Transport: NewTradeRoute(e.Transport, buying_good, selling_good_at_base, commodity),
-				Frigate:   NewTradeRoute(e.Frigate, buying_good, selling_good_at_base, commodity),
-				Freighter: NewTradeRoute(e.Freighter, buying_good, selling_good_at_base, commodity),
+				Transport: NewTradeRoute(e.Transport, buying_good, selling_good_at_base),
+				Frigate:   NewTradeRoute(e.Frigate, buying_good, selling_good_at_base),
+				Freighter: NewTradeRoute(e.Freighter, buying_good, selling_good_at_base),
 			}
 			if trade_route.Transport.GetProffitPerV() <= 0 {
 				continue

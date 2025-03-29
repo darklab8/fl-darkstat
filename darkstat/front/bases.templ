@@ -607,7 +607,7 @@ templ BaseTrades(name string, base *configs_export.Base, tab_mode BaseMode, shar
 			>
 				<td>
 					@frmt.WriteLimit(200) {
-						{ trade_route.Transport.Commodity.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.Commodity.ShipClass) }
+						{ trade_route.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.SellingGood.ShipClass) }
 					}
 				</td>
 				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
@@ -654,9 +654,9 @@ templ BaseTrades(name string, base *configs_export.Base, tab_mode BaseMode, shar
 					</td>
 				}
 				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
-				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.Commodity.Volume) }</td>
+				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.SellingGood.Volume) }</td>
 				if shared.ShowDisco {
-					<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.Commodity.ShipClass) }</td>
+					<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.SellingGood.ShipClass) }</td>
 				}
 				<td>
 					@frmt.WriteSystemName(trade_route.Transport.SellingGood.SystemName)
@@ -673,7 +673,7 @@ templ BaseTrades(name string, base *configs_export.Base, tab_mode BaseMode, shar
 				</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
 				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.GetPriceBaseBuysFor()) }</td>
-				<td>{ trade_route.Transport.Commodity.Nickname }</td>
+				<td>{ trade_route.Transport.SellingGood.Nickname }</td>
 				<td>
 					@frmt.WriteLimit(100) {
 						{ trade_route.Transport.SellingGood.BaseNickname.ToStr() }
