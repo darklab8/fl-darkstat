@@ -58,7 +58,7 @@ func TestGetTrades(t *testing.T) {
 		if base.Nickname != "zone_br05_gold_dummy_field" {
 			continue
 		}
-		for _, trade_route := range trade_path_exporter.GetBaseTradePaths(base).TradeRoutes {
+		for _, trade_route := range trade_path_exporter.GetBaseTradePaths(base) {
 			trade_route.Transport.Route.GetPaths()
 			trade_route.Frigate.Route.GetTimeMs()
 		}

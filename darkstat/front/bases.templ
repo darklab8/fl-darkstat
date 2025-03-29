@@ -128,7 +128,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm tab.PinMo
 		<tbody>
 			if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
 				for _, base := range GetBasesWithTradePaths(bases,data) {
-					@BaseRow(base.Base, tab_mode, pinm, shared, base.BaseAllTradeRoutes)
+					@BaseRow(base.Base, tab_mode, pinm, shared, base.BaseBestPathTimes)
 				}
 			} else {
 				for _, base := range bases {
@@ -141,32 +141,32 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm tab.PinMo
 
 type BaseWithTradePaths struct {
 	*configs_export.Base
-	*configs_export.BaseAllTradeRoutes
+	*configs_export.BaseBestPathTimes
 }
 func GetBasesWithTradePaths(bases []*configs_export.Base, data *configs_export.Exporter) []BaseWithTradePaths {
 	var results []BaseWithTradePaths
 	for _, base := range bases {
 		results = append(results, BaseWithTradePaths{
 			Base: base,
-			BaseAllTradeRoutes: data.GetBaseTradePaths(base),
+			BaseBestPathTimes: data.GetBaseBestPath(base),
 		})
 	}
 	sort.Slice(results, func(i, j int) bool {
-		if results[i].BestTransportRoute == nil && results[j].BestTransportRoute == nil {
+		if results[i].TransportProfitPerTime == nil && results[j].TransportProfitPerTime == nil {
 			return true
 		}
-		if results[i].BestTransportRoute == nil {
+		if results[i].TransportProfitPerTime == nil {
 			return false
 		}
-		if results[j].BestTransportRoute == nil {
+		if results[j].TransportProfitPerTime == nil {
 			return true
 		}
-		return results[i].BestTransportRoute.GetProffitPerTime() > results[j].BestTransportRoute.GetProffitPerTime()
+		return *results[i].TransportProfitPerTime > *results[j].TransportProfitPerTime
 	})
 	return results
 }
 
-templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, shared *types.SharedData, routes *configs_export.BaseAllTradeRoutes) {
+templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, shared *types.SharedData, routes *configs_export.BaseBestPathTimes) {
 	@tab.TrFromMain(tab.NewTr(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm, tab.WithTransportUnreachable(base.IsTransportUnreachable))) {
 		@tab.PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@tab.PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
@@ -202,23 +202,23 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 			<td
 				class="route_transport" 
 			> // routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteTransport) }
-				if routes.BestTransportRoute != nil {
-					{ fmt.Sprintf("%2.2f", routes.BestTransportRoute.GetProffitPerTime() * 100) }
+				if routes.TransportProfitPerTime != nil {
+					{ fmt.Sprintf("%2.2f", *routes.TransportProfitPerTime * 100) }
 				} else {
 					0
 				}
 			</td>
 			if shared.ShowDisco {
 				<td class="route_frigate"> // routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFrigate) }
-					if routes.BestFrigateRoute != nil {
-						{ fmt.Sprintf("%2.2f", routes.BestFrigateRoute.GetProffitPerTime() * 100) }
+					if routes.FrigateProfitPerTime != nil {
+						{ fmt.Sprintf("%2.2f", *routes.FrigateProfitPerTime * 100) }
 					} else {
 						0
 					}
 				</td>
 				<td class="route_freighter"> // routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFreighter) }
-					if routes.BestFreighterRoute != nil {
-						{ fmt.Sprintf("%2.2f", routes.BestFreighterRoute.GetProffitPerTime() * 100) }
+					if routes.FreighterProfitPerTime != nil {
+						{ fmt.Sprintf("%2.2f", *routes.FreighterProfitPerTime * 100) }
 					} else {
 						0
 					}
@@ -596,7 +596,7 @@ templ BaseTrades(name string, base *configs_export.Base, tab_mode BaseMode, shar
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@BaseTradesShared(shared) {
-		for _, trade_route := range data.GetBaseTradePathsFiltered(base).TradeRoutes {
+		for _, trade_route := range data.GetBaseTradePathsFiltered(base) {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
 				hx-trigger="click"
