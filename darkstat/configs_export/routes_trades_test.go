@@ -47,18 +47,13 @@ func TestGetTrades(t *testing.T) {
 	e.Bases = e.GetBases()
 	e.Bases = append(e.Bases, mining_bases...)
 	wg.Wait()
-
-	trade_path_exporter := newTradePathExporter(
-		e,
-		e.Commodities,
-		e.Bases,
-	)
+	e.Bases, e.Commodities = e.TradePaths(e.Bases, e.Commodities)
 
 	for _, base := range e.Bases {
 		if base.Nickname != "zone_br05_gold_dummy_field" {
 			continue
 		}
-		for _, trade_route := range trade_path_exporter.GetBaseTradePaths(base).TradeRoutes {
+		for _, trade_route := range base.TradeRoutes {
 			trade_route.Transport.Route.GetPaths()
 			trade_route.Frigate.Route.GetTimeMs()
 		}

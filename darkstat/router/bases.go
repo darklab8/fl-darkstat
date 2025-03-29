@@ -21,37 +21,41 @@ func (l *Router) LinkBases(
 	sort.Slice(data.Bases, func(i, j int) bool {
 		return data.Bases[i].Name < data.Bases[j].Name
 	})
-
 	sort.Slice(data.MiningOperations, func(i, j int) bool {
-		base_i := data.GetBaseTradePaths(data.MiningOperations[i])
-		base_j := data.GetBaseTradePaths(data.MiningOperations[j])
-
-		if base_i.BestTransportRoute == nil && base_j.BestTransportRoute == nil {
+		if data.MiningOperations[i].BestTransportRoute == nil && data.MiningOperations[j].BestTransportRoute == nil {
 			return true
 		}
-		if base_i.BestTransportRoute == nil {
+		if data.MiningOperations[i].BestTransportRoute == nil {
 			return false
 		}
-		if base_j.BestTransportRoute == nil {
+		if data.MiningOperations[j].BestTransportRoute == nil {
 			return true
 		}
-		return base_i.BestTransportRoute.GetProffitPerTime() > base_j.BestTransportRoute.GetProffitPerTime()
+		return data.MiningOperations[i].BestTransportRoute.GetProffitPerTime() > data.MiningOperations[j].BestTransportRoute.GetProffitPerTime()
 	})
+	for _, base := range data.MiningOperations {
+		sort.Slice(base.TradeRoutes, func(i, j int) bool {
+			return base.TradeRoutes[i].Transport.GetProffitPerTime() > base.TradeRoutes[j].Transport.GetProffitPerTime()
+		})
+	}
 	sort.Slice(data.TradeBases, func(i, j int) bool {
-		base_i := data.GetBaseTradePaths(data.TradeBases[i])
-		base_j := data.GetBaseTradePaths(data.TradeBases[j])
-		if base_i.BestTransportRoute == nil && base_j.BestTransportRoute == nil {
+		if data.TradeBases[i].BestTransportRoute == nil && data.TradeBases[j].BestTransportRoute == nil {
 			return true
 		}
-		if base_i.BestTransportRoute == nil {
+		if data.TradeBases[i].BestTransportRoute == nil {
 			return false
 		}
-		if base_j.BestTransportRoute == nil {
+		if data.TradeBases[j].BestTransportRoute == nil {
 			return true
 		}
-		return base_i.BestTransportRoute.GetProffitPerTime() > base_j.BestTransportRoute.GetProffitPerTime()
+		return data.TradeBases[i].BestTransportRoute.GetProffitPerTime() > data.TradeBases[j].BestTransportRoute.GetProffitPerTime()
 	})
 
+	for _, base := range data.TradeBases {
+		sort.Slice(base.TradeRoutes, func(i, j int) bool {
+			return base.TradeRoutes[i].Transport.GetProffitPerTime() > base.TradeRoutes[j].Transport.GetProffitPerTime()
+		})
+	}
 	sort.Slice(data.TravelBases, func(i, j int) bool {
 		return data.TravelBases[i].Name < data.TravelBases[j].Name
 	})
@@ -59,19 +63,19 @@ func (l *Router) LinkBases(
 	build.RegComps(
 		builder.NewComponent(
 			urls.Bases,
-			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, tab.ShowEmpty(false), shared, data),
+			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Bases),
-			front.BasesT(data.Bases, front.BaseShowShops, tab.ShowEmpty(true), shared, data),
+			front.BasesT(data.Bases, front.BaseShowShops, tab.ShowEmpty(true), shared),
 		),
 		builder.NewComponent(
 			urls.Missions,
-			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, tab.ShowEmpty(false), shared, data),
+			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Missions),
-			front.BasesT(data.Bases, front.BaseShowMissions, tab.ShowEmpty(true), shared, data),
+			front.BasesT(data.Bases, front.BaseShowMissions, tab.ShowEmpty(true), shared),
 		),
 	)
 
@@ -98,7 +102,7 @@ func (l *Router) LinkBases(
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
-				front.BaseTrades(base.Name, base, front.BaseTabTrades, shared, data),
+				front.BaseTrades(base.Name, base.TradeRoutes, front.BaseTabTrades, shared),
 			),
 		)
 		build.RegComps(
@@ -107,11 +111,11 @@ func (l *Router) LinkBases(
 				front.BaseRoutes(base.Name, base, data, front.BaseAllRoutes, shared),
 			),
 		)
-		for _, combo_route := range data.GetBaseTradePaths(base).TradeRoutes {
+		for _, combo_route := range base.TradeRoutes {
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
-					front.TradeRouteInfo3(combo_route.Freighter.BuyingGood, combo_route.Freighter.SellingGood, data, shared),
+					front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, shared),
 				),
 			)
 		}
@@ -126,30 +130,40 @@ func (l *Router) LinkBases(
 		}
 	}
 
+	sort.Slice(data.Bases, func(i, j int) bool {
+		if data.Bases[j].BestTransportRoute == nil {
+			return true
+		}
+		if data.Bases[i].BestTransportRoute == nil {
+			return false
+		}
+		return data.Bases[i].BestTransportRoute.GetProffitPerTime() > data.Bases[j].BestTransportRoute.GetProffitPerTime()
+	})
+
 	build.RegComps(
 		builder.NewComponent(
 			urls.Trades,
-			front.BasesT(configs_export.FilterToUserfulBases(data.TradeBases), front.BaseTabTrades, tab.ShowEmpty(false), shared, data),
+			front.BasesT(configs_export.FilterToUserfulBases(data.TradeBases), front.BaseTabTrades, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Trades),
-			front.BasesT(data.TradeBases, front.BaseTabTrades, tab.ShowEmpty(true), shared, data),
+			front.BasesT(data.TradeBases, front.BaseTabTrades, tab.ShowEmpty(true), shared),
 		),
 		builder.NewComponent(
 			urls.Asteroids,
-			front.BasesT(configs_export.FitlerToUsefulOres(data.MiningOperations), front.BaseTabOres, tab.ShowEmpty(false), shared, data),
+			front.BasesT(configs_export.FitlerToUsefulOres(data.MiningOperations), front.BaseTabOres, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Asteroids),
-			front.BasesT(data.MiningOperations, front.BaseTabOres, tab.ShowEmpty(true), shared, data),
+			front.BasesT(data.MiningOperations, front.BaseTabOres, tab.ShowEmpty(true), shared),
 		),
 		builder.NewComponent(
 			urls.TravelRoutes,
-			front.BasesT(configs_export.FilterToUserfulBases(data.TravelBases), front.BaseAllRoutes, tab.ShowEmpty(false), shared, data),
+			front.BasesT(configs_export.FilterToUserfulBases(data.TravelBases), front.BaseAllRoutes, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.TravelRoutes),
-			front.BasesT(data.TravelBases, front.BaseAllRoutes, tab.ShowEmpty(true), shared, data),
+			front.BasesT(data.TravelBases, front.BaseAllRoutes, tab.ShowEmpty(true), shared),
 		),
 	)
 
@@ -157,16 +171,16 @@ func (l *Router) LinkBases(
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOres)),
-				front.BaseTrades(base.Name, base, front.BaseTabOres, shared, data),
+				front.BaseTrades(base.Name, base.TradeRoutes, front.BaseTabOres, shared),
 			),
 		)
 
-		for _, combo_route := range data.GetBaseTradePaths(base).TradeRoutes {
+		for _, combo_route := range base.TradeRoutes {
 
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
-					front.TradeRouteInfo3(combo_route.Freighter.BuyingGood, combo_route.Freighter.SellingGood, data, shared),
+					front.TradeRouteInfo(combo_route.Transport.Route, combo_route.Frigate.Route, combo_route.Freighter.Route, shared),
 				),
 			)
 		}

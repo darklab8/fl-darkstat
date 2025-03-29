@@ -196,8 +196,9 @@ type Base struct {
 
 	IsTransportUnreachable bool `json:"is_transport_unreachable" validate:"required"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
 
-	Missions    *BaseMissions `json:"-" swaggerignore:"true"`
-	*MiningInfo `json:"mining_info,omitempty"`
+	Missions           *BaseMissions `json:"-" swaggerignore:"true"`
+	baseAllTradeRoutes `json:"-" swaggerignore:"true"`
+	*MiningInfo        `json:"mining_info,omitempty"`
 
 	Reachable bool `json:"is_reachhable" validate:"required"` // is base IS Rechable by frighter from Manhattan
 	IsPob     bool `validate:"required"`

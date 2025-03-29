@@ -47,7 +47,8 @@ type Commodity struct {
 	PriceBestBaseBuysFor  int                             `json:"price_best_base_buys_for"  validate:"required"`
 	PriceBestBaseSellsFor int                             `json:"price_best_base_sells_for"  validate:"required"`
 	ProffitMargin         int                             `json:"proffit_margin"  validate:"required"`
-	Mass                  float64                         `json:"mass"  validate:"required"`
+	baseAllTradeRoutes    `json:"-" swaggerignore:"true"`
+	Mass                  float64 `json:"mass"  validate:"required"`
 }
 
 func (b Commodity) GetNickname() string { return string(b.Nickname) }
