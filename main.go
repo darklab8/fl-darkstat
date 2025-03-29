@@ -72,7 +72,7 @@ func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 func main() {
 	fmt.Println("args=", os.Args[1:])
 	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
+		log.Println(http.ListenAndServe("0.0.0.0:6060", nil))
 	}()
 
 	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteHost, "https://", "")
