@@ -103,6 +103,7 @@ If u have problems with configuring development environment, then seek my contac
 - Has searching/filtering options with multiple matching items shown
 - You can pin items for comparison
 - For Discovery Freelancer, u can select ID/Tractor and having guns/ships etc filtered/shown according to what your ID can use without power core regeneration debuffs. Shows ID compatibility (75% ID compatibility at any equiped item will mean having only 75% of Power core regeneration)
+- **For up to date list of different features read** [its embedded documentation at "Docs" tab](https://darklab8.github.io/fl-data-discovery/index_docs.html)
 
 # Usage
 
