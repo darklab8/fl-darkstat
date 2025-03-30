@@ -44,7 +44,7 @@ func WithStaticAssetsGen() RouterOpt {
 func (l *Router) Link() *builder.Builder {
 	shared := l.AppData.Shared
 	configs := l.AppData.Configs
-	build := l.AppData.Build
+	build := appdata.NewBuilder(configs.Mapped.Discovery != nil)
 
 	defer timeit.NewTimer("link, internal measure").Close()
 

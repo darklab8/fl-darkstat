@@ -30,10 +30,10 @@ func (r *Router) Link() *builder.Builder {
 	defer timeit.NewTimer("link, internal measure").Close()
 
 	shared := r.AppData.Shared
-	build := r.AppData.Build
 	configs := r.AppData.Configs
+	build := appdata.NewBuilder(configs.Mapped.Discovery != nil)
 
-	r.LinkPobs(r.AppData)
+	r.LinkPobs(r.AppData, build)
 
 	build.RegComps(
 		builder.NewComponent(

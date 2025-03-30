@@ -20,7 +20,6 @@ import (
 )
 
 type AppData struct {
-	Build   *builder.Builder
 	Configs *configs_export.Exporter
 	Shared  *types.SharedData
 
@@ -103,7 +102,6 @@ func NewMapped() *configs_mapped.MappedConfigs {
 func NewAppData() *AppData {
 	mapped := NewMapped()
 	configs := configs_export.NewExporter(mapped)
-	build := NewBuilder(mapped.Discovery != nil)
 
 	var data *configs_export.Exporter
 	timeit.NewTimerMF("exporting data", func() { data = configs.Export(configs_export.ExportOptions{}) })
@@ -136,7 +134,6 @@ func NewAppData() *AppData {
 	shared.CraftableBaseName = mapped.CraftableBaseName()
 
 	return &AppData{
-		Build:   build,
 		Configs: data,
 		Shared:  shared,
 	}
@@ -144,7 +141,6 @@ func NewAppData() *AppData {
 
 func NewRelayData(app_data *AppData) *AppDataRelay {
 	return &AppDataRelay{
-		Build:   app_data.Build,
 		Configs: app_data.Configs.ExporterRelay,
 		Shared:  app_data.Shared,
 		mu:      &app_data.mu,
@@ -152,7 +148,6 @@ func NewRelayData(app_data *AppData) *AppDataRelay {
 }
 
 type AppDataRelay struct {
-	Build   *builder.Builder
 	Configs *configs_export.ExporterRelay
 	Shared  *types.SharedData
 

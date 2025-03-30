@@ -133,11 +133,13 @@ func main() {
 						relay_data.Configs.Mapped.Discovery.PlayerOwnedBases.Refresh()
 						relay_data.Configs.PoBs = relay_data.Configs.GetPoBs()
 						relay_data.Configs.PoBGoods = relay_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
+
 						relay_fs2 := GetRelayFs(relay_data)
 						for key, _ := range relay_fs.Files {
 							delete(relay_fs.Files, key)
 						}
 						relay_fs.Files = relay_fs2.Files
+
 						logus.Log.Info("refreshed content")
 						runtime.GC()
 					}()

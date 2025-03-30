@@ -13,9 +13,9 @@ import (
 
 func (l *Router) LinkPobs(
 	data *appdata.AppDataRelay,
+	build *builder.Builder,
 ) {
 	shared := data.Shared
-	build := data.Build
 	configs := data.Configs
 
 	sort.Slice(configs.PoBs, func(i, j int) bool {
