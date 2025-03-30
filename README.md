@@ -29,8 +29,7 @@ See demos:
 
 - git clone https://github.com/darklab8/fl-configs repository for game configs scan, download it to same parent folder as this repository
 - install golang of project version or higher (potentially will work anyway).
-
-  - See current golang version [in CI workflow](.github/workflows/deploy.yml)
+  - See current golang version [in Dockerfile](./Dockerfile)
 - install [templ](https://templ.guide/quick-start/installation)
 
   - go install github.com/a-h/templ/cmd/templ@latest
