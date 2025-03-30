@@ -54,6 +54,10 @@ resource "docker_service" "darkstat" {
             "caddy_4"               = "${var.apigateway_prefix}.${var.zone}"
             "caddy_4.reverse_proxy" = "{{upstreams 8081}}"
           } : {},
+          var.pprof_prefix != null ? {
+            "caddy_5"               = "${var.pprof_prefix}.${var.zone}"
+            "caddy_5.reverse_proxy" = "{{upstreams 6060}}"
+          } : {},
         )
         content {
           label = labels.key

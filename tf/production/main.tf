@@ -21,6 +21,7 @@ module "darkstat" {
   relay_prefix      = "darkrelay"
   apigateway_prefix = "apigateway"
   rpc_prefix        = "darkgrpc"
+  pprof_prefix      = "darkstat-pprof"
   zone              = "dd84ai.com"
 }
 

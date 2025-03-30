@@ -36,6 +36,10 @@ variable "rpc_prefix" {
   type    = string
   default = null
 }
+variable "pprof_prefix" {
+  type    = string
+  default = null
+}
 variable "apigateway_prefix" {
   type    = string
   default = null
@@ -65,4 +69,3 @@ variable "disco_oauth" {
   type        = bool
   default     = false
 }
-

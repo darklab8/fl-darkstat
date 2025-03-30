@@ -14,6 +14,12 @@ module "dns" {
       name    = var.rpc_prefix
       proxied = false
     }] : [],
+    var.pprof_prefix != null ? [{
+      type    = "A"
+      value   = var.ipv4_address
+      name    = var.pprof_prefix
+      proxied = false
+    }] : [],
     var.relay_prefix != null ? [{
       type    = "A"
       value   = var.ipv4_address
