@@ -27,11 +27,10 @@ See demos:
 
 # Development setup
 
-- git clone https://github.com/darklab8/fl-configs repository for game configs scan, download it to same parent folder as this repository
+- git clone the repo https://github.com/darklab8/fl-darkstat.git
 - install golang of project version or higher (potentially will work anyway).
   - See current golang version [in Dockerfile](./Dockerfile)
 - install [templ](https://templ.guide/quick-start/installation)
-
   - go install github.com/a-h/templ/cmd/templ@latest
   - check specific version in [go.mod](./go.mod)
   - In case of emergency we could use vendored in version perhaps
@@ -56,12 +55,15 @@ If u have problems with configuring development environment, then seek my contac
 # Features
 
 - Long term maintance support for dozen of years. Minimum dependencies software with Golang and Htmx.
-  - for this purpose everything is [go mod vendored in](https://go.dev/ref/mod#go-mod-vendor)
 - full GitOps. On commit push to redeploy it automatically
   - See example in [fl-data-discovery repo](https://github.com/darklab8/fl-data-discovery). It contains .github/workflows + game data
 - scans Freelancer folder and builds to static assets (html/css/js) deployable to Github pages or any other static assets serving place.
 - Usable locally for Linux and Windows.
-- Only Freelancer Discovery mod and Vanilla are supported at the moment
+- Cross mod support is available
+  - Freelancer Discovery
+  - Vanilla Freelancer
+  - Freelancer Sirius Revival
+  - may be will working for any other mod, if not, then request support
 
 # Darkstat has API access
 
@@ -138,7 +140,7 @@ So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery f
 - [Discord Community in starport](https://discord.gg/freelancer-galactic-community-638984923591737355) also answered multiple questions
   - as well as Freelancer Discovery dev community
 - Also thanks to The Alex (From Freelancer Discovery) for getting me [Python script for reading dlls](https://github.com/darklab8/fl-configs/blob/master/docs/inspiration/dll_reading/alex_py/main.py)
-  - That helped rewriting it in go for [fl-configs lib](https://github.com/darklab8/fl-configs)
+  - That helped rewriting it in go for [configs lib](./configs)
 - Honorary mentions for very active moral support and extra ideas by
   - IrateRedKite (from starport Discord)
   - Bolte (from starport Discord)
