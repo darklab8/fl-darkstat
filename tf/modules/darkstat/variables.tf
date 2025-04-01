@@ -17,7 +17,7 @@ locals {
     },
     var.RELAY_HOST != null ? {
       DARKSTAT_RELAY_HOST      = var.RELAY_HOST # Required only for Discover Freelancer which have frontend at Github Pages. Path to backend for PoBs data
-      DARKSTAT_RELAY_LOOP_SECS = "300"          # Optional only for Discover Freelancer, how often to update PoB tab.
+      DARKSTAT_RELAY_LOOP_SECS = "60"          # Optional only for Discover Freelancer, how often to update PoB tab.
     } : {},
     var.password != null ? {
       DARKCORE_PASSWORD = var.password

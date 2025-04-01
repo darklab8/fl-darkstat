@@ -7,6 +7,7 @@ import (
 	"os"
 	"runtime/pprof"
 	"testing"
+	"time"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/go-utils/utils/timeit"
@@ -16,6 +17,9 @@ import (
 func TestTradeRoutes(t *testing.T) {
 
 	configs := configs_mapped.TestFixtureConfigs()
+
+	start := time.Now()
+
 	graph := MapConfigsToFGraph(
 		configs,
 		DiscoverySpeeds.AvgTransportCruiseSpeed,
@@ -39,8 +43,12 @@ func TestTradeRoutes(t *testing.T) {
 	defer pprof.StopCPUProfile()
 
 	timeit.NewTimerF(func() {
+
 		dijkstra := NewDijkstraApspFromGraph(graph)
 		dist, parents := dijkstra.DijkstraApsp()
+
+		elapsed := time.Since(start)
+		log.Printf("Elapsed diijkstra time %s", elapsed)
 
 		// This version lf algorithm can provide you with distances only originating from space bases (and not proxy bases)
 		// The rest of starting points were excluded for performance reasons

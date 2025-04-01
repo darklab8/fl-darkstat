@@ -2,7 +2,10 @@ package configs
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"runtime"
+	"runtime/pprof"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
@@ -15,6 +18,16 @@ import (
 
 // *configs_export.Exporter
 func GetConfigsExport() *configs_export.Exporter {
+	// Start profiling
+	f, err := os.Create("configs.pprof")
+	if err != nil {
+		fmt.Println(err)
+		return nil
+
+	}
+	pprof.StartCPUProfile(f)
+	start := time.Now()
+
 	timer_mapping := timeit.NewTimerMain(timeit.WithMsg("read mapping"))
 	freelancer_folder := configs_settings.Env.FreelancerFolder
 	mapped := configs_mapped.NewMappedConfigs()
@@ -27,6 +40,11 @@ func GetConfigsExport() *configs_export.Exporter {
 	configs.Export(configs_export.ExportOptions{})
 	timer_export.Close()
 	configs.Mapped.Clean()
+
+	pprof.StopCPUProfile()
+	elapsed := time.Since(start)
+	log.Printf("Elapsed Pprof time %s", elapsed)
+
 	return configs
 }
 
@@ -51,9 +69,9 @@ func CliConfigs() {
 
 		timer_total.Close()
 
-		for {
-			fmt.Println(configs.Bases[0])
-			time.Sleep(time.Hour)
-		}
+		// for {
+		// 	fmt.Println(configs.Bases[0])
+		// 	time.Sleep(time.Hour)
+		// }
 	}
 }

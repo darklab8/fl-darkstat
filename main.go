@@ -94,6 +94,8 @@ func main() {
 	}()
 
 	web_darkstat := func() func() {
+		start := time.Now()
+
 		app_data := appdata.NewAppData()
 		relay_data := appdata.NewRelayData(app_data)
 		app_data.Configs.Mapped.Clean()
@@ -129,7 +131,6 @@ func main() {
 						app_data.Lock()
 						defer app_data.Unlock()
 
-						// TODO minimize usage of data here.
 						relay_data.Configs.Mapped.Discovery.PlayerOwnedBases.Refresh()
 						relay_data.Configs.PoBs = relay_data.Configs.GetPoBs()
 						relay_data.Configs.PoBGoods = relay_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
@@ -153,6 +154,10 @@ func main() {
 			web.WithSiteRoot(settings.Env.SiteRoot),
 			web.WithAppData(app_data),
 		)
+
+		elapsed := time.Since(start)
+		log.Printf("Elapsed web launch time %s", elapsed)
+
 		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 
 		rpc_server := darkrpc.NewRpcServer(darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))

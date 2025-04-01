@@ -112,9 +112,9 @@ jobs:
     - name: Switch service image darkwind8/darkstat for swarm to new one
       run: |
         set -ex
-        docker pull darkwind8/darkstat:staging
+        docker pull darkwind8/darkstat:staging-arm64
         sleep 5
-        docker service update --image darkwind8/darkstat:staging staging-darkstat-app
+        docker service update --image darkwind8/darkstat:staging-arm64 staging-darkstat-app
     needs:
     - build-arm64
     - build-amd64
