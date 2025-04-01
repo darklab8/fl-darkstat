@@ -95,7 +95,8 @@ func main() {
 	}()
 
 	web_darkstat := func() func() {
-		start := time.Now()
+		start_time_total := time.Now()
+
 		if settings.Env.IsDevEnv {
 			f, err := os.Create("web.pprof")
 			if err != nil {
@@ -106,14 +107,25 @@ func main() {
 			pprof.StartCPUProfile(f)
 		}
 
+		start_time_app_data := time.Now()
 		app_data := appdata.NewAppData()
+		log.Printf("Elapsed start_time_app_data time %s", time.Since(start_time_app_data))
+
+		start_time_relay_data := time.Now()
 		relay_data := appdata.NewRelayData(app_data)
 		app_data.Configs.Mapped.Clean()
+		log.Printf("Elapsed start_time_relay_data time %s", time.Since(start_time_relay_data))
 
+		start_time_stat_router := time.Now()
 		stat_router := router.NewRouter(app_data)
+		log.Printf("Elapsed start_time_stat_router time %s", time.Since(start_time_stat_router))
+		start_time_stat_router_link := time.Now()
 		stat_builder := stat_router.Link()
+		log.Printf("Elapsed start_time_stat_router_link time %s", time.Since(start_time_stat_router_link))
 
+		start_time_stat_router_build := time.Now()
 		stat_fs := stat_builder.BuildAll(true, nil)
+		log.Printf("Elapsed start_time_stat_router_build time %s", time.Since(start_time_stat_router_build))
 
 		app_data.Lock()
 		relay_fs := GetRelayFs(relay_data)
@@ -138,6 +150,7 @@ func main() {
 							}
 						}()
 						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
+						start_relay_refresh := time.Now()
 						app_data.Lock()
 						defer app_data.Unlock()
 
@@ -153,6 +166,8 @@ func main() {
 
 						logus.Log.Info("refreshed content")
 						runtime.GC()
+						log.Printf("Elapsed start_relay_refresh time %s", time.Since(start_relay_refresh))
+
 					}()
 				}
 			}()
@@ -165,11 +180,10 @@ func main() {
 			web.WithAppData(app_data),
 		)
 
-		elapsed := time.Since(start)
 		if settings.Env.IsDevEnv {
 			pprof.StopCPUProfile()
 		}
-		log.Printf("Elapsed web launch time %s", elapsed)
+		log.Printf("Elapsed web launch time %s", time.Since(start_time_total))
 
 		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 

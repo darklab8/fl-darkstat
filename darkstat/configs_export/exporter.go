@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
+	"github.com/darklab8/go-utils/utils/async"
 )
 
 type InfocardKey string
@@ -197,16 +198,6 @@ type ExportOptions struct {
 	trades.MappingOptions
 }
 
-func ToAsync(callback func()) chan error {
-	c := make(chan error, 1)
-	go func() {
-		callback()
-		c <- nil
-	}()
-
-	return c // <-c  receive from c to await it
-}
-
 func (e *Exporter) Export(options ExportOptions) *Exporter {
 	var wg sync.WaitGroup
 
@@ -294,19 +285,19 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	e.Shields = e.GetShields(e.Tractors)
 	buyable_shield_tech := e.GetBuyableShields(e.Shields)
 
-	guns_wait := ToAsync(func() {
+	guns_wait := async.ToAsync(func() {
 		e.Guns = e.GetGuns(e.Tractors, buyable_shield_tech)
 	})
-	missiles_await := ToAsync(func() {
+	missiles_await := async.ToAsync(func() {
 		e.Missiles = e.GetMissiles(e.Tractors, buyable_shield_tech)
 	})
-	equip_await := ToAsync(func() {
+	equip_await := async.ToAsync(func() {
 		e.Mines = e.GetMines(e.Tractors)
 		e.Thrusters = e.GetThrusters(e.Tractors)
 		logus.Log.Info("getting ships")
 		e.Ships = e.GetShips(e.Tractors, e.TractorsByID, e.Thrusters)
 	})
-	equip2_await := ToAsync(func() {
+	equip2_await := async.ToAsync(func() {
 		e.Engines = e.GetEngines(e.Tractors)
 		e.Cloaks = e.GetCloaks(e.Tractors)
 		e.CMs = e.GetCounterMeasures(e.Tractors)
