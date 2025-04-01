@@ -67,6 +67,9 @@ func (i Infocard) StringsJoin(delimiter string) string {
 }
 
 func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
+	e.sync_infocards.Lock()
+	defer e.sync_infocards.Unlock()
+
 	if _, ok := e.Infocards[InfocardKey(nickname)]; ok {
 		return
 	}
@@ -131,6 +134,8 @@ type Exporter struct {
 	findable_in_loot_cache map[string]bool
 	craftable_cached       map[string]bool
 	pob_buyable_cache      map[string][]*PobShopItem
+
+	sync_infocards sync.Mutex
 }
 
 type OptExport func(e *Exporter)
@@ -190,6 +195,16 @@ func NewGraphResults(
 
 type ExportOptions struct {
 	trades.MappingOptions
+}
+
+func ToAsync(callback func()) chan error {
+	c := make(chan error, 1)
+	go func() {
+		callback()
+		c <- nil
+	}()
+
+	return c // <-c  receive from c to await it
 }
 
 func (e *Exporter) Export(options ExportOptions) *Exporter {
@@ -278,20 +293,34 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 
 	e.Shields = e.GetShields(e.Tractors)
 	buyable_shield_tech := e.GetBuyableShields(e.Shields)
-	e.Guns = e.GetGuns(e.Tractors, buyable_shield_tech)
-	e.Missiles = e.GetMissiles(e.Tractors, buyable_shield_tech)
-	e.Mines = e.GetMines(e.Tractors)
-	e.Thrusters = e.GetThrusters(e.Tractors)
-	logus.Log.Info("getting ships")
-	e.Ships = e.GetShips(e.Tractors, e.TractorsByID, e.Thrusters)
-	e.Engines = e.GetEngines(e.Tractors)
-	e.Cloaks = e.GetCloaks(e.Tractors)
-	e.CMs = e.GetCounterMeasures(e.Tractors)
-	e.Scanners = e.GetScanners(e.Tractors)
-	logus.Log.Info("getting ammo")
 
-	e.Ammos = e.GetAmmo(e.Tractors)
-	logus.Log.Info("waiting for graph to finish")
+	guns_wait := ToAsync(func() {
+		e.Guns = e.GetGuns(e.Tractors, buyable_shield_tech)
+	})
+	missiles_await := ToAsync(func() {
+		e.Missiles = e.GetMissiles(e.Tractors, buyable_shield_tech)
+	})
+	equip_await := ToAsync(func() {
+		e.Mines = e.GetMines(e.Tractors)
+		e.Thrusters = e.GetThrusters(e.Tractors)
+		logus.Log.Info("getting ships")
+		e.Ships = e.GetShips(e.Tractors, e.TractorsByID, e.Thrusters)
+	})
+	equip2_await := ToAsync(func() {
+		e.Engines = e.GetEngines(e.Tractors)
+		e.Cloaks = e.GetCloaks(e.Tractors)
+		e.CMs = e.GetCounterMeasures(e.Tractors)
+		e.Scanners = e.GetScanners(e.Tractors)
+		logus.Log.Info("getting ammo")
+
+		e.Ammos = e.GetAmmo(e.Tractors)
+		logus.Log.Info("waiting for graph to finish")
+	})
+
+	<-guns_wait
+	<-missiles_await
+	<-equip_await
+	<-equip2_await
 
 	wg.Wait()
 

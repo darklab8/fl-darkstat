@@ -8,10 +8,10 @@
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wineprefix_flsr/drive_c/Freelancer",
     "UTILS_DEV_ENV": "true",
     # "UTILS_BAD_VAR": "true",
-    "DARKSTAT_LOG_LEVEL": "DEBUG",
-    "DARKCORE_LOG_LEVEL": "DEBUG",
-    "UTILS_LOG_LEVEL": "DEBUG",
-    "CONFIGS_LOG_LEVEL": "INFO",
+    "DARKSTAT_LOG_LEVEL": "WARN",
+    "DARKCORE_LOG_LEVEL": "WARN",
+    "UTILS_LOG_LEVEL": "WARN",
+    "CONFIGS_LOG_LEVEL": "WARN",
     # if u wish to speed up rerender by magnitude, then keep uncommended trade route calculations disabling
     "DARKSTAT_FLDARKSTAT_HEADING": 'Dev server for fl-darkstat | <a href="https://github.com/darklab8/fl-darkstat">Github</a>',
     # "DARKSTAT_DETAILED": "true"

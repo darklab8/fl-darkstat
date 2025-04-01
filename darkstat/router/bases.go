@@ -75,14 +75,6 @@ func (l *Router) LinkBases(
 				front.BaseRoutes(base.Name, base, data, front.BaseAllRoutes, shared),
 			),
 		)
-		for _, combo_route := range data.GetBaseTradePaths(base) {
-			build.RegComps(
-				builder.NewComponent(
-					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
-					front.TradeRouteInfo3(combo_route.Freighter.BuyingGood, combo_route.Freighter.SellingGood, data, shared),
-				),
-			)
-		}
 
 		for _, combo_route := range data.GetTravelRoutes(base) {
 			build.RegComps(
@@ -130,7 +122,6 @@ func (l *Router) LinkBases(
 		)
 
 		for _, combo_route := range data.GetBaseTradePaths(base) {
-
 			build.RegComps(
 				builder.NewComponent(
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),

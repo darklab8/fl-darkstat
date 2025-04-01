@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"runtime"
 	"runtime/debug"
+	"runtime/pprof"
 	"strings"
 	"syscall"
 	"time"
@@ -95,6 +96,15 @@ func main() {
 
 	web_darkstat := func() func() {
 		start := time.Now()
+		if settings.Env.IsDevEnv {
+			f, err := os.Create("web.pprof")
+			if err != nil {
+				fmt.Println(err)
+				return nil
+
+			}
+			pprof.StartCPUProfile(f)
+		}
 
 		app_data := appdata.NewAppData()
 		relay_data := appdata.NewRelayData(app_data)
@@ -156,6 +166,9 @@ func main() {
 		)
 
 		elapsed := time.Since(start)
+		if settings.Env.IsDevEnv {
+			pprof.StopCPUProfile()
+		}
 		log.Printf("Elapsed web launch time %s", elapsed)
 
 		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
