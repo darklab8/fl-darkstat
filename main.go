@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	_ "net/http/pprof"
+	// _ "net/http/pprof"
 
 	"github.com/darklab8/fl-darkstat/configs"
 	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
@@ -72,9 +72,9 @@ func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 // @BasePath /
 func main() {
 	fmt.Println("args=", os.Args[1:])
-	go func() {
-		log.Println(http.ListenAndServe("0.0.0.0:6060", nil))
-	}()
+	// go func() {
+	// 	log.Println(http.ListenAndServe("0.0.0.0:6060", nil))
+	// }()
 
 	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteHost, "https://", "")
 	docs.SwaggerInfo.Host = strings.ReplaceAll(docs.SwaggerInfo.Host, "http://", "")
