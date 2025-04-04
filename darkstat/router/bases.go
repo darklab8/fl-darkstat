@@ -2,8 +2,10 @@ package router
 
 import (
 	"sort"
+	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkstat/cache"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -23,23 +25,22 @@ func (l *Router) LinkBases(
 	sort.Slice(data.TravelBases, func(i, j int) bool {
 		return data.TravelBases[i].Name < data.TravelBases[j].Name
 	})
-
 	build.RegComps(
 		builder.NewComponent(
 			urls.Bases,
-			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, tab.ShowEmpty(false), shared, data),
+			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Bases),
-			front.BasesT(data.Bases, front.BaseShowShops, tab.ShowEmpty(true), shared, data),
+			front.BasesT(data.Bases, front.BaseShowShops, tab.ShowEmpty(true), shared, data, front.BaseOpts{}),
 		),
 		builder.NewComponent(
 			urls.Missions,
-			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, tab.ShowEmpty(false), shared, data),
+			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Missions),
-			front.BasesT(data.Bases, front.BaseShowMissions, tab.ShowEmpty(true), shared, data),
+			front.BasesT(data.Bases, front.BaseShowMissions, tab.ShowEmpty(true), shared, data, front.BaseOpts{}),
 		),
 	)
 
@@ -89,27 +90,63 @@ func (l *Router) LinkBases(
 	build.RegComps(
 		builder.NewComponent(
 			urls.Trades,
-			front.BasesT(configs_export.FilterToUserfulBases(data.TradeBases), front.BaseTabTrades, tab.ShowEmpty(false), shared, data),
+			front.BasesT(
+				configs_export.FilterToUserfulBases(data.TradeBases),
+				front.BaseTabTrades,
+				tab.ShowEmpty(false),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePaths(configs_export.FilterToUserfulBases(data.TradeBases), data)
+				}, time.Minute)},
+			),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Trades),
-			front.BasesT(data.TradeBases, front.BaseTabTrades, tab.ShowEmpty(true), shared, data),
+			front.BasesT(
+				data.TradeBases,
+				front.BaseTabTrades,
+				tab.ShowEmpty(true),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePaths(data.TradeBases, data)
+				}, time.Minute)},
+			),
 		),
 		builder.NewComponent(
 			urls.Asteroids,
-			front.BasesT(configs_export.FitlerToUsefulOres(data.MiningOperations), front.BaseTabOres, tab.ShowEmpty(false), shared, data),
+			front.BasesT(
+				configs_export.FitlerToUsefulOres(data.MiningOperations),
+				front.BaseTabOres,
+				tab.ShowEmpty(false),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePaths(configs_export.FitlerToUsefulOres(data.MiningOperations), data)
+				}, time.Minute)},
+			),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Asteroids),
-			front.BasesT(data.MiningOperations, front.BaseTabOres, tab.ShowEmpty(true), shared, data),
+			front.BasesT(
+				data.MiningOperations,
+				front.BaseTabOres,
+				tab.ShowEmpty(true),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePaths(data.MiningOperations, data)
+				}, time.Minute)},
+			),
 		),
 		builder.NewComponent(
 			urls.TravelRoutes,
-			front.BasesT(configs_export.FilterToUserfulBases(data.TravelBases), front.BaseAllRoutes, tab.ShowEmpty(false), shared, data),
+			front.BasesT(configs_export.FilterToUserfulBases(data.TravelBases), front.BaseAllRoutes, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.TravelRoutes),
-			front.BasesT(data.TravelBases, front.BaseAllRoutes, tab.ShowEmpty(true), shared, data),
+			front.BasesT(data.TravelBases, front.BaseAllRoutes, tab.ShowEmpty(true), shared, data, front.BaseOpts{}),
 		),
 	)
 

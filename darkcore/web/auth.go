@@ -16,7 +16,7 @@ import (
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		logus.Log.Warn("auth for page url", typelog.String("r.URL.Path", r.URL.Path))
+		logus.Log.Debug("auth for page url", typelog.String("r.URL.Path", r.URL.Path))
 		if strings.HasPrefix(r.URL.Path, "/oauth") {
 			next.ServeHTTP(w, r)
 			return

@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"sort"
+	"github.com/darklab8/fl-darkstat/darkstat/cache"
 )
 
 func BaseDetailedUrl(base *configs_export.Base, tab_mode BaseMode) string {
@@ -42,7 +43,18 @@ const (
 	BaseAllRoutes
 )
 
-templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, shared *types.SharedData, data *configs_export.Exporter) {
+type BaseOpts struct {
+	BasesWithTradePaths *cache.Cached[[]BaseWithTradePaths]
+}
+
+templ BasesTable(
+		bases []*configs_export.Base,
+		tab_mode BaseMode,
+		pinm tab.PinMod,
+		shared *types.SharedData,
+		data *configs_export.Exporter,
+		base_opts BaseOpts,
+	) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -127,7 +139,7 @@ templ BasesTable(bases []*configs_export.Base, tab_mode BaseMode, pinm tab.PinMo
 		</thead>
 		<tbody>
 			if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
-				for _, base := range GetBasesWithTradePaths(bases,data) {
+				for _, base := range base_opts.BasesWithTradePaths.Get() {
 					@BaseRow(base.Base, tab_mode, pinm, shared, base.BaseBestPathTimes)
 				}
 			} else {
@@ -143,6 +155,7 @@ type BaseWithTradePaths struct {
 	*configs_export.Base
 	*configs_export.BaseBestPathTimes
 }
+
 func GetBasesWithTradePaths(bases []*configs_export.Base, data *configs_export.Exporter) []BaseWithTradePaths {
 	var results []BaseWithTradePaths
 	for _, base := range bases {
@@ -257,7 +270,14 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty, shared *types.SharedData, data *configs_export.Exporter) {
+templ BasesT(
+		bases []*configs_export.Base,
+		tab_mode BaseMode,
+		mode tab.ShowEmpty,
+		shared *types.SharedData,
+		data *configs_export.Exporter,
+		base_opts BaseOpts,
+	) {
 	if tab_mode == BaseShowShops {
 		@TabMenu(urls.Bases, mode, shared)
 	} else if tab_mode == BaseShowMissions {
@@ -286,10 +306,10 @@ templ BasesT(bases []*configs_export.Base, tab_mode BaseMode, mode tab.ShowEmpty
 						// }
 					}
 					<div id="table-top-main">
-						@BasesTable(bases, tab_mode, tab.MainMode, shared, data)
+						@BasesTable(bases, tab_mode, tab.MainMode, shared, data, base_opts)
 					</div>
 					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
-						@BasesTable(bases, tab_mode, tab.PinMode, shared, data)
+						@BasesTable(bases, tab_mode, tab.PinMode, shared, data, base_opts)
 					</div>
 				}
 				@tab.TableBottom(){

@@ -5,6 +5,7 @@ import (
 	"html"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
@@ -49,7 +50,7 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 					typelog.Int("files_count", len(w.filesystems[0].Files)),
 				)
 
-				logger.Info("having get request")
+				logger.Debug("having get request")
 
 				var content builder.MemFile
 				var ok bool
@@ -70,7 +71,9 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 				}
 
 				if ok {
+					time_start := time.Now()
 					fmt.Fprint(resp, string(content.Render()))
+					logger.Info("proceed request", typelog.String("duration", (time.Now().Sub(time_start).String())))
 				} else {
 					resp.WriteHeader(http.StatusNotFound)
 					fmt.Fprintf(resp, "content is not found at %s!, %q", req.URL, html.EscapeString(requested))
