@@ -11,10 +11,18 @@ import (
 	"strconv"
 	"html"
 	"fmt"
+	"math"
 )
 
+
+
 func PoBGoodDetailedUrl(good *configs_export.PoBGood) string {
-	return "pob_good/pob_good_" + strings.ToLower(good.Nickname)
+	var ship_class string
+	if good.ShipClass != nil {
+		ship_class = strconv.Itoa(int(*good.ShipClass))
+	}
+
+	return "pob_good/pob_good_" + strings.ToLower(good.Nickname) + ship_class
 }
 
 templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared *types.SharedData) {
@@ -120,6 +128,12 @@ templ PoBGoodPobsShared() {
 				<th style="width:75px;">
 					@frmt.MultiLinestring([]string{"Base", "Sells"})
 				</th>
+				<th style="width:75px;">
+					@frmt.MultiLinestring([]string{"Base sells", "your kilo", "volumes"})
+				</th>
+				<th style="width:75px;">
+					@frmt.MultiLinestring([]string{"Base buys", "your kilo", "volumes"})
+				</th>
 				<th style="width:10px;">Min Stock</th>
 				<th style="width:10px;">Max Stock</th>
 				@PoBTableHeaders()
@@ -131,11 +145,11 @@ templ PoBGoodPobsShared() {
 	</table>
 }
 
-templ PoBGoodPobs(name string, pobs []*configs_export.PoBGoodBase) {
+templ PoBGoodPobs(good *configs_export.PoBGood) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ name }</div>
+	<div class="bottom_name">{ good.Name }</div>
 	@PoBGoodPobsShared() {
-		for _, pob := range pobs {
+		for _, pob := range good.Bases {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(pob.Base.Nickname)) }
 				hx-trigger="click"
@@ -153,6 +167,8 @@ templ PoBGoodPobs(name string, pobs []*configs_export.PoBGoodBase) {
 				<td> { strconv.Itoa(pob.ShopItem.SellPrice) }</td>
 				<td> { strconv.Itoa(pob.ShopItem.Price) }</td>
 				@FormatPoBSells(pob.ShopItem)
+				<td> { SellsKiloVolumes(good,pob) }</td>
+				<td> { BuysKiloVolumes(good,pob) } </td>
 				<td> { strconv.Itoa(pob.ShopItem.MinStock) }</td>
 				<td> { strconv.Itoa(pob.ShopItem.MaxStock) }</td>
 				@PobTableRow(pob.Base)
@@ -160,4 +176,28 @@ templ PoBGoodPobs(name string, pobs []*configs_export.PoBGoodBase) {
 			</tr>
 		}
 	}
+}
+
+func SellsKiloVolumes(good *configs_export.PoBGood, pob *configs_export.PoBGoodBase) string {
+	if pob.ShopItem.Quantity-pob.ShopItem.MinStock <= 0 {
+		return "0"
+	} 
+	
+	return fmt.Sprintf("%.1f",math.Min(
+		configs_export.MaxKilVolumes,
+		(good.Volume * float64(pob.ShopItem.Quantity-pob.ShopItem.MinStock))/configs_export.KiloVolume),
+	)
+}
+func BuysKiloVolumes(good *configs_export.PoBGood, pob *configs_export.PoBGoodBase) string {
+	if pob.ShopItem.MaxStock-pob.ShopItem.Quantity <= 0 {
+		return "0"
+	} 
+	var cargo_space_left float64 = 0
+	if pob.Base.CargoSpaceLeft != nil {
+		cargo_space_left = float64(*pob.Base.CargoSpaceLeft)
+	}
+	return fmt.Sprintf("%.1f",math.Min(
+		configs_export.MaxKilVolumes,
+		math.Min(cargo_space_left * good.Volume / good.OriginalVolume,(good.Volume * float64(pob.ShopItem.MaxStock-pob.ShopItem.Quantity)))/configs_export.KiloVolume),
+	)
 }

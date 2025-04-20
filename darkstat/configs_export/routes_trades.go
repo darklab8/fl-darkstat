@@ -95,6 +95,12 @@ func (e *TradePathExporter) GetBaseTradePathsFiltered(base *Base) []*ComboTradeR
 	return TradeRoutes
 }
 
+var (
+	KiloVolume    float64 = 1000
+	MaxKilVolumes float64 = 999
+)
+
+
 func (e *TradePathExporter) GetBaseTradePaths(base *Base) []*ComboTradeRoute {
 	var TradeRoutes []*ComboTradeRoute
 

@@ -93,7 +93,7 @@ func (l *Router) LinkPobs(
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(relayfront.PoBGoodDetailedUrl(good)),
-				relayfront.PoBGoodPobs(good.Name, good.Bases),
+				relayfront.PoBGoodPobs(good),
 			),
 		)
 	}

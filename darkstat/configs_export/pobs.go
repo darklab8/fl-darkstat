@@ -85,10 +85,11 @@ type PoBGood struct {
 	Category string         `json:"category" validate:"required"`
 	Bases    []*PoBGoodBase `json:"bases" validate:"required"`
 
-	AnyBaseSells bool           `json:"any_base_sells" validate:"required"`
-	AnyBaseBuys  bool           `json:"any_base_buys" validate:"required"`
-	Volume       float64        `json:"volume" validate:"required"`
-	ShipClass    *cfg.ShipClass `json:"ship_class"`
+	AnyBaseSells   bool           `json:"any_base_sells" validate:"required"`
+	AnyBaseBuys    bool           `json:"any_base_buys" validate:"required"`
+	Volume         float64        `json:"volume" validate:"required"`
+	OriginalVolume float64        `json:"_"`
+	ShipClass      *cfg.ShipClass `json:"ship_class"`
 }
 
 func (b PoBGood) GetNickname() string { return string(b.Nickname) }
@@ -174,7 +175,10 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				}
 				pobs_goods_by_nick[good.Nickname] = pob_good
 			}
-			pob_good.Bases = append(pob_good.Bases, &PoBGoodBase{Base: &pob.PoBCore, ShopItem: good})
+			pob_good.Bases = append(pob_good.Bases, &PoBGoodBase{
+				Base:     &pob.PoBCore,
+				ShopItem: good,
+			})
 		}
 	}
 
@@ -212,18 +216,21 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 			}
 		}
 
-		if equipment, ok := e.Mapped.Equip().CommoditiesMap[item.Nickname]; ok {
+		if commodity, ok := e.Mapped.Equip().CommoditiesMap[item.Nickname]; ok {
 			// then it is commodity that can be duplicated through volumes
-			for _, volume_info := range equipment.Volumes {
+			for _, volume_info := range commodity.Volumes {
 				copied := GetPtrStructCopy(item)
 				copied.Volume = volume_info.Volume.Get()
 				copied.ShipClass = volume_info.GetShipClass()
+				copied.OriginalVolume = commodity.OriginalVolume.Volume.Get()
 				pob_goods = append(pob_goods, copied)
 			}
 		} else {
 			items_map := e.Mapped.Equip()
 			if equip, ok := items_map.ItemsMap[item.Nickname]; ok {
 				item.Volume = equip.Volume.Get()
+				item.OriginalVolume = equip.Volume.Get()
+
 			}
 			pob_goods = append(pob_goods, item)
 		}
