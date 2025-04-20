@@ -167,8 +167,8 @@ templ PoBGoodPobs(good *configs_export.PoBGood) {
 				<td> { strconv.Itoa(pob.ShopItem.SellPrice) }</td>
 				<td> { strconv.Itoa(pob.ShopItem.Price) }</td>
 				@FormatPoBSells(pob.ShopItem)
-				<td> { SellsKiloVolumes(good,pob) }</td>
-				<td> { BuysKiloVolumes(good,pob) } </td>
+				<td> { SellsKiloVolumes(pob.ShopItem, good.Volume) }</td>
+				<td> { BuysKiloVolumes(pob.ShopItem, good.Volume, good.OriginalVolume, pob.Base.CargoSpaceLeft) } </td>
 				<td> { strconv.Itoa(pob.ShopItem.MinStock) }</td>
 				<td> { strconv.Itoa(pob.ShopItem.MaxStock) }</td>
 				@PobTableRow(pob.Base)
@@ -178,26 +178,31 @@ templ PoBGoodPobs(good *configs_export.PoBGood) {
 	}
 }
 
-func SellsKiloVolumes(good *configs_export.PoBGood, pob *configs_export.PoBGoodBase) string {
-	if pob.ShopItem.Quantity-pob.ShopItem.MinStock <= 0 {
+func SellsKiloVolumes(ShopItem *configs_export.ShopItem, good_volume float64) string {
+	if ShopItem.Quantity-ShopItem.MinStock <= 0 {
 		return "0"
 	} 
 	
 	return fmt.Sprintf("%.1f",math.Min(
 		configs_export.MaxKilVolumes,
-		(good.Volume * float64(pob.ShopItem.Quantity-pob.ShopItem.MinStock))/configs_export.KiloVolume),
+		(good_volume * float64(ShopItem.Quantity-ShopItem.MinStock))/configs_export.KiloVolume),
 	)
 }
-func BuysKiloVolumes(good *configs_export.PoBGood, pob *configs_export.PoBGoodBase) string {
-	if pob.ShopItem.MaxStock-pob.ShopItem.Quantity <= 0 {
+func BuysKiloVolumes(
+		ShopItem *configs_export.ShopItem,
+		good_volume float64,
+		original_volume float64,
+		cargo_space_left *int,
+	) string {
+	if ShopItem.MaxStock-ShopItem.Quantity <= 0 {
 		return "0"
 	} 
-	var cargo_space_left float64 = 0
-	if pob.Base.CargoSpaceLeft != nil {
-		cargo_space_left = float64(*pob.Base.CargoSpaceLeft)
+	var cargo_space_left_f64 float64 = 0
+	if cargo_space_left != nil {
+		cargo_space_left_f64 = float64(*cargo_space_left)
 	}
 	return fmt.Sprintf("%.1f",math.Min(
 		configs_export.MaxKilVolumes,
-		math.Min(cargo_space_left * good.Volume / good.OriginalVolume,(good.Volume * float64(pob.ShopItem.MaxStock-pob.ShopItem.Quantity)))/configs_export.KiloVolume),
+		math.Min(cargo_space_left_f64 * good_volume / original_volume,(good_volume * float64(ShopItem.MaxStock-ShopItem.Quantity)))/configs_export.KiloVolume),
 	)
 }

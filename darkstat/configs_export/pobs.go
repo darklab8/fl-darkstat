@@ -24,6 +24,10 @@ type ShopItem struct {
 	Nickname string `json:"nickname" validate:"required"`
 	Name     string `json:"name" validate:"required"`
 	Category string `json:"category" validate:"required"`
+
+	Volume         float64        `json:"volume" validate:"required"`
+	OriginalVolume float64        `json:"original_volume"`
+	ShipClass      *cfg.ShipClass `json:"ship_class"`
 }
 
 type DefenseMode int
@@ -88,7 +92,7 @@ type PoBGood struct {
 	AnyBaseSells   bool           `json:"any_base_sells" validate:"required"`
 	AnyBaseBuys    bool           `json:"any_base_buys" validate:"required"`
 	Volume         float64        `json:"volume" validate:"required"`
-	OriginalVolume float64        `json:"_"`
+	OriginalVolume float64        `json:"original_volume"`
 	ShipClass      *cfg.ShipClass `json:"ship_class"`
 }
 
@@ -348,7 +352,24 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 				}
 			}
 
+			if commodity, ok := e.Mapped.Equip().CommoditiesMap[good.Nickname]; ok {
+				// then it is commodity that can be duplicated through volumes
+				for _, volume_info := range commodity.Volumes {
+					copied := GetPtrStructCopy(good)
+					copied.Volume = volume_info.Volume.Get()
+					copied.ShipClass = volume_info.GetShipClass()
+					copied.OriginalVolume = commodity.OriginalVolume.Volume.Get()
+					pob.ShopItems = append(pob.ShopItems, copied)
+				}
+			} else {
+				items_map := e.Mapped.Equip()
+				if equip, ok := items_map.ItemsMap[good.Nickname]; ok {
+					good.Volume = equip.Volume.Get()
+					good.OriginalVolume = equip.Volume.Get()
+
+				}
 			pob.ShopItems = append(pob.ShopItems, good)
+			}
 		}
 
 		var sb InfocardBuilder
