@@ -17,6 +17,6 @@
     # "DARKSTAT_DETAILED": "true"
     # "CONFIGS_FALLBACK_TO_NICKNAMES": "true",
     # "CONFIGS_STRICT": "false",
-    # "DARKSTAT_STAT_BACK_IS_PREFERED": "true",
-    # "DARKSTAT_SITE_HOST": "http://localhost:8000",
+    "DARKSTAT_STAT_BACK_IS_PREFERED": "true",
+    "DARKSTAT_SITE_HOST": "http://localhost:8000",
 }

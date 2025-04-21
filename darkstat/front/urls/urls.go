@@ -13,6 +13,7 @@ const (
 	VanillaIndex    utils_types.FilePath = "vanilla.html"
 	Bases           utils_types.FilePath = "cdn/bases.html"
 	Trades          utils_types.FilePath = "cdn/trades.html"
+	TradeDeals      utils_types.FilePath = "cdn/trade_deals.html"
 	Asteroids       utils_types.FilePath = "cdn/asteroids.html"
 	TravelRoutes    utils_types.FilePath = "cdn/travel_routes.html"
 	Missions        utils_types.FilePath = "cdn/missions.html"

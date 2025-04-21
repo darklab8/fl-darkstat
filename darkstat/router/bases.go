@@ -91,6 +91,16 @@ func (l *Router) LinkBases(
 	}
 
 	build.RegComps(
+		builder.NewComponent( // move to back?
+			urls.TradeDeals,
+			front.TradeDeals(
+				cache.NewCached(func() []*configs_export.TradeDeal {
+					return data.GetBestTradeDeals(data.TradeBases)
+				}, time.Minute),
+				shared,
+				data,
+			),
+		),
 		// top tables of ore and trades
 		builder.NewComponent( // move to back?
 			urls.Trades,

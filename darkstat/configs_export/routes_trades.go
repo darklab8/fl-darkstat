@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"fmt"
 	"math"
 	"sort"
 	"time"
@@ -34,6 +35,12 @@ func (t *TradeRoute) GetProffitPerTime() float64 {
 	return GetProffitPerTime(t.Route.g, t.BuyingGood, t.SellingGood)
 }
 
+func GetTimeS(g *GraphResults, BuyingGood *MarketGood, SellingGood *MarketGood) float64 {
+	time_ms := trades.GetTimeMs2(g.Graph, g.Time, BuyingGood.BaseNickname.ToStr(), SellingGood.BaseNickname.ToStr())
+	time_s := float64(time_ms)/trades.PrecisionMultipiler + float64(trades.BaseDockingDelay)
+	return time_s
+}
+
 // memory optimized version of GetProffitPerTime
 func GetProffitPerTime(g *GraphResults, BuyingGood *MarketGood, SellingGood *MarketGood) float64 {
 	if g == nil {
@@ -43,8 +50,7 @@ func GetProffitPerTime(g *GraphResults, BuyingGood *MarketGood, SellingGood *Mar
 		return 0
 	}
 	ProffitPerV := float64(SellingGood.GetPriceBaseBuysFor()-BuyingGood.PriceBaseSellsFor) / float64(SellingGood.Volume)
-	time_ms := trades.GetTimeMs2(g.Graph, g.Time, BuyingGood.BaseNickname.ToStr(), SellingGood.BaseNickname.ToStr())
-	time_s := float64(time_ms)/trades.PrecisionMultipiler + float64(trades.BaseDockingDelay)
+	time_s := GetTimeS(g, BuyingGood, SellingGood)
 	return ProffitPerV / time_s
 }
 
@@ -99,7 +105,7 @@ func (e *TradePathExporter) GetBaseTradePathsFiltered(base *Base) []*ComboTradeR
 
 var (
 	KiloVolume    float64 = 1000
-	MaxKilVolumes float64 = 999
+	MaxKilVolumes float64 = 100
 )
 
 func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) float64 {
@@ -112,7 +118,7 @@ func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) f
 			return 0
 		}
 
-		return (float64(buying_good.PoBGood.Quantity-buying_good.PoBGood.MinStock) * buying_good.Volume) / KiloVolume
+		return math.Min(MaxKilVolumes, (float64(buying_good.PoBGood.Quantity-buying_good.PoBGood.MinStock)*buying_good.Volume)/KiloVolume)
 	}
 
 	if selling_good.PoBGood != nil {
@@ -120,12 +126,12 @@ func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) f
 			return 0
 		}
 
-		return (float64(selling_good.PoBGood.MaxStock-selling_good.PoBGood.Quantity) * selling_good.Volume) / KiloVolume
+		return math.Min(MaxKilVolumes, (float64(selling_good.PoBGood.MaxStock-selling_good.PoBGood.Quantity)*selling_good.Volume)/KiloVolume)
 	}
 
 	a := (float64(buying_good.PoBGood.Quantity-buying_good.PoBGood.MinStock) * buying_good.Volume) / KiloVolume
 	b := (float64(selling_good.PoBGood.MaxStock-selling_good.PoBGood.Quantity) * selling_good.Volume) / KiloVolume
-	return math.Min(a, b)
+	return math.Min(MaxKilVolumes, math.Min(a, b))
 }
 
 func (e *TradePathExporter) GetBaseTradePaths(base *Base) []*ComboTradeRoute {
@@ -167,6 +173,54 @@ func (e *TradePathExporter) GetBaseTradePaths(base *Base) []*ComboTradeRoute {
 	}
 
 	return TradeRoutes
+}
+
+type TradeDeal struct {
+	*ComboTradeRoute
+	ProfitPerTimeForKiloVolumes float64
+	ProfitWeight                float64
+}
+
+const LimitBestPaths = 1500
+
+func (e *TradePathExporter) GetBestTradeDeals(bases []*Base) []*TradeDeal {
+	var trade_deals []*TradeDeal
+
+	for index, base := range bases {
+		fmt.Println("base_", index, "is processed for trade detals")
+		trade_routes := e.GetBaseTradePaths(base)
+		for _, trade_route := range trade_routes {
+			profit_per_time := trade_route.Transport.GetProffitPerTime()
+			kilo_volume := math.Min(10, KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
+
+			if kilo_volume < 5 {
+				continue
+			}
+			profit_per_time_for_kilo_volumes := kilo_volume * profit_per_time
+			time_s := GetTimeS(trade_route.Transport.Route.g, trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)
+
+			var time_weight float64
+			time_weight = math.Min(time_s, 600) / 600
+
+			trade_route.Transport.GetProffitPerTime()
+			trade_deals = append(trade_deals, &TradeDeal{
+				ComboTradeRoute:             trade_route,
+				ProfitPerTimeForKiloVolumes: profit_per_time_for_kilo_volumes,
+				ProfitWeight:                profit_per_time*math.Min(10, kilo_volume)/10 + profit_per_time*time_weight,
+			})
+		}
+		if len(trade_deals) > LimitBestPaths+500 {
+			sort.Slice(trade_deals, func(i, j int) bool {
+				return trade_deals[i].ProfitWeight > trade_deals[j].ProfitWeight
+			})
+			trade_deals = trade_deals[:LimitBestPaths]
+		}
+	}
+	sort.Slice(trade_deals, func(i, j int) bool {
+		return trade_deals[i].ProfitWeight > trade_deals[j].ProfitWeight
+	})
+	trade_deals = trade_deals[:LimitBestPaths]
+	return trade_deals
 }
 
 type BaseBestPathTimes struct {
