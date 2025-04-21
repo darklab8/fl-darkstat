@@ -67,8 +67,14 @@ func (l *Router) LinkBases(
 		// bottom table info trade routes!! Important.
 		build.RegComps(
 			builder.NewComponent(
-				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
-				front.BaseTrades(base.Name, base, front.BaseTabTrades, shared, data),
+				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTradesFrom)),
+				front.BaseTradesFrom(base.Name, base, front.BaseTabTradesFrom, shared, data),
+			),
+		)
+		build.RegComps( // move to back?
+			builder.NewComponent(
+				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTradesTo)),
+				front.BaseTradesTo(base.Name, base, front.BaseTabTradesTo, shared, data),
 			),
 		)
 		// bottom table info for all routes. Important.
@@ -103,28 +109,54 @@ func (l *Router) LinkBases(
 		),
 		// top tables of ore and trades
 		builder.NewComponent( // move to back?
-			urls.Trades,
+			urls.TradesFrom,
 			front.BasesT(
 				configs_export.FilterToUserfulBases(data.TradeBases),
-				front.BaseTabTrades,
+				front.BaseTabTradesFrom,
 				tab.ShowEmpty(false),
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePaths(configs_export.FilterToUserfulBases(data.TradeBases), data)
+					return front.GetBasesWithTradePathsFrom(configs_export.FilterToUserfulBases(data.TradeBases), data)
 				}, time.Minute)},
 			),
 		),
 		builder.NewComponent( // move to back?
-			tab.AllItemsUrl(urls.Trades),
+			tab.AllItemsUrl(urls.TradesFrom),
 			front.BasesT(
 				data.TradeBases,
-				front.BaseTabTrades,
+				front.BaseTabTradesFrom,
 				tab.ShowEmpty(true),
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePaths(data.TradeBases, data)
+					return front.GetBasesWithTradePathsFrom(data.TradeBases, data)
+				}, time.Minute)},
+			),
+		),
+		builder.NewComponent( // move to back?
+			urls.TradesTo,
+			front.BasesT(
+				configs_export.FilterToUserfulBases(data.TradeBases),
+				front.BaseTabTradesTo,
+				tab.ShowEmpty(false),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePathsTo(configs_export.FilterToUserfulBases(data.TradeBases), data)
+				}, time.Minute)},
+			),
+		),
+		builder.NewComponent( // move to back?
+			tab.AllItemsUrl(urls.TradesTo),
+			front.BasesT(
+				data.TradeBases,
+				front.BaseTabTradesTo,
+				tab.ShowEmpty(true),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePathsTo(data.TradeBases, data)
 				}, time.Minute)},
 			),
 		),
@@ -137,7 +169,7 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePaths(configs_export.FitlerToUsefulOres(data.MiningOperations), data)
+					return front.GetBasesWithTradePathsFrom(configs_export.FitlerToUsefulOres(data.MiningOperations), data)
 				}, time.Minute)},
 			),
 		),
@@ -150,7 +182,7 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePaths(data.MiningOperations, data)
+					return front.GetBasesWithTradePathsFrom(data.MiningOperations, data)
 				}, time.Minute)},
 			),
 		),
@@ -170,11 +202,11 @@ func (l *Router) LinkBases(
 		build.RegComps( // move to back?
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOres)),
-				front.BaseTrades(base.Name, base, front.BaseTabOres, shared, data),
+				front.BaseTradesFrom(base.Name, base, front.BaseTabOres, shared, data),
 			),
 		)
 
-		for _, combo_route := range data.GetBaseTradePaths(base) { // infocards for mining.
+		for _, combo_route := range data.GetBaseTradePathsFrom(base) { // infocards for mining.
 			build.RegComps(
 				builder.NewComponent( // probably move to back?
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),

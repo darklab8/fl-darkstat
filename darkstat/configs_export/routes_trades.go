@@ -95,8 +95,7 @@ func newTradePathExporter(
 	return tp
 }
 
-func (e *TradePathExporter) GetBaseTradePathsFiltered(base *Base) []*ComboTradeRoute {
-	TradeRoutes := e.GetBaseTradePaths(base)
+func (e *TradePathExporter) GetBaseTradePathsFiltered(TradeRoutes []*ComboTradeRoute) []*ComboTradeRoute {
 	sort.Slice(TradeRoutes, func(i, j int) bool {
 		return TradeRoutes[i].Transport.GetProffitPerTime() > TradeRoutes[j].Transport.GetProffitPerTime()
 	})
@@ -134,7 +133,24 @@ func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) f
 	return math.Min(MaxKilVolumes, math.Min(a, b))
 }
 
-func (e *TradePathExporter) GetBaseTradePaths(base *Base) []*ComboTradeRoute {
+func (e *TradePathExporter) GetVolumedMarketGoods(buying_good *MarketGood, selling_good *MarketGood, callback func(*MarketGood, *MarketGood)) {
+	if commodity, ok := e.Mapped.Equip().CommoditiesMap[buying_good.Nickname]; ok {
+		// then it is commodity that can be duplicated through volumes
+		for _, volume_info := range commodity.Volumes {
+			copied_buying_good := GetPtrStructCopy(buying_good)
+			copied_buying_good.Volume = volume_info.Volume.Get()
+			copied_buying_good.ShipClass = volume_info.GetShipClass()
+			// copied.OriginalVolume = commodity.OriginalVolume.Volume.Get()
+			copied_selling_good := GetPtrStructCopy(selling_good)
+			copied_selling_good.Volume = volume_info.Volume.Get()
+			copied_selling_good.ShipClass = volume_info.GetShipClass()
+
+			callback(copied_buying_good, copied_selling_good)
+		}
+	}
+}
+
+func (e *TradePathExporter) GetBaseTradePathsFrom(base *Base) []*ComboTradeRoute {
 	var TradeRoutes []*ComboTradeRoute
 
 	for _, buying_good := range base.MarketGoodsPerNick {
@@ -147,18 +163,26 @@ func (e *TradePathExporter) GetBaseTradePaths(base *Base) []*ComboTradeRoute {
 		commodity_key := GetCommodityKey(buying_good.Nickname, buying_good.ShipClass)
 		commodity_selling_bases := e.sell_locations_by_base.Get()[commodity_key]
 		for _, selling_good_at_base := range commodity_selling_bases {
-			if buying_good.Nickname == selling_good_at_base.Nickname && buying_good.ShipClass != selling_good_at_base.ShipClass {
+			if selling_good_at_base.ShipClass != nil || buying_good.ShipClass != nil {
 				continue
 			}
 
-			trade_route := &ComboTradeRoute{
-				Transport: NewTradeRoute(e.Transport, buying_good, selling_good_at_base),
-				Frigate:   NewTradeRoute(e.Frigate, buying_good, selling_good_at_base),
-				Freighter: NewTradeRoute(e.Freighter, buying_good, selling_good_at_base),
-			}
-			if trade_route.Transport.GetProffitPerTime() <= 0 {
+			kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good_at_base)
+			if kilo_volumes < 5 {
 				continue
 			}
+
+			e.GetVolumedMarketGoods(buying_good, selling_good_at_base, func(copied_buying_good, copied_selling_good *MarketGood) {
+				trade_route := &ComboTradeRoute{
+					Transport: NewTradeRoute(e.Transport, copied_buying_good, copied_selling_good),
+					Frigate:   NewTradeRoute(e.Frigate, copied_buying_good, copied_selling_good),
+					Freighter: NewTradeRoute(e.Freighter, copied_buying_good, copied_selling_good),
+				}
+				if trade_route.Transport.GetProffitPerTime() <= 0 {
+					return
+				}
+				TradeRoutes = append(TradeRoutes, trade_route)
+			})
 
 			// If u need to limit to specific min distance
 			// if trade_route.Transport.GetTime() < 60*10*350 {
@@ -167,11 +191,48 @@ func (e *TradePathExporter) GetBaseTradePaths(base *Base) []*ComboTradeRoute {
 
 			// fmt.Println("path for", trade_route.Transport.BuyingGood.BaseNickname, trade_route.Transport.SellingGood.BaseNickname)
 			// fmt.Println("trade_route.Transport.GetPaths().length", len(trade_route.Transport.GetPaths()))
-
-			TradeRoutes = append(TradeRoutes, trade_route)
 		}
 	}
 
+	return TradeRoutes
+}
+
+func (e *TradePathExporter) GetBaseTradePathsTo(base *Base) []*ComboTradeRoute {
+	var TradeRoutes []*ComboTradeRoute
+
+	for _, selling_good := range base.MarketGoodsPerNick {
+		if selling_good.Category != "commodity" {
+			continue
+		}
+
+		commodity_key := GetCommodityKey(selling_good.Nickname, selling_good.ShipClass)
+		commodity_selling_bases := e.sell_locations_by_base.Get()[commodity_key]
+		for _, buying_good := range commodity_selling_bases {
+			if !buying_good.BaseSells {
+				continue
+			}
+			if selling_good.ShipClass != nil || buying_good.ShipClass != nil {
+				continue
+			}
+			kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
+			if kilo_volumes < 5 {
+				continue
+			}
+
+			e.GetVolumedMarketGoods(buying_good, selling_good, func(copied_buying_good, copied_selling_good *MarketGood) {
+				trade_route := &ComboTradeRoute{
+					Transport: NewTradeRoute(e.Transport, copied_buying_good, copied_selling_good),
+					Frigate:   NewTradeRoute(e.Frigate, copied_buying_good, copied_selling_good),
+					Freighter: NewTradeRoute(e.Freighter, copied_buying_good, copied_selling_good),
+				}
+				if trade_route.Transport.GetProffitPerTime() <= 0 {
+					return
+				}
+				TradeRoutes = append(TradeRoutes, trade_route)
+			})
+
+		}
+	}
 	return TradeRoutes
 }
 
@@ -188,7 +249,7 @@ func (e *TradePathExporter) GetBestTradeDeals(bases []*Base) []*TradeDeal {
 
 	for index, base := range bases {
 		fmt.Println("base_", index, "is processed for trade detals")
-		trade_routes := e.GetBaseTradePaths(base)
+		trade_routes := e.GetBaseTradePathsFrom(base)
 		for _, trade_route := range trade_routes {
 			profit_per_time := trade_route.Transport.GetProffitPerTime()
 			kilo_volume := math.Min(10, KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
@@ -229,7 +290,7 @@ type BaseBestPathTimes struct {
 	FreighterProfitPerTime *float64
 }
 
-func (e *TradePathExporter) GetBaseBestPath(base *Base) *BaseBestPathTimes {
+func (e *TradePathExporter) GetBaseBestPathFrom(base *Base) *BaseBestPathTimes {
 	var result *BaseBestPathTimes = &BaseBestPathTimes{}
 	for _, buying_good := range base.MarketGoodsPerNick {
 		if buying_good.Category != "commodity" {
@@ -244,31 +305,97 @@ func (e *TradePathExporter) GetBaseBestPath(base *Base) *BaseBestPathTimes {
 		if buying_good == nil {
 			continue
 		}
-		for _, selling_good_at_base := range commodity_selling_bases {
-			TransportProfitPerTime := GetProffitPerTime(e.Transport, buying_good, selling_good_at_base)
-			FrigateProfitPerTime := GetProffitPerTime(e.Frigate, buying_good, selling_good_at_base)
-			FreighterProfitPerTime := GetProffitPerTime(e.Freighter, buying_good, selling_good_at_base)
-			if TransportProfitPerTime <= 0 {
+		for _, selling_good := range commodity_selling_bases {
+			if selling_good.ShipClass != nil || buying_good.ShipClass != nil {
+				continue
+			}
+			kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
+			if kilo_volumes < 5 {
 				continue
 			}
 
-			if result.TransportProfitPerTime == nil {
-				result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
-			} else if TransportProfitPerTime > *result.TransportProfitPerTime {
-				result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
-			}
+			e.GetVolumedMarketGoods(buying_good, selling_good, func(copied_buying_good, copied_selling_good *MarketGood) {
+				TransportProfitPerTime := GetProffitPerTime(e.Transport, buying_good, selling_good)
+				FrigateProfitPerTime := GetProffitPerTime(e.Frigate, buying_good, selling_good)
+				FreighterProfitPerTime := GetProffitPerTime(e.Freighter, buying_good, selling_good)
+				if TransportProfitPerTime <= 0 {
+					return
+				}
 
-			if result.FrigateProfitPerTime == nil {
-				result.FrigateProfitPerTime = ptr.Ptr(FrigateProfitPerTime)
-			} else if FrigateProfitPerTime > *result.FrigateProfitPerTime {
-				result.FrigateProfitPerTime = ptr.Ptr(FrigateProfitPerTime)
-			}
+				if result.TransportProfitPerTime == nil {
+					result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
+				} else if TransportProfitPerTime > *result.TransportProfitPerTime {
+					result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
+				}
 
-			if result.FreighterProfitPerTime == nil {
-				result.FreighterProfitPerTime = ptr.Ptr(FreighterProfitPerTime)
-			} else if FreighterProfitPerTime > *result.FreighterProfitPerTime {
-				result.FreighterProfitPerTime = ptr.Ptr(FreighterProfitPerTime)
+				if result.FrigateProfitPerTime == nil {
+					result.FrigateProfitPerTime = ptr.Ptr(FrigateProfitPerTime)
+				} else if FrigateProfitPerTime > *result.FrigateProfitPerTime {
+					result.FrigateProfitPerTime = ptr.Ptr(FrigateProfitPerTime)
+				}
+
+				if result.FreighterProfitPerTime == nil {
+					result.FreighterProfitPerTime = ptr.Ptr(FreighterProfitPerTime)
+				} else if FreighterProfitPerTime > *result.FreighterProfitPerTime {
+					result.FreighterProfitPerTime = ptr.Ptr(FreighterProfitPerTime)
+				}
+			})
+
+		}
+	}
+	return result
+}
+
+func (e *TradePathExporter) GetBaseBestPathTo(base *Base) *BaseBestPathTimes {
+	var result *BaseBestPathTimes = &BaseBestPathTimes{}
+	for _, selling_good := range base.MarketGoodsPerNick {
+		if selling_good.Category != "commodity" {
+			continue
+		}
+
+		commodity_key := GetCommodityKey(selling_good.Nickname, selling_good.ShipClass)
+		commodity_selling_bases := e.sell_locations_by_base.Get()[commodity_key]
+
+		if selling_good == nil {
+			continue
+		}
+		for _, buying_good := range commodity_selling_bases {
+			if !buying_good.BaseSells {
+				continue
 			}
+			if selling_good.ShipClass != nil || buying_good.ShipClass != nil {
+				continue
+			}
+			kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
+			if kilo_volumes < 5 {
+				continue
+			}
+			e.GetVolumedMarketGoods(buying_good, selling_good, func(copied_buying_good, copied_selling_good *MarketGood) {
+				TransportProfitPerTime := GetProffitPerTime(e.Transport, buying_good, selling_good)
+				FrigateProfitPerTime := GetProffitPerTime(e.Frigate, buying_good, selling_good)
+				FreighterProfitPerTime := GetProffitPerTime(e.Freighter, buying_good, selling_good)
+				if TransportProfitPerTime <= 0 {
+					return
+				}
+
+				if result.TransportProfitPerTime == nil {
+					result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
+				} else if TransportProfitPerTime > *result.TransportProfitPerTime {
+					result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
+				}
+
+				if result.FrigateProfitPerTime == nil {
+					result.FrigateProfitPerTime = ptr.Ptr(FrigateProfitPerTime)
+				} else if FrigateProfitPerTime > *result.FrigateProfitPerTime {
+					result.FrigateProfitPerTime = ptr.Ptr(FrigateProfitPerTime)
+				}
+
+				if result.FreighterProfitPerTime == nil {
+					result.FreighterProfitPerTime = ptr.Ptr(FreighterProfitPerTime)
+				} else if FreighterProfitPerTime > *result.FreighterProfitPerTime {
+					result.FreighterProfitPerTime = ptr.Ptr(FreighterProfitPerTime)
+				}
+			})
 		}
 	}
 	return result

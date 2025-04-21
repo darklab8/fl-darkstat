@@ -60,7 +60,7 @@ func TestGetTrades(t *testing.T) {
 		// if base.Nickname != "zone_br05_gold_dummy_field" {
 		// 	continue
 		// }
-		for _, trade_route := range trade_path_exporter.GetBaseTradePaths(base) {
+		for _, trade_route := range trade_path_exporter.GetBaseTradePathsFrom(base) {
 			trade_route.Transport.Route.GetPaths()
 			trade_route.Frigate.Route.GetTimeMs()
 			KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)
