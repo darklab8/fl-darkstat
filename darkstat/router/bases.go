@@ -105,6 +105,18 @@ func (l *Router) LinkBases(
 				}, time.Minute*2+time.Second*5),
 				shared,
 				data,
+				tab.ShowEmpty(false),
+			),
+		),
+		builder.NewComponent( // move to back?
+			tab.AllItemsUrl(urls.TradeDeals),
+			front.TradeDeals(
+				cache.NewCached(func() []*configs_export.TradeDeal {
+					return data.GetBestTradeDeals(data.TradeBases)
+				}, time.Minute*2+time.Second*5),
+				shared,
+				data,
+				tab.ShowEmpty(true),
 			),
 		),
 		// top tables of ore and trades

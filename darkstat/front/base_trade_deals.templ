@@ -16,8 +16,9 @@ templ TradeDeals(
 		trade_routes *cache.Cached[[]*configs_export.TradeDeal],
 		shared *types.SharedData,
 		data *configs_export.Exporter,
+		mode tab.ShowEmpty,
 ) {
-    @TabMenu(urls.TradeDeals, tab.ShowEmpty(true), shared)
+    @TabMenu(urls.TradeDeals, mode, shared)
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable(){
