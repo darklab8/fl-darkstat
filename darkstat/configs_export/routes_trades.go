@@ -86,7 +86,7 @@ func newTradePathExporter(
 			}
 		}
 		return sell_locations_by_commodity
-	}, time.Minute)
+	}, time.Minute*2)
 
 	tp := &TradePathExporter{
 		Exporter:               e,
@@ -136,11 +136,6 @@ func (e *TradePathExporter) GetBaseTradePathsFrom(base *Base) []*ComboTradeRoute
 				continue
 			}
 
-			kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good_at_base)
-			if kilo_volumes < 5 {
-				continue
-			}
-
 			e.GetVolumedMarketGoods(buying_good, selling_good_at_base, func(copied_buying_good, copied_selling_good *MarketGood) {
 				trade_route := &ComboTradeRoute{
 					Transport: NewTradeRoute(e.Transport, copied_buying_good, copied_selling_good),
@@ -148,6 +143,10 @@ func (e *TradePathExporter) GetBaseTradePathsFrom(base *Base) []*ComboTradeRoute
 					Freighter: NewTradeRoute(e.Freighter, copied_buying_good, copied_selling_good),
 				}
 				if trade_route.Transport.GetProffitPerTime() <= 0 {
+					return
+				}
+				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good_at_base)
+				if kilo_volumes < 5 {
 					return
 				}
 				TradeRoutes = append(TradeRoutes, trade_route)
@@ -183,8 +182,7 @@ func (e *TradePathExporter) GetBaseTradePathsTo(base *Base) []*ComboTradeRoute {
 			if selling_good.ShipClass != nil || buying_good.ShipClass != nil {
 				continue
 			}
-			kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
-			if kilo_volumes < 5 {
+			if buying_good.FactionName == "Mining Field" {
 				continue
 			}
 
@@ -195,6 +193,10 @@ func (e *TradePathExporter) GetBaseTradePathsTo(base *Base) []*ComboTradeRoute {
 					Freighter: NewTradeRoute(e.Freighter, copied_buying_good, copied_selling_good),
 				}
 				if trade_route.Transport.GetProffitPerTime() <= 0 {
+					return
+				}
+				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
+				if kilo_volumes < 5 {
 					return
 				}
 				TradeRoutes = append(TradeRoutes, trade_route)
@@ -278,16 +280,17 @@ func (e *TradePathExporter) GetBaseBestPathFrom(base *Base) *BaseBestPathTimes {
 			if selling_good.ShipClass != nil || buying_good.ShipClass != nil {
 				continue
 			}
-			kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
-			if kilo_volumes < 5 {
-				continue
-			}
 
 			e.GetVolumedMarketGoods(buying_good, selling_good, func(copied_buying_good, copied_selling_good *MarketGood) {
 				TransportProfitPerTime := GetProffitPerTime(e.Transport, buying_good, selling_good)
 				FrigateProfitPerTime := GetProffitPerTime(e.Frigate, buying_good, selling_good)
 				FreighterProfitPerTime := GetProffitPerTime(e.Freighter, buying_good, selling_good)
 				if TransportProfitPerTime <= 0 {
+					return
+				}
+
+				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
+				if kilo_volumes < 5 {
 					return
 				}
 
@@ -335,8 +338,7 @@ func (e *TradePathExporter) GetBaseBestPathTo(base *Base) *BaseBestPathTimes {
 			if selling_good.ShipClass != nil || buying_good.ShipClass != nil {
 				continue
 			}
-			kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
-			if kilo_volumes < 5 {
+			if buying_good.FactionName == "Mining Field" {
 				continue
 			}
 			e.GetVolumedMarketGoods(buying_good, selling_good, func(copied_buying_good, copied_selling_good *MarketGood) {
@@ -344,6 +346,11 @@ func (e *TradePathExporter) GetBaseBestPathTo(base *Base) *BaseBestPathTimes {
 				FrigateProfitPerTime := GetProffitPerTime(e.Frigate, buying_good, selling_good)
 				FreighterProfitPerTime := GetProffitPerTime(e.Freighter, buying_good, selling_good)
 				if TransportProfitPerTime <= 0 {
+					return
+				}
+
+				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
+				if kilo_volumes < 5 {
 					return
 				}
 

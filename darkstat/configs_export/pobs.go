@@ -143,10 +143,10 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 				IsServerSideOverride: true,
 			}
 			if pob_good.BaseBuys() {
-				market_good.PriceBaseBuysFor = ptr.Ptr(pob_good.SellPrice)
+				market_good.PriceBaseBuysFor = ptr.Ptr(pob_good.PriceBaseBuysFor)
 			}
 			if pob_good.BaseSells() {
-				market_good.PriceBaseSellsFor = pob_good.Price
+				market_good.PriceBaseSellsFor = pob_good.PriceBaseSellsFor
 				market_good.BaseSells = true
 			}
 			if market_good.Category == "commodity" {
@@ -205,10 +205,10 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				item.TotalBuyableFromBases += pob.ShopItem.Quantity - pob.ShopItem.MinStock
 
 				if item.BestPriceToBuy == nil {
-					item.BestPriceToBuy = ptr.Ptr(pob.ShopItem.Price)
+					item.BestPriceToBuy = ptr.Ptr(pob.ShopItem.PriceBaseSellsFor)
 				}
-				if pob.ShopItem.Price < *item.BestPriceToBuy {
-					item.BestPriceToBuy = ptr.Ptr(pob.ShopItem.Price)
+				if pob.ShopItem.PriceBaseSellsFor < *item.BestPriceToBuy {
+					item.BestPriceToBuy = ptr.Ptr(pob.ShopItem.PriceBaseSellsFor)
 				}
 			}
 			if pob.ShopItem.BaseBuys() {
@@ -224,10 +224,10 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				item.TotalSellableToBases += sellable_to_current_base
 
 				if item.BestPriceToSell == nil {
-					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.SellPrice)
+					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.PriceBaseBuysFor)
 				}
-				if pob.ShopItem.SellPrice > *item.BestPriceToSell {
-					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.SellPrice)
+				if pob.ShopItem.PriceBaseBuysFor > *item.BestPriceToSell {
+					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.PriceBaseBuysFor)
 				}
 			}
 		}

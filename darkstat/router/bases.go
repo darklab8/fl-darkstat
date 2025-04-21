@@ -102,7 +102,7 @@ func (l *Router) LinkBases(
 			front.TradeDeals(
 				cache.NewCached(func() []*configs_export.TradeDeal {
 					return data.GetBestTradeDeals(data.TradeBases)
-				}, time.Minute),
+				}, time.Minute*2+time.Second*5),
 				shared,
 				data,
 			),
@@ -118,7 +118,7 @@ func (l *Router) LinkBases(
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
 					return front.GetBasesWithTradePathsFrom(configs_export.FilterToUserfulBases(data.TradeBases), data)
-				}, time.Minute)},
+				}, time.Minute*2+time.Second*10)},
 			),
 		),
 		builder.NewComponent( // move to back?
@@ -131,7 +131,7 @@ func (l *Router) LinkBases(
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
 					return front.GetBasesWithTradePathsFrom(data.TradeBases, data)
-				}, time.Minute)},
+				}, time.Minute*2+time.Second*15)},
 			),
 		),
 		builder.NewComponent( // move to back?
@@ -144,7 +144,7 @@ func (l *Router) LinkBases(
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
 					return front.GetBasesWithTradePathsTo(configs_export.FilterToUserfulBases(data.TradeBases), data)
-				}, time.Minute)},
+				}, time.Minute*2+time.Second*20)},
 			),
 		),
 		builder.NewComponent( // move to back?
@@ -157,7 +157,7 @@ func (l *Router) LinkBases(
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
 					return front.GetBasesWithTradePathsTo(data.TradeBases, data)
-				}, time.Minute)},
+				}, time.Minute*2+time.Second*25)},
 			),
 		),
 		builder.NewComponent( // move to back?
@@ -170,7 +170,7 @@ func (l *Router) LinkBases(
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
 					return front.GetBasesWithTradePathsFrom(configs_export.FitlerToUsefulOres(data.MiningOperations), data)
-				}, time.Minute)},
+				}, time.Minute*2+time.Second*30)},
 			),
 		),
 		builder.NewComponent( // move to back?
@@ -183,7 +183,7 @@ func (l *Router) LinkBases(
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
 					return front.GetBasesWithTradePathsFrom(data.MiningOperations, data)
-				}, time.Minute)},
+				}, time.Minute*2+time.Second*35)},
 			),
 		),
 

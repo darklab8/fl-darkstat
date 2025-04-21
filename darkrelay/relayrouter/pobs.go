@@ -58,7 +58,7 @@ func (l *Router) LinkPobs(
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(relayfront.PoBDetailedUrl(pob)),
-				relayfront.PoBShopItems(pob.Name, pob.ShopItems, pob.CargoSpaceLeft),
+				relayfront.PoBShopItems(pob.Name, pob.ShopItems, pob.CargoSpaceLeft, pob.Money),
 			),
 		)
 	}

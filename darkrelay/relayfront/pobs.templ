@@ -193,7 +193,7 @@ templ PoBShopItemsShared() {
 	</table>
 }
 
-templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpaceLeft *int) {
+templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpaceLeft *int, Money *int) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@PoBShopItemsShared() {
@@ -215,11 +215,11 @@ templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpac
 					@frmt.WriteGoodType(string(good.Category))
 				</td>
 				<td> { strconv.Itoa(good.Quantity) }</td>
-				<td> { strconv.Itoa(good.SellPrice) }</td>
-				<td> { strconv.Itoa(good.Price) }</td>
+				<td> { strconv.Itoa(good.PriceBaseBuysFor) }</td>
+				<td> { strconv.Itoa(good.PriceBaseSellsFor) }</td>
 				@FormatPoBSells(good)
-				<td> { SellsKiloVolumes(good, good.Volume) }</td>
-				<td> { BuysKiloVolumes(good, good.Volume, good.OriginalVolume, CargoSpaceLeft) } </td>
+				<td> { SellsKiloVolumes(good, good.Volume, Money) }</td>
+				<td> { BuysKiloVolumes(good, good.Volume, good.OriginalVolume, CargoSpaceLeft, Money) } </td>
 				<td>{ fmt.Sprintf("%.2f", good.Volume) }</td>
 				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
 				<td> { strconv.Itoa(good.MinStock) }</td>

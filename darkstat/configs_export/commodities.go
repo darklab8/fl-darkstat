@@ -267,8 +267,8 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 					GoodInfo:             e.GetGoodInfo(commodity.Nickname),
 					BaseSells:            good.Quantity > good.MinStock,
 					IsServerSideOverride: true,
-					PriceBaseBuysFor:     ptr.Ptr(good.SellPrice),
-					PriceBaseSellsFor:    good.Price,
+					PriceBaseBuysFor:     ptr.Ptr(good.PriceBaseBuysFor),
+					PriceBaseSellsFor:    good.PriceBaseSellsFor,
 					Volume:               commodity.Volume,
 					ShipClass:            commodity.ShipClass,
 					BaseInfo: BaseInfo{

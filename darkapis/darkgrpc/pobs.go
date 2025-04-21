@@ -69,8 +69,8 @@ func NewShopItem(item *configs_export.ShopItem) *pb.ShopItem {
 		Category:  item.Category,
 		Id:        int64(item.Id),
 		Quantity:  int64(item.Quantity),
-		Price:     int64(item.Price),
-		SellPrice: int64(item.SellPrice),
+		Price:     int64(item.PriceBaseSellsFor),
+		SellPrice: int64(item.PriceBaseBuysFor),
 		MinStock:  int64(item.MinStock),
 		MaxStock:  int64(item.MaxStock),
 	}
