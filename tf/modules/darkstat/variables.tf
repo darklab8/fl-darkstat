@@ -10,6 +10,10 @@ locals {
     DARKSTAT_SITE_HOST          = "https://${var.stat_prefix}.${var.zone}"
     DARKSTAT_FLDARKSTAT_HEADING = var.FLDARKSTAT_HEADING # Optional for phrases at the top of Darkstat interface
 
+     # sending traffic to backend more for more up to date picture. Relying on CDN for performance
+     # cache "https://${var.stat_prefix}.${var.zone}/cdn/*" and "https://${var.stat_prefix}.${var.zone}/all_cdn/*" and "https://${var.stat_prefix}.${var.zone}/static/*" i guess too
+    DARKSTAT_STAT_BACK_IS_PREFERED = "true"
+
     // grpc debugging
     GRPC_TRACE                  = "all"
     GRPC_VERBOSITY              = "DEBUG"

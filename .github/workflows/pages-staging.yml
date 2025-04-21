@@ -55,6 +55,7 @@ jobs:
         CONFIGS_FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
         DARKSTAT_FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
         DARKSTAT_RELAY_HOST: https://darkrelay-staging.dd84ai.com
+        DARKSTAT_STAT_BACK_IS_PREFERED: "true"
     - name: Upload artifacts for deployment to Github Pages
       uses: actions/upload-pages-artifact@v3
       with:
