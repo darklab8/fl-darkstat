@@ -45,9 +45,11 @@ func TestGetTrades(t *testing.T) {
 		wg.Done()
 	}()
 
-	// e.Bases = append(e.Bases, e.GetBases()...)
-	// e.Bases = append(e.Bases, mining_bases...)
-	e.Bases = append(e.Bases, e.PoBsToBases(e.GetPoBs())...)
+	e.Bases = e.GetBases()
+	e.Bases = append(e.Bases, mining_bases...)
+	if e.Mapped.Discovery != nil {
+		e.Bases = append(e.Bases, e.PoBsToBases(e.GetPoBs())...)
+	}
 	wg.Wait()
 
 	trade_path_exporter := newTradePathExporter(

@@ -303,6 +303,10 @@ func NewHashesCategories(Mapped *configs_mapped.MappedConfigs) HashesByCat {
 func (e *ExporterRelay) GetPoBs() []*PoB {
 	var pobs []*PoB
 
+	if e.Mapped.Discovery == nil {
+		return pobs
+	}
+
 	for _, pob_info := range e.Mapped.Discovery.PlayerOwnedBases.Bases {
 
 		var pob *PoB = &PoB{
