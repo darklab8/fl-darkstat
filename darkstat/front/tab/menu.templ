@@ -133,6 +133,7 @@ type Buttn struct {
 	direct_button_url bool
 
 	is_relay bool
+	is_stat_back_prefered bool
 	extra_style string
 	attrs templ.Attributes
 }
@@ -141,6 +142,13 @@ type ButtnOpt func(s *Buttn)
 func WithRelay() ButtnOpt{
 	return func(s *Buttn) {
 		s.is_relay = true
+	}
+}
+func WithStatBackPrefered() ButtnOpt{
+	return func(s *Buttn) {
+		if settings.Env.StatBackIsPreferedAllow {
+			s.is_stat_back_prefered = true
+		}
 	}
 }
 func WithStyle(style string) ButtnOpt{
@@ -204,6 +212,10 @@ func NewButtn(
 func (opt *Buttn) HxGet() string {
 	if opt.is_relay {
 		return types.GetCtx(opt.ctx).RelayHost + types.GetCtx(opt.ctx).RelayRoot + opt.get_url.ToString()
+	} 
+
+	if opt.is_stat_back_prefered && types.GetCtx(opt.ctx).SiteHost != "" {
+		return types.GetCtx(opt.ctx).SiteHost + types.GetCtx(opt.ctx).SiteRoot + opt.get_url.ToString()
 	} 
 
 	return types.GetCtx(opt.ctx).SiteRoot + opt.get_url.ToString()

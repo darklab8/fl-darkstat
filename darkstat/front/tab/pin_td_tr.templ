@@ -4,6 +4,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"context"
 )
 
@@ -140,6 +141,7 @@ type Tr struct {
 	pinm PinMod
 	is_tranport_unreachable bool
 	from_relay bool
+	is_stat_back_prefered bool
 }
 type TrOpt func(t *Tr)
 
@@ -152,6 +154,14 @@ func WithTransportUnreachable(is_tranport_unreachable bool) TrOpt {
 func WithFromRelay() TrOpt {
 	return func(t *Tr) {
 		t.from_relay = true
+	}
+}
+
+func WithStatBackPrefer(value bool) TrOpt {
+	return func(t *Tr) {
+		if settings.Env.StatBackIsPreferedAllow {
+			t.is_stat_back_prefered = value
+		}
 	}
 }
 
@@ -184,6 +194,10 @@ templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
 func GetSiteRoot(tr *Tr, ctx context.Context) string {
 	if tr.from_relay {
 		return types.GetCtx(ctx).RelayHost + types.GetCtx(ctx).RelayRoot
+	}
+
+	if tr.is_stat_back_prefered && types.GetCtx(ctx).SiteHost != "" {
+		return types.GetCtx(ctx).SiteHost + types.GetCtx(ctx).SiteRoot
 	}
 
 	return types.GetCtx(ctx).SiteRoot

@@ -44,23 +44,26 @@ func TestGetTrades(t *testing.T) {
 		e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true), mining_bases_by_system, graph_options)
 		wg.Done()
 	}()
-	e.Bases = e.GetBases()
-	e.Bases = append(e.Bases, mining_bases...)
+
+	// e.Bases = append(e.Bases, e.GetBases()...)
+	// e.Bases = append(e.Bases, mining_bases...)
+	e.Bases = append(e.Bases, e.PoBsToBases(e.GetPoBs())...)
 	wg.Wait()
 
 	trade_path_exporter := newTradePathExporter(
 		e,
-		e.Commodities,
 		e.Bases,
+		[]*Base{},
 	)
 
 	for _, base := range e.Bases {
-		if base.Nickname != "zone_br05_gold_dummy_field" {
-			continue
-		}
+		// if base.Nickname != "zone_br05_gold_dummy_field" {
+		// 	continue
+		// }
 		for _, trade_route := range trade_path_exporter.GetBaseTradePaths(base) {
 			trade_route.Transport.Route.GetPaths()
 			trade_route.Frigate.Route.GetTimeMs()
+			KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)
 		}
 	}
 

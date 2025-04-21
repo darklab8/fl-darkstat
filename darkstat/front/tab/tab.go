@@ -11,7 +11,7 @@ import (
 type ShowEmpty bool
 
 func InfocardURL(infocard_key configs_export.InfocardKey) string {
-	return "infocards/info_" + strings.ToLower(string(infocard_key))
+	return "cdn/infocards/info_" + strings.ToLower(string(infocard_key))
 }
 
 func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {

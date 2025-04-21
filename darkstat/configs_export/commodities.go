@@ -23,6 +23,8 @@ type MarketGood struct {
 	NotBuyable             bool `json:"_" swaggerignore:"true"`
 	IsTransportUnreachable bool `json:"_" swaggerignore:"true"`
 
+	PoBGood *ShopItem
+
 	BaseInfo
 }
 
@@ -252,9 +254,10 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 			},
 		}
 		goods_per_base[BaseLootableNickname] = good_to_add
-
 	}
 
+	// this thing propagates data to commodities. hmm. needs to be refreshing.
+	// Also missing defined PoB good.
 	if e.Mapped.Discovery != nil {
 		pob_buyable := e.get_pob_buyable()
 		if goods, ok := pob_buyable[commodity.Nickname]; ok {

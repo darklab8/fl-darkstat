@@ -1,9 +1,11 @@
 package configs_export
 
 import (
+	"math"
 	"sort"
+	"time"
 
-	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkstat/cache"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -54,35 +56,35 @@ type ComboTradeRoute struct {
 
 type TradePathExporter struct {
 	*Exporter
-	commodity_by_nick          map[CommodityKey]*Commodity
-	commodity_by_good_and_base map[CommodityKey]map[cfg.BaseUniNick]*MarketGood
-	commodity_bases            []*Base
+	sell_locations_by_base *cache.Cached[map[CommodityKey][]*MarketGood]
 }
 
 func newTradePathExporter(
 	e *Exporter,
-	commodities []*Commodity,
-	commodity_bases []*Base,
+	Bases []*Base,
+	MiningOperations []*Base,
 ) *TradePathExporter {
-	var commodity_by_nick map[CommodityKey]*Commodity = make(map[CommodityKey]*Commodity)
-	var commodity_by_good_and_base map[CommodityKey]map[cfg.BaseUniNick]*MarketGood = make(map[CommodityKey]map[cfg.BaseUniNick]*MarketGood)
+	var sell_locations_by_commodity *cache.Cached[map[CommodityKey][]*MarketGood]
 
-	for _, commodity := range commodities {
-		commodity_key := GetCommodityKey(commodity.Nickname, commodity.ShipClass)
-		commodity_by_nick[commodity_key] = commodity
-		if _, ok := commodity_by_good_and_base[commodity_key]; !ok {
-			commodity_by_good_and_base[commodity_key] = make(map[cfg.BaseUniNick]*MarketGood)
+	sell_locations_by_commodity = cache.NewCached(func() map[CommodityKey][]*MarketGood {
+		BasesFromPobs := e.PoBsToBases(e.GetPoBs())
+
+		var commodity_bases []*Base = []*Base{}
+		commodity_bases = append(append(Bases, BasesFromPobs...), MiningOperations...)
+
+		sell_locations_by_commodity := make(map[CommodityKey][]*MarketGood)
+		for _, base := range commodity_bases {
+			for _, market_good := range base.MarketGoodsPerNick {
+				commodity_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
+				sell_locations_by_commodity[commodity_key] = append(sell_locations_by_commodity[commodity_key], market_good)
+			}
 		}
-		for _, good_at_base := range commodity.Bases {
-			commodity_by_good_and_base[commodity_key][good_at_base.BaseNickname] = good_at_base
-		}
-	}
+		return sell_locations_by_commodity
+	}, time.Minute)
 
 	tp := &TradePathExporter{
-		Exporter:                   e,
-		commodity_by_nick:          commodity_by_nick,
-		commodity_by_good_and_base: commodity_by_good_and_base,
-		commodity_bases:            commodity_bases,
+		Exporter:               e,
+		sell_locations_by_base: sell_locations_by_commodity,
 	}
 	return tp
 }
@@ -100,25 +102,45 @@ var (
 	MaxKilVolumes float64 = 999
 )
 
+func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) float64 {
+	if buying_good.PoBGood == nil && selling_good.PoBGood == nil {
+		return MaxKilVolumes
+	}
+
+	if buying_good.PoBGood != nil {
+		if buying_good.PoBGood.Quantity <= buying_good.PoBGood.MinStock {
+			return 0
+		}
+
+		return (float64(buying_good.PoBGood.Quantity-buying_good.PoBGood.MinStock) * buying_good.Volume) / KiloVolume
+	}
+
+	if selling_good.PoBGood != nil {
+		if selling_good.PoBGood.Quantity >= selling_good.PoBGood.MaxStock {
+			return 0
+		}
+
+		return (float64(selling_good.PoBGood.MaxStock-selling_good.PoBGood.Quantity) * selling_good.Volume) / KiloVolume
+	}
+
+	a := (float64(buying_good.PoBGood.Quantity-buying_good.PoBGood.MinStock) * buying_good.Volume) / KiloVolume
+	b := (float64(selling_good.PoBGood.MaxStock-selling_good.PoBGood.Quantity) * selling_good.Volume) / KiloVolume
+	return math.Min(a, b)
+}
 
 func (e *TradePathExporter) GetBaseTradePaths(base *Base) []*ComboTradeRoute {
 	var TradeRoutes []*ComboTradeRoute
 
-	for _, good := range base.MarketGoodsPerNick {
-		if good.Category != "commodity" {
+	for _, buying_good := range base.MarketGoodsPerNick {
+		if buying_good.Category != "commodity" {
 			continue
 		}
-		if !good.BaseSells {
+		if !buying_good.BaseSells {
 			continue
 		}
-		commodity_key := GetCommodityKey(good.Nickname, good.ShipClass)
-		commodity := e.commodity_by_nick[commodity_key]
-		buying_good := e.commodity_by_good_and_base[commodity_key][base.Nickname]
-
-		if buying_good == nil {
-			continue
-		}
-		for _, selling_good_at_base := range commodity.Bases {
+		commodity_key := GetCommodityKey(buying_good.Nickname, buying_good.ShipClass)
+		commodity_selling_bases := e.sell_locations_by_base.Get()[commodity_key]
+		for _, selling_good_at_base := range commodity_selling_bases {
 			if buying_good.Nickname == selling_good_at_base.Nickname && buying_good.ShipClass != selling_good_at_base.ShipClass {
 				continue
 			}
@@ -155,21 +177,20 @@ type BaseBestPathTimes struct {
 
 func (e *TradePathExporter) GetBaseBestPath(base *Base) *BaseBestPathTimes {
 	var result *BaseBestPathTimes = &BaseBestPathTimes{}
-	for _, good := range base.MarketGoodsPerNick {
-		if good.Category != "commodity" {
+	for _, buying_good := range base.MarketGoodsPerNick {
+		if buying_good.Category != "commodity" {
 			continue
 		}
-		if !good.BaseSells {
+		if !buying_good.BaseSells {
 			continue
 		}
-		commodity_key := GetCommodityKey(good.Nickname, good.ShipClass)
-		commodity := e.commodity_by_nick[commodity_key]
-		buying_good := e.commodity_by_good_and_base[commodity_key][base.Nickname]
+		commodity_key := GetCommodityKey(buying_good.Nickname, buying_good.ShipClass)
+		commodity_selling_bases := e.sell_locations_by_base.Get()[commodity_key]
 
 		if buying_good == nil {
 			continue
 		}
-		for _, selling_good_at_base := range commodity.Bases {
+		for _, selling_good_at_base := range commodity_selling_bases {
 			TransportProfitPerTime := GetProffitPerTime(e.Transport, buying_good, selling_good_at_base)
 			FrigateProfitPerTime := GetProffitPerTime(e.Frigate, buying_good, selling_good_at_base)
 			FreighterProfitPerTime := GetProffitPerTime(e.Freighter, buying_good, selling_good_at_base)

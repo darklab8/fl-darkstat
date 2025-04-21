@@ -22,7 +22,7 @@ func PoBGoodDetailedUrl(good *configs_export.PoBGood) string {
 		ship_class = strconv.Itoa(int(*good.ShipClass))
 	}
 
-	return "pob_good/pob_good_" + strings.ToLower(good.Nickname) + ship_class
+	return "cdn/pob_good/pob_good_" + strings.ToLower(good.Nickname) + ship_class
 }
 
 templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared *types.SharedData) {

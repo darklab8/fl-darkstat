@@ -64,12 +64,14 @@ func (l *Router) LinkBases(
 	}
 
 	for _, base := range data.TradeBases {
+		// bottom table info trade routes!! Important.
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
 				front.BaseTrades(base.Name, base, front.BaseTabTrades, shared, data),
 			),
 		)
+		// bottom table info for all routes. Important.
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseAllRoutes)),
@@ -77,9 +79,10 @@ func (l *Router) LinkBases(
 			),
 		)
 
+		// All travel route infocards
 		for _, combo_route := range data.GetTravelRoutes(base) {
 			build.RegComps(
-				builder.NewComponent(
+				builder.NewComponent( // probably move to back, at least for RAM reasons
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
 					front.TradeRouteInfo2(combo_route.Transport.FromBase, combo_route.Freighter.ToBase, data, shared),
 				),
@@ -88,7 +91,8 @@ func (l *Router) LinkBases(
 	}
 
 	build.RegComps(
-		builder.NewComponent(
+		// top tables of ore and trades
+		builder.NewComponent( // move to back?
 			urls.Trades,
 			front.BasesT(
 				configs_export.FilterToUserfulBases(data.TradeBases),
@@ -101,7 +105,7 @@ func (l *Router) LinkBases(
 				}, time.Minute)},
 			),
 		),
-		builder.NewComponent(
+		builder.NewComponent( // move to back?
 			tab.AllItemsUrl(urls.Trades),
 			front.BasesT(
 				data.TradeBases,
@@ -114,7 +118,7 @@ func (l *Router) LinkBases(
 				}, time.Minute)},
 			),
 		),
-		builder.NewComponent(
+		builder.NewComponent( // move to back?
 			urls.Asteroids,
 			front.BasesT(
 				configs_export.FitlerToUsefulOres(data.MiningOperations),
@@ -127,7 +131,7 @@ func (l *Router) LinkBases(
 				}, time.Minute)},
 			),
 		),
-		builder.NewComponent(
+		builder.NewComponent( // move to back?
 			tab.AllItemsUrl(urls.Asteroids),
 			front.BasesT(
 				data.MiningOperations,
@@ -140,6 +144,7 @@ func (l *Router) LinkBases(
 				}, time.Minute)},
 			),
 		),
+
 		builder.NewComponent(
 			urls.TravelRoutes,
 			front.BasesT(configs_export.FilterToUserfulBases(data.TravelBases), front.BaseAllRoutes, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
@@ -151,16 +156,17 @@ func (l *Router) LinkBases(
 	)
 
 	for _, base := range data.MiningOperations {
-		build.RegComps(
+		// Ore routes bottom table. Important.
+		build.RegComps( // move to back?
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOres)),
 				front.BaseTrades(base.Name, base, front.BaseTabOres, shared, data),
 			),
 		)
 
-		for _, combo_route := range data.GetBaseTradePaths(base) {
+		for _, combo_route := range data.GetBaseTradePaths(base) { // infocards for mining.
 			build.RegComps(
-				builder.NewComponent(
+				builder.NewComponent( // probably move to back?
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
 					front.TradeRouteInfo3(combo_route.Freighter.BuyingGood, combo_route.Freighter.SellingGood, data, shared),
 				),

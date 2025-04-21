@@ -14,7 +14,7 @@ import (
 )
 
 func PoBDetailedUrl(pob *configs_export.PoB) string {
-	return "pob/pob_" + strings.ToLower(pob.Nickname)
+	return "cdn/pob/pob_" + strings.ToLower(pob.Nickname)
 }
 
 func FmtPtrString(value *string) string {

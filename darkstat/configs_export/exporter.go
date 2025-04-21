@@ -324,8 +324,8 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 
 	e.TradePathExporter = newTradePathExporter(
 		e,
-		e.Commodities,
-		append(e.TradeBases, e.MiningOperations...),
+		e.Bases,
+		e.MiningOperations,
 	)
 
 	e.EnhanceBasesWithIsTransportReachable(e.Bases, e.Transport, e.Freighter)

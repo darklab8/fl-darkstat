@@ -137,6 +137,7 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 
 		for _, pob_good := range pob.ShopItems {
 			market_good := &MarketGood{
+				PoBGood:              pob_good,
 				GoodInfo:             e.GetGoodInfo(pob_good.Nickname),
 				IsServerSideOverride: true,
 			}
@@ -152,8 +153,18 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 				for _, volume := range equipment.Volumes {
 					var volumed_good *MarketGood = &MarketGood{}
 					*volumed_good = *market_good
+					volumed_good.PoBGood = market_good.PoBGood
 					volumed_good.Volume = volume.Volume.Get()
 					volumed_good.ShipClass = volume.GetShipClass()
+					volumed_good.BaseInfo = BaseInfo{
+						BaseNickname: base.Nickname,
+						BaseName:     base.Name,
+						SystemName:   base.System,
+						FactionName:  base.FactionName,
+						Region:       base.Region,
+						BasePos:      base.Pos,
+						SectorCoord:  base.SectorCoord,
+					}
 					base.MarketGoodsPerNick[GetCommodityKey(volumed_good.Nickname, volumed_good.ShipClass)] = volumed_good
 				}
 			} else {
@@ -368,7 +379,7 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 					good.OriginalVolume = equip.Volume.Get()
 
 				}
-			pob.ShopItems = append(pob.ShopItems, good)
+				pob.ShopItems = append(pob.ShopItems, good)
 			}
 		}
 

@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"math"
 	"strconv"
 	"strings"
@@ -19,17 +20,16 @@ import (
 func BaseDetailedUrl(base *configs_export.Base, tab_mode BaseMode) string {
 
 	if tab_mode == BaseShowShops {
-		return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/marketgoods/mg_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseShowMissions {
-		return "bases/missions/msns_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/missions/msns_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseTabTrades {
-		return "bases/trades/trades_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/trades/trades_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseTabOres {
-		return "bases/ores/ore_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/ores/ore_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseAllRoutes {
-		return "bases/routes/route_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/routes/route_" + strings.ToLower(base.Nickname.ToStr())
 	}
-
 	panic("not supported mode for base")
 }
 
@@ -180,7 +180,13 @@ func GetBasesWithTradePaths(bases []*configs_export.Base, data *configs_export.E
 }
 
 templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, shared *types.SharedData, routes *configs_export.BaseBestPathTimes) {
-	@tab.TrFromMain(tab.NewTr(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm, tab.WithTransportUnreachable(base.IsTransportUnreachable))) {
+	@tab.TrFromMain(tab.NewTr(
+			base.Nickname.ToStr(),
+			BaseDetailedUrl(base, tab_mode),
+			pinm,
+			tab.WithTransportUnreachable(base.IsTransportUnreachable),
+			tab.WithStatBackPrefer(tab_mode == BaseTabTrades || tab_mode == BaseTabOres),
+		)) {
 		@tab.PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@tab.PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		if tab_mode != BaseTabOres {
@@ -548,6 +554,12 @@ templ BaseTradesShared(shared *types.SharedData) {
 					<th style="width:50px;">
 						@frmt.MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
 					</th>
+					if settings.Env.StatBackIsPreferedAllow {
+						<th style="width:25px;">
+							@frmt.MultiLinestring([]string{"kilo","volumes","to trade"})
+						</th>
+					}
+					
 				}
 				<th style="width:50px;">
 					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
@@ -630,11 +642,16 @@ templ BaseTrades(name string, base *configs_export.Base, tab_mode BaseMode, shar
 						{ trade_route.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.SellingGood.ShipClass) }
 					}
 				</td>
-				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
+				<td class="route_transport">{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
 				if shared.ShowDisco {
-					<td class="route_frigate" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
-					<td class="route_freighter" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
-				}
+					<td class="route_frigate">{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
+					<td class="route_freighter">{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+					if settings.Env.StatBackIsPreferedAllow {
+						<td>
+							{   fmt.Sprintf("%.1f",configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)) }
+						</td>
+					}
+				} 
 				<td>
 					<span class="tooltip">
 						@TradeRouteHumanTime(trade_route.Transport.Route)

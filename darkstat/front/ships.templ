@@ -15,9 +15,9 @@ import (
 
 func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 	if mode == ShipShowBases {
-		return "ships/ships_base_" + strings.ToLower(ship.Nickname)
+		return "cdn/ships/ships_base_" + strings.ToLower(ship.Nickname)
 	} else if mode == ShipShowDetails {
-		return "ships/ships_details_" + strings.ToLower(ship.Nickname)
+		return "cdn/ships/ships_details_" + strings.ToLower(ship.Nickname)
 	}
 
 	panic("unsupported ship mode")

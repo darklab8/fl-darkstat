@@ -13,7 +13,7 @@ import (
 )
 
 func ThrusterDetailedUrl(thruster configs_export.Thruster) string {
-	return "thrusters/thruster_base_" + strings.ToLower(thruster.Nickname)
+	return "cdn/thrusters/thruster_base_" + strings.ToLower(thruster.Nickname)
 }
 
 templ ThrustersTable(thrusters []configs_export.Thruster, pinm tab.PinMod, shared *types.SharedData) {
