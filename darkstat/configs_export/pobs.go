@@ -138,6 +138,7 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 		for _, pob_good := range pob.ShopItems {
 			market_good := &MarketGood{
 				PoBGood:              pob_good,
+				PoB:                  pob,
 				GoodInfo:             e.GetGoodInfo(pob_good.Nickname),
 				IsServerSideOverride: true,
 			}

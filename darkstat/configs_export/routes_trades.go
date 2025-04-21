@@ -102,37 +102,6 @@ func (e *TradePathExporter) GetBaseTradePathsFiltered(TradeRoutes []*ComboTradeR
 	return TradeRoutes
 }
 
-var (
-	KiloVolume    float64 = 1000
-	MaxKilVolumes float64 = 100
-)
-
-func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) float64 {
-	if buying_good.PoBGood == nil && selling_good.PoBGood == nil {
-		return MaxKilVolumes
-	}
-
-	if buying_good.PoBGood != nil {
-		if buying_good.PoBGood.Quantity <= buying_good.PoBGood.MinStock {
-			return 0
-		}
-
-		return math.Min(MaxKilVolumes, (float64(buying_good.PoBGood.Quantity-buying_good.PoBGood.MinStock)*buying_good.Volume)/KiloVolume)
-	}
-
-	if selling_good.PoBGood != nil {
-		if selling_good.PoBGood.Quantity >= selling_good.PoBGood.MaxStock {
-			return 0
-		}
-
-		return math.Min(MaxKilVolumes, (float64(selling_good.PoBGood.MaxStock-selling_good.PoBGood.Quantity)*selling_good.Volume)/KiloVolume)
-	}
-
-	a := (float64(buying_good.PoBGood.Quantity-buying_good.PoBGood.MinStock) * buying_good.Volume) / KiloVolume
-	b := (float64(selling_good.PoBGood.MaxStock-selling_good.PoBGood.Quantity) * selling_good.Volume) / KiloVolume
-	return math.Min(MaxKilVolumes, math.Min(a, b))
-}
-
 func (e *TradePathExporter) GetVolumedMarketGoods(buying_good *MarketGood, selling_good *MarketGood, callback func(*MarketGood, *MarketGood)) {
 	if commodity, ok := e.Mapped.Equip().CommoditiesMap[buying_good.Nickname]; ok {
 		// then it is commodity that can be duplicated through volumes

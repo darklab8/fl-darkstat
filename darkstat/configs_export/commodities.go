@@ -24,6 +24,7 @@ type MarketGood struct {
 	IsTransportUnreachable bool `json:"_" swaggerignore:"true"`
 
 	PoBGood *ShopItem
+	PoB     *PoB
 
 	BaseInfo
 }
