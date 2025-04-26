@@ -9,7 +9,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"math"
 	"strconv"
 	"strings"
@@ -210,7 +209,6 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 			BaseDetailedUrl(base, tab_mode),
 			pinm,
 			tab.WithTransportUnreachable(base.IsTransportUnreachable),
-			tab.WithStatBackPrefer(tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo || tab_mode == BaseTabOres),
 		)) {
 		@tab.PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@tab.PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
@@ -581,12 +579,9 @@ templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 					<th style="width:50px;">
 						@frmt.MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
 					</th>
-					if settings.Env.StatBackIsPreferedAllow {
-						<th style="width:25px;">
-							@frmt.MultiLinestring([]string{"kilo","volumes","to trade"})
-						</th>
-					}
-					
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"kilo","volumes","to trade"})
+					</th>
 				}
 				<th style="width:50px;">
 					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
@@ -704,11 +699,9 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 		if shared.ShowDisco {
 			<td class="route_frigate">{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
 			<td class="route_freighter">{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
-			if settings.Env.StatBackIsPreferedAllow {
-				<td>
-					{   fmt.Sprintf("%.1f",configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)) }
-				</td>
-			}
+			<td>
+				{   fmt.Sprintf("%.1f",configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)) }
+			</td>
 		} 
 		<td>
 			<span class="tooltip">

@@ -4,7 +4,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"context"
 )
 
@@ -157,14 +156,6 @@ func WithFromRelay() TrOpt {
 	}
 }
 
-func WithStatBackPrefer(value bool) TrOpt {
-	return func(t *Tr) {
-		if settings.Env.StatBackIsPreferedAllow {
-			t.is_stat_back_prefered = value
-		}
-	}
-}
-
 func NewTr(nickname string, detailed_url string, pinm PinMod, opts ...TrOpt) *Tr {
 	t := &Tr{
 		nickname: nickname,
@@ -194,10 +185,6 @@ templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
 func GetSiteRoot(tr *Tr, ctx context.Context) string {
 	if tr.from_relay {
 		return types.GetCtx(ctx).RelayHost + types.GetCtx(ctx).RelayRoot
-	}
-
-	if tr.is_stat_back_prefered && types.GetCtx(ctx).SiteHost != "" {
-		return types.GetCtx(ctx).SiteHost + types.GetCtx(ctx).SiteRoot
 	}
 
 	return types.GetCtx(ctx).SiteRoot
