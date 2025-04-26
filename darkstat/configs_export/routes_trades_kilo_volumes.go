@@ -1,7 +1,6 @@
 package configs_export
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -31,10 +30,6 @@ func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) f
 	}
 
 	if selling_good.PoBGood != nil {
-		if selling_good.PoB.Nickname == "cayman_research_institute" && selling_good.Nickname == "commodity_high_temp_alloys" {
-			fmt.Println()
-		}
-
 		if selling_good.PoBGood.Quantity >= selling_good.PoBGood.MaxStock {
 			selling_kilo_volume = 0
 		} else {

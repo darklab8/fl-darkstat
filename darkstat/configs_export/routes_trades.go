@@ -218,8 +218,9 @@ const LimitBestPaths = 1500
 func (e *TradePathExporter) GetBestTradeDeals(bases []*Base) []*TradeDeal {
 	var trade_deals []*TradeDeal
 
+	len_bases := len(bases)
 	for index, base := range bases {
-		fmt.Println("base_", index, "is processed for trade detals")
+		fmt.Println("base_", index, "/", len_bases, " is processed for trade detals")
 		trade_routes := e.GetBaseTradePathsFrom(base)
 		for _, trade_route := range trade_routes {
 			profit_per_time := trade_route.Transport.GetProffitPerTime()

@@ -93,7 +93,8 @@ func (b *Builder) BuildAll(to_mem bool, filesystem *Filesystem) *Filesystem {
 
 	timeit.NewTimerF(func() {
 		chunked_components := chunkSlice(b.components, 10000)
-		fmt.Println("components chunks", len(chunked_components))
+		len_comps := len(chunked_components)
+		fmt.Println("components chunks", len_comps)
 		for chunk_index, components_chunk := range chunked_components {
 
 			if to_mem {
@@ -115,7 +116,7 @@ func (b *Builder) BuildAll(to_mem bool, filesystem *Filesystem) *Filesystem {
 				}
 			}
 
-			fmt.Println("finished chunk=", chunk_index)
+			fmt.Println("finished chunk=", chunk_index, "/", len_comps)
 		}
 
 	}, timeit.WithMsg("wrote components"))
