@@ -648,7 +648,7 @@ templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Nav", "Map"})
 				</th>
-				if tab_mode == BaseTabTradesFrom {
+				if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabOres {
 					<th style="width:100px;">Dest. Faction</th>
 					<th style="width:100px;">Dest. Name</th>
 					<th style="width:100px;">Dest. Region</th>
@@ -666,7 +666,7 @@ templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 					@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
 				</th>
 				<th style="width:50px;">Commodity Nick</th>
-				if tab_mode == BaseTabTradesFrom {
+				if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabOres {
 					<th style="width:50px;">Dest. Nickname</th>
 					<th style="width:50px;">Dest.X</th>
 					<th style="width:50px;">Dest.Y</th>
@@ -791,7 +791,7 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 		if shared.ShowDisco {
 			<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.SellingGood.ShipClass) }</td>
 		}
-		if tab_mode == BaseTabTradesFrom {
+		if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabOres {
 			<td>
 				@frmt.WriteSystemName(trade_route.Transport.SellingGood.SystemName)
 			</td>
