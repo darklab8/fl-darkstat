@@ -23,6 +23,7 @@ resource "docker_service" "darkstat" {
   task_spec {
     networks_advanced {
       name = docker_network.network.id
+      aliases = ["darkstat"]
     }
     networks_advanced {
       name = data.docker_network.caddy.id
@@ -91,7 +92,7 @@ resource "docker_service" "darkstat" {
     }
     resources {
       limits {
-        memory_bytes = 1000 * 1000 * 3000 # 1 gb
+        memory_bytes = 1000 * 1000 * 5000 # 3 gb
       }
     }
   }

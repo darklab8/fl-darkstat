@@ -3,6 +3,7 @@ package configs_export
 import (
 	"fmt"
 	"math"
+	"runtime"
 	"sort"
 	"time"
 
@@ -248,11 +249,16 @@ func (e *TradePathExporter) GetBestTradeDeals(bases []*Base) []*TradeDeal {
 			})
 			trade_deals = trade_deals[:LimitBestPaths]
 		}
+
+		if index%100 == 0 {
+			runtime.GC()
+		}
 	}
 	sort.Slice(trade_deals, func(i, j int) bool {
 		return trade_deals[i].ProfitWeight > trade_deals[j].ProfitWeight
 	})
 	trade_deals = trade_deals[:LimitBestPaths]
+	runtime.GC()
 	return trade_deals
 }
 
