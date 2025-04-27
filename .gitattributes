@@ -2,4 +2,7 @@ sortable.js linguist-vendored
 htmx.* linguist-vendored
 *.templ linguist-language=go
 darkmap/docs/experiment/** linguist-vendored
-configs/docs/inspiration/** linguist-vendored
+configs/docs/** linguist-vendored
+configs/configs_mapped/freelancer_mapped/exe_mapped/testdata/dll_reader.py linguist-vendored
+grpc_python/** linguist-vendored
+configs/configs_mapped/parserutils/bini/bini.py linguist-vendored
