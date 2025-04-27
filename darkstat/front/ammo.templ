@@ -12,7 +12,7 @@ import (
 )
 
 func AmmoDetailedUrl(ammo configs_export.Ammo) string {
-	return "ammo/ammo_base_" + strings.ToLower(ammo.Nickname)
+	return "cdn/ammo/ammo_base_" + strings.ToLower(ammo.Nickname)
 }
 
 templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.SharedData) {

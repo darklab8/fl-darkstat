@@ -10,6 +10,8 @@ locals {
     DARKSTAT_SITE_HOST          = "https://${var.stat_prefix}.${var.zone}"
     DARKSTAT_FLDARKSTAT_HEADING = var.FLDARKSTAT_HEADING # Optional for phrases at the top of Darkstat interface
 
+    DARKCORE_CACHE_CONTROL = "max-age=600"
+
     // grpc debugging
     GRPC_TRACE                  = "all"
     GRPC_VERBOSITY              = "DEBUG"

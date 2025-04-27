@@ -13,7 +13,7 @@ import (
 )
 
 func CounterMeasreDetailedUrl(cm configs_export.CounterMeasure) string {
-	return "cm/cm_base_" + strings.ToLower(cm.Nickname)
+	return "cdn/cm/cm_base_" + strings.ToLower(cm.Nickname)
 }
 
 templ CmTable(cms []configs_export.CounterMeasure, pinm tab.PinMod, shared *types.SharedData) {

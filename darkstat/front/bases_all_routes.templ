@@ -46,7 +46,7 @@ templ BasesRoutesShared(shared *types.SharedData) {
 }
 
 func RouteUrl(route *configs_export.Route) string {
-	return "routes/route_" + route.GetID()
+	return "cdn/routes/route_" + route.GetID()
 }
 
 templ BaseRoutes(name string, base *configs_export.Base, data *configs_export.Exporter, tab_mode BaseMode, shared *types.SharedData) {

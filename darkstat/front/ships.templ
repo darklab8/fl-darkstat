@@ -15,9 +15,9 @@ import (
 
 func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 	if mode == ShipShowBases {
-		return "ships/ships_base_" + strings.ToLower(ship.Nickname)
+		return "cdn/ships/ships_base_" + strings.ToLower(ship.Nickname)
 	} else if mode == ShipShowDetails {
-		return "ships/ships_details_" + strings.ToLower(ship.Nickname)
+		return "cdn/ships/ships_details_" + strings.ToLower(ship.Nickname)
 	}
 
 	panic("unsupported ship mode")
@@ -203,6 +203,19 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					if mode == ShipShowDetails {
+						@tab.PageHint() {
+							Ship hardpoint hp_types. Insert to other tab filter bar to find <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Findingequipmentcompatiblewithspecifichardpoint") }>compatible equipment. See Docs.</a>
+						}
+					}
+					if mode == ShipShowBases {
+						@tab.PageHint() {
+							Ship NPC sellers.
+							if shared.ShowDisco {
+								See extra ships from PoBs at PoB goods
+							}
+						}
+					}
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@ShipTable(ships, mode, tab.MainMode, shared, infocards)

@@ -24,6 +24,10 @@ type ShopItem struct {
 	Nickname string `json:"nickname" validate:"required"`
 	Name     string `json:"name" validate:"required"`
 	Category string `json:"category" validate:"required"`
+
+	Volume         float64        `json:"volume" validate:"required"`
+	OriginalVolume float64        `json:"original_volume"`
+	ShipClass      *cfg.ShipClass `json:"ship_class"`
 }
 
 type DefenseMode int
@@ -85,10 +89,11 @@ type PoBGood struct {
 	Category string         `json:"category" validate:"required"`
 	Bases    []*PoBGoodBase `json:"bases" validate:"required"`
 
-	AnyBaseSells bool           `json:"any_base_sells" validate:"required"`
-	AnyBaseBuys  bool           `json:"any_base_buys" validate:"required"`
-	Volume       float64        `json:"volume" validate:"required"`
-	ShipClass    *cfg.ShipClass `json:"ship_class"`
+	AnyBaseSells   bool           `json:"any_base_sells" validate:"required"`
+	AnyBaseBuys    bool           `json:"any_base_buys" validate:"required"`
+	Volume         float64        `json:"volume" validate:"required"`
+	OriginalVolume float64        `json:"original_volume"`
+	ShipClass      *cfg.ShipClass `json:"ship_class"`
 }
 
 func (b PoBGood) GetNickname() string { return string(b.Nickname) }
@@ -132,14 +137,16 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 
 		for _, pob_good := range pob.ShopItems {
 			market_good := &MarketGood{
+				PoBGood:              pob_good,
+				PoB:                  pob,
 				GoodInfo:             e.GetGoodInfo(pob_good.Nickname),
 				IsServerSideOverride: true,
 			}
 			if pob_good.BaseBuys() {
-				market_good.PriceBaseBuysFor = ptr.Ptr(pob_good.SellPrice)
+				market_good.PriceBaseBuysFor = ptr.Ptr(pob_good.PriceBaseBuysFor)
 			}
 			if pob_good.BaseSells() {
-				market_good.PriceBaseSellsFor = pob_good.Price
+				market_good.PriceBaseSellsFor = pob_good.PriceBaseSellsFor
 				market_good.BaseSells = true
 			}
 			if market_good.Category == "commodity" {
@@ -147,8 +154,18 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 				for _, volume := range equipment.Volumes {
 					var volumed_good *MarketGood = &MarketGood{}
 					*volumed_good = *market_good
+					volumed_good.PoBGood = market_good.PoBGood
 					volumed_good.Volume = volume.Volume.Get()
 					volumed_good.ShipClass = volume.GetShipClass()
+					volumed_good.BaseInfo = BaseInfo{
+						BaseNickname: base.Nickname,
+						BaseName:     base.Name,
+						SystemName:   base.System,
+						FactionName:  base.FactionName,
+						Region:       base.Region,
+						BasePos:      base.Pos,
+						SectorCoord:  base.SectorCoord,
+					}
 					base.MarketGoodsPerNick[GetCommodityKey(volumed_good.Nickname, volumed_good.ShipClass)] = volumed_good
 				}
 			} else {
@@ -174,7 +191,10 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				}
 				pobs_goods_by_nick[good.Nickname] = pob_good
 			}
-			pob_good.Bases = append(pob_good.Bases, &PoBGoodBase{Base: &pob.PoBCore, ShopItem: good})
+			pob_good.Bases = append(pob_good.Bases, &PoBGoodBase{
+				Base:     &pob.PoBCore,
+				ShopItem: good,
+			})
 		}
 	}
 
@@ -185,10 +205,10 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				item.TotalBuyableFromBases += pob.ShopItem.Quantity - pob.ShopItem.MinStock
 
 				if item.BestPriceToBuy == nil {
-					item.BestPriceToBuy = ptr.Ptr(pob.ShopItem.Price)
+					item.BestPriceToBuy = ptr.Ptr(pob.ShopItem.PriceBaseSellsFor)
 				}
-				if pob.ShopItem.Price < *item.BestPriceToBuy {
-					item.BestPriceToBuy = ptr.Ptr(pob.ShopItem.Price)
+				if pob.ShopItem.PriceBaseSellsFor < *item.BestPriceToBuy {
+					item.BestPriceToBuy = ptr.Ptr(pob.ShopItem.PriceBaseSellsFor)
 				}
 			}
 			if pob.ShopItem.BaseBuys() {
@@ -204,26 +224,29 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				item.TotalSellableToBases += sellable_to_current_base
 
 				if item.BestPriceToSell == nil {
-					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.SellPrice)
+					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.PriceBaseBuysFor)
 				}
-				if pob.ShopItem.SellPrice > *item.BestPriceToSell {
-					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.SellPrice)
+				if pob.ShopItem.PriceBaseBuysFor > *item.BestPriceToSell {
+					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.PriceBaseBuysFor)
 				}
 			}
 		}
 
-		if equipment, ok := e.Mapped.Equip().CommoditiesMap[item.Nickname]; ok {
+		if commodity, ok := e.Mapped.Equip().CommoditiesMap[item.Nickname]; ok {
 			// then it is commodity that can be duplicated through volumes
-			for _, volume_info := range equipment.Volumes {
+			for _, volume_info := range commodity.Volumes {
 				copied := GetPtrStructCopy(item)
 				copied.Volume = volume_info.Volume.Get()
 				copied.ShipClass = volume_info.GetShipClass()
+				copied.OriginalVolume = commodity.OriginalVolume.Volume.Get()
 				pob_goods = append(pob_goods, copied)
 			}
 		} else {
 			items_map := e.Mapped.Equip()
 			if equip, ok := items_map.ItemsMap[item.Nickname]; ok {
 				item.Volume = equip.Volume.Get()
+				item.OriginalVolume = equip.Volume.Get()
+
 			}
 			pob_goods = append(pob_goods, item)
 		}
@@ -280,6 +303,10 @@ func NewHashesCategories(Mapped *configs_mapped.MappedConfigs) HashesByCat {
 
 func (e *ExporterRelay) GetPoBs() []*PoB {
 	var pobs []*PoB
+
+	if e.Mapped.Discovery == nil {
+		return pobs
+	}
 
 	for _, pob_info := range e.Mapped.Discovery.PlayerOwnedBases.Bases {
 
@@ -341,7 +368,24 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 				}
 			}
 
-			pob.ShopItems = append(pob.ShopItems, good)
+			if commodity, ok := e.Mapped.Equip().CommoditiesMap[good.Nickname]; ok {
+				// then it is commodity that can be duplicated through volumes
+				for _, volume_info := range commodity.Volumes {
+					copied := GetPtrStructCopy(good)
+					copied.Volume = volume_info.Volume.Get()
+					copied.ShipClass = volume_info.GetShipClass()
+					copied.OriginalVolume = commodity.OriginalVolume.Volume.Get()
+					pob.ShopItems = append(pob.ShopItems, copied)
+				}
+			} else {
+				items_map := e.Mapped.Equip()
+				if equip, ok := items_map.ItemsMap[good.Nickname]; ok {
+					good.Volume = equip.Volume.Get()
+					good.OriginalVolume = equip.Volume.Get()
+
+				}
+				pob.ShopItems = append(pob.ShopItems, good)
+			}
 		}
 
 		var sb InfocardBuilder

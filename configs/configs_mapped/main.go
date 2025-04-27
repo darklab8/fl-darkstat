@@ -117,6 +117,7 @@ func (m *MappedConfigs) Equip() *equip_mapped.Config {
 }
 
 func (m *MappedConfigs) Clean() {
+	return // Disabled.not updated to functionioning e.GetPoBs/e.GetPoBsToBases.
 	// Deallocate not often used stuff here.
 	// We deallocate stuff needed only one time during Export() operation pretty much.
 	// Technically more clean solution would be passing around those parsed configs... but it requires too much variable passing around.

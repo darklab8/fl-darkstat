@@ -13,6 +13,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
@@ -86,15 +87,25 @@ type WebServeOpts struct {
 	SockAddress string
 }
 
-func enableCors(w *http.ResponseWriter) {
+func setHeaders(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Headers", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "*")
+
+	if settings.Env.CacheControl != "" {
+		(*w).Header().Set("Cache-Control", settings.Env.CacheControl)
+	}
 }
 
 func CorsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
-		next.ServeHTTP(w, r)
+		setHeaders(&w)
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+		} else {
+			next.ServeHTTP(w, r)
+		}
+
 	})
 }
 
@@ -110,7 +121,7 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 	}
 
 	fmt.Printf("launching web server, visit http://localhost:%d to check it!\n", port)
-	hander := AuthMiddleware(CorsMiddleware(w.mux))
+	hander := CorsMiddleware(AuthMiddleware(w.mux))
 
 	var sock_listener net.Listener
 	var sock_server http.Server

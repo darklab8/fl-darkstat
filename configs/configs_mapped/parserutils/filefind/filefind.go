@@ -4,7 +4,6 @@ Package with reusable code for discovery of files and other reusable stuff like 
 package filefind
 
 import (
-	"fmt"
 	"io/fs"
 	"path/filepath"
 	"strings"
@@ -49,7 +48,6 @@ func FindConfigs(folderpath utils_types.FilePath) *Filesystem {
 		}
 		// https://github.com/darklab8/fl-darkstat/issues/107
 		if strings.Contains(strings.ToLower(path), "flmmbak") {
-			fmt.Println()
 			return nil
 		}
 

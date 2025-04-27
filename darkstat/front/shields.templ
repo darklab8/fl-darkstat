@@ -14,7 +14,7 @@ import (
 )
 
 func ShieldDetailedUrl(shield configs_export.Shield) string {
-	return "shields/shields_base_" + strings.ToLower(shield.Nickname)
+	return "cdn/shields/shields_base_" + strings.ToLower(shield.Nickname)
 }
 
 templ ShieldTable(shields []configs_export.Shield, pinm tab.PinMod, shared *types.SharedData) {
@@ -99,6 +99,9 @@ templ ShieldT(shields []configs_export.Shield, mode2 tab.ShowEmpty, shared *type
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					@tab.PageHint() {
+						Shields. You can equip <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Findingequipmentcompatiblewithspecifichardpoint") }>hp_type compatible. See Docs.</a>
+					}
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@ShieldTable(shields, tab.MainMode, shared)

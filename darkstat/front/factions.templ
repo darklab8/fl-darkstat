@@ -15,9 +15,9 @@ import (
 func FactionRepUrl(faction configs_export.Faction, mode FactionTabMode) string {
 
 	if mode == FactionShowBases {
-		return "factions/rep_" + strings.ToLower(faction.Nickname)
-	} else if mode == FactionShowRephacks {
-		return "rephacks/rep_" + strings.ToLower(faction.Nickname)
+		return "cdn/factions/rep_" + strings.ToLower(faction.Nickname)
+	} else if mode == FactionShowBribes {
+		return "cdn/rephacks/rep_" + strings.ToLower(faction.Nickname)
 	} else {
 		return ""
 	}
@@ -27,7 +27,7 @@ type FactionTabMode int64
 
 const (
 	FactionShowBases FactionTabMode = iota
-	FactionShowRephacks
+	FactionShowBribes
 )
 
 templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm tab.PinMod, shared *types.SharedData) {
@@ -41,7 +41,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 				}
 				<th style="width:50px;">Short Name</th>
 				<th style="width:50px;">Nickname</th>
-				if mode == FactionShowRephacks {
+				if mode == FactionShowBribes {
 					<th style="width:50px;">
 						@frmt.MultiLinestring([]string{"Has", "Rep","hacks"})
 					</th>
@@ -70,7 +70,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 					@tab.PinSelectLeftRight(pinm, FactionRepUrl(faction, mode))
 					<td class="seo">{ faction.ShortName }</td>
 					<td class="seo">{ faction.Nickname }</td>
-					if mode == FactionShowRephacks {
+					if mode == FactionShowBribes {
 						<td>{ strconv.FormatBool(len(faction.Bribes) > 0) }</td>
 					}
 					<td>{ fmt.Sprintf("%.2f", faction.ObjectDestruction) }</td>
@@ -91,13 +91,29 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 tab.ShowEmpty, shared *types.SharedData) {
 	if mode == FactionShowBases {
 		@TabMenu(urls.Factions, mode2, shared)
-	} else if mode == FactionShowRephacks {
+	} else if mode == FactionShowBribes {
 		@TabMenu(urls.Bribes, mode2, shared)
 	}
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					if mode == FactionShowBases {
+						@tab.PageHint() {
+							Reps between NPC factions. How changes by NPC kills and missions.
+							if shared.ShowDisco {
+								See your ID reps in ID Rep hacks.
+							}
+						}
+					}
+					if mode == FactionShowBribes {
+						@tab.PageHint() {
+							Where u can bribe NPC faction for more rep.
+							if shared.ShowDisco {
+								You can't increase your rep beyond your ID rephacks limits.
+							}
+						}
+					}
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@FactionTable(factions, mode, tab.MainMode, shared)
@@ -110,14 +126,14 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 					<div id="table-bottom-main">
 						if mode == FactionShowBases {
 							@FactionRepsBase()
-						} else if mode == FactionShowRephacks {
+						} else if mode == FactionShowBribes {
 							@BriberyBottomBase()
 						}
 					</div>
 					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
 						if mode == FactionShowBases {
 							@FactionRepsBase()
-						} else if mode == FactionShowRephacks {
+						} else if mode == FactionShowBribes {
 							@BriberyBottomBase()
 						}
 					</div>

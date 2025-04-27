@@ -14,9 +14,9 @@ import (
 
 func TractorDetailedUrl(tractor *configs_export.Tractor, tab_mode TractorMode) string {
 	if tab_mode == TractorModShop {
-		return "tractor/tractor_base_" + strings.ToLower(string(tractor.Nickname))
+		return "cdn/tractor/tractor_base_" + strings.ToLower(string(tractor.Nickname))
 	} else if tab_mode == TractorIDRephacks {
-		return "id_rephacks/id_rephacks_" + strings.ToLower(string(tractor.Nickname))
+		return "cdn/id_rephacks/id_rephacks_" + strings.ToLower(string(tractor.Nickname))
 	}
 
 	panic("not supported mode for tractor")
@@ -74,6 +74,20 @@ templ TractorsT(tractors []*configs_export.Tractor, mode2 tab.ShowEmpty, tab_mod
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					if tab_mode == TractorModShop {
+						@tab.PageHint() {
+						if shared.ShowDisco {
+							Your ID, You  can have only one, it affects <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Techcompatibility") }>tech compatibility. See docs.</a>
+						} else {
+							Tractors
+						}
+						}
+					}
+					if tab_mode == TractorIDRephacks {
+						@tab.PageHint() {
+							ID reputation limits enforced
+						}
+					}
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						<table class="sortable">

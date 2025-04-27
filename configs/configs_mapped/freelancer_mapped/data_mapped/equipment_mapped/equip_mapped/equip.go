@@ -34,7 +34,8 @@ type Commodity struct {
 	HitPts            *semantic.Int
 	Mass              *semantic.Float
 
-	Volumes []*Volume
+	Volumes        []*Volume
+	OriginalVolume *Volume // without any ship classes
 }
 type Volume struct {
 	semantic.Model
@@ -379,6 +380,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				override.Map(section)
 				commodity.Volumes = append(commodity.Volumes, override)
+				commodity.OriginalVolume = override
 
 				volume_override_key := cfg.Key("volume_class_override")
 				for index, _ := range section.ParamMap[volume_override_key] {

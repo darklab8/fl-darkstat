@@ -11,10 +11,18 @@ import (
 	"strconv"
 	"html"
 	"fmt"
+	"math"
 )
 
+
+
 func PoBGoodDetailedUrl(good *configs_export.PoBGood) string {
-	return "pob_good/pob_good_" + strings.ToLower(good.Nickname)
+	var ship_class string
+	if good.ShipClass != nil {
+		ship_class = strconv.Itoa(int(*good.ShipClass))
+	}
+
+	return "cdn/pob_good/pob_good_" + strings.ToLower(good.Nickname) + ship_class
 }
 
 templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared *types.SharedData) {
@@ -80,6 +88,10 @@ templ PoBGoodsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shar
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					@tab.PageHint() {
+						What u can buy and sell to Player Owned Bases viewed by goods.
+						@tab.PageTime()
+					}
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@PoBGoodsTable(configs.PoBGoods, tab.MainMode, shared)
@@ -120,6 +132,12 @@ templ PoBGoodPobsShared() {
 				<th style="width:75px;">
 					@frmt.MultiLinestring([]string{"Base", "Sells"})
 				</th>
+				<th style="width:75px;">
+					@frmt.MultiLinestring([]string{"Base sells", "your kilo", "volumes"})
+				</th>
+				<th style="width:75px;">
+					@frmt.MultiLinestring([]string{"Base buys", "your kilo", "volumes"})
+				</th>
 				<th style="width:10px;">Min Stock</th>
 				<th style="width:10px;">Max Stock</th>
 				@PoBTableHeaders()
@@ -131,11 +149,11 @@ templ PoBGoodPobsShared() {
 	</table>
 }
 
-templ PoBGoodPobs(name string, pobs []*configs_export.PoBGoodBase) {
+templ PoBGoodPobs(good *configs_export.PoBGood) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ name }</div>
+	<div class="bottom_name">{ good.Name }</div>
 	@PoBGoodPobsShared() {
-		for _, pob := range pobs {
+		for _, pob := range good.Bases {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(pob.Base.Nickname)) }
 				hx-trigger="click"
@@ -150,9 +168,11 @@ templ PoBGoodPobs(name string, pobs []*configs_export.PoBGoodBase) {
 					}
 				</td>
 				<td> { strconv.Itoa(pob.ShopItem.Quantity) }</td>
-				<td> { strconv.Itoa(pob.ShopItem.SellPrice) }</td>
-				<td> { strconv.Itoa(pob.ShopItem.Price) }</td>
+				<td> { strconv.Itoa(pob.ShopItem.PriceBaseBuysFor) }</td>
+				<td> { strconv.Itoa(pob.ShopItem.PriceBaseSellsFor) }</td>
 				@FormatPoBSells(pob.ShopItem)
+				<td> { SellsKiloVolumes(pob.ShopItem, good.Volume, pob.Base.Money) }</td>
+				<td> { BuysKiloVolumes(pob.ShopItem, good.Volume, good.OriginalVolume, pob.Base.CargoSpaceLeft, pob.Base.Money) } </td>
 				<td> { strconv.Itoa(pob.ShopItem.MinStock) }</td>
 				<td> { strconv.Itoa(pob.ShopItem.MaxStock) }</td>
 				@PobTableRow(pob.Base)
@@ -160,4 +180,47 @@ templ PoBGoodPobs(name string, pobs []*configs_export.PoBGoodBase) {
 			</tr>
 		}
 	}
+}
+
+func SellsKiloVolumes(ShopItem *configs_export.ShopItem, good_volume float64, base_money *int) string {
+	if ShopItem.Quantity-ShopItem.MinStock <= 0 {
+		return "0"
+	} 
+	
+	kilo_volume := math.Min(
+		configs_export.MaxKilVolumes,
+		(good_volume * float64(ShopItem.Quantity-ShopItem.MinStock))/configs_export.KiloVolume,
+	)
+
+	if base_money != nil {
+		base_has_moner_for_vol := (ShopItem.Volume * float64(*base_money) / float64(ShopItem.PriceBaseSellsFor) / configs_export.KiloVolume)
+		kilo_volume = math.Min(base_has_moner_for_vol, kilo_volume)
+	}
+	return fmt.Sprintf("%.1f",kilo_volume)
+}
+func BuysKiloVolumes(
+		ShopItem *configs_export.ShopItem,
+		good_volume float64,
+		original_volume float64,
+		cargo_space_left *int,
+		base_money *int,
+	) string {
+	if ShopItem.MaxStock-ShopItem.Quantity <= 0 {
+		return "0"
+	} 
+	var cargo_space_left_f64 float64 = 0
+	if cargo_space_left != nil {
+		cargo_space_left_f64 = float64(*cargo_space_left)
+	}
+
+	kilo_volume := math.Min(
+		configs_export.MaxKilVolumes,
+		math.Min(cargo_space_left_f64 * good_volume / original_volume,(good_volume * float64(ShopItem.MaxStock-ShopItem.Quantity)))/configs_export.KiloVolume,
+	)
+	if base_money != nil {
+		base_has_moner_for_vol := (ShopItem.Volume * float64(*base_money) / float64(ShopItem.PriceBaseBuysFor) / configs_export.KiloVolume)
+		kilo_volume = math.Min(base_has_moner_for_vol, kilo_volume)
+	}
+	
+	return fmt.Sprintf("%.1f",kilo_volume)
 }

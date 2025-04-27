@@ -10,10 +10,11 @@ import (
 	"strconv"
 	"strings"
 	"html"
+	"fmt"
 )
 
 func PoBDetailedUrl(pob *configs_export.PoB) string {
-	return "pob/pob_" + strings.ToLower(pob.Nickname)
+	return "cdn/pob/pob_" + strings.ToLower(pob.Nickname)
 }
 
 func FmtPtrString(value *string) string {
@@ -132,6 +133,10 @@ templ PoBsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shared *
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					@tab.PageHint() {
+						What u can buy and sell to Player Owned Bases viewed by bases.
+						@tab.PageTime()
+					}
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@PobTable(configs.PoBs, tab.MainMode, shared)
@@ -172,6 +177,14 @@ templ PoBShopItemsShared() {
 				<th style="width:75px;">
 					@frmt.MultiLinestring([]string{"Base", "Sells"})
 				</th>
+				<th style="width:75px;">
+					@frmt.MultiLinestring([]string{"Base sells", "your kilo", "volumes"})
+				</th>
+				<th style="width:75px;">
+					@frmt.MultiLinestring([]string{"Base buys", "your kilo", "volumes"})
+				</th>
+				<th style="width:10px;">@frmt.MultiLinestring([]string{"Volume"})</th>
+				<th style="width:10px;">@frmt.MultiLinestring([]string{"Ship", "Class"})</th>
 				<th style="width:10px;">Min Stock</th>
 				<th style="width:10px;">Max Stock</th>
 				<th style="width:200px;">Nickname</th>
@@ -184,7 +197,7 @@ templ PoBShopItemsShared() {
 	</table>
 }
 
-templ PoBShopItems(name string, shop_items []*configs_export.ShopItem) {
+templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpaceLeft *int, Money *int) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
 	@PoBShopItemsShared() {
@@ -199,16 +212,20 @@ templ PoBShopItems(name string, shop_items []*configs_export.ShopItem) {
 			>
 				<td>
 					@frmt.WriteLimit(200) {
-						{ good.Name }
+						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass), }
 					}
 				</td>
 				<td>
 					@frmt.WriteGoodType(string(good.Category))
 				</td>
 				<td> { strconv.Itoa(good.Quantity) }</td>
-				<td> { strconv.Itoa(good.SellPrice) }</td>
-				<td> { strconv.Itoa(good.Price) }</td>
+				<td> { strconv.Itoa(good.PriceBaseBuysFor) }</td>
+				<td> { strconv.Itoa(good.PriceBaseSellsFor) }</td>
 				@FormatPoBSells(good)
+				<td> { SellsKiloVolumes(good, good.Volume, Money) }</td>
+				<td> { BuysKiloVolumes(good, good.Volume, good.OriginalVolume, CargoSpaceLeft, Money) } </td>
+				<td>{ fmt.Sprintf("%.2f", good.Volume) }</td>
+				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
 				<td> { strconv.Itoa(good.MinStock) }</td>
 				<td> { strconv.Itoa(good.MaxStock) }</td>
 				<td>

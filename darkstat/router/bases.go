@@ -64,12 +64,20 @@ func (l *Router) LinkBases(
 	}
 
 	for _, base := range data.TradeBases {
+		// bottom table info trade routes!! Important.
 		build.RegComps(
 			builder.NewComponent(
-				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTrades)),
-				front.BaseTrades(base.Name, base, front.BaseTabTrades, shared, data),
+				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTradesFrom)),
+				front.BaseTradesFrom(base.Name, base, front.BaseTabTradesFrom, shared, data),
 			),
 		)
+		build.RegComps( // move to back?
+			builder.NewComponent(
+				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabTradesTo)),
+				front.BaseTradesTo(base.Name, base, front.BaseTabTradesTo, shared, data),
+			),
+		)
+		// bottom table info for all routes. Important.
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseAllRoutes)),
@@ -77,9 +85,10 @@ func (l *Router) LinkBases(
 			),
 		)
 
+		// All travel route infocards
 		for _, combo_route := range data.GetTravelRoutes(base) {
 			build.RegComps(
-				builder.NewComponent(
+				builder.NewComponent( // probably move to back, at least for RAM reasons
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
 					front.TradeRouteInfo2(combo_route.Transport.FromBase, combo_route.Freighter.ToBase, data, shared),
 				),
@@ -88,33 +97,82 @@ func (l *Router) LinkBases(
 	}
 
 	build.RegComps(
-		builder.NewComponent(
-			urls.Trades,
+		builder.NewComponent( // move to back?
+			urls.TradeDeals,
+			front.TradeDeals(
+				cache.NewCached(func() []*configs_export.TradeDeal {
+					return data.GetBestTradeDeals(data.TradeBases)
+				}, time.Minute*2+time.Second*5),
+				shared,
+				data,
+				tab.ShowEmpty(false),
+			),
+		),
+		builder.NewComponent( // move to back?
+			tab.AllItemsUrl(urls.TradeDeals),
+			front.TradeDeals(
+				cache.NewCached(func() []*configs_export.TradeDeal {
+					return data.GetBestTradeDeals(data.TradeBases)
+				}, time.Minute*2+time.Second*5),
+				shared,
+				data,
+				tab.ShowEmpty(true),
+			),
+		),
+		// top tables of ore and trades
+		builder.NewComponent( // move to back?
+			urls.TradesFrom,
 			front.BasesT(
 				configs_export.FilterToUserfulBases(data.TradeBases),
-				front.BaseTabTrades,
+				front.BaseTabTradesFrom,
 				tab.ShowEmpty(false),
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePaths(configs_export.FilterToUserfulBases(data.TradeBases), data)
-				}, time.Minute)},
+					return front.GetBasesWithTradePathsFrom(configs_export.FilterToUserfulBases(data.TradeBases), data)
+				}, time.Minute*2+time.Second*10)},
 			),
 		),
-		builder.NewComponent(
-			tab.AllItemsUrl(urls.Trades),
+		builder.NewComponent( // move to back?
+			tab.AllItemsUrl(urls.TradesFrom),
 			front.BasesT(
 				data.TradeBases,
-				front.BaseTabTrades,
+				front.BaseTabTradesFrom,
 				tab.ShowEmpty(true),
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePaths(data.TradeBases, data)
-				}, time.Minute)},
+					return front.GetBasesWithTradePathsFrom(data.TradeBases, data)
+				}, time.Minute*2+time.Second*15)},
 			),
 		),
-		builder.NewComponent(
+		builder.NewComponent( // move to back?
+			urls.TradesTo,
+			front.BasesT(
+				configs_export.FilterToUserfulBases(data.TradeBases),
+				front.BaseTabTradesTo,
+				tab.ShowEmpty(false),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePathsTo(configs_export.FilterToUserfulBases(data.TradeBases), data)
+				}, time.Minute*2+time.Second*20)},
+			),
+		),
+		builder.NewComponent( // move to back?
+			tab.AllItemsUrl(urls.TradesTo),
+			front.BasesT(
+				data.TradeBases,
+				front.BaseTabTradesTo,
+				tab.ShowEmpty(true),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePathsTo(data.TradeBases, data)
+				}, time.Minute*2+time.Second*25)},
+			),
+		),
+		builder.NewComponent( // move to back?
 			urls.Asteroids,
 			front.BasesT(
 				configs_export.FitlerToUsefulOres(data.MiningOperations),
@@ -123,11 +181,11 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePaths(configs_export.FitlerToUsefulOres(data.MiningOperations), data)
-				}, time.Minute)},
+					return front.GetBasesWithTradePathsFrom(configs_export.FitlerToUsefulOres(data.MiningOperations), data)
+				}, time.Minute*2+time.Second*30)},
 			),
 		),
-		builder.NewComponent(
+		builder.NewComponent( // move to back?
 			tab.AllItemsUrl(urls.Asteroids),
 			front.BasesT(
 				data.MiningOperations,
@@ -136,10 +194,11 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePaths(data.MiningOperations, data)
-				}, time.Minute)},
+					return front.GetBasesWithTradePathsFrom(data.MiningOperations, data)
+				}, time.Minute*2+time.Second*35)},
 			),
 		),
+
 		builder.NewComponent(
 			urls.TravelRoutes,
 			front.BasesT(configs_export.FilterToUserfulBases(data.TravelBases), front.BaseAllRoutes, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
@@ -151,16 +210,17 @@ func (l *Router) LinkBases(
 	)
 
 	for _, base := range data.MiningOperations {
-		build.RegComps(
+		// Ore routes bottom table. Important.
+		build.RegComps( // move to back?
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOres)),
-				front.BaseTrades(base.Name, base, front.BaseTabOres, shared, data),
+				front.BaseTradesFrom(base.Name, base, front.BaseTabOres, shared, data),
 			),
 		)
 
-		for _, combo_route := range data.GetBaseTradePaths(base) {
+		for _, combo_route := range data.GetBaseTradePathsFrom(base) { // infocards for mining.
 			build.RegComps(
-				builder.NewComponent(
+				builder.NewComponent( // probably move to back?
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
 					front.TradeRouteInfo3(combo_route.Freighter.BuyingGood, combo_route.Freighter.SellingGood, data, shared),
 				),

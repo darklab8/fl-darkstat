@@ -19,17 +19,18 @@ import (
 func BaseDetailedUrl(base *configs_export.Base, tab_mode BaseMode) string {
 
 	if tab_mode == BaseShowShops {
-		return "bases/marketgoods/mg_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/marketgoods/mg_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseShowMissions {
-		return "bases/missions/msns_" + strings.ToLower(base.Nickname.ToStr())
-	} else if tab_mode == BaseTabTrades {
-		return "bases/trades/trades_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/missions/msns_" + strings.ToLower(base.Nickname.ToStr())
+	} else if tab_mode == BaseTabTradesFrom {
+		return "cdn/bases/trades/trades_from_" + strings.ToLower(base.Nickname.ToStr())
+		} else if tab_mode == BaseTabTradesTo {
+		return "cdn/bases/trades/trades_to_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseTabOres {
-		return "bases/ores/ore_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/ores/ore_" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseAllRoutes {
-		return "bases/routes/route_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/routes/route_" + strings.ToLower(base.Nickname.ToStr())
 	}
-
 	panic("not supported mode for base")
 }
 
@@ -38,7 +39,8 @@ type BaseMode int64
 const (
 	BaseShowShops BaseMode = iota
 	BaseShowMissions
-	BaseTabTrades
+	BaseTabTradesFrom
+	BaseTabTradesTo
 	BaseTabOres
 	BaseAllRoutes
 )
@@ -101,7 +103,7 @@ templ BasesTable(
 						@frmt.MultiLinestring([]string{"Vingettes", "Offers Limit"})
 					</th>
 				}
-				if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
+				if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo || tab_mode == BaseTabOres {
 					<th style="width:50px;">@frmt.MultiLinestring([]string{"Best","Transport","profit/v", "¢/sec"})</th>
 					if shared.ShowDisco {
 						<th style="width:50px;">@frmt.MultiLinestring([]string{"Best","Frigate","profit/v", "¢/sec"})</th>
@@ -138,7 +140,7 @@ templ BasesTable(
 			</tr>
 		</thead>
 		<tbody>
-			if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
+			if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo || tab_mode == BaseTabOres {
 				for _, base := range base_opts.BasesWithTradePaths.Get() {
 					@BaseRow(base.Base, tab_mode, pinm, shared, base.BaseBestPathTimes)
 				}
@@ -156,12 +158,34 @@ type BaseWithTradePaths struct {
 	*configs_export.BaseBestPathTimes
 }
 
-func GetBasesWithTradePaths(bases []*configs_export.Base, data *configs_export.Exporter) []BaseWithTradePaths {
+func GetBasesWithTradePathsFrom(bases []*configs_export.Base, data *configs_export.Exporter) []BaseWithTradePaths {
 	var results []BaseWithTradePaths
 	for _, base := range bases {
 		results = append(results, BaseWithTradePaths{
 			Base: base,
-			BaseBestPathTimes: data.GetBaseBestPath(base),
+			BaseBestPathTimes: data.GetBaseBestPathFrom(base),
+		})
+	}
+	sort.Slice(results, func(i, j int) bool {
+		if results[i].TransportProfitPerTime == nil && results[j].TransportProfitPerTime == nil {
+			return true
+		}
+		if results[i].TransportProfitPerTime == nil {
+			return false
+		}
+		if results[j].TransportProfitPerTime == nil {
+			return true
+		}
+		return *results[i].TransportProfitPerTime > *results[j].TransportProfitPerTime
+	})
+	return results
+}
+func GetBasesWithTradePathsTo(bases []*configs_export.Base, data *configs_export.Exporter) []BaseWithTradePaths {
+	var results []BaseWithTradePaths
+	for _, base := range bases {
+		results = append(results, BaseWithTradePaths{
+			Base: base,
+			BaseBestPathTimes: data.GetBaseBestPathTo(base),
 		})
 	}
 	sort.Slice(results, func(i, j int) bool {
@@ -180,7 +204,12 @@ func GetBasesWithTradePaths(bases []*configs_export.Base, data *configs_export.E
 }
 
 templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, shared *types.SharedData, routes *configs_export.BaseBestPathTimes) {
-	@tab.TrFromMain(tab.NewTr(base.Nickname.ToStr(), BaseDetailedUrl(base, tab_mode), pinm, tab.WithTransportUnreachable(base.IsTransportUnreachable))) {
+	@tab.TrFromMain(tab.NewTr(
+			base.Nickname.ToStr(),
+			BaseDetailedUrl(base, tab_mode),
+			pinm,
+			tab.WithTransportUnreachable(base.IsTransportUnreachable),
+		)) {
 		@tab.PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@tab.PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
 		if tab_mode != BaseTabOres {
@@ -282,8 +311,10 @@ templ BasesT(
 		@TabMenu(urls.Bases, mode, shared)
 	} else if tab_mode == BaseShowMissions {
 		@TabMenu(urls.Missions, mode, shared)
-	} else if tab_mode == BaseTabTrades {
-		@TabMenu(urls.Trades, mode, shared)
+	} else if tab_mode == BaseTabTradesFrom {
+		@TabMenu(urls.TradesFrom, mode, shared)
+	} else if tab_mode == BaseTabTradesTo {
+		@TabMenu(urls.TradesTo, mode, shared)
 	} else if tab_mode == BaseTabOres {
 		@TabMenu(urls.Asteroids, mode, shared)
 	} else if tab_mode == BaseAllRoutes {
@@ -293,6 +324,51 @@ templ BasesT(
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					if tab_mode == BaseTabTradesFrom {
+						@tab.PageHint() {
+							All routes from specific bases.
+							if shared.ShowDisco {
+								Excluded with less than 5k cargo, and no money at pob.
+								@tab.PageTime()
+							}
+						}
+					}
+					if tab_mode == BaseTabTradesTo {
+						@tab.PageHint() {
+							All routes to specific bases.
+							if shared.ShowDisco {
+								Excluded with less than 5k cargo, and no money at pob.
+								@tab.PageTime()
+							}
+						}
+					}
+					if tab_mode == BaseAllRoutes {
+						@tab.PageHint() {
+							All routes from specific bases to any other base for navigation.
+						}
+					}
+					if tab_mode == BaseTabOres {
+						@tab.PageHint() {
+							Routes from all minable asteroid fields.
+							if shared.ShowDisco {
+								Shows routes for refined sub-results from pobs too.
+								@tab.PageTime()
+							}
+						}
+					}
+					if tab_mode == BaseShowMissions {
+						@tab.PageHint() {
+							NPC Base missions finder. Where best money, and more missions at bar (Min offers)
+						}
+					}
+					if tab_mode == BaseShowShops {
+						@tab.PageHint() {
+							NPC base shops, goods are sorted by name and category.
+							if shared.ShowDisco {
+								See PoBs for player owned bases.
+							}
+						}
+					}
 					@tab.FilterBar(&types.SharedData{}) {
 						// Turning off this feature because it has 170+mb bug size increasig for trades.html
 						// if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {
@@ -318,10 +394,10 @@ templ BasesT(
 							@BaseMarketGoodsBase()
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
-						} else if tab_mode == BaseTabTrades {
-							@BaseTradesShared(shared)
+						} else if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo {
+							@BaseTradesShared(shared, tab_mode)
 						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared(shared)
+							@BaseTradesShared(shared, tab_mode)
 						} else if tab_mode == BaseAllRoutes {
 							@BasesRoutesShared(shared)
 						}
@@ -332,10 +408,10 @@ templ BasesT(
 							@BaseMarketGoodsBase()
 						} else if tab_mode == BaseShowMissions {
 							@BaseMissionsBase()
-						} else if tab_mode == BaseTabTrades {
-							@BaseTradesShared(shared)
+						} else if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo {
+							@BaseTradesShared(shared, tab_mode)
 						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared(shared)
+							@BaseTradesShared(shared, tab_mode)
 						}  else if tab_mode == BaseAllRoutes {
 							@BasesRoutesShared(shared)
 						}
@@ -533,7 +609,7 @@ templ PrintEnemies(enemies []configs_export.EnemyFaction) {
 	}
 }
 
-templ BaseTradesShared(shared *types.SharedData) {
+templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -547,6 +623,9 @@ templ BaseTradesShared(shared *types.SharedData) {
 					</th>
 					<th style="width:50px;">
 						@frmt.MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"kilo","volumes","to trade"})
 					</th>
 				}
 				<th style="width:50px;">
@@ -569,9 +648,17 @@ templ BaseTradesShared(shared *types.SharedData) {
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Nav", "Map"})
 				</th>
-				<th style="width:100px;">Dest. Faction</th>
-				<th style="width:100px;">Dest. Name</th>
-				<th style="width:100px;">Dest. Region</th>
+				if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabOres {
+					<th style="width:100px;">Dest. Faction</th>
+					<th style="width:100px;">Dest. Name</th>
+					<th style="width:100px;">Dest. Region</th>
+				}
+				if tab_mode == BaseTabTradesTo {
+					<th style="width:100px;">From Faction</th>
+					<th style="width:100px;">From Name</th>
+					<th style="width:100px;">From Region</th>
+				}
+				
 				<th style="width:50px;">
 					@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
 				</th>
@@ -579,10 +666,18 @@ templ BaseTradesShared(shared *types.SharedData) {
 					@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
 				</th>
 				<th style="width:50px;">Commodity Nick</th>
-				<th style="width:50px;">Dest. Nickname</th>
-				<th style="width:50px;">Dest.X</th>
-				<th style="width:50px;">Dest.Y</th>
-				<th style="width:50px;">Dest.Z</th>
+				if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabOres {
+					<th style="width:50px;">Dest. Nickname</th>
+					<th style="width:50px;">Dest.X</th>
+					<th style="width:50px;">Dest.Y</th>
+					<th style="width:50px;">Dest.Z</th>
+				}
+				if tab_mode == BaseTabTradesTo {
+					<th style="width:50px;">From. Nickname</th>
+					<th style="width:50px;">From.X</th>
+					<th style="width:50px;">From.Y</th>
+					<th style="width:50px;">From.Z</th>
+				}
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -612,100 +707,144 @@ func (r RoundedFloat) MarshalJSON() ([]byte, error) {
 }
 
 
-templ BaseTrades(name string, base *configs_export.Base, tab_mode BaseMode, shared *types.SharedData, 	data *configs_export.Exporter) {
+templ BaseTradesFrom(name string, base *configs_export.Base, tab_mode BaseMode, shared *types.SharedData, 	data *configs_export.Exporter) {
 	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }</div>
-	@BaseTradesShared(shared) {
-		for _, trade_route := range data.GetBaseTradePathsFiltered(base) {
-			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
-				hx-trigger="click"
-				hx-target="#infocard_view"
-				hx-swap="innerHTML"
-				preload="mouseover"
-				onclick="RowHighlighter(this)"
-			>
-				<td>
-					@frmt.WriteLimit(200) {
-						{ trade_route.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.SellingGood.ShipClass) }
-					}
-				</td>
-				<td class="route_transport" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
-				if shared.ShowDisco {
-					<td class="route_frigate" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
-					<td class="route_freighter" routetime={ fmt.Sprintf("%.2f",trade_route.Transport.Route.GetTimeS()) } >{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
-				}
-				<td>
-					<span class="tooltip">
-						@TradeRouteHumanTime(trade_route.Transport.Route)
-						<span class="tooltiptext">
-							if trade_route.Transport.Route.GetTimeMs() < trades.INF/2 {
-								{ fmt.Sprintf("%.0f", trade_route.Transport.Route.GetTimeS()) } secs
-							} else {
-								INF secs
-							}
-						</span>
-					</span>
-				</td>
-				if shared.ShowDisco {
-					<td>
-						<span class="tooltip">
-							@TradeRouteHumanTime(trade_route.Frigate.Route)
-							<span class="tooltiptext">
-								if trade_route.Frigate.Route.GetTimeMs() < trades.INF/2 {
-									{ fmt.Sprintf("%.0f", trade_route.Frigate.Route.GetTimeS()) } secs
-								} else {
-									INF secs
-								}
-							</span>
-						</span>
-					</td>
-					<td>
-						<span class="tooltip">
-							@TradeRouteHumanTime(trade_route.Freighter.Route)
-							<span class="tooltiptext">
-								if trade_route.Freighter.Route.GetTimeMs() < trades.INF/2 {
-									{ fmt.Sprintf("%.0f", trade_route.Freighter.Route.GetTimeS()) } secs
-								} else {
-									INF secs
-								}
-							</span>
-						</span>
-					</td>
-				}
-				<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
-				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.SellingGood.Volume) }</td>
-				if shared.ShowDisco {
-					<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.SellingGood.ShipClass) }</td>
-				}
-				<td>
-					@frmt.WriteSystemName(trade_route.Transport.SellingGood.SystemName)
-				</td>
-				<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
-				<td>
-					@frmt.WriteFactioName(trade_route.Transport.SellingGood.FactionName)
-				</td>
-				<td>
-					@frmt.WriteBaseName(trade_route.Transport.SellingGood.BaseName)
-				</td>
-				<td>
-					@frmt.WriteRegionName(trade_route.Transport.SellingGood.Region)
-				</td>
-				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
-				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.GetPriceBaseBuysFor()) }</td>
-				<td>{ trade_route.Transport.SellingGood.Nickname }</td>
-				<td>
-					@frmt.WriteLimit(100) {
-						{ trade_route.Transport.SellingGood.BaseNickname.ToStr() }
-					}
-				</td>
-				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>
-				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Y) }</td>
-				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Z) }</td>
-				<td></td>
-			</tr>
+	@BaseTradesShared(shared, tab_mode) {
+		for _, trade_route := range data.GetBaseTradePathsFiltered(data.GetBaseTradePathsFrom(base)) {
+			@TradeRouteRow(trade_route, shared, tab_mode)
 		}
 	}
+}
+templ BaseTradesTo(name string, base *configs_export.Base, tab_mode BaseMode, shared *types.SharedData, data *configs_export.Exporter) {
+	@tab.BottomFilterBar()
+	<div class="bottom_name">{ name }</div>
+	@BaseTradesShared(shared, tab_mode) {
+		for _, trade_route := range data.GetBaseTradePathsFiltered(data.GetBaseTradePathsTo(base)) {
+			@TradeRouteRow(trade_route, shared, tab_mode)
+		}
+	}
+}
+
+templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.SharedData, tab_mode BaseMode) {
+	<tr
+		hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
+		hx-trigger="click"
+		hx-target="#infocard_view"
+		hx-swap="innerHTML"
+		preload="mouseover"
+		onclick="RowHighlighter(this)"
+	>
+		<td>
+			@frmt.WriteLimit(200) {
+				{ trade_route.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.SellingGood.ShipClass) }
+			}
+		</td>
+		<td class="route_transport">{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
+		if shared.ShowDisco {
+			<td class="route_frigate">{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
+			<td class="route_freighter">{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+			<td>
+				{   fmt.Sprintf("%.1f",configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)) }
+			</td>
+		} 
+		<td>
+			<span class="tooltip">
+				@TradeRouteHumanTime(trade_route.Transport.Route)
+				<span class="tooltiptext">
+					if trade_route.Transport.Route.GetTimeMs() < trades.INF/2 {
+						{ fmt.Sprintf("%.0f", trade_route.Transport.Route.GetTimeS()) } secs
+					} else {
+						INF secs
+					}
+				</span>
+			</span>
+		</td>
+		if shared.ShowDisco {
+			<td>
+				<span class="tooltip">
+					@TradeRouteHumanTime(trade_route.Frigate.Route)
+					<span class="tooltiptext">
+						if trade_route.Frigate.Route.GetTimeMs() < trades.INF/2 {
+							{ fmt.Sprintf("%.0f", trade_route.Frigate.Route.GetTimeS()) } secs
+						} else {
+							INF secs
+						}
+					</span>
+				</span>
+			</td>
+			<td>
+				<span class="tooltip">
+					@TradeRouteHumanTime(trade_route.Freighter.Route)
+					<span class="tooltiptext">
+						if trade_route.Freighter.Route.GetTimeMs() < trades.INF/2 {
+							{ fmt.Sprintf("%.0f", trade_route.Freighter.Route.GetTimeS()) } secs
+						} else {
+							INF secs
+						}
+					</span>
+				</span>
+			</td>
+		}
+		<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
+		<td>{ fmt.Sprintf("%.2f", trade_route.Transport.SellingGood.Volume) }</td>
+		if shared.ShowDisco {
+			<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.SellingGood.ShipClass) }</td>
+		}
+		if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabOres {
+			<td>
+				@frmt.WriteSystemName(trade_route.Transport.SellingGood.SystemName)
+			</td>
+			<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
+			<td>
+				@frmt.WriteFactioName(trade_route.Transport.SellingGood.FactionName)
+			</td>
+			<td>
+				@frmt.WriteBaseName(trade_route.Transport.SellingGood.BaseName)
+			</td>
+			<td>
+				@frmt.WriteRegionName(trade_route.Transport.SellingGood.Region)
+			</td>
+			<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
+			<td>{ strconv.Itoa(trade_route.Transport.SellingGood.GetPriceBaseBuysFor()) }</td>
+			<td>{ trade_route.Transport.SellingGood.Nickname }</td>
+			<td>
+				@frmt.WriteLimit(100) {
+					{ trade_route.Transport.SellingGood.BaseNickname.ToStr() }
+				}
+			</td>
+			<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>
+			<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Y) }</td>
+			<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Z) }</td>
+		}
+		if tab_mode == BaseTabTradesTo {
+			<td>
+				@frmt.WriteSystemName(trade_route.Transport.BuyingGood.SystemName)
+			</td>
+			<td>{ trade_route.Transport.BuyingGood.SectorCoord }</td>
+			<td>
+				@frmt.WriteFactioName(trade_route.Transport.BuyingGood.FactionName)
+			</td>
+			<td>
+				@frmt.WriteBaseName(trade_route.Transport.BuyingGood.BaseName)
+			</td>
+			<td>
+				@frmt.WriteRegionName(trade_route.Transport.BuyingGood.Region)
+			</td>
+			<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
+			<td>{ strconv.Itoa(trade_route.Transport.SellingGood.GetPriceBaseBuysFor()) }</td>
+			<td>{ trade_route.Transport.BuyingGood.Nickname }</td>
+			<td>
+				@frmt.WriteLimit(100) {
+					{ trade_route.Transport.BuyingGood.BaseNickname.ToStr() }
+				}
+			</td>
+			<td>{ fmt.Sprintf("%.0f", trade_route.Transport.BuyingGood.BasePos.X) }</td>
+			<td>{ fmt.Sprintf("%.0f", trade_route.Transport.BuyingGood.BasePos.Y) }</td>
+			<td>{ fmt.Sprintf("%.0f", trade_route.Transport.BuyingGood.BasePos.Z) }</td>
+		}
+		<td></td>
+	</tr>
 }
 
 templ TradeRouteInfo3(BuyingGood *configs_export.MarketGood, SellingGood *configs_export.MarketGood, e *configs_export.Exporter, shared *types.SharedData) {

@@ -1,0 +1,228 @@
+package front
+
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
+	"github.com/darklab8/fl-darkstat/darkstat/cache"
+    "fmt"
+    "strconv"
+)
+
+templ TradeDeals(
+		trade_routes *cache.Cached[[]*configs_export.TradeDeal],
+		shared *types.SharedData,
+		data *configs_export.Exporter,
+		mode tab.ShowEmpty,
+) {
+    @TabMenu(urls.TradeDeals, mode, shared)
+	@tab.TabContent() {
+		<div class="splitter">
+			@tab.LeftTable(){
+                <style>
+                #table-top {
+                    height: 95%;
+                    overflow: hidden;
+                    border-style: solid;
+                    border-width: 1px;
+                    border-color: var(--color_border);
+                    box-sizing: border-box;
+
+                    display: flex;
+                    flex-direction: column;
+                }
+                </style>
+				@tab.PageHint() {
+					Best 800 trade routes sorted by formula: 50% of profit/v/s + 50% time weight (linear, 0 at 0min, max at 10min).
+					if shared.ShowDisco {
+						Excluded less than 5k cargo, and no money at pob.
+						@tab.PageTime()
+					}
+				}
+                <div id="table-top" style="height: calc(100% - 15px);">
+                   	@tab.FilterBar(&types.SharedData{}) {}
+					<div id="table-top-main" style="height:100%;">
+						@TradesTable(trade_routes, shared, data)
+					</div>
+                </div>
+
+				// @tab.TableBottom(){
+				// 	<div id="table-bottom-main">
+				// 		@BaseTradesShared(shared)
+				// 	</div>
+				// 	<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
+				// 		@BaseTradesShared(shared)
+				// 	</div>
+				// }
+			}
+			@tab.InfocardTable(){
+				@tab.InfocardShared()
+			}
+		</div>
+	}
+}
+
+templ TradesTable(
+	trade_routes *cache.Cached[[]*configs_export.TradeDeal],
+    shared *types.SharedData,
+    data *configs_export.Exporter,
+) {
+	<table class="sortable">
+		<thead>
+			<tr class="flexed-tr">
+				<th style="width:100px;">Commodity</th>
+                <th style="width:100px;">From. System</th>
+                <th style="width:25px;"> @frmt.MultiLinestring([]string{"From", "Nav", "Map"}) </th>
+                <th style="width:100px;">From. Base</th>
+                <th style="width:50px;">Profit/v</th>
+				<th style="width:100px;">Dest. System</th>
+				<th style="width:25px;"> @frmt.MultiLinestring([]string{"Nav", "Map"}) </th>
+                <th style="width:100px;">Dest. Name</th>
+				<th style="width:50px;">
+					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
+				</th>
+				if shared.ShowDisco {
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{"Frigate", "Time(sec)"})
+					</th>
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{"Freighter", "Time(sec)"})
+					</th>
+                    <th style="width:25px;">@frmt.MultiLinestring([]string{"profit","sum"})</th>
+                    <th style="width:25px;">@frmt.MultiLinestring([]string{"kilo","volumes","to trade"})</th>	
+				}
+				<th style="width:50px;">
+					@frmt.MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
+				</th>
+				if shared.ShowDisco {
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
+					</th>
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
+					</th>
+				}
+				<th style="width:5px;">Vol.</th>
+				if shared.ShowDisco {
+					<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "cl."})</th>
+				}
+                <th style="width:100px;">From. Faction</th>
+				<th style="width:100px;">Dest. Faction</th>
+                <th style="width:100px;">From. Region</th>
+				<th style="width:100px;">Dest. Region</th>
+				<th style="width:50px;">
+					@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
+				</th>
+				<th style="width:50px;">
+					@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
+				</th>
+				<th style="width:50px;">Commodity Nick</th>
+				<th style="width:50px;">Dest. Nickname</th>
+				<th style="width:50px;">Dest.X</th>
+				<th style="width:50px;">Dest.Y</th>
+				<th style="width:50px;">Dest.Z</th>
+                <th style="width:25px;"> @frmt.MultiLinestring([]string{"profit", "weight"}) </th>	
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, trade_route := range trade_routes.Get() {
+            <tr
+				hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
+				hx-trigger="click"
+				hx-target="#infocard_view"
+				hx-swap="innerHTML"
+				preload="mouseover"
+				onclick="RowHighlighter(this)"
+			>
+				<td>
+					@frmt.WriteLimit(150) {
+						{ trade_route.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.SellingGood.ShipClass) }
+					}
+				</td>
+                <td>@frmt.WriteBaseName("fr."+trade_route.Transport.BuyingGood.SystemName) </td>
+                <td>{ trade_route.Transport.BuyingGood.SectorCoord }</td>
+                <td>@frmt.WriteBaseName("fr."+trade_route.Transport.BuyingGood.BaseName) </td>
+                <td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
+				<td>@frmt.WriteSystemName("to."+trade_route.Transport.SellingGood.SystemName)</td>
+				<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
+				<td>@frmt.WriteBaseName("to."+trade_route.Transport.SellingGood.BaseName) </td>
+				<td>
+					<span class="tooltip">
+						@TradeRouteHumanTime(trade_route.Transport.Route)
+						<span class="tooltiptext">
+							if trade_route.Transport.Route.GetTimeMs() < trades.INF/2 {
+								{ fmt.Sprintf("%.0f", trade_route.Transport.Route.GetTimeS()) } secs
+							} else {
+								INF secs
+							}
+						</span>
+					</span>
+				</td>
+				if shared.ShowDisco {
+					<td>
+						<span class="tooltip">
+							@TradeRouteHumanTime(trade_route.Frigate.Route)
+							<span class="tooltiptext">
+								if trade_route.Frigate.Route.GetTimeMs() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", trade_route.Frigate.Route.GetTimeS()) } secs
+								} else {
+									INF secs
+								}
+							</span>
+						</span>
+					</td>
+					<td>
+						<span class="tooltip">
+							@TradeRouteHumanTime(trade_route.Freighter.Route)
+							<span class="tooltiptext">
+								if trade_route.Freighter.Route.GetTimeMs() < trades.INF/2 {
+									{ fmt.Sprintf("%.0f", trade_route.Freighter.Route.GetTimeS()) } secs
+								} else {
+									INF secs
+								}
+							</span>
+						</span>
+					</td>
+                    <td>
+                        {   fmt.Sprintf("%.1f",trade_route.ProfitPerTimeForKiloVolumes) }
+                    </td>
+                    <td>
+                        {   fmt.Sprintf("%.1f",configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)) }
+                    </td>
+				}
+				<td class="route_transport">{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
+				if shared.ShowDisco {
+					<td class="route_frigate">{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
+					<td class="route_freighter">{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+					
+				} 
+				<td>{ fmt.Sprintf("%.2f", trade_route.Transport.SellingGood.Volume) }</td>
+				if shared.ShowDisco {
+					<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.SellingGood.ShipClass) }</td>
+				}
+				<td>@frmt.WriteFactioName("to."+trade_route.Transport.BuyingGood.FactionName) </td>
+				<td>@frmt.WriteFactioName("to."+trade_route.Transport.SellingGood.FactionName) </td>
+				<td>@frmt.WriteRegionName("fr."+trade_route.Transport.BuyingGood.Region)</td>
+				<td>@frmt.WriteRegionName("to."+trade_route.Transport.SellingGood.Region)</td>
+				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
+				<td>{ strconv.Itoa(trade_route.Transport.SellingGood.GetPriceBaseBuysFor()) }</td>
+				<td>{ trade_route.Transport.SellingGood.Nickname }</td>
+				<td>
+					@frmt.WriteLimit(100) {
+						{ trade_route.Transport.SellingGood.BaseNickname.ToStr() }
+					}
+				</td>
+				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>
+				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Y) }</td>
+				<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Z) }</td>
+                <td>{   fmt.Sprintf("%.1f",trade_route.ProfitWeight) }</td>
+				<td></td>
+                </tr>
+            }
+		</tbody>
+	</table>
+}

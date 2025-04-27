@@ -4,6 +4,10 @@
 
 online version of the [flstat](https://discoverygc.com/forums/showthread.php?tid=115254) to navigate game data of [the game Freelancer](https://youtu.be/RHlH_qOH5zc). You can see data about Bases, Guns, Ships and multiple other stuff.
 
+It is able to work in two mods:
+- Static Site Generator to build html/css/js files to deploy them for example to github pages (In this way runs for Freelancer Vanilla and FLSR)
+- Live web backend for more nearly real time update of content (useful for Discovery). Cached behind CDN to run smmothly
+
 See demos:
 
 - [Staging version](https://darklab8.github.io/fl-darkstat/)

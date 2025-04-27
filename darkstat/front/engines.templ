@@ -14,7 +14,7 @@ import (
 )
 
 func EngineDetailedUrl(engine configs_export.Engine) string {
-	return "engines/engines_base_" + strings.ToLower(engine.Nickname)
+	return "cdn/engines/engines_base_" + strings.ToLower(engine.Nickname)
 }
 
 templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *types.SharedData) {
@@ -97,6 +97,10 @@ templ Engines(engines []configs_export.Engine, mode tab.ShowEmpty, shared *types
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					@tab.PageHint() {
+						Engines.
+						You can equip <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Findingequipmentcompatiblewithspecifichardpoint") }>hp_type compatible. See Docs.</a>
+					}
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@EnginesTable(engines, tab.MainMode, shared)
