@@ -22,7 +22,7 @@ resource "docker_service" "darkstat" {
 
   task_spec {
     networks_advanced {
-      name = docker_network.network.id
+      name    = docker_network.network.id
       aliases = ["darkstat"]
     }
     networks_advanced {
