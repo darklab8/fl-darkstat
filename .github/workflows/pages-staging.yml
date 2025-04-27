@@ -59,7 +59,7 @@ jobs:
       run: |
         set -ex
         mkdir build | true
-        cp docker/iframe-stagingindex.html build/index.html
+        cp docker/iframe-staging/index.html build/index.html
     - name: Upload artifacts for deployment to Github Pages
       uses: actions/upload-pages-artifact@v3
       with:
