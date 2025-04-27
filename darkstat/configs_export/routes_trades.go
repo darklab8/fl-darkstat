@@ -214,7 +214,7 @@ type TradeDeal struct {
 	ProfitWeight                float64
 }
 
-const LimitBestPaths = 1500
+const LimitBestPaths = 800
 
 func (e *TradePathExporter) GetBestTradeDeals(bases []*Base) []*TradeDeal {
 	var trade_deals []*TradeDeal
