@@ -1,5 +1,5 @@
 sortable.js linguist-vendored
 htmx.* linguist-vendored
 *.templ linguist-language=go
-darkmap/docs/experiment/**/* export-ignore
-configs/docs/inspiration/**/* export-ignore
+darkmap/docs/experiment/** linguist-vendored
+configs/docs/inspiration/** linguist-vendored
