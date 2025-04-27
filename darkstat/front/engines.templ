@@ -97,6 +97,10 @@ templ Engines(engines []configs_export.Engine, mode tab.ShowEmpty, shared *types
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					<div><p>
+						Engines.
+						You can equip <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Findingequipmentcompatiblewithspecifichardpoint") }>hp_type compatible. See Docs.</a>
+					</p></div>
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@EnginesTable(engines, tab.MainMode, shared)

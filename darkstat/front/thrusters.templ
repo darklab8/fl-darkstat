@@ -80,6 +80,9 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 tab.ShowEmpty, shared
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					<div><p>
+						Thrusters. You can equip Engine at your ship usually same as your ship's default Engine Max Force param.
+					</p></div>
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@ThrustersTable(thrusters, tab.MainMode, shared)

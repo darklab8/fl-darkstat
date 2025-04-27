@@ -88,6 +88,10 @@ templ PoBGoodsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shar
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					<div><p>
+						What u can buy and sell to Player Owned Bases viewed by goods.
+						@tab.PageTime()
+					</p></div>
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@PoBGoodsTable(configs.PoBGoods, tab.MainMode, shared)

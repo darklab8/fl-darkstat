@@ -324,6 +324,56 @@ templ BasesT(
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					if tab_mode == BaseTabTradesFrom {
+					<div>
+						<p>All routes from specific bases.
+						if shared.ShowDisco {
+							Excluded with less than 5k cargo, and no money at pob.
+							@tab.PageTime()
+						}
+						</p>
+					</div>
+					}
+					if tab_mode == BaseTabTradesTo {
+					<div>
+						<p>All routes to specific bases.
+						if shared.ShowDisco {
+							Excluded with less than 5k cargo, and no money at pob.
+							@tab.PageTime()
+						}
+						</p>
+					</div>
+					}
+					if tab_mode == BaseAllRoutes {
+					<div>
+						<p>All routes from specific bases to any other base for navigation.</p>
+					</div>
+					}
+					if tab_mode == BaseTabOres {
+					<div>
+						<p>Routes from all minable asteroid fields.
+						if shared.ShowDisco {
+							Shows routes for refined sub-results from pobs too.
+							@tab.PageTime()
+						}
+						</p>
+					</div>
+					}
+					if tab_mode == BaseShowMissions {
+					<div>
+						<p>NPC Base missions finder. Where best money, and more missions at bar (Min offers)</p>
+					</div>
+					}
+					if tab_mode == BaseShowShops {
+					<div>
+						<p>
+							NPC base shops, goods are sorted by name and category.
+							if shared.ShowDisco {
+								See PoBs for player owned bases.
+							}
+						</p>
+					</div>
+					}
 					@tab.FilterBar(&types.SharedData{}) {
 						// Turning off this feature because it has 170+mb bug size increasig for trades.html
 						// if tab_mode == BaseTabTrades || tab_mode == BaseTabOres {

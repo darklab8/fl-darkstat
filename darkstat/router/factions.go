@@ -52,11 +52,11 @@ func (l *Router) LinkFactions(
 		),
 		builder.NewComponent(
 			urls.Bribes,
-			front.FactionsT(useful_bribes, front.FactionShowRephacks, tab.ShowEmpty(false), shared),
+			front.FactionsT(useful_bribes, front.FactionShowBribes, tab.ShowEmpty(false), shared),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Bribes),
-			front.FactionsT(data.Factions, front.FactionShowRephacks, tab.ShowEmpty(true), shared),
+			front.FactionsT(data.Factions, front.FactionShowBribes, tab.ShowEmpty(true), shared),
 		),
 	)
 
@@ -68,7 +68,7 @@ func (l *Router) LinkFactions(
 					front.FactionReps(faction, faction.Reputations),
 				),
 				builder.NewComponent(
-					utils_types.FilePath(front.FactionRepUrl(faction, front.FactionShowRephacks)),
+					utils_types.FilePath(front.FactionRepUrl(faction, front.FactionShowBribes)),
 					front.RephackBottom(faction, faction.Bribes),
 				),
 			)

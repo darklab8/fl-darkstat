@@ -296,6 +296,20 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, sha
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					<div><p>
+						if mode == GunsShowBases || mode == GunsShowDamageBonuses {
+							Guns.
+						}
+						if mode == GunsMissiles {
+							Missiles.
+						}
+						if mode == GunsShowBases || mode == GunsMissiles {
+							You can equip <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Findingequipmentcompatiblewithspecifichardpoint") }>hp_type compatible. See Docs.</a>
+						}
+						if mode == GunsShowDamageBonuses {
+							Attack bonuses again shields.
+						}
+					</p></div>
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@GunTable(guns, mode, tab.MainMode, shared, infocards)

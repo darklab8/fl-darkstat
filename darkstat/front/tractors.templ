@@ -74,6 +74,18 @@ templ TractorsT(tractors []*configs_export.Tractor, mode2 tab.ShowEmpty, tab_mod
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					if tab_mode == TractorModShop {
+						<div><p>
+						if shared.ShowDisco {
+							Your ID, You  can have only one, it affects <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Techcompatibility") }>tech compatibility. See docs.</a>
+						} else {
+							Tractors
+						}
+						</p></div>
+					}
+					if tab_mode == TractorIDRephacks {
+						<div><p>ID reputation limits enforced</p></div>
+					}
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						<table class="sortable">

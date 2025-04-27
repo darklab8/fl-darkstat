@@ -203,6 +203,18 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
+					if mode == ShipShowDetails {
+						<div><p>
+							Ship hardpoint hp_types. Insert to other tab filter bar to find <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Findingequipmentcompatiblewithspecifichardpoint") }>compatible equipment. See Docs.</a>
+						</p></div>
+					}
+					if mode == ShipShowBases {
+						<div><p>Ship NPC sellers.
+						if shared.ShowDisco {
+							See extra ships from PoBs at PoB goods
+						}
+						</p></div>
+					}
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@ShipTable(ships, mode, tab.MainMode, shared, infocards)
