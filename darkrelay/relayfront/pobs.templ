@@ -133,10 +133,10 @@ templ PoBsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shared *
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					<div><p>
+					@tab.PageHint() {
 						What u can buy and sell to Player Owned Bases viewed by bases.
 						@tab.PageTime()
-					</p></div>
+					}
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@PobTable(configs.PoBs, tab.MainMode, shared)

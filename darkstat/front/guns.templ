@@ -296,7 +296,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, sha
 		<div class="splitter">
 			@tab.LeftTable(){
 				@tab.TableTop(){
-					<div><p>
+					@tab.PageHint() {
 						if mode == GunsShowBases || mode == GunsShowDamageBonuses {
 							Guns.
 						}
@@ -309,7 +309,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, sha
 						if mode == GunsShowDamageBonuses {
 							Attack bonuses again shields.
 						}
-					</p></div>
+					}
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@GunTable(guns, mode, tab.MainMode, shared, infocards)

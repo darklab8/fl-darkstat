@@ -99,22 +99,20 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 			@tab.LeftTable(){
 				@tab.TableTop(){
 					if mode == FactionShowBases {
-					<div>
-						<p>Reps between NPC factions. How changes by NPC kills and missions.
-						if shared.ShowDisco {
-							See your ID reps in ID Rep hacks.
+						@tab.PageHint() {
+							Reps between NPC factions. How changes by NPC kills and missions.
+							if shared.ShowDisco {
+								See your ID reps in ID Rep hacks.
+							}
 						}
-						</p>
-					</div>
 					}
 					if mode == FactionShowBribes {
-					<div>
-						<p>Where u can bribe NPC faction for more rep.
-						if shared.ShowDisco {
-							You can't increase your rep beyond your ID rephacks limits.
+						@tab.PageHint() {
+							Where u can bribe NPC faction for more rep.
+							if shared.ShowDisco {
+								You can't increase your rep beyond your ID rephacks limits.
+							}
 						}
-						</p>
-					</div>
 					}
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">

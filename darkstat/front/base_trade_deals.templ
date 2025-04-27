@@ -35,15 +35,13 @@ templ TradeDeals(
                     flex-direction: column;
                 }
                 </style>
-				<div>
-					<p>Best 800 trade routes sorted by formula: 50% of profit/v/s + 50% time weight (linear, 0 at 0min, max at 10min).
+				@tab.PageHint() {
+					Best 800 trade routes sorted by formula: 50% of profit/v/s + 50% time weight (linear, 0 at 0min, max at 10min).
 					if shared.ShowDisco {
 						Excluded less than 5k cargo, and no money at pob.
 						@tab.PageTime()
 					}
-					</p>
-				</div>
-				
+				}
                 <div id="table-top" style="height: calc(100% - 15px);">
                    	@tab.FilterBar(&types.SharedData{}) {}
 					<div id="table-top-main" style="height:100%;">
