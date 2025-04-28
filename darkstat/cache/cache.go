@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"sync"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -14,7 +15,7 @@ type Cached[T any] struct {
 	getter      func() T
 	timeToLive  time.Duration
 	timeCreated time.Time
-	first_init  chan error
+	first_init  sync.WaitGroup
 }
 
 func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
@@ -23,17 +24,16 @@ func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
 		timeToLive: timeToLive,
 	}
 
-	c.first_init = async.ToAsync(func() {
+	c.first_init.Add(1)
+	async.ToAsync(func() {
 		c.get()
+		c.first_init.Done()
 	})
 	return c
 }
 
 func (c *Cached[T]) Get() T {
-	if c.first_init != nil {
-		<-c.first_init
-		c.first_init = nil
-	}
+	c.first_init.Wait()
 	return c.get()
 }
 
