@@ -18,7 +18,7 @@ import (
 // because we don't need CSS transitions and they are hurtful https://htmx.org/docs/#css_transitions
 //
 
-//go:embed htmx.1.9.11.js
+//go:embed htmx.2.0.4.js
 var HtmxJsContent string
 
 var HtmxJS core_types.StaticFile = core_types.StaticFile{
@@ -27,7 +27,7 @@ var HtmxJS core_types.StaticFile = core_types.StaticFile{
 	Kind:     core_types.StaticFileJS,
 }
 
-//go:embed htmx.1.9.11.preload.js
+//go:embed htmx.preload.2.1.1.js
 var PreloadJsContent string
 
 var HtmxPreloadJS core_types.StaticFile = core_types.StaticFile{
