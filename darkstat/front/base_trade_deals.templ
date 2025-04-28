@@ -74,13 +74,15 @@ templ TradesTable(
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:100px;">Commodity</th>
-                <th style="width:100px;">From. System</th>
+                <th style="width:60px;">@frmt.MultiLinestring([]string{"From", "System"})</th>
                 <th style="width:25px;"> @frmt.MultiLinestring([]string{"From", "Nav", "Map"}) </th>
                 <th style="width:100px;">From. Base</th>
+				<th style="width:70px;">@frmt.MultiLinestring([]string{"From", "Faction"})</th>
                 <th style="width:50px;">Profit/v</th>
-				<th style="width:100px;">Dest. System</th>
+				<th style="width:60px;">@frmt.MultiLinestring([]string{"Dest.", "System"})</th>
 				<th style="width:25px;"> @frmt.MultiLinestring([]string{"Nav", "Map"}) </th>
-                <th style="width:100px;">Dest. Name</th>
+                <th style="width:100px;">Dest. Base</th>
+				<th style="width:70px;">@frmt.MultiLinestring([]string{"Dest.", "Faction"})</th>
 				<th style="width:50px;">
 					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
@@ -109,8 +111,6 @@ templ TradesTable(
 				if shared.ShowDisco {
 					<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "cl."})</th>
 				}
-                <th style="width:100px;">From. Faction</th>
-				<th style="width:100px;">Dest. Faction</th>
                 <th style="width:100px;">From. Region</th>
 				<th style="width:100px;">Dest. Region</th>
 				<th style="width:50px;">
@@ -143,13 +143,31 @@ templ TradesTable(
 						{ trade_route.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.SellingGood.ShipClass) }
 					}
 				</td>
-                <td>@frmt.WriteBaseName("fr."+trade_route.Transport.BuyingGood.SystemName) </td>
+                <td>
+					@frmt.WriteLimit(85) {
+						{ "fr."+trade_route.Transport.BuyingGood.SystemName }
+					}
+				</td>
                 <td>{ trade_route.Transport.BuyingGood.SectorCoord }</td>
                 <td>@frmt.WriteBaseName("fr."+trade_route.Transport.BuyingGood.BaseName) </td>
+				<td>
+					@frmt.WriteLimit(100) {
+						{ "to."+trade_route.Transport.BuyingGood.FactionName }
+					}
+				</td>
                 <td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
-				<td>@frmt.WriteSystemName("to."+trade_route.Transport.SellingGood.SystemName)</td>
+				<td>
+					@frmt.WriteLimit(85) {
+						{ "to."+trade_route.Transport.SellingGood.SystemName }
+					}
+				</td>
 				<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
 				<td>@frmt.WriteBaseName("to."+trade_route.Transport.SellingGood.BaseName) </td>
+				<td>
+					@frmt.WriteLimit(100) {
+						{ "to."+trade_route.Transport.SellingGood.FactionName }
+					}
+				</td>
 				<td>
 					<span class="tooltip">
 						@TradeRouteHumanTime(trade_route.Transport.Route)
@@ -204,8 +222,6 @@ templ TradesTable(
 				if shared.ShowDisco {
 					<td>{ frmt.FormattedShipClassOfCommodity2(trade_route.Transport.SellingGood.ShipClass) }</td>
 				}
-				<td>@frmt.WriteFactioName("to."+trade_route.Transport.BuyingGood.FactionName) </td>
-				<td>@frmt.WriteFactioName("to."+trade_route.Transport.SellingGood.FactionName) </td>
 				<td>@frmt.WriteRegionName("fr."+trade_route.Transport.BuyingGood.Region)</td>
 				<td>@frmt.WriteRegionName("to."+trade_route.Transport.SellingGood.Region)</td>
 				<td>{ strconv.Itoa(trade_route.Transport.BuyingGood.PriceBaseSellsFor) }</td>
