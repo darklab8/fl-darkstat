@@ -268,7 +268,8 @@ templ ShipDetailsShared(ship configs_export.Ship) {
 
 templ ShipDetails(ship configs_export.Ship) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ ship.Name }</div>
+	<div class="bottom_name">{ ship.Name },
+	@tab.PageTime()</div>
 	@ShipDetailsShared(ship) {
 		for _, slot := range ship.Slots {
 			@HighlightableRow() {

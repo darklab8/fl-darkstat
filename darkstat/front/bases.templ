@@ -475,7 +475,9 @@ templ BaseMarketGoodsBase() {
 
 templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*configs_export.MarketGood, tab_mode BaseMode) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ name }</div>
+	<div class="bottom_name">{ name }
+	// @tab.PageTime() // TODO add when having page proper live backend
+	</div>
 	@BaseMarketGoodsBase() {
 		for _, good := range frmt.SortedMarketGoods(goods) {
 			<tr
@@ -554,7 +556,8 @@ templ BaseMissionsBase() {
 
 templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_mode BaseMode) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ name }</div>
+	<div class="bottom_name">{ name },
+	@tab.PageTime()</div>
 	@BaseMissionsBase() {
 		for _, msn_giver := range mission_givers.Factions {
 			<tr
@@ -709,7 +712,8 @@ func (r RoundedFloat) MarshalJSON() ([]byte, error) {
 
 templ BaseTradesFrom(name string, base *configs_export.Base, tab_mode BaseMode, shared *types.SharedData, 	data *configs_export.Exporter) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ name }</div>
+	<div class="bottom_name">{ name },
+	@tab.PageTime()</div>
 	@BaseTradesShared(shared, tab_mode) {
 		for _, trade_route := range data.GetBaseTradePathsFiltered(data.GetBaseTradePathsFrom(base)) {
 			@TradeRouteRow(trade_route, shared, tab_mode)
@@ -718,7 +722,8 @@ templ BaseTradesFrom(name string, base *configs_export.Base, tab_mode BaseMode, 
 }
 templ BaseTradesTo(name string, base *configs_export.Base, tab_mode BaseMode, shared *types.SharedData, data *configs_export.Exporter) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ name }</div>
+	<div class="bottom_name">{ name },
+	@tab.PageTime()</div>
 	@BaseTradesShared(shared, tab_mode) {
 		for _, trade_route := range data.GetBaseTradePathsFiltered(data.GetBaseTradePathsTo(base)) {
 			@TradeRouteRow(trade_route, shared, tab_mode)

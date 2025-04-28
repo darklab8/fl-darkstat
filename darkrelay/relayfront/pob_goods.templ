@@ -151,7 +151,8 @@ templ PoBGoodPobsShared() {
 
 templ PoBGoodPobs(good *configs_export.PoBGood) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ good.Name }</div>
+	<div class="bottom_name">{ good.Name },
+	@tab.PageTime()</div>
 	@PoBGoodPobsShared() {
 		for _, pob := range good.Bases {
 			<tr

@@ -34,7 +34,9 @@ templ BriberyBottomBase() {
 
 templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Bribe) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ faction.Name }</div>
+	<div class="bottom_name">{ faction.Name }
+	// @tab.PageTime() // add if u will make page proper live
+	</div>
 	@BriberyBottomBase() {
 		for _, rep := range rephacks {
 			<tr

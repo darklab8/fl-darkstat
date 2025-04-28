@@ -148,7 +148,9 @@ templ IDRephacksShared() {
 
 templ IDRephacksT(rephack *configs_export.Tractor) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ rephack.Name }</div>
+	<div class="bottom_name">{ rephack.Name },
+	@tab.PageTime()
+	</div>
 	@IDRephacksShared() {
 		for _, rep := range rephack.GetRephacksList() {
 			<tr

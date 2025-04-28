@@ -365,7 +365,8 @@ templ GunShowModifiersShared() {
 
 templ GunShowModifiers(gun configs_export.Gun) {
 	@tab.BottomFilterBar()
-	<div class="bottom_name">{ gun.Name }</div>
+	<div class="bottom_name">{ gun.Name },
+	@tab.PageTime()</div>
 	@GunShowModifiersShared() {
 		for _, bonus := range gun.DamageBonuses {
 			<tr
