@@ -96,13 +96,15 @@ func (l *Router) LinkBases(
 		}
 	}
 
+	best_trades := cache.NewCached(func() []*configs_export.TradeDeal {
+		return data.GetBestTradeDeals(data.TradeBases)
+	}, time.Minute*2+time.Second*5)
+
 	build.RegComps(
 		builder.NewComponent( // move to back?
 			urls.TradeDeals,
 			front.TradeDeals(
-				cache.NewCached(func() []*configs_export.TradeDeal {
-					return data.GetBestTradeDeals(data.TradeBases)
-				}, time.Minute*2+time.Second*5),
+				best_trades,
 				shared,
 				data,
 				tab.ShowEmpty(false),
@@ -111,9 +113,7 @@ func (l *Router) LinkBases(
 		builder.NewComponent( // move to back?
 			tab.AllItemsUrl(urls.TradeDeals),
 			front.TradeDeals(
-				cache.NewCached(func() []*configs_export.TradeDeal {
-					return data.GetBestTradeDeals(data.TradeBases)
-				}, time.Minute*2+time.Second*5),
+				best_trades,
 				shared,
 				data,
 				tab.ShowEmpty(true),

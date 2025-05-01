@@ -8,7 +8,7 @@
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wineprefix_flsr/drive_c/Freelancer",
     "UTILS_DEV_ENV": "true",
     # "UTILS_BAD_VAR": "true",
-    "DARKSTAT_LOG_LEVEL": "DEBUG",
+    "DARKSTAT_LOG_LEVEL": "INFO",
     "DARKCORE_LOG_LEVEL": "WARN",
     "UTILS_LOG_LEVEL": "WARN",
     "CONFIGS_LOG_LEVEL": "WARN",
