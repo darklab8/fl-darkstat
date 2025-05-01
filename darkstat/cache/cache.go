@@ -24,11 +24,15 @@ func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
 		timeToLive: timeToLive,
 	}
 
-	c.first_init.Add(1)
-	async.ToAsync(func() {
-		c.get()
-		c.first_init.Done()
-	})
+	go func() {
+		c.first_init.Add(1)
+		async.ToAsync(func() {
+			c.get()
+			c.first_init.Done()
+		})
+		time.Sleep(timeToLive - time.Second*20)
+	}()
+
 	return c
 }
 

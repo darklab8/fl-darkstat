@@ -552,7 +552,7 @@ func (e *ExporterRelay) fmt_factions_to_str(factions_by_hash map[flhash.HashCode
 				sb.WriteString(", ")
 			}
 		} else {
-			logus.Log.Error("faction hash is invalid", typelog.Any("hash", *faction_hash))
+			logus.Log.Warn("faction hash is invalid", typelog.Any("hash", *faction_hash))
 		}
 	}
 	sb.WriteString("]")
