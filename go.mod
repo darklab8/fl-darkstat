@@ -5,7 +5,7 @@ go 1.23.0
 require (
 	github.com/a-h/templ v0.3.857
 	github.com/darklab8/fl-data-discovery v0.4.0
-	github.com/darklab8/go-typelog v0.6.2
+	github.com/darklab8/go-typelog v0.7.1
 	github.com/darklab8/go-utils v0.25.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.1
 	github.com/stretchr/testify v1.10.0
@@ -28,6 +28,8 @@ require (
 	github.com/mailru/easyjson v0.9.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/swaggo/files v1.0.1 // indirect
+	go.opentelemetry.io/otel v1.35.0 // indirect
+	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	golang.org/x/net v0.37.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/tools v0.30.0 // indirect
