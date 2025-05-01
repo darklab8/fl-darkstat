@@ -27,16 +27,19 @@ func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
 	}
 
 	go func() {
-		c.first_init.Add(1)
-		async.ToAsync(func() {
-			Lock.Lock()
-			defer Lock.Unlock()
-			c.get()
-			c.first_init.Done()
-		})
-		time.Sleep(timeToLive - time.Second*20)
+		for {
+			c.first_init.Add(1)
+			async.ToAsync(func() {
+				Lock.Lock()
+				defer Lock.Unlock()
+				c.get()
+				c.timeCreated = time.Now()
+				c.first_init.Done()
+				logus.Log.Debug("updated cache with time to live", typelog.Any("ttl_period", c.timeToLive.Seconds()))
+			})
+			time.Sleep(timeToLive - time.Second*20)
+		}
 	}()
-
 	return c
 }
 
