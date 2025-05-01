@@ -152,7 +152,7 @@ templ TradesTable(
                 <td>@frmt.WriteBaseName("fr."+trade_route.Transport.BuyingGood.BaseName) </td>
 				<td>
 					@frmt.WriteLimit(100) {
-						{ "to."+trade_route.Transport.BuyingGood.FactionName }
+						{ "fr."+trade_route.Transport.BuyingGood.FactionName }
 					}
 				</td>
                 <td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
