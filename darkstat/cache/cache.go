@@ -18,6 +18,8 @@ type Cached[T any] struct {
 	first_init  sync.WaitGroup
 }
 
+var Lock sync.Mutex
+
 func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
 	c := &Cached[T]{
 		getter:     getter,
@@ -27,6 +29,8 @@ func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
 	go func() {
 		c.first_init.Add(1)
 		async.ToAsync(func() {
+			Lock.Lock()
+			defer Lock.Unlock()
 			c.get()
 			c.first_init.Done()
 		})
