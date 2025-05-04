@@ -47,13 +47,16 @@ func PostItemsMarketGoodsT[T Marketable](webapp *web.Web, items []T) func(w http
 		body, err := io.ReadAll(r.Body)
 		if logus.Log.CheckError(err, "failed to read body") {
 			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "err to ready body")
+			_, err = fmt.Fprintf(w, "err to ready body")
+			Log.CheckError(err, "err to ready body")
 			return
 		}
-		json.Unmarshal(body, &nicknames)
+		err = json.Unmarshal(body, &nicknames)
+		logus.Log.CheckWarn(err, "failed to unmarshal input into post market goods")
 		if len(nicknames) == 0 {
 			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "input at least some nicknames into request body")
+			_, err = fmt.Fprintf(w, "input at least some nicknames into request body")
+			Log.CheckError(err, "input at least some nicknames into request body")
 			return
 		}
 
@@ -96,13 +99,16 @@ func PostItemsTechCompatT[T TechCompatable](webapp *web.Web, items []T) func(w h
 		body, err := io.ReadAll(r.Body)
 		if logus.Log.CheckError(err, "failed to read body") {
 			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "err to ready body")
+			_, err = fmt.Fprintf(w, "err to ready body")
+			Log.CheckError(err, "err to ready body")
 			return
 		}
-		json.Unmarshal(body, &nicknames)
+		err = json.Unmarshal(body, &nicknames)
+		logus.Log.CheckWarn(err, "failed to unmarshal input into post items tech compat")
 		if len(nicknames) == 0 {
 			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "input at least some base nicknames into request body")
+			_, err = fmt.Fprintf(w, "input at least some base nicknames into request body")
+			Log.CheckError(err, "input at least some base nicknames into request body")
 			return
 		}
 

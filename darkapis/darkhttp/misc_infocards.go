@@ -36,13 +36,16 @@ func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registr
 			body, err := io.ReadAll(r.Body)
 			if logus.Log.CheckError(err, "failed to read body") {
 				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "err to ready body")
+				_, err = fmt.Fprintf(w, "err to ready body")
+				Log.CheckError(err, "fprintf print error in infocards 1")
 				return
 			}
-			json.Unmarshal(body, &nicknames)
+			err = json.Unmarshal(body, &nicknames)
+			Log.CheckWarn(err, "failed to unparmshal input in get infocards")
 			if len(nicknames) == 0 {
 				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "input at least some base nicknames into request body")
+				_, err = fmt.Fprintf(w, "input at least some base nicknames into request body")
+				Log.CheckError(err, "fprintf print error in infocards 2")
 				return
 			}
 

@@ -25,7 +25,8 @@ func GetConfigsExport() *configs_export.Exporter {
 		return nil
 
 	}
-	pprof.StartCPUProfile(f)
+	err = pprof.StartCPUProfile(f)
+	logus.Log.CheckError(err, "failed to start cpu profiling")
 	start := time.Now()
 
 	timer_mapping := timeit.NewTimerMain(timeit.WithMsg("read mapping"))

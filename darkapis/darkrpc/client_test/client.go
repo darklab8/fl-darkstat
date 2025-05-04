@@ -15,7 +15,6 @@ func main() {
 	smth := darkrpc.ServerRpc{}
 	smth2 := smth.GetBases
 	_ = smth2
-	smth2 = GetBases
 
 	args := darkrpc.Args{}
 	var reply darkrpc.Reply

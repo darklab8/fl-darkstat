@@ -10,6 +10,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
+	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	stat_settings "github.com/darklab8/fl-darkstat/darkstat/settings"
 
 	"github.com/darklab8/go-utils/utils/cantil"
@@ -66,5 +67,6 @@ func DarkmapCliGroup(Args []string) {
 			Enverants:  stat_settings.Enverants,
 		},
 	)
-	parser.Run(Args)
+	err := parser.Run(Args)
+	logus.Log.CheckError(err, "failed to execute darkmap cli group command")
 }

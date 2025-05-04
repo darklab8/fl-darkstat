@@ -28,13 +28,16 @@ func PostBaseMarketGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 			body, err := io.ReadAll(r.Body)
 			if logus.Log.CheckError(err, "failed to read body") {
 				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "err to ready body")
+				_, err = fmt.Fprintf(w, "err to ready body")
+				Log.CheckError(err, "err to frpint about reading body")
 				return
 			}
-			json.Unmarshal(body, &base_nicknames)
+			err = json.Unmarshal(body, &base_nicknames)
+			Log.CheckError(err, "failed to unparsmal in base market goods request")
 			if len(base_nicknames) == 0 {
 				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "input at least some base nicknames into request body")
+				_, err = fmt.Fprintf(w, "input at least some base nicknames into request body")
+				Log.CheckError(err, "frpnt failed in base market goods")
 				return
 			}
 

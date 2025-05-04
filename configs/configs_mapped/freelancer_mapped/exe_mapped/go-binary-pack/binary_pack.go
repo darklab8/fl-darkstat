@@ -3,25 +3,25 @@
 // license that can be found in the LICENSE file.
 
 /*
-	Package binary_pack performs conversions between some Go values represented as byte slices.
-	This can be used in handling binary data stored in files or from network connections,
-	among other sources. It uses format slices of strings as compact descriptions of the layout
-	of the Go structs.
+Package binary_pack performs conversions between some Go values represented as byte slices.
+This can be used in handling binary data stored in files or from network connections,
+among other sources. It uses format slices of strings as compact descriptions of the layout
+of the Go structs.
 
-	Format characters (some characters like H have been reserved for future implementation of unsigned numbers):
-		? - bool, packed size 1 byte
-		b - int8, packed size 1 bytes
-		B - uint8, packed size 1 bytes
-		h - int16, packed size 2 bytes
-		H - uint16, packed size 2 bytes
-		i, l - int32, packed size 4 bytes
-		I, L - int32, packed size 4 bytes
-		q - int64, packed size 8 bytes
-		Q - uint64, packed size 8 bytes
-		f - float32, packed size 4 bytes
-		d - float64, packed size 8 bytes
-		Ns - string, packed size N bytes, N is a number of runes to pack/unpack
+Format characters (some characters like H have been reserved for future implementation of unsigned numbers):
 
+	? - bool, packed size 1 byte
+	b - int8, packed size 1 bytes
+	B - uint8, packed size 1 bytes
+	h - int16, packed size 2 bytes
+	H - uint16, packed size 2 bytes
+	i, l - int32, packed size 4 bytes
+	I, L - int32, packed size 4 bytes
+	q - int64, packed size 8 bytes
+	Q - uint64, packed size 8 bytes
+	f - float32, packed size 4 bytes
+	d - float64, packed size 8 bytes
+	Ns - string, packed size N bytes, N is a number of runes to pack/unpack
 */
 package binarypack
 
@@ -32,6 +32,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 )
 
 // BinaryPack presents a BinaryPack
@@ -219,19 +221,23 @@ func bytesToBool(b []byte) bool {
 	return bytesToInt(b) > 0
 }
 
+var Log = logus.Log.WithScope("binary_pack")
+
 func intToBytes(n int, size int) []byte {
 	buf := bytes.NewBuffer([]byte{})
 
+	var err error
 	switch size {
 	case 1:
-		binary.Write(buf, binary.LittleEndian, int8(n))
+		err = binary.Write(buf, binary.LittleEndian, int8(n))
 	case 2:
-		binary.Write(buf, binary.LittleEndian, int16(n))
+		err = binary.Write(buf, binary.LittleEndian, int16(n))
 	case 4:
-		binary.Write(buf, binary.LittleEndian, int32(n))
+		err = binary.Write(buf, binary.LittleEndian, int32(n))
 	default:
-		binary.Write(buf, binary.LittleEndian, int64(n))
+		err = binary.Write(buf, binary.LittleEndian, int64(n))
 	}
+	Log.CheckError(err, "failed to write buf")
 
 	return buf.Bytes()[0:size]
 }

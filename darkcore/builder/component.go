@@ -7,10 +7,16 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
+	"github.com/darklab8/go-typelog/typelog"
 
 	"github.com/a-h/templ"
 	"github.com/darklab8/go-utils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/utils/utils_types"
+)
+
+var (
+	Log *typelog.Logger = logus.Log.WithScope("darkcore.builder.component")
 )
 
 type Component struct {
@@ -42,7 +48,8 @@ func (h *Component) Write(gp Params) WriteResult {
 	buf.Write([]byte(fmt.Sprintf("<!--ts %s-->\n", time.Now().Format("2006-01-02T15:04:05.999Z"))))
 	// gp.Pagepath = string(h.pagepath)
 
-	h.templ_comp.Render(context.WithValue(context.Background(), core_types.GlobalParamsCtxKey, gp), buf)
+	err := h.templ_comp.Render(context.WithValue(context.Background(), core_types.GlobalParamsCtxKey, gp), buf)
+	Log.CheckPanic(err, "failed to write component")
 
 	// Usage of gohtml is not obligatory, but nice touch simplifying debugging view.
 	return WriteResult{

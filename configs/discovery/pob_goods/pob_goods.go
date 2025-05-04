@@ -83,7 +83,8 @@ func Read(file *file.File) *Config {
 	logus.Log.CheckFatal(err, "failed to read file")
 
 	var conf *Config
-	json.Unmarshal(byteValue, &conf)
+	err = json.Unmarshal(byteValue, &conf)
+	logus.Log.CheckError(err, "failed to read pob goods")
 
 	for base_name, base := range conf.BasesByName {
 		base.Name = base_name

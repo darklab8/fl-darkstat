@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/stretchr/testify/assert"
 )
@@ -39,7 +40,8 @@ func TestTradeRoutes(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	pprof.StartCPUProfile(f)
+	err = pprof.StartCPUProfile(f)
+	logus.Log.CheckError(err, "failed to start pprof")
 	defer pprof.StopCPUProfile()
 
 	timeit.NewTimerF(func() {

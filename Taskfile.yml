@@ -127,6 +127,10 @@ tasks:
     cmds:
       - go tool pprof mem.pprof
 
+  lint:
+    cmds:
+      - golangci-lint run
+
   profiler:web:
     cmds:
       # https://www.codereliant.io/memory-leaks-with-pprof/

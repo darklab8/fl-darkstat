@@ -28,10 +28,6 @@ func NewBaseRoute(g *GraphResults, FromBase *Base, ToBase *Base) *BaseRoute {
 
 }
 
-type baseAllRoutes struct {
-	AllRoutes []*ComboRoute
-}
-
 type ComboRoute struct {
 	Transport *BaseRoute
 	Frigate   *BaseRoute

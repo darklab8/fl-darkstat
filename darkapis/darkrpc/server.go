@@ -42,10 +42,15 @@ func WithPortSrv(port int) ServerOpt {
 	}
 }
 
+var (
+	Log = logus.Log.WithScope("darkgrpc")
+)
+
 func (r *RpcServer) Serve(app_data *appdata.AppData) {
 	rpcServer := rpc.NewServer()
 	rpc_server := NewRpc(app_data)
-	rpcServer.Register(rpc_server)
+	err := rpcServer.Register(rpc_server)
+	Log.CheckError(err, "failed to register rpc server")
 
 	rpc.HandleHTTP()                                                   // if serving over http
 	tcp_listener, err := net.Listen("tcp", fmt.Sprintf(":%d", r.port)) // if serving over http
@@ -55,8 +60,8 @@ func (r *RpcServer) Serve(app_data *appdata.AppData) {
 
 	var sock_listener net.Listener
 	if cfg.IsLinux {
-		os.Remove(r.sock_address)
-		os.Mkdir("/tmp/darkstat", 0777)
+		_ = os.Remove(r.sock_address)
+		_ = os.Mkdir("/tmp/darkstat", 0777)
 		sock_listener, err = net.Listen("unix", r.sock_address) // if serving over Unix
 		if err != nil {
 			log.Fatal("listen error:", err)

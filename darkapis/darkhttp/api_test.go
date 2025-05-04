@@ -41,6 +41,7 @@ func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string
 		body["include_rephacks"] = true
 	}
 	post_body, err := json.Marshal(body)
+	logus.Log.CheckError(err, "failing to marshal body")
 	res, err := httpc.Post("http://localhost/api"+url, ApplicationJson, bytes.NewBuffer(post_body))
 	logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
 

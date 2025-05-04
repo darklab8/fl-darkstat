@@ -9,6 +9,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
 
 type TdCacheKey string
@@ -29,7 +30,8 @@ func GetTdDiscoCacheKey(shared *types.SharedData, nickname string) TdCacheKey {
 	}
 	cache_key_data := marshalIDs(shared, nickname)
 	h := md5.New()
-	io.WriteString(h, cache_key_data)
+	_, err := io.WriteString(h, cache_key_data)
+	logus.Log.CheckWarn(err, "failing to get disco key, md5 hash value problems")
 	return TdCacheKey(fmt.Sprintf("%x", h.Sum(nil)))
 }
 

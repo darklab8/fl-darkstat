@@ -28,7 +28,10 @@ func TestRpc(t *testing.T) {
 
 	// c := NewClient(fmt.Sprintf("unix:%s", unix_socket))
 	c := NewClient(fmt.Sprintf("localhost:%d", test_port))
-	defer c.Conn.Close()
+	defer func() {
+		err := c.Conn.Close()
+		logus.Log.CheckError(err, "failed to close connection in test rpc")
+	}()
 
 	for i := 0; i < 10; i++ {
 		res, _ := c.GetHealth(context.Background(), &statproto.Empty{})

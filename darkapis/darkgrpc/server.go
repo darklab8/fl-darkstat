@@ -62,8 +62,8 @@ func (r *Server) Serve() {
 	reflection.Register(s)
 
 	if cfg.IsLinux && r.sock_address != "" {
-		os.Remove(r.sock_address)
-		os.Mkdir("/tmp/darkstat", 0777)
+		_ = os.Remove(r.sock_address)
+		_ = os.Mkdir("/tmp/darkstat", 0777)
 		sock_listener, err := net.Listen("unix", fmt.Sprintf("%s", r.sock_address)) // if serving over Unix
 		if err != nil {
 			log.Fatal("listen error:", err)
@@ -98,21 +98,34 @@ func (r *Server) Serve() {
 		}
 
 		// Sprinked with API documentation :)
-		mux.HandlePath("GET", "/", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-			w.Write([]byte(staticproto.Index))
+		err = mux.HandlePath("GET", "/", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			_, err = w.Write([]byte(staticproto.Index))
+			logus.Log.CheckError(err, "failed to write index file")
 		})
-		mux.HandlePath("GET", "/swagger-ui-bundle.js", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-			w.Write([]byte(staticproto.JS1))
+		logus.Log.CheckError(err, "mux failed to handle path for index file")
+		err = mux.HandlePath("GET", "/swagger-ui-bundle.js", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			_, err = w.Write([]byte(staticproto.JS1))
+			logus.Log.CheckError(err, "failed to write  file JS1 for swagger")
 		})
-		mux.HandlePath("GET", "/swagger-ui-standalone-preset.js", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-			w.Write([]byte(staticproto.JS2))
+		logus.Log.CheckError(err, "mux failed to handle path for JS1 file")
+
+		err = mux.HandlePath("GET", "/swagger-ui-standalone-preset.js", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			_, err = w.Write([]byte(staticproto.JS2))
+			logus.Log.CheckError(err, "failed to write  file JS2 for swagger")
 		})
-		mux.HandlePath("GET", "/swagger-ui.css", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-			w.Write([]byte(staticproto.CSS))
+		logus.Log.CheckError(err, "mux failed to handle path for JS2 file")
+
+		err = mux.HandlePath("GET", "/swagger-ui.css", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			_, err = w.Write([]byte(staticproto.CSS))
+			logus.Log.CheckError(err, "failed to write  file CSS for swagger")
 		})
-		mux.HandlePath("GET", "/docs.json", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-			w.Write([]byte(statproto.SwaggerContent))
+		logus.Log.CheckError(err, "mux failed to handle path for CSS file for swagger")
+
+		err = mux.HandlePath("GET", "/docs.json", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			_, err = w.Write([]byte(statproto.SwaggerContent))
+			logus.Log.CheckError(err, "failed to write  file docs.json for swagger")
 		})
+		logus.Log.CheckError(err, "mux failed to handle path for docs.json for swagger")
 
 		log.Printf("server listening at 8081")
 		go func() {

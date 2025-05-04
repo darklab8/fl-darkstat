@@ -62,8 +62,11 @@ func (f *File) openToReadF() *File {
 }
 
 func (f *File) close() {
-	f.file.Close()
+	err := f.file.Close()
+	Log.CheckError(err, "failed to close file")
 }
+
+var Log = logus.Log.WithScope("filefind.file")
 
 func (f *File) ReadLines() ([]string, error) {
 

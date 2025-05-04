@@ -279,7 +279,8 @@ func (m *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 			latest_patch_file_fp := latest_patch_file.GetFilepath()
 			patch_data, err := os.ReadFile(latest_patch_file_fp.ToString())
 			if !logus.Log.CheckError(err, "failed to unmarshal patch") {
-				json.Unmarshal(patch_data, &m.Discovery.LatestPatch)
+				err := json.Unmarshal(patch_data, &m.Discovery.LatestPatch)
+				logus.Log.CheckWarn(err, "failed to unmarshal latest patch")
 			}
 			fmt.Println("p.Discovery.LatestPatch=", m.Discovery.LatestPatch)
 		}

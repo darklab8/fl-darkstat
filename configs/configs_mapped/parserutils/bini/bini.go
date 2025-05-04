@@ -31,6 +31,10 @@ var bp = new(gbp.BinaryPack)
 
 const SEEK_SET = io.SeekStart // python default seek(offset, whence=os.SEEK_SET, /)
 
+var (
+	Log *typelog.Logger = logus.Log.WithScope("bini")
+)
+
 var VALUE_TYPES map[int]string = map[int]string{
 	1: "i", 2: "f", 3: "i",
 }
@@ -50,11 +54,13 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 	fh := bytes.NewReader(data)
 
 	bdata := make([]byte, 12)
-	fh.Read(bdata)
+	_, err = fh.Read(bdata)
+	Log.CheckWarn(err, "failed to read bdata")
 
 	format := []string{"4s", "I", "I"}
 
 	packed_values, err := bp.UnPack(format, bdata)
+	Log.CheckError(err, "failed to unpack bini")
 	magic := packed_values[0].(string)
 	version := packed_values[1].(int)
 	str_table_offset := packed_values[2].(int)
@@ -63,7 +69,8 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 		logus.Log.Panic("Expected finding BINI. Found smth else", typelog.String("magic", magic), typelog.Int("version", version))
 	}
 
-	fh.Seek(int64(str_table_offset), SEEK_SET)
+	_, err = fh.Seek(int64(str_table_offset), SEEK_SET)
+	Log.CheckWarn(err, "failed to seek str_table_offset")
 
 	var raw_table []byte
 	raw_table_length := file_size - str_table_offset - 1
@@ -71,7 +78,8 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 		return result
 	}
 	raw_table = make([]byte, raw_table_length)
-	fh.Read(raw_table)
+	_, err = fh.Read(raw_table)
+	Log.CheckWarn(err, "failed to read raw_table")
 
 	raw_tables := bytes.Split(raw_table, []byte{'\x00'})
 
@@ -89,6 +97,7 @@ func parse_file(path utils_types.FilePath, FoldValues FoldValues) []Section {
 	// return to end of header to read sections
 	var position int
 	pos, err := fh.Seek(12, SEEK_SET)
+	Log.CheckError(err, "failed to seek_set")
 	position = int(pos)
 
 	for position < str_table_offset {
@@ -184,12 +193,15 @@ func IsBini(filepath utils_types.FilePath) bool {
 	f, err := os.Open(filepath.ToString())
 	logus.Log.CheckPanic(err,
 		"file not founs in isBini check", utils_logus.FilePath(filepath))
-	defer f.Close()
+	defer func() {
+		err = f.Close()
+		logus.Log.CheckError(err, "failed to close file in is bini")
+	}()
 
 	bytes := make([]byte, 4)
 
 	bufr := bufio.NewReader(f)
-	bufr.Read(bytes)
+	_, _ = bufr.Read(bytes)
 
 	return string(bytes) == "BINI"
 }

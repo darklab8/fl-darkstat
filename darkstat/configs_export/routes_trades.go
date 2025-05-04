@@ -76,8 +76,7 @@ func newTradePathExporter(
 	sell_locations_by_commodity = cache.NewCached(func() map[CommodityKey][]*MarketGood {
 		BasesFromPobs := e.PoBsToBases(e.GetPoBs())
 
-		var commodity_bases []*Base = []*Base{}
-		commodity_bases = append(append(Bases, BasesFromPobs...), MiningOperations...)
+		commodity_bases := append(append(Bases, BasesFromPobs...), MiningOperations...)
 
 		sell_locations_by_commodity := make(map[CommodityKey][]*MarketGood)
 		for _, base := range commodity_bases {

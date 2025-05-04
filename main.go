@@ -104,7 +104,8 @@ func main() {
 				return nil
 
 			}
-			pprof.StartCPUProfile(f)
+			err = pprof.StartCPUProfile(f)
+			logus.Log.CheckError(err, "failed to start pprof")
 		}
 
 		start_time_app_data := time.Now()
@@ -273,5 +274,6 @@ func main() {
 			Enverants:     settings.Enverants,
 		},
 	)
-	parser.Run(os.Args[1:])
+	err := parser.Run(os.Args[1:])
+	logus.Log.CheckError(err, "failed to run parser")
 }

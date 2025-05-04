@@ -145,11 +145,13 @@ func ParseDLL(fileData []byte, out *infocard.Config, globalOffset int) {
 					length *= 2
 					if length != 0 {
 						bytes := make([]byte, length)
-						reader.Read(bytes)
+						_, err := reader.Read(bytes)
+						Log.CheckError(err, "failed to read bytes")
+
 						idsId := blockId + j
 						str, err := decodeUnicode(bytes)
 						if err != nil {
-							logus.Log.Warn("Infostring corrupt, skipping.", typelog.Any("id", idsId), typelog.Any("error", err))
+							Log.Warn("Infostring corrupt, skipping.", typelog.Any("id", idsId), typelog.Any("error", err))
 							continue
 						}
 						out.Infonames[idsId] = infocard.Infoname(str)
@@ -159,6 +161,10 @@ func ParseDLL(fileData []byte, out *infocard.Config, globalOffset int) {
 		}
 	}
 }
+
+var (
+	Log *typelog.Logger = logus.Log.WithScope("dll")
+)
 
 func DirOffset(a uint32) int {
 	return int(a & 0x7FFFFFFF)

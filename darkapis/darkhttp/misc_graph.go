@@ -37,14 +37,17 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 			body, err := io.ReadAll(r.Body)
 			if logus.Log.CheckError(err, "failed to read body") {
 				resp.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(resp, "err to ready body")
+				_, err = fmt.Fprintf(resp, "err to ready body")
+				Log.CheckError(err, "fprintf post graph paths error")
 				return
 			}
-			json.Unmarshal(body, &input_routes)
+			err = json.Unmarshal(body, &input_routes)
+			Log.CheckWarn(err, "failed to unparmshal input in post graph paths")
 
 			if len(input_routes) == 0 {
 				resp.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(resp, "input at least some routes into request body")
+				_, err = fmt.Fprintf(resp, "input at least some routes into request body")
+				Log.CheckError(err, "fprintf post graph paths error 2")
 				return
 			}
 			output_routes := api.app_data.GetGraphPaths(input_routes)

@@ -7,7 +7,6 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/ship_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/go-typelog/typelog"
 )
@@ -72,10 +71,6 @@ For each ship
 
 	ship_packages = find buyable/craftable ship packages
 */
-func remove(s []int, i int) []int {
-	s[i] = s[len(s)-1]
-	return s[:len(s)-1]
-}
 
 func is_thruster_slot(slot EquipmentSlot) bool {
 	for _, smth := range slot.AllowedEquip {
@@ -90,7 +85,6 @@ func (s *Ship) getThrusterSpeed(
 	e *Exporter,
 	equipped_thrusters []*equip_mapped.Thruster,
 	linear_drag float64,
-	ship_info *ship_mapped.Ship,
 	ThrustCapacity float64,
 	ThrustRecharge float64,
 	Slots []EquipmentSlot,
@@ -364,7 +358,6 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 			thrust_speed := ship.getThrusterSpeed(e,
 				ship_package.equipped_thrusters,
 				ship.LinearDrag,
-				ship_info,
 				float64(ship.ThrustCapacity),
 				float64(ship.ThrustRecharge),
 				ship.Slots,

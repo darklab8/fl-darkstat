@@ -19,6 +19,10 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 )
 
+var (
+	Log = logus.Log.WithScope("web")
+)
+
 type Mutex interface {
 	Lock()
 	Unlock()
@@ -128,7 +132,7 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 	if cfg.IsLinux && opts.SockAddress != "" {
 		sock_server = http.Server{Handler: hander}
 		var err error
-		os.Mkdir("/tmp/darkstat", 0777)
+		_ = os.Mkdir("/tmp/darkstat", 0777)
 		err = os.Remove(opts.SockAddress)
 		logus.Log.CheckWarn(err, "attempting to remove socket")
 
@@ -137,7 +141,10 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 		if err != nil {
 			panic(err)
 		}
-		go sock_server.Serve(sock_listener)
+		go func() {
+			err = sock_server.Serve(sock_listener)
+			Log.CheckError(err, "serve sock server")
+		}()
 	}
 
 	tcp_server := http.Server{Handler: hander}
@@ -163,7 +170,8 @@ type ServerClose struct {
 }
 
 func (s ServerClose) Close() {
-	os.Remove(s.sock_adrr)
+	err := os.Remove(s.sock_adrr)
+	logus.Log.CheckError(err, "failed to close server sock addr")
 }
 
 const DarkstatHttpSock = "/tmp/darkstat/http.sock"

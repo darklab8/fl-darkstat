@@ -1,3 +1,4 @@
+// package logus - logging confugiration for darkcore. Useful for global usage or getting childs into modules
 package logus
 
 import (

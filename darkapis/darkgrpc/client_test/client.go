@@ -9,6 +9,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 )
 
 var (
@@ -23,7 +24,10 @@ func main() {
 	flag.Parse()
 
 	c := darkgrpc.NewClient(*addr)
-	defer c.Conn.Close()
+	defer func() {
+		err := c.Conn.Close()
+		logus.Log.CheckError(err, "failed to close connection")
+	}()
 
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)

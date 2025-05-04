@@ -15,7 +15,7 @@ type EnemyFaction struct {
 }
 
 /*
-Calculates for enemy faction percentage of ships defined in faction_props/npcships.ini
+NewEnemyFaction Calculates for enemy faction percentage of ships defined in faction_props/npcships.ini
 If they aren't defined, Freelancer will be showing corrupted no missions when they encounter.
 */
 func (e *Exporter) NewEnemyFaction(faction Faction, npc_ranks []int) EnemyFaction {

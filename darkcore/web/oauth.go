@@ -53,7 +53,8 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 			is_dev, err := validateCode(oauth_code)
 
 			if !is_dev {
-				fmt.Fprintf(w, fmt.Sprintln("failed oauth procedure.", err))
+				_, err := fmt.Fprintf(w, fmt.Sprintln("failed oauth procedure.", err))
+				Log.CheckError(err, "failed oauth procedure responce")
 			}
 
 			tempus_value := NewTempusToken()
@@ -63,10 +64,12 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 			// http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
 			// redirect with delay instead
 			buf := bytes.NewBuffer([]byte{})
-			RedirectPage(
+			err = RedirectPage(
 				"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
 				"/").Render(context.Background(), buf)
-			fmt.Fprint(w, buf.String())
+			logus.Log.CheckError(err, "failed to redirect oauth response")
+			_, err = fmt.Fprint(w, buf.String())
+			logus.Log.CheckError(err, "failed to print into response")
 		},
 	}
 }
@@ -95,7 +98,10 @@ func validateCode(code string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	defer response.Body.Close()
+	defer func() {
+		err = response.Body.Close()
+		Log.CheckError(err, "failed to close body")
+	}()
 	err = json.NewDecoder(response.Body).Decode(&answer)
 	if err != nil {
 		return false, err

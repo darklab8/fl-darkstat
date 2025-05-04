@@ -6,7 +6,12 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	httpSwagger "github.com/swaggo/http-swagger"
+)
+
+var (
+	Log = logus.Log.WithScope("darkhttp")
 )
 
 const ApiRoute = "/api"

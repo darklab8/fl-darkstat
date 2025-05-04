@@ -54,7 +54,8 @@ func TestReadInfocardsToHtml(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	pprof.StartCPUProfile(f)
+	err = pprof.StartCPUProfile(f)
+	logus.Log.CheckError(err, "failed to start pprof")
 	defer pprof.StopCPUProfile()
 
 	timeit.NewTimerF(func() {
@@ -114,7 +115,7 @@ func TestValidateInfocards(t *testing.T) {
 				// They just have this one corrupted. Not fl-configs fault.
 			}
 
-			failed = append(failed)
+			failed = append(failed, card)
 			fmt.Println("failed=", id, text)
 
 		} else {

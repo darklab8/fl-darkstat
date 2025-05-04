@@ -1,0 +1,21 @@
+version: "2"
+linters:
+  disable:
+    - staticcheck
+  settings:
+    errcheck:
+      exclude-functions:
+        - encoding/binary.Read
+        - encoding/binary.Write
+    govet:
+      disable:
+        - structtag
+        - unreachable
+    staticcheck:
+      checks:
+        - "all"
+        - "-QF1005"
+        - "-ST1003"
+        - "-ST1016"
+        - "-ST1020"
+        - "-ST1023"

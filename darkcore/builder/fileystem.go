@@ -72,8 +72,8 @@ func (f *Filesystem) WriteToFile(path utils_types.FilePath, content []byte) {
 }
 
 func (f *Filesystem) CreateBuildFolder() {
-	os.RemoveAll(f.build_root.ToString())
-	os.MkdirAll(f.build_root.ToString(), os.ModePerm)
+	_ = os.RemoveAll(f.build_root.ToString())
+	_ = os.MkdirAll(f.build_root.ToString(), os.ModePerm)
 }
 
 func haveParentFoldersCreated(buildpath utils_types.FilePath) {

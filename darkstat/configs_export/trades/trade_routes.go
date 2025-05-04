@@ -123,7 +123,7 @@ func MapConfigsToFGraph(
 	for _, system := range mapped.Systems.Systems {
 		system_speed_multiplier := mapped.Overrides.GetSystemSpeedMultiplier(system.Nickname)
 
-		var system_objects []SystemObject = make([]SystemObject, 0, 50)
+		system_objects := make([]SystemObject, 0, 50)
 
 		if bases, ok := extra_bases_by_system[system.Nickname]; ok {
 			for _, base := range bases {
