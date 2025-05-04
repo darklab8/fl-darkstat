@@ -91,7 +91,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 type ShowAsCommodity bool
 
 templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_export.MarketGood, is_commodity ShowAsCommodity,shared *types.SharedData ) {
-	@tab.BottomFilterBar()
+	
 	<div class="bottom_name">{ name }
 	// @tab.PageTime() // TODO when making the page proper live
 	</div>

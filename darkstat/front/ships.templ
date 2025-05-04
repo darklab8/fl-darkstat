@@ -267,7 +267,7 @@ templ ShipDetailsShared(ship configs_export.Ship) {
 }
 
 templ ShipDetails(ship configs_export.Ship) {
-	@tab.BottomFilterBar()
+	
 	<div class="bottom_name">{ ship.Name },
 	@tab.PageTime()</div>
 	@ShipDetailsShared(ship) {

@@ -165,7 +165,6 @@ templ FactionRepsBase() {
 }
 
 templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputation) {
-	@tab.BottomFilterBar()
 	<div class="bottom_name">{ faction.Name },
 	@tab.PageTime()</div>
 	@FactionRepsBase() {
