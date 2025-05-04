@@ -1,3 +1,1 @@
-time=2025-05-04T10:48:48.768+02:00 level=WARN msg="unable to parse commit with hash=" commit_hash=70d39b0b93c48e69c412b53d45750045cd606cc6 commit_file="changes in tables.templ\n\nIn #table-bottom changed flex-direction, to show BottomFilterBar correctly"
-time=2025-05-04T10:48:48.769+02:00 level=WARN msg="unable to parse commit with hash=" commit_hash=c03f76e5be49c0253cad277df152d18da23bb0c6 commit_file="Changes in bases.templ\n\n@tab.BottomFilterBar() moved from \"table-bottom-main\" into \"table-bottom\""
-v1.77.13
+v1.77.11
