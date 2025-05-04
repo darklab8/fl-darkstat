@@ -389,6 +389,7 @@ templ BasesT(
 					</div>
 				}
 				@tab.TableBottom(){
+					@tab.BottomFilterBar()
 					<div id="table-bottom-main">
 						if tab_mode == BaseShowShops {
 							@BaseMarketGoodsBase()
@@ -474,7 +475,6 @@ templ BaseMarketGoodsBase() {
 }
 
 templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*configs_export.MarketGood, tab_mode BaseMode) {
-	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name }
 	// @tab.PageTime() // TODO add when having page proper live backend
 	</div>
@@ -555,7 +555,6 @@ templ BaseMissionsBase() {
 }
 
 templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_mode BaseMode) {
-	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name },
 	@tab.PageTime()</div>
 	@BaseMissionsBase() {
@@ -711,7 +710,6 @@ func (r RoundedFloat) MarshalJSON() ([]byte, error) {
 
 
 templ BaseTradesFrom(name string, base *configs_export.Base, tab_mode BaseMode, shared *types.SharedData, 	data *configs_export.Exporter) {
-	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name },
 	@tab.PageTime()</div>
 	@BaseTradesShared(shared, tab_mode) {
@@ -721,7 +719,6 @@ templ BaseTradesFrom(name string, base *configs_export.Base, tab_mode BaseMode, 
 	}
 }
 templ BaseTradesTo(name string, base *configs_export.Base, tab_mode BaseMode, shared *types.SharedData, data *configs_export.Exporter) {
-	@tab.BottomFilterBar()
 	<div class="bottom_name">{ name },
 	@tab.PageTime()</div>
 	@BaseTradesShared(shared, tab_mode) {
