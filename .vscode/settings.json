@@ -6,6 +6,9 @@
         "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"
     },
     "editor.formatOnSave": true,
+    "[templ]": {
+        "editor.defaultFormatter": "a-h.templ"
+    },
     "terminal.integrated.env.linux": {
         "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"
     }
