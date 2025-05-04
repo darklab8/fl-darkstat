@@ -31,6 +31,10 @@ See demos:
 
 # Development setup
 
+The project assumes u are working with it through VSCode IDE, and having installed Go extension
+And having templ extension https://templ.guide/developer-tools/ide-support/#visual-studio-code
+Optionally u are able to use any other supported IDE there, as instructions are provided for more of them.
+
 - git clone the repo https://github.com/darklab8/fl-darkstat.git
 - install golang of project version or higher (potentially will work anyway).
   - See current golang version [in Dockerfile](./Dockerfile)
