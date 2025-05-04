@@ -50,7 +50,7 @@ func RouteUrl(route *configs_export.Route) string {
 }
 
 templ BaseRoutes(name string, base *configs_export.Base, data *configs_export.Exporter, tab_mode BaseMode, shared *types.SharedData) {
-	@tab.BottomFilterBar()
+	
 	<div class="bottom_name">{ name },
 	@tab.PageTime()</div>
 	@BasesRoutesShared(shared) {

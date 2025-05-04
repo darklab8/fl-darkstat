@@ -110,6 +110,9 @@ function FilteringForAnyTable(table_selector, input_selector) { // eslint-disabl
     // console.log("triggered FilteringFunction")
     let input, filter, table, tr, txtValue;
     input = document.getElementById(input_selector); // "filterinput"
+    if (input === null) {
+        return
+    }
     filter = input.value.toUpperCase();
     table = document.querySelector(table_selector); // "#table-top table"
     tr = table.getElementsByTagName("tr");

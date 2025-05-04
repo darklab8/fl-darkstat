@@ -51,10 +51,11 @@ templ TableBottom(){
 			box-sizing: border-box;
 
 			display: flex;
-			flex-direction: row;
+			flex-direction: column;
 		}
     </style>
     <div id="table-bottom" style="height: calc(35% - 7px);">
+        @BottomFilterBar()
         { children... }
     </div>
 }

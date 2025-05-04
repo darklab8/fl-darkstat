@@ -43,6 +43,7 @@ tasks:
 
   dev:watch:
     cmds:
+      - task: swag:build
       - task: build-version
       # pip install watchdog[watchmedo]
       - >
