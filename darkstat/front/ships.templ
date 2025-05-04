@@ -225,20 +225,11 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 					</div>
 				}
 				@tab.TableBottom(){
-					<div id="table-bottom-main">
-						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
-						} else if mode == ShipShowDetails {
-							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
-						}
-					</div>
-					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
-						if mode == ShipShowBases {
-							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
-						} else if mode == ShipShowDetails {
-							@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
-						}
-					</div>
+					if mode == ShipShowBases {
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
+					} else if mode == ShipShowDetails {
+						@ShipDetailsShared(configs_export.Ship{Name: "not selected"})
+					}
 				}
 			}
 			@tab.InfocardTable(){

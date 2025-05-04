@@ -51,19 +51,32 @@ templ TableBottom(){
 			box-sizing: border-box;
 
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
 		}
-        #bottom-split {
-            width: 100%;
+        .table-bottom-child {
+            width: 50%;
+            flex-grow: 1;
             height: 100%;
 			display: flex;
-			flex-direction: row;
+			flex-direction: column;
+            height: 100%;
+        }
+        .table-bottom-main {
+            height: 100%;
         }
     </style>
     <div id="table-bottom" style="height: calc(35% - 7px);">
-        @BottomFilterBar()
-        <div id="bottom-split">
-            { children... }
+        <div id="table-bottom-left" class="table-bottom-child">
+            @BottomFilterBar()
+            <div id="table-bottom-main" class="table-bottom-main">
+                 { children... }
+            </div>
+        </div>
+        <div id="table-bottom-right" class="table-bottom-child hidden">
+            @BottomFilterBarPin()
+            <div id={ "table-bottom-main" + string(PinMode) } class="table-bottom-main">
+                 { children... }
+            </div>
         </div>
     </div>
 }

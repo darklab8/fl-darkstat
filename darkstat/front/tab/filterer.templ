@@ -58,6 +58,12 @@ templ EmbedInfocardForSearch(infocards configs_export.Infocards, infokey configs
 }
 
 templ BottomFilterBar() {
-	<input style="width: 100%;" type="text" id="bottom_input" onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')" placeholder="Search rows by any content: name, nickname etc.."/>
+	<input style="width: 100%;" type="text" id="bottom_input"
+		onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')"
+		placeholder="Search rows by any content: name, nickname etc.."/>
 }
-
+templ BottomFilterBarPin() {
+	<input style="width: 100%;" type="text" id="bottom_input_pin"
+		onkeyup="FilteringForAnyTable('#table-bottom-mainpin', 'bottom_input_pin')"
+		placeholder="Search rows by any content: name, nickname etc.."/>
+}

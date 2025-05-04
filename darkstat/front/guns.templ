@@ -319,20 +319,11 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, sha
 					</div>
 				}
 				@tab.TableBottom(){
-					<div id="table-bottom-main">
-						if mode == GunsShowBases || mode == GunsMissiles {
-							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
-						} else {
-							@GunShowModifiersShared()
-						}
-					</div>
-					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
-						if mode == GunsShowBases || mode == GunsMissiles {
-							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
-						} else {
-							@GunShowModifiersShared()
-						}
-					</div>
+					if mode == GunsShowBases || mode == GunsMissiles {
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
+					} else {
+						@GunShowModifiersShared()
+					}
 				}
 			}
 			@tab.InfocardTable(){
