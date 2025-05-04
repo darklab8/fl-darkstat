@@ -122,22 +122,13 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 						@FactionTable(factions, mode, tab.PinMode, shared)
 					</div>
 				}
-				@tab.TableBottom(){
-					<div id="table-bottom-main">
+					@tab.TableBottom(){
 						if mode == FactionShowBases {
 							@FactionRepsBase()
 						} else if mode == FactionShowBribes {
 							@BriberyBottomBase()
 						}
-					</div>
-					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
-						if mode == FactionShowBases {
-							@FactionRepsBase()
-						} else if mode == FactionShowBribes {
-							@BriberyBottomBase()
-						}
-					</div>
-				}
+					}
 			}
 			@tab.InfocardTable(){
 				@tab.InfocardShared()

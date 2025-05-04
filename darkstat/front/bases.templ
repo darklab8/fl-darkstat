@@ -389,34 +389,17 @@ templ BasesT(
 					</div>
 				}
 				@tab.TableBottom(){
-					
-					<div id="table-bottom-main">
-						if tab_mode == BaseShowShops {
-							@BaseMarketGoodsBase()
-						} else if tab_mode == BaseShowMissions {
-							@BaseMissionsBase()
-						} else if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo {
-							@BaseTradesShared(shared, tab_mode)
-						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared(shared, tab_mode)
-						} else if tab_mode == BaseAllRoutes {
-							@BasesRoutesShared(shared)
-						}
-					</div>
-					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
-					
-						if tab_mode == BaseShowShops {
-							@BaseMarketGoodsBase()
-						} else if tab_mode == BaseShowMissions {
-							@BaseMissionsBase()
-						} else if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo {
-							@BaseTradesShared(shared, tab_mode)
-						} else if tab_mode == BaseTabOres {
-							@BaseTradesShared(shared, tab_mode)
-						}  else if tab_mode == BaseAllRoutes {
-							@BasesRoutesShared(shared)
-						}
-					</div>
+					if tab_mode == BaseShowShops {
+						@BaseMarketGoodsBase()
+					} else if tab_mode == BaseShowMissions {
+						@BaseMissionsBase()
+					} else if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo {
+						@BaseTradesShared(shared, tab_mode)
+					} else if tab_mode == BaseTabOres {
+						@BaseTradesShared(shared, tab_mode)
+					}  else if tab_mode == BaseAllRoutes {
+						@BasesRoutesShared(shared)
+					}
 				}
 			}
 			@tab.InfocardTable(){

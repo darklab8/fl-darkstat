@@ -98,12 +98,7 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, 
 					</div>
 				}
 				@tab.TableBottom(){
-					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
-					</div>
-					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
-					</div>
+					@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 				}
 			}
 			@tab.InfocardTable(){

@@ -92,12 +92,7 @@ templ ThrusterT(thrusters []configs_export.Thruster, mode2 tab.ShowEmpty, shared
 					</div>
 				}
 				@tab.TableBottom(){
-					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
-					</div>
-					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
-					</div>
+					@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 				}
 			}
 			@tab.InfocardTable(){

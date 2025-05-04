@@ -101,12 +101,7 @@ templ PoBGoodsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shar
 					</div>
 				}
 				@tab.TableBottom(){
-					<div id="table-bottom-main">
-						@PoBGoodPobsShared()
-					</div>
-					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
-						@PoBGoodPobsShared()
-					</div>
+					@PoBGoodPobsShared()
 				}
 			}
 			@tab.InfocardTable(){

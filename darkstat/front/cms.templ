@@ -100,12 +100,7 @@ templ CounterMeasureT(cms []configs_export.CounterMeasure, mode2 tab.ShowEmpty, 
 					</div>
 				}
 				@tab.TableBottom(){
-					<div id="table-bottom-main">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
-					</div>
-					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
-						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
-					</div>
+					@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 				}
 			}
 			@tab.InfocardTable(){

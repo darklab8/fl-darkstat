@@ -146,12 +146,7 @@ templ PoBsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shared *
 					</div>
 				}
 				@tab.TableBottom(){
-					<div id="table-bottom-main">
-						@PoBShopItemsShared()
-					</div>
-					<div id={ "table-bottom-main" + string(tab.PinMode) } class="hidden">
-						@PoBShopItemsShared()
-					</div>
+					@PoBShopItemsShared()
 				}
 			}
 			@tab.InfocardTable(){

@@ -110,13 +110,11 @@ templ TractorsT(tractors []*configs_export.Tractor, mode2 tab.ShowEmpty, tab_mod
 					</div>
 				}
 				@tab.TableBottom(){
-					<div id="table-bottom-main">
-						if tab_mode == TractorModShop {
-							@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
-						} else if tab_mode == TractorIDRephacks {
-							@IDRephacksShared()
-						}
-					</div>
+					if tab_mode == TractorModShop {
+						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
+					} else if tab_mode == TractorIDRephacks {
+						@IDRephacksShared()
+					}
 				}
 			}
 			@tab.InfocardTable(){

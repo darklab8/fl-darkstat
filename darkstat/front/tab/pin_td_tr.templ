@@ -20,12 +20,12 @@ script Pin(id string) {
 
 	if (TableLen(document.querySelector("#table-top-mainpin table")) === 1) {
 		Hide("table-top-mainpin")
-		Hide("table-bottom-mainpin")
+		Hide("table-bottom-right")
 	}
   } else {
 	Unhide("pin"+id)
 	Unhide("table-top-mainpin")
-	Unhide("table-bottom-mainpin")
+	Unhide("table-bottom-right")
   }
 }
 
@@ -38,12 +38,12 @@ script Pin2(id string) {
 
 	if (TableLen(document.querySelector("#table-top-mainpin table")) === 1) {
 		Hide("table-top-mainpin")
-		Hide("table-bottom-mainpin")
+		Hide("table-bottom-right")
 	}
   } else {
 	// htmx adds as another element to table
 	Unhide("table-top-mainpin")
-	Unhide("table-bottom-mainpin")
+	Unhide("table-bottom-right")
 
 	rows = document.querySelectorAll("#pin"+id)
 	if (rows.length >= 1) {
