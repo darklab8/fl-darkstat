@@ -53,10 +53,18 @@ templ TableBottom(){
 			display: flex;
 			flex-direction: column;
 		}
+        #bottom-split {
+            width: 100%;
+            height: 100%;
+			display: flex;
+			flex-direction: row;
+        }
     </style>
     <div id="table-bottom" style="height: calc(35% - 7px);">
         @BottomFilterBar()
-        { children... }
+        <div id="bottom-split">
+            { children... }
+        </div>
     </div>
 }
 
