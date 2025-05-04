@@ -3,11 +3,11 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
-	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -39,7 +39,6 @@ const (
 	ShipShowDetails
 )
 
-
 templ ShipTable(
 	ships []configs_export.Ship,
 	mode ShipTabMode,
@@ -70,12 +69,12 @@ templ ShipTable(
 					@frmt.MultiLinestring([]string{"Engine", "Max", "Force"})
 				</th>
 				<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Thrust", "Speed"})
+					@frmt.MultiLinestring([]string{"Thrust", "Speed"})
 				</th>
 				<th style="width:25px;">Armor</th>
 				if shared.ShowDisco {
 					<th style="width:5px;">
-							@frmt.MultiLinestring([]string{"Armor", "Res.",})
+						@frmt.MultiLinestring([]string{"Armor", "Res."})
 					</th>
 				}
 				<th style="width:25px;">
@@ -133,7 +132,7 @@ templ ShipTable(
 
 func thruster_speeds_to_str(thrust_speeds []int) string {
 	var as_str []string
-	for _, speed := range thrust_speeds{
+	for _, speed := range thrust_speeds {
 		as_str = append(as_str, strconv.Itoa(speed))
 	}
 	return strings.Join(as_str, ",")
@@ -167,7 +166,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 		<td class="seo">{ thruster_speeds_to_str(ship.ThrusterSpeed) }</td>
 		<td class="seo">{ strconv.Itoa(ship.Armor) } </td>
 		if shared.ShowDisco {
-			<td class="seo">{ fmt.Sprintf("%4.0f(%.0f%%)", ship.DiscoShip.ArmorMult, 100*ship.DiscoShip.ArmorMult/(100+ship.DiscoShip.ArmorMult ))}</td>
+			<td class="seo">{ fmt.Sprintf("%4.0f(%.0f%%)", ship.DiscoShip.ArmorMult, 100*ship.DiscoShip.ArmorMult/(100+ship.DiscoShip.ArmorMult )) }</td>
 		}
 		<td class="seo">{ strconv.Itoa(ship.HoldSize) } </td>
 		<td class="seo">{ strconv.Itoa(ship.Nanobots) }</td>
@@ -201,8 +200,8 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 	}
 	@tab.TabContent() {
 		<div class="splitter">
-			@tab.LeftTable(){
-				@tab.TableTop(){
+			@tab.LeftTable() {
+				@tab.TableTop() {
 					if mode == ShipShowDetails {
 						@tab.PageHint() {
 							Ship hardpoint hp_types. Insert to other tab filter bar to find <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Findingequipmentcompatiblewithspecifichardpoint") }>compatible equipment. See Docs.</a>
@@ -224,7 +223,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 						@ShipTable([]configs_export.Ship{}, mode, tab.PinMode, shared, infocards)
 					</div>
 				}
-				@tab.TableBottom(){
+				@tab.TableBottom() {
 					if mode == ShipShowBases {
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					} else if mode == ShipShowDetails {
@@ -232,7 +231,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 					}
 				}
 			}
-			@tab.InfocardTable(){
+			@tab.InfocardTable() {
 				@tab.InfocardShared()
 			}
 		</div>
@@ -258,9 +257,10 @@ templ ShipDetailsShared(ship configs_export.Ship) {
 }
 
 templ ShipDetails(ship configs_export.Ship) {
-	
-	<div class="bottom_name">{ ship.Name },
-	@tab.PageTime()</div>
+	<div class="bottom_name">
+		{ ship.Name },
+		@tab.PageTime()
+	</div>
 	@ShipDetailsShared(ship) {
 		for _, slot := range ship.Slots {
 			@HighlightableRow() {

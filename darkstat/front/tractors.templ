@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/configs/config_consts"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"strconv"
 	"strings"
 )
@@ -72,15 +72,15 @@ templ TractorsT(tractors []*configs_export.Tractor, mode2 tab.ShowEmpty, tab_mod
 	}
 	@tab.TabContent() {
 		<div class="splitter">
-			@tab.LeftTable(){
-				@tab.TableTop(){
+			@tab.LeftTable() {
+				@tab.TableTop() {
 					if tab_mode == TractorModShop {
 						@tab.PageHint() {
-						if shared.ShowDisco {
-							Your ID, You  can have only one, it affects <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Techcompatibility") }>tech compatibility. See docs.</a>
-						} else {
-							Tractors
-						}
+							if shared.ShowDisco {
+								Your ID, You  can have only one, it affects <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Techcompatibility") }>tech compatibility. See docs.</a>
+							} else {
+								Tractors
+							}
 						}
 					}
 					if tab_mode == TractorIDRephacks {
@@ -109,7 +109,7 @@ templ TractorsT(tractors []*configs_export.Tractor, mode2 tab.ShowEmpty, tab_mod
 						</table>
 					</div>
 				}
-				@tab.TableBottom(){
+				@tab.TableBottom() {
 					if tab_mode == TractorModShop {
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					} else if tab_mode == TractorIDRephacks {
@@ -117,7 +117,7 @@ templ TractorsT(tractors []*configs_export.Tractor, mode2 tab.ShowEmpty, tab_mod
 					}
 				}
 			}
-			@tab.InfocardTable(){
+			@tab.InfocardTable() {
 				@tab.InfocardShared()
 			}
 		</div>
@@ -145,8 +145,9 @@ templ IDRephacksShared() {
 }
 
 templ IDRephacksT(rephack *configs_export.Tractor) {
-	<div class="bottom_name">{ rephack.Name },
-	@tab.PageTime()
+	<div class="bottom_name">
+		{ rephack.Name },
+		@tab.PageTime()
 	</div>
 	@IDRephacksShared() {
 		for _, rep := range rephack.GetRephacksList() {

@@ -3,11 +3,11 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"strconv"
 	"strings"
 )
@@ -44,11 +44,11 @@ templ MinesTable(mines []configs_export.Mine, pinm tab.PinMod, shared *types.Sha
 				<th style="width:25px;">Refire</th>
 				<th style="width:5px;">
 					if shared.ShowDisco {
-						@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+						@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ", "Cart.)"})
 					} else {
 						@frmt.MultiLinestring([]string{"Ammo", "Limit"})
 					}
-				</th>	
+				</th>
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Detonation", "Distance"})
 				</th>
@@ -128,8 +128,8 @@ templ MinesT(mines []configs_export.Mine, mode2 tab.ShowEmpty, shared *types.Sha
 	@TabMenu(urls.Mines, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">
-			@tab.LeftTable(){
-				@tab.TableTop(){
+			@tab.LeftTable() {
+				@tab.TableTop() {
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@MinesTable(mines, tab.MainMode, shared)
@@ -138,11 +138,11 @@ templ MinesT(mines []configs_export.Mine, mode2 tab.ShowEmpty, shared *types.Sha
 						@MinesTable(mines, tab.PinMode, shared)
 					</div>
 				}
-				@tab.TableBottom(){
+				@tab.TableBottom() {
 					@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 				}
 			}
-			@tab.InfocardTable(){
+			@tab.InfocardTable() {
 				@tab.InfocardShared()
 			}
 		</div>

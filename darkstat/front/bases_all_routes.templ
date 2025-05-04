@@ -1,14 +1,13 @@
 package front
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
-    "fmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 )
-
 
 templ BasesRoutesShared(shared *types.SharedData) {
 	<table class="sortable">
@@ -50,9 +49,10 @@ func RouteUrl(route *configs_export.Route) string {
 }
 
 templ BaseRoutes(name string, base *configs_export.Base, data *configs_export.Exporter, tab_mode BaseMode, shared *types.SharedData) {
-	
-	<div class="bottom_name">{ name },
-	@tab.PageTime()</div>
+	<div class="bottom_name">
+		{ name },
+		@tab.PageTime()
+	</div>
 	@BasesRoutesShared(shared) {
 		for _, route := range data.GetTravelRoutes(base) {
 			<tr
@@ -113,11 +113,9 @@ templ BaseRoutes(name string, base *configs_export.Base, data *configs_export.Ex
 				<td>
 					@frmt.WriteFactioName(route.Transport.ToBase.FactionName)
 				</td>
-
 				<td>
 					@frmt.WriteRegionName(route.Transport.ToBase.Region)
 				</td>
-
 				<td>
 					@frmt.WriteLimit(100) {
 						{ route.Transport.ToBase.Nickname.ToStr() }

@@ -2,11 +2,11 @@ package front
 
 import (
 	"fmt"
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
-	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"strconv"
 )
 
@@ -39,10 +39,10 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 				if bool(is_commodity) {
 					if shared.ShowDisco {
 						<th style="width:25px;">
-							@frmt.MultiLinestring([]string{"price","to sell", "per vol", "to base"})
+							@frmt.MultiLinestring([]string{"price", "to sell", "per vol", "to base"})
 						</th>
 						<th style="width:25px;">
-							@frmt.MultiLinestring([]string{"price","to buy", "per vol", "from base"})
+							@frmt.MultiLinestring([]string{"price", "to buy", "per vol", "from base"})
 						</th>
 					} else {
 						<th style="width:5px;">
@@ -50,14 +50,14 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 						</th>
 					}
 				}
-				if bool(is_commodity) && shared.ShowDisco{
+				if bool(is_commodity) && shared.ShowDisco {
 					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"Ship", "class"})
 					</th>
 				}
 				<th style="width:5px;">
-						@frmt.MultiLinestring([]string{"Vol", "ume"})
-					</th>
+					@frmt.MultiLinestring([]string{"Vol", "ume"})
+				</th>
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Base", "Sells"})
 				</th>
@@ -90,10 +90,10 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 
 type ShowAsCommodity bool
 
-templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_export.MarketGood, is_commodity ShowAsCommodity,shared *types.SharedData ) {
-	
-	<div class="bottom_name">{ name }
-	// @tab.PageTime() // TODO when making the page proper live
+templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_export.MarketGood, is_commodity ShowAsCommodity, shared *types.SharedData) {
+	<div class="bottom_name">
+		{ name }
+		// @tab.PageTime() // TODO when making the page proper live
 	</div>
 	@GoodAtBaseSharedT(is_commodity, shared) {
 		for _, base_info := range frmt.SortedBases(base_infos) {
@@ -104,9 +104,10 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 				hx-swap="innerHTML"
 				preload="mouseover"
 				onclick="RowHighlighter(this)"
-				class={ 
+				class={
 					templ.KV("line_through", base_info.NotBuyable),
-					templ.KV("line_underline", base_info.IsTransportUnreachable), }
+					templ.KV("line_underline", base_info.IsTransportUnreachable),
+				}
 			>
 				<td>
 					@frmt.WriteBaseName(base_info.BaseName)
@@ -126,7 +127,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 					</td>
 				}
 				<td>{ base_info.SectorCoord }</td>
-				if bool(is_commodity) && shared.ShowDisco{
+				if bool(is_commodity) && shared.ShowDisco {
 					<td>{ strconv.Itoa(base_info.GetPriceBaseBuysFor()) }</td>
 				}
 				<td>{ strconv.Itoa(base_info.PriceBaseSellsFor) }</td>
@@ -136,7 +137,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 					}
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseSellsFor, base_info.Volume)) }</td>
 				}
-				if bool(is_commodity) && shared.ShowDisco{
+				if bool(is_commodity) && shared.ShowDisco {
 					<td>{ fmt.Sprintf("%d", base_info.ShipClass) }</td>
 				}
 				<td>{ fmt.Sprintf("%.0f", base_info.Volume) }</td>

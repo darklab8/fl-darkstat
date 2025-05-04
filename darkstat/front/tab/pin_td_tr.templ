@@ -1,10 +1,10 @@
 package tab
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
-	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"context"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 )
 
 type PinMod string
@@ -117,30 +117,29 @@ type InfocardClickOpts struct {
 
 templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, shared *types.SharedData, opts InfocardClickOpts) {
 	@EmbedInfocardForSearch(shared.Infocards, infocardKey)
-	
-		<td
-			if !opts.IsRelayHosted {
-				hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
-			} else {
-				hx-get={ types.GetCtx(ctx).RelayHost + types.GetCtx(ctx).RelayRoot + InfocardURL(infocardKey) }
-			}
-			if pinm == PinMode {
-				hx-trigger={ "mousedown from:closest tr, click from:previous td.select_left_infocard_trigger" }
-			} else {
-				hx-trigger={ "mousedown from:closest tr" }
-			}
-			hx-target="#infocard_view"
-			hx-swap="innerHTML"
-		></td>
+	<td
+		if !opts.IsRelayHosted {
+			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
+		} else {
+			hx-get={ types.GetCtx(ctx).RelayHost + types.GetCtx(ctx).RelayRoot + InfocardURL(infocardKey) }
+		}
+		if pinm == PinMode {
+			hx-trigger={ "mousedown from:closest tr, click from:previous td.select_left_infocard_trigger" }
+		} else {
+			hx-trigger={ "mousedown from:closest tr" }
+		}
+		hx-target="#infocard_view"
+		hx-swap="innerHTML"
+	></td>
 }
 
 type Tr struct {
-	nickname string
-	detailed_url string
-	pinm PinMod
+	nickname                string
+	detailed_url            string
+	pinm                    PinMod
 	is_tranport_unreachable bool
-	from_relay bool
-	is_stat_back_prefered bool
+	from_relay              bool
+	is_stat_back_prefered   bool
 }
 type TrOpt func(t *Tr)
 
@@ -158,9 +157,9 @@ func WithFromRelay() TrOpt {
 
 func NewTr(nickname string, detailed_url string, pinm PinMod, opts ...TrOpt) *Tr {
 	t := &Tr{
-		nickname: nickname,
+		nickname:     nickname,
 		detailed_url: detailed_url,
-		pinm: pinm,
+		pinm:         pinm,
 	}
 
 	for _, opt := range opts {
@@ -193,7 +192,7 @@ func GetSiteRoot(tr *Tr, ctx context.Context) string {
 templ TrFromMainTb2(tr *Tr, prerender bool) {
 	<tr
 		id={ string(tr.pinm) + "bottominfo_" + tr.nickname }
-		hx-get={ GetSiteRoot(tr,ctx) + tr.detailed_url }
+		hx-get={ GetSiteRoot(tr, ctx) + tr.detailed_url }
 		hx-trigger="mousedown"
 		hx-target={ "#table-bottom-main" + string(tr.pinm) }
 		hx-swap="innerHTML"
@@ -203,7 +202,6 @@ templ TrFromMainTb2(tr *Tr, prerender bool) {
 			templ.KV("line_underline", tr.is_tranport_unreachable),
 		}
 		onclick="RowHighlighter(this)"
-
 	>
 		{ children... }
 	</tr>

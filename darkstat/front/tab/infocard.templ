@@ -2,8 +2,8 @@ package tab
 
 import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"strings"
 	"html"
+	"strings"
 )
 
 templ InfocardShared() {
@@ -26,7 +26,7 @@ templ Infocard(info configs_export.Infocard) {
 	@InfocardShared() {
 		for _, line := range info {
 			if strings.ReplaceAll(line.ToStr()," ", "") == "" {
-				<p><br></p>
+				<p><br/></p>
 			} else {
 				<p>
 					for _, phrase := range line.Phrases {

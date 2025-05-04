@@ -1,13 +1,13 @@
 package tab
 
 import (
+	"context"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
-	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/go-utils/utils/utils_types"
 	"strings"
-	"context"
 )
 
 templ Heading(shared *types.SharedData) {
@@ -125,43 +125,42 @@ script GoToUrl(current string, themes []string) {
 }
 
 type Buttn struct {
-	ctx context.Context
-	text []string
-	get_url utils_types.FilePath
-	url utils_types.FilePath
-	site_url string
+	ctx               context.Context
+	text              []string
+	get_url           utils_types.FilePath
+	url               utils_types.FilePath
+	site_url          string
 	direct_button_url bool
 
-	is_relay bool
+	is_relay              bool
 	is_stat_back_prefered bool
-	extra_style string
-	attrs templ.Attributes
+	extra_style           string
+	attrs                 templ.Attributes
 }
-type ButtnOpt func(s *Buttn) 
+type ButtnOpt func(s *Buttn)
 
-func WithRelay() ButtnOpt{
+func WithRelay() ButtnOpt {
 	return func(s *Buttn) {
 		s.is_relay = true
 	}
 }
-func WithStyle(style string) ButtnOpt{
+func WithStyle(style string) ButtnOpt {
 	return func(s *Buttn) {
 		s.extra_style = style
 	}
 }
 
-func WithSiteUrl(site_url string) ButtnOpt{
+func WithSiteUrl(site_url string) ButtnOpt {
 	return func(s *Buttn) {
 		s.site_url = site_url
 	}
 }
 
-func WithDrectUrl() ButtnOpt{
+func WithDrectUrl() ButtnOpt {
 	return func(s *Buttn) {
 		s.direct_button_url = true
 	}
 }
-
 
 func NewButtn(
 	ctx context.Context,
@@ -169,12 +168,12 @@ func NewButtn(
 	get_url utils_types.FilePath,
 	url utils_types.FilePath,
 	opts ...ButtnOpt,
-	) *Buttn {
+) *Buttn {
 	button := &Buttn{
-		ctx:ctx,
-		text: text,
+		ctx:     ctx,
+		text:    text,
 		get_url: get_url,
-		url: url,
+		url:     url,
 	}
 
 	for _, opt := range opts {
@@ -197,7 +196,7 @@ func NewButtn(
 	}
 
 	sb.WriteString(button.extra_style)
-	button.attrs["style"] =sb.String()
+	button.attrs["style"] = sb.String()
 
 	return button
 }
@@ -205,7 +204,7 @@ func NewButtn(
 func (opt *Buttn) HxGet() string {
 	if opt.is_relay {
 		return types.GetCtx(opt.ctx).RelayHost + types.GetCtx(opt.ctx).RelayRoot + opt.get_url.ToString()
-	} 
+	}
 
 	return types.GetCtx(opt.ctx).SiteRoot + opt.get_url.ToString()
 }
@@ -218,11 +217,9 @@ func (opt *Buttn) SiteUrl(ctx context.Context) string {
 	return types.GetCtx(ctx).SiteHost + "/"
 }
 
-
-
 templ Button(opt *Buttn) {
 	if opt.direct_button_url {
-		<a 
+		<a
 			href={ templ.SafeURL(opt.SiteUrl(ctx) + opt.get_url.ToString()) }
 			style="display: block;"
 		>
@@ -236,8 +233,7 @@ templ Button(opt *Buttn) {
 				@frmt.MultiLinestringWrap(opt.text)
 			</button>
 		</a>
-
-	// TODO refactor this hackery
+		// TODO refactor this hackery
 	} else {
 		<button
 			preload="mouseover"

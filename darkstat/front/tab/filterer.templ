@@ -1,8 +1,8 @@
 package tab
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 )
 
 templ FilterBar(shared *types.SharedData) {
@@ -30,7 +30,7 @@ templ FilterBar(shared *types.SharedData) {
 	</style>
 	<div id="table-top-panel">
 		<input type="text" id="filterinput" class="filter_input" onkeyup="FilteringFunction()" placeholder="Search rows by any content: name, faction, system and etc.."/>
-		<input type="text" id="filterinput_infocard" class="filter_input"  onkeyup="FilteringFunction()" placeholder="Search rows by infocards content"/>
+		<input type="text" id="filterinput_infocard" class="filter_input" onkeyup="FilteringFunction()" placeholder="Search rows by infocards content"/>
 		if bool(shared.ShowDisco) {
 			<select name="IDs" id="tractor_id_selector" onchange="FilteringFunction()">
 				<option value="">Filter items by tech compatible ID</option>
@@ -58,12 +58,21 @@ templ EmbedInfocardForSearch(infocards configs_export.Infocards, infokey configs
 }
 
 templ BottomFilterBar() {
-	<input style="width: 100%;" type="text" id="bottom_input"
+	<input
+		style="width: 100%;"
+		type="text"
+		id="bottom_input"
 		onkeyup="FilteringForAnyTable('#table-bottom-main', 'bottom_input')"
-		placeholder="Search rows by any content: name, nickname etc.."/>
+		placeholder="Search rows by any content: name, nickname etc.."
+	/>
 }
+
 templ BottomFilterBarPin() {
-	<input style="width: 100%;" type="text" id="bottom_input_pin"
+	<input
+		style="width: 100%;"
+		type="text"
+		id="bottom_input_pin"
 		onkeyup="FilteringForAnyTable('#table-bottom-mainpin', 'bottom_input_pin')"
-		placeholder="Search rows by any content: name, nickname etc.."/>
+		placeholder="Search rows by any content: name, nickname etc.."
+	/>
 }

@@ -3,9 +3,9 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 )
 
 templ BriberyBottomBase() {
@@ -33,9 +33,9 @@ templ BriberyBottomBase() {
 }
 
 templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Bribe) {
-	
-	<div class="bottom_name">{ faction.Name }
-	// @tab.PageTime() // add if u will make page proper live
+	<div class="bottom_name">
+		{ faction.Name }
+		// @tab.PageTime() // add if u will make page proper live
 	</div>
 	@BriberyBottomBase() {
 		for _, rep := range rephacks {

@@ -1,11 +1,12 @@
 package tab
+
 /*
 For structured components of darkstat
 defining different table components reusable in all tabs
 */
 
 templ TableTop() {
-    <style>
+	<style>
         #table-top {
 			height: 65%;
 			overflow: hidden;
@@ -18,12 +19,13 @@ templ TableTop() {
 			flex-direction: column;
 		}
     </style>
-    <div id="table-top" style="height: calc(65% - 7px);">
-        { children... }
-    </div>
+	<div id="table-top" style="height: calc(65% - 7px);">
+		{ children... }
+	</div>
 }
+
 templ TopBottomResizer() {
-    <style>
+	<style>
         .resizer-top-bottom {
             width: 100%;
             height: 10px;
@@ -31,17 +33,17 @@ templ TopBottomResizer() {
             background-color: var(--color_border);
         }
     </style>
-    <div class="resizer-top-bottom"></div>
-    <script type="text/javascript">
+	<div class="resizer-top-bottom"></div>
+	<script type="text/javascript">
         (() => {
             makeTopBottomTablesResizable()
         })()
     </script>
 }
 
-templ TableBottom(){
-    @TopBottomResizer()
-    <style>
+templ TableBottom() {
+	@TopBottomResizer()
+	<style>
         #table-bottom {
 			overflow: hidden;
 			height: 35%;
@@ -65,24 +67,24 @@ templ TableBottom(){
             height: 100%;
         }
     </style>
-    <div id="table-bottom" style="height: calc(35% - 7px);">
-        <div id="table-bottom-left" class="table-bottom-child">
-            @BottomFilterBar()
-            <div id="table-bottom-main" class="table-bottom-main">
-                 { children... }
-            </div>
-        </div>
-        <div id="table-bottom-right" class="table-bottom-child hidden">
-            @BottomFilterBarPin()
-            <div id={ "table-bottom-main" + string(PinMode) } class="table-bottom-main">
-                 { children... }
-            </div>
-        </div>
-    </div>
+	<div id="table-bottom" style="height: calc(35% - 7px);">
+		<div id="table-bottom-left" class="table-bottom-child">
+			@BottomFilterBar()
+			<div id="table-bottom-main" class="table-bottom-main">
+				{ children... }
+			</div>
+		</div>
+		<div id="table-bottom-right" class="table-bottom-child hidden">
+			@BottomFilterBarPin()
+			<div id={ "table-bottom-main" + string(PinMode) } class="table-bottom-main">
+				{ children... }
+			</div>
+		</div>
+	</div>
 }
 
 templ LeftRightResizer() {
-    <style>
+	<style>
         .resizer-left-right {
             height: 100%;
             width: 10px;
@@ -90,8 +92,8 @@ templ LeftRightResizer() {
             background-color: var(--color_border);
         }
     </style>
-    <div class="resizer-left-right"></div>
-    <script type="text/javascript">
+	<div class="resizer-left-right"></div>
+	<script type="text/javascript">
         (() => {
             makeLeftRightTablesResizable()
         })()
@@ -99,21 +101,21 @@ templ LeftRightResizer() {
 }
 
 templ LeftTable() {
-    <style>
+	<style>
         #table-wrapper {
 			width: 75%;
 			height: 100%;
 			box-sizing: border-box;
 		}
     </style>
-    <div id="table-wrapper" style="width: 75%;">
-        { children... }
-    </div>
+	<div id="table-wrapper" style="width: 75%;">
+		{ children... }
+	</div>
 }
 
 templ InfocardTable() {
-    @LeftRightResizer()
-    <style>
+	@LeftRightResizer()
+	<style>
         #infocard_view {
 			width: 25%;
 			overflow-y: scroll;
@@ -124,7 +126,7 @@ templ InfocardTable() {
 			box-sizing: border-box;
 		}
     </style>
-    <div id="infocard_view" style="width: 25%;">
-        { children... }
-    </div>
+	<div id="infocard_view" style="width: 25%;">
+		{ children... }
+	</div>
 }

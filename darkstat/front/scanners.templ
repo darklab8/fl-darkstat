@@ -1,15 +1,15 @@
 package front
 
 import (
+	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
-	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
-	"fmt"
 )
 
 func ScannerDetailedUrl(item configs_export.Scanner) string {
@@ -72,8 +72,8 @@ templ ScannersT(scanners []configs_export.Scanner, mode2 tab.ShowEmpty, shared *
 	@TabMenu(urls.Scanners, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">
-			@tab.LeftTable(){
-				@tab.TableTop(){
+			@tab.LeftTable() {
+				@tab.TableTop() {
 					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@ScannerTable(scanners, tab.MainMode, shared)
@@ -82,11 +82,11 @@ templ ScannersT(scanners []configs_export.Scanner, mode2 tab.ShowEmpty, shared *
 						@ScannerTable(scanners, tab.PinMode, shared)
 					</div>
 				}
-				@tab.TableBottom(){
+				@tab.TableBottom() {
 					@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 				}
 			}
-			@tab.InfocardTable(){
+			@tab.InfocardTable() {
 				@tab.InfocardShared()
 			}
 		</div>

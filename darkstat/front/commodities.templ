@@ -3,10 +3,10 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"strconv"
 	"strings"
 )
@@ -41,7 +41,9 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm tab.PinMod, s
 					<th style="width:5px;">Mass</th>
 				}
 				if shared.ShowDisco {
-					<th style="width:5px;">@frmt.MultiLinestring([]string{"Ship", "Class"})</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Ship", "Class"})
+					</th>
 				}
 				<th style="width:25px;">Profit</th>
 				<th style="width:25px;">
@@ -56,7 +58,7 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm tab.PinMod, s
 		<tbody>
 			for _, commodity := range commodities {
 				@tab.TrFromMainTb(commodity.Nickname, GoodAtBaseInfoTUrl(commodity), pinm) {
-					@tab.PinTd(commodity.Nickname, commodity.Name + frmt.FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
+					@tab.PinTd(commodity.Nickname, commodity.Name+frmt.FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
 					@tab.PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
 					<td>{ strconv.Itoa(commodity.PriceBestBaseSellsFor) }</td>
 					<td>{ strconv.Itoa(commodity.PriceBestBaseBuysFor) }</td>
@@ -87,8 +89,8 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, 
 	@TabMenu(urls.Commodities, mode, shared)
 	@tab.TabContent() {
 		<div class="splitter">
-			@tab.LeftTable(){
-				@tab.TableTop(){
+			@tab.LeftTable() {
+				@tab.TableTop() {
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@CommodityTable(commodities, tab.MainMode, shared)
@@ -97,11 +99,11 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, 
 						@CommodityTable(commodities, tab.PinMode, shared)
 					</div>
 				}
-				@tab.TableBottom(){
+				@tab.TableBottom() {
 					@GoodAtBaseSharedT(ShowAsCommodity(true), shared)
 				}
 			}
-			@tab.InfocardTable(){
+			@tab.InfocardTable() {
 				@tab.InfocardShared()
 			}
 		</div>

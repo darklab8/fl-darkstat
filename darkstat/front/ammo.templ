@@ -3,10 +3,10 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"strconv"
 	"strings"
 )
@@ -33,14 +33,14 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.Shar
 				<th style="width:25px;">Hit Pts</th>
 				<th style="width:5px;">
 					if shared.ShowDisco {
-						@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+						@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ", "Cart.)"})
 					} else {
 						@frmt.MultiLinestring([]string{"Ammo", "Limit"})
 					}
 				</th>
 				<th style="width:25px;">Volume</th>
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"Ammo", "Life","Time"})
+					@frmt.MultiLinestring([]string{"Ammo", "Life", "Time"})
 				</th>
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Seeker", "Type"})
@@ -49,7 +49,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.Shar
 					@frmt.MultiLinestring([]string{"Seeker", "Range"})
 				</th>
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"Seeker", "Fov","Deg"})
+					@frmt.MultiLinestring([]string{"Seeker", "Fov", "Deg"})
 				</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
@@ -91,8 +91,8 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 tab.ShowEmpty, shared *types.Shar
 	@TabMenu(urls.Ammo, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">
-			@tab.LeftTable(){
-				@tab.TableTop(){
+			@tab.LeftTable() {
+				@tab.TableTop() {
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
 						@AmmoTable(ammos, tab.MainMode, shared)
@@ -101,11 +101,11 @@ templ AmmoT(ammos []configs_export.Ammo, mode2 tab.ShowEmpty, shared *types.Shar
 						@AmmoTable(ammos, tab.PinMode, shared)
 					</div>
 				}
-				@tab.TableBottom(){
+				@tab.TableBottom() {
 					@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 				}
 			}
-			@tab.InfocardTable(){
+			@tab.InfocardTable() {
 				@tab.InfocardShared()
 			}
 		</div>

@@ -3,11 +3,11 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
-	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/go-utils/utils"
 	"strconv"
 	"strings"
@@ -49,37 +49,36 @@ func GetRefire(gun configs_export.Gun) []string {
 	if gun.BurstFire == nil {
 		return []string{fmt.Sprintf("%8.2f", gun.Refire)}
 	}
-	return []string{fmt.Sprintf("%8.2f",gun.BurstFire.SustainedRefire), fmt.Sprintf("( %8.2f )", gun.Refire)}
+	return []string{fmt.Sprintf("%8.2f", gun.BurstFire.SustainedRefire), fmt.Sprintf("( %8.2f )", gun.Refire)}
 }
 
 func GetHullPerSec(gun configs_export.Gun) []string {
 	if gun.BurstFire == nil {
 		return []string{fmt.Sprintf("%8.0f", gun.HullDamagePerSec)}
 	}
-	return []string{fmt.Sprintf("%8.0f",gun.BurstFire.SustainedHullDamagePerSec), fmt.Sprintf("( %8.0f )",gun.HullDamagePerSec)}
+	return []string{fmt.Sprintf("%8.0f", gun.BurstFire.SustainedHullDamagePerSec), fmt.Sprintf("( %8.0f )", gun.HullDamagePerSec)}
 }
 
 func GetShieldPerSec(gun configs_export.Gun) []string {
 	if gun.BurstFire == nil {
-		return []string{fmt.Sprintf("%8.0f",gun.AvgShieldDamagePerSec)}
+		return []string{fmt.Sprintf("%8.0f", gun.AvgShieldDamagePerSec)}
 	}
-	return []string{fmt.Sprintf("%8.0f",gun.BurstFire.SustainedAvgShieldDamagePerSec), fmt.Sprintf("( %8.0f )",gun.AvgShieldDamagePerSec)}
+	return []string{fmt.Sprintf("%8.0f", gun.BurstFire.SustainedAvgShieldDamagePerSec), fmt.Sprintf("( %8.0f )", gun.AvgShieldDamagePerSec)}
 }
 
 func GetEnergyPerSec(gun configs_export.Gun) []string {
 	if gun.BurstFire == nil {
-		return []string{fmt.Sprintf("%8.0f",gun.EnergyDamagePerSec)}
+		return []string{fmt.Sprintf("%8.0f", gun.EnergyDamagePerSec)}
 	}
-	return []string{fmt.Sprintf("%8.0f",gun.BurstFire.SustainedEnergyDamagePerSec), fmt.Sprintf("( %8.0f )",gun.EnergyDamagePerSec)}
+	return []string{fmt.Sprintf("%8.0f", gun.BurstFire.SustainedEnergyDamagePerSec), fmt.Sprintf("( %8.0f )", gun.EnergyDamagePerSec)}
 }
 
 func GetPowerPerSec(gun configs_export.Gun) []string {
 	if gun.BurstFire == nil {
-		return []string{fmt.Sprintf("%6.0f",gun.PowerUsagePerSec)}
+		return []string{fmt.Sprintf("%6.0f", gun.PowerUsagePerSec)}
 	}
-	return []string{fmt.Sprintf("%6.0f",gun.BurstFire.SustainedPowerUsagePerSec), fmt.Sprintf("( %6.0f )", gun.PowerUsagePerSec)}
+	return []string{fmt.Sprintf("%6.0f", gun.BurstFire.SustainedPowerUsagePerSec), fmt.Sprintf("( %6.0f )", gun.PowerUsagePerSec)}
 }
-
 
 func GetBurstParams(gun configs_export.Gun) []string {
 	burst_ammo := ""
@@ -127,7 +126,6 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Power", "Usage"})
 				</th>
-				
 				<th style="width:5px;">
 					if shared.ShowDisco {
 						@frmt.MultiLinestring([]string{"Refire", "(+Burst.)"})
@@ -137,13 +135,13 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 				</th>
 				if shared.ShowDisco {
 					<th style="width:5px;">
-						@frmt.MultiLinestring([]string{"Burst", "Ammo","[barrels]" ,"(reload)"})
+						@frmt.MultiLinestring([]string{"Burst", "Ammo", "[barrels]", "(reload)"})
 					</th>
 					<th style="width:5px;">
-							@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ","Cart.)"})
+						@frmt.MultiLinestring([]string{"Ammo", "Limit", "(+Max ", "Cart.)"})
 					</th>
 					<th style="width:5px;">
-							@frmt.MultiLinestring([]string{"Armor", "Pen.",})
+						@frmt.MultiLinestring([]string{"Armor", "Pen."})
 					</th>
 				}
 				if mode == GunsMissiles {
@@ -153,7 +151,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 				}
 				if shared.ShowDisco {
 					<th style="width:5px;">
-							@frmt.MultiLinestring([]string{"Hull", "Dmg/s", "(+Burst.)"})		
+						@frmt.MultiLinestring([]string{"Hull", "Dmg/s", "(+Burst.)"})
 					</th>
 					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"Avg", "Sheld", "Dmg/s", "(+Burst.)"})
@@ -166,7 +164,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 					</th>
 				} else {
 					<th style="width:5px;">
-							@frmt.MultiLinestring([]string{"Hull", "Dmg/s"})		
+						@frmt.MultiLinestring([]string{"Hull", "Dmg/s"})
 					</th>
 					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"Avg", "Sheld", "Dmg/s"})
@@ -294,8 +292,8 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, sha
 	}
 	@tab.TabContent() {
 		<div class="splitter">
-			@tab.LeftTable(){
-				@tab.TableTop(){
+			@tab.LeftTable() {
+				@tab.TableTop() {
 					@tab.PageHint() {
 						if mode == GunsShowBases || mode == GunsShowDamageBonuses {
 							Guns.
@@ -318,7 +316,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, sha
 						@GunTable([]configs_export.Gun{}, mode, tab.PinMode, shared, infocards)
 					</div>
 				}
-				@tab.TableBottom(){
+				@tab.TableBottom() {
 					if mode == GunsShowBases || mode == GunsMissiles {
 						@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
 					} else {
@@ -326,7 +324,7 @@ templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, sha
 					}
 				}
 			}
-			@tab.InfocardTable(){
+			@tab.InfocardTable() {
 				@tab.InfocardShared()
 			}
 		</div>
@@ -355,9 +353,10 @@ templ GunShowModifiersShared() {
 }
 
 templ GunShowModifiers(gun configs_export.Gun) {
-	
-	<div class="bottom_name">{ gun.Name },
-	@tab.PageTime()</div>
+	<div class="bottom_name">
+		{ gun.Name },
+		@tab.PageTime()
+	</div>
 	@GunShowModifiersShared() {
 		for _, bonus := range gun.DamageBonuses {
 			<tr

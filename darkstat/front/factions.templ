@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/configs/config_consts"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"strconv"
 	"strings"
 )
@@ -43,7 +43,7 @@ templ FactionTable(factions []configs_export.Faction, mode FactionTabMode, pinm 
 				<th style="width:50px;">Nickname</th>
 				if mode == FactionShowBribes {
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Has", "Rep","hacks"})
+						@frmt.MultiLinestring([]string{"Has", "Rep", "hacks"})
 					</th>
 				}
 				<th style="width:50px;">
@@ -96,8 +96,8 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 	}
 	@tab.TabContent() {
 		<div class="splitter">
-			@tab.LeftTable(){
-				@tab.TableTop(){
+			@tab.LeftTable() {
+				@tab.TableTop() {
 					if mode == FactionShowBases {
 						@tab.PageHint() {
 							Reps between NPC factions. How changes by NPC kills and missions.
@@ -122,15 +122,15 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 						@FactionTable(factions, mode, tab.PinMode, shared)
 					</div>
 				}
-					@tab.TableBottom(){
-						if mode == FactionShowBases {
-							@FactionRepsBase()
-						} else if mode == FactionShowBribes {
-							@BriberyBottomBase()
-						}
+				@tab.TableBottom() {
+					if mode == FactionShowBases {
+						@FactionRepsBase()
+					} else if mode == FactionShowBribes {
+						@BriberyBottomBase()
 					}
+				}
 			}
-			@tab.InfocardTable(){
+			@tab.InfocardTable() {
 				@tab.InfocardShared()
 			}
 		</div>
@@ -156,8 +156,10 @@ templ FactionRepsBase() {
 }
 
 templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputation) {
-	<div class="bottom_name">{ faction.Name },
-	@tab.PageTime()</div>
+	<div class="bottom_name">
+		{ faction.Name },
+		@tab.PageTime()
+	</div>
 	@FactionRepsBase() {
 		for _, rep := range reps {
 			<tr
