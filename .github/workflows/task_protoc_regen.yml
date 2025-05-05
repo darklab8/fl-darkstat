@@ -1,4 +1,4 @@
-name: Test-Protoc-Regen
+name: Test Protoc Regen
 
 on:
   push:
