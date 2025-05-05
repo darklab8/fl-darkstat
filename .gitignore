@@ -18,3 +18,4 @@ openapi-generator-cli.jar
 *prof
 node_modules/
 .venv/
+.idea/

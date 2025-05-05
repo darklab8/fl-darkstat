@@ -111,8 +111,9 @@ tasks:
       - docker pull darkwind8/darkstat:production && docker service update --image darkwind8/darkstat:production darkstat-production
 
   kcl:build:
+    dir: .github
     cmds:
-      - kcl kcls/build.k
+      - kcl build.k
 
   swag:build:
     cmds:

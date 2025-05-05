@@ -10,7 +10,7 @@ import infra.kcls.actions.install_swag as swag
 import .common as c
 
 _workflow = gw.Workflow {
-    _filename = "pages-production.yml"
+    _filename = "pages_production.yml"
     name = "Deploy pages production"
     on = {
         workflow_dispatch: {}

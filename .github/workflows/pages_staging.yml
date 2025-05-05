@@ -1,0 +1,33 @@
+name: Deploy pages staging
+'on':
+  push:
+    tags:
+    - '*-*'
+  workflow_dispatch: {}
+jobs:
+  job:
+    name: Github Pages Staging
+    runs-on: ubuntu-22.04
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    - name: Check out source repository
+      uses: actions/checkout@v4
+    - name: Upload iframe redirect
+      run: |
+        set -ex
+        mkdir build | true
+        cp docker/iframe-staging.html build/index.html
+    - name: Upload artifacts for deployment to Github Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        name: github-pages
+        path: './build'
+    - name: Deploy to pages
+      uses: actions/deploy-pages@v4
+      id: deployment
