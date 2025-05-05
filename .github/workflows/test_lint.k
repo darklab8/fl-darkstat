@@ -14,7 +14,7 @@ import .common as c
 
 _workflow = gw.Workflow {
     _filename = "test_lint.yml"
-    name = "Test build"
+    name = "Test lint"
     on = {
         push.branches = ["master"]
         schedule: [{cron = "0 9 * * *"}]
@@ -47,7 +47,7 @@ _test_job: gw.Job = {
         }
         ga.Step {
             name = "lint things"
-            run = "task lint"
+            uses = "golangci/golangci-lint-action@v8"
         }
     ]
 }

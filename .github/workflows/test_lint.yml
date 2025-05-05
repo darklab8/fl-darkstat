@@ -1,4 +1,4 @@
-name: Test build
+name: Test lint
 'on':
   push:
     branches:
@@ -39,4 +39,4 @@ jobs:
       with:
         freelancer-folder: ${{ github.workspace }}/fl-data
     - name: lint things
-      run: task lint
+      uses: golangci/golangci-lint-action@v8
