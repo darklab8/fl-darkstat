@@ -9,7 +9,7 @@ WORKDIR /code
 
 COPY go.mod go.sum ./
 RUN go mod download -x
-RUN go install github.com/a-h/templ/cmd/templ@v0.2.747
+RUN go install github.com/a-h/templ/cmd/templ@v0.3.857
 RUN go install github.com/swaggo/swag/cmd/swag@v1.16.4
 
 FROM dependencies AS protoc
