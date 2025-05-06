@@ -108,21 +108,21 @@ func setHeaders(r *http.Request, w *http.ResponseWriter) {
 			}
 			requested := r.URL.Path[1:]
 			if strings.Contains(requested, "info_") {
-				(*w).Header().Set("Cache-Control", "1200")
+				(*w).Header().Set("Cache-Control", "max-age=1200")
 				return
 			} else if strings.Contains(requested, "route/route_") {
-				(*w).Header().Set("Cache-Control", "1200")
+				(*w).Header().Set("Cache-Control", "max-age=1200")
 				return
 			} else if strings.Contains(requested, "id_rephacks_") {
-				(*w).Header().Set("Cache-Control", "1200")
+				(*w).Header().Set("Cache-Control", "max-age=1200")
 				return
 			} else if strings.Contains(requested, "ships_details") {
-				(*w).Header().Set("Cache-Control", "1200")
+				(*w).Header().Set("Cache-Control", "max-age=1200")
 				return
 			}
 		}
 
-		(*w).Header().Set("Cache-Control", "60")
+		(*w).Header().Set("Cache-Control", "max-age=60")
 	}
 }
 
