@@ -2,10 +2,9 @@ module "dns" {
   source = "../../../../infra/tf/modules/cloudflare_dns"
   zone   = var.zone
   dns_records = concat([{
-    type    = "A"
-    value   = var.ipv4_address
-    name    = var.stat_prefix
-    proxied = true
+    type  = "A"
+    value = var.ipv4_address
+    name  = var.stat_prefix
     }
     ],
     var.rpc_prefix != null ? [{
