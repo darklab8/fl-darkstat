@@ -59,6 +59,45 @@ templ TradeDeals(
 	}
 }
 
+func getRGBFromValue(value float64) (int, int, int) {
+	minValue := 5.0
+	maxValue := 25.0
+
+	if value < minValue {
+		return 255, 0, 0
+	} else if value >= maxValue {
+		return 0, 255, 0
+	}
+
+	percentage := (value - minValue) / (maxValue - minValue) * 100
+
+	var r, g, b int
+
+	// Transition from Red (255, 0, 0) to Yellow (255, 255, 0)
+	if percentage <= 50 {
+		r = 255
+		g = int(percentage * 5.1) // Gradual increase in Green as percentage increases
+		b = 0
+	} else {
+		// Transition from Yellow (255, 255, 0) to Green (0, 255, 0)
+		r = int((1 - (percentage-50)/50) * 255) // Decrease red as percentage increases beyond 50
+		g = 255
+		b = 0
+	}
+
+	return r, g, b
+}
+func getRgbStrFromValue(input float64) string {
+	r, g, b := getRGBFromValue(input)
+	return fmt.Sprintf("background:rgba(%d, %d, %d, 0.2);", r, g, b)
+}
+
+templ FormatKiloVolumes(kilo_volume float64) {
+	<td style={ getRgbStrFromValue(kilo_volume) }>
+		{   fmt.Sprintf("%.1f",kilo_volume) }
+	</td>
+}
+
 templ TradesTable(
 	trade_routes *cache.Cached[[]*configs_export.TradeDeal],
 	shared *types.SharedData,
@@ -78,7 +117,6 @@ templ TradesTable(
 				<th style="width:70px;">
 					@frmt.MultiLinestring([]string{"From", "Faction"})
 				</th>
-				<th style="width:50px;">Profit/v</th>
 				<th style="width:60px;">
 					@frmt.MultiLinestring([]string{"Dest.", "System"})
 				</th>
@@ -89,6 +127,12 @@ templ TradesTable(
 				<th style="width:70px;">
 					@frmt.MultiLinestring([]string{"Dest.", "Faction"})
 				</th>
+				<th style="width:50px;">Profit/v</th>
+				if shared.ShowDisco {
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"kilo", "volumes", "to trade"})
+					</th>
+				}
 				<th style="width:50px;">
 					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
@@ -101,9 +145,6 @@ templ TradesTable(
 					</th>
 					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"profit", "sum"})
-					</th>
-					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"kilo", "volumes", "to trade"})
 					</th>
 				}
 				<th style="width:50px;">
@@ -171,7 +212,6 @@ templ TradesTable(
 							{ "fr."+trade_route.Transport.BuyingGood.FactionName }
 						}
 					</td>
-					<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
 					<td>
 						@frmt.WriteLimit(85) {
 							{ "to."+trade_route.Transport.SellingGood.SystemName }
@@ -186,6 +226,10 @@ templ TradesTable(
 							{ "to."+trade_route.Transport.SellingGood.FactionName }
 						}
 					</td>
+					<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
+					if shared.ShowDisco {
+						@FormatKiloVolumes(configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
+					}
 					<td>
 						<span class="tooltip">
 							@TradeRouteHumanTime(trade_route.Transport.Route)
@@ -225,9 +269,6 @@ templ TradesTable(
 						</td>
 						<td>
 							{   fmt.Sprintf("%.1f",trade_route.ProfitPerTimeForKiloVolumes) }
-						</td>
-						<td>
-							{   fmt.Sprintf("%.1f",configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)) }
 						</td>
 					}
 					<td class="route_transport">{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
