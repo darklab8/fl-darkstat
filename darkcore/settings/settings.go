@@ -26,7 +26,7 @@ func GetEnvs() DarkcoreEnvVars {
 		UtilsEnvs:           utils_settings.GetEnvs(),
 		Password:            envs.GetStrOr("PASSWORD", "", enverant.WithDesc("protect access to web interface of darkstat with ?password=query_param")),
 		Secret:              envs.GetStrOr("SECRET", "passphrasewhichneedstobe32bytes!", enverant.WithDesc("secret to persist authentifications with query param password or oauth, required if using auths")),
-		CacheControl:        envs.GetStrOr("CACHE_CONTROL", ""),
+		CacheControl:        envs.GetStrOr("CACHE_CONTROL", ""), // refactor to boolean and set as true
 		IsDiscoOauthEnabled: envs.GetBool("DISCO_OAUTH", enverant.WithDesc("an option to turn auth of darkstat for Discovery freelancer a protected dev instance of darkstat")),
 		Enver:               envs,
 	}

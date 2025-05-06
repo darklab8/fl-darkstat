@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
@@ -91,19 +92,44 @@ type WebServeOpts struct {
 	SockAddress string
 }
 
-func setHeaders(w *http.ResponseWriter) {
+func setHeaders(r *http.Request, w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Headers", "*")
 	(*w).Header().Set("Access-Control-Allow-Methods", "*")
 
 	if settings.Env.CacheControl != "" {
-		(*w).Header().Set("Cache-Control", settings.Env.CacheControl)
+		switch r.Method {
+		case http.MethodGet:
+			if r.URL == nil {
+				return
+			}
+			if len(r.URL.Path) < 1 {
+				return
+			}
+			requested := r.URL.Path[1:]
+			if strings.Contains(requested, "info_") {
+				(*w).Header().Set("Cache-Control", "1200")
+				return
+			} else if strings.Contains(requested, "route/route_") {
+				(*w).Header().Set("Cache-Control", "1200")
+				return
+			} else if strings.Contains(requested, "id_rephacks_") {
+				(*w).Header().Set("Cache-Control", "1200")
+				return
+			} else if strings.Contains(requested, "ships_details") {
+				(*w).Header().Set("Cache-Control", "1200")
+				return
+			}
+		}
+
+		(*w).Header().Set("Cache-Control", "60")
 	}
 }
 
 func CorsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		setHeaders(&w)
+
+		setHeaders(r, &w)
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 		} else {
