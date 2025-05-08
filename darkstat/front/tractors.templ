@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/configs/config_consts"
+	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -43,9 +44,26 @@ templ TractorHeaders(shared *types.SharedData) {
 	</th>
 	<th style="width:25px;">Lootable</th>
 	<th style="width:25px;">Nickname</th>
+	if settings.Env.IsDevEnv {
+		<th style="width:25px;">
+			@frmt.MultiLinestring([]string{"No Dock", "Count"})
+		</th>
+	}
 	<th style="width:25px;">Name ID</th>
 	<th style="width:25px;">Info ID</th>
 	<th style="max-width:100%;"></th>
+}
+
+func NoDockCount(tractor *configs_export.Tractor) int {
+	count := 0
+	for _, rep := range tractor.Rephacks {
+		if config_consts.GetRelationshipStatus(rep.Reputation) == config_consts.RepEnemy {
+			count++
+		} else if rep.Reputation <= 0.56 {
+			count++
+		}
+	}
+	return count
 }
 
 templ TractorValues(tractor *configs_export.Tractor, shared *types.SharedData) {
@@ -58,6 +76,9 @@ templ TractorValues(tractor *configs_export.Tractor, shared *types.SharedData) {
 	<td>{ strconv.Itoa(tractor.ReachSpeed) }</td>
 	<td>{ strconv.FormatBool(tractor.Lootable) }</td>
 	<td class="seo">{ string(tractor.Nickname) } </td>
+	if settings.Env.IsDevEnv {
+		<td>{ strconv.Itoa(NoDockCount(tractor)) } </td>
+	}
 	<td class="seo">{ strconv.Itoa(tractor.NameID) } </td>
 	<td class="seo">{ strconv.Itoa(tractor.InfoID) } </td>
 }
