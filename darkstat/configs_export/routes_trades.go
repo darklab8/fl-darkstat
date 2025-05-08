@@ -232,6 +232,10 @@ func (e *TradePathExporter) GetBestTradeDeals(bases []*Base) []*TradeDeal {
 			profit_per_time_for_kilo_volumes := kilo_volume * profit_per_time
 			time_s := GetTimeS(trade_route.Transport.Route.g, trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)
 
+			if time_s*trades.PrecisionMultipiler > float64(trades.INFthreshold) {
+				continue
+			}
+
 			var time_weight float64
 			time_weight = math.Min(time_s, 600) / 600
 
@@ -288,6 +292,11 @@ func (e *TradePathExporter) GetBaseBestPathFrom(base *Base) *BaseBestPathTimes {
 			}
 
 			e.GetVolumedMarketGoods(buying_good, selling_good, func(copied_buying_good, copied_selling_good *MarketGood) {
+				time_s := GetTimeS(e.Transport, buying_good, selling_good)
+				if time_s*trades.PrecisionMultipiler > float64(trades.INFthreshold) {
+					return
+				}
+
 				TransportProfitPerTime := GetProffitPerTime(e.Transport, buying_good, selling_good)
 				FrigateProfitPerTime := GetProffitPerTime(e.Frigate, buying_good, selling_good)
 				FreighterProfitPerTime := GetProffitPerTime(e.Freighter, buying_good, selling_good)
@@ -348,6 +357,11 @@ func (e *TradePathExporter) GetBaseBestPathTo(base *Base) *BaseBestPathTimes {
 				continue
 			}
 			e.GetVolumedMarketGoods(buying_good, selling_good, func(copied_buying_good, copied_selling_good *MarketGood) {
+				time_s := GetTimeS(e.Transport, buying_good, selling_good)
+				if time_s*trades.PrecisionMultipiler > float64(trades.INFthreshold) {
+					return
+				}
+
 				TransportProfitPerTime := GetProffitPerTime(e.Transport, buying_good, selling_good)
 				FrigateProfitPerTime := GetProffitPerTime(e.Frigate, buying_good, selling_good)
 				FreighterProfitPerTime := GetProffitPerTime(e.Freighter, buying_good, selling_good)
