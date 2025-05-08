@@ -1,5 +1,7 @@
 package infocard
 
+import "sync"
+
 type Infocard struct {
 	content string
 	Lines   []string
@@ -21,6 +23,7 @@ const (
 type Config struct {
 	Infonames map[int]Infoname
 	Infocards map[int]*Infocard
+	Mutex     sync.Mutex
 }
 
 func NewConfig() *Config {

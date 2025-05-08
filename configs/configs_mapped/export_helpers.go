@@ -8,6 +8,9 @@ import (
 )
 
 func (configs *MappedConfigs) GetInfocardName(ids_name int, nickname string) string {
+	configs.Infocards.Mutex.Lock()
+	defer configs.Infocards.Mutex.Unlock()
+
 	if infoname, ok := configs.Infocards.Infonames[ids_name]; ok {
 		return strings.ReplaceAll(string(infoname), "\r", "")
 	} else {
@@ -16,6 +19,9 @@ func (configs *MappedConfigs) GetInfocardName(ids_name int, nickname string) str
 }
 
 func (configs *MappedConfigs) GetRegionName(system *universe_mapped.System) string {
+	configs.Infocards.Mutex.Lock()
+	defer configs.Infocards.Mutex.Unlock()
+
 	var Region string
 	system_infocard_Id := system.Ids_info.Get()
 	if value, ok := configs.Infocards.Infocards[system_infocard_Id]; ok {

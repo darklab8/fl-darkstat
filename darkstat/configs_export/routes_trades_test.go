@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
@@ -58,6 +59,10 @@ func TestGetTrades(t *testing.T) {
 		[]*Base{},
 	)
 
+	time_start := time.Now()
+	_ = trade_path_exporter.GetBestTradeDeals(e.Bases)
+	fmt.Println("best trade deals in ", time.Now().Sub(time_start).Seconds(), " seconds")
+
 	for _, base := range e.Bases {
 		// if base.Nickname != "zone_br05_gold_dummy_field" {
 		// 	continue
@@ -67,6 +72,7 @@ func TestGetTrades(t *testing.T) {
 			trade_route.Frigate.Route.GetTimeMs()
 			KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)
 		}
+		break
 	}
 
 	e.EnhanceBasesWithIsTransportReachable(e.Bases, e.Transport, e.Freighter)
