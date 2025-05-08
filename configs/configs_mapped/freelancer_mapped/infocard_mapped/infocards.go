@@ -43,9 +43,9 @@ func ReadFromTextFile(input_file *file.File) (*infocard.Config, error) {
 
 		switch infocard.RecordKind(name) {
 		case infocard.TYPE_NAME:
-			frelconfig.Infonames[id] = infocard.Infoname(content)
+			frelconfig.PutInfoname(id, infocard.Infoname(content))
 		case infocard.TYPE_INFOCAD:
-			frelconfig.Infocards[id] = infocard.NewInfocard(content)
+			frelconfig.PutInfocard(id, infocard.NewInfocard(content))
 		default:
 			logus1.Log.Fatal(
 				"unrecognized object name in infocards.txt",
@@ -93,9 +93,9 @@ func ReadFromDiscoServerConfig(input_file *file.File) (*infocard.Config, error) 
 
 		switch kind {
 		case infocard.TYPE_NAME:
-			frelconfig.Infonames[id] = infocard.Infoname(content)
+			frelconfig.PutInfoname(id, infocard.Infoname(content))
 		case infocard.TYPE_INFOCAD:
-			frelconfig.Infocards[id] = infocard.NewInfocard(content)
+			frelconfig.PutInfocard(id, infocard.NewInfocard(content))
 		default:
 			logus1.Log.Fatal(
 				"unrecognized object name in infocards.txt",
@@ -127,22 +127,32 @@ func Read(filesystem *filefind.Filesystem, freelancer_ini *exe_mapped.Config, in
 		config_override, err := ReadFromDiscoServerConfig(input_file)
 		logus.Log.CheckPanic(err, "unable to read infocards", typelog.OptError(err))
 
-		for key, value := range config_override.Infocards {
-			config.Infocards[key] = value
+		_config_override := config_override.GetUnsafe()
+		_config_override.Mutex.Lock()
+		_config := config.GetUnsafe()
+		_config.Mutex.Lock()
+		for key, value := range _config_override.Infocards {
+			_config.Infocards[key] = value
 		}
-		for key, value := range config_override.Infonames {
-			config.Infonames[key] = value
+		for key, value := range _config_override.Infonames {
+			_config.Infonames[key] = value
 		}
+		_config_override.Mutex.Unlock()
+		_config.Mutex.Unlock()
+
 	}
 
-	var wg sync.WaitGroup
-	for _, card := range config.Infocards {
-		wg.Add(1)
-		go func(parsed_infocard *infocard.Infocard) {
-			card.Lines, _ = card.XmlToText()
-			wg.Done()
-		}(card)
-	}
-	wg.Wait()
+	config.GetDicts(func(config *infocard.UnsafeConfig) {
+		var wg sync.WaitGroup
+		for _, card := range config.Infocards {
+			wg.Add(1)
+			go func(parsed_infocard *infocard.Infocard) {
+				card.Lines, _ = card.XmlToText()
+				wg.Done()
+			}(card)
+		}
+		wg.Wait()
+	})
+
 	return config, nil
 }

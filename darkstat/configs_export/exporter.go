@@ -76,7 +76,7 @@ func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
 	}
 
 	for _, info_id := range infocard_ids {
-		if value, ok := e.Mapped.Infocards.Infocards[info_id]; ok {
+		if value, ok := e.Mapped.Infocards.GetInfocard2(info_id); ok {
 			for _, line := range value.Lines {
 				e.Infocards[InfocardKey(nickname)] = append(e.Infocards[InfocardKey(nickname)], NewInfocardSimpleLine(line))
 			}
@@ -135,8 +135,7 @@ type Exporter struct {
 	findable_in_loot_cache map[string]bool
 	craftable_cached       map[string]bool
 	pob_buyable_cache      map[string][]*PobShopItem
-
-	sync_infocards sync.Mutex
+	sync_infocards         sync.Mutex
 }
 
 type OptExport func(e *Exporter)

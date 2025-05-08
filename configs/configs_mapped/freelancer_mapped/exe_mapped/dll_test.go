@@ -25,7 +25,7 @@ func TestReadInfocards(t *testing.T) {
 	config := Read(iniload.NewLoader(fileref).Scan())
 
 	dlls := config.GetDlls()
-	infocards := GetAllInfocards(filesystem, dlls)
+	infocards := GetAllInfocards(filesystem, dlls).GetUnsafe()
 
 	assert.Greater(t, len(infocards.Infocards), 0)
 	assert.Greater(t, len(infocards.Infocards), 0)
@@ -63,7 +63,7 @@ func TestReadInfocardsToHtml(t *testing.T) {
 		fileref := filesystem.GetFile(FILENAME_FL_INI)
 		config := Read(iniload.NewLoader(fileref).Scan())
 
-		infocards := GetAllInfocards(tests.FixtureFileFind(), config.GetDlls())
+		infocards := GetAllInfocards(tests.FixtureFileFind(), config.GetDlls()).GetUnsafe()
 
 		// assert.Greater(t, len(ids), 0)
 
@@ -99,7 +99,7 @@ func TestValidateInfocards(t *testing.T) {
 	filesystem := filefind.FindConfigs(game_location)
 	fileref := filesystem.GetFile(FILENAME_FL_INI)
 	config := Read(iniload.NewLoader(fileref).Scan())
-	infocards := GetAllInfocards(filefind.FindConfigs(game_location), config.GetDlls())
+	infocards := GetAllInfocards(filefind.FindConfigs(game_location), config.GetDlls()).GetUnsafe()
 
 	var parsed []*infocard.Infocard = make([]*infocard.Infocard, 0, 100)
 	var parsed_text map[int][]string = make(map[int][]string)
