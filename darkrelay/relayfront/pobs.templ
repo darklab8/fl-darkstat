@@ -1,16 +1,17 @@
 package relayfront
 
 import (
+	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/fl-darkstat/darkstat/front"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
-	"github.com/darklab8/fl-darkstat/darkstat/front"
+	"html"
 	"strconv"
 	"strings"
-	"html"
-	"fmt"
 )
 
 func PoBDetailedUrl(pob *configs_export.PoB) string {
@@ -21,52 +22,64 @@ func FmtPtrString(value *string) string {
 	if value == nil {
 		return "noaccess"
 	}
-	return  *value
+	return *value
 }
 
 func FmtPtrStringOrQuestionMark(value *string) string {
 	if value == nil {
 		return "?"
 	}
-	return  *value
+	return *value
 }
 
 func FmtPtrInt(value *int) string {
 	if value == nil {
 		return "noaccess"
 	}
-	return  strconv.Itoa(*value)
+	return strconv.Itoa(*value)
 }
 
 func FmtPtrFloat(value *float64, precision int) string {
 	if value == nil {
 		return "noaccess"
 	}
-	return  strconv.FormatFloat(*value, 'f', precision, 64)
+	return strconv.FormatFloat(*value, 'f', precision, 64)
 }
 
 templ PoBTableHeaders() {
-	<th style="width:25px;">@frmt.MultiLinestring([]string{"Cargo", "space", "left"})</th>
-	<th style="width:25px;">@frmt.MultiLinestring([]string{"Forum", "thread"})</th>
+	<th style="width:25px;">
+		@frmt.MultiLinestring([]string{"Cargo", "space", "left"})
+	</th>
+	<th style="width:25px;">
+		@frmt.MultiLinestring([]string{"Forum", "thread"})
+	</th>
 	<th style="width:25px;">Pos</th>
 	<th style="width:25px;">Level</th>
 	<th style="width:25px;">Money</th>
 	<th style="width:25px;">Health</th>
 	<th style="width:25px;">System</th>
-	<th style="width:25px;">@frmt.MultiLinestring([]string{"Nav", "Map"})</th>
+	<th style="width:25px;">
+		@frmt.MultiLinestring([]string{"Nav", "Map"})
+	</th>
 	<th style="width:100px;">Region</th>
-	<th style="width:25px;">@frmt.MultiLinestring([]string{"System", "Nickname"})</th>
+	<th style="width:25px;">
+		@frmt.MultiLinestring([]string{"System", "Nickname"})
+	</th>
 	<th style="width:25px;">Faction</th>
-	<th style="width:25px;">@frmt.MultiLinestring([]string{"Faction", "Nickname"})</th>
+	<th style="width:25px;">
+		@frmt.MultiLinestring([]string{"Faction", "Nickname"})
+	</th>
 	<th style="width:25px;">
 		@frmt.MultiLinestring([]string{"Defense", "Mode"})
 	</th>
-	<th style="width:25px;">@frmt.MultiLinestring([]string{"Nickname"})</th>
+	<th style="width:25px;">
+		@frmt.MultiLinestring([]string{"Nickname"})
+	</th>
 	<th style="max-width:100%;"></th>
 }
 
 templ PobTableRow(pob *configs_export.PoBCore) {
-	<td> { FmtPtrInt(pob.CargoSpaceLeft)} </td>
+	<td>{ FmtPtrInt(pob.CargoSpaceLeft) } </td>
 	<td>
 		if pob.ForumThreadUrl != nil {
 			<a href={ templ.SafeURL(*pob.ForumThreadUrl) }>link</a>
@@ -74,25 +87,26 @@ templ PobTableRow(pob *configs_export.PoBCore) {
 			notfound
 		}
 	</td>
-	<td> { FmtPtrString(pob.Pos)} </td>
+	<td>{ FmtPtrString(pob.Pos) } </td>
 	<td>{ FmtPtrInt(pob.Level) }</td>
 	<td>{ FmtPtrInt(pob.Money) }</td>
 	<td>{ FmtPtrFloat(pob.Health, 2) }</td>
 	<td class="seo">{ FmtPtrString(pob.SystemName) }</td>
 	<td>{ FmtPtrStringOrQuestionMark(pob.SectorCoord) }</td>
-	<td>@frmt.WriteLimit(100) {
-		{ FmtPtrString(pob.Region) }
-	}</td>
+	<td>
+		@frmt.WriteLimit(100) {
+			{ FmtPtrString(pob.Region) }
+		}
+	</td>
 	<td class="seo">{ FmtPtrString(pob.SystemNick) } </td>
 	<td class="seo">{ FmtPtrString(pob.FactionName) }</td>
-	
 	<td class="seo">{ FmtPtrString(pob.FactionNick) } </td>
 	<td class="seo">
-	if pob.DefenseMode != nil {
-		{ pob.DefenseMode.ToStr() }
-	} else {
-		noaccess
-	}	
+		if pob.DefenseMode != nil {
+			{ pob.DefenseMode.ToStr() }
+		} else {
+			noaccess
+		}
 	</td>
 	<td class="seo">{ pob.Nickname } </td>
 }
@@ -106,7 +120,9 @@ templ PobTable(pobs []*configs_export.PoB, pinm tab.PinMod, shared *types.Shared
 					<th style="width:25px;">Select</th>
 					<th style="width:25px;">Select</th>
 				}
-				<th style="width:25px;">@frmt.MultiLinestring([]string{"Public", "items", "amount"})</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Public", "items", "amount"})
+				</th>
 				@PoBTableHeaders()
 			</tr>
 		</thead>
@@ -116,9 +132,9 @@ templ PobTable(pobs []*configs_export.PoB, pinm tab.PinMod, shared *types.Shared
 					@tab.PinTd(pob.Nickname, html.UnescapeString(pob.Name), pinm)
 					@tab.PinSelectLeftRight(pinm, PoBDetailedUrl(pob))
 					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
-					<td> { strconv.Itoa(len(pob.ShopItems)) } </td>
+					<td>{ strconv.Itoa(len(pob.ShopItems)) } </td>
 					@PobTableRow(&pob.PoBCore)
-					@tab.TdInfoCardClick(configs_export.InfocardKey(pob.Nickname), pob.Nickname, pinm, shared, tab.InfocardClickOpts{IsRelayHosted: true})
+					@tab.TdInfoCardClick(infocarder.InfocardKey(pob.Nickname), pob.Nickname, pinm, shared, tab.InfocardClickOpts{IsRelayHosted: true})
 				}
 			}
 		</tbody>
@@ -131,8 +147,8 @@ templ PoBsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shared *
 	@front.TabMenu(urls.PoBs, mode2, shared)
 	@tab.TabContent() {
 		<div class="splitter">
-			@tab.LeftTable(){
-				@tab.TableTop(){
+			@tab.LeftTable() {
+				@tab.TableTop() {
 					@tab.PageHint() {
 						What u can buy and sell to Player Owned Bases viewed by bases.
 						@tab.PageTime()
@@ -145,11 +161,11 @@ templ PoBsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shared *
 						@PobTable(configs.PoBs, tab.PinMode, shared)
 					</div>
 				}
-				@tab.TableBottom(){
+				@tab.TableBottom() {
 					@PoBShopItemsShared()
 				}
 			}
-			@tab.InfocardTable(){
+			@tab.InfocardTable() {
 				@tab.InfocardShared()
 			}
 		</div>
@@ -164,10 +180,10 @@ templ PoBShopItemsShared() {
 				<th style="width:100px;">Category</th>
 				<th style="width:10px;">Quantity</th>
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"price","to sell","to base"})
+					@frmt.MultiLinestring([]string{"price", "to sell", "to base"})
 				</th>
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"price","to buy","from base"})
+					@frmt.MultiLinestring([]string{"price", "to buy", "from base"})
 				</th>
 				<th style="width:75px;">
 					@frmt.MultiLinestring([]string{"Base", "Sells"})
@@ -178,8 +194,12 @@ templ PoBShopItemsShared() {
 				<th style="width:75px;">
 					@frmt.MultiLinestring([]string{"Base buys", "your kilo", "volumes"})
 				</th>
-				<th style="width:10px;">@frmt.MultiLinestring([]string{"Volume"})</th>
-				<th style="width:10px;">@frmt.MultiLinestring([]string{"Ship", "Class"})</th>
+				<th style="width:10px;">
+					@frmt.MultiLinestring([]string{"Volume"})
+				</th>
+				<th style="width:10px;">
+					@frmt.MultiLinestring([]string{"Ship", "Class"})
+				</th>
 				<th style="width:10px;">Min Stock</th>
 				<th style="width:10px;">Max Stock</th>
 				<th style="width:200px;">Nickname</th>
@@ -193,15 +213,14 @@ templ PoBShopItemsShared() {
 }
 
 templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpaceLeft *int, Money *int) {
-	
 	<div class="bottom_name">
-	{ name },
-	@tab.PageTime()
+		{ name },
+		@tab.PageTime()
 	</div>
 	@PoBShopItemsShared() {
 		for _, good := range shop_items {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(good.Nickname)) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(infocarder.InfocardKey(good.Nickname)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"
@@ -210,22 +229,22 @@ templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpac
 			>
 				<td>
 					@frmt.WriteLimit(200) {
-						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass), }
+						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass),   }
 					}
 				</td>
 				<td>
 					@frmt.WriteGoodType(string(good.Category))
 				</td>
-				<td> { strconv.Itoa(good.Quantity) }</td>
-				<td> { strconv.Itoa(good.PriceBaseBuysFor) }</td>
-				<td> { strconv.Itoa(good.PriceBaseSellsFor) }</td>
+				<td>{ strconv.Itoa(good.Quantity) }</td>
+				<td>{ strconv.Itoa(good.PriceBaseBuysFor) }</td>
+				<td>{ strconv.Itoa(good.PriceBaseSellsFor) }</td>
 				@FormatPoBSells(good)
-				<td> { SellsKiloVolumes(good, good.Volume, Money) }</td>
-				<td> { BuysKiloVolumes(good, good.Volume, good.OriginalVolume, CargoSpaceLeft, Money) } </td>
+				<td>{ SellsKiloVolumes(good, good.Volume, Money) }</td>
+				<td>{ BuysKiloVolumes(good, good.Volume, good.OriginalVolume, CargoSpaceLeft, Money) } </td>
 				<td>{ fmt.Sprintf("%.2f", good.Volume) }</td>
 				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
-				<td> { strconv.Itoa(good.MinStock) }</td>
-				<td> { strconv.Itoa(good.MaxStock) }</td>
+				<td>{ strconv.Itoa(good.MinStock) }</td>
+				<td>{ strconv.Itoa(good.MaxStock) }</td>
 				<td>
 					@frmt.WriteLimit(200) {
 						{ good.Nickname }
@@ -243,12 +262,12 @@ type ShopItemI interface {
 }
 
 templ FormatPoBSells2(good ShopItemI) {
-	if good.BaseSells() && good.BaseBuys() { 
+	if good.BaseSells() && good.BaseBuys() {
 		<td>
-		{ "sells & buys" }
+			{ "sells & buys" }
 		</td>
-	} else if good.BaseSells() { 
-		<td>{ "sells only" }</td>  
+	} else if good.BaseSells() {
+		<td>{ "sells only" }</td>
 	} else if good.BaseBuys() {
 		<td>{ "buys only" }</td>
 	} else {
@@ -257,12 +276,12 @@ templ FormatPoBSells2(good ShopItemI) {
 }
 
 templ FormatPoBSells(good ShopItemI) {
-	if good.BaseSells() && good.BaseBuys() { 
+	if good.BaseSells() && good.BaseBuys() {
 		<td style="background:linear-gradient(90deg, var(--color_fmt_sb_sells) 0 50%, var(--color_fmt_sb_buys) 50% 100%)">
-		{ "sells & buys" }
+			{ "sells & buys" }
 		</td>
-	} else if good.BaseSells() { 
-		<td style="background:var(--color_fmt_sb_sells)">{ "sells only" }</td>  
+	} else if good.BaseSells() {
+		<td style="background:var(--color_fmt_sb_sells)">{ "sells only" }</td>
 	} else if good.BaseBuys() {
 		<td style="background:var(--color_fmt_sb_buys)">{ "buys only" }</td>
 	} else {

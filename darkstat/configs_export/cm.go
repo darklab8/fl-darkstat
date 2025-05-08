@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -81,7 +82,7 @@ func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 			}
 		}
 
-		e.exportInfocards(InfocardKey(cm.Nickname), infocards...)
+		e.exportInfocards(infocarder.InfocardKey(cm.Nickname), infocards...)
 		cm.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, cm.Nickname)
 		tractors = append(tractors, cm)
 	}

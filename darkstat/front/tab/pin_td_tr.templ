@@ -2,7 +2,7 @@ package tab
 
 import (
 	"context"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 )
@@ -115,7 +115,7 @@ type InfocardClickOpts struct {
 	IsRelayHosted bool
 }
 
-templ TdInfoCardClick(infocardKey configs_export.InfocardKey, nickname string, pinm PinMod, shared *types.SharedData, opts InfocardClickOpts) {
+templ TdInfoCardClick(infocardKey infocarder.InfocardKey, nickname string, pinm PinMod, shared *types.SharedData, opts InfocardClickOpts) {
 	@EmbedInfocardForSearch(shared.Infocards, infocardKey)
 	<td
 		if !opts.IsRelayHosted {

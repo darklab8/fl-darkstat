@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 )
 
 type Cloak struct {
@@ -61,7 +62,7 @@ func (e *Exporter) GetCloaks(ids []*Tractor) []Cloak {
 			}
 		}
 
-		e.exportInfocards(InfocardKey(cloak.Nickname), cloak.InfoID)
+		e.exportInfocards(infocarder.InfocardKey(cloak.Nickname), cloak.InfoID)
 		cloak.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, cloak.Nickname)
 		items = append(items, cloak)
 	}

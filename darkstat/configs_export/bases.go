@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
@@ -98,7 +99,7 @@ func (e *Exporter) GetBases() []*Base {
 
 		var nickname cfg.BaseUniNick = cfg.BaseUniNick(base.Nickname.Get())
 
-		e.exportInfocards(InfocardKey(nickname), infocard_ids...)
+		e.exportInfocards(infocarder.InfocardKey(nickname), infocard_ids...)
 
 		base := &Base{
 			Missions:           &BaseMissions{},

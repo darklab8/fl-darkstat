@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/discovery/playercntl_rephacks"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-typelog/typelog"
 )
 
@@ -94,7 +95,7 @@ func (e *Exporter) GetTractors() []*Tractor {
 
 		tractor.Name = e.GetInfocardName(tractor.NameID, string(tractor.Nickname))
 
-		e.exportInfocards(InfocardKey(tractor.Nickname), tractor.InfoID)
+		e.exportInfocards(infocarder.InfocardKey(tractor.Nickname), tractor.InfoID)
 
 		if e.Mapped.Discovery != nil {
 

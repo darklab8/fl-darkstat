@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -73,7 +74,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm tab.PinMod, shared *type
 					<td class="seo">{ cm.Nickname } </td>
 					<td class="seo">{ strconv.Itoa(cm.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(cm.InfoID) } </td>
-					@tab.TdInfoCardClick(configs_export.InfocardKey(cm.Nickname), cm.Nickname, pinm, shared, tab.InfocardClickOpts{})
+					@tab.TdInfoCardClick(infocarder.InfocardKey(cm.Nickname), cm.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

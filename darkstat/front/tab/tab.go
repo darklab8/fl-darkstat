@@ -5,16 +5,16 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 )
 
 type ShowEmpty bool
 
-func InfocardURL(infocard_key configs_export.InfocardKey) string {
+func InfocardURL(infocard_key infocarder.InfocardKey) string {
 	return "cdn/infocards/info_" + strings.ToLower(string(infocard_key))
 }
 
-func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
+func GetFirstLine(infocards infocarder.Infocards, infokey infocarder.InfocardKey) string {
 	if infocard_lines, ok := infocards[infokey]; ok {
 		if len(infocard_lines) > 0 {
 			return string(infocard_lines[0].ToStr())
@@ -23,7 +23,7 @@ func GetFirstLine(infocards configs_export.Infocards, infokey configs_export.Inf
 	return ""
 }
 
-func GetShipName(infocards configs_export.Infocards, infokey configs_export.InfocardKey) string {
+func GetShipName(infocards infocarder.Infocards, infokey infocarder.InfocardKey) string {
 	first_line := GetFirstLine(infocards, infokey)
 	var result string
 

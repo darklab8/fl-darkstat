@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-typelog/typelog"
 )
 
@@ -344,7 +345,7 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 		if id, ok := ship_info.IdsInfo.GetValue(); ok {
 			infocards = append(infocards, id)
 		}
-		e.exportInfocards(InfocardKey(ship.Nickname), infocards...)
+		e.exportInfocards(infocarder.InfocardKey(ship.Nickname), infocards...)
 		ship.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, ship.Nickname)
 
 		if e.Mapped.Discovery != nil {

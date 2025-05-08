@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/configs/config_consts"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
@@ -163,7 +164,7 @@ templ FactionReps(faction configs_export.Faction, reps []configs_export.Reputati
 	@FactionRepsBase() {
 		for _, rep := range reps {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(rep.Nickname)) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(infocarder.InfocardKey(rep.Nickname)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"

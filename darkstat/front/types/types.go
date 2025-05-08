@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/discovery/techcompat"
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -59,7 +60,7 @@ type DiscoveryData struct {
 	Config       *techcompat.Config
 	LatestPatch  autopatcher.Patch
 
-	Infocards configs_export.Infocards
+	Infocards infocarder.Infocards
 
 	OrderedTechcompat configs_export.TechCompatOrderer
 }

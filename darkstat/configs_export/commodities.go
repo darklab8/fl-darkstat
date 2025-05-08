@@ -5,6 +5,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -45,7 +46,7 @@ type Commodity struct {
 	ShipClass             *cfg.ShipClass                  `json:"ship_class"`
 	NameID                int                             `json:"name_id"  validate:"required"`
 	InfocardID            int                             `json:"infocard_id"  validate:"required"`
-	Infocard              InfocardKey                     `json:"infocard_key"  validate:"required"`
+	Infocard              infocarder.InfocardKey          `json:"infocard_key"  validate:"required"`
 	Bases                 map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	PriceBestBaseBuysFor  int                             `json:"price_best_base_buys_for"  validate:"required"`
 	PriceBestBaseSellsFor int                             `json:"price_best_base_sells_for"  validate:"required"`
@@ -90,7 +91,7 @@ func (e *Exporter) GetCommodities() []*Commodity {
 
 			commodity.Volume = volume_info.Volume.Get()
 			commodity.ShipClass = volume_info.GetShipClass()
-			commodity.Infocard = InfocardKey(commodity.Nickname)
+			commodity.Infocard = infocarder.InfocardKey(commodity.Nickname)
 
 			base_item_price := comm.Price.Get()
 

@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/cache"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -308,7 +309,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		<td class="seo">{ strconv.Itoa(base.StridName) }</td>
 		<td class="seo">{ strconv.Itoa(base.InfocardID) }</td>
 		<td>{ frmt.FormatBoolAsYesNo(base.Reachable) }</td>
-		@tab.TdInfoCardClick(configs_export.InfocardKey(base.Nickname), base.Nickname.ToStr(), pinm, shared, tab.InfocardClickOpts{})
+		@tab.TdInfoCardClick(infocarder.InfocardKey(base.Nickname), base.Nickname.ToStr(), pinm, shared, tab.InfocardClickOpts{})
 	}
 }
 
@@ -479,7 +480,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 	@BaseMarketGoodsBase() {
 		for _, good := range frmt.SortedMarketGoods(goods) {
 			<tr
-				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(configs_export.InfocardKey(good.Nickname)) }
+				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(infocarder.InfocardKey(good.Nickname)) }
 				hx-trigger="click"
 				hx-target="#infocard_view"
 				hx-swap="innerHTML"

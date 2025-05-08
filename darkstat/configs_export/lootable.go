@@ -1,6 +1,9 @@
 package configs_export
 
-import "github.com/darklab8/fl-darkstat/configs/cfg"
+import (
+	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+)
 
 func (e *Exporter) findable_in_loot() map[string]bool {
 	if e.findable_in_loot_cache != nil {
@@ -67,12 +70,12 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 		base.MarketGoodsPerNick[market_good_key] = market_good
 	}
 
-	var sb []InfocardLine
-	sb = append(sb, NewInfocardSimpleLine(base.Name))
-	sb = append(sb, NewInfocardSimpleLine(`This is only pseudo base to show availability of lootable content`))
-	sb = append(sb, NewInfocardSimpleLine(`The content is findable in wrecks or drops from ships at missions`))
+	var sb []infocarder.InfocardLine
+	sb = append(sb, infocarder.NewInfocardSimpleLine(base.Name))
+	sb = append(sb, infocarder.NewInfocardSimpleLine(`This is only pseudo base to show availability of lootable content`))
+	sb = append(sb, infocarder.NewInfocardSimpleLine(`The content is findable in wrecks or drops from ships at missions`))
 
-	e.Infocards[InfocardKey(base.Nickname)] = sb
+	e.Infocards[infocarder.InfocardKey(base.Nickname)] = sb
 
 	bases = append(bases, base)
 	return bases

@@ -5,6 +5,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -40,7 +41,7 @@ func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 				info.Category = equip.Category
 				info.Name = e.GetInfocardName(equip.IdsName.Get(), good_nickname)
 
-				e.exportInfocards(InfocardKey(good_nickname), equip.IdsInfo.Get())
+				e.exportInfocards(infocarder.InfocardKey(good_nickname), equip.IdsInfo.Get())
 			}
 		case "ship":
 			ship := e.Mapped.Goods.ShipsMap[good.Nickname.Get()]
@@ -54,9 +55,9 @@ func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 
 			info.Name = e.GetInfocardName(shiparch.IdsName.Get(), info.ShipNickname)
 
-			// e.exportInfocards(InfocardKey(market_good_nickname),
+			// e.exportInfocards(infocarder.InfocardKey(market_good_nickname),
 			// 	shiparch.IdsInfo.Get(), shiparch.IdsInfo1.Get(), shiparch.IdsInfo2.Get(), shiparch.IdsInfo3.Get())
-			e.exportInfocards(InfocardKey(good_nickname),
+			e.exportInfocards(infocarder.InfocardKey(good_nickname),
 				shiparch.IdsInfo1.Get(), shiparch.IdsInfo.Get())
 		}
 

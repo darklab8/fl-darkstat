@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/mbases_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 )
 
 type Reputation struct {
@@ -26,11 +27,11 @@ type Faction struct {
 	MissionFailure    float64 `json:"mission_failure"  validate:"required"`
 	MissionAbort      float64 `json:"mission_abort"  validate:"required"`
 
-	InfonameID  int          `json:"infoname_id"  validate:"required"`
-	InfocardID  int          `json:"infocard_id"  validate:"required"`
-	InfocardKey InfocardKey  `json:"-" swaggerignore:"true"`
-	Reputations []Reputation `json:"reputations"  validate:"required"`
-	Bribes      []Bribe      `json:"bribe"  validate:"required"`
+	InfonameID  int                    `json:"infoname_id"  validate:"required"`
+	InfocardID  int                    `json:"infocard_id"  validate:"required"`
+	InfocardKey infocarder.InfocardKey `json:"-" swaggerignore:"true"`
+	Reputations []Reputation           `json:"reputations"  validate:"required"`
+	Bribes      []Bribe                `json:"bribe"  validate:"required"`
 }
 
 func (b Faction) GetNickname() string { return string(b.Nickname) }
@@ -58,7 +59,7 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 			Nickname:    nickname,
 			InfonameID:  group.IdsName.Get(),
 			InfocardID:  group.IdsInfo.Get(),
-			InfocardKey: InfocardKey(nickname),
+			InfocardKey: infocarder.InfocardKey(nickname),
 		}
 
 		if rephacks, ok := faction_rephacks[nickname]; ok {
@@ -75,7 +76,7 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 		}
 		faction.Name = e.GetInfocardName(group.IdsName.Get(), faction.Nickname)
 
-		e.exportInfocards(InfocardKey(nickname), group.IdsInfo.Get())
+		e.exportInfocards(infocarder.InfocardKey(nickname), group.IdsInfo.Get())
 
 		faction.ShortName = e.GetInfocardName(group.IdsShortName.Get(), faction.Nickname)
 

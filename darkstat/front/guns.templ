@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -95,7 +96,7 @@ func GetBurstParams(gun configs_export.Gun) []string {
 	return []string{burst_ammo, fmt.Sprintf("(%.2f)", gun.BurstFire.ReloadTime)}
 }
 
-templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards configs_export.Infocards) {
+templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards infocarder.Infocards) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -215,7 +216,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 	</table>
 }
 
-templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
+templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards infocarder.Infocards, prerender bool) {
 	@tab.TrFromMainTb2(tab.NewTr(gun.Nickname, GunDetailedUrl(gun, mode), pinm), prerender) {
 		@tab.PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
 		@tab.PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
@@ -276,13 +277,13 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *t
 		<td class="seo">{ gun.HpType } </td>
 		<td class="seo">{ strconv.Itoa(gun.IdsName) } </td>
 		<td class="seo">{ strconv.Itoa(gun.IdsInfo) } </td>
-		@tab.TdInfoCardClick(configs_export.InfocardKey(gun.Nickname), gun.Nickname, pinm, shared, tab.InfocardClickOpts{})
+		@tab.TdInfoCardClick(infocarder.InfocardKey(gun.Nickname), gun.Nickname, pinm, shared, tab.InfocardClickOpts{})
 	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards configs_export.Infocards) {
+templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards infocarder.Infocards) {
 	if mode == GunsShowBases {
 		@TabMenu(urls.Guns, mode2, shared)
 	} else if mode == GunsShowDamageBonuses {

@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -82,7 +83,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *typ
 					<td class="seo">{ engine.HpType } </td>
 					<td class="seo">{ strconv.Itoa(engine.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(engine.InfoID) } </td>
-					@tab.TdInfoCardClick(configs_export.InfocardKey(engine.Nickname), engine.Nickname, pinm, shared, tab.InfocardClickOpts{})
+					@tab.TdInfoCardClick(infocarder.InfocardKey(engine.Nickname), engine.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>
