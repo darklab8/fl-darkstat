@@ -31,10 +31,14 @@ See demos:
 
 # Development setup
 
-The project assumes u are working with it through VSCode IDE, and having installed Go extension
-And having templ extension https://templ.guide/developer-tools/ide-support/#visual-studio-code
-Optionally u are able to use any other supported IDE there, as instructions are provided for more of them.
+The project assumes
+- u are working with it through VSCode IDE, and having installed [Go extension](https://marketplace.visualstudio.com/items?itemName=golang.Go)
+- And having [templ extension](https://templ.guide/developer-tools/ide-support/#visual-studio-code)
+  - Optionally u are able to use any other supported IDE there, as instructions are provided for more of them. See https://templ.guide/developer-tools/ide-support for other supported IDEs.
+- we use VScode's way to inject env var `"ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"` in terminal, debugging and test running configurations in order to see all dev env variables specified in [enverant.json file](./.vscode/enverant.json)
+- Your var `CONFIGS_FREELANCER_FOLDER` must point to existing root of a Freelancer game. Which can be Freelancer Vanilla, Discovery or FLSR at this point.
 
+General instruction:
 - git clone the repo https://github.com/darklab8/fl-darkstat.git
 - install golang of project version or higher (potentially will work anyway).
   - See current golang version [in Dockerfile](./Dockerfile)
@@ -49,7 +53,6 @@ Optionally u are able to use any other supported IDE there, as instructions are 
   - Check to have set other values from [enverant.json](.vscode/enverant.json)
   - full list of variable possible to set available in help command `go run . help`
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
-
   - run some command, for example `task web`
 - if u wish access to `task dev:watch` that reloads running web server on file changes, then install `pip install watchdog[watchmedo]` and ensure `watchmedo` binary is available to `task dev:watch` command written [in Taskfile](Taskfile.yml)
 
