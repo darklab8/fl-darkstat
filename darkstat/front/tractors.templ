@@ -16,9 +16,9 @@ import (
 
 func TractorDetailedUrl(tractor *configs_export.Tractor, tab_mode TractorMode) string {
 	if tab_mode == TractorModShop {
-		return "cdn/tractor/tractor_base_" + strings.ToLower(string(tractor.Nickname))
+		return "cdn/tractor/tractor_base-" + strings.ToLower(string(tractor.Nickname))
 	} else if tab_mode == TractorIDRephacks {
-		return "cdn/id_rephacks/id_rephacks_" + strings.ToLower(string(tractor.Nickname))
+		return "cdn/id_rephacks/id_rephacks-" + strings.ToLower(string(tractor.Nickname))
 	}
 
 	panic("not supported mode for tractor")

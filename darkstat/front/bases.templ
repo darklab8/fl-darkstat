@@ -20,17 +20,17 @@ import (
 func BaseDetailedUrl(base *configs_export.Base, tab_mode BaseMode) string {
 
 	if tab_mode == BaseShowShops {
-		return "cdn/bases/marketgoods/mg_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/marketgoods/mg-" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseShowMissions {
-		return "cdn/bases/missions/msns_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/missions/msns-" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseTabTradesFrom {
-		return "cdn/bases/trades/trades_from_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/trades/trades_from-" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseTabTradesTo {
-		return "cdn/bases/trades/trades_to_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/trades/trades_to-" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseTabOres {
-		return "cdn/bases/ores/ore_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/ores/ore-" + strings.ToLower(base.Nickname.ToStr())
 	} else if tab_mode == BaseAllRoutes {
-		return "cdn/bases/routes/route_" + strings.ToLower(base.Nickname.ToStr())
+		return "cdn/bases/routes/route-" + strings.ToLower(base.Nickname.ToStr())
 	}
 	panic("not supported mode for base")
 }

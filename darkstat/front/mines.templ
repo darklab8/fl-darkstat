@@ -14,7 +14,7 @@ import (
 )
 
 func MineDetailedUrl(mine configs_export.Mine) string {
-	return "cdn/mines/mines_base_" + strings.ToLower(mine.Nickname)
+	return "cdn/mines/mines_base-" + strings.ToLower(mine.Nickname)
 }
 
 templ MinesTable(mines []configs_export.Mine, pinm tab.PinMod, shared *types.SharedData) {

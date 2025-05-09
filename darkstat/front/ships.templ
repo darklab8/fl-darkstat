@@ -16,9 +16,9 @@ import (
 
 func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 	if mode == ShipShowBases {
-		return "cdn/ships/ships_base_" + strings.ToLower(ship.Nickname)
+		return "cdn/ships/ships_base-" + strings.ToLower(ship.Nickname)
 	} else if mode == ShipShowDetails {
-		return "cdn/ships/ships_details_" + strings.ToLower(ship.Nickname)
+		return "cdn/ships/ships_details-" + strings.ToLower(ship.Nickname)
 	}
 
 	panic("unsupported ship mode")
@@ -26,9 +26,9 @@ func ShipDetailedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 
 func ShipPinnedUrl(ship configs_export.Ship, mode ShipTabMode) string {
 	if mode == ShipShowBases {
-		return "ships/pinned/ships_base_" + strings.ToLower(ship.Nickname)
+		return "ships/pinned/ships_base-" + strings.ToLower(ship.Nickname)
 	} else if mode == ShipShowDetails {
-		return "ships/pinned/ships_details_" + strings.ToLower(ship.Nickname)
+		return "ships/pinned/ships_details-" + strings.ToLower(ship.Nickname)
 	}
 	panic("unsupported ship mode")
 }

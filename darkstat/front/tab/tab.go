@@ -11,7 +11,7 @@ import (
 type ShowEmpty bool
 
 func InfocardURL(infocard_key infocarder.InfocardKey) string {
-	return "cdn/infocards/info_" + strings.ToLower(string(infocard_key))
+	return "cdn/infocards/info-" + strings.ToLower(string(infocard_key))
 }
 
 func GetFirstLine(infocards *infocarder.Infocarder, infokey infocarder.InfocardKey) string {

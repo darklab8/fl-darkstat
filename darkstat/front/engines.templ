@@ -15,7 +15,7 @@ import (
 )
 
 func EngineDetailedUrl(engine configs_export.Engine) string {
-	return "cdn/engines/engines_base_" + strings.ToLower(engine.Nickname)
+	return "cdn/engines/engines_base-" + strings.ToLower(engine.Nickname)
 }
 
 templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *types.SharedData) {

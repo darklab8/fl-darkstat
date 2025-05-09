@@ -15,7 +15,7 @@ import (
 )
 
 func ShieldDetailedUrl(shield configs_export.Shield) string {
-	return "cdn/shields/shields_base_" + strings.ToLower(shield.Nickname)
+	return "cdn/shields/shields_base-" + strings.ToLower(shield.Nickname)
 }
 
 templ ShieldTable(shields []configs_export.Shield, pinm tab.PinMod, shared *types.SharedData) {

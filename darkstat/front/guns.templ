@@ -16,11 +16,11 @@ import (
 
 func GunDetailedUrl(gun configs_export.Gun, mode GunTabMode) string {
 	if mode == GunsShowBases {
-		return "cdn/guns/guns_base_" + strings.ToLower(gun.Nickname)
+		return "cdn/guns/guns_base-" + strings.ToLower(gun.Nickname)
 	} else if mode == GunsShowDamageBonuses {
-		return "cdn/guns/guns_bonuses_" + strings.ToLower(gun.Nickname)
+		return "cdn/guns/guns_bonuses-" + strings.ToLower(gun.Nickname)
 	} else if mode == GunsMissiles {
-		return "cdn/guns/missiles_" + strings.ToLower(gun.Nickname)
+		return "cdn/guns/missiles-" + strings.ToLower(gun.Nickname)
 	}
 
 	panic("unsupported choice in GunDetailedUrl")
@@ -28,11 +28,11 @@ func GunDetailedUrl(gun configs_export.Gun, mode GunTabMode) string {
 
 func GunPinnedRowUrl(gun configs_export.Gun, mode GunTabMode) string {
 	if mode == GunsShowBases {
-		return "guns/pinned/guns_base_" + strings.ToLower(gun.Nickname)
+		return "guns/pinned/guns_base-" + strings.ToLower(gun.Nickname)
 	} else if mode == GunsShowDamageBonuses {
-		return "guns/pinned/guns_bonuses_" + strings.ToLower(gun.Nickname)
+		return "guns/pinned/guns_bonuses-" + strings.ToLower(gun.Nickname)
 	} else if mode == GunsMissiles {
-		return "guns/pinned/missiles_" + strings.ToLower(gun.Nickname)
+		return "guns/pinned/missiles-" + strings.ToLower(gun.Nickname)
 	}
 
 	panic("unsupported choice in GunDetailedUrl")

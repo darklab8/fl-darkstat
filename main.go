@@ -21,6 +21,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
 	"github.com/darklab8/fl-darkstat/darkapis/darkrpc"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
@@ -193,6 +194,7 @@ func main() {
 
 		grpc_server := darkgrpc.NewServer(app_data, darkgrpc.DefaultServerPort, darkgrpc.WithSockAddr(darkgrpc.DarkstatGRpcSock))
 		go grpc_server.Serve()
+		go metrics.NewMetronom(web_server.GetMux()).Run()
 
 		return func() {
 			relay_closer.Close()
