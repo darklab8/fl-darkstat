@@ -96,7 +96,7 @@ func GetBurstParams(gun configs_export.Gun) []string {
 	return []string{burst_ammo, fmt.Sprintf("(%.2f)", gun.BurstFire.ReloadTime)}
 }
 
-templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards infocarder.Infocards) {
+templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards *infocarder.Infocarder) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -216,7 +216,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 	</table>
 }
 
-templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards infocarder.Infocards, prerender bool) {
+templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *types.SharedData, infocards *infocarder.Infocarder, prerender bool) {
 	@tab.TrFromMainTb2(tab.NewTr(gun.Nickname, GunDetailedUrl(gun, mode), pinm), prerender) {
 		@tab.PinTd2(gun.Nickname, gun.Name, pinm, GunPinnedRowUrl(gun, mode))
 		@tab.PinSelectLeftRight(pinm, GunDetailedUrl(gun, mode))
@@ -283,7 +283,7 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *t
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards infocarder.Infocards) {
+templ GunsT(guns []configs_export.Gun, mode GunTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards *infocarder.Infocarder) {
 	if mode == GunsShowBases {
 		@TabMenu(urls.Guns, mode2, shared)
 	} else if mode == GunsShowDamageBonuses {

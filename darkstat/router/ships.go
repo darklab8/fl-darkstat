@@ -29,19 +29,19 @@ func (l *Router) LinkShips(
 	build.RegComps(
 		builder.NewComponent(
 			urls.Ships,
-			front.ShipsT(useful_ships, front.ShipShowBases, tab.ShowEmpty(false), shared, data.Infocards),
+			front.ShipsT(useful_ships, front.ShipShowBases, tab.ShowEmpty(false), shared, data.Infocarder),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Ships),
-			front.ShipsT(data.Ships, front.ShipShowBases, tab.ShowEmpty(true), shared, data.Infocards),
+			front.ShipsT(data.Ships, front.ShipShowBases, tab.ShowEmpty(true), shared, data.Infocarder),
 		),
 		builder.NewComponent(
 			urls.ShipDetails,
-			front.ShipsT(useful_ships, front.ShipShowDetails, tab.ShowEmpty(false), shared, data.Infocards),
+			front.ShipsT(useful_ships, front.ShipShowDetails, tab.ShowEmpty(false), shared, data.Infocarder),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.ShipDetails),
-			front.ShipsT(data.Ships, front.ShipShowDetails, tab.ShowEmpty(true), shared, data.Infocards),
+			front.ShipsT(data.Ships, front.ShipShowDetails, tab.ShowEmpty(true), shared, data.Infocarder),
 		),
 	)
 
@@ -57,11 +57,11 @@ func (l *Router) LinkShips(
 			),
 			builder.NewComponent(
 				utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowBases)),
-				front.ShipRow(ship, front.ShipShowBases, tab.PinMode, shared, data.Infocards, true),
+				front.ShipRow(ship, front.ShipShowBases, tab.PinMode, shared, data.Infocarder, true),
 			),
 			builder.NewComponent(
 				utils_types.FilePath(front.ShipPinnedUrl(ship, front.ShipShowDetails)),
-				front.ShipRow(ship, front.ShipShowDetails, tab.PinMode, shared, data.Infocards, true),
+				front.ShipRow(ship, front.ShipShowDetails, tab.PinMode, shared, data.Infocarder, true),
 			),
 		)
 	}
@@ -74,7 +74,7 @@ func (l *Router) LinkShips(
 			),
 			builder.NewComponent(
 				utils_types.FilePath(front.GunPinnedRowUrl(missile, front.GunsMissiles)),
-				front.GunRow(missile, front.GunsMissiles, tab.PinMode, shared, data.Infocards, true),
+				front.GunRow(missile, front.GunsMissiles, tab.PinMode, shared, data.Infocarder, true),
 			),
 		)
 	}

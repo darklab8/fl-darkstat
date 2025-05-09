@@ -73,7 +73,6 @@ func (c *Config) PutInfoname(id int, value Infoname) {
 	defer c.mutex.Unlock()
 	c.infonames[id] = value
 }
-
 func (c *Config) GetDicts(callback func(config *UnsafeConfig)) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()

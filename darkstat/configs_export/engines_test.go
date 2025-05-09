@@ -19,7 +19,7 @@ func TestGetEngines(t *testing.T) {
 
 	count := 0
 	for _, engine := range engines {
-		infocard := exporter.Infocards[infocarder.InfocardKey(engine.Nickname)]
+		infocard := exporter.GetInfocard(infocarder.InfocardKey(engine.Nickname))
 		if !strings.Contains(infocard.StringsJoin(""), strconv.Itoa(engine.CruiseSpeed)) {
 			fmt.Println("engine, nick=", engine.Nickname, " not found correct cruise speed in infocard")
 		}

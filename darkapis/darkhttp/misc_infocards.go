@@ -51,7 +51,7 @@ func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registr
 
 			var outputs []InfocardResp
 			for _, nickname := range nicknames {
-				if info, ok := app_data.Configs.Infocards[infocarder.InfocardKey(nickname)]; ok {
+				if info, ok := app_data.Configs.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
 					outputs = append(outputs, InfocardResp{Infocard: &info})
 				} else {
 					outputs = append(outputs, InfocardResp{Error: ptr.Ptr("infocard is not found")})

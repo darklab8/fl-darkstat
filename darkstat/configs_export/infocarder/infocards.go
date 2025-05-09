@@ -9,14 +9,35 @@ import (
 type InfocardKey string
 
 type Infocarder struct {
-	Mutex     sync.RWMutex
-	Infocards Infocards
+	mutex     sync.RWMutex
+	infocards Infocards
 }
 
-func NewInfocarder() Infocarder {
-	return Infocarder{
-		Infocards: make(Infocards),
+func NewInfocarder() *Infocarder {
+	return &Infocarder{
+		infocards: make(Infocards),
 	}
+}
+func (c *Infocarder) GetInfocard(id InfocardKey) Infocard {
+	c.mutex.RLock()
+	defer c.mutex.RUnlock()
+	return c.infocards[id]
+}
+func (c *Infocarder) GetInfocard2(id InfocardKey) (Infocard, bool) {
+	c.mutex.RLock()
+	defer c.mutex.RUnlock()
+	value, ok := c.infocards[id]
+	return value, ok
+}
+func (c *Infocarder) PutInfocard(id InfocardKey, value Infocard) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	c.infocards[id] = value
+}
+func (c *Infocarder) GetInfocardsDict(callback func(infocards Infocards)) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	callback(c.infocards)
 }
 
 type InfocardPhrase struct {

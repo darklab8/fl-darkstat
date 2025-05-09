@@ -92,7 +92,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		}
 
 		var info infocarder.InfocardBuilder
-		if value, ok := e.Infocards[infocarder.InfocardKey(market_good.Nickname)]; ok {
+		if value, ok := e.GetInfocard2(infocarder.InfocardKey(market_good.Nickname)); ok {
 			info.Lines = value
 		}
 
@@ -119,15 +119,15 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		}
 		info.Lines = add_line_about_recipes(info.Lines)
 
-		e.Infocards[infocarder.InfocardKey(market_good.Nickname)] = append(info.Lines, infocard_addition.Lines...)
+		e.PutInfocard(infocarder.InfocardKey(market_good.Nickname), append(info.Lines, infocard_addition.Lines...))
 
 		if market_good.ShipNickname != "" {
 			var info infocarder.Infocard
-			if value, ok := e.Infocards[infocarder.InfocardKey(market_good.ShipNickname)]; ok {
+			if value, ok := e.GetInfocard2(infocarder.InfocardKey(market_good.ShipNickname)); ok {
 				info = value
 			}
 			info = add_line_about_recipes(info)
-			e.Infocards[infocarder.InfocardKey(market_good.ShipNickname)] = append(info, infocard_addition.Lines...)
+			e.PutInfocard(infocarder.InfocardKey(market_good.ShipNickname), append(info, infocard_addition.Lines...))
 		}
 	}
 
@@ -137,7 +137,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 	sb.WriteLineStr(``)
 	sb.WriteLineStr(`At the bottom of each item infocard it shows CRAFTING RECIPES`)
 
-	e.Infocards[infocarder.InfocardKey(base.Nickname)] = sb.Lines
+	e.PutInfocard(infocarder.InfocardKey(base.Nickname), sb.Lines)
 
 	bases = append(bases, base)
 	return bases

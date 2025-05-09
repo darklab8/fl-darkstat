@@ -437,7 +437,7 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 			sb.WriteLineStr("")
 		}
 
-		e.Infocards[infocarder.InfocardKey(pob.Nickname)] = sb.Lines
+		e.PutInfocard(infocarder.InfocardKey(pob.Nickname), sb.Lines)
 		e.Mapped.Infocards.PutInfoname(int(flhash.HashNickname(pob.Nickname)), infocard.Infoname(pob.Name))
 
 		pobs = append(pobs, pob)

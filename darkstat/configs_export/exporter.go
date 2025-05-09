@@ -13,24 +13,22 @@ import (
 
 /* TODO move into infocarder */
 func (e *Exporter) exportInfocards(nickname infocarder.InfocardKey, infocard_ids ...int) {
-	e.Infocarder.Mutex.Lock()
-	defer e.Infocarder.Mutex.Unlock()
-
-	if _, ok := e.Infocards[infocarder.InfocardKey(nickname)]; ok {
+	if _, ok := e.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
 		return
 	}
 
 	for _, info_id := range infocard_ids {
 		if value, ok := e.Mapped.Infocards.GetInfocard2(info_id); ok {
+			var lines_to_add []infocarder.InfocardLine
 			for _, line := range value.Lines {
-				e.Infocards[infocarder.InfocardKey(nickname)] = append(e.Infocards[infocarder.InfocardKey(nickname)], infocarder.NewInfocardSimpleLine(line))
+				lines_to_add = append(lines_to_add, infocarder.NewInfocardSimpleLine(line))
 			}
-
+			e.PutInfocard(infocarder.InfocardKey(nickname), append(e.GetInfocard(infocarder.InfocardKey(nickname)), lines_to_add...))
 		}
 	}
 
-	if len(e.Infocards[infocarder.InfocardKey(nickname)]) == 0 {
-		e.Infocards[infocarder.InfocardKey(nickname)] = []infocarder.InfocardLine{infocarder.NewInfocardSimpleLine("no infocard")}
+	if len(e.GetInfocard(infocarder.InfocardKey(nickname))) == 0 {
+		e.PutInfocard(infocarder.InfocardKey(nickname), []infocarder.InfocardLine{infocarder.NewInfocardSimpleLine("no infocard")})
 	}
 }
 
@@ -40,7 +38,7 @@ type ExporterRelay struct {
 	PoBs     []*PoB
 	PoBGoods []*PoBGood
 
-	infocarder.Infocarder
+	*infocarder.Infocarder
 }
 
 type Exporter struct {

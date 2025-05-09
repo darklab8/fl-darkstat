@@ -200,7 +200,7 @@ for Freelancer Discovery we also add possible sub products of refinery at player
 				}
 			}
 
-			e.Infocards[infocarder.InfocardKey(base.Nickname)] = sb.Lines
+			e.PutInfocard(infocarder.InfocardKey(base.Nickname), sb.Lines)
 
 			bases = append(bases, base)
 

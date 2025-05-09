@@ -14,8 +14,8 @@ func InfocardURL(infocard_key infocarder.InfocardKey) string {
 	return "cdn/infocards/info_" + strings.ToLower(string(infocard_key))
 }
 
-func GetFirstLine(infocards infocarder.Infocards, infokey infocarder.InfocardKey) string {
-	if infocard_lines, ok := infocards[infokey]; ok {
+func GetFirstLine(infocards *infocarder.Infocarder, infokey infocarder.InfocardKey) string {
+	if infocard_lines, ok := infocards.GetInfocard2(infokey); ok {
 		if len(infocard_lines) > 0 {
 			return string(infocard_lines[0].ToStr())
 		}
@@ -23,7 +23,7 @@ func GetFirstLine(infocards infocarder.Infocards, infokey infocarder.InfocardKey
 	return ""
 }
 
-func GetShipName(infocards infocarder.Infocards, infokey infocarder.InfocardKey) string {
+func GetShipName(infocards *infocarder.Infocarder, infokey infocarder.InfocardKey) string {
 	first_line := GetFirstLine(infocards, infokey)
 	var result string
 

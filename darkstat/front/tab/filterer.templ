@@ -43,14 +43,14 @@ templ FilterBar(shared *types.SharedData) {
 	</div>
 }
 
-func GetInfocard(infocards infocarder.Infocards, infokey infocarder.InfocardKey) string {
-	if infocard_lines, ok := infocards[infokey]; ok {
+func GetInfocard(infocards *infocarder.Infocarder, infokey infocarder.InfocardKey) string {
+	if infocard_lines, ok := infocards.GetInfocard2(infokey); ok {
 		return infocard_lines.StringsJoin("")
 	}
 	return ""
 }
 
-templ EmbedInfocardForSearch(infocards infocarder.Infocards, infokey infocarder.InfocardKey) {
+templ EmbedInfocardForSearch(infocards *infocarder.Infocarder, infokey infocarder.InfocardKey) {
 	<td style="display:none;">
 		<span style="display:none;" class="seo">{ GetFirstLine(infocards, infokey) }</span>
 		<span style="display:none;" class="search-infocard">{ GetInfocard(infocards, infokey) }</span>

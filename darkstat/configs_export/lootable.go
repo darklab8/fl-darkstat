@@ -75,7 +75,7 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 	sb = append(sb, infocarder.NewInfocardSimpleLine(`This is only pseudo base to show availability of lootable content`))
 	sb = append(sb, infocarder.NewInfocardSimpleLine(`The content is findable in wrecks or drops from ships at missions`))
 
-	e.Infocards[infocarder.InfocardKey(base.Nickname)] = sb
+	e.PutInfocard(infocarder.InfocardKey(base.Nickname), sb)
 
 	bases = append(bases, base)
 	return bases

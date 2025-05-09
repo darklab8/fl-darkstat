@@ -16,7 +16,7 @@ func (s *Server) GetInfocards(_ context.Context, in *pb.GetInfocardsInput) (*pb.
 
 	var outputs []*pb.GetInfocardAnswer
 	for _, nickname := range in.Nicknames {
-		if info, ok := s.app_data.Configs.Infocards[infocarder.InfocardKey(nickname)]; ok {
+		if info, ok := s.app_data.Configs.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
 			outputs = append(outputs, &pb.GetInfocardAnswer{Infocard: NewInfocard(info)})
 		} else {
 			outputs = append(outputs, &pb.GetInfocardAnswer{Error: ptr.Ptr("infocard is not found")})

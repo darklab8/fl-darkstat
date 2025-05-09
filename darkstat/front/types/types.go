@@ -60,7 +60,7 @@ type DiscoveryData struct {
 	Config       *techcompat.Config
 	LatestPatch  autopatcher.Patch
 
-	Infocards infocarder.Infocards
+	*infocarder.Infocarder
 
 	OrderedTechcompat configs_export.TechCompatOrderer
 }

@@ -116,7 +116,7 @@ type InfocardClickOpts struct {
 }
 
 templ TdInfoCardClick(infocardKey infocarder.InfocardKey, nickname string, pinm PinMod, shared *types.SharedData, opts InfocardClickOpts) {
-	@EmbedInfocardForSearch(shared.Infocards, infocardKey)
+	@EmbedInfocardForSearch(shared.Infocarder, infocardKey)
 	<td
 		if !opts.IsRelayHosted {
 			hx-get={ types.GetCtx(ctx).SiteRoot + InfocardURL(infocardKey) }
