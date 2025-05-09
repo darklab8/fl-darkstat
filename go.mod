@@ -6,7 +6,7 @@ require (
 	github.com/a-h/templ v0.3.857
 	github.com/darklab8/fl-data-discovery v0.4.0
 	github.com/darklab8/go-typelog v0.7.2
-	github.com/darklab8/go-utils v0.25.0
+	github.com/darklab8/go-utils v0.26.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.1
 	github.com/prometheus/client_golang v1.22.0
 	github.com/stretchr/testify v1.10.0

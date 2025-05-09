@@ -10,8 +10,8 @@ github.com/darklab8/fl-data-discovery v0.4.0 h1:cUacP+N04/PrYl4cmw687BAaQWVJI32s
 github.com/darklab8/fl-data-discovery v0.4.0/go.mod h1:SgRh0N3cWrhslXVkc5LJXK52Mw4+Fdsbmv+0qkNJ6QI=
 github.com/darklab8/go-typelog v0.7.2 h1:re/DWovGeiNtTKBEdgH6j0VLRGa/B37rKhJO6uTuRPQ=
 github.com/darklab8/go-typelog v0.7.2/go.mod h1:jlwB6Qc0GpFtDyLTya00Wtl/c1Di5GPexWOT64M1Llg=
-github.com/darklab8/go-utils v0.25.0 h1:DdKAGkv1OsN83x8KOhgbidEobXhJkoGN5tLYmUIFNEA=
-github.com/darklab8/go-utils v0.25.0/go.mod h1:rA9yOum6xqtIUTHkXWghozwVpbr/KVOXDv1z0fSuQyc=
+github.com/darklab8/go-utils v0.26.1 h1:1OEIdcGjGgXx5CAlnx0EXHPP7aGuFW6u1uAvHIJGU8A=
+github.com/darklab8/go-utils v0.26.1/go.mod h1:rA9yOum6xqtIUTHkXWghozwVpbr/KVOXDv1z0fSuQyc=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/go-logr/logr v1.4.2 h1:6pFjapn8bFcIbiKo3XT4j/BhANplGihG6tvd+8rYgrY=
