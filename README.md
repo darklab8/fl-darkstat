@@ -36,6 +36,7 @@ The project assumes
 - And having [templ extension](https://templ.guide/developer-tools/ide-support/#visual-studio-code)
   - Optionally u are able to use any other supported IDE there, as instructions are provided for more of them. See https://templ.guide/developer-tools/ide-support for other supported IDEs.
 - we use VScode's way to inject env var `"ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"` for terminal, debugging and test running configurations in order to use all dev env variables specified in [enverant.json file](./.vscode/enverant.json)
+  - This `ENVERANT_ENV_FILE` is injected in our [settings.json](./.vscode/settings.json) and [launch.json](./.vscode/launch.json)
 - Your var `CONFIGS_FREELANCER_FOLDER` must point to existing root of a Freelancer game. Which can be Freelancer Vanilla, Discovery or FLSR at this point.
 - Succesful configuration IDE assumes u are able to run in debug mode prject in `web` mode at least as it is specified in [launch.json](./.vscode/launch.json)
   - And u are able to launch specific unit tests in debug mode by clicking in IDE onto green appeared arrows at the left from test function names. Vscode uses `"go.testEnvVars"` in [settings.json](./.vscode/settings.json) to inject the same enverant.json for the functioning of tests.
