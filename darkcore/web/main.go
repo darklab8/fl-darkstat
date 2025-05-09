@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/regexy"
 
@@ -194,7 +195,10 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		// Gathering all info pre request
 		pattern := r.Pattern
 		url := r.URL.Path[1:]
-		if pattern == "" && (strings.Contains(url, ".html") || strings.Contains(url, "cdn")) {
+		if pattern == "" && (strings.Contains(url, urls.Index.ToString()) ||
+			strings.Contains(url, urls.DarkIndex.ToString()) ||
+			strings.Contains(url, urls.VanillaIndex.ToString()) ||
+			strings.Contains(url, "cdn")) {
 			pattern = UrlGeneralizer.ReplaceAllString(url, "-{item_id}")
 			logus.Log.Debug("generalized url to pattern", typelog.String("pattern", pattern))
 		}
