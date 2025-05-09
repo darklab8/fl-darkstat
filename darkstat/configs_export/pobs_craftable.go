@@ -5,6 +5,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 )
 
 func (e *Exporter) pob_produced() map[string]bool {
@@ -60,7 +61,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		market_good_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
 		base.MarketGoodsPerNick[market_good_key] = market_good
 
-		var infocard_addition InfocardBuilder
+		var infocard_addition infocarder.InfocardBuilder
 		if e.Mapped.Discovery != nil {
 			if recipes, ok := e.Mapped.Discovery.BaseRecipeItems.RecipePerProduced[market_good.Nickname]; ok {
 				infocard_addition.WriteLineStr(`CRAFTING RECIPES:`)
@@ -90,13 +91,13 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 			}
 		}
 
-		var info InfocardBuilder
-		if value, ok := e.Infocards[InfocardKey(market_good.Nickname)]; ok {
+		var info infocarder.InfocardBuilder
+		if value, ok := e.GetInfocard2(infocarder.InfocardKey(market_good.Nickname)); ok {
 			info.Lines = value
 		}
 
-		add_line_about_recipes := func(info Infocard) Infocard {
-			add_line := func(index int, line InfocardLine) {
+		add_line_about_recipes := func(info infocarder.Infocard) infocarder.Infocard {
+			add_line := func(index int, line infocarder.InfocardLine) {
 				info = append(info[:index+1], info[index:]...)
 				info[index] = line
 			}
@@ -105,38 +106,38 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 			}
 			if len(infocard_addition.Lines) > 0 {
 				line_position := 1
-				add_line(line_position, InfocardLine{Phrases: []InfocardPhrase{{Phrase: `Item has crafting recipes below`, Bold: true}}})
+				add_line(line_position, infocarder.InfocardLine{Phrases: []infocarder.InfocardPhrase{{Phrase: `Item has crafting recipes below`, Bold: true}}})
 				if strip_line(info[0].ToStr()) != "" {
-					add_line(1, NewInfocardSimpleLine(""))
+					add_line(1, infocarder.NewInfocardSimpleLine(""))
 					line_position += 1
 				}
 				if strip_line(info[line_position+1].ToStr()) != "" {
-					add_line(line_position+1, NewInfocardSimpleLine(""))
+					add_line(line_position+1, infocarder.NewInfocardSimpleLine(""))
 				}
 			}
 			return info
 		}
 		info.Lines = add_line_about_recipes(info.Lines)
 
-		e.Infocards[InfocardKey(market_good.Nickname)] = append(info.Lines, infocard_addition.Lines...)
+		e.PutInfocard(infocarder.InfocardKey(market_good.Nickname), append(info.Lines, infocard_addition.Lines...))
 
 		if market_good.ShipNickname != "" {
-			var info Infocard
-			if value, ok := e.Infocards[InfocardKey(market_good.ShipNickname)]; ok {
+			var info infocarder.Infocard
+			if value, ok := e.GetInfocard2(infocarder.InfocardKey(market_good.ShipNickname)); ok {
 				info = value
 			}
 			info = add_line_about_recipes(info)
-			e.Infocards[InfocardKey(market_good.ShipNickname)] = append(info, infocard_addition.Lines...)
+			e.PutInfocard(infocarder.InfocardKey(market_good.ShipNickname), append(info, infocard_addition.Lines...))
 		}
 	}
 
-	var sb InfocardBuilder
+	var sb infocarder.InfocardBuilder
 	sb.WriteLineStr(base.Name)
 	sb.WriteLineStr(`This is only pseudo base to show availability of player crafts`)
 	sb.WriteLineStr(``)
 	sb.WriteLineStr(`At the bottom of each item infocard it shows CRAFTING RECIPES`)
 
-	e.Infocards[InfocardKey(base.Nickname)] = sb.Lines
+	e.PutInfocard(infocarder.InfocardKey(base.Nickname), sb.Lines)
 
 	bases = append(bases, base)
 	return bases

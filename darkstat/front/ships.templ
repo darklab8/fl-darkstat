@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -42,7 +43,7 @@ const (
 templ ShipTable(
 	ships []configs_export.Ship,
 	mode ShipTabMode,
-	pinm tab.PinMod, shared *types.SharedData, infocards configs_export.Infocards) {
+	pinm tab.PinMod, shared *types.SharedData, infocards *infocarder.Infocarder) {
 	<table class={ "sortable", templ.KV("top-main", pinm==tab.MainMode), templ.KV("top-pinned", pinm==tab.PinMode) }>
 		<thead>
 			<tr>
@@ -139,7 +140,7 @@ func thruster_speeds_to_str(thrust_speeds []int) string {
 }
 
 func FullShipName(ship_name string, ship_nickname string, shared *types.SharedData) string {
-	infocard_name := tab.GetShipName(shared.Infocards, configs_export.InfocardKey(ship_nickname))
+	infocard_name := tab.GetShipName(shared.Infocarder, infocarder.InfocardKey(ship_nickname))
 
 	if strings.Contains(strings.ToLower(ship_name), strings.ToLower(infocard_name)) {
 		return ship_name
@@ -148,7 +149,7 @@ func FullShipName(ship_name string, ship_nickname string, shared *types.SharedDa
 	return fmt.Sprintf("%s \"%s\" ", ship_name, infocard_name)
 }
 
-templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, shared *types.SharedData, infocards configs_export.Infocards, prerender bool) {
+templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, shared *types.SharedData, infocards *infocarder.Infocarder, prerender bool) {
 	@tab.TrFromMainTb2(tab.NewTr(ship.Nickname, ShipDetailedUrl(ship, mode), pinm), prerender) {
 		@tab.PinTd2(ship.Nickname, FullShipName(ship.Name, ship.Nickname, shared), pinm, ShipPinnedUrl(ship, mode))
 		@tab.PinSelectLeftRight(pinm, ShipDetailedUrl(ship, mode))
@@ -186,13 +187,13 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 		</td>
 		<td class="seo">{ strconv.Itoa(ship.NameID) } </td>
 		<td class="seo">{ strconv.Itoa(ship.InfoID) } </td>
-		@tab.TdInfoCardClick(configs_export.InfocardKey(ship.Nickname), ship.Nickname, pinm, shared, tab.InfocardClickOpts{})
+		@tab.TdInfoCardClick(infocarder.InfocardKey(ship.Nickname), ship.Nickname, pinm, shared, tab.InfocardClickOpts{})
 	}
 }
 
 // https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
 // https://www.cssscript.com/fast-html-table-sorting/
-templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards configs_export.Infocards) {
+templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty, shared *types.SharedData, infocards *infocarder.Infocarder) {
 	if mode == ShipShowBases {
 		@TabMenu(urls.Ships, mode2, shared)
 	} else if mode == ShipShowDetails {

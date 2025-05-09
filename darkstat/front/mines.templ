@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -115,7 +116,7 @@ templ MinesTable(mines []configs_export.Mine, pinm tab.PinMod, shared *types.Sha
 					<td class="seo">{ strconv.Itoa(mine.IdsName) } </td>
 					<td class="seo">{ strconv.Itoa(mine.IdsInfo) } </td>
 					<td class="seo">{ mine.ProjectileArchetype } </td>
-					@tab.TdInfoCardClick(configs_export.InfocardKey(mine.Nickname), mine.Nickname, pinm, shared, tab.InfocardClickOpts{})
+					@tab.TdInfoCardClick(infocarder.InfocardKey(mine.Nickname), mine.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

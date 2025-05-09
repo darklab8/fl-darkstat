@@ -128,7 +128,7 @@ func NewAppData() *AppData {
 			}
 		}
 		fmt.Println("attempting to access l.configs.Infocards")
-		shared.Infocards = configs.Infocards
+		shared.Infocarder = configs.Infocarder
 	})
 
 	shared.CraftableBaseName = mapped.CraftableBaseName()

@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 )
 
 type Thruster struct {
@@ -88,7 +89,7 @@ func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 			thruster.Value = float64(thruster.Price) * 1000
 		}
 
-		e.exportInfocards(InfocardKey(thruster.Nickname), thruster.InfoID)
+		e.exportInfocards(infocarder.InfocardKey(thruster.Nickname), thruster.InfoID)
 		thruster.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, thruster.Nickname)
 		thrusters = append(thrusters, thruster)
 	}

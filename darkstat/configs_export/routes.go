@@ -102,7 +102,7 @@ func (t *Route) GetPaths() []PathWithNavmap {
 }
 
 func (t *Route) GetNameByIdsName(ids_name int) string {
-	return string(t.g.e.Mapped.Infocards.Infonames[ids_name])
+	return string(t.g.e.Mapped.Infocards.GetInfoname(ids_name))
 }
 
 func (t *Route) GetTimeMs() cfg.MillisecondsI {

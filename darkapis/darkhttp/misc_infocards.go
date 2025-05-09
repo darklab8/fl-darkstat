@@ -10,7 +10,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -51,7 +51,7 @@ func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registr
 
 			var outputs []InfocardResp
 			for _, nickname := range nicknames {
-				if info, ok := app_data.Configs.Infocards[configs_export.InfocardKey(nickname)]; ok {
+				if info, ok := app_data.Configs.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
 					outputs = append(outputs, InfocardResp{Infocard: &info})
 				} else {
 					outputs = append(outputs, InfocardResp{Error: ptr.Ptr("infocard is not found")})
@@ -64,6 +64,6 @@ func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registr
 }
 
 type InfocardResp struct {
-	Infocard *configs_export.Infocard `json:"infocard,omitempty"`
-	Error    *string                  `json:"error,omitempty"`
+	Infocard *infocarder.Infocard `json:"infocard,omitempty"`
+	Error    *string              `json:"error,omitempty"`
 }

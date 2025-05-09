@@ -1,102 +1,44 @@
 package configs_export
 
 import (
-	"strings"
 	"sync"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/go-utils/utils/async"
 )
 
-type InfocardKey string
-
-type InfocardPhrase struct {
-	Phrase string  `json:"phrase"  validate:"required"`
-	Link   *string `json:"link"`
-	Bold   bool    `json:"bold"  validate:"required"`
-}
-
-type InfocardLine struct {
-	Phrases []InfocardPhrase `json:"phrases"  validate:"required"`
-}
-
-func (i InfocardLine) ToStr() string {
-	var sb strings.Builder
-	for _, phrase := range i.Phrases {
-		sb.WriteString(phrase.Phrase)
-	}
-	return sb.String()
-}
-
-func NewInfocardSimpleLine(line string) InfocardLine {
-	return InfocardLine{Phrases: []InfocardPhrase{{Phrase: line}}}
-}
-
-func NewInfocardBuilder() InfocardBuilder {
-	return InfocardBuilder{}
-}
-func (i *InfocardBuilder) WriteLine(phrases ...InfocardPhrase) {
-	i.Lines = append(i.Lines, InfocardLine{Phrases: phrases})
-}
-func (i *InfocardBuilder) WriteLineStr(phrase_strs ...string) {
-	var phrases []InfocardPhrase
-	for _, phrase := range phrase_strs {
-		phrases = append(phrases, InfocardPhrase{Phrase: phrase})
-	}
-	i.Lines = append(i.Lines, InfocardLine{Phrases: phrases})
-}
-
-type InfocardBuilder struct {
-	Lines Infocard
-}
-
-type Infocard []InfocardLine
-
-func (i Infocard) StringsJoin(delimiter string) string {
-	var sb strings.Builder
-
-	for _, line := range i {
-		for _, phrase := range line.Phrases {
-			sb.WriteString(phrase.Phrase)
-		}
-		sb.WriteString(delimiter)
-	}
-	return sb.String()
-}
-
-func (e *Exporter) exportInfocards(nickname InfocardKey, infocard_ids ...int) {
-	e.sync_infocards.Lock()
-	defer e.sync_infocards.Unlock()
-
-	if _, ok := e.Infocards[InfocardKey(nickname)]; ok {
+/* TODO move into infocarder */
+func (e *Exporter) exportInfocards(nickname infocarder.InfocardKey, infocard_ids ...int) {
+	if _, ok := e.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
 		return
 	}
 
 	for _, info_id := range infocard_ids {
-		if value, ok := e.Mapped.Infocards.Infocards[info_id]; ok {
+		if value, ok := e.Mapped.Infocards.GetInfocard2(info_id); ok {
+			var lines_to_add []infocarder.InfocardLine
 			for _, line := range value.Lines {
-				e.Infocards[InfocardKey(nickname)] = append(e.Infocards[InfocardKey(nickname)], NewInfocardSimpleLine(line))
+				lines_to_add = append(lines_to_add, infocarder.NewInfocardSimpleLine(line))
 			}
-
+			e.PutInfocard(infocarder.InfocardKey(nickname), append(e.GetInfocard(infocarder.InfocardKey(nickname)), lines_to_add...))
 		}
 	}
 
-	if len(e.Infocards[InfocardKey(nickname)]) == 0 {
-		e.Infocards[InfocardKey(nickname)] = []InfocardLine{NewInfocardSimpleLine("no infocard")}
+	if len(e.GetInfocard(infocarder.InfocardKey(nickname))) == 0 {
+		e.PutInfocard(infocarder.InfocardKey(nickname), []infocarder.InfocardLine{infocarder.NewInfocardSimpleLine("no infocard")})
 	}
 }
 
-type Infocards map[InfocardKey]Infocard
-
 type ExporterRelay struct {
-	Mapped    *configs_mapped.MappedConfigs
-	hashes    HashesByCat
-	PoBs      []*PoB
-	PoBGoods  []*PoBGood
-	Infocards Infocards
+	Mapped   *configs_mapped.MappedConfigs
+	hashes   HashesByCat
+	PoBs     []*PoB
+	PoBGoods []*PoBGood
+
+	*infocarder.Infocarder
 }
 
 type Exporter struct {
@@ -135,8 +77,6 @@ type Exporter struct {
 	findable_in_loot_cache map[string]bool
 	craftable_cached       map[string]bool
 	pob_buyable_cache      map[string][]*PobShopItem
-
-	sync_infocards sync.Mutex
 }
 
 type OptExport func(e *Exporter)
@@ -146,9 +86,9 @@ func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Expor
 		Mapped:      mapped,
 		ship_speeds: trades.VanillaSpeeds,
 		ExporterRelay: &ExporterRelay{
-			Infocards: map[InfocardKey]Infocard{},
-			Mapped:    mapped,
-			hashes:    NewHashesCategories(mapped),
+			Infocarder: infocarder.NewInfocarder(),
+			Mapped:     mapped,
+			hashes:     NewHashesCategories(mapped),
 		},
 	}
 

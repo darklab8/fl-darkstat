@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -172,7 +173,7 @@ func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
 				}
 			}
 
-			var sb InfocardBuilder
+			var sb infocarder.InfocardBuilder
 			sb.WriteLineStr(base.Name)
 			sb.WriteLineStr((`This is is not a base.
 It is a mining field with droppable ores`))
@@ -181,7 +182,7 @@ It is a mining field with droppable ores`))
 
 			if e.Mapped.Discovery != nil {
 				sb.WriteLineStr("")
-				sb.WriteLine(InfocardPhrase{Link: ptr.Ptr("https://discoverygc.com/wiki2/Mining"), Phrase: "Check mining tutorial"}, InfocardPhrase{Phrase: " to see how they can be mined"})
+				sb.WriteLine(infocarder.InfocardPhrase{Link: ptr.Ptr("https://discoverygc.com/wiki2/Mining"), Phrase: "Check mining tutorial"}, infocarder.InfocardPhrase{Phrase: " to see how they can be mined"})
 
 				sb.WriteLineStr("")
 				sb.WriteLineStr(`NOTE:
@@ -199,7 +200,7 @@ for Freelancer Discovery we also add possible sub products of refinery at player
 				}
 			}
 
-			e.Infocards[InfocardKey(base.Nickname)] = sb.Lines
+			e.PutInfocard(infocarder.InfocardKey(base.Nickname), sb.Lines)
 
 			bases = append(bases, base)
 

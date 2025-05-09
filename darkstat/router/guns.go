@@ -35,28 +35,28 @@ func (l *Router) LinkGuns(
 	build.RegComps(
 		builder.NewComponent(
 			urls.Guns,
-			front.GunsT(useful_guns, front.GunsShowBases, tab.ShowEmpty(false), shared, data.Infocards),
+			front.GunsT(useful_guns, front.GunsShowBases, tab.ShowEmpty(false), shared, data.Infocarder),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Guns),
-			front.GunsT(data.Guns, front.GunsShowBases, tab.ShowEmpty(true), shared, data.Infocards),
+			front.GunsT(data.Guns, front.GunsShowBases, tab.ShowEmpty(true), shared, data.Infocarder),
 		),
 		builder.NewComponent(
 			urls.GunModifiers,
-			front.GunsT(useful_guns, front.GunsShowDamageBonuses, tab.ShowEmpty(false), shared, data.Infocards),
+			front.GunsT(useful_guns, front.GunsShowDamageBonuses, tab.ShowEmpty(false), shared, data.Infocarder),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.GunModifiers),
-			front.GunsT(data.Guns, front.GunsShowDamageBonuses, tab.ShowEmpty(true), shared, data.Infocards),
+			front.GunsT(data.Guns, front.GunsShowDamageBonuses, tab.ShowEmpty(true), shared, data.Infocarder),
 		),
 
 		builder.NewComponent(
 			urls.Missiles,
-			front.GunsT(useful_missiles, front.GunsMissiles, tab.ShowEmpty(false), shared, data.Infocards),
+			front.GunsT(useful_missiles, front.GunsMissiles, tab.ShowEmpty(false), shared, data.Infocarder),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Missiles),
-			front.GunsT(data.Missiles, front.GunsMissiles, tab.ShowEmpty(true), shared, data.Infocards),
+			front.GunsT(data.Missiles, front.GunsMissiles, tab.ShowEmpty(true), shared, data.Infocarder),
 		),
 	)
 
@@ -73,11 +73,11 @@ func (l *Router) LinkGuns(
 
 			builder.NewComponent(
 				utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowBases)),
-				front.GunRow(gun, front.GunsShowBases, tab.PinMode, shared, data.Infocards, true),
+				front.GunRow(gun, front.GunsShowBases, tab.PinMode, shared, data.Infocarder, true),
 			),
 			builder.NewComponent(
 				utils_types.FilePath(front.GunPinnedRowUrl(gun, front.GunsShowDamageBonuses)),
-				front.GunRow(gun, front.GunsShowDamageBonuses, tab.PinMode, shared, data.Infocards, true),
+				front.GunRow(gun, front.GunsShowDamageBonuses, tab.PinMode, shared, data.Infocarder, true),
 			),
 		)
 	}

@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -84,7 +85,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm tab.PinMod, shared *type
 					<td class="seo">{ shield.HpType } </td>
 					<td class="seo">{ strconv.Itoa(shield.IdsName) } </td>
 					<td class="seo">{ strconv.Itoa(shield.IdsInfo) } </td>
-					@tab.TdInfoCardClick(configs_export.InfocardKey(shield.Nickname), shield.Nickname, pinm, shared, tab.InfocardClickOpts{})
+					@tab.TdInfoCardClick(infocarder.InfocardKey(shield.Nickname), shield.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

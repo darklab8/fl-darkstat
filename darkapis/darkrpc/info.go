@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"gopkg.in/yaml.v3"
@@ -47,7 +47,7 @@ func (t *ServerRpc) isInfoFound(lowered_query string, name string, nickname stri
 		return true, false
 	}
 
-	first_line_in_infocard := tab.GetFirstLine(t.app_data.Configs.Infocards, configs_export.InfocardKey(nickname))
+	first_line_in_infocard := tab.GetFirstLine(t.app_data.Configs.Infocarder, infocarder.InfocardKey(nickname))
 	if strings.Contains(strings.ToLower(first_line_in_infocard), lowered_query) {
 		return true, false
 	}
@@ -66,7 +66,7 @@ func EntityToYamlStrings(entity any) []string {
 	delete(hashmap, "BGCS_base_run_by")
 	delete(hashmap, "file")
 	delete(hashmap, "li01_01_base")
-	delete(hashmap, "InfocardKey")
+	delete(hashmap, "infocarder.InfocardKey")
 	delete(hashmap, "rephacks")
 	delete(hashmap, "equipment_slots")
 	delete(hashmap, "biggest_hardpoint")
@@ -106,7 +106,7 @@ func (t *ServerRpc) NewInfoFound(Nickname string, Name string, Entity string, Ob
 	return InfoFound{
 		Name:       Name,
 		Nickname:   string(Nickname),
-		FirstLine:  tab.GetFirstLine(t.app_data.Configs.Infocards, configs_export.InfocardKey(string(Nickname))),
+		FirstLine:  tab.GetFirstLine(t.app_data.Configs.Infocarder, infocarder.InfocardKey(string(Nickname))),
 		Obtainable: Obtainable,
 		Entity:     Entity,
 	}
@@ -123,7 +123,7 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 	}
 
 	set_infocard := func(nickname string) {
-		infocard := t.app_data.Configs.Infocards[configs_export.InfocardKey(nickname)]
+		infocard := t.app_data.Configs.GetInfocard(infocarder.InfocardKey(nickname))
 		for _, line := range infocard {
 			reply.Content = append(reply.Content, line.ToStr())
 		}

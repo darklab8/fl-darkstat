@@ -85,7 +85,8 @@ type VersionInfoResource struct {
 	Data []byte
 }
 
-func ParseDLL(fileData []byte, out *infocard.Config, globalOffset int) {
+func ParseDLL(fileData []byte, out_pr *infocard.Config, globalOffset int) {
+	out := out_pr.GetUnsafe()
 	rsrcOffset, rsrc, err := ReadPE(fileData)
 	if err != nil {
 		panic(err)

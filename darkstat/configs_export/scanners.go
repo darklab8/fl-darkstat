@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 )
 
 type Scanner struct {
@@ -57,7 +58,7 @@ func (e *Exporter) GetScanners(ids []*Tractor) []Scanner {
 
 		item.Name = e.GetInfocardName(item.NameID, item.Nickname)
 
-		e.exportInfocards(InfocardKey(item.Nickname), item.InfoID)
+		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
 		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
 		scanners = append(scanners, item)
 	}

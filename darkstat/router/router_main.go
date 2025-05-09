@@ -9,6 +9,7 @@ Technically it is "Router"
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
@@ -93,14 +94,16 @@ func (l *Router) Link() *builder.Builder {
 	})
 
 	timeit.NewTimerMF("linking most of stuff", func() {
-		for nickname, infocard := range configs.Infocards {
-			build.RegComps(
-				builder.NewComponent(
-					utils_types.FilePath(tab.InfocardURL(nickname)),
-					tab.Infocard(infocard),
-				),
-			)
-		}
+		configs.GetInfocardsDict(func(infocards infocarder.Infocards) {
+			for nickname, infocard := range infocards {
+				build.RegComps(
+					builder.NewComponent(
+						utils_types.FilePath(tab.InfocardURL(nickname)),
+						tab.Infocard(infocard),
+					),
+				)
+			}
+		})
 	})
 
 	return build

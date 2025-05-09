@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
@@ -78,7 +79,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.Shar
 					<td class="seo">{ ammo.Nickname } </td>
 					<td class="seo">{ strconv.Itoa(ammo.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(ammo.InfoID) } </td>
-					@tab.TdInfoCardClick(configs_export.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, shared, tab.InfocardClickOpts{})
+					@tab.TdInfoCardClick(infocarder.InfocardKey(ammo.Nickname), ammo.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

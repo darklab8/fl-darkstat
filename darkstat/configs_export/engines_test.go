@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 )
 
 func TestGetEngines(t *testing.T) {
@@ -18,7 +19,7 @@ func TestGetEngines(t *testing.T) {
 
 	count := 0
 	for _, engine := range engines {
-		infocard := exporter.Infocards[InfocardKey(engine.Nickname)]
+		infocard := exporter.GetInfocard(infocarder.InfocardKey(engine.Nickname))
 		if !strings.Contains(infocard.StringsJoin(""), strconv.Itoa(engine.CruiseSpeed)) {
 			fmt.Println("engine, nick=", engine.Nickname, " not found correct cruise speed in infocard")
 		}

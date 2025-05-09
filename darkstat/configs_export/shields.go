@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-typelog/typelog"
 )
 
@@ -105,7 +106,7 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 			}
 		}
 
-		e.exportInfocards(InfocardKey(shield.Nickname), shield.IdsInfo)
+		e.exportInfocards(infocarder.InfocardKey(shield.Nickname), shield.IdsInfo)
 		shield.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, shield.Nickname)
 
 		shields = append(shields, shield)

@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -59,7 +60,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm tab.PinMod, shared *t
 					<td class="seo">{ scanner.Nickname } </td>
 					<td class="seo">{ strconv.Itoa(scanner.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(scanner.InfoID) } </td>
-					@tab.TdInfoCardClick(configs_export.InfocardKey(scanner.Nickname), scanner.Nickname, pinm, shared, tab.InfocardClickOpts{})
+					@tab.TdInfoCardClick(infocarder.InfocardKey(scanner.Nickname), scanner.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

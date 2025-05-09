@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -121,7 +122,7 @@ func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 			mine.AmmoLimit.MaxCatridges = ptr.Ptr(value)
 		}
 
-		e.exportInfocards(InfocardKey(mine.Nickname), mine.IdsInfo)
+		e.exportInfocards(infocarder.InfocardKey(mine.Nickname), mine.IdsInfo)
 		mine.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, mine.Nickname)
 
 		mines = append(mines, mine)

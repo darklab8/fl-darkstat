@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -65,7 +66,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm tab.PinMod, share
 					<td class="seo">{ thruster.Nickname } </td>
 					<td class="seo">{ strconv.Itoa(thruster.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(thruster.InfoID) } </td>
-					@tab.TdInfoCardClick(configs_export.InfocardKey(thruster.Nickname), thruster.Nickname, pinm, shared, tab.InfocardClickOpts{})
+					@tab.TdInfoCardClick(infocarder.InfocardKey(thruster.Nickname), thruster.Nickname, pinm, shared, tab.InfocardClickOpts{})
 				}
 			}
 		</tbody>

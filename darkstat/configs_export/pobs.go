@@ -15,6 +15,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/discovery/pob_goods"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -388,12 +389,12 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 			}
 		}
 
-		var sb InfocardBuilder
+		var sb infocarder.InfocardBuilder
 		sb.WriteLineStr(pob.Name)
 		sb.WriteLineStr("")
 
 		if pob_info.Pos == nil && len(pob_info.InfocardParagraphs) == 0 {
-			sb.WriteLine(InfocardPhrase{Phrase: "infocard:", Bold: true})
+			sb.WriteLine(infocarder.InfocardPhrase{Phrase: "infocard:", Bold: true})
 			sb.WriteLineStr("no access (toggle pos permission in pob account manager)")
 			sb.WriteLineStr("")
 		}
@@ -404,16 +405,16 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		}
 
 		if pob_info.DefenseMode != nil {
-			sb.WriteLine(InfocardPhrase{Phrase: "Defense mode:", Bold: true})
+			sb.WriteLine(infocarder.InfocardPhrase{Phrase: "Defense mode:", Bold: true})
 			sb.WriteLineStr((*DefenseMode)(pob_info.DefenseMode).ToStr())
 			sb.WriteLineStr("")
 		} else {
-			sb.WriteLine(InfocardPhrase{Phrase: "docking permissions:", Bold: true})
+			sb.WriteLine(infocarder.InfocardPhrase{Phrase: "docking permissions:", Bold: true})
 			sb.WriteLineStr("no access (toggle defense mode in pob account manager)")
 			sb.WriteLineStr("")
 		}
 		if len(pob_info.SrpFactionHashList) > 0 || len(pob_info.SrpTagList) > 0 || len(pob_info.SrpNameList) > 0 {
-			sb.WriteLine(InfocardPhrase{Phrase: "Docking allias(srp,ignore rep):", Bold: true})
+			sb.WriteLine(infocarder.InfocardPhrase{Phrase: "Docking allias(srp,ignore rep):", Bold: true})
 			sb.WriteLineStr(e.fmt_factions_to_str(e.hashes.factions_by_hash, pob_info.SrpFactionHashList))
 			sb.WriteLineStr(fmt.Sprintf("tags: %s", fmt_docking_tags(pob_info.SrpTagList)))
 			sb.WriteLineStr(fmt.Sprintf("names: %s", fmt_docking_tags(pob_info.SrpNameList)))
@@ -421,7 +422,7 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		}
 
 		if len(pob_info.AllyFactionHashList) > 0 || len(pob_info.AllyTagList) > 0 || len(pob_info.AllyNameList) > 0 {
-			sb.WriteLine(InfocardPhrase{Phrase: "Docking allias(IFF rep still affects):", Bold: true})
+			sb.WriteLine(infocarder.InfocardPhrase{Phrase: "Docking allias(IFF rep still affects):", Bold: true})
 			sb.WriteLineStr(e.fmt_factions_to_str(e.hashes.factions_by_hash, pob_info.AllyFactionHashList))
 			sb.WriteLineStr(fmt.Sprintf("tags: %s", fmt_docking_tags(pob_info.AllyTagList)))
 			sb.WriteLineStr(fmt.Sprintf("names: %s", fmt_docking_tags(pob_info.AllyNameList)))
@@ -429,17 +430,15 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		}
 
 		if len(pob_info.HostileFactionHashList) > 0 || len(pob_info.HostileTagList) > 0 || len(pob_info.HostileNameList) > 0 {
-			sb.WriteLine(InfocardPhrase{Phrase: "Docking enemies:", Bold: true})
+			sb.WriteLine(infocarder.InfocardPhrase{Phrase: "Docking enemies:", Bold: true})
 			sb.WriteLineStr(e.fmt_factions_to_str(e.hashes.factions_by_hash, pob_info.HostileFactionHashList))
 			sb.WriteLineStr(fmt.Sprintf("tags: %s", fmt_docking_tags(pob_info.HostileTagList)))
 			sb.WriteLineStr(fmt.Sprintf("names: %s", fmt_docking_tags(pob_info.HostileNameList)))
 			sb.WriteLineStr("")
 		}
 
-		e.Infocards[InfocardKey(pob.Nickname)] = sb.Lines
-		e.Mapped.Infocards.Mutex.Lock()
-		e.Mapped.Infocards.Infonames[int(flhash.HashNickname(pob.Nickname))] = infocard.Infoname(pob.Name)
-		e.Mapped.Infocards.Mutex.Unlock()
+		e.PutInfocard(infocarder.InfocardKey(pob.Nickname), sb.Lines)
+		e.Mapped.Infocards.PutInfoname(int(flhash.HashNickname(pob.Nickname)), infocard.Infoname(pob.Name))
 
 		pobs = append(pobs, pob)
 	}
@@ -484,7 +483,7 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
 		goods_by_hash[hash] = item
-		e.exportInfocards(InfocardKey(nickname), item.IdsInfo.Get())
+		e.exportInfocards(infocarder.InfocardKey(nickname), item.IdsInfo.Get())
 	}
 	ships_by_hash := make(map[flhash.HashCode]*equipment_mapped.Ship)
 	for _, item := range e.Mapped.Goods.Ships {

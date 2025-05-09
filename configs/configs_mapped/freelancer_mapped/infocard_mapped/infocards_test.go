@@ -19,7 +19,8 @@ func TestReader(t *testing.T) {
 	filesystem := tests.FixtureFileFind()
 
 	freelancer_ini := exe_mapped.FixtureFLINIConfig()
-	config, _ := Read(filesystem, freelancer_ini, one_file_filesystem.GetFile("temp.disco.infocards.txt"))
+	_config, _ := Read(filesystem, freelancer_ini, one_file_filesystem.GetFile("temp.disco.infocards.txt"))
+	config := _config.GetUnsafe()
 
 	assert.Greater(t, len(config.Infocards), 0)
 

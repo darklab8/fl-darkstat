@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -250,7 +251,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		gun.Name = "Undefined"
 	}
 
-	e.exportInfocards(InfocardKey(gun.Nickname), gun.IdsInfo)
+	e.exportInfocards(infocarder.InfocardKey(gun.Nickname), gun.IdsInfo)
 
 	gun.ShieldDamage = int(float64(gun.HullDamage)*float64(e.Mapped.Consts.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get()) + float64(gun.EnergyDamage))
 

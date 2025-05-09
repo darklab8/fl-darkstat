@@ -11,6 +11,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/discovery/discoprices"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/stretchr/testify/assert"
 )
@@ -53,7 +54,7 @@ func TestExportBases(t *testing.T) {
 
 	for _, base := range bases {
 		if base.Nickname == "Br01_01_Base" {
-			lines := exporter.Infocards[InfocardKey(base.Nickname)]
+			lines := exporter.GetInfocard(infocarder.InfocardKey(base.Nickname))
 			fmt.Println(base.Nickname, lines)
 			assert.Greater(t, len(lines), 0, "expected finding lines in infocard")
 			break

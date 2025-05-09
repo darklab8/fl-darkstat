@@ -3,6 +3,7 @@ package configs_export
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 )
 
 func (g Engine) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
@@ -88,7 +89,7 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 
 		engine.Name = e.GetInfocardName(engine.NameID, engine.Nickname)
 
-		e.exportInfocards(InfocardKey(engine.Nickname), engine.InfoID)
+		e.exportInfocards(infocarder.InfocardKey(engine.Nickname), engine.InfoID)
 
 		engine.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, engine.Nickname)
 
