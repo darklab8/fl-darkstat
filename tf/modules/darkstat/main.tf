@@ -33,7 +33,10 @@ resource "docker_service" "darkstat" {
       image = docker_image.darkstat.name
       env   = local.envs
       #   args = ["sleep", "infinity"]
-
+      labels {
+        label = "prometheus"
+        value = "true"
+      }
       dynamic "labels" {
         for_each = merge({
           "caddy_0"               = "${var.stat_prefix}.${var.zone}"
