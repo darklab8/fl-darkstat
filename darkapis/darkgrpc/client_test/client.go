@@ -17,13 +17,14 @@ var (
 	// 37.27.207.42:50051
 	// fmt.Sprintf("unix:%s", darkgrpc.DarkstatGRpcSock)
 	// darkgrpc-staging.dd84ai.com:443
-	addr = flag.String("addr", "darkgrpc-staging.dd84ai.com:443", "the address to connect to")
+	addr = fmt.Sprintf("unix:%s", darkgrpc.DarkstatGRpcSock)
+	// addr = flag.String("addr", "darkgrpc-staging.dd84ai.com:443", "the address to connect to")
 )
 
 func main() {
 	flag.Parse()
 
-	c := darkgrpc.NewClient(*addr)
+	c := darkgrpc.NewClient(addr)
 	defer func() {
 		err := c.Conn.Close()
 		logus.Log.CheckError(err, "failed to close connection")

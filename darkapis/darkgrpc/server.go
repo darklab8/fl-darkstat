@@ -157,8 +157,13 @@ func (r *Server) Serve() {
 		logus.Log.CheckError(err, "mux failed to handle path for docs.json for swagger")
 
 		log.Printf("server listening at 8081")
+		s := &http.Server{
+			Addr:    ":8081",
+			Handler: MiddlewarePrometheusForAPIGateway(mux),
+		}
+
 		go func() {
-			if err := http.ListenAndServe(":8081", mux); err != nil {
+			if s.ListenAndServe(); err != nil {
 				panic(err)
 			}
 		}()
