@@ -184,12 +184,21 @@ var UrlGeneralizer *regexp.Regexp = regexy.InitRegex(`-[\w0-9]*`)
 
 type statusRecorder struct {
 	http.ResponseWriter
-	status int
+	status    int
+	body_size int
 }
 
 func (rec *statusRecorder) WriteHeader(code int) {
 	rec.status = code
 	rec.ResponseWriter.WriteHeader(code)
+
+	var bytes []byte = []byte{}
+	rec.body_size, _ = rec.ResponseWriter.Write(bytes)
+}
+func (rec *statusRecorder) Write(bytes []byte) (int, error) {
+	var err error
+	rec.body_size, err = rec.ResponseWriter.Write(bytes)
+	return rec.body_size, err
 }
 
 func prometheusMidleware(next http.Handler) http.Handler {
@@ -215,27 +224,35 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		metrics.HttpRequestByPatternStartedTotal.WithLabelValues(pattern).Inc()
 
 		// Request
-		rec := statusRecorder{w, 200}
+		rec := statusRecorder{w, 200, 0}
 		time_start := time.Now()
 		next.ServeHTTP(&rec, r)
+		time_finish := time.Since(time_start).Seconds()
+		Logger := Log.WithFields(
+			typelog.String("pattern", pattern),
+			typelog.Int("status_code", rec.status),
+			typelog.String("url", r.URL.Path),
+			typelog.Float64("duration", time_finish),
+			typelog.Int("body_size", rec.body_size),
+		)
 
 		if rec.status >= 400 && rec.status < 500 && !strings.Contains(r.URL.Path, "favicon.ico") {
-			Log.Warn("finished request", typelog.String("pattern", pattern), typelog.Int("status_code", rec.status), typelog.String("url", r.URL.Path))
+			Logger.Warn("finished request")
 		} else if rec.status >= 500 {
-			Log.Error("finished request", typelog.String("pattern", pattern), typelog.Int("status_code", rec.status), typelog.String("url", r.URL.Path))
+			Logger.Error("finished request")
 		} else {
-			Log.Info("finished request", typelog.String("pattern", pattern), typelog.Int("status_code", rec.status), typelog.String("url", r.URL.Path))
+			Logger.Info("finished request")
 		}
 
-		time_finish := time.Since(time_start).Seconds()
-
 		// Metrics after request
-		metrics.HttpRequestByPatternFinishedTotal.WithLabelValues(pattern, strconv.Itoa(rec.status)).Inc()
-		metrics.HttpRequestByPatternDurationSum.WithLabelValues(pattern, strconv.Itoa(rec.status)).Add(time_finish)
-		metrics.HttpRequestByPatternDurationHist.WithLabelValues(pattern, strconv.Itoa(rec.status)).Observe(time_finish)
+		metrics.HttpReponseByPatternFinishedTotal.WithLabelValues(pattern, strconv.Itoa(rec.status)).Inc()
+		metrics.HttpResponseByPatternDurationSum.WithLabelValues(pattern, strconv.Itoa(rec.status)).Add(time_finish)
+		metrics.HttpResponseByPatternDurationHist.WithLabelValues(pattern, strconv.Itoa(rec.status)).Observe(time_finish)
 
-		metrics.HttpRequestByIpFinishedTotal.WithLabelValues(ip, strconv.Itoa(rec.status)).Inc()
-		metrics.HttpRequestByIpDurationSum.WithLabelValues(ip, strconv.Itoa(rec.status)).Add(time_finish)
+		metrics.HttpResponseByPatternBodySizeHist.WithLabelValues(pattern, strconv.Itoa(rec.status)).Observe(float64(rec.body_size))
+
+		metrics.HttpResponseByIpFinishedTotal.WithLabelValues(ip, strconv.Itoa(rec.status)).Inc()
+		metrics.HttpResponseByIpDurationSum.WithLabelValues(ip, strconv.Itoa(rec.status)).Add(time_finish)
 
 	})
 }
