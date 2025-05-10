@@ -15,7 +15,9 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	_ "github.com/darklab8/fl-darkstat/docs"
+	grpcprom "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/prometheus/client_golang/prometheus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
@@ -27,6 +29,7 @@ type Server struct {
 	app_data     *appdata.AppData
 	port         int
 	sock_address string
+	reg          *prometheus.Registry
 }
 
 func NewServer(app_data *appdata.AppData, port int, opts ...ServerOpt) *Server {
@@ -42,6 +45,11 @@ func WithSockAddr(sock string) ServerOpt {
 		s.sock_address = sock
 	}
 }
+func WithProm(reg *prometheus.Registry) ServerOpt {
+	return func(s *Server) {
+		s.reg = reg
+	}
+}
 
 type ServerOpt func(s *Server)
 
@@ -50,16 +58,37 @@ const DefaultServerPort = 50051
 const DarkstatGRpcSock = "/tmp/darkstat/grpc.sock"
 
 func (r *Server) Serve() {
+	// Setup metrics.
+	// inspired by https://github.com/grpc-ecosystem/go-grpc-middleware/tree/main/providers/prometheus
+	// and https://github.com/grpc-ecosystem/go-grpc-middleware/blob/main/examples/server/main.go
+	srvMetrics := grpcprom.NewServerMetrics(
+		grpcprom.WithServerHandlingTimeHistogram(
+			grpcprom.WithHistogramBuckets(prometheus.DefBuckets),
+		),
+	)
+	if r.reg != nil {
+		r.reg.MustRegister(srvMetrics)
+	}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", r.port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer(grpc.MaxRecvMsgSize(32 * 10e6))
+	s := grpc.NewServer(
+		grpc.MaxRecvMsgSize(32*10e6),
+		grpc.ChainUnaryInterceptor(
+			srvMetrics.UnaryServerInterceptor(),
+		),
+		grpc.ChainStreamInterceptor(
+			srvMetrics.StreamServerInterceptor(),
+		),
+	)
 	pb.RegisterDarkstatServer(s, r)
 	log.Printf("server listening at %v", lis.Addr())
 	// Register reflection service on gRPC server.
 	reflection.Register(s)
+
+	srvMetrics.InitializeMetrics(s)
 
 	if cfg.IsLinux && r.sock_address != "" {
 		_ = os.Remove(r.sock_address)

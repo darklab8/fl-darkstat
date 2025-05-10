@@ -49,6 +49,7 @@ var (
 )
 
 type Metronom struct {
+	Reg *prometheus.Registry
 }
 
 func NewMetronom(mux *http.ServeMux) *Metronom {
@@ -78,7 +79,9 @@ func NewMetronom(mux *http.ServeMux) *Metronom {
 			promhttp.HandlerOpts{}),
 	)
 
-	return &Metronom{}
+	return &Metronom{
+		Reg: newreg,
+	}
 }
 
 func (m *Metronom) Run() {

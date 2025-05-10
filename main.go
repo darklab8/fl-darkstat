@@ -192,9 +192,10 @@ func main() {
 		rpc_server := darkrpc.NewRpcServer(darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
 		rpc_server.Serve(app_data)
 
-		grpc_server := darkgrpc.NewServer(app_data, darkgrpc.DefaultServerPort, darkgrpc.WithSockAddr(darkgrpc.DarkstatGRpcSock))
+		metronom := metrics.NewMetronom(web_server.GetMux())
+		grpc_server := darkgrpc.NewServer(app_data, darkgrpc.DefaultServerPort, darkgrpc.WithSockAddr(darkgrpc.DarkstatGRpcSock), darkgrpc.WithProm(metronom.Reg))
 		go grpc_server.Serve()
-		go metrics.NewMetronom(web_server.GetMux()).Run()
+		go metronom.Run()
 
 		return func() {
 			relay_closer.Close()
