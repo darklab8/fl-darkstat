@@ -17,18 +17,14 @@ var (
 		Name: "darkstat_uptime_seconds",
 		Help: "Up time in seconds",
 	})
-	HttpRequestByPatternStartedTotal *prometheus.CounterVec = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name: "darkstat_http_by_pattern_started_total",
-		Help: "Started http requests",
-	}, []string{"pattern"})
 	HttpReponseByPatternFinishedTotal *prometheus.CounterVec = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "darkstat_http_by_pattern_finished_total",
 		Help: "Finished http requests",
-	}, []string{"pattern", "status_code"})
+	}, []string{"pattern", "status_code"}) // duplicates Hist. Remove?
 	HttpResponseByPatternDurationSum *prometheus.GaugeVec = promauto.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "darkstat_http_by_pattern_duration_seconds_sum",
 		Help: "Duration sum of http request in seconds",
-	}, []string{"pattern", "status_code"})
+	}, []string{"pattern", "status_code"}) // duplicates Hist. Remove?
 	HttpResponseByPatternDurationHist *prometheus.HistogramVec = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name: "darkstat_http_by_pattern_duration_seconds_hist",
 		Help: "Duration histogram of http request in seconds",
@@ -65,7 +61,6 @@ func NewMetronom(mux *http.ServeMux) *Metronom {
 		}, newreg)
 	reg.MustRegister(
 		upTime,
-		HttpRequestByPatternStartedTotal,
 		HttpReponseByPatternFinishedTotal,
 		HttpResponseByPatternDurationSum,
 		HttpResponseByPatternDurationHist,

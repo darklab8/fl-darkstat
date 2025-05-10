@@ -203,31 +203,28 @@ func (rec *statusRecorder) Write(bytes []byte) (int, error) {
 
 func prometheusMidleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Gathering all info pre request
+		// Request
+		rec := statusRecorder{w, 200, 0}
+		time_start := time.Now()
+		next.ServeHTTP(&rec, r)
+		time_finish := time.Since(time_start).Seconds()
+
+		// Gathering request info
 		pattern := r.Pattern
 		url := r.URL.Path[1:]
-		if pattern == "" && (strings.Contains(url, urls.Index.ToString()) ||
+		if pattern == "/" && (strings.Contains(url, urls.Index.ToString()) ||
 			strings.Contains(url, urls.DarkIndex.ToString()) ||
 			strings.Contains(url, urls.VanillaIndex.ToString()) ||
 			strings.Contains(url, "cdn")) {
 			pattern = UrlGeneralizer.ReplaceAllString(url, "-{item_id}")
 			logus.Log.Debug("generalized url to pattern", typelog.String("pattern", pattern))
 		}
-		if pattern == "" {
+		if pattern == "/" && r.URL.Path != "/" {
 			pattern = "unknown"
 		}
-
 		ip, err := getIP(r)
 		logus.Log.CheckError(err, "not found ip in prometheus middleware incoming request")
 
-		// Metrics pre request
-		metrics.HttpRequestByPatternStartedTotal.WithLabelValues(pattern).Inc()
-
-		// Request
-		rec := statusRecorder{w, 200, 0}
-		time_start := time.Now()
-		next.ServeHTTP(&rec, r)
-		time_finish := time.Since(time_start).Seconds()
 		Logger := Log.WithFields(
 			typelog.String("pattern", pattern),
 			typelog.Int("status_code", rec.status),
@@ -235,7 +232,6 @@ func prometheusMidleware(next http.Handler) http.Handler {
 			typelog.Float64("duration", time_finish),
 			typelog.Int("body_size", rec.body_size),
 		)
-
 		if rec.status >= 400 && rec.status < 500 && !strings.Contains(r.URL.Path, "favicon.ico") {
 			Logger.Warn("finished request")
 		} else if rec.status >= 500 {
