@@ -17,6 +17,10 @@ data "docker_network" "caddy" {
   name = "caddy"
 }
 
+data "docker_network" "grafana" {
+  name = "grafana"
+}
+
 resource "docker_service" "darkstat" {
   name = "${var.environment}-darkstat-app"
 
@@ -26,9 +30,13 @@ resource "docker_service" "darkstat" {
       aliases = ["darkstat"]
     }
     networks_advanced {
-      name = data.docker_network.caddy.id
+      name    = data.docker_network.caddy.id
+      aliases = ["${var.environment}-darkstat"]
     }
-
+    networks_advanced {
+      name    = data.docker_network.grafana.id
+      aliases = ["${var.environment}-darkstat"]
+    }
     container_spec {
       image = docker_image.darkstat.name
       env   = local.envs
