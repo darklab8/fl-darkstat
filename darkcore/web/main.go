@@ -36,6 +36,8 @@ var (
 type Mutex interface {
 	Lock()
 	Unlock()
+	RLock()
+	RUnlock()
 }
 
 type Web struct {

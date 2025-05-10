@@ -23,8 +23,8 @@ func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url: "" + ApiRoute + "/pobs",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
 			}
 
 			apiutils.ReturnJson(&w, api.app_data.Configs.PoBs)
@@ -44,8 +44,8 @@ func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url: "" + ApiRoute + "/pob_goods",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
 			}
 
 			apiutils.ReturnJson(&w, api.app_data.Configs.PoBGoods)

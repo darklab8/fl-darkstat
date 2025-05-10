@@ -21,8 +21,8 @@ func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url: "" + ApiRoute + "/hashes",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
 			}
 			hashes := darkgrpc.GetHashesData(api.app_data)
 			apiutils.ReturnJson(&w, darkgrpc.Hashes{HashesByNick: hashes})

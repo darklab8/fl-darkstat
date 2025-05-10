@@ -34,8 +34,8 @@ func GetShields(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url: "" + ApiRoute + "/shields",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
 			}
 
 			var in *pb.GetEquipmentInput

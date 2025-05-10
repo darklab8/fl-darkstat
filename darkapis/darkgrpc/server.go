@@ -143,8 +143,8 @@ func (r *Server) Serve() {
 
 func (s *Server) GetHealth(_ context.Context, in *pb.Empty) (*pb.HealthReply, error) {
 	if s.app_data != nil {
-		s.app_data.Lock()
-		defer s.app_data.Unlock()
+		s.app_data.RLock()
+		defer s.app_data.RUnlock()
 	}
 
 	return &pb.HealthReply{

@@ -49,8 +49,8 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url: "" + ApiRoute + "/npc_bases",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
 			}
 
 			var in *pb.GetBasesInput
@@ -102,8 +102,8 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url: "" + ApiRoute + "/mining_operations",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
 			}
 			var in *pb.GetBasesInput
 			in, err := GetBasesInput(w, r)
@@ -153,8 +153,8 @@ func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url: "" + ApiRoute + "/pobs/bases",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
 			}
 			var in *pb.GetBasesInput
 			in, err := GetBasesInput(w, r)

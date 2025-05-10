@@ -28,8 +28,8 @@ func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registr
 		Url: "POST " + ApiRoute + "/infocards",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
 			}
 
 			var nicknames []string

@@ -10,8 +10,8 @@ import (
 
 func (s *Server) GetPoBs(_ context.Context, in *pb.Empty) (*pb.GetPoBsReply, error) {
 	if s.app_data != nil {
-		s.app_data.Lock()
-		defer s.app_data.Unlock()
+		s.app_data.RLock()
+		defer s.app_data.RUnlock()
 	}
 
 	var bases []*pb.PoB
@@ -78,8 +78,8 @@ func NewShopItem(item *configs_export.ShopItem) *pb.ShopItem {
 
 func (s *Server) GetPoBGoods(_ context.Context, in *pb.Empty) (*pb.GetPoBGoodsReply, error) {
 	if s.app_data != nil {
-		s.app_data.Lock()
-		defer s.app_data.Unlock()
+		s.app_data.RLock()
+		defer s.app_data.RUnlock()
 	}
 
 	var pob_goods []*pb.PoBGood

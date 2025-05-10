@@ -9,8 +9,8 @@ import (
 
 func (s *Server) GetGuns(_ context.Context, in *pb.GetGunsInput) (*pb.GetGunsReply, error) {
 	if s.app_data != nil {
-		s.app_data.Lock()
-		defer s.app_data.Unlock()
+		s.app_data.RLock()
+		defer s.app_data.RUnlock()
 	}
 	var input []configs_export.Gun
 	if in.FilterToUseful {
@@ -30,8 +30,8 @@ func (s *Server) GetGuns(_ context.Context, in *pb.GetGunsInput) (*pb.GetGunsRep
 
 func (s *Server) GetMissiles(_ context.Context, in *pb.GetGunsInput) (*pb.GetGunsReply, error) {
 	if s.app_data != nil {
-		s.app_data.Lock()
-		defer s.app_data.Unlock()
+		s.app_data.RLock()
+		defer s.app_data.RUnlock()
 	}
 	var input []configs_export.Gun
 	if in.FilterToUseful {

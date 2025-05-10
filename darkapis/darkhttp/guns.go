@@ -61,8 +61,8 @@ func GetGuns(webapp *web.Web, api *Api) *registry.Endpoint {
 func GunHandler(webapp *web.Web, api *Api, guns []configs_export.Gun) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if webapp.AppDataMutex != nil {
-			webapp.AppDataMutex.Lock()
-			defer webapp.AppDataMutex.Unlock()
+			webapp.AppDataMutex.RLock()
+			defer webapp.AppDataMutex.RUnlock()
 		}
 
 		var in *pb.GetGunsInput

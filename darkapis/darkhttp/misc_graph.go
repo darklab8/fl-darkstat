@@ -29,8 +29,8 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url: "POST " + ApiRoute + "/graph/paths",
 		Handler: func(resp http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
-				webapp.AppDataMutex.Lock()
-				defer webapp.AppDataMutex.Unlock()
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
 			}
 
 			var input_routes []appdata.GraphPathReq

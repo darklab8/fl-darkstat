@@ -88,8 +88,8 @@ func GetHashesData(app_data *appdata.AppData) map[string]Hash {
 
 func (s *Server) GetHashes(_ context.Context, in *pb.Empty) (*pb.GetHashesReply, error) {
 	if s.app_data != nil {
-		s.app_data.Lock()
-		defer s.app_data.Unlock()
+		s.app_data.RLock()
+		defer s.app_data.RUnlock()
 	}
 
 	answer := &pb.GetHashesReply{HashesByNick: make(map[string]*pb.Hash)}

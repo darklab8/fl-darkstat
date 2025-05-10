@@ -9,8 +9,8 @@ import (
 
 func (s *Server) GetCommodities(_ context.Context, in *pb.GetCommoditiesInput) (*pb.GetCommoditiesReply, error) {
 	if s.app_data != nil {
-		s.app_data.Lock()
-		defer s.app_data.Unlock()
+		s.app_data.RLock()
+		defer s.app_data.RUnlock()
 	}
 
 	var input []*configs_export.Commodity

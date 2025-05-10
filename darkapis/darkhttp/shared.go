@@ -39,8 +39,8 @@ type Marketable interface {
 func PostItemsMarketGoodsT[T Marketable](webapp *web.Web, items []T) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if webapp.AppDataMutex != nil {
-			webapp.AppDataMutex.Lock()
-			defer webapp.AppDataMutex.Unlock()
+			webapp.AppDataMutex.RLock()
+			defer webapp.AppDataMutex.RUnlock()
 		}
 
 		var nicknames []string
@@ -91,8 +91,8 @@ type TechCompatable interface {
 func PostItemsTechCompatT[T TechCompatable](webapp *web.Web, items []T) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if webapp.AppDataMutex != nil {
-			webapp.AppDataMutex.Lock()
-			defer webapp.AppDataMutex.Unlock()
+			webapp.AppDataMutex.RLock()
+			defer webapp.AppDataMutex.RUnlock()
 		}
 
 		var nicknames []string

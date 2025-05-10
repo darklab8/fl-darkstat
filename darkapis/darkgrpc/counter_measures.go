@@ -9,8 +9,8 @@ import (
 
 func (s *Server) GetCounterMeasures(_ context.Context, in *pb.GetEquipmentInput) (*pb.GetCounterMeasuresReply, error) {
 	if s.app_data != nil {
-		s.app_data.Lock()
-		defer s.app_data.Unlock()
+		s.app_data.RLock()
+		defer s.app_data.RUnlock()
 	}
 
 	var input []configs_export.CounterMeasure

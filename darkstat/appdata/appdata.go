@@ -23,11 +23,13 @@ type AppData struct {
 	Configs *configs_export.Exporter
 	Shared  *types.SharedData
 
-	mu sync.Mutex
+	mu sync.RWMutex
 }
 
-func (a *AppData) Lock()   { a.mu.Lock() }
-func (a *AppData) Unlock() { a.mu.Unlock() }
+func (a *AppData) Lock()    { a.mu.Lock() }
+func (a *AppData) Unlock()  { a.mu.Unlock() }
+func (a *AppData) RLock()   { a.mu.RLock() }
+func (a *AppData) RUnlock() { a.mu.RUnlock() }
 
 type IsDiscovery bool
 
@@ -151,5 +153,5 @@ type AppDataRelay struct {
 	Configs *configs_export.ExporterRelay
 	Shared  *types.SharedData
 
-	mu *sync.Mutex
+	mu *sync.RWMutex
 }

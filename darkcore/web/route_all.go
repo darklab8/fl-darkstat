@@ -22,8 +22,8 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 		Url: UrlStatic,
 		Handler: func(resp http.ResponseWriter, req *http.Request) {
 			if w.AppDataMutex != nil {
-				w.AppDataMutex.Lock()
-				defer w.AppDataMutex.Unlock()
+				w.AppDataMutex.RLock()
+				defer w.AppDataMutex.RUnlock()
 			}
 			switch req.Method {
 			case http.MethodOptions:
