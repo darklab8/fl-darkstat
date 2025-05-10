@@ -163,7 +163,7 @@ func (r *Server) Serve() {
 		}
 
 		go func() {
-			if s.ListenAndServe(); err != nil {
+			if err := s.ListenAndServe(); err != nil {
 				panic(err)
 			}
 		}()
