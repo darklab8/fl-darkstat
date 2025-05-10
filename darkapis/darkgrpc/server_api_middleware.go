@@ -30,6 +30,9 @@ func newLogResponseWriter(w http.ResponseWriter) *logResponseWriter {
 	return &logResponseWriter{w, http.StatusOK}
 }
 
+// MiddlewarePrometheusForAPIGateway is inspired by
+// how to write middlewares for api gateways
+// from over there https://github.com/grpc-ecosystem/grpc-gateway/blob/115075f9df32cc3a4fe3325ee2dc274d5569876f/docs/docs/operations/logging.md?plain=1#L10
 func MiddlewarePrometheusForAPIGateway(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		lw := newLogResponseWriter(w)
