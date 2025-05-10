@@ -9,6 +9,7 @@ locals {
     DARKSTAT_FLDARKSTAT_HEADING = var.FLDARKSTAT_HEADING # Optional for phrases at the top of Darkstat interface
 
     DARKCORE_CACHE_CONTROL = "max-age=600"
+    UTILS_ENVIRONMENT      = var.environment
 
     // grpc debugging
     GRPC_TRACE                  = "all"
