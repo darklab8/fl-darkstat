@@ -73,13 +73,13 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 				if ok {
 					time_start := time.Now()
 					_, err := fmt.Fprint(resp, string(content.Render()))
-					logus.Log.CheckError(err, "failed to print static into response")
+					logger.CheckError(err, "failed to print static into response")
 					logger.Debug("proceed request", typelog.String("duration", (time.Now().Sub(time_start).String())))
 				} else {
 					resp.WriteHeader(http.StatusNotFound)
 					_, err := fmt.Fprintf(resp, "content is not found at %s!, %q", req.URL, html.EscapeString(requested))
-					logus.Log.CheckError(err, "failed to print static into err response")
-					logus.Log.Error("content is not found")
+					logger.CheckError(err, "failed to print static into err response")
+					logger.Error("content is not found")
 				}
 
 			default:

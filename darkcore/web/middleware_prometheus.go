@@ -1,7 +1,10 @@
 package web
 
 import (
+	"errors"
+	"net"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -10,6 +13,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/utils/regexy"
 )
 
 type statusRecorder struct {
@@ -55,12 +59,15 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		ip, err := getIP(r)
 		logus.Log.CheckError(err, "not found ip in prometheus middleware incoming request")
 
+		user_agent := r.Header.Get("User-Agent")
+
 		Logger := Log.WithFields(
 			typelog.String("pattern", pattern),
 			typelog.Int("status_code", rec.status),
 			typelog.String("url", r.URL.Path),
 			typelog.Float64("duration", time_finish),
 			typelog.Int("body_size", rec.body_size),
+			typelog.String("user_agent", user_agent),
 		)
 		if rec.status >= 400 && rec.status < 500 && !strings.Contains(r.URL.Path, "favicon.ico") {
 			Logger.Warn("finished request")
@@ -80,3 +87,35 @@ func prometheusMidleware(next http.Handler) http.Handler {
 
 	})
 }
+
+// getIP returns the ip address from the http request
+func getIP(r *http.Request) (string, error) {
+	ips := r.Header.Get("X-Forwarded-For")
+	splitIps := strings.Split(ips, ",")
+
+	if len(splitIps) > 0 {
+		// get last IP in list since ELB prepends other user defined IPs, meaning the last one is the actual client IP.
+		netIP := net.ParseIP(splitIps[len(splitIps)-1])
+		if netIP != nil {
+			return netIP.String(), nil
+		}
+	}
+
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return "", err
+	}
+
+	netIP := net.ParseIP(ip)
+	if netIP != nil {
+		ip := netIP.String()
+		if ip == "::1" {
+			return "127.0.0.1", nil
+		}
+		return ip, nil
+	}
+
+	return "", errors.New("IP not found")
+}
+
+var UrlGeneralizer *regexp.Regexp = regexy.InitRegex(`-[\w0-9]*`)
