@@ -16,6 +16,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/interface_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/empathy_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/faction_props_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/lootprops_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/mbases_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/npc_ships"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/rnd_msns_mapped/diff2money"
@@ -83,6 +84,7 @@ type MappedConfigs struct {
 	MBases         *mbases_mapped.Config
 	Consts         *const_mapped.Config
 	WeaponMods     *weaponmoddb.Config
+	LookProps      *lootprops_mapped.Config
 
 	NpcRankToDiff *npcranktodiff.Config
 	DiffToMoney   *diff2money.Config
@@ -217,6 +219,8 @@ func (m *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 	file_initialworld := iniload.NewLoader(filesystem.GetFile(initialworld.FILENAME))
 	file_empathy := iniload.NewLoader(filesystem.GetFile(empathy_mapped.FILENAME))
 	file_mbases := iniload.NewLoader(filesystem.GetFile(mbases_mapped.FILENAME))
+	file_lootprops := iniload.NewLoader(filesystem.GetFile(lootprops_mapped.FILENAME))
+
 	file_consts := iniload.NewLoader(filesystem.GetFile(const_mapped.FILENAME))
 	file_weaponmoddb := iniload.NewLoader(filesystem.GetFile(weaponmoddb.FILENAME))
 
@@ -237,6 +241,7 @@ func (m *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		file_initialworld,
 		file_empathy,
 		file_mbases,
+		file_lootprops,
 		file_consts,
 		file_weaponmoddb,
 		file_diff2money,
@@ -364,6 +369,11 @@ func (m *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
 		wg.Add(1)
 		go func() {
 			m.MBases = mbases_mapped.Read(file_mbases)
+			wg.Done()
+		}()
+		wg.Add(1)
+		go func() {
+			m.LookProps = lootprops_mapped.Read(file_lootprops)
 			wg.Done()
 		}()
 		wg.Add(1)

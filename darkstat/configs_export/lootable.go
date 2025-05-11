@@ -31,6 +31,12 @@ func (e *Exporter) findable_in_loot() map[string]bool {
 			}
 		}
 	}
+
+	for _, MLootProp := range e.Mapped.LookProps.LootProps {
+		equipment_nickname := MLootProp.Nickname.Get()
+		e.findable_in_loot_cache[equipment_nickname] = true
+
+	}
 	return e.findable_in_loot_cache
 }
 
