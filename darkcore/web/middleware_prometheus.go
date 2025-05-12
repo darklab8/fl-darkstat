@@ -76,11 +76,11 @@ func prometheusMidleware(next http.Handler) http.Handler {
 			typelog.String("user_agent", user_agent),
 		)
 		if rec.status >= 400 && rec.status < 500 && !strings.Contains(r.URL.Path, "favicon.ico") {
-			Logger.Warn("finished request")
+			Logger.WarnCtx(ctx, "finished request")
 		} else if rec.status >= 500 {
-			Logger.Error("finished request")
+			Logger.ErrorCtx(ctx, "finished request")
 		} else {
-			Logger.Info("finished request")
+			Logger.InfoCtx(ctx, "finished request")
 		}
 
 		var trace_id string
