@@ -3,7 +3,7 @@ package logus
 
 import (
 	_ "github.com/darklab8/fl-darkstat/darkcore/settings"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 )
 
 var Log *typelog.Logger = typelog.NewLogger("darkcore",

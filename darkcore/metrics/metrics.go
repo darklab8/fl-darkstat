@@ -66,7 +66,9 @@ func NewMetronom(mux *http.ServeMux) *Metronom {
 	mux.Handle(
 		"/metrics", promhttp.HandlerFor(
 			newreg,
-			promhttp.HandlerOpts{}),
+			promhttp.HandlerOpts{
+				EnableOpenMetrics: true,
+			}),
 	)
 
 	return &Metronom{

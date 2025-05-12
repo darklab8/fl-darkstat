@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -30,7 +31,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/docs"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/otlp"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/cantil"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -95,7 +97,7 @@ func main() {
 		}
 	}()
 
-	web_darkstat := func() func() {
+	web_darkstat := func(ctx context.Context) func() {
 		start_time_total := time.Now()
 
 		if settings.Env.IsDevEnv {
@@ -180,6 +182,7 @@ func main() {
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
 			web.WithAppData(app_data),
+			web.WithCtx(ctx),
 		)
 
 		if settings.Env.IsDevEnv {
@@ -220,8 +223,19 @@ func main() {
 				Nickname:    "web",
 				Description: "run as standalone application that serves darkstat from memory",
 				Func: func(info cantil.ActionInfo) error {
-					closer := web_darkstat()
+
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+
+					otelShutdown, err := otlp.SetupOTelSDK(ctx) // Set up OpenTelemetry.
+					if err != nil {
+						return err
+					}
+					defer func() { // Handle shutdown properly so nothing leaks.
+						err = errors.Join(err, otelShutdown(context.Background()))
+					}()
+
+					closer := web_darkstat(ctx)
+
 					defer stop()
 					<-ctx.Done()
 					closer()

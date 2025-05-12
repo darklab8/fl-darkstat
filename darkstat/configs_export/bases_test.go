@@ -12,7 +12,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/discovery/discoprices"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/stretchr/testify/assert"
 )
 

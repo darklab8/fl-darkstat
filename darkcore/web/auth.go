@@ -10,7 +10,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 )
 
 func AuthMiddleware(next http.Handler) http.Handler {

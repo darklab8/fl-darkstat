@@ -3,13 +3,17 @@
         "-v"
     ],
     "go.testEnvVars": {
-        "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"
+        "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json",
+        "OTEL_RESOURCE_ATTRIBUTES": "service.name=check,service.version=0.1.0",
+        "OTEL_SERVICE_NAME": "check2",
     },
     "editor.formatOnSave": true,
     "[templ]": {
         "editor.defaultFormatter": "a-h.templ"
     },
     "terminal.integrated.env.linux": {
-        "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json"
+        "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json",
+        "OTEL_RESOURCE_ATTRIBUTES": "service.name=check,service.version=0.1.0",
+        "OTEL_SERVICE_NAME": "check2",
     }
 }

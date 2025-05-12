@@ -5,6 +5,7 @@ Entrypoint for front and for dev web server?
 */
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -37,6 +38,7 @@ type Web struct {
 	registry     *registry.Registion
 	mux          *http.ServeMux
 	AppDataMutex Mutex
+	ctx          context.Context
 
 	site_root string
 }
@@ -48,6 +50,11 @@ type WebOpt func(w *Web)
 func WithAppData(data *appdata.AppData) WebOpt {
 	return func(w *Web) {
 		w.data = data
+	}
+}
+func WithCtx(ctx context.Context) WebOpt {
+	return func(w *Web) {
+		w.ctx = ctx
 	}
 }
 
@@ -68,6 +75,7 @@ func NewWebBasic(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
 		filesystems: filesystems,
 		registry:    registry.NewRegister(),
 		mux:         http.NewServeMux(),
+		ctx:         context.Background(),
 	}
 
 	for _, opt := range opts {
@@ -158,7 +166,10 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 	var sock_listener net.Listener
 	var sock_server http.Server
 	if cfg.IsLinux && opts.SockAddress != "" {
-		sock_server = http.Server{Handler: hander}
+		sock_server = http.Server{
+			BaseContext: func(_ net.Listener) context.Context { return w.ctx },
+			Handler:     hander,
+		}
 		var err error
 		_ = os.Mkdir("/tmp/darkstat", 0777)
 		err = os.Remove(opts.SockAddress)

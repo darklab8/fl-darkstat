@@ -11,9 +11,11 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/regexy"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 type statusRecorder struct {
@@ -40,7 +42,11 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		// Request
 		rec := statusRecorder{w, 200, 0}
 		time_start := time.Now()
-		next.ServeHTTP(&rec, r)
+
+		ctx, span := traces.Tracer.Start(r.Context(), "request")
+		defer span.End()
+
+		next.ServeHTTP(&rec, r.WithContext(ctx))
 		time_finish := time.Since(time_start).Seconds()
 
 		// Gathering request info
@@ -77,14 +83,21 @@ func prometheusMidleware(next http.Handler) http.Handler {
 			Logger.Info("finished request")
 		}
 
-		// Metrics after request
-		metrics.HttpResponseByPatternDurationHist.WithLabelValues(pattern, strconv.Itoa(rec.status)).Observe(time_finish)
+		var trace_id string
+		if span.SpanContext().HasSpanID() {
+			trace_id = span.SpanContext().TraceID().String()
+		}
+
+		// confirm it is present
+		// curl -H 'Accept: application/openmetrics-text' localhost:8000/metrics | grep "darkstat_http_by_pattern_duration_seconds_hist"
+		metrics.HttpResponseByPatternDurationHist.WithLabelValues(pattern, strconv.Itoa(rec.status)).(prometheus.ExemplarObserver).ObserveWithExemplar(
+			time_finish, prometheus.Labels{"traceID": trace_id},
+		)
 
 		metrics.HttpResponseByPatternBodySizeHist.WithLabelValues(pattern, strconv.Itoa(rec.status)).Observe(float64(rec.body_size))
 
 		metrics.HttpResponseByIpFinishedTotal.WithLabelValues(ip, strconv.Itoa(rec.status)).Inc()
 		metrics.HttpResponseByIpDurationSum.WithLabelValues(ip, strconv.Itoa(rec.status)).Add(time_finish)
-
 	})
 }
 

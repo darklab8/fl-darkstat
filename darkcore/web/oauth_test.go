@@ -16,7 +16,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	statsettings "github.com/darklab8/fl-darkstat/darkstat/settings"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/utils_types"
 	"github.com/stretchr/testify/assert"

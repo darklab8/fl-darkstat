@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/async"
 	"github.com/darklab8/go-utils/utils/ptr"
 )

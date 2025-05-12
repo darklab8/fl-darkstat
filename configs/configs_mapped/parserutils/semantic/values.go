@@ -11,7 +11,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 )
 
 // ORM values

@@ -16,7 +16,7 @@ import (
 	"unicode/utf16"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"

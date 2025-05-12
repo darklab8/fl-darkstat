@@ -11,7 +11,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 
 	"github.com/darklab8/go-utils/utils/utils_logus"
 	"github.com/darklab8/go-utils/utils/utils_types"

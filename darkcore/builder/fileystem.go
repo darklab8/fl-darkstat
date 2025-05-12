@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )

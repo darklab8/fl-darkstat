@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
-	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/typelog"
 )
 
 func (f *File) ReadBytes() ([]byte, error) {
