@@ -52,14 +52,14 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		// Gathering request info
 		pattern := r.Pattern
 		url := r.URL.Path[1:]
-		if pattern == "/" && (strings.Contains(url, urls.Index.ToString()) ||
+		if strings.Contains(url, urls.Index.ToString()) ||
 			strings.Contains(url, urls.DarkIndex.ToString()) ||
 			strings.Contains(url, urls.VanillaIndex.ToString()) ||
-			strings.Contains(url, "cdn")) {
+			strings.Contains(url, "cdn") {
 			pattern = UrlGeneralizer.ReplaceAllString(url, "-{item_id}")
 			logus.Log.Debug("generalized url to pattern", typelog.String("pattern", pattern))
 		}
-		if pattern == "/" && r.URL.Path != "/" {
+		if pattern == "" || pattern == "/" {
 			pattern = "unknown"
 		}
 		ip, err := getIP(r)
