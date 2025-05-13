@@ -21,7 +21,10 @@ resource "docker_container" "vanilla" {
     host_path      = local.host_path
     container_path = "/code"
   }
-
+  log_opts = {
+    "mode" : "non-blocking"
+    "max-buffer-size" : "500m"
+  }
   restart = "always"
 
   lifecycle {

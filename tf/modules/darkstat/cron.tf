@@ -12,7 +12,10 @@ resource "docker_container" "cron_restart" {
   restart = "always"
   tty     = true
   command = ["sh", "-c", "echo 'starting ${local.restart_seconds} cycle'; sleep ${local.restart_seconds}; docker service update --force darkstat-${var.environment}"]
-
+  log_opts = {
+    "mode" : "non-blocking"
+    "max-buffer-size" : "500m"
+  }
   volumes {
     host_path      = "/var/run/docker.sock"
     container_path = "/var/run/docker.sock"

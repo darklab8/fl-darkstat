@@ -37,6 +37,14 @@ resource "docker_service" "darkstat" {
       name    = data.docker_network.grafana.id
       aliases = ["${var.environment}-darkstat"]
     }
+    log_driver {
+      name = "json-file"
+
+      options = {
+        max-size = "500m"
+        max-file = "3"
+      }
+    }
     container_spec {
       image = docker_image.darkstat.name
       env   = local.envs

@@ -8,12 +8,12 @@ locals {
     DARKSTAT_SITE_HOST          = "https://${var.stat_prefix}.${var.zone}"
     DARKSTAT_FLDARKSTAT_HEADING = var.FLDARKSTAT_HEADING # Optional for phrases at the top of Darkstat interface
 
-    CACHE_CONTROL = "true"
-    UTILS_ENVIRONMENT      = var.environment
-    OTLP_HTTP_ON = var.environment == "staging" ? "true" : "false"
+    CACHE_CONTROL               = "true"
+    UTILS_ENVIRONMENT           = var.environment
+    OTLP_HTTP_ON                = "true"
     OTEL_EXPORTER_OTLP_ENDPOINT = "http://alloy-traces:4318"
-    OTEL_SERVICE_NAME = "${var.environment}-darkstat-app"
-    OTEL_TRACES_SAMPLER = "parentbased_always_on"
+    OTEL_SERVICE_NAME           = "${var.environment}-darkstat-app"
+    OTEL_TRACES_SAMPLER         = "parentbased_always_on"
 
     // grpc debugging
     GRPC_TRACE                  = "all"

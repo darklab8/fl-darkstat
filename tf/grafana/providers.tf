@@ -14,8 +14,8 @@ data "external" "secrets" {
 }
 
 locals {
-  grafana_password = data.external.secrets.result["grafana_password"]
-  grafana_creds    = "admin:${local.grafana_password}"
+  grafana_password    = data.external.secrets.result["grafana_password"]
+  grafana_creds       = "admin:${local.grafana_password}"
   discord_webhook_url = data.external.secrets.result["discord_webhook_url"]
 }
 
