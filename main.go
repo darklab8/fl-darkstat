@@ -159,6 +159,7 @@ func main() {
 						app_data.Lock()
 						defer app_data.Unlock()
 
+						// TODO, refactor some day to have it more elegant.
 						relay_data.Configs.Mapped.Discovery.PlayerOwnedBases.Refresh()
 						relay_data.Configs.PoBs = relay_data.Configs.GetPoBs()
 						relay_data.Configs.PoBGoods = relay_data.Configs.GetPoBGoods(app_data.Configs.PoBs)

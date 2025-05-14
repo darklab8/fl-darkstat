@@ -63,7 +63,7 @@ ENV BUILD_VERSION="${BUILD_VERSION}"
 ENTRYPOINT /code/main
 EXPOSE 8000
 CMD web
-HEALTHCHECK CMD /code/main health
+HEALTHCHECK --interval=28s CMD /code/main health
 
 # test command
 # docker run -v /home/naa/apps/freelancer_related/wine_prefix_freelancer_online/drive_c/Discovery:/discovery -it -e FREELANCER_FOLDER=/discovery -p 8000:8000 -e DARKSTAT_LOG_LEVEL=DEBUG -e UTILS_LOG_LEVEL=DEBUG -e DEV_ENV=true -p 8080:8080  test
