@@ -10,6 +10,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/utils_types"
@@ -28,6 +29,9 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 			switch req.Method {
 			case http.MethodOptions:
 			case http.MethodGet:
+
+				_, span := traces.Tracer.Start(req.Context(), "route-all")
+				defer span.End()
 
 				requested := req.URL.Path[1:]
 

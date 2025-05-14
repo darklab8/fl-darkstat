@@ -16,6 +16,7 @@ import (
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/regexy"
 	"github.com/prometheus/client_golang/prometheus"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 type statusRecorder struct {
@@ -75,6 +76,15 @@ func prometheusMidleware(next http.Handler) http.Handler {
 			typelog.Int("body_size", rec.body_size),
 			typelog.String("user_agent", user_agent),
 		)
+		span.SetAttributes(
+			attribute.String("pattern", pattern),
+			attribute.Int("status_code", rec.status),
+			attribute.String("url", r.URL.Path),
+			attribute.Float64("duration", time_finish),
+			attribute.Int("body_size", rec.body_size),
+			attribute.String("user_agent", user_agent),
+		)
+
 		if rec.status >= 400 && rec.status < 500 && !strings.Contains(r.URL.Path, "favicon.ico") {
 			Logger.WarnCtx(ctx, "finished request")
 		} else if rec.status >= 500 {

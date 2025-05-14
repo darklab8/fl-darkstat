@@ -75,9 +75,6 @@ func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 // @BasePath /
 func main() {
 	fmt.Println("args=", os.Args[1:])
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
 
 	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteHost, "https://", "")
 	docs.SwaggerInfo.Host = strings.ReplaceAll(docs.SwaggerInfo.Host, "http://", "")
@@ -98,6 +95,10 @@ func main() {
 	}()
 
 	web_darkstat := func(ctx context.Context) func() {
+		go func() {
+			log.Println(http.ListenAndServe("0.0.0.0:6060", nil)) // for pprof
+		}()
+
 		start_time_total := time.Now()
 
 		if settings.Env.IsDevEnv {
@@ -260,7 +261,7 @@ func main() {
 						DisableCompression: true,
 					}
 					client := &http.Client{Transport: tr}
-					resp, err := client.Get(fmt.Sprintf("http://localhost:8000/index.html?password=%s", settings.Env.DarkcoreEnvVars.Password))
+					resp, err := client.Get(fmt.Sprintf("http://localhost:8000/ping?password=%s", settings.Env.DarkcoreEnvVars.Password))
 					logus.Log.CheckPanic(err, "failed to health check")
 					if resp.StatusCode != 200 {
 						logus.Log.Panic("status code is not 200", typelog.Any("code", resp.StatusCode))
