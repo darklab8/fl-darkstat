@@ -47,11 +47,12 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		ctx, span := traces.Tracer.Start(r.Context(), "request")
 		defer span.End()
 
-		next.ServeHTTP(&rec, r.WithContext(ctx))
+		new_r := r.WithContext(ctx)
+		next.ServeHTTP(&rec, new_r)
 		time_finish := time.Since(time_start).Seconds()
 
 		// Gathering request info
-		pattern := r.Pattern
+		pattern := new_r.Pattern
 		url := r.URL.Path[1:]
 		if strings.Contains(url, urls.Index.ToString()) ||
 			strings.Contains(url, urls.DarkIndex.ToString()) ||
