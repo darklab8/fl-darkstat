@@ -17,6 +17,7 @@ import (
 	"github.com/darklab8/go-utils/utils/regexy"
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 )
 
 type statusRecorder struct {
@@ -49,6 +50,7 @@ func prometheusMidleware(next http.Handler) http.Handler {
 
 		new_r := r.WithContext(ctx)
 		next.ServeHTTP(&rec, new_r)
+		span.AddEvent("ServeHTTP is made")
 		time_finish := time.Since(time_start).Seconds()
 
 		// Gathering request info
@@ -88,8 +90,10 @@ func prometheusMidleware(next http.Handler) http.Handler {
 
 		if rec.status >= 400 && rec.status < 500 && !strings.Contains(r.URL.Path, "favicon.ico") {
 			Logger.WarnCtx(ctx, "finished request")
+			span.SetStatus(codes.Error, "4xx status code")
 		} else if rec.status >= 500 {
 			Logger.ErrorCtx(ctx, "finished request")
+			span.SetStatus(codes.Error, "5xx status code")
 		} else {
 			Logger.InfoCtx(ctx, "finished request")
 		}
