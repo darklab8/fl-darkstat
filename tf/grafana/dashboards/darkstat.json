@@ -122,7 +122,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "darkstat_uptime_seconds",
+          "expr": "darkstat_uptime_seconds{environment=~\"$environment\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -219,7 +219,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum (increase(darkstat_http_by_ip_finished_total[10m])) by (status_code, environment)",
+          "expr": "sum (increase(darkstat_http_by_ip_finished_total{environment=~\"$environment\"}[10m])) by (status_code)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -290,7 +290,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum (darkstat_http_by_ip_finished_total{status_code=~\"2.*|3.*\", environment=\"production\"}) by (status_code, ip)",
+          "expr": "sum (darkstat_http_by_ip_finished_total{status_code=~\"2.*|3.*\", environment=~\"$environment\"}) by (status_code, ip)",
           "instant": true,
           "legendFormat": "{{ip}} - {{status_code}}",
           "range": false,
@@ -358,7 +358,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum (darkstat_http_by_ip_finished_total{status_code=~\"4.*|5.*\"}) by (status_code, ip)",
+          "expr": "sum (darkstat_http_by_ip_finished_total{status_code=~\"4.*|5.*\", environment=~\"$environment\"}) by (status_code, ip)",
           "instant": true,
           "legendFormat": "__auto",
           "range": false,
@@ -457,7 +457,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "count(count (darkstat_http_by_ip_finished_total{}) by (ip))",
+          "expr": "count(count (darkstat_http_by_ip_finished_total{environment=~\"$environment\"}) by (ip))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -555,7 +555,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum (increase(darkstat_http_by_pattern_duration_seconds_hist_count{environment=\"production\"}[10m])) by (status_code, pattern)",
+          "expr": "sum (increase(darkstat_http_by_pattern_duration_seconds_hist_count{environment=~\"$environment\"}[10m])) by (status_code, pattern)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -652,7 +652,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{status_code=~\"4.*|5.*\",environment=\"production\"}) by (status_code, pattern)",
+          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{status_code=~\"4.*|5.*\",environment=~\"$environment\"}) by (status_code, pattern)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -749,7 +749,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum by(status_code, pattern) (rate(darkstat_http_by_pattern_duration_seconds_hist_sum{environment=\"production\"}[10m])) /\nsum by(status_code, pattern) (rate(darkstat_http_by_pattern_duration_seconds_hist_count{environment=\"production\"}[10m]))",
+          "expr": "sum by(status_code, pattern) (rate(darkstat_http_by_pattern_duration_seconds_hist_sum{environment=~\"$environment\"}[10m])) /\nsum by(status_code, pattern) (rate(darkstat_http_by_pattern_duration_seconds_hist_count{environment=~\"$environment\"}[10m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -819,7 +819,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by(status_code, pattern) (darkstat_http_by_pattern_duration_seconds_sum{})",
+          "expr": "sum by(status_code, pattern) (darkstat_http_by_pattern_duration_seconds_hist_sum{environment=~\"$environment\"})\n\n",
           "instant": true,
           "legendFormat": "{{pattern}}:{{status_code}}",
           "range": false,
@@ -917,7 +917,9 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "avg (histogram_quantile(0.50, darkstat_http_by_pattern_duration_seconds_hist_bucket{})) by (status_code, pattern, environment)",
+          "exemplar": true,
+          "expr": "histogram_quantile(0.50, sum(rate(darkstat_http_by_pattern_duration_seconds_hist_bucket{environment=~\"$environment\"}[5m]))  by (status_code, pattern, environment, le))",
+          "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -1014,7 +1016,8 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "avg (histogram_quantile(0.90, darkstat_http_by_pattern_duration_seconds_hist_bucket{})) by (status_code, pattern, environment)",
+          "exemplar": true,
+          "expr": "histogram_quantile(0.90, sum(rate(darkstat_http_by_pattern_duration_seconds_hist_bucket{environment=~\"$environment\"}[5m]))  by (status_code, pattern, environment, le))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -1111,7 +1114,8 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "avg (histogram_quantile(0.99, darkstat_http_by_pattern_duration_seconds_hist_bucket{})) by (status_code, pattern, environment)",
+          "exemplar": true,
+          "expr": "histogram_quantile(0.99, sum(rate(darkstat_http_by_pattern_duration_seconds_hist_bucket{environment=~\"$environment\"}[5m]))  by (status_code, pattern, environment, le))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -1208,7 +1212,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum by(status_code, pattern) (rate(darkstat_http_by_pattern_duration_seconds_hist_sum{pattern!=\"index.html\"}[10m])) /\nsum by(status_code, pattern) (rate(darkstat_http_by_pattern_duration_seconds_hist_count{pattern!=\"index.html\"}[10m]))",
+          "expr": "sum by(status_code, pattern) (rate(darkstat_http_by_pattern_duration_seconds_hist_sum{pattern!=\"index.html\", environment=~\"$environment\"}[10m])) /\nsum by(status_code, pattern) (rate(darkstat_http_by_pattern_duration_seconds_hist_count{pattern!=\"index.html\", environment=~\"$environment\"}[10m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -1305,7 +1309,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "avg (histogram_quantile(0.50, darkstat_http_by_pattern_duration_seconds_hist_bucket{})) by (status_code, environment)",
+          "expr": "histogram_quantile(0.50, sum(rate(darkstat_http_by_pattern_duration_seconds_hist_bucket{environment=~\"$environment\"}[10m])) by (status_code, environment, le)) ",
           "legendFormat": "P50 {{environment}}, {{status_code}}",
           "range": true,
           "refId": "A"
@@ -1316,7 +1320,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "avg (histogram_quantile(0.70, darkstat_http_by_pattern_duration_seconds_hist_bucket{})) by (status_code, environment)",
+          "expr": "histogram_quantile(0.70, sum(rate(darkstat_http_by_pattern_duration_seconds_hist_bucket{environment=~\"$environment\"}[10m])) by (status_code, environment, le)) ",
           "hide": false,
           "instant": false,
           "legendFormat": "P70 {{environment}}, {{status_code}}",
@@ -1329,7 +1333,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "avg (histogram_quantile(0.90, darkstat_http_by_pattern_duration_seconds_hist_bucket{})) by (status_code, environment)",
+          "expr": "histogram_quantile(0.90, sum(rate(darkstat_http_by_pattern_duration_seconds_hist_bucket{environment=~\"$environment\"}[10m])) by (status_code, environment, le)) ",
           "hide": false,
           "instant": false,
           "legendFormat": "P90 {{environment}}, {{status_code}}",
@@ -1428,7 +1432,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum by (status_code, environment) (increase(darkstat_http_by_pattern_duration_seconds_hist_sum{}[10m]))",
+          "expr": "sum by (status_code, environment) (increase(darkstat_http_by_pattern_duration_seconds_hist_sum{environment=~\"$environment\"}[10m]))",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -1527,7 +1531,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum by(status_code, pattern) (darkstat_http_by_pattern_body_size_bytes_hist_sum{environment=\"production\"})",
+          "expr": "sum by(status_code, pattern) (darkstat_http_by_pattern_body_size_bytes_hist_sum{environment=~\"$environment\"})",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -1626,7 +1630,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum by(status_code, pattern) (increase(darkstat_http_by_pattern_body_size_bytes_hist_sum{environment=\"production\"}[10m])) /\nsum by(status_code, pattern) (increase(darkstat_http_by_pattern_body_size_bytes_hist_count{environment=\"production\"}[10m]))",
+          "expr": "sum by(status_code, pattern) (increase(darkstat_http_by_pattern_body_size_bytes_hist_sum{environment=~\"$environment\"}[10m])) /\nsum by(status_code, pattern) (increase(darkstat_http_by_pattern_body_size_bytes_hist_count{environment=~\"$environment\"}[10m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -1723,7 +1727,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "avg (histogram_quantile(0.50, darkstat_http_by_pattern_body_size_bytes_hist_bucket{environment=\"production\"})) by (status_code, pattern)",
+          "expr": "histogram_quantile(0.50, sum(rate(darkstat_http_by_pattern_body_size_bytes_hist_bucket{environment=~\"$environment\"}[5m]))  by (status_code, pattern, le))",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -1934,7 +1938,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{environment=\"production\", pattern=~\"/statproto.*\"}) by (status_code, pattern)",
+          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{environment=~\"$environment\", pattern=~\"/statproto.*\"}) by (status_code, pattern)",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -2033,7 +2037,7 @@
             "uid": "prometheus-datasource"
           },
           "editorMode": "code",
-          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{environment=\"production\", pattern=~\"/api.*\"}) by (status_code, pattern)",
+          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{environment=~\"$environment\", pattern=~\"/api.*\"}) by (status_code, pattern)",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -2181,7 +2185,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{environment=\"production\", pattern=~\"/statproto.*\"}) by (status_code, pattern)",
+          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{environment=~\"$environment\", pattern=~\"/statproto.*\"}) by (status_code, pattern)",
           "hide": false,
           "instant": true,
           "legendFormat": "__auto",
@@ -2254,7 +2258,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{environment=\"production\", pattern=~\"/api.*\"}) by (status_code, pattern)",
+          "expr": "sum (darkstat_http_by_pattern_duration_seconds_hist_count{environment=~\"$environment\", pattern=~\"/api.*\"}) by (status_code, pattern)",
           "hide": false,
           "instant": true,
           "legendFormat": "__auto",
@@ -2270,7 +2274,32 @@
   "schemaVersion": 41,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "text": [
+            "production"
+          ],
+          "value": [
+            "production"
+          ]
+        },
+        "definition": "label_values(darkstat_build_info,environment)",
+        "description": "",
+        "includeAll": false,
+        "multi": true,
+        "name": "environment",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(darkstat_build_info,environment)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
   },
   "time": {
     "from": "now-1h",
@@ -2280,5 +2309,5 @@
   "timezone": "browser",
   "title": "App Darkstat",
   "uid": "belbdnu2uqe4gd",
-  "version": 10
+  "version": 20
 }
