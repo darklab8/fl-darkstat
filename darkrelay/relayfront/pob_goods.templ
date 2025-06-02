@@ -200,11 +200,6 @@ func SellsKiloVolumes(ShopItem *configs_export.ShopItem, good_volume float64, ba
 		configs_export.MaxKilVolumes,
 		(good_volume*float64(ShopItem.Quantity-ShopItem.MinStock))/configs_export.KiloVolume,
 	)
-
-	if base_money != nil {
-		base_has_moner_for_vol := (ShopItem.Volume * float64(*base_money) / float64(ShopItem.PriceBaseSellsFor) / configs_export.KiloVolume)
-		kilo_volume = math.Min(base_has_moner_for_vol, kilo_volume)
-	}
 	return fmt.Sprintf("%.1f", kilo_volume)
 }
 func BuysKiloVolumes(

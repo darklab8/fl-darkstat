@@ -22,11 +22,6 @@ func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) f
 		} else {
 			buying_kilo_volume = math.Min(MaxKilVolumes, (float64(buying_good.PoBGood.Quantity-buying_good.PoBGood.MinStock)*buying_good.Volume)/KiloVolume)
 		}
-
-		if buying_good.PoB.Money != nil {
-			base_has_moner_for_vol := (buying_good.Volume * float64(*buying_good.PoB.Money) / float64(buying_good.PriceBaseSellsFor) / KiloVolume)
-			buying_kilo_volume = math.Min(base_has_moner_for_vol, buying_kilo_volume)
-		}
 	}
 
 	if selling_good.PoBGood != nil {
