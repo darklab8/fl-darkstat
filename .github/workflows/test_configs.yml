@@ -26,8 +26,6 @@ jobs:
       with:
         freelancer-mod: "${{ matrix.freelancer-mod }}"
         freelancer-folder: '${{ github.workspace }}/${{ matrix.freelancer-mod }}'
-        ssh-key-base64-discovery: ${{ secrets.ID_RSA_FILES_FREELANCER_DISCOVERY }}
-        ssh-key-base64-vanilla: ${{ secrets.ID_RSA_FILES_FREELANCER_VANILLA }}
     - run: ls ./${{ matrix.freelancer-mod }}
     - name: Install Taskfile
       uses: darklab8/infra/.github/actions/install-taskfile@master
