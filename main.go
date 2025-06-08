@@ -23,6 +23,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkapis/darkrpc"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
@@ -94,12 +95,14 @@ func main() {
 		}
 	}()
 
-	web_darkstat := func(ctx context.Context) func() {
+	web_darkstat := func(ctx_close context.Context) func() {
 		go func() {
 			log.Println(http.ListenAndServe("0.0.0.0:6060", nil)) // for pprof
 		}()
 
 		start_time_total := time.Now()
+		ctx_span, span_boot := traces.Tracer.Start(context.Background(), "bootstrap")
+		defer span_boot.End()
 
 		if settings.Env.IsDevEnv {
 			f, err := os.Create("web.pprof")
@@ -113,29 +116,38 @@ func main() {
 		}
 
 		start_time_app_data := time.Now()
-		app_data := appdata.NewAppData()
+		app_data := appdata.NewAppData(ctx_span)
 		log.Printf("Elapsed start_time_app_data time %s", time.Since(start_time_app_data))
 
 		start_time_relay_data := time.Now()
+		_, span := traces.Tracer.Start(ctx_span, "NewRelayData")
 		relay_data := appdata.NewRelayData(app_data)
 		app_data.Configs.Mapped.Clean()
+		span.End()
 		log.Printf("Elapsed start_time_relay_data time %s", time.Since(start_time_relay_data))
 
 		start_time_stat_router := time.Now()
+		_, span = traces.Tracer.Start(ctx_span, "NewRouter")
 		stat_router := router.NewRouter(app_data)
+		span.End()
 		log.Printf("Elapsed start_time_stat_router time %s", time.Since(start_time_stat_router))
 		start_time_stat_router_link := time.Now()
-		stat_builder := stat_router.Link()
+		stat_builder := stat_router.Link(ctx_span)
+
 		log.Printf("Elapsed start_time_stat_router_link time %s", time.Since(start_time_stat_router_link))
 
 		start_time_stat_router_build := time.Now()
+		_, span = traces.Tracer.Start(ctx_span, "stat_builder.BuildAll")
 		stat_fs := stat_builder.BuildAll(true, nil)
+		span.End()
 		log.Printf("Elapsed start_time_stat_router_build time %s", time.Since(start_time_stat_router_build))
 
+		_, span = traces.Tracer.Start(ctx_span, "GetRelayFs")
 		app_data.Lock()
 		relay_fs := GetRelayFs(relay_data)
 		app_data.Unlock()
 		runtime.GC()
+		span.End()
 
 		web_server := darkhttp.RegisterApiRoutes(web.NewWeb(
 			[]*builder.Filesystem{stat_fs, relay_fs},
@@ -184,7 +196,7 @@ func main() {
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
 			web.WithAppData(app_data),
-			web.WithCtx(ctx),
+			web.WithCtx(ctx_close),
 		)
 
 		if settings.Env.IsDevEnv {
@@ -216,8 +228,10 @@ func main() {
 				Nickname:    "build",
 				Description: "build darkstat to static assets: html, css, js files",
 				Func: func(info cantil.ActionInfo) error {
-					app_data := appdata.NewAppData()
-					router.NewRouter(app_data, router.WithStaticAssetsGen()).Link().BuildAll(false, nil)
+					ctx_span, span_boot := traces.Tracer.Start(context.Background(), "build")
+					defer span_boot.End()
+					app_data := appdata.NewAppData(ctx_span)
+					router.NewRouter(app_data, router.WithStaticAssetsGen()).Link(ctx_span).BuildAll(false, nil)
 					return nil
 				},
 			},

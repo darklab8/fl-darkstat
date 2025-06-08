@@ -13,7 +13,7 @@
     "UTILS_LOG_LEVEL": "WARN",
     "CONFIGS_LOG_LEVEL": "WARN",
     # "OTLP_HTTP_ON": "true",
-    "OTEL_SERVICE_NAME": "dev-darkstat-app",
+    # "OTEL_SERVICE_NAME": "check2",
     # if u wish to speed up rerender by magnitude, then keep uncommended trade route calculations disabling
     "DARKSTAT_FLDARKSTAT_HEADING": 'Dev server for fl-darkstat | <a href="https://github.com/darklab8/fl-darkstat">Github</a>',
     # "DARKSTAT_DETAILED": "true"

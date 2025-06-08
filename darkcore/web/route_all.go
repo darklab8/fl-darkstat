@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"fmt"
 	"html"
 	"net/http"
@@ -22,6 +23,8 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: UrlStatic,
 		Handler: func(resp http.ResponseWriter, req *http.Request) {
+			var ctx context.Context = req.Context()
+
 			if w.AppDataMutex != nil {
 				w.AppDataMutex.RLock()
 				defer w.AppDataMutex.RUnlock()
@@ -30,7 +33,7 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 			case http.MethodOptions:
 			case http.MethodGet:
 
-				_, span := traces.Tracer.Start(req.Context(), "route-all")
+				ctx, span := traces.Tracer.Start(ctx, "route-all")
 				defer span.End()
 
 				requested := req.URL.Path[1:]
@@ -76,7 +79,7 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 
 				if ok {
 					time_start := time.Now()
-					_, err := fmt.Fprint(resp, string(content.Render()))
+					_, err := fmt.Fprint(resp, string(content.Render(ctx)))
 					logger.CheckError(err, "failed to print static into response")
 					logger.Debug("proceed request", typelog.String("duration", (time.Now().Sub(time_start).String())))
 				} else {

@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"sync"
@@ -22,7 +23,7 @@ type Filesystem struct {
 }
 
 type MemFile interface {
-	Render() []byte
+	Render(ctx context.Context) []byte
 }
 
 type MemComp struct {
@@ -30,15 +31,15 @@ type MemComp struct {
 	b    *Builder
 }
 
-func (m *MemComp) Render() []byte {
-	return m.comp.Write(m.b.params).bytes
+func (m *MemComp) Render(ctx context.Context) []byte {
+	return m.comp.Write(ctx, m.b.params).bytes
 }
 
 type MemStatic struct {
 	content []byte
 }
 
-func (m *MemStatic) Render() []byte {
+func (m *MemStatic) Render(ctx context.Context) []byte {
 	return m.content
 }
 

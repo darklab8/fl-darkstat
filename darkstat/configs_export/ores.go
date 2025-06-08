@@ -1,12 +1,14 @@
 package configs_export
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -19,7 +21,9 @@ type MiningInfo struct {
 	MinedGood             *MarketGood
 }
 
-func (e *Exporter) GetOres(Commodities []*Commodity) []*Base {
+func (e *Exporter) GetOres(ctx context.Context, Commodities []*Commodity) []*Base {
+	ctx, span := traces.Tracer.Start(ctx, "Exporter.GetOres")
+	defer span.End()
 	var bases []*Base
 
 	var comm_by_nick map[CommodityKey]*Commodity = make(map[CommodityKey]*Commodity)

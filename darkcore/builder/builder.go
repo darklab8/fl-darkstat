@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
@@ -77,6 +78,7 @@ func chunkSlice(slice []*Component, chunkSize int) [][]*Component {
 // }
 
 func (b *Builder) BuildAll(to_mem bool, filesystem *Filesystem) *Filesystem {
+	var ctx context.Context = context.Background()
 
 	if !to_mem {
 		darkstat_settings.Env.IsStaticSiteGenerator = true
@@ -107,7 +109,7 @@ func (b *Builder) BuildAll(to_mem bool, filesystem *Filesystem) *Filesystem {
 			} else {
 				for _, comp := range components_chunk {
 					go func(comp *Component) {
-						results <- comp.Write(b.params)
+						results <- comp.Write(ctx, b.params)
 					}(comp)
 				}
 				for range components_chunk {

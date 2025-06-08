@@ -106,10 +106,10 @@ func TestApiHealth(t *testing.T) {
 }
 
 func TestApi(t *testing.T) {
-
+	ctx := context.Background()
 	app_data := router.GetAppDataFixture()
 	stat_router := router.NewRouter(app_data)
-	stat_builder := stat_router.Link()
+	stat_builder := stat_router.Link(ctx)
 	stat_fs := stat_builder.BuildAll(true, nil)
 
 	some_socket := "/tmp/darkstat/api_test.sock"

@@ -1,6 +1,7 @@
 package front
 
 import (
+	"context"
 	"fmt"
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/cache"
@@ -148,7 +149,7 @@ templ BasesTable(
 		</thead>
 		<tbody>
 			if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo || tab_mode == BaseTabOres {
-				for _, base := range base_opts.BasesWithTradePaths.Get() {
+				for _, base := range base_opts.BasesWithTradePaths.Get(ctx) {
 					@BaseRow(base.Base, tab_mode, pinm, shared, base.BaseBestPathTimes)
 				}
 			} else {
@@ -165,12 +166,12 @@ type BaseWithTradePaths struct {
 	*configs_export.BaseBestPathTimes
 }
 
-func GetBasesWithTradePathsFrom(bases []*configs_export.Base, data *configs_export.Exporter) []BaseWithTradePaths {
+func GetBasesWithTradePathsFrom(ctx context.Context, bases []*configs_export.Base, data *configs_export.Exporter) []BaseWithTradePaths {
 	var results []BaseWithTradePaths
 	for _, base := range bases {
 		results = append(results, BaseWithTradePaths{
 			Base:              base,
-			BaseBestPathTimes: data.GetBaseBestPathFrom(base),
+			BaseBestPathTimes: data.GetBaseBestPathFrom(ctx, base),
 		})
 	}
 	sort.Slice(results, func(i, j int) bool {
@@ -187,12 +188,12 @@ func GetBasesWithTradePathsFrom(bases []*configs_export.Base, data *configs_expo
 	})
 	return results
 }
-func GetBasesWithTradePathsTo(bases []*configs_export.Base, data *configs_export.Exporter) []BaseWithTradePaths {
+func GetBasesWithTradePathsTo(ctx context.Context, bases []*configs_export.Base, data *configs_export.Exporter) []BaseWithTradePaths {
 	var results []BaseWithTradePaths
 	for _, base := range bases {
 		results = append(results, BaseWithTradePaths{
 			Base:              base,
-			BaseBestPathTimes: data.GetBaseBestPathTo(base),
+			BaseBestPathTimes: data.GetBaseBestPathTo(ctx, base),
 		})
 	}
 	sort.Slice(results, func(i, j int) bool {
@@ -716,7 +717,7 @@ templ BaseTradesFrom(name string, base *configs_export.Base, tab_mode BaseMode, 
 		@tab.PageTime()
 	</div>
 	@BaseTradesShared(shared, tab_mode) {
-		for _, trade_route := range data.GetBaseTradePathsFiltered(data.GetBaseTradePathsFrom(base)) {
+		for _, trade_route := range data.GetBaseTradePathsFiltered(data.GetBaseTradePathsFrom(ctx,base)) {
 			@TradeRouteRow(trade_route, shared, tab_mode)
 		}
 	}
@@ -728,7 +729,7 @@ templ BaseTradesTo(name string, base *configs_export.Base, tab_mode BaseMode, sh
 		@tab.PageTime()
 	</div>
 	@BaseTradesShared(shared, tab_mode) {
-		for _, trade_route := range data.GetBaseTradePathsFiltered(data.GetBaseTradePathsTo(base)) {
+		for _, trade_route := range data.GetBaseTradePathsFiltered(data.GetBaseTradePathsTo(ctx,base)) {
 			@TradeRouteRow(trade_route, shared, tab_mode)
 		}
 	}

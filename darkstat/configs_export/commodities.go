@@ -1,10 +1,12 @@
 package configs_export
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -65,7 +67,9 @@ func GetPricePerVoume(price int, volume float64) float64 {
 	return float64(price) / float64(volume)
 }
 
-func (e *Exporter) GetCommodities() []*Commodity {
+func (e *Exporter) GetCommodities(ctx context.Context) []*Commodity {
+	ctx, span := traces.Tracer.Start(ctx, "Exporter.GetCommodities")
+	defer span.End()
 	commodities := make([]*Commodity, 0, 100)
 
 	for _, comm := range e.Mapped.Goods.Commodities {

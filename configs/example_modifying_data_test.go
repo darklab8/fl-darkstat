@@ -5,6 +5,8 @@ https://github.com/darklab8/fl-darklint
 package configs
 
 import (
+	"context"
+
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
@@ -13,13 +15,14 @@ import (
 
 // ExampleModifyingData demononstrating how to change configs values
 func Example_modifyingConfigs() {
+	ctx := context.Background()
 	freelancer_folder := configs_settings.Env.FreelancerFolder
 	configs := configs_mapped.NewMappedConfigs()
 	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
 
 	// Reading ini reading universal format
 	// and mapping to ORM objects
-	configs.Read(freelancer_folder)
+	configs.Read(ctx, freelancer_folder)
 
 	// Modifying files
 	for _, base := range configs.Universe.Bases {

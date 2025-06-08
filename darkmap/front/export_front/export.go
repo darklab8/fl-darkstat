@@ -1,6 +1,8 @@
 package export_front
 
 import (
+	"context"
+
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
@@ -13,7 +15,7 @@ type Export struct {
 	Systems []System
 }
 
-func NewExport() *Export {
+func NewExport(ctx context.Context) *Export {
 	e := &Export{}
 
 	defer timeit.NewTimer("MappedConfigs creation").Close()
@@ -21,7 +23,7 @@ func NewExport() *Export {
 	freelancer_folder := settings.Env.FreelancerFolder
 	if e.Mapped == nil {
 		logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
-		e.Mapped = configs_mapped.NewMappedConfigs().Read(freelancer_folder)
+		e.Mapped = configs_mapped.NewMappedConfigs().Read(ctx, freelancer_folder)
 	}
 
 	e.export()

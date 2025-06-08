@@ -1,11 +1,13 @@
 package configs_export
 
 import (
+	"context"
 	"sync"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/go-utils/utils/async"
@@ -138,7 +140,10 @@ type ExportOptions struct {
 	trades.MappingOptions
 }
 
-func (e *Exporter) Export(options ExportOptions) *Exporter {
+func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter {
+	ctx, span := traces.Tracer.Start(ctx, "Exporter.Export")
+	defer span.End()
+
 	var wg sync.WaitGroup
 
 	if e.Mapped.Discovery != nil {
@@ -146,7 +151,7 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	}
 
 	logus.Log.Info("getting bases")
-	e.Bases = e.GetBases()
+	e.Bases = e.GetBases(ctx)
 	useful_bases := FilterToUserfulBases(e.Bases)
 	e.useful_bases_by_nick = make(map[cfg.BaseUniNick]bool)
 	for _, base := range useful_bases {
@@ -155,10 +160,10 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	e.useful_bases_by_nick[pob_crafts_nickname] = true
 	e.useful_bases_by_nick[BaseLootableNickname] = true
 
-	e.Commodities = e.GetCommodities()
+	e.Commodities = e.GetCommodities(ctx)
 	EnhanceBasesWithServerOverrides(e.Bases, e.Commodities)
 
-	e.MiningOperations = e.GetOres(e.Commodities)
+	e.MiningOperations = e.GetOres(ctx, e.Commodities)
 	if e.Mapped.Discovery != nil {
 		e.PoBs = e.GetPoBs()
 		e.PoBGoods = e.GetPoBGoods(e.PoBs)
@@ -191,6 +196,9 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	{
 		wg.Add(1)
 		go func() {
+			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Transports")
+			defer span.End()
+
 			logus.Log.Info("graph launching for tranposrt")
 			e.Transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false), extra_graph_bases, options.MappingOptions)
 			// e.Freighter = e.Transport
@@ -200,11 +208,17 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 		}()
 		wg.Add(1)
 		go func() {
+			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Freighters")
+			defer span.End()
+
 			e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true), extra_graph_bases, options.MappingOptions)
 			wg.Done()
 		}()
 		wg.Add(1)
 		go func() {
+			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Frigate")
+			defer span.End()
+
 			e.Frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed, trades.WithFreighterPaths(false), extra_graph_bases, options.MappingOptions)
 			wg.Done()
 		}()
@@ -226,18 +240,30 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	buyable_shield_tech := e.GetBuyableShields(e.Shields)
 
 	guns_wait := async.ToAsync(func() {
+		_, span := traces.Tracer.Start(ctx, "Exporter.GunsAwait")
+		defer span.End()
+
 		e.Guns = e.GetGuns(e.Tractors, buyable_shield_tech)
 	})
 	missiles_await := async.ToAsync(func() {
+		_, span := traces.Tracer.Start(ctx, "Exporter.MissilesAwait")
+		defer span.End()
+
 		e.Missiles = e.GetMissiles(e.Tractors, buyable_shield_tech)
 	})
 	equip_await := async.ToAsync(func() {
+		_, span := traces.Tracer.Start(ctx, "Exporter.EquipAwait")
+		defer span.End()
+
 		e.Mines = e.GetMines(e.Tractors)
 		e.Thrusters = e.GetThrusters(e.Tractors)
 		logus.Log.Info("getting ships")
 		e.Ships = e.GetShips(e.Tractors, e.TractorsByID, e.Thrusters)
 	})
 	equip2_await := async.ToAsync(func() {
+		_, span := traces.Tracer.Start(ctx, "Exporter.Equip2Await")
+		defer span.End()
+
 		e.Engines = e.GetEngines(e.Tractors)
 		e.Cloaks = e.GetCloaks(e.Tractors)
 		e.CMs = e.GetCounterMeasures(e.Tractors)
@@ -253,10 +279,15 @@ func (e *Exporter) Export(options ExportOptions) *Exporter {
 	<-equip_await
 	<-equip2_await
 
+	_, span_wg := traces.Tracer.Start(ctx, "Exporter.WgAwait")
 	wg.Wait()
+	span_wg.End()
 
 	logus.Log.Info("getting pob to bases")
 	// TODO refactor. all my ram allocated problems are majorly here.
+
+	_, span_export_tail := traces.Tracer.Start(ctx, "Exporter.Tail")
+	defer span_export_tail.End()
 
 	BasesFromPobs := e.PoBsToBases(e.PoBs)
 	e.TradeBases = append(e.Bases, BasesFromPobs...)
@@ -344,8 +375,8 @@ func (e *Exporter) EnhanceBasesWithIsTransportReachable(
 	}
 }
 
-func Export(mapped *configs_mapped.MappedConfigs, options ExportOptions) *Exporter {
-	return NewExporter(mapped).Export(options)
+func Export(ctx context.Context, mapped *configs_mapped.MappedConfigs, options ExportOptions) *Exporter {
+	return NewExporter(mapped).Export(ctx, options)
 }
 
 func Empty(phrase string) bool {

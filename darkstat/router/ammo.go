@@ -1,9 +1,11 @@
 package router
 
 import (
+	"context"
 	"sort"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -13,10 +15,14 @@ import (
 )
 
 func (l *Router) LinkAmmo(
+	ctx context.Context,
 	build *builder.Builder,
 	data *configs_export.Exporter,
 	shared *types.SharedData,
 ) {
+	ctx, span := traces.Tracer.Start(ctx, "linker-ammo")
+	defer span.End()
+
 	sort.Slice(data.Ammos, func(i, j int) bool {
 		if data.Ammos[i].Name != "" && data.Ammos[j].Name == "" {
 			return true

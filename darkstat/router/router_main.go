@@ -7,7 +7,10 @@ Technically it is "Router"
 */
 
 import (
+	"context"
+
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
@@ -42,7 +45,9 @@ func WithStaticAssetsGen() RouterOpt {
 	return func(l *Router) { l.is_static_assets_gen = true }
 }
 
-func (l *Router) Link() *builder.Builder {
+func (l *Router) Link(ctx context.Context) *builder.Builder {
+	ctx, span := traces.Tracer.Start(ctx, "linker-main")
+	defer span.End()
 	shared := l.AppData.Shared
 	configs := l.AppData.Configs
 	build := appdata.NewBuilder(configs.Mapped.Discovery != nil)
@@ -50,20 +55,22 @@ func (l *Router) Link() *builder.Builder {
 	defer timeit.NewTimer("link, internal measure").Close()
 
 	timeit.NewTimerMF("linking main stuff", func() {
+		ctx, span := traces.Tracer.Start(ctx, "linker-all")
+		defer span.End()
 
-		l.LinkBases(build, configs, shared)
-		l.LinkFactions(build, configs, shared)
-		l.LinkShips(build, configs, shared)
-		l.LinkGuns(build, configs, shared)
-		l.LinkCommodities(build, configs, shared)
-		l.LinkAmmo(build, configs, shared)
-		l.LinkMines(build, configs, shared)
-		l.LinkShields(build, configs, shared)
-		l.LinkThrusters(build, configs, shared)
-		l.LinkTractors(build, configs, shared)
-		l.LinkEngines(build, configs, shared)
-		l.LinkCounterMeasures(build, configs, shared)
-		l.LinkScanners(build, configs, shared)
+		l.LinkBases(ctx, build, configs, shared)
+		l.LinkFactions(ctx, build, configs, shared)
+		l.LinkShips(ctx, build, configs, shared)
+		l.LinkGuns(ctx, build, configs, shared)
+		l.LinkCommodities(ctx, build, configs, shared)
+		l.LinkAmmo(ctx, build, configs, shared)
+		l.LinkMines(ctx, build, configs, shared)
+		l.LinkShields(ctx, build, configs, shared)
+		l.LinkThrusters(ctx, build, configs, shared)
+		l.LinkTractors(ctx, build, configs, shared)
+		l.LinkEngines(ctx, build, configs, shared)
+		l.LinkCounterMeasures(ctx, build, configs, shared)
+		l.LinkScanners(ctx, build, configs, shared)
 
 		build.RegComps(
 			builder.NewComponent(

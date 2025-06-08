@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -15,6 +16,7 @@ import (
 
 // ExampleImportIniSection demonstrates how to add section to specific section
 func Example_importIniSection() {
+	ctx := context.Background()
 	// can be having imperfections related to how to handle comments. To improve some day
 
 	freelancer_folder := configs_settings.Env.FreelancerFolder
@@ -23,7 +25,7 @@ func Example_importIniSection() {
 
 	// Reading to ini universal custom format and mapping to ORM objects
 	// which have both reading and writing back capabilities
-	mapped.Read(freelancer_folder)
+	mapped.Read(ctx, freelancer_folder)
 
 	// TODO Adding Section manually
 	// var new_section *inireader.Section = &inireader.Section{}

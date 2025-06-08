@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -9,10 +10,11 @@ import (
 )
 
 func TestGetOres(t *testing.T) {
+	ctx := context.Background()
 	configs := configs_mapped.TestFixtureConfigs()
 	exporter := NewExporter(configs)
-	commodities := exporter.GetCommodities()
-	mining_operations := exporter.GetOres(commodities)
+	commodities := exporter.GetCommodities(ctx)
+	mining_operations := exporter.GetOres(ctx, commodities)
 	assert.Greater(t, len(mining_operations), 0)
 	fmt.Println("len(mining_operations)=", len(mining_operations))
 }

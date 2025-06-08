@@ -4,6 +4,7 @@ Tool to parse freelancer configs
 package configs_mapped
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -35,6 +36,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/overrides"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-data-discovery/autopatcher"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/equip_mapped"
@@ -203,7 +205,10 @@ func getConfigs(filesystem *filefind.Filesystem, paths []*semantic.Path) []*inil
 	})
 }
 
-func (m *MappedConfigs) Read(file1path utils_types.FilePath) *MappedConfigs {
+func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath) *MappedConfigs {
+	ctx, span := traces.Tracer.Start(ctx, "MappedConfigs.Read")
+	defer span.End()
+
 	logus.Log.Info("Parse START for FreelancerFolderLocation=", utils_logus.FilePath(file1path))
 	filesystem := filefind.FindConfigs(file1path)
 	m.filesystem = filesystem

@@ -11,7 +11,8 @@ import (
 )
 
 func main() {
-	app_data := appdata.NewAppData()
+	ctx := context.Background()
+	app_data := appdata.NewAppData(ctx)
 	srv := darkrpc.NewRpcServer()
 	srv.Serve(app_data)
 

@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"context"
 	"testing"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
@@ -8,10 +9,11 @@ import (
 )
 
 func TestExportCommodities(t *testing.T) {
+	ctx := context.Background()
 	configs := configs_mapped.TestFixtureConfigs()
 	exporter := NewExporter(configs)
 
-	items := exporter.GetCommodities()
+	items := exporter.GetCommodities(ctx)
 	assert.Greater(t, len(items), 0)
 
 	if configs.Discovery != nil {

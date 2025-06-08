@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -78,7 +79,7 @@ func OauthTestServer(opts WebServeOpts) {
 
 type EmptyPage struct{}
 
-func (e EmptyPage) Render() []byte { return []byte(string("empty page")) }
+func (e EmptyPage) Render(ctx context.Context) []byte { return []byte(string("empty page")) }
 
 func OauthTestClient(opts WebServeOpts) {
 	fs := &builder.Filesystem{Files: make(map[utils_types.FilePath]builder.MemFile)}

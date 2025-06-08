@@ -1,9 +1,11 @@
 package router
 
 import (
+	"context"
 	"sort"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -13,10 +15,14 @@ import (
 )
 
 func (l *Router) LinkEngines(
+	ctx context.Context,
 	build *builder.Builder,
 	data *configs_export.Exporter,
 	shared *types.SharedData,
 ) {
+	ctx, span := traces.Tracer.Start(ctx, "linker-engines")
+	defer span.End()
+
 	sort.Slice(data.Engines, func(i, j int) bool {
 		if data.Engines[i].Name != "" && data.Engines[j].Name == "" {
 			return true

@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -18,6 +19,7 @@ import (
 
 // *configs_export.Exporter
 func GetConfigsExport() *configs_export.Exporter {
+	ctx := context.Background()
 	// Start profiling
 	f, err := os.Create("configs.pprof")
 	if err != nil {
@@ -33,12 +35,12 @@ func GetConfigsExport() *configs_export.Exporter {
 	freelancer_folder := configs_settings.Env.FreelancerFolder
 	mapped := configs_mapped.NewMappedConfigs()
 	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
-	mapped.Read(freelancer_folder)
+	mapped.Read(ctx, freelancer_folder)
 	timer_mapping.Close()
 
 	timer_export := timeit.NewTimerMain(timeit.WithMsg("read mapping"))
 	configs := configs_export.NewExporter(mapped)
-	configs.Export(configs_export.ExportOptions{})
+	configs.Export(ctx, configs_export.ExportOptions{})
 	timer_export.Close()
 	configs.Mapped.Clean()
 

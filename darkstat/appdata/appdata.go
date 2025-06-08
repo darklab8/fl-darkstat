@@ -1,6 +1,7 @@
 package appdata
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"time"
@@ -8,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
@@ -89,7 +91,10 @@ func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 	return build
 }
 
-func NewMapped() *configs_mapped.MappedConfigs {
+func NewMapped(ctx context.Context) *configs_mapped.MappedConfigs {
+	ctx, span := traces.Tracer.Start(ctx, "NewMapped")
+	defer span.End()
+
 	var mapped *configs_mapped.MappedConfigs
 	freelancer_folder := settings.Env.FreelancerFolder
 
@@ -97,16 +102,19 @@ func NewMapped() *configs_mapped.MappedConfigs {
 		mapped = configs_mapped.NewMappedConfigs()
 	}, timeit.WithMsg("MappedConfigs creation"))
 	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
-	mapped.Read(freelancer_folder)
+	mapped.Read(ctx, freelancer_folder)
 	return mapped
 }
 
-func NewAppData() *AppData {
-	mapped := NewMapped()
+func NewAppData(ctx context.Context) *AppData {
+	ctx, span := traces.Tracer.Start(ctx, "NewAppData")
+	defer span.End()
+
+	mapped := NewMapped(ctx)
 	configs := configs_export.NewExporter(mapped)
 
 	var data *configs_export.Exporter
-	timeit.NewTimerMF("exporting data", func() { data = configs.Export(configs_export.ExportOptions{}) })
+	timeit.NewTimerMF("exporting data", func() { data = configs.Export(ctx, configs_export.ExportOptions{}) })
 
 	var shared *types.SharedData = &types.SharedData{
 		AverageTradeLaneSpeed: mapped.GetAvgTradeLaneSpeed(),

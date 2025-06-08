@@ -184,7 +184,7 @@ templ TradesTable(
 			</tr>
 		</thead>
 		<tbody>
-			for _, trade_route := range trade_routes.Get() {
+			for _, trade_route := range trade_routes.Get(ctx) {
 				<tr
 					hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
 					hx-trigger="click"

@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -37,7 +39,10 @@ func VectorToSectorCoord(system *universe_mapped.System, pos cfg.Vector) string 
 
 }
 
-func (e *Exporter) GetBases() []*Base {
+func (e *Exporter) GetBases(ctx context.Context) []*Base {
+	ctx, span := traces.Tracer.Start(ctx, "Exporter.GetBases")
+	defer span.End()
+
 	results := make([]*Base, 0, len(e.Mapped.Universe.Bases))
 
 	commodities_per_base := e.getMarketGoods()

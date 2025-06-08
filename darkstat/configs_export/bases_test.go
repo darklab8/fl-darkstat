@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"testing"
@@ -23,10 +24,11 @@ type FixtureBasesOutput struct {
 }
 
 func FixtureBases(t *testing.T) FixtureBasesOutput {
+	ctx := context.Background()
 	configs := configs_mapped.TestFixtureConfigs()
 	exporter := NewExporter(configs)
 
-	bases := exporter.GetBases()
+	bases := exporter.GetBases(ctx)
 	assert.Greater(t, len(bases), 0)
 
 	return FixtureBasesOutput{
@@ -37,10 +39,11 @@ func FixtureBases(t *testing.T) FixtureBasesOutput {
 }
 
 func TestExportBases(t *testing.T) {
+	ctx := context.Background()
 	configs := configs_mapped.TestFixtureConfigs()
 	exporter := NewExporter(configs)
 
-	bases := exporter.GetBases()
+	bases := exporter.GetBases(ctx)
 	assert.Greater(t, len(bases), 0)
 	assert.NotEqual(t, bases[0].Nickname, bases[1].Nickname)
 
@@ -86,6 +89,7 @@ func TestExportBases(t *testing.T) {
 }
 
 func TestServerOverrides(t *testing.T) {
+	ctx := context.Background()
 	configs := configs_mapped.TestFixtureConfigs()
 	if configs.Discovery == nil {
 		return
@@ -103,8 +107,8 @@ MarketGood = li01_01_base, commodity_basic_alloys, 1150, 1550, 1
 
 	exporter := NewExporter(configs)
 
-	bases := exporter.GetBases()
-	commodities := exporter.GetCommodities()
+	bases := exporter.GetBases(ctx)
+	commodities := exporter.GetCommodities(ctx)
 	EnhanceBasesWithServerOverrides(bases, commodities)
 
 	var targetbase *Base

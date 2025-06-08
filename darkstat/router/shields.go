@@ -1,9 +1,11 @@
 package router
 
 import (
+	"context"
 	"sort"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -13,11 +15,13 @@ import (
 )
 
 func (l *Router) LinkShields(
+	ctx context.Context,
 	build *builder.Builder,
 	data *configs_export.Exporter,
 	shared *types.SharedData,
 ) {
-
+	ctx, span := traces.Tracer.Start(ctx, "linker-shields")
+	defer span.End()
 	sort.Slice(data.Shields, func(i, j int) bool {
 		if data.Shields[i].Name != "" && data.Shields[j].Name == "" {
 			return true

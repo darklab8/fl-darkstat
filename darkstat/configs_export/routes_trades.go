@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"context"
 	"fmt"
 	"math"
 	"runtime"
@@ -119,7 +120,7 @@ func (e *TradePathExporter) GetVolumedMarketGoods(buying_good *MarketGood, selli
 	}
 }
 
-func (e *TradePathExporter) GetBaseTradePathsFrom(base *Base) []*ComboTradeRoute {
+func (e *TradePathExporter) GetBaseTradePathsFrom(ctx context.Context, base *Base) []*ComboTradeRoute {
 	var TradeRoutes []*ComboTradeRoute
 
 	for _, buying_good := range base.MarketGoodsPerNick {
@@ -130,7 +131,7 @@ func (e *TradePathExporter) GetBaseTradePathsFrom(base *Base) []*ComboTradeRoute
 			continue
 		}
 		commodity_key := GetCommodityKey(buying_good.Nickname, buying_good.ShipClass)
-		commodity_selling_bases := e.sell_locations_by_base.Get()[commodity_key]
+		commodity_selling_bases := e.sell_locations_by_base.Get(ctx)[commodity_key]
 		for _, selling_good_at_base := range commodity_selling_bases {
 			if selling_good_at_base.ShipClass != nil || buying_good.ShipClass != nil {
 				continue
@@ -165,7 +166,7 @@ func (e *TradePathExporter) GetBaseTradePathsFrom(base *Base) []*ComboTradeRoute
 	return TradeRoutes
 }
 
-func (e *TradePathExporter) GetBaseTradePathsTo(base *Base) []*ComboTradeRoute {
+func (e *TradePathExporter) GetBaseTradePathsTo(ctx context.Context, base *Base) []*ComboTradeRoute {
 	var TradeRoutes []*ComboTradeRoute
 
 	for _, selling_good := range base.MarketGoodsPerNick {
@@ -174,7 +175,7 @@ func (e *TradePathExporter) GetBaseTradePathsTo(base *Base) []*ComboTradeRoute {
 		}
 
 		commodity_key := GetCommodityKey(selling_good.Nickname, selling_good.ShipClass)
-		commodity_selling_bases := e.sell_locations_by_base.Get()[commodity_key]
+		commodity_selling_bases := e.sell_locations_by_base.Get(ctx)[commodity_key]
 		for _, buying_good := range commodity_selling_bases {
 			if !buying_good.BaseSells {
 				continue
@@ -215,13 +216,13 @@ type TradeDeal struct {
 
 const LimitBestPaths = 800
 
-func (e *TradePathExporter) GetBestTradeDeals(bases []*Base) []*TradeDeal {
+func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) []*TradeDeal {
 	var trade_deals []*TradeDeal
 
 	len_bases := len(bases)
 	for index, base := range bases {
 		fmt.Println("base_", index, "/", len_bases, " is processed for trade detals")
-		trade_routes := e.GetBaseTradePathsFrom(base)
+		trade_routes := e.GetBaseTradePathsFrom(ctx, base)
 		for _, trade_route := range trade_routes {
 			profit_per_time := trade_route.Transport.GetProffitPerTime()
 			kilo_volume := math.Min(10, KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
@@ -271,7 +272,7 @@ type BaseBestPathTimes struct {
 	FreighterProfitPerTime *float64
 }
 
-func (e *TradePathExporter) GetBaseBestPathFrom(base *Base) *BaseBestPathTimes {
+func (e *TradePathExporter) GetBaseBestPathFrom(ctx context.Context, base *Base) *BaseBestPathTimes {
 	var result *BaseBestPathTimes = &BaseBestPathTimes{}
 	for _, buying_good := range base.MarketGoodsPerNick {
 		if buying_good.Category != "commodity" {
@@ -281,7 +282,7 @@ func (e *TradePathExporter) GetBaseBestPathFrom(base *Base) *BaseBestPathTimes {
 			continue
 		}
 		commodity_key := GetCommodityKey(buying_good.Nickname, buying_good.ShipClass)
-		commodity_selling_bases := e.sell_locations_by_base.Get()[commodity_key]
+		commodity_selling_bases := e.sell_locations_by_base.Get(ctx)[commodity_key]
 
 		if buying_good == nil {
 			continue
@@ -333,7 +334,7 @@ func (e *TradePathExporter) GetBaseBestPathFrom(base *Base) *BaseBestPathTimes {
 	return result
 }
 
-func (e *TradePathExporter) GetBaseBestPathTo(base *Base) *BaseBestPathTimes {
+func (e *TradePathExporter) GetBaseBestPathTo(ctx context.Context, base *Base) *BaseBestPathTimes {
 	var result *BaseBestPathTimes = &BaseBestPathTimes{}
 	for _, selling_good := range base.MarketGoodsPerNick {
 		if selling_good.Category != "commodity" {
@@ -341,7 +342,7 @@ func (e *TradePathExporter) GetBaseBestPathTo(base *Base) *BaseBestPathTimes {
 		}
 
 		commodity_key := GetCommodityKey(selling_good.Nickname, selling_good.ShipClass)
-		commodity_selling_bases := e.sell_locations_by_base.Get()[commodity_key]
+		commodity_selling_bases := e.sell_locations_by_base.Get(ctx)[commodity_key]
 
 		if selling_good == nil {
 			continue

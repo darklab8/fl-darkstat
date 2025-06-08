@@ -45,7 +45,7 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		rec := statusRecorder{w, 200, 0}
 		time_start := time.Now()
 
-		ctx, span := traces.Tracer.Start(r.Context(), "request")
+		ctx, span := traces.Tracer.Start(r.Context(), "web-request")
 		defer span.End()
 
 		new_r := r.WithContext(ctx)
@@ -87,6 +87,7 @@ func prometheusMidleware(next http.Handler) http.Handler {
 			attribute.Int("body_size", rec.body_size),
 			attribute.String("user_agent", user_agent),
 		)
+		span.SetName("web-request " + pattern)
 
 		if rec.status >= 400 && rec.status < 500 && !strings.Contains(r.URL.Path, "favicon.ico") {
 			Logger.WarnCtx(ctx, "finished request")

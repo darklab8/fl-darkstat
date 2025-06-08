@@ -1,10 +1,12 @@
 package router
 
 import (
+	"context"
 	"sort"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/cache"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front"
@@ -15,10 +17,14 @@ import (
 )
 
 func (l *Router) LinkBases(
+	ctx context.Context,
 	build *builder.Builder,
 	data *configs_export.Exporter,
 	shared *types.SharedData,
 ) {
+	ctx, span := traces.Tracer.Start(ctx, "linker-bases")
+	defer span.End()
+
 	sort.Slice(data.Bases, func(i, j int) bool {
 		return data.Bases[i].Name < data.Bases[j].Name
 	})
@@ -97,7 +103,7 @@ func (l *Router) LinkBases(
 	}
 
 	best_trades := cache.NewCached(func() []*configs_export.TradeDeal {
-		return data.GetBestTradeDeals(data.TradeBases)
+		return data.GetBestTradeDeals(ctx, data.TradeBases)
 	}, time.Minute*2+time.Second*5)
 
 	build.RegComps(
@@ -129,7 +135,7 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePathsFrom(configs_export.FilterToUserfulBases(data.TradeBases), data)
+					return front.GetBasesWithTradePathsFrom(ctx, configs_export.FilterToUserfulBases(data.TradeBases), data)
 				}, time.Minute*2+time.Second*10)},
 			),
 		),
@@ -142,7 +148,7 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePathsFrom(data.TradeBases, data)
+					return front.GetBasesWithTradePathsFrom(ctx, data.TradeBases, data)
 				}, time.Minute*2+time.Second*15)},
 			),
 		),
@@ -155,7 +161,7 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePathsTo(configs_export.FilterToUserfulBases(data.TradeBases), data)
+					return front.GetBasesWithTradePathsTo(ctx, configs_export.FilterToUserfulBases(data.TradeBases), data)
 				}, time.Minute*2+time.Second*20)},
 			),
 		),
@@ -168,7 +174,7 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePathsTo(data.TradeBases, data)
+					return front.GetBasesWithTradePathsTo(ctx, data.TradeBases, data)
 				}, time.Minute*2+time.Second*25)},
 			),
 		),
@@ -181,7 +187,7 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePathsFrom(configs_export.FitlerToUsefulOres(data.MiningOperations), data)
+					return front.GetBasesWithTradePathsFrom(ctx, configs_export.FitlerToUsefulOres(data.MiningOperations), data)
 				}, time.Minute*2+time.Second*30)},
 			),
 		),
@@ -194,7 +200,7 @@ func (l *Router) LinkBases(
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePathsFrom(data.MiningOperations, data)
+					return front.GetBasesWithTradePathsFrom(ctx, data.MiningOperations, data)
 				}, time.Minute*2+time.Second*35)},
 			),
 		),
@@ -218,7 +224,7 @@ func (l *Router) LinkBases(
 			),
 		)
 
-		for _, combo_route := range data.GetBaseTradePathsFrom(base) { // infocards for mining.
+		for _, combo_route := range data.GetBaseTradePathsFrom(ctx, base) { // infocards for mining.
 			build.RegComps(
 				builder.NewComponent( // probably move to back?
 					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),

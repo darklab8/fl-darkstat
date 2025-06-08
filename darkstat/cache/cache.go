@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"context"
 	"sync"
 	"time"
 
@@ -43,7 +44,7 @@ func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
 	return c
 }
 
-func (c *Cached[T]) Get() T {
+func (c *Cached[T]) Get(ctx context.Context) T {
 	c.first_init.Wait()
 	return c.get()
 }

@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -13,14 +14,14 @@ import (
 
 // ExampleExtractIniSection demonstrates how to extract specific freelancer ini sections out
 func Example_extractIniSection() {
-
+	ctx := context.Background()
 	freelancer_folder := configs_settings.Env.FreelancerFolder
 	mapped := configs_mapped.NewMappedConfigs()
 	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
 
 	// Reading to ini universal custom format and mapping to ORM objects
 	// which have both reading and writing back capabilities
-	mapped.Read(freelancer_folder)
+	mapped.Read(ctx, freelancer_folder)
 
 	order_gun := mapped.Equip().GunMap["fc_or_gun01_mark02"]
 	var output strings.Builder

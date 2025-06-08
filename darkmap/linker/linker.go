@@ -1,6 +1,7 @@
 package linker
 
 import (
+	"context"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
@@ -31,8 +32,8 @@ func NewLinker(opts ...LinkOption) *Linker {
 	return l
 }
 
-func (l *Linker) Link() *builder.Builder {
-	l.Export = export_front.NewExport()
+func (l *Linker) Link(ctx context.Context) *builder.Builder {
+	l.Export = export_front.NewExport(ctx)
 
 	defer timeit.NewTimer("Link").Close()
 	var build *builder.Builder
