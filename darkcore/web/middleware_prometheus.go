@@ -61,7 +61,7 @@ func prometheusMidleware(next http.Handler) http.Handler {
 			strings.Contains(url, urls.VanillaIndex.ToString()) ||
 			strings.Contains(url, "cdn") {
 			pattern = UrlGeneralizer.ReplaceAllString(url, "-{item_id}")
-			logus.Log.Debug("generalized url to pattern", typelog.String("pattern", pattern))
+			logus.Log.Debug("generalized url to pattern", typelog.String("url_pattern", pattern))
 		}
 		if pattern == "" || pattern == "/" {
 			pattern = "unknown"
@@ -72,7 +72,7 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		user_agent := r.Header.Get("User-Agent")
 
 		Logger := Log.WithFields(
-			typelog.String("pattern", pattern),
+			typelog.String("url_pattern", pattern),
 			typelog.Int("status_code", rec.status),
 			typelog.String("url", r.URL.Path),
 			typelog.Float64("duration", time_finish),
