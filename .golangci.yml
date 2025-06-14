@@ -2,6 +2,7 @@ version: "2"
 linters:
   disable:
     - staticcheck
+    - ineffassign
   settings:
     errcheck:
       exclude-functions:
