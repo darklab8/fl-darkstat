@@ -48,7 +48,6 @@ resource "docker_service" "darkstat" {
     container_spec {
       image = docker_image.darkstat.name
       env   = local.envs
-      #   args = ["sleep", "infinity"]
       labels {
         label = "prometheus"
         value = "true"
@@ -103,6 +102,18 @@ resource "docker_service" "darkstat" {
         bind_options {
           propagation = "rprivate"
         }
+      }
+
+      command = ["/shared/main"]
+      args = ["web"]
+      
+      # command = ["sleep", "infinity"]
+
+       mounts {
+        target    = "/shared"
+        source    = docker_volume.epbf_data.name
+        type      = "volume"
+        read_only = false
       }
     }
     restart_policy {

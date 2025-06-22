@@ -1,0 +1,24 @@
+beyla.ebpf "default" {
+  discovery {
+    exclude_otel_instrumented_services = false
+    services {
+      open_ports = "8000"
+      exe_path = "/code/main"
+    }
+  }
+  output {
+    traces = [otelcol.processor.batch.default.input]
+  }
+}
+
+otelcol.processor.batch "default" {
+  output {
+    traces  = [otelcol.exporter.otlp.default.input]
+  }
+}
+
+otelcol.exporter.otlp "default" {
+  client {
+    endpoint = sys.env("OTEL_EXPORTER_OTLP_ENDPOINT")
+  }
+}

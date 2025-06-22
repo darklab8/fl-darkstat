@@ -6,6 +6,7 @@ module "vanilla" {
 module "darkstat" {
   source             = "../modules/darkstat"
   environment        = "staging"
+  tag                = "staging-arm64"
   discovery_path     = module.vanilla.freelancer_path
   ipv4_address       = module.data_cluster.node_darklab.ipv4_address
   RELAY_HOST         = "https://darkrelay-staging.dd84ai.com"
