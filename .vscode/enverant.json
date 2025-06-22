@@ -13,6 +13,9 @@
     "UTILS_LOG_LEVEL": "WARN",
     "CONFIGS_LOG_LEVEL": "WARN",
     # "OTLP_HTTP_ON": "true",
+    # "OTEL_TRACES_SAMPLER": "parentbased_traceidratio",
+    # "OTEL_TRACES_SAMPLER_ARG": "1.0",
+    # "OTLP_METRICS_INTERVAL_SECS": "5",
     # "OTEL_SERVICE_NAME": "check2",
     # if u wish to speed up rerender by magnitude, then keep uncommended trade route calculations disabling
     "DARKSTAT_FLDARKSTAT_HEADING": 'Dev server for fl-darkstat | <a href="https://github.com/darklab8/fl-darkstat">Github</a>',

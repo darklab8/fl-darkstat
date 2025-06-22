@@ -12,6 +12,19 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+// Example with OTLP metrics
+//	func Init[T any](result T, err error) T {
+//		logus.Log.CheckPanic(err, "failed to init metric")
+//		return result
+//	}
+// var (
+// 	meter                      = otel.Meter("darkstat")
+// 	upTime metric.Int64Counter = Init(meter.Int64Counter(
+// 		"darkstat_uptime_seconds",
+// 		metric.WithDescription("Up time in seconds by otlp")),
+// 	)
+// )
+
 var (
 	upTime prometheus.Counter = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "darkstat_uptime_seconds",
@@ -78,9 +91,9 @@ func NewMetronom(mux *http.ServeMux) *Metronom {
 
 func (m *Metronom) Run() {
 	for {
-
-		upTime.Add(60)
-		time.Sleep(time.Minute)
+		seconds := 60
+		upTime.Add(float64(seconds))
+		time.Sleep(time.Second * time.Duration(seconds))
 	}
 }
 
