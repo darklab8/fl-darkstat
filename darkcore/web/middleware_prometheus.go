@@ -18,6 +18,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type statusRecorder struct {
@@ -45,7 +46,10 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		rec := statusRecorder{w, 200, 0}
 		time_start := time.Now()
 
-		ctx, span := traces.Tracer.Start(r.Context(), "web-request")
+		opts := []trace.SpanStartOption{
+			trace.WithSpanKind(trace.SpanKindServer),
+		}
+		ctx, span := traces.Tracer.Start(r.Context(), "web-request", opts...)
 		defer span.End()
 
 		new_r := r.WithContext(ctx)
