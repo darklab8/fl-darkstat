@@ -86,7 +86,10 @@ func main() {
 	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	defer func() {
 		if r := recover(); r != nil {
-			logus.Log.Error("Program crashed. Sleeping 10 seconds before exit", typelog.Any("recover", r))
+			logus.Log.Error("Program crashed in main process",
+				typelog.Any("recover", r),
+				typelog.Any("stack", string(debug.Stack())),
+			)
 			if !settings.Env.IsDevEnv {
 				fmt.Println("going to sleeping")
 				time.Sleep(10 * time.Second)

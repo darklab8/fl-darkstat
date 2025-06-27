@@ -5,6 +5,7 @@
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/windows10shared/game-repository",
     # "DARKSTAT_TRADE_ROUTES_DETAILED_TRADE_LANE": "true",
     "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
+    # "CONFIGS_FREELANCER_FOLDER": "/home/naa/windows10shared/opensirius-main",
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wineprefix_flsr/drive_c/Freelancer",
     "UTILS_DEV_ENV": "true",
     # "UTILS_BAD_VAR": "true",

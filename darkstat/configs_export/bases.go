@@ -157,12 +157,12 @@ func FilterToUserfulBases(bases []*Base) []*Base {
 			continue
 		}
 
-		if item.Reachable {
-			useful_bases = append(useful_bases, item)
+		if len(item.MarketGoodsPerNick) == 0 {
 			continue
 		}
 
-		if (item.Name == "Object Unknown" || item.Name == "") && len(item.MarketGoodsPerNick) == 0 {
+		if item.Reachable {
+			useful_bases = append(useful_bases, item)
 			continue
 		}
 

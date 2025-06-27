@@ -217,7 +217,7 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 			continue
 		}
 		ship.Batteries = ship_info.Batteries.Get()
-		ship.Mass = ship_info.Mass.Get()
+		ship.Mass, _ = ship_info.Mass.GetValue()
 		ship.NudgeForce = ship_info.NudgeForce.Get()
 		ship.StrafeForce, _ = ship_info.StrafeForce.GetValue()
 
@@ -265,7 +265,12 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 							ship.ReverseFraction = engine.ReverseFraction.Get()
 
 							ship.MaxAngularSpeedDegS = ship_info.SteeringTorque.X.Get() / ship_info.AngularDrag.X.Get()
-							ship.TimeTo90MaxAngularSpeed = ship_info.RotationIntertia.X.Get() / (ship_info.AngularDrag.X.Get() * LogOgE)
+							RoutationIntertia, _ := ship_info.RotationIntertia.X.GetValue()
+							AngularDrag, _ := ship_info.AngularDrag.X.GetValue()
+							if AngularDrag == 0 {
+								AngularDrag = 1
+							}
+							ship.TimeTo90MaxAngularSpeed = RoutationIntertia / (AngularDrag * LogOgE)
 
 							ship.MaxAngularSpeedDegS *= Pi180
 

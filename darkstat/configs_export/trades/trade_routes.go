@@ -215,9 +215,13 @@ func MapConfigsToFGraph(
 		}
 
 		for _, jumphole := range system.Jumpholes {
+			pos_vector, found_pos := jumphole.Pos.GetValue()
+			if !found_pos {
+				continue
+			}
 			object := SystemObject{
 				nickname: jumphole.Nickname.Get(),
-				pos:      jumphole.Pos.Get(),
+				pos:      pos_vector,
 			}
 			graph.SetIdsName(object.nickname, jumphole.IdsName.Get())
 

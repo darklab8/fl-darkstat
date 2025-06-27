@@ -5,7 +5,9 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -47,18 +49,31 @@ func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 			ship := e.Mapped.Goods.ShipsMap[good.Nickname.Get()]
 
 			ship_hull := e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()]
-			info.PriceBase = ship_hull.Price.Get()
+			if ship_hull != nil {
+				info.PriceBase = ship_hull.Price.Get()
 
-			// Infocard data
-			info.ShipNickname = ship_hull.Ship.Get()
-			shiparch := e.Mapped.Shiparch.ShipsMap[info.ShipNickname]
+				// Infocard data
+				info.ShipNickname = ship_hull.Ship.Get()
+				shiparch := e.Mapped.Shiparch.ShipsMap[info.ShipNickname]
 
-			info.Name = e.GetInfocardName(shiparch.IdsName.Get(), info.ShipNickname)
+				info.Name = e.GetInfocardName(shiparch.IdsName.Get(), info.ShipNickname)
 
-			// e.exportInfocards(infocarder.InfocardKey(market_good_nickname),
-			// 	shiparch.IdsInfo.Get(), shiparch.IdsInfo1.Get(), shiparch.IdsInfo2.Get(), shiparch.IdsInfo3.Get())
-			e.exportInfocards(infocarder.InfocardKey(good_nickname),
-				shiparch.IdsInfo1.Get(), shiparch.IdsInfo.Get())
+				// e.exportInfocards(infocarder.InfocardKey(market_good_nickname),
+				// 	shiparch.IdsInfo.Get(), shiparch.IdsInfo1.Get(), shiparch.IdsInfo2.Get(), shiparch.IdsInfo3.Get())
+				func() {
+					defer func() {
+						if r := recover(); r != nil {
+							logus.Log.Debug("Failed to get infocard",
+								typelog.String("nickname", good_nickname),
+							)
+							e.exportInfocards(infocarder.InfocardKey(good_nickname))
+						}
+					}()
+					e.exportInfocards(infocarder.InfocardKey(good_nickname),
+						shiparch.IdsInfo1.Get(), shiparch.IdsInfo.Get())
+				}()
+			}
+
 		}
 
 		if gun, ok := e.Mapped.Equip().GunMap[good_nickname]; ok {
