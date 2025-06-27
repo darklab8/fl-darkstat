@@ -28,6 +28,9 @@ See demos:
 - It was made in mind with supporting [Freelancer Discovery](https://discoverygc.com/) as first order.
 - Support is extended to Vanilla version.
 - Any other mode will be supported on request, see contacts to get in touch.
+  - things were tested for HD edition at some point of time
+  - for Freelancer Sirius Revival at some point of time
+  - for Open Sirius at some point of time
 
 # Development setup
 
@@ -128,11 +131,11 @@ If u have problems with configuring development environment, then seek my contac
 - put file into root of Freelancer folder and start
   - optionally launch from anywhere, just add env variable FREELANCER_FOLDER with location to freelancer folder root.
 - visit http://localhost:8000/ as printed in console to see web site locally
-- Launching from `cmd` or any other console at Freelancer Discovery folder path is preferable. Because u will see detailed log output.
+- Launching from `cmd` or any other console at Freelancer folder path is preferable. Because u will see detailed log output.
   - optionally see all list of possible env vars and sub commands by running `darkstat help` command
 
 P.S. The tool uses lazy filesystem approach by grabbing first file with matching name. I did not use full paths.
-So don't have folder "DATA2" duplicating all files in same FreelancerDiscovery folder
+So don't have folder "DATA2" duplicating all files in same Freelancer folder
 
 ## Docker usage
 
