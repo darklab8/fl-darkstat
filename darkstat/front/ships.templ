@@ -205,7 +205,7 @@ templ ShipsT(ships []configs_export.Ship, mode ShipTabMode, mode2 tab.ShowEmpty,
 				@tab.TableTop() {
 					if mode == ShipShowDetails {
 						@tab.PageHint() {
-							Ship hardpoint hp_types. Insert to other tab filter bar to find <a href={ templ.SafeURL(types.GetCtx(ctx).SiteHost + "index_docs.html#Findingequipmentcompatiblewithspecifichardpoint") }>compatible equipment. See Docs.</a>
+							Ship hardpoint hp_types. Insert to other tab filter bar to find <a href={ templ.SafeURL(types.GetCtx(ctx).SiteUrl + "index_docs.html#Findingequipmentcompatiblewithspecifichardpoint") }>compatible equipment. See Docs.</a>
 						}
 					}
 					if mode == ShipShowBases {

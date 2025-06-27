@@ -56,6 +56,7 @@ func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 		TractorTabName: tractor_tab_name,
 		SiteHost:       settings.Env.SiteHost,
 		SiteRoot:       siteRoot,
+		SiteUrl:        settings.Env.SiteUrl,
 		StaticRoot:     siteRoot + staticPrefix,
 		Heading:        settings.Env.AppHeading,
 		Timestamp:      time.Now().UTC(),

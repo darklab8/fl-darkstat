@@ -28,6 +28,7 @@ type GlobalParams struct {
 	Themes         []string
 	SiteHost       string
 	SiteRoot       string
+	SiteUrl        string
 	StaticRoot     string
 	Heading        string
 	Timestamp      time.Time
