@@ -342,12 +342,16 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 				</ul>
 			</p>
 			<p>
-				How to turn this feature on for your own PoB base?
+				<a href={ templ.URL(types.GetCtx(ctx).SiteRoot + urls.IndexDocs.ToString() + "#" + "how_to_turn_pob_feature_on") }>
+					<h3 id="how_to_turn_pob_feature_on">
+						How to turn PoB visibility in darkstat?
+					</h3>
+				</a>
 				<ul>
 					<li>login to base, <b>/base login base_password</b></li>
 					<li><b>/base setpublic public &lt;master password&gt;</b></li>
 					<li>
-						then go to Forum PoB account manager
+						then go to Forum <a href="https://discoverygc.com/forums/base_admin.php">PoB account manager</a>
 						<ul>
 							<li>login to your base, and toggle all things you wish to show about your base to darkstat.</li>
 							<li>Within 15 minutes information will appear in "PoBs" tab, and within day will propagate to other tabs.</li>
