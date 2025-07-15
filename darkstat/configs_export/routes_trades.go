@@ -10,6 +10,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkstat/cache"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -221,9 +222,19 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 	len_bases := len(bases)
 	for index, base := range bases {
+
+		if settings.Env.DarkstatDisablePobsForBestTrades && base.IsPob {
+			continue
+		}
+
 		fmt.Println("base_", index, "/", len_bases, " is processed for trade detals")
 		trade_routes := e.GetBaseTradePathsFrom(ctx, base)
 		for _, trade_route := range trade_routes {
+
+			if settings.Env.DarkstatDisablePobsForBestTrades && trade_route.Transport.SellingGood.PoBGood != nil {
+				continue
+			}
+
 			profit_per_time := trade_route.Transport.GetProffitPerTime()
 			kilo_volume := math.Min(10, KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
 
