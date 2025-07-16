@@ -1,8 +1,6 @@
 package relaysettings
 
 import (
-	"fmt"
-
 	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
@@ -23,5 +21,4 @@ func init() {
 		ConfEnvVars: configs_settings.GetEnvs(),
 		AppVersion:  env.GetStrOr("BUILD_VERSION", "v0.0.0-dev"),
 	}
-	fmt.Sprintln("conf=", Env)
 }

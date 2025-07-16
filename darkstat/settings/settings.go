@@ -1,7 +1,6 @@
 package settings
 
 import (
-	"fmt"
 	"strings"
 
 	_ "embed"
@@ -85,8 +84,6 @@ func init() {
 	for _, enver := range Enverants {
 		enver.ValidetNoUnused()
 	}
-
-	fmt.Sprintln("conf=", Env)
 }
 
 func getAppVersion() string {

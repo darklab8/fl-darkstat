@@ -37,5 +37,4 @@ func init() {
 		SiteRoot:    env.GetStr("SITE_ROOT", enverant.OrStr("/")),
 		AppVersion:  GolangVersion,
 	}
-	fmt.Sprintln("conf=", Env)
 }
