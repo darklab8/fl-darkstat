@@ -17,7 +17,7 @@ while True:
 
     print("attempting to clone freelancer folder")
     os.system("git clone gogs@git.discoverygc.com:DGCRepository/game-repository.git freelancer_folder")
-    os.system("cd freelancer_folder && git pull")
+    os.system("cd freelancer_folder && git checkout 5.3 && git pull")
     NEW_PASSWORD=subprocess.run("cd freelancer_folder && git rev-parse HEAD", shell=True, capture_output=True).stdout.decode("utf8").replace("\n","")
     if OLD_PASSWORD != NEW_PASSWORD:
         print(f"Detected New Password {NEW_PASSWORD}")
