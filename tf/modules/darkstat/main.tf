@@ -41,8 +41,8 @@ resource "docker_service" "darkstat" {
       name = "json-file"
 
       options = {
-        max-size = "500m"
-        max-file = "3"
+        "max-file": "3"
+        "max-size": "10m"
       }
     }
     container_spec {

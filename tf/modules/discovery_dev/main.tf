@@ -27,8 +27,8 @@ resource "docker_container" "discovery" {
     container_path = "/code"
   }
   log_opts = {
-    "mode" : "non-blocking"
-    "max-buffer-size" : "500m"
+    "max-file": "3"
+    "max-size": "10m"
   }
   env = [
     "DISCO_DEV_WEBHOOK=${local.disco_dev_webhook}"
