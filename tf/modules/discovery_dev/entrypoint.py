@@ -24,6 +24,9 @@ while True:
         os.system(f'docker service update --env-add DARKCORE_PASSWORD={NEW_PASSWORD} --env-add "FLDARKSTAT_HEADING=commit:{NEW_PASSWORD}" --image darkwind8/darkstat:production dev-darkstat-app')
         OLD_PASSWORD=NEW_PASSWORD
         STATE=json.loads(subprocess.run("docker service inspect dev-darkstat-app", shell=True, capture_output=True).stdout.decode("utf8").replace("\n",""))[0]["UpdateStatus"]["State"]
-        data = dict(username="Darkstat",content=f"https://darkstat-dev.dd84ai.com/?password={NEW_PASSWORD} state={STATE}")
+        content_msg = f"https://darkstat-dev.dd84ai.com/?password={NEW_PASSWORD} state={STATE}"
+        if "state=completed" not in content_msg:
+            content_msg += " <@370435997974134785>"
+        data = dict(username="Darkstat",content=content_msg)
         result = requests.post(os.environ["DISCO_DEV_WEBHOOK"], json = data)
     time.sleep(30)
