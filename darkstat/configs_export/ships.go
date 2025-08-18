@@ -216,7 +216,7 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 		} else {
 			continue
 		}
-		ship.Batteries = ship_info.Batteries.Get()
+		ship.Batteries, _ = ship_info.Batteries.GetValue()
 		ship.Mass, _ = ship_info.Mass.GetValue()
 		ship.NudgeForce = ship_info.NudgeForce.Get()
 		ship.StrafeForce, _ = ship_info.StrafeForce.GetValue()
