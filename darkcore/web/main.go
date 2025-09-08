@@ -161,7 +161,7 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 	}
 
 	fmt.Printf("launching web server, visit http://localhost:%d to check it!\n", port)
-	hander := prometheusMidleware(CorsMiddleware(AuthMiddleware(w.mux)))
+	hander := Recovery(prometheusMidleware(CorsMiddleware(AuthMiddleware(w.mux))))
 
 	var sock_listener net.Listener
 	var sock_server http.Server
