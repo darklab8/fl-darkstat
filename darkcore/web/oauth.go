@@ -53,7 +53,7 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 			is_dev, err := validateCode(oauth_code)
 
 			if !is_dev {
-				_, err := fmt.Fprintf(w, fmt.Sprintln("failed oauth procedure.", err))
+				_, err := fmt.Fprintln(w, "failed oauth procedure.", err)
 				Log.CheckError(err, "failed oauth procedure responce")
 			}
 
