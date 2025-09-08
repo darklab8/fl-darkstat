@@ -381,6 +381,9 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 			} else {
 				items_map := e.Mapped.Equip()
 				if equip, ok := items_map.ItemsMap[good.Nickname]; ok {
+					if _, ok := equip.Volume.GetValue(); !ok {
+						fmt.Println(good.Nickname, equip.RenderModel().ToString(false))
+					}
 					good.Volume = equip.Volume.Get()
 					good.OriginalVolume = equip.Volume.Get()
 

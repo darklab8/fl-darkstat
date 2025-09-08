@@ -26,7 +26,7 @@ func Recovery(next http.Handler) http.Handler {
 				})
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write(jsonBody)
+				_, _ = w.Write(jsonBody)
 			}
 
 		}()
