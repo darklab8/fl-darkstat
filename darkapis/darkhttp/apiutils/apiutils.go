@@ -9,7 +9,8 @@ import (
 
 func ReturnJson(w *http.ResponseWriter, data any) {
 	(*w).Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(*w).Encode(data)
+
+	marshaled, err := json.Marshal(data)
 	if logus.Log.CheckError(err, "should be marshable") {
 		err := json.NewEncoder(*w).Encode(struct {
 			Error string
@@ -19,4 +20,6 @@ func ReturnJson(w *http.ResponseWriter, data any) {
 		logus.Log.CheckWarn(err, "failed to encode error response in return json")
 		(*w).WriteHeader(http.StatusInternalServerError)
 	}
+
+	(*w).Write(marshaled)
 }

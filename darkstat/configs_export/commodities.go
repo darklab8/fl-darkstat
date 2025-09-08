@@ -23,8 +23,8 @@ type MarketGood struct {
 	BaseSells            bool           `json:"base_sells" validate:"required"`
 	IsServerSideOverride bool           `json:"is_server_override" validate:"required"`
 
-	NotBuyable             bool `json:"_" swaggerignore:"true"`
-	IsTransportUnreachable bool `json:"_" swaggerignore:"true"`
+	NotBuyable             bool `json:"-" swaggerignore:"true"`
+	IsTransportUnreachable bool `json:"-" swaggerignore:"true"`
 
 	PoBGood *ShopItem
 	PoB     *PoB

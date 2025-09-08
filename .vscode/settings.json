@@ -2,6 +2,9 @@
     "go.testFlags": [
         "-v"
     ],
+    "go.toolsEnvVars": {
+        "GOEXPERIMENT": "jsonv2"
+    },
     "go.testEnvVars": {
         "ENVERANT_ENV_FILE": "${workspaceFolder}/.vscode/enverant.json",
         "OTEL_RESOURCE_ATTRIBUTES": "service.name=check,service.version=0.1.0",

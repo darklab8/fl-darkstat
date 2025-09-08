@@ -1,4 +1,4 @@
-FROM golang:1.24-bullseye AS dependencies
+FROM golang:1.25-bookworm AS dependencies
 
 RUN apt update
 RUN apt install -y build-essential
@@ -53,7 +53,7 @@ ARG BUILD_VERSION
 RUN echo "${BUILD_VERSION}" > darkstat/settings/version.txt
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
-FROM debian:11.6-slim AS runner
+FROM debian:12.11-slim AS runner
 WORKDIR /code
 RUN mkdir data
 COPY --from=build /code/main main

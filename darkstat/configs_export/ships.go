@@ -16,7 +16,7 @@ func (g Ship) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompa
 
 type ShipPackage struct {
 	Nickname           string                   `json:"nickname" validate:"required"`
-	equipped_thrusters []*equip_mapped.Thruster `json:"equipped_thrusters" validate:"required"`
+	equipped_thrusters []*equip_mapped.Thruster `json:"-" validate:"required"`
 }
 
 type Ship struct {
@@ -51,12 +51,12 @@ type Ship struct {
 	NameID      int     `json:"name_id" validate:"required"`
 	InfoID      int     `json:"info_id" validate:"required"`
 
-	Bases            map[cfg.BaseUniNick]*MarketGood `json:"_" swaggerignore:"true"`
+	Bases            map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	Slots            []EquipmentSlot                 `json:"equipment_slots" validate:"required"`
 	BiggestHardpoint []string                        `json:"biggest_hardpoint" validate:"required"`
 	ShipPackages     []ShipPackage                   `json:"ship_packages" validate:"required"`
 
-	*DiscoveryTechCompat `json:"_" swaggerignore:"true"`
+	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 
 	DiscoShip *DiscoShip `json:"discovery_ship"`
 }

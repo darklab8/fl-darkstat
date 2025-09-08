@@ -1,6 +1,6 @@
 module github.com/darklab8/fl-darkstat
 
-go 1.24.0
+go 1.25.1
 
 require (
 	github.com/a-h/templ v0.3.857

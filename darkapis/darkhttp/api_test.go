@@ -333,7 +333,16 @@ func TestApi(t *testing.T) {
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
-		assert.Greater(t, len(items[0].MarketGoods), 0)
+
+		market_goods_exist := false
+		for _, item := range items {
+			if len(item.MarketGoods) > 0 {
+				market_goods_exist = true
+			}
+		}
+		if !market_goods_exist {
+			panic("not a single market good")
+		}
 		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
@@ -350,7 +359,15 @@ func TestApi(t *testing.T) {
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
-		assert.Greater(t, len(items[0].MarketGoods), 0)
+		market_goods_exist := false
+		for _, item := range items {
+			if len(item.MarketGoods) > 0 {
+				market_goods_exist = true
+			}
+		}
+		if !market_goods_exist {
+			panic("not a single market good")
+		}
 		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {

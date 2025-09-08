@@ -24,7 +24,7 @@ type Shield struct {
 	Capacity          int     `json:"capacity" validate:"required"`
 	RegenerationRate  int     `json:"regeneration_rate" validate:"required"`
 	ConstantPowerDraw int     `json:"constant_power_draw" validate:"required"`
-	Value             float64 `json:"value" validate:"required"`
+	Value             float64 `json:"value,format:nonfinite" validate:"required"`
 	RebuildPowerDraw  int     `json:"rebuild_power_draw" validate:"required"`
 	OffRebuildTime    int     `json:"off_rebuild_time" validate:"required"`
 
@@ -92,6 +92,10 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 					shield_value = math.Abs(float64(shield.ConstantPowerDraw))
 				}
 				shield.Value = 1000 * shield_value / float64(shield.Price)
+
+				if math.IsNaN(shield.Value) {
+					shield.Value = -1
+				}
 			}
 		}
 
