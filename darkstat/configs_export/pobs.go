@@ -124,13 +124,23 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 		base := &Base{
 			Nickname:           cfg.BaseUniNick(pob.Nickname),
 			Name:               fmt.Sprintf("(PoB) %s", pob.Name),
-			Pos:                *pob.BasePos,
-			System:             *pob.SystemName,
-			SystemNickname:     *pob.SystemNick,
-			Region:             *pob.Region,
-			SectorCoord:        *pob.SectorCoord,
 			MarketGoodsPerNick: map[CommodityKey]*MarketGood{},
 			IsPob:              true,
+		}
+		if pob.SystemName != nil {
+			base.System = *pob.SystemName
+		}
+		if pob.SystemNick != nil {
+			base.SystemNickname = *pob.SystemNick
+		}
+		if pob.Region != nil {
+			base.Region = *pob.Region
+		}
+		if pob.SectorCoord != nil {
+			base.SectorCoord = *pob.SectorCoord
+		}
+		if pob.BasePos != nil {
+			base.Pos = *pob.BasePos
 		}
 		if pob.FactionName != nil {
 			base.FactionName = *pob.FactionName
