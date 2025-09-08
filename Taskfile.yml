@@ -7,7 +7,9 @@ tasks:
   test:
     cmds:
       - task: build-version
-      - go test ./... -coverprofile=cover.out {{.CLI_ARGS}}
+      - go test ./... {{.CLI_ARGS}}
+      # -coverprofile=cover.out
+      # https://github.com/golang/go/issues/75031
     vars:
       PWD:
         sh: echo '$(pwd)'

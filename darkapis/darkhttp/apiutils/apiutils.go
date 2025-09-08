@@ -21,5 +21,6 @@ func ReturnJson(w *http.ResponseWriter, data any) {
 		(*w).WriteHeader(http.StatusInternalServerError)
 	}
 
-	(*w).Write(marshaled)
+	_, err = (*w).Write(marshaled)
+	logus.Log.CheckError(err, "failed to write content")
 }
