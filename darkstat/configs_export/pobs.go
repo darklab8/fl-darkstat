@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -384,11 +385,16 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 					if _, ok := equip.Volume.GetValue(); !ok {
 						fmt.Println("nickname of good=", good.Nickname)
 						fmt.Println(good.Nickname, equip.RenderModel().ToString(false))
-					}
-					good.Volume = equip.Volume.Get()
-					good.OriginalVolume = equip.Volume.Get()
 
+						fmt.Println("adding without volume item in PoBs", *good)
+						data, _ := json.Marshal(good)
+						fmt.Println("adding 2 without volume item in PoBs", string(data))
+						panic("stop")
+					}
+					good.Volume, _ = equip.Volume.GetValue()
+					good.OriginalVolume, _ = equip.Volume.GetValue()
 				}
+
 				pob.ShopItems = append(pob.ShopItems, good)
 			}
 		}
