@@ -284,8 +284,18 @@ func NewHashesCategories(Mapped *configs_mapped.MappedConfigs) HashesByCat {
 	}
 	goods_by_hash := make(map[flhash.HashCode]*equip_mapped.Item)
 	for _, item := range Mapped.Equip().Items {
+
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
+
+		if item.Category == "lod" { // Discovery specific, somehow breaks hashes
+			continue
+		}
+
+		if _, ok := goods_by_hash[hash]; ok {
+			fmt.Println("DETECETED GOOD COLLUSION FOR nickanme", item.Category, nickname, *item)
+		}
+
 		goods_by_hash[hash] = item
 	}
 
