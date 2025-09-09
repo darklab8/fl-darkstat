@@ -77,6 +77,17 @@ type PoB struct {
 	ShopItems []*ShopItem `json:"shop_items" validate:"required"`
 }
 
+// ShopItemsLength counts without accounting for volume dupicates
+func (p PoB) ShopItemsLength() int {
+	count := 0
+	for _, item := range p.ShopItems {
+		if item.ShipClass == nil {
+			count++
+		}
+	}
+	return count
+}
+
 func (b PoB) GetNickname() string { return string(b.Nickname) }
 
 type PoBGood struct {

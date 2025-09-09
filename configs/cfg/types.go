@@ -26,6 +26,7 @@ type BaseUniNick string
 
 func (b BaseUniNick) ToStr() string { return string(b) }
 
+// ShipClass is used to show item volume for specific ship class, used for commoditiies
 type ShipClass int64
 
 func ShipClassToKey(s *ShipClass) string {
