@@ -31,6 +31,8 @@ script Pin(id string) {
 
 script Pin2(id string) {
   // htmx adding row to table version for performance
+
+  // This section deletes pinned items, and hides pinned table if we deleted last one
   if (id.includes("pin")) {
 	// deleting htmx added row in table
 	row = document.querySelector("#" + id)
@@ -40,6 +42,9 @@ script Pin2(id string) {
 		Hide("table-top-mainpin")
 		Hide("table-bottom-right")
 	}
+
+  // this section uhhides pinned table on any `pin` click
+  // and for some reason.... selects pinned items with same ids and deletes? i suspect anti bug from mutiple additions
   } else {
 	// htmx adds as another element to table
 	Unhide("table-top-mainpin")
@@ -51,6 +56,16 @@ script Pin2(id string) {
 			rows[i].remove()
 		}
 	}
+
+	// hide techcompat cells, since they can shift columns in pinned table after row was copied if ID is selected
+	// no idea why it happens ;)
+	tech_compats = document.querySelectorAll("#table-top-mainpin table .tech_compat");
+	for (let i = 1; i < tech_compats.length; i++) {
+		if (!tech_compats[i].classList.contains(HIDDEN_CLS)) {
+			tech_compats[i].classList.add(HIDDEN_CLS);
+		}
+	}
+	// Here u could add manual copy i think of a row instead of using htmx if u wish
   }
 }
 
@@ -73,6 +88,7 @@ templ PinTd2(nickname string, name string, pinm PinMod, url string) {
 	// htmx adding row to table version for performance
 	<td style="display:flex;justify-content:space-between;min-width:50px;" class="seo">
 		<span>{ name }</span>
+		// seems to be using Htmx to add row in a pinned table
 		if pinm==MainMode {
 			<span
 				style="cursor:copy;"
