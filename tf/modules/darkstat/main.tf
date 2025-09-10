@@ -107,7 +107,7 @@ resource "docker_service" "darkstat" {
     }
     restart_policy {
       condition = "any"
-      delay     = "20s"
+      delay     = "5m"
     }
     resources {
       limits {
