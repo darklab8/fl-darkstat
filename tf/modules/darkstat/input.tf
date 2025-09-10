@@ -69,3 +69,6 @@ variable "disco_oauth" {
   type        = bool
   default     = false
 }
+variable "is_discovery" {
+  type = bool
+}

@@ -21,6 +21,7 @@ module "darkstat" {
   rpc_prefix        = "darkgrpc"
   pprof_prefix      = "darkstat-pprof"
   zone              = "dd84ai.com"
+  is_discovery      = true
 }
 
 resource "random_string" "random_password" {
@@ -56,6 +57,7 @@ module "darkstat_dev" {
   password    = random_string.random_password.result
   secret      = random_string.random_secret.result
   disco_oauth = true
+  is_discovery      = true
 }
 
 module "vanilla" {
@@ -80,4 +82,5 @@ module "darkstat_vanilla" {
   apigateway_prefix = "apigateway-vanilla"
   zone              = "dd84ai.com"
   enable_restarts   = false
+  is_discovery      = false
 }
