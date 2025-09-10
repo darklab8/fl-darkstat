@@ -124,6 +124,13 @@ resource "docker_service" "darkstat" {
   }
   # with usage of docker networking, this is no longer necessary
 
+  update_config {
+    parallelism       = 1
+    delay             = "60s"
+    failure_action    = "pause"
+    monitor           = "30s"
+  }
+
   endpoint_spec {
     mode = "vip"
 
