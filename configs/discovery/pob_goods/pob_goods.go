@@ -2,6 +2,7 @@ package pob_goods
 
 import (
 	"encoding/json"
+	"errors"
 	"html"
 	"regexp"
 	"strings"
@@ -62,12 +63,16 @@ type Config struct {
 	Bases       []*Base
 }
 
-func (c *Config) Refresh() {
-	reread := Read(c.file)
+func (c *Config) Refresh() error {
+	reread, err := Read(c.file)
+	if logus.Log.CheckError(err, "failed to refresh") {
+		return err
+	}
 	c.file = reread.file
 	c.BasesByName = reread.BasesByName
 	c.Timestamp = reread.Timestamp
 	c.Bases = reread.Bases
+	return nil
 }
 
 func NameToNickname(name string) string {
@@ -78,13 +83,17 @@ func NameToNickname(name string) string {
 	return name
 }
 
-func Read(file *file.File) *Config {
+func Read(file *file.File) (*Config, error) {
 	byteValue, err := file.ReadBytes()
-	logus.Log.CheckFatal(err, "failed to read file")
+	if logus.Log.CheckError(err, "failed to read file") {
+		return nil, errors.New("failed to read file")
+	}
 
 	var conf *Config
 	err = json.Unmarshal(byteValue, &conf)
-	logus.Log.CheckError(err, "failed to read pob goods")
+	if logus.Log.CheckError(err, "failed to read pob goods") {
+		return nil, errors.New("failed to read file")
+	}
 
 	for base_name, base := range conf.BasesByName {
 		base.Name = base_name
@@ -95,7 +104,7 @@ func Read(file *file.File) *Config {
 	}
 
 	conf.file = file
-	return conf
+	return conf, nil
 }
 
 func (frelconfig *Config) Write() *file.File {

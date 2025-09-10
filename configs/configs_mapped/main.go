@@ -435,8 +435,10 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 				m.Discovery.PlayercntlRephacks = playercntl_rephacks.Read(file_playercntl_rephacks)
 				wg.Done()
 			}()
-			file_public_bases := file.NewWebFile("https://discoverygc.com/forums/base_admin.php?action=getjson")
-			m.Discovery.PlayerOwnedBases = pob_goods.Read(file_public_bases)
+			file_public_bases := file.NewWebFile(PobDataUrl)
+			var err error
+			m.Discovery.PlayerOwnedBases, err = pob_goods.Read(file_public_bases)
+			logus.Log.CheckPanic(err, "failed to read pods on darkstat start")
 		}
 		wg.Wait()
 	}, timeit.WithMsg("Mapped stuff"))
@@ -445,6 +447,10 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 
 	return m
 }
+
+const (
+	PobDataUrl = "https://discoverygc.com/forums/base_admin.php?action=getjson"
+)
 
 type IsDruRun bool
 
