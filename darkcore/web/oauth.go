@@ -14,6 +14,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	statsettings "github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/typelog"
+	"github.com/darklab8/go-utils/utils/utils_settings"
 )
 
 // I have now implemented roughly this
@@ -95,6 +96,9 @@ func validateCode(code string) (bool, error) {
 	}
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	response, err := client.Do(request)
+	if utils_settings.Envs.UserAgent != "" {
+		request.Header.Set("User-Agent", utils_settings.Envs.UserAgent)
+	}
 	if err != nil {
 		return false, err
 	}

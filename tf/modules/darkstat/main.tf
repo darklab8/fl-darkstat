@@ -41,8 +41,8 @@ resource "docker_service" "darkstat" {
       name = "json-file"
 
       options = {
-        "max-file": "3"
-        "max-size": "10m"
+        "max-file" : "3"
+        "max-size" : "10m"
       }
     }
     container_spec {
@@ -109,6 +109,14 @@ resource "docker_service" "darkstat" {
       condition = "any"
       delay     = "5m"
     }
+    # placement {
+    #   # constraints = [
+    #   #   "node.role==worker",
+    #   # ]
+    #   prefs = [
+    #     "spread=node.id",
+    #   ]
+    # }
     resources {
       limits {
         memory_bytes = 1000 * 1000 * 5000 # 3 gb
@@ -125,10 +133,10 @@ resource "docker_service" "darkstat" {
   # with usage of docker networking, this is no longer necessary
 
   update_config {
-    parallelism       = 1
-    delay             = "60s"
-    failure_action    = "pause"
-    monitor           = "30s"
+    parallelism    = 1
+    delay          = "3m"
+    failure_action = "continue"
+    monitor        = "1m30s"
   }
 
   endpoint_spec {

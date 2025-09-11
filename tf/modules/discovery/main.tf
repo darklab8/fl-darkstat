@@ -18,8 +18,8 @@ resource "docker_container" "discovery" {
     container_path = "/code"
   }
   log_opts = {
-    "max-file": "3"
-    "max-size": "10m"
+    "max-file" : "3"
+    "max-size" : "10m"
   }
   restart = "always"
 

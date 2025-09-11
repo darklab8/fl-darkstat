@@ -9,7 +9,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"strings"
 
@@ -17,6 +16,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/go-utils/typelog"
 
+	"github.com/darklab8/go-utils/utils/utils_http"
 	"github.com/darklab8/go-utils/utils/utils_logus"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -77,7 +77,7 @@ func (f *File) ReadLines() ([]string, error) {
 	}
 
 	if f.webfile != nil {
-		res, err := http.Get(f.webfile.url)
+		res, err := utils_http.Get(f.webfile.url)
 		if err != nil {
 			logus.Log.Error("error making http request: %s\n", typelog.OptError(err))
 			return []string{}, err

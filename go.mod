@@ -5,7 +5,7 @@ go 1.25.1
 require (
 	github.com/a-h/templ v0.3.857
 	github.com/darklab8/fl-data-discovery v0.4.0
-	github.com/darklab8/go-utils v0.28.0
+	github.com/darklab8/go-utils v0.29.0
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2
 	github.com/prometheus/client_golang v1.23.2

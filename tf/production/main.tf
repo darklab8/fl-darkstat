@@ -54,10 +54,10 @@ module "darkstat_dev" {
   zone            = "dd84ai.com"
   enable_restarts = true
 
-  password    = random_string.random_password.result
-  secret      = random_string.random_secret.result
-  disco_oauth = true
-  is_discovery      = true
+  password     = random_string.random_password.result
+  secret       = random_string.random_secret.result
+  disco_oauth  = true
+  is_discovery = true
 }
 
 module "vanilla" {
