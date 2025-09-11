@@ -10,6 +10,8 @@ tasks:
       - go test ./... {{.CLI_ARGS}}
       # -coverprofile=cover.out
       # https://github.com/golang/go/issues/75031
+    env:
+      UTILS_USERAGENT: "darkstat/1.0"
     vars:
       PWD:
         sh: echo '$(pwd)'
