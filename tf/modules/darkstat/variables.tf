@@ -10,6 +10,7 @@ locals {
 
     CACHE_CONTROL               = "true"
     UTILS_ENVIRONMENT           = var.environment
+    UTILS_USERAGENT             = "darkwind/1.0"
     OTLP_HTTP_ON                = "true"
     OTEL_EXPORTER_OTLP_ENDPOINT = "http://alloy-traces:4318"
     OTEL_SERVICE_NAME           = "${var.environment}-darkstat-app"
