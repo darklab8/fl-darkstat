@@ -1,4 +1,6 @@
 name: Test build
+env:
+  UTILS_USERAGENT: "darkstat-ci/1.0"
 'on':
   push:
     branches:
