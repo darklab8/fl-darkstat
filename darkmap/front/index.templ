@@ -3,8 +3,8 @@ package front
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
-    "github.com/darklab8/fl-darkstat/darkmap/front/export_front"
 )
 
 templ Html5() {
@@ -37,7 +37,7 @@ templ Html5() {
 				}
 			</style>
 		</head>
-		<body hx-ext="preload">
+		<body>
 			{ children... }
 		</body>
 	</html>
