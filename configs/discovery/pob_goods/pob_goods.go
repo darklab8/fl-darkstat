@@ -63,6 +63,10 @@ type Config struct {
 	Bases       []*Base
 }
 
+var (
+	TestingAddition = 0
+)
+
 func (c *Config) Refresh() error {
 	reread, err := Read(c.file)
 	if logus.Log.CheckError(err, "failed to refresh") {
@@ -72,6 +76,17 @@ func (c *Config) Refresh() error {
 	c.BasesByName = reread.BasesByName
 	c.Timestamp = reread.Timestamp
 	c.Bases = reread.Bases
+
+	if false {
+		// E2E Testing: if u wish End to End test periodic updates of darkstat
+		TestingAddition += 1000
+		for _, base := range c.Bases {
+			for item_i, _ := range base.ShopItems {
+				base.ShopItems[item_i].Quantity += TestingAddition
+			}
+		}
+	}
+
 	return nil
 }
 

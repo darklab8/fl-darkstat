@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -12,19 +13,27 @@ import (
 )
 
 type Cached[T any] struct {
-	value       *T
-	getter      func() T
-	timeToLive  time.Duration
-	timeCreated time.Time
-	first_init  sync.WaitGroup
+	value        *T
+	getter       func() T
+	timeToLive   time.Duration
+	timeCreated  time.Time
+	first_init   sync.WaitGroup
+	ExtraLogging bool
 }
 
 var Lock sync.Mutex
 
-func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
+type CacheOption[T any] func(c *Cached[T])
+
+func NewCached[T any](getter func() T, timeToLive time.Duration, opts ...CacheOption[T]) *Cached[T] {
 	c := &Cached[T]{
 		getter:     getter,
 		timeToLive: timeToLive,
+	}
+	c.timeCreated = time.Now()
+
+	for _, opt := range opts {
+		opt(c)
 	}
 
 	go func() {
@@ -34,7 +43,6 @@ func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
 				Lock.Lock()
 				defer Lock.Unlock()
 				c.get()
-				c.timeCreated = time.Now()
 				c.first_init.Done()
 				logus.Log.Debug("updated cache with time to live", typelog.Any("ttl_period", c.timeToLive.Seconds()))
 			})
@@ -51,15 +59,24 @@ func (c *Cached[T]) Get(ctx context.Context) T {
 
 func (c *Cached[T]) get() T {
 	expiry_date := c.timeCreated.Add(c.timeToLive)
-	if c.value == nil {
-		c.value = ptr.Ptr(c.getter())
-		c.timeCreated = time.Now()
-		logus.Log.Debug(" nil cache calced ")
-	} else if time.Now().After(expiry_date) {
-		c.value = ptr.Ptr(c.getter())
-		c.timeCreated = time.Now()
-		logus.Log.Debug("cache is expired and recalced")
+	if c.ExtraLogging {
+		fmt.Println("CACHED CACHED CACHED: expire date=", expiry_date, " now data=", time.Now())
 	}
-	logus.Log.Debug("cache is returned", typelog.Float64("ttl_left", expiry_date.Sub(time.Now()).Seconds()))
+	if c.value == nil {
+		if c.ExtraLogging {
+			fmt.Println("CACHED CACHED CACHED: is nil, updated")
+		}
+		c.value = ptr.Ptr(c.getter())
+		c.timeCreated = time.Now()
+		logus.Log.Debug("CACHED nil cache calced ")
+	} else if time.Now().After(expiry_date) {
+		if c.ExtraLogging {
+			fmt.Println("CACHED CACHED CACHED: after expired data succeeded, updating")
+		}
+		c.value = ptr.Ptr(c.getter())
+		c.timeCreated = time.Now()
+		logus.Log.Debug("CACHED is expired and recalced")
+	}
+	logus.Log.Debug("CACHED is returned", typelog.Float64("ttl_left", expiry_date.Sub(time.Now()).Seconds()))
 	return *c.value
 }
