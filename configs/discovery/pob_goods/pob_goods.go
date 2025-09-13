@@ -64,7 +64,8 @@ type Config struct {
 }
 
 var (
-	TestingAddition = 0
+	TestingAdditionQuantity = 0
+	TestingAdditionPrice    = 0
 )
 
 func (c *Config) Refresh() error {
@@ -79,10 +80,13 @@ func (c *Config) Refresh() error {
 
 	if false {
 		// E2E Testing: if u wish End to End test periodic updates of darkstat
-		TestingAddition += 1000
+		TestingAdditionQuantity += 1000
+		TestingAdditionPrice += 10
 		for _, base := range c.Bases {
 			for item_i, _ := range base.ShopItems {
-				base.ShopItems[item_i].Quantity += TestingAddition
+				base.ShopItems[item_i].Quantity += TestingAdditionQuantity
+				base.ShopItems[item_i].PriceBaseBuysFor += TestingAdditionPrice
+				base.ShopItems[item_i].PriceBaseSellsFor += TestingAdditionPrice
 			}
 		}
 	}
