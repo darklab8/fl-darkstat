@@ -2,7 +2,7 @@ resource "docker_image" "docker_cli" {
   name = "docker:27.3.1-cli"
 }
 locals {
-  restart_seconds = 3600 * 12 # every 12 hours
+  restart_seconds = 3600 * 6 # every 6 hours
 }
 // ensures to catch new Discovery version
 resource "docker_container" "cron_restart" {

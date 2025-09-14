@@ -123,19 +123,19 @@ jobs:
         set -ex
         docker pull darkwind8/darkstat:production-arm64
         sleep 5
-        docker service update --image darkwind8/darkstat:production-arm64 production-darkstat-app
+        docker service update --force production-darkstat-app
     - name: Switch service image darkwind8/darkstat for swarm to new one
       run: |
         set -ex
         docker pull darkwind8/darkstat:production-arm64
         sleep 5
-        docker service update --image darkwind8/darkstat:production-arm64 dev-darkstat-app
+        docker service update --force dev-darkstat-app
     - name: Switch service image darkwind8/darkstat for swarm to new one
       run: |
         set -ex
         docker pull darkwind8/darkstat:production-arm64
         sleep 5
-        docker service update --image darkwind8/darkstat:production-arm64 vanilla-darkstat-app
+        docker service update --force vanilla-darkstat-app
     needs:
     - build-arm64
     - build-amd64
