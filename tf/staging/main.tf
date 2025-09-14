@@ -19,4 +19,5 @@ module "darkstat" {
   apigateway_prefix = "apigateway-staging"
   zone              = "dd84ai.com"
   enable_restarts   = false
+  is_discovery      = false
 }

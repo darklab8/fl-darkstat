@@ -51,7 +51,7 @@ resource "docker_service" "darkstat" {
         interval     = "14s"
         timeout      = "20s"
         retries      = 6
-        start_period = "60s"
+        start_period = "1m"
       }
 
       image = docker_image.darkstat.name
