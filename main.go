@@ -28,7 +28,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -182,22 +181,6 @@ func main() {
 						}
 						relay_data.Configs.PoBs = relay_data.Configs.GetPoBs()
 						relay_data.Configs.PoBGoods = relay_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
-
-						BasesFromPobs := app_data.Configs.PoBsToBases(relay_data.Configs.PoBs)
-						var bases_by_nick map[string]*configs_export.Base = make(map[string]*configs_export.Base)
-						for _, base := range BasesFromPobs {
-							bases_by_nick[string(base.Nickname)] = base
-						}
-						for _, base := range app_data.Configs.TradeBases {
-							if updated_base, ok := bases_by_nick[string(base.Nickname)]; ok {
-								base.MarketGoodsPerNick = updated_base.MarketGoodsPerNick
-							}
-						}
-						app_data.Configs.TradePathExporter = configs_export.NewTradePathExporter(
-							app_data.Configs,
-							app_data.Configs.Bases,
-							app_data.Configs.MiningOperations,
-						)
 
 						relay_fs2 := GetRelayFs(relay_data)
 						for key, _ := range relay_fs.Files {

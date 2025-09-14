@@ -293,7 +293,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 	e.TradeBases = append(e.Bases, BasesFromPobs...)
 	e.TravelBases = e.TradeBases
 
-	e.TradePathExporter = NewTradePathExporter(
+	e.TradePathExporter = newTradePathExporter(
 		e,
 		e.Bases,
 		e.MiningOperations,

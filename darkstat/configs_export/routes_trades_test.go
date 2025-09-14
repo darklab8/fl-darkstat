@@ -55,7 +55,7 @@ func TestGetTrades(t *testing.T) {
 	}
 	wg.Wait()
 
-	trade_path_exporter := NewTradePathExporter(
+	trade_path_exporter := newTradePathExporter(
 		e,
 		e.Bases,
 		[]*Base{},

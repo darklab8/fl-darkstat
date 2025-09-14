@@ -2,7 +2,6 @@ package router
 
 import (
 	"context"
-	"fmt"
 	"sort"
 	"time"
 
@@ -104,10 +103,8 @@ func (l *Router) LinkBases(
 	}
 
 	best_trades := cache.NewCached(func() []*configs_export.TradeDeal {
-		fmt.Println("run update to best trade deals")
 		return data.GetBestTradeDeals(ctx, data.TradeBases)
-	}, time.Minute*2+time.Second*30, func(c *cache.Cached[[]*configs_export.TradeDeal]) {
-	})
+	}, time.Minute*2+time.Second*5)
 
 	build.RegComps(
 		builder.NewComponent( // move to back?
