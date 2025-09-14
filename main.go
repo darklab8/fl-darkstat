@@ -167,7 +167,7 @@ func main() {
 					func() {
 						defer func() {
 							if r := recover(); r != nil {
-								fmt.Println("Recovered in f, trying to update relay data", r, string(debug.Stack()))
+								fmt.Println("Recovered in f, trying to update app data", r, string(debug.Stack()))
 							}
 						}()
 						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
@@ -183,37 +183,6 @@ func main() {
 						relay_data.Configs.PoBs = relay_data.Configs.GetPoBs()
 						relay_data.Configs.PoBGoods = relay_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
 
-						relay_fs2 := GetRelayFs(relay_data)
-						for key, _ := range relay_fs.Files {
-							delete(relay_fs.Files, key)
-						}
-						relay_fs.Files = relay_fs2.Files
-
-						logus.Log.Info("refreshed content")
-						runtime.GC()
-						log.Printf("Elapsed relay start_refresh time %s", time.Since(start_relay_refresh))
-
-					}()
-				}
-			}()
-
-			go func() {
-				for {
-					func() {
-						defer func() {
-							if r := recover(); r != nil {
-								fmt.Println("Recovered in f, trying to update app data", r, string(debug.Stack()))
-							}
-						}()
-
-						_, span_boot := traces.Tracer.Start(context.Background(), "app_data_refresh")
-						defer span_boot.End()
-
-						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
-						start_refresh := time.Now()
-
-						app_data.Lock()
-						defer app_data.Unlock()
 						BasesFromPobs := app_data.Configs.PoBsToBases(relay_data.Configs.PoBs)
 						var bases_by_nick map[string]*configs_export.Base = make(map[string]*configs_export.Base)
 						for _, base := range BasesFromPobs {
@@ -221,7 +190,7 @@ func main() {
 						}
 						for _, base := range app_data.Configs.TradeBases {
 							if updated_base, ok := bases_by_nick[string(base.Nickname)]; ok {
-								*base = *updated_base
+								base.MarketGoodsPerNick = updated_base.MarketGoodsPerNick
 							}
 						}
 						app_data.Configs.TradePathExporter = configs_export.NewTradePathExporter(
@@ -230,10 +199,16 @@ func main() {
 							app_data.Configs.MiningOperations,
 						)
 
-						app_data.Configs.EnhanceBasesWithIsTransportReachable(app_data.Configs.Bases, app_data.Configs.Transport, app_data.Configs.Freighter)
+						relay_fs2 := GetRelayFs(relay_data)
+						for key, _ := range relay_fs.Files {
+							delete(relay_fs.Files, key)
+						}
+						relay_fs.Files = relay_fs2.Files
 
+						logus.Log.Info("refreshed content")
 						runtime.GC()
-						logus.Log.Info(fmt.Sprintf("Refreshed App Data Total Elapsed start_refresh time %s", time.Since(start_refresh)))
+						log.Printf("Elapsed start_relay_refresh time %s", time.Since(start_relay_refresh))
+
 					}()
 				}
 			}()
