@@ -68,7 +68,7 @@ type TradePathExporter struct {
 	sell_locations_by_base *cache.Cached[map[CommodityKey][]*MarketGood]
 }
 
-func newTradePathExporter(
+func NewTradePathExporter(
 	e *Exporter,
 	Bases []*Base,
 	MiningOperations []*Base,

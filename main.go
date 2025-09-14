@@ -28,6 +28,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -187,6 +188,23 @@ func main() {
 							delete(relay_fs.Files, key)
 						}
 						relay_fs.Files = relay_fs2.Files
+
+						BasesFromPobs := app_data.Configs.PoBsToBases(relay_data.Configs.PoBs)
+						var bases_by_nick map[string]*configs_export.Base = make(map[string]*configs_export.Base)
+						for _, base := range BasesFromPobs {
+							bases_by_nick[string(base.Nickname)] = base
+						}
+						for _, base := range app_data.Configs.TradeBases {
+							if updated_base, ok := bases_by_nick[string(base.Nickname)]; ok {
+								*base = *updated_base
+							}
+						}
+						app_data.Configs.TradePathExporter = configs_export.NewTradePathExporter(
+							app_data.Configs,
+							app_data.Configs.Bases,
+							app_data.Configs.MiningOperations,
+						)
+						app_data.Configs.EnhanceBasesWithIsTransportReachable(app_data.Configs.Bases, app_data.Configs.Transport, app_data.Configs.Freighter)
 
 						logus.Log.Info("refreshed content")
 						runtime.GC()
