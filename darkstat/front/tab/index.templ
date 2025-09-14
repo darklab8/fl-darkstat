@@ -157,7 +157,7 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 				});
 			</script>
 		</head>
-		<body>
+		<body hx-ext="preload">
 			{ children... }
 		</body>
 	</html>

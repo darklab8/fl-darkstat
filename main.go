@@ -221,7 +221,6 @@ func main() {
 						}
 						for _, base := range app_data.Configs.TradeBases {
 							if updated_base, ok := bases_by_nick[string(base.Nickname)]; ok {
-								// base.MarketGoodsPerNick = updated_base.MarketGoodsPerNick
 								*base = *updated_base
 							}
 						}
@@ -230,6 +229,7 @@ func main() {
 							app_data.Configs.Bases,
 							app_data.Configs.MiningOperations,
 						)
+
 						app_data.Configs.EnhanceBasesWithIsTransportReachable(app_data.Configs.Bases, app_data.Configs.Transport, app_data.Configs.Freighter)
 
 						runtime.GC()
@@ -318,19 +318,12 @@ func main() {
 				Nickname:    "health",
 				Description: "check darkstat is healthy. Useful for container health checks",
 				Func: func(info cantil.ActionInfo) error {
-					var protocols http.Protocols
-					protocols.SetUnencryptedHTTP2(true)
 					tr := &http.Transport{
 						MaxIdleConns:       10,
 						IdleConnTimeout:    10 * time.Second,
 						DisableCompression: true,
-						ForceAttemptHTTP2:  true,
-						Protocols:          &protocols,
 					}
-
-					client := &http.Client{
-						Transport: tr,
-					}
+					client := &http.Client{Transport: tr}
 					resp, err := client.Get(fmt.Sprintf("http://localhost:8000/ping?password=%s", settings.Env.DarkcoreEnvVars.Password))
 					logus.Log.CheckPanic(err, "failed to health check")
 					if resp.StatusCode != 200 {
