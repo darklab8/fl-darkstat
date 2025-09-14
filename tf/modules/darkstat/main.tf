@@ -46,6 +46,14 @@ resource "docker_service" "darkstat" {
       }
     }
     container_spec {
+      healthcheck {
+        test         = ["CMD", "/code/main", "health"]
+        interval     = "14s"
+        timeout      = "20s"
+        retries      = 6
+        start_period = "60s"
+      }
+
       image = docker_image.darkstat.name
       env   = local.envs
       #   args = ["sleep", "infinity"]
@@ -119,7 +127,7 @@ resource "docker_service" "darkstat" {
     # }
     resources {
       limits {
-        memory_bytes = 1000 * 1000 * 5000 # 3 gb
+        memory_bytes = 1000 * 1000 * 5000 # 5 gb
       }
     }
   }

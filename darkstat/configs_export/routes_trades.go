@@ -227,7 +227,9 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 			continue
 		}
 
-		fmt.Println("base_", index, "/", len_bases, " is processed for trade detals")
+		if index%100 == 0 {
+			fmt.Println("base_", index, "/", len_bases, " is processed for trade detals")
+		}
 		trade_routes := e.GetBaseTradePathsFrom(ctx, base)
 		for _, trade_route := range trade_routes {
 
