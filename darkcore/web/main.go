@@ -165,7 +165,7 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 
 	var sock_listener net.Listener
 	var sock_server http.Server
-	if cfg.IsLinux && settings.Env.EnableUnixSockets && opts.SockAddress != "" {
+	if cfg.IsLinux && opts.SockAddress != "" {
 		sock_server = http.Server{
 			BaseContext: func(_ net.Listener) context.Context { return w.ctx },
 			Handler:     hander,

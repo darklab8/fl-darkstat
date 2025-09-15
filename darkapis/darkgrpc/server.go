@@ -14,7 +14,6 @@ import (
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	_ "github.com/darklab8/fl-darkstat/docs"
 	grpcprom "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -91,10 +90,10 @@ func (r *Server) Serve() {
 
 	srvMetrics.InitializeMetrics(s)
 
-	if cfg.IsLinux && settings.Env.EnableUnixSockets && r.sock_address != "" {
+	if cfg.IsLinux && r.sock_address != "" {
 		_ = os.Remove(r.sock_address)
 		_ = os.Mkdir("/tmp/darkstat", 0777)
-		sock_listener, err := net.Listen("unix", fmt.Sprintf("%s", r.sock_address)) // if serving over Unix
+		sock_listener, err := net.Listen("unix", r.sock_address) // if serving over Unix
 		if err != nil {
 			log.Fatal("listen error:", err)
 		}
@@ -116,14 +115,14 @@ func (r *Server) Serve() {
 			grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(32 * 10e6)),
 		}
 
+		// that thing is to make working grpc gateway eh?
 		var err error
-		if cfg.IsLinux && settings.Env.EnableUnixSockets {
+		if cfg.IsLinux && r.sock_address != "" {
 			err = pb.RegisterDarkstatHandlerFromEndpoint(ctx, mux, fmt.Sprintf("unix:%s", DarkstatGRpcSock), opts)
 		} else {
 			err = pb.RegisterDarkstatHandlerFromEndpoint(ctx, mux, "localhost:50051", opts)
 		}
 		if err != nil {
-
 			panic(err)
 		}
 

@@ -63,7 +63,7 @@ func (r *RpcServer) Serve(app_data *appdata.AppData) {
 
 	settings.Env.EnableUnixSockets = true
 	var sock_listener net.Listener
-	if cfg.IsLinux && settings.Env.EnableUnixSockets {
+	if cfg.IsLinux && r.sock_address != "" {
 		_ = os.Remove(r.sock_address)
 		_ = os.Mkdir("/tmp/darkstat", 0777)
 		sock_listener, err = net.Listen("unix", r.sock_address) // if serving over Unix

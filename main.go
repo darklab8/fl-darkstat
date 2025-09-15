@@ -159,7 +159,11 @@ func main() {
 			web.WithSiteRoot(settings.Env.SiteRoot),
 			web.WithAppData(app_data),
 		), app_data)
-		web_closer := web_server.Serve(web.WebServeOpts{SockAddress: web.DarkstatHttpSock})
+		web_opts := web.WebServeOpts{}
+		if settings.Env.EnableUnixSockets {
+			web_opts.SockAddress = web.DarkstatHttpSock
+		}
+		web_closer := web_server.Serve(web_opts)
 
 		if app_data.Configs.IsDiscovery {
 			go func() {
@@ -230,11 +234,23 @@ func main() {
 
 		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
 
-		rpc_server := darkrpc.NewRpcServer(darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
+		var rpc_opts []darkrpc.ServerOpt
+		if settings.Env.EnableUnixSockets {
+			rpc_opts = append(rpc_opts, darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
+		}
+		rpc_server := darkrpc.NewRpcServer(rpc_opts...)
 		rpc_server.Serve(app_data)
 
 		metronom := metrics.NewMetronom(web_server.GetMux())
-		grpc_server := darkgrpc.NewServer(app_data, darkgrpc.DefaultServerPort, darkgrpc.WithSockAddr(darkgrpc.DarkstatGRpcSock), darkgrpc.WithProm(metronom.Reg))
+		var grpc_opts []darkgrpc.ServerOpt = []darkgrpc.ServerOpt{
+			darkgrpc.WithProm(metronom.Reg),
+		}
+		if settings.Env.EnableUnixSockets {
+			grpc_opts = append(grpc_opts, darkgrpc.WithSockAddr(darkgrpc.DarkstatGRpcSock))
+		}
+		grpc_server := darkgrpc.NewServer(
+			app_data, darkgrpc.DefaultServerPort,
+			grpc_opts...)
 		go grpc_server.Serve()
 		go metronom.Run()
 
