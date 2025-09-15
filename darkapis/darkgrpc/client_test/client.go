@@ -9,6 +9,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 )
 
@@ -17,9 +18,18 @@ var (
 	// 37.27.207.42:50051
 	// fmt.Sprintf("unix:%s", darkgrpc.DarkstatGRpcSock)
 	// darkgrpc-staging.dd84ai.com:443
-	addr = fmt.Sprintf("unix:%s", darkgrpc.DarkstatGRpcSock)
-	// addr = flag.String("addr", "darkgrpc-staging.dd84ai.com:443", "the address to connect to")
+	addr string
+
+// addr = flag.String("addr", "darkgrpc-staging.dd84ai.com:443", "the address to connect to")
 )
+
+func init() {
+	if settings.Env.EnableUnixSockets {
+		addr = fmt.Sprintf("unix:%s", darkgrpc.DarkstatGRpcSock)
+	} else {
+		addr = fmt.Sprintf("localhost:%d", darkgrpc.DefaultServerPort)
+	}
+}
 
 func main() {
 	flag.Parse()

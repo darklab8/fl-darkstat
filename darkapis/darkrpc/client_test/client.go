@@ -19,12 +19,21 @@ func main() {
 	args := darkrpc.Args{}
 	var reply darkrpc.Reply
 
-	client := darkrpc.NewClient()
+	client := darkrpc.NewClient(darkrpc.WithPortCli(8111))
+	// client := darkrpc.NewClient(darkrpc.WithSockCli(darkrpc.DarkstatRpcSock))
 
-	err := client.GetBases(args, &reply)
+	var health_reply bool
+	fmt.Println("attempted to get health")
+	err := client.GetHealth(args, &health_reply)
+	if err != nil {
+		log.Fatal("getHealth error:", err)
+	} else {
+		fmt.Println("server health reply =", health_reply)
+	}
+
+	err = client.GetBases(args, &reply)
 	if err != nil {
 		log.Fatal("getBases error:", err)
 	}
 	fmt.Println("Bases[0]=", reply.Bases[0])
-
 }

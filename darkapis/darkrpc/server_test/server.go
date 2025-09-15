@@ -13,7 +13,8 @@ import (
 func main() {
 	ctx := context.Background()
 	app_data := appdata.NewAppData(ctx)
-	srv := darkrpc.NewRpcServer()
+	srv := darkrpc.NewRpcServer(darkrpc.WithPortSrv(8111))
+	// srv := darkrpc.NewRpcServer(darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
 	srv.Serve(app_data)
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)

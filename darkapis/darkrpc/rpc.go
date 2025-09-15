@@ -1,6 +1,7 @@
 package darkrpc
 
 import (
+	"fmt"
 	"net/rpc"
 
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
@@ -24,7 +25,8 @@ type Reply struct {
 
 // / CLIENT///////////////////
 type ClientRpc struct {
-	sock string
+	sock *string
+	port *int
 }
 
 const DarkstatRpcSock = "/tmp/darkstat/rpc.sock"
@@ -33,7 +35,13 @@ type ClientOpt func(r *ClientRpc)
 
 func WithSockCli(sock string) ClientOpt {
 	return func(r *ClientRpc) {
-		r.sock = sock
+		r.sock = &sock
+	}
+}
+
+func WithPortCli(port int) ClientOpt {
+	return func(r *ClientRpc) {
+		r.port = &port
 	}
 }
 
@@ -48,8 +56,24 @@ func NewClient(opts ...ClientOpt) RpcI {
 }
 
 func (r *ClientRpc) getClient() (*rpc.Client, error) {
-	// client, err := rpc.DialHTTP("tcp", "127.0.0.1+":1234") // if serving over http
-	client, err := rpc.Dial("unix", r.sock) // if connecting over cli over sock
+	var client *rpc.Client
+	var err error
+	if r.sock == nil && r.port == nil {
+		logus.Log.Panic("undefined sock and port for rpc client")
+	}
+	if r.sock != nil && r.port != nil {
+		logus.Log.Panic("both sock and port are defined for rpc client")
+	}
+	if r.sock != nil {
+		fmt.Println("initialized unix client")
+		client, err = rpc.Dial("unix", *r.sock) // if connecting over cli over sock
+	}
+	if r.port != nil {
+		info := fmt.Sprintf("127.0.0.1:%d", *r.port)
+		fmt.Println("initializing tcp client at ", info)
+		client, err = rpc.DialHTTP("tcp", info) // if serving over http
+		fmt.Println("initialized tcp client")
+	}
 
 	if logus.Log.CheckWarn(err, "dialing:") {
 		return nil, err
@@ -87,6 +111,7 @@ func (r *ClientRpc) GetBases(args Args, reply *Reply) error {
 }
 
 func (t *ServerRpc) GetHealth(args Args, reply *bool) error {
+	fmt.Println("received get health request")
 	*reply = true
 	logus.Log.Info("rpc server got health checked")
 	return nil
@@ -98,7 +123,9 @@ func (r *ClientRpc) GetHealth(args Args, reply *bool) error {
 		return err
 	}
 
+	fmt.Println("querying server rpc for get health")
 	divCall := client.Go("ServerRpc.GetHealth", args, &reply, nil)
+	fmt.Println("stuck awaiting server")
 	replyCall := <-divCall.Done // will be equal to divCall
 	return replyCall.Error
 }

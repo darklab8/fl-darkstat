@@ -71,6 +71,7 @@ func TestApiHealth(t *testing.T) {
 	stat_fs := &builder.Filesystem{}
 
 	some_socket := "/tmp/darkstat/api_test2.sock"
+	server_port := 8454
 
 	web_server := RegisterApiRoutes(web.NewWeb(
 		[]*builder.Filesystem{
@@ -78,15 +79,29 @@ func TestApiHealth(t *testing.T) {
 		},
 		web.WithSiteRoot(settings.Env.SiteRoot),
 	), app_data)
-	web_closer := web_server.Serve(web.WebServeOpts{SockAddress: some_socket})
 
-	httpc := http.Client{
-		Transport: &http.Transport{
-			DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
-				return net.Dial("unix", some_socket)
+	var web_closer web.ServerClose
+	var httpc http.Client
+	if settings.Env.EnableUnixSockets {
+		web_closer = web_server.Serve(web.WebServeOpts{SockAddress: some_socket})
+		httpc = http.Client{
+			Transport: &http.Transport{
+				DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+					return net.Dial("unix", some_socket)
+				},
 			},
-		},
+		}
+	} else {
+		web_closer = web_server.Serve(web.WebServeOpts{Port: ptr.Ptr(server_port)})
+		httpc = http.Client{
+			Transport: &http.Transport{
+				DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+					return net.Dial("tcp", fmt.Sprintf("localhost:%d", server_port))
+				},
+			},
+		}
 	}
+
 	t.Run("GetHealth", func(t *testing.T) {
 		res, err := httpc.Get("http://localhost/ping")
 		logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
@@ -112,7 +127,10 @@ func TestApi(t *testing.T) {
 	stat_builder := stat_router.Link(ctx)
 	stat_fs := stat_builder.BuildAll(true, nil)
 
-	some_socket := "/tmp/darkstat/api_test.sock"
+	var some_socket string
+	if settings.Env.EnableUnixSockets {
+		some_socket = "/tmp/darkstat/api_test.sock"
+	}
 
 	web_server := RegisterApiRoutes(web.NewWeb(
 		[]*builder.Filesystem{
@@ -121,14 +139,26 @@ func TestApi(t *testing.T) {
 		web.WithMutexableData(app_data),
 		web.WithSiteRoot(settings.Env.SiteRoot),
 	), app_data)
+
 	web_closer := web_server.Serve(web.WebServeOpts{SockAddress: some_socket, Port: ptr.Ptr(8432)})
 
-	httpc := http.Client{
-		Transport: &http.Transport{
-			DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
-				return net.Dial("unix", some_socket)
+	var httpc http.Client
+	if settings.Env.EnableUnixSockets {
+		httpc = http.Client{
+			Transport: &http.Transport{
+				DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+					return net.Dial("unix", some_socket)
+				},
 			},
-		},
+		}
+	} else {
+		httpc = http.Client{
+			Transport: &http.Transport{
+				DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+					return net.Dial("tcp", "localhost:8432")
+				},
+			},
+		}
 	}
 
 	t.Run("GetHealth", func(t *testing.T) {
