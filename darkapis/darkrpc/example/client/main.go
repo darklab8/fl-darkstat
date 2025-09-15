@@ -16,7 +16,7 @@ func main() {
 	}
 
 	// Synchronous call
-	args := &server.Args{7, 8}
+	args := &server.Args{A: 7, B: 8}
 	var reply int
 	err = client.Call("Arith.Multiply", args, &reply)
 	if err != nil {
