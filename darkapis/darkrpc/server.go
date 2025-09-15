@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 )
@@ -59,7 +60,7 @@ func (r *RpcServer) Serve(app_data *appdata.AppData) {
 	}
 
 	var sock_listener net.Listener
-	if cfg.IsLinux {
+	if cfg.IsLinux && settings.Env.EnableUnixSockets {
 		_ = os.Remove(r.sock_address)
 		_ = os.Mkdir("/tmp/darkstat", 0777)
 		sock_listener, err = net.Listen("unix", r.sock_address) // if serving over Unix

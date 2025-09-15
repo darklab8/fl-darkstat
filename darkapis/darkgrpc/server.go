@@ -14,6 +14,7 @@ import (
 	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	_ "github.com/darklab8/fl-darkstat/docs"
 	grpcprom "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -90,7 +91,7 @@ func (r *Server) Serve() {
 
 	srvMetrics.InitializeMetrics(s)
 
-	if cfg.IsLinux && r.sock_address != "" {
+	if cfg.IsLinux && settings.Env.EnableUnixSockets && r.sock_address != "" {
 		_ = os.Remove(r.sock_address)
 		_ = os.Mkdir("/tmp/darkstat", 0777)
 		sock_listener, err := net.Listen("unix", fmt.Sprintf("%s", r.sock_address)) // if serving over Unix
@@ -116,7 +117,7 @@ func (r *Server) Serve() {
 		}
 
 		var err error
-		if cfg.IsLinux {
+		if cfg.IsLinux && settings.Env.EnableUnixSockets {
 			err = pb.RegisterDarkstatHandlerFromEndpoint(ctx, mux, fmt.Sprintf("unix:%s", DarkstatGRpcSock), opts)
 		} else {
 			err = pb.RegisterDarkstatHandlerFromEndpoint(ctx, mux, "localhost:50051", opts)

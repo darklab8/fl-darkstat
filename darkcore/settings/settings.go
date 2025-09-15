@@ -12,6 +12,7 @@ type DarkcoreEnvVars struct {
 	ExtraCookieHost     string
 	IsDiscoOauthEnabled bool
 	CacheControl        string
+	EnableUnixSockets   bool
 	Enver               *enverant.Enverant
 }
 
@@ -26,6 +27,7 @@ func GetEnvs() DarkcoreEnvVars {
 		Secret:              envs.GetStrOr("SECRET", "passphrasewhichneedstobe32bytes!", enverant.WithDesc("secret to persist authentifications with query param password or oauth, required if using auths")),
 		CacheControl:        envs.GetStrOr("CACHE_CONTROL", ""), // refactor to boolean and set as true
 		IsDiscoOauthEnabled: envs.GetBool("DISCO_OAUTH", enverant.WithDesc("an option to turn auth of darkstat for Discovery freelancer a protected dev instance of darkstat")),
+		EnableUnixSockets:   envs.GetBool("ENABLE_UNIX_SOCKETS", enverant.WithDesc("creating unix sockets, requires /tmp/darkstat or /tmp/darkstat-{environment} folder defined")),
 		Enver:               envs,
 	}
 	return Env
