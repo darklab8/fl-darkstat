@@ -1,4 +1,4 @@
-package darkgrpc
+package darkgrpc_deprecated
 
 import (
 	"runtime"

@@ -1,4 +1,4 @@
-package darkgrpc
+package darkgrpc_deprecated
 
 import "github.com/darklab8/fl-darkstat/darkstat/configs_export"
 

@@ -1,7 +1,13 @@
-package darkgrpc
+package darkgrpc_deprecated
 
 import (
-	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"net/http"
+	"strconv"
+
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated/statproto_deprecated"
+	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
+	"github.com/darklab8/fl-darkstat/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -32,12 +38,12 @@ func NewPoBCore(base *configs_export.PoBCore) *pb.PoBCore {
 	}
 }
 
-func NewInt64FromDefenseMode(DefenseMode *configs_export.DefenseMode) *int64 {
+func NewInt64FromDefenseMode(DefenseMode *configs_export.DefenseMode) pb.NumString {
 	if DefenseMode == nil {
 		return nil
 	}
 
-	return ptr.Ptr(int64(*DefenseMode))
+	return ptr.Ptr(strconv.Itoa(int(*DefenseMode)))
 }
 
 func NewShopItem(item *configs_export.ShopItem) *pb.ShopItem {
@@ -45,29 +51,24 @@ func NewShopItem(item *configs_export.ShopItem) *pb.ShopItem {
 		Nickname:  item.Nickname,
 		Name:      item.Name,
 		Category:  item.Category,
-		Id:        int64(item.Id),
-		Quantity:  int64(item.Quantity),
-		Price:     int64(item.PriceBaseSellsFor),
-		SellPrice: int64(item.PriceBaseBuysFor),
-		MinStock:  int64(item.MinStock),
-		MaxStock:  int64(item.MaxStock),
+		Id:        NewInt64S(item.Id),
+		Quantity:  NewInt64S(item.Quantity),
+		Price:     NewInt64S(item.PriceBaseSellsFor),
+		SellPrice: NewInt64S(item.PriceBaseBuysFor),
+		MinStock:  NewInt64S(item.MinStock),
+		MaxStock:  NewInt64S(item.MaxStock),
 	}
 }
 
-func GetPoBGoods(app_data *appdata.AppData, in *pb.Empty) (*pb.GetPoBGoodsReply, error) {
-	if app_data != nil {
-		app_data.RLock()
-		defer app_data.RUnlock()
-	}
-
+func GetPoBGoods(app_data *appdata.AppData) (*pb.GetPoBGoodsReply, error) {
 	var pob_goods []*pb.PoBGood
 	for _, base := range app_data.Configs.PoBGoods {
 
 		item := &pb.PoBGood{
 			Nickname:              base.Nickname,
 			Name:                  base.Name,
-			TotalBuyableFromBases: int64(base.TotalBuyableFromBases),
-			TotalSellableToBases:  int64(base.TotalSellableToBases),
+			TotalBuyableFromBases: NewInt64S(base.TotalBuyableFromBases),
+			TotalSellableToBases:  NewInt64S(base.TotalSellableToBases),
 			BestPriceToBuy:        NewInt64(base.BestPriceToBuy),
 			BestPriceToSell:       NewInt64(base.BestPriceToSell),
 			Category:              base.Category,
@@ -87,4 +88,36 @@ func GetPoBGoods(app_data *appdata.AppData, in *pb.Empty) (*pb.GetPoBGoodsReply,
 		pob_goods = append(pob_goods, item)
 	}
 	return &pb.GetPoBGoodsReply{Items: pob_goods}, nil
+}
+
+type Api interface {
+	GetAppData() *appdata.AppData
+}
+
+// ShowAccount godoc
+// @Summary      PoB Goods Deprecated
+// @Tags         deprecated
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  	statproto_deprecated.GetPoBGoodsReply
+// @Router       /statproto.Darkstat/GetPoBGoods [post]
+func GetPobGoodsDeprecated(webapp *web.Web, api Api) *registry.Endpoint {
+	return &registry.Endpoint{
+		Url: "" + "/statproto.Darkstat/GetPoBGoods",
+		Handler: func(w http.ResponseWriter, r *http.Request) {
+			if webapp.AppDataMutex != nil {
+				webapp.AppDataMutex.RLock()
+				defer webapp.AppDataMutex.RUnlock()
+			}
+
+			reply, err := GetPoBGoods(api.GetAppData())
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			apiutils.ReturnJson(&w, reply)
+		},
+	}
 }
