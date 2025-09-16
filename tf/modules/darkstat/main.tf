@@ -143,9 +143,9 @@ resource "docker_service" "darkstat" {
 
   update_config {
     parallelism    = 1
-    delay          = "3m"
-    failure_action = "continue"
-    monitor        = "1m30s"
+    delay          = "30s"
+    failure_action = "rollback"
+    monitor        = "1m"
   }
 
   endpoint_spec {
