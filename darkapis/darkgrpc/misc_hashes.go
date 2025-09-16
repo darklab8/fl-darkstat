@@ -1,8 +1,6 @@
 package darkgrpc
 
 import (
-	"context"
-
 	"runtime"
 	"strings"
 	"sync"
@@ -12,7 +10,6 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings"
-	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 )
@@ -84,25 +81,4 @@ func GetHashesData(app_data *appdata.AppData) map[string]Hash {
 		}
 	}
 	return hashes
-}
-
-func (s *Server) GetHashes(_ context.Context, in *pb.Empty) (*pb.GetHashesReply, error) {
-	if s.app_data != nil {
-		s.app_data.RLock()
-		defer s.app_data.RUnlock()
-	}
-
-	answer := &pb.GetHashesReply{HashesByNick: make(map[string]*pb.Hash)}
-
-	hashes := GetHashesData(s.app_data)
-
-	for key, hash := range hashes {
-		answer.HashesByNick[key] = &pb.Hash{
-			Int32:  hash.Int32,
-			Uint32: hash.Uint32,
-			Hex:    hash.Hex,
-		}
-	}
-
-	return answer, nil
 }

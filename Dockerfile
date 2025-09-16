@@ -11,26 +11,9 @@ COPY go.mod go.sum ./
 RUN go mod download -x
 RUN go install github.com/a-h/templ/cmd/templ@v0.3.857
 RUN go install github.com/swaggo/swag/cmd/swag@v1.16.4
-
-FROM dependencies AS protoc
-
-RUN apt-get install unzip -y
-WORKDIR /install
-COPY docker/install_protoc.py .
-RUN python3 install_protoc.py
-
-COPY ./docker/go.mod ./docker/go.sum ./docker/installer.go ./
-RUN go mod tidy
-RUN go install \
-    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
-    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
-    google.golang.org/protobuf/cmd/protoc-gen-go \
-    google.golang.org/grpc/cmd/protoc-gen-go-grpc
 RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-CMD task grpc:protoc:gateway
-WORKDIR /code
 
-FROM protoc AS build
+FROM dependencies AS build
 
 RUN mkdir data
 COPY main.go Taskfile.yml ./
@@ -40,9 +23,6 @@ COPY configs configs
 COPY darkcore darkcore
 COPY darkapis darkapis
 COPY darkmap darkmap
-
-# regen grpc+gateway code. Supposedly should be not changed :)
-RUN task grpc:protoc:gateway
 
 # building golang gazilion times faster
 ENV GOCACHE=/root/.cache/go-build
