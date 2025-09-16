@@ -297,10 +297,12 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 	gun.GunTurnRate, _ = gun_info.TurnRate.GetValue()
 	gun.DispersionAngle, _ = gun_info.DispersionAngle.GetValue()
 
-	if gun.IsAutoTurret {
-		gun.Type = "turret"
-	} else {
+	if strings.Contains(gun.HpType, "gun") {
 		gun.Type = "gun"
+	} else if strings.Contains(gun.HpType, "turret") {
+		gun.Type = "turret"
+	} else if strings.Contains(gun.HpType, "torpedo") {
+		gun.Type = "torpedo"
 	}
 
 	// fmt.Println("CalculateTEchCompat", e.mapped.Discovery != nil, gun.Nickname)
