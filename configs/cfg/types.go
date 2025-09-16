@@ -6,6 +6,8 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
+type CtxKey string
+
 type Vector struct {
 	X float64
 	Y float64

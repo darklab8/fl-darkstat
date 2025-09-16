@@ -1,9 +1,9 @@
 package statproto_deprecated
 
 type Pos struct {
-	X float64 `protobuf:"fixed64,1,opt,name=x,proto3" json:"x,omitempty"`
-	Y float64 `protobuf:"fixed64,2,opt,name=y,proto3" json:"y,omitempty"`
-	Z float64 `protobuf:"fixed64,3,opt,name=z,proto3" json:"z,omitempty"`
+	X float64 `protobuf:"fixed64,1,opt,name=x,proto3" json:"x"`
+	Y float64 `protobuf:"fixed64,2,opt,name=y,proto3" json:"y"`
+	Z float64 `protobuf:"fixed64,3,opt,name=z,proto3" json:"z"`
 }
 
 type GetGunsInput struct {
@@ -83,22 +83,22 @@ type ShopItem struct {
 }
 
 type PoBCore struct {
-	Nickname       string    `protobuf:"bytes,1,opt,name=nickname,proto3" json:"nickname"`
-	Name           string    `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	Pos            *string   `protobuf:"bytes,3,opt,name=pos,proto3,oneof" json:"pos"`
-	Level          NumString `protobuf:"varint,4,opt,name=level,proto3,oneof" json:"level"`
+	Nickname       string    `protobuf:"bytes,1,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	Name           string    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Pos            *string   `protobuf:"bytes,3,opt,name=pos,proto3,oneof" json:"pos,omitempty"`
+	Level          NumString `protobuf:"varint,4,opt,name=level,proto3,oneof" json:"level,omitempty"`
 	Money          NumString `protobuf:"varint,5,opt,name=money,proto3,oneof" json:"money,omitempty"`
-	Health         *float64  `protobuf:"fixed64,6,opt,name=health,proto3,oneof" json:"health"`
-	DefenseMode    NumString `protobuf:"varint,7,opt,name=defense_mode,json=defenseMode,proto3,oneof" json:"defenseMode"`
-	SystemNick     *string   `protobuf:"bytes,8,opt,name=system_nick,json=systemNick,proto3,oneof" json:"systemNick"`
-	SystemName     *string   `protobuf:"bytes,9,opt,name=system_name,json=systemName,proto3,oneof" json:"systemName"`
-	FactionNick    *string   `protobuf:"bytes,10,opt,name=faction_nick,json=factionNick,proto3,oneof" json:"factionNick"`
-	FactionName    *string   `protobuf:"bytes,11,opt,name=faction_name,json=factionName,proto3,oneof" json:"factionName"`
+	Health         *float64  `protobuf:"fixed64,6,opt,name=health,proto3,oneof" json:"health,omitempty"`
+	DefenseMode    NumString `protobuf:"varint,7,opt,name=defense_mode,json=defenseMode,proto3,oneof" json:"defenseMode,omitempty"`
+	SystemNick     *string   `protobuf:"bytes,8,opt,name=system_nick,json=systemNick,proto3,oneof" json:"systemNick,omitempty"`
+	SystemName     *string   `protobuf:"bytes,9,opt,name=system_name,json=systemName,proto3,oneof" json:"systemName,omitempty"`
+	FactionNick    *string   `protobuf:"bytes,10,opt,name=faction_nick,json=factionNick,proto3,oneof" json:"factionNick,omitempty"`
+	FactionName    *string   `protobuf:"bytes,11,opt,name=faction_name,json=factionName,proto3,oneof" json:"factionName,omitempty"`
 	ForumThreadUrl *string   `protobuf:"bytes,12,opt,name=forum_thread_url,json=forumThreadUrl,proto3,oneof" json:"forumThreadUrl,omitempty"`
-	CargoSpaceLeft NumString `protobuf:"varint,13,opt,name=cargo_space_left,json=cargoSpaceLeft,proto3,oneof" json:"cargoSpaceLeft"`
-	BasePos        *Pos      `protobuf:"bytes,14,opt,name=base_pos,json=basePos,proto3,oneof" json:"basePos"`
-	SectorCoord    *string   `protobuf:"bytes,15,opt,name=sector_coord,json=sectorCoord,proto3,oneof" json:"sectorCoord"`
-	Region         *string   `protobuf:"bytes,16,opt,name=region,proto3,oneof" json:"region"`
+	CargoSpaceLeft NumString `protobuf:"varint,13,opt,name=cargo_space_left,json=cargoSpaceLeft,proto3,oneof" json:"cargoSpaceLeft,omitempty"`
+	BasePos        *Pos      `protobuf:"bytes,14,opt,name=base_pos,json=basePos,proto3,oneof" json:"basePos,omitempty"`
+	SectorCoord    *string   `protobuf:"bytes,15,opt,name=sector_coord,json=sectorCoord,proto3,oneof" json:"sectorCoord,omitempty"`
+	Region         *string   `protobuf:"bytes,16,opt,name=region,proto3,oneof" json:"region,omitempty"`
 }
 
 type PoBGood struct {
@@ -106,14 +106,14 @@ type PoBGood struct {
 	Name                  string         `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
 	TotalBuyableFromBases NumString      `protobuf:"varint,3,opt,name=total_buyable_from_bases,json=totalBuyableFromBases,proto3" json:"totalBuyableFromBases"`
 	TotalSellableToBases  NumString      `protobuf:"varint,4,opt,name=total_sellable_to_bases,json=totalSellableToBases,proto3" json:"totalSellableToBases"`
-	BestPriceToBuy        NumString      `protobuf:"varint,5,opt,name=best_price_to_buy,json=bestPriceToBuy,proto3,oneof" json:"bestPriceToBuy"`
-	BestPriceToSell       NumString      `protobuf:"varint,6,opt,name=best_price_to_sell,json=bestPriceToSell,proto3,oneof" json:"bestPriceToSell"`
+	BestPriceToBuy        NumString      `protobuf:"varint,5,opt,name=best_price_to_buy,json=bestPriceToBuy,proto3,oneof" json:"bestPriceToBuy,omitempty"`
+	BestPriceToSell       NumString      `protobuf:"varint,6,opt,name=best_price_to_sell,json=bestPriceToSell,proto3,oneof" json:"bestPriceToSell,omitempty"`
 	Category              string         `protobuf:"bytes,7,opt,name=category,proto3" json:"category"`
 	AnyBaseSells          bool           `protobuf:"varint,8,opt,name=any_base_sells,json=anyBaseSells,proto3" json:"anyBaseSells"`
 	AnyBaseBuys           bool           `protobuf:"varint,9,opt,name=any_base_buys,json=anyBaseBuys,proto3" json:"anyBaseBuys"`
 	Bases                 []*PoBGoodBase `protobuf:"bytes,10,rep,name=bases,proto3" json:"bases"`
 	Volume                float64        `protobuf:"fixed64,11,opt,name=volume,proto3" json:"volume"`
-	ShipClass             NumString      `protobuf:"varint,12,opt,name=ship_class,json=shipClass,proto3,oneof" json:"shipClass"`
+	ShipClass             NumString      `protobuf:"varint,12,opt,name=ship_class,json=shipClass,proto3,oneof" json:"shipClass,omitempty"`
 }
 
 type PoBGoodBase struct {

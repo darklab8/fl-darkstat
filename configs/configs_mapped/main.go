@@ -437,7 +437,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			}()
 			file_public_bases := file.NewWebFile(PobDataUrl)
 			var err error
-			m.Discovery.PlayerOwnedBases, err = pob_goods.Read(file_public_bases)
+			m.Discovery.PlayerOwnedBases, err = pob_goods.Read(ctx, file_public_bases)
 			logus.Log.CheckPanic(err, "failed to read pods on darkstat start")
 		}
 		wg.Wait()

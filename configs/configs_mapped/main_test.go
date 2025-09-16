@@ -1,6 +1,7 @@
 package configs_mapped
 
 import (
+	"context"
 	"testing"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
@@ -20,8 +21,9 @@ func TestOnRealData(t *testing.T) {
 	if true {
 		return
 	}
+	ctx := context.Background()
 	file_public_bases := file.NewWebFile(PobDataUrl)
-	config, err := pob_goods.Read(file_public_bases)
+	config, err := pob_goods.Read(ctx, file_public_bases)
 
 	assert.Greater(t, len(config.BasesByName), 0)
 	assert.Nil(t, err)
