@@ -25,8 +25,9 @@ type Reply struct {
 
 // / CLIENT///////////////////
 type ClientRpc struct {
-	sock *string
-	port *int
+	address *string
+	sock    *string
+	port    *int
 }
 
 const DarkstatRpcSock = "/tmp/darkstat/rpc.sock"
@@ -42,6 +43,12 @@ func WithSockCli(sock string) ClientOpt {
 func WithPortCli(port int) ClientOpt {
 	return func(r *ClientRpc) {
 		r.port = &port
+	}
+}
+
+func WithTcpAddress(address string) ClientOpt {
+	return func(r *ClientRpc) {
+		r.address = &address
 	}
 }
 
@@ -69,7 +76,12 @@ func (r *ClientRpc) getClient() (*rpc.Client, error) {
 		client, err = rpc.Dial("unix", *r.sock) // if connecting over cli over sock
 	}
 	if r.port != nil {
-		info := fmt.Sprintf("127.0.0.1:%d", *r.port)
+
+		address := "127.0.0.1"
+		if r.address != nil {
+			address = *r.address
+		}
+		info := fmt.Sprintf("%s:%d", address, *r.port)
 		fmt.Println("initializing tcp client at ", info)
 		client, err = rpc.DialHTTP("tcp", info) // if serving over http
 		fmt.Println("initialized tcp client")
