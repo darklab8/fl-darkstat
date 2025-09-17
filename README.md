@@ -59,15 +59,12 @@ General instruction:
   - Check to have set other values from [enverant.json](.vscode/enverant.json)
   - full list of variable possible to set available in help command `go run . help`
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
-  - run some command, for example `task web`
+  - run `task swag: build`
+  - run `templ generate`
+  - run some command, for example `task web` or u could run `go run . web` directly at this point
 - if u wish access to `task dev:watch` that reloads running web server on file changes, then install `pip install watchdog[watchmedo]` and ensure `watchmedo` binary is available to `task dev:watch` command written [in Taskfile](Taskfile.yml)
 
 If u have problems with configuring development environment, then seek my contacts below to help you through it ^_^
-
-# Development, how to regenerate proto related code
-
-- task grpc:docker:gateway // for docker way to run file updates for grpc and its gateway // assumes docker is available of unix socket
-- task grpc:protoc:gateway // to run grpc file updates locally without docker. // assumes u did same stuff as `protoc` stage in Dockerfile
 
 # Features
 
@@ -93,18 +90,22 @@ If u have problems with configuring development environment, then seek my contac
   - deployed Discovery can be found at https://darkstat.dd84ai.com/swagger/index.html
   - deployed Vanilla can be found at https://darkstat-vanilla.dd84ai.com/swagger/index.html
 
-# Alternatively we offer Client generation through gRPC!
+# gRPC existed but was removed
 
-- With gRPC you can export our proto file and generate client with precise data structs and methods of API for your any language! Be it C#, Javascript, Python or even C++
+In the past we offered **grpc client** too, but it **was decommissioned** due being not very used and creating maintanance overhead
+- https://github.com/darklab8/fl-darkstat/pull/158
+- if there will be ever demand for gRPC, we could make it back
+
+- With gRPC you could export our proto file and generate client with precise data structs and methods of API for your any language! Be it C#, Javascript, Python or even C++
   - Full list of supported languages here https://grpc.io/docs/languages/
   - You get static typing validations
   - You get performance boosts from using grpc compression stuff
   - We change server side smth? Just regenerate the lib to keep up with updates ^_^
-  - Import [darkstat proto file](./darkapis/darkgrpc/statproto/darkstat.proto) for its usage and generate client lib from it with `protoc` command
+  - Import [darkstat proto file](https://github.com/darklab8/fl-darkstat/blob/8a4903a459e2024bdacf8a3444603fc67403037a/darkapis/darkgrpc/statproto/darkstat.proto) for its usage and generate client lib from it with `protoc` command
   - addresses to connect:
     - for local instance localhost:50051, or optionally unix socket `/tmp/darkstat/grpc.sock` at linux for extra performance boosts.
     - for deployed instances for discovery and vanilla, they are hosted over darkgrpc.dd84ai.com and darkgrpc-vanilla.dd84ai.com accordingly. 80 and 443 ports accordingly
-    - [see example in golang](./darkapis/darkgrpc/server_test.go) of interacting with grpc if desired
+    - [see example in golang](https://github.com/darklab8/fl-darkstat/blob/8a4903a459e2024bdacf8a3444603fc67403037a/darkapis/darkgrpc/server_test.go) of interacting with grpc if desired
     - up to date exposed grpc domains can be found [in this file](./tf/production/main.tf) as rpc_prefix + zone combination
   - Make sure to set in your client option to increase accepting data size `grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(32 * 10e6))`.
   - NOTE: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLY FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers
