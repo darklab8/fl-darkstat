@@ -44,6 +44,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/weaponmoddb"
 	"github.com/darklab8/fl-darkstat/configs/discovery/base_recipe_items"
 	"github.com/darklab8/fl-darkstat/configs/discovery/discoprices"
+	"github.com/darklab8/fl-darkstat/configs/discovery/minecontrol"
 	"github.com/darklab8/fl-darkstat/configs/discovery/playercntl_rephacks"
 	"github.com/darklab8/fl-darkstat/configs/discovery/pob_goods"
 	"github.com/darklab8/fl-darkstat/configs/discovery/techcompat"
@@ -65,6 +66,7 @@ type DiscoveryConfig struct {
 	LatestPatch        autopatcher.Patch
 	PlayercntlRephacks *playercntl_rephacks.Config
 	PlayerOwnedBases   *pob_goods.Config
+	Minecontrol        *minecontrol.Config
 }
 
 type MappedConfigs struct {
@@ -260,6 +262,8 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	var file_prices *iniload.IniLoader
 	var file_base_recipe_items *iniload.IniLoader
 	var file_playercntl_rephacks *iniload.IniLoader
+	var file_minecontrol *iniload.IniLoader
+
 	if filesystem.GetFile("flsr-launcher.ini") != nil ||
 		filesystem.GetFile("flsr-texts.dll") != nil ||
 		filesystem.GetFile("flsr-dialogs.dll") != nil {
@@ -275,13 +279,14 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
 		file_base_recipe_items = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_items.cfg"))
 		file_playercntl_rephacks = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/playercntl_rephacks.cfg"))
-
+		file_minecontrol = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/minecontrol.cfg"))
 		all_files = append(
 			all_files,
 			file_techcompat,
 			file_prices,
 			file_base_recipe_items,
 			file_playercntl_rephacks,
+			file_minecontrol,
 		)
 
 		if latest_patch_file := filesystem.GetFile(autopatcher.AutopatherFilename); latest_patch_file != nil {
@@ -418,7 +423,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 		}()
 
 		if m.Discovery != nil {
-			wg.Add(4)
+			wg.Add(5)
 			go func() {
 				m.Discovery.Techcompat = techcompat.Read(file_techcompat)
 				wg.Done()
@@ -433,6 +438,10 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			}()
 			go func() {
 				m.Discovery.PlayercntlRephacks = playercntl_rephacks.Read(file_playercntl_rephacks)
+				wg.Done()
+			}()
+			go func() {
+				m.Discovery.Minecontrol = minecontrol.Read(file_minecontrol)
 				wg.Done()
 			}()
 			file_public_bases := file.NewWebFile(PobDataUrl)

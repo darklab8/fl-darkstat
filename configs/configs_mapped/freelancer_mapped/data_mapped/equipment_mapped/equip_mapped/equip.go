@@ -317,8 +317,9 @@ type Config struct {
 
 	Scanners []*Scanner
 
-	Tractors []*Tractor
-	Cloaks   []*CloakingDevice
+	Tractors    []*Tractor
+	TractorsMap map[string]*Tractor
+	Cloaks      []*CloakingDevice
 }
 
 const (
@@ -340,6 +341,7 @@ func Read(files []*iniload.IniLoader) *Config {
 		GunMap:            make(map[string]*Gun),
 		ShidGenMap:        make(map[string]*ShieldGenerator),
 		ThrusterMap:       make(map[string]*Thruster),
+		TractorsMap:       make(map[string]*Tractor),
 	}
 	frelconfig.Commodities = make([]*Commodity, 0, 100)
 	frelconfig.CommoditiesMap = make(map[string]*Commodity)
@@ -613,6 +615,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					Mass:       semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
 				frelconfig.Tractors = append(frelconfig.Tractors, tractor)
+				frelconfig.TractorsMap[tractor.Nickname.Get()] = tractor
 			case "[countermeasuredropper]":
 				frelconfig.Items = append(frelconfig.Items, item)
 				frelconfig.ItemsMap[item.Nickname.Get()] = item

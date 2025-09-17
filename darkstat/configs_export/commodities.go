@@ -3,6 +3,8 @@ package configs_export
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
@@ -122,6 +124,31 @@ func (e *Exporter) GetCommodities(ctx context.Context) []*Commodity {
 				commodity.ProffitMargin = commodity.PriceBestBaseBuysFor - commodity.PriceBestBaseSellsFor
 			}
 
+			var infocard_addition infocarder.InfocardBuilder
+			if e.Mapped.Discovery != nil {
+				if player_bonuses, ok := e.Mapped.Discovery.Minecontrol.PlayerBonusByOreNickname[commodity.Nickname]; ok {
+					infocard_addition.WriteLineStr(`MINING BONUSES (darkstat):`)
+					for _, player_bonus := range player_bonuses {
+						id_nickname := player_bonus.IDNickname.Get()
+						id_name := id_nickname
+						if tractor, ok := e.Mapped.Equip().TractorsMap[id_nickname]; ok {
+							if name_id, ok := tractor.IdsName.GetValue(); ok {
+								id_name = e.GetInfocardName(name_id, string(id_nickname))
+							}
+						}
+						infocard_addition.WriteLineStr(id_name, "= ", strconv.FormatFloat(player_bonus.Bonus.Get(), 'f', 2, 64))
+					}
+					infocard_addition.WriteLineStr("")
+				}
+			}
+
+			var info infocarder.InfocardBuilder
+			if value, ok := e.GetInfocard2(infocarder.InfocardKey(commodity.Nickname)); ok {
+				info.Lines = value
+			}
+			if !strings.Contains(info.Lines.StringsJoin(""), "MINING BONUSES") {
+				e.PutInfocard(infocarder.InfocardKey(commodity.Nickname), append(info.Lines, infocard_addition.Lines...))
+			}
 			commodities = append(commodities, commodity)
 		}
 

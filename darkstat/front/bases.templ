@@ -78,6 +78,11 @@ templ BasesTable(
 					<th style="width:50px;">
 						@frmt.MultiLinestring([]string{"Dynamic Loot", "Min-Max", "(Difficulty)"})
 					</th>
+					if shared.ShowDisco {
+						<th style="width:50px;">
+							@frmt.MultiLinestring([]string{"Mining", "Bonuses", "Count"})
+						</th>
+					}
 				}
 				<th style="width:50px;">System</th>
 				if shared.ShowDisco {
@@ -211,6 +216,13 @@ func GetBasesWithTradePathsTo(ctx context.Context, bases []*configs_export.Base,
 	return results
 }
 
+func GetMiningBonusesCountByOre(shared *types.SharedData, Nickname string) int {
+	if value, ok := shared.Minecontrol.PlayerBonusByOreNickname[Nickname]; ok {
+		return len(value)
+	}
+	return 0
+}
+
 templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, shared *types.SharedData, routes *configs_export.BaseBestPathTimes) {
 	@tab.TrFromMain(tab.NewTr(
 		base.Nickname.ToStr(),
@@ -227,6 +239,9 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		}
 		if tab_mode == BaseTabOres {
 			<td>{ strconv.Itoa(base.DynamicLootMin) } - { strconv.Itoa(base.DynamicLootMax) } ( { strconv.Itoa(base.DynamicLootDifficulty) } ) </td>
+			if shared.ShowDisco {
+				<td>{ strconv.Itoa(GetMiningBonusesCountByOre(shared, base.MinedGood.Nickname)) }</td>
+			}
 		}
 		<td>
 			@frmt.WriteSystemName(base.System)

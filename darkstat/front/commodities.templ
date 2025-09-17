@@ -49,6 +49,11 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm tab.PinMod, s
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Profit", "per v. "})
 				</th>
+				if shared.ShowDisco {
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{"Mining", "Bonuses", "Count"})
+					</th>
+				}
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>
 				<th style="width:25px;">Infocard ID</th>
@@ -73,6 +78,9 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm tab.PinMod, s
 					}
 					<td>{ strconv.Itoa(commodity.ProffitMargin) }</td>
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(commodity.ProffitMargin, commodity.Volume)) }</td>
+					if shared.ShowDisco {
+						<td>{ strconv.Itoa(GetMiningBonusesCountByOre(shared, commodity.Nickname)) }</td>
+					}
 					<td class="seo">{ commodity.Nickname }</td>
 					<td class="seo">{ strconv.Itoa(commodity.NameID) }</td>
 					<td class="seo">{ strconv.Itoa(commodity.InfocardID) }</td>

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/discovery/minecontrol"
 	"github.com/darklab8/fl-darkstat/configs/discovery/techcompat"
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -60,6 +61,7 @@ type DiscoveryData struct {
 	TractorsByID map[cfg.TractorID]*configs_export.Tractor
 	Config       *techcompat.Config
 	LatestPatch  autopatcher.Patch
+	Minecontrol  *minecontrol.Config
 
 	*infocarder.Infocarder
 

@@ -136,6 +136,7 @@ func NewAppData(ctx context.Context) *AppData {
 				Config:            mapped.Discovery.Techcompat,
 				LatestPatch:       mapped.Discovery.LatestPatch,
 				OrderedTechcompat: *configs_export.NewOrderedTechCompat(configs),
+				Minecontrol:       mapped.Discovery.Minecontrol,
 			}
 		}
 		fmt.Println("attempting to access l.configs.Infocards")

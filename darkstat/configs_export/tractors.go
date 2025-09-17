@@ -3,6 +3,7 @@ package configs_export
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
@@ -133,6 +134,31 @@ func (e *Exporter) GetTractors() []*Tractor {
 				}
 			}
 		}
+
+		var infocard_addition infocarder.InfocardBuilder
+		if e.Mapped.Discovery != nil {
+			if player_bonuses, ok := e.Mapped.Discovery.Minecontrol.PlayerBonusByIDNickname[tractor.Nickname]; ok {
+				infocard_addition.WriteLineStr(`MINING BONUSES (darkstat):`)
+				for _, player_bonus := range player_bonuses {
+
+					ore_nickname := player_bonus.OreNickname.Get()
+					ore_name := ""
+					if equip, ok := e.Mapped.Equip().ItemsMap[ore_nickname]; ok {
+						ore_name = e.GetInfocardName(equip.IdsName.Get(), ore_nickname)
+					}
+
+					infocard_addition.WriteLineStr(ore_name, " (", ore_nickname, ")= ", strconv.FormatFloat(player_bonus.Bonus.Get(), 'f', 2, 64))
+				}
+				infocard_addition.WriteLineStr("")
+			}
+
+			var info infocarder.InfocardBuilder
+			if value, ok := e.GetInfocard2(infocarder.InfocardKey(tractor.Nickname)); ok {
+				info.Lines = value
+			}
+			e.PutInfocard(infocarder.InfocardKey(tractor.Nickname), append(info.Lines, infocard_addition.Lines...))
+		}
+
 		tractors = append(tractors, tractor)
 	}
 	return tractors

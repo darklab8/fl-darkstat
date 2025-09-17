@@ -2,6 +2,7 @@ package front
 
 import (
 	"fmt"
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/config_consts"
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -44,6 +45,11 @@ templ TractorHeaders(shared *types.SharedData) {
 		@frmt.MultiLinestring([]string{"Reach", "Speed"})
 	</th>
 	<th style="width:25px;">Lootable</th>
+	if shared.ShowDisco {
+		<th style="width:25px;">
+			@frmt.MultiLinestring([]string{"Mining", "Bonuses"})
+		</th>
+	}
 	<th style="width:25px;">Nickname</th>
 	if settings.Env.IsDevEnv {
 		<th style="width:25px;">
@@ -67,6 +73,13 @@ func NoDockCount(tractor *configs_export.Tractor) int {
 	return count
 }
 
+func GetMiningBonusesCount(shared *types.SharedData, Nickname cfg.TractorID) int {
+	if value, ok := shared.Minecontrol.PlayerBonusByIDNickname[Nickname]; ok {
+		return len(value)
+	}
+	return 0
+}
+
 templ TractorValues(tractor *configs_export.Tractor, shared *types.SharedData) {
 	<td>{ strconv.Itoa(tractor.Price) } </td>
 	<td>{ frmt.FormatBoolAsYesNo(configs_export.Buyable(tractor.Bases)) }</td>
@@ -76,6 +89,9 @@ templ TractorValues(tractor *configs_export.Tractor, shared *types.SharedData) {
 	<td>{ strconv.Itoa(tractor.MaxLength) } </td>
 	<td>{ strconv.Itoa(tractor.ReachSpeed) }</td>
 	<td>{ strconv.FormatBool(tractor.Lootable) }</td>
+	if shared.ShowDisco {
+		<td>{ strconv.Itoa(GetMiningBonusesCount(shared,tractor.Nickname)) } </td>
+	}
 	<td class="seo">{ string(tractor.Nickname) } </td>
 	if settings.Env.IsDevEnv {
 		<td>{ strconv.Itoa(NoDockCount(tractor)) } </td>
