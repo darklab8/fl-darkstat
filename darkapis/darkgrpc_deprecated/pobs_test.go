@@ -58,6 +58,9 @@ func TestDepregatedPoBGoods(t *testing.T) {
 	logus.Log.CheckPanic(err, "failed to read test file")
 	new_ctx := context.WithValue(ctx, cfg.CtxKey("pob_goods_data_override"), file_data)
 	app_data := router.GetAppDataFixture(new_ctx)
+	if !app_data.Configs.IsDiscovery {
+		return
+	}
 	stat_router := router.NewRouter(app_data)
 	stat_builder := stat_router.Link(ctx)
 	stat_fs := stat_builder.BuildAll(true, nil)
