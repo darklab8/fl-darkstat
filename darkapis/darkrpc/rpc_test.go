@@ -1,6 +1,7 @@
 package darkrpc
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -11,7 +12,8 @@ import (
 )
 
 func TestRpc(t *testing.T) {
-	app_data := router.GetAppDataFixture()
+	ctx := context.Background()
+	app_data := router.GetAppDataFixture(ctx)
 
 	var srv *RpcServer
 	var client RpcI

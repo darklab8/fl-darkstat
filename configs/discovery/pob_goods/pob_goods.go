@@ -1,12 +1,14 @@
 package pob_goods
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"html"
 	"regexp"
 	"strings"
 
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
@@ -69,7 +71,7 @@ var (
 )
 
 func (c *Config) Refresh() error {
-	reread, err := Read(c.file)
+	reread, err := Read(context.Background(), c.file)
 	if logus.Log.CheckError(err, "failed to refresh") {
 		return err
 	}
@@ -102,8 +104,17 @@ func NameToNickname(name string) string {
 	return name
 }
 
-func Read(file *file.File) (*Config, error) {
+const (
+	PoBGoodsDataOverrideKey = cfg.CtxKey("pob_goods_data_override")
+)
+
+func Read(ctx context.Context, file *file.File) (*Config, error) {
 	byteValue, err := file.ReadBytes()
+	if file_data := ctx.Value(cfg.CtxKey("pob_goods_data_override")); file_data != nil {
+		byteValue = file_data.([]byte)
+		err = nil
+	}
+
 	if logus.Log.CheckError(err, "failed to read file") {
 		return nil, errors.New("failed to read file")
 	}

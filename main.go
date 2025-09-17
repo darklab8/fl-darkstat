@@ -18,7 +18,6 @@ import (
 	_ "net/http/pprof"
 
 	"github.com/darklab8/fl-darkstat/configs"
-	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
 	"github.com/darklab8/fl-darkstat/darkapis/darkrpc"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
@@ -242,16 +241,6 @@ func main() {
 		rpc_server.Serve(app_data)
 
 		metronom := metrics.NewMetronom(web_server.GetMux())
-		var grpc_opts []darkgrpc.ServerOpt = []darkgrpc.ServerOpt{
-			darkgrpc.WithProm(metronom.Reg),
-		}
-		if settings.Env.EnableUnixSockets {
-			grpc_opts = append(grpc_opts, darkgrpc.WithSockAddr(darkgrpc.DarkstatGRpcSock))
-		}
-		grpc_server := darkgrpc.NewServer(
-			app_data, darkgrpc.DefaultServerPort,
-			grpc_opts...)
-		go grpc_server.Serve()
 		go metronom.Run()
 
 		return func() {

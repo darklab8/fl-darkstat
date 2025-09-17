@@ -3,8 +3,8 @@ package darkhttp
 import (
 	"net/http"
 
-	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
-	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc/statproto"
+	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated/statproto_deprecated"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
@@ -60,7 +60,7 @@ func GetTractors(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.Tractors
 			}
-			result = darkgrpc.FilterNicknames(in.FilterNicknames, result)
+			result = darkgrpc_deprecated.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Tractor
 			for _, item := range result {

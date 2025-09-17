@@ -3,7 +3,7 @@ package darkhttp
 import (
 	"net/http"
 
-	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc"
+	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
@@ -14,7 +14,7 @@ import (
 // @Tags         misc
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  	darkgrpc.Hashes
+// @Success      200  {object}  	darkgrpc_deprecated.Hashes
 // @Router       /api/hashes [post]
 func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
@@ -24,8 +24,8 @@ func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 				webapp.AppDataMutex.RLock()
 				defer webapp.AppDataMutex.RUnlock()
 			}
-			hashes := darkgrpc.GetHashesData(api.app_data)
-			apiutils.ReturnJson(&w, darkgrpc.Hashes{HashesByNick: hashes})
+			hashes := darkgrpc_deprecated.GetHashesData(api.app_data)
+			apiutils.ReturnJson(&w, darkgrpc_deprecated.Hashes{HashesByNick: hashes})
 		},
 	}
 }
