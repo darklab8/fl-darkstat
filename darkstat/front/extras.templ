@@ -1,0 +1,103 @@
+package front
+
+import (
+	"fmt"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"strconv"
+	"strings"
+)
+
+func ExtraDetailedUrl(cm configs_export.ExtraItem) string {
+	return "cdn/extra/extra_base-" + strings.ToLower(cm.Nickname)
+}
+
+templ ExtraTable(extras []configs_export.ExtraItem, pinm tab.PinMod, shared *types.SharedData) {
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th style="width:200px;">Item</th>
+				if pinm == tab.PinMode {
+					<th style="width:25px;">Select</th>
+					<th style="width:25px;">Select</th>
+				}
+				@disco.ThDisco(shared)
+				<th style="width:50px;">Category</th>
+				<th style="width:25px;">Price</th>
+				<th style="width:25px;">Buyable</th>
+				<th style="width:5px;">Mass</th>
+				<th style="width:25px;">Lootable</th>
+				<th style="width:25px;">@frmt.MultiLinestring([]string{"Power", "Capacity"})
+</th>
+				<th style="width:25px;">@frmt.MultiLinestring([]string{"Power", "Charge"})
+</th>
+				<th style="width:25px;">HpType</th>
+				<th style="width:25px;">Nickname</th>
+				<th style="width:25px;">Name ID</th>
+				<th style="width:25px;">Info ID</th>
+				<th style="max-width:100%;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, item := range extras {
+				@tab.TrFromMainTb(item.Nickname, ExtraDetailedUrl(item), pinm) {
+					@tab.PinTd(item.Nickname, item.Name, pinm)
+					@tab.PinSelectLeftRight(pinm, ExtraDetailedUrl(item))
+					@disco.TdDisco(shared, item.Nickname, item.DiscoveryTechCompat)
+					<td class="seo">{ item.Category } </td>
+					<td>{ strconv.Itoa(item.Price) } </td>
+					<td>{ frmt.FormatBoolAsYesNo(configs_export.Buyable(item.Bases)) }</td>
+					<td>{ fmt.Sprintf("%.2f", item.Mass) }</td>
+					<td>{ strconv.FormatBool(item.Lootable) }</td>
+					<td>
+						if item.PowerCapacity != nil {
+							{ strconv.Itoa(*item.PowerCapacity) }
+						}
+					</td>
+					<td>
+						if item.PowerChargeRate != nil {
+							{ strconv.Itoa(*item.PowerChargeRate) }
+						}
+					</td>
+					<td class="seo">{ item.HpType } </td>
+					<td class="seo">{ item.Nickname } </td>
+					<td class="seo">{ strconv.Itoa(item.NameID) } </td>
+					<td class="seo">{ strconv.Itoa(item.InfoID) } </td>
+					@tab.TdInfoCardClick(infocarder.InfocardKey(item.Nickname), item.Nickname, pinm, shared, tab.InfocardClickOpts{})
+				}
+			}
+		</tbody>
+	</table>
+}
+
+// https://www.cssscript.com/minimalist-table-sortable/#:~:text=Description%3A-,sorttable.,clicking%20on%20the%20table%20headers
+// https://www.cssscript.com/fast-html-table-sorting/
+templ ExtraItemT(items []configs_export.ExtraItem, mode2 tab.ShowEmpty, shared *types.SharedData) {
+	@TabMenu(urls.ExtraItems, mode2, shared)
+	@tab.TabContent() {
+		<div class="splitter">
+			@tab.LeftTable() {
+				@tab.TableTop() {
+					@tab.FilterBar(shared)
+					<div id="table-top-main">
+						@ExtraTable(items, tab.MainMode, shared)
+					</div>
+					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
+						@ExtraTable(items, tab.PinMode, shared)
+					</div>
+				}
+				@tab.TableBottom() {
+					@GoodAtBaseSharedT(ShowAsCommodity(false), shared)
+				}
+			}
+			@tab.InfocardTable() {
+				@tab.InfocardShared()
+			}
+		</div>
+	}
+}

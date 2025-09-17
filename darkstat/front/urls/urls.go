@@ -35,6 +35,7 @@ const (
 	IDRephacks      utils_types.FilePath = "cdn/id_rephacks.html"
 	Engines         utils_types.FilePath = "cdn/engines.html"
 	CounterMeasures utils_types.FilePath = "cdn/counter_measures.html"
+	ExtraItems      utils_types.FilePath = "cdn/extra_items.html"
 	Scanners        utils_types.FilePath = "cdn/scanners.html"
 	PoBs            utils_types.FilePath = "cdn/pobs.html"
 	PoBGoods        utils_types.FilePath = "cdn/pob_goods.html"

@@ -56,6 +56,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button(tab.NewButtn(ctx, []string{"PoBs"}, urls.PoBs, url, tab.WithRelay()))
 					@tab.Button(tab.NewButtn(ctx, []string{"PoB&thinsp;", "goods"}, urls.PoBGoods, url, tab.WithRelay()))
 				}
+				@tab.Button(tab.NewButtn(ctx, []string{"Extra"}, urls.ExtraItems, url))
 				if settings.IsApiActive() {
 					@tab.Button(tab.NewButtn(ctx, []string{"API"}, urls.Swagger, url, tab.WithSiteUrl(settings.Env.SiteHost+"/"), tab.WithDrectUrl()))
 				}
@@ -94,6 +95,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button(tab.NewButtn(ctx, []string{"PoBs"}, tab.AllItemsUrl(urls.PoBs), url, tab.WithRelay()))
 					@tab.Button(tab.NewButtn(ctx, []string{"PoB&thinsp;", "goods"}, tab.AllItemsUrl(urls.PoBGoods), url, tab.WithRelay()))
 				}
+				@tab.Button(tab.NewButtn(ctx, []string{"Extra"}, tab.AllItemsUrl(urls.ExtraItems), url))
 				if settings.IsApiActive() {
 					@tab.Button(tab.NewButtn(ctx, []string{"API"}, urls.Swagger, url, tab.WithSiteUrl(settings.Env.SiteHost+"/"), tab.WithDrectUrl()))
 				}

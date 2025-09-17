@@ -71,6 +71,7 @@ func (l *Router) Link(ctx context.Context) *builder.Builder {
 		l.LinkEngines(ctx, build, configs, shared)
 		l.LinkCounterMeasures(ctx, build, configs, shared)
 		l.LinkScanners(ctx, build, configs, shared)
+		l.LinkExtraItems(ctx, build, configs, shared)
 
 		build.RegComps(
 			builder.NewComponent(

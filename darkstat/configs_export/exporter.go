@@ -75,6 +75,7 @@ type Exporter struct {
 	CMs          []CounterMeasure
 	Scanners     []Scanner
 	Ammos        []Ammo
+	ExtraItems   []ExtraItem
 
 	findable_in_loot_cache map[string]bool
 	craftable_cached       map[string]bool
@@ -268,6 +269,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 		e.Cloaks = e.GetCloaks(e.Tractors)
 		e.CMs = e.GetCounterMeasures(e.Tractors)
 		e.Scanners = e.GetScanners(e.Tractors)
+		e.ExtraItems = e.GetExtraItems(e.Tractors)
 		logus.Log.Info("getting ammo")
 
 		e.Ammos = e.GetAmmo(e.Tractors)
