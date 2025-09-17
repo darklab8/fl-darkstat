@@ -92,11 +92,11 @@ If u have problems with configuring development environment, then seek my contac
 
 # gRPC existed but was removed
 
-In the past we offered **grpc client** too, but it **was decommissioned** due being not very used and creating maintanance overhead
-- https://github.com/darklab8/fl-darkstat/pull/158
+In the past we offered **grpc client** too, but it **was decommissioned** in https://github.com/darklab8/fl-darkstat/pull/158 due being not very used and creating maintanance overhead
 - if there will be ever demand for gRPC, we could make it back
-
-- With gRPC you could export our proto file and generate client with precise data structs and methods of API for your any language! Be it C#, Javascript, Python or even C++
+- With gRPC you could export [our proto file](https://github.com/darklab8/fl-darkstat/blob/8a4903a459e2024bdacf8a3444603fc67403037a/darkapis/darkgrpc/statproto/darkstat.proto) and generate client with precise data structs and methods of API for your any language! Be it C#, Javascript, Python or even C++
+<details>
+  <summary>Detailed deprecated description</summary>
   - Full list of supported languages here https://grpc.io/docs/languages/
   - You get static typing validations
   - You get performance boosts from using grpc compression stuff
@@ -109,7 +109,7 @@ In the past we offered **grpc client** too, but it **was decommissioned** due be
     - up to date exposed grpc domains can be found [in this file](./tf/production/main.tf) as rpc_prefix + zone combination
   - Make sure to set in your client option to increase accepting data size `grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(32 * 10e6))`.
   - NOTE: By default Grpc goes through grpc endpoint and uses compression of Protocol Buffers. Ability to go Json in API Gateway (for which Swagger documentation is provided) is ONLY FALLBACK for situations when people unable to go gRPC native way. If you will go through gRPC getting started instruction, u will receive automatically for your language client generated to utilize Protocol Buffers
-
+</details>
 # What makes different from regular flstat
 
 - Obviously online
