@@ -15,7 +15,6 @@ module "darkstat" {
   EOT
 
   stat_prefix       = "darkstat-staging"
-  rpc_prefix        = "darkgrpc-staging"
   apigateway_prefix = "apigateway-staging"
   zone              = "dd84ai.com"
   enable_restarts   = false

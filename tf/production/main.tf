@@ -18,7 +18,6 @@ module "darkstat" {
 
   stat_prefix       = "darkstat"
   apigateway_prefix = "apigateway"
-  rpc_prefix        = "darkgrpc"
   pprof_prefix      = "darkstat-pprof"
   zone              = "dd84ai.com"
   is_discovery      = true
@@ -78,7 +77,6 @@ module "darkstat_vanilla" {
   EOT
 
   stat_prefix       = "darkstat-vanilla"
-  rpc_prefix        = "darkgrpc-vanilla"
   apigateway_prefix = "apigateway-vanilla"
   zone              = "dd84ai.com"
   enable_restarts   = false

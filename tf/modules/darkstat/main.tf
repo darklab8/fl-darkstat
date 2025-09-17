@@ -80,7 +80,7 @@ resource "docker_service" "darkstat" {
           } : {},
           var.apigateway_prefix != null ? {
             "caddy_4"               = "${var.apigateway_prefix}.${var.zone}"
-            "caddy_4.reverse_proxy" = "{{upstreams 8081}}"
+            "caddy_4.reverse_proxy" = "{{upstreams 8000}}"
           } : {},
           var.pprof_prefix != null ? {
             "caddy_5"               = "${var.pprof_prefix}.${var.zone}"
