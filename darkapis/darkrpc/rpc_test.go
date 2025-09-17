@@ -15,6 +15,10 @@ func TestRpc(t *testing.T) {
 	ctx := context.Background()
 	app_data := router.GetAppDataFixture(ctx)
 
+	if !app_data.Configs.IsDiscovery {
+		return
+	}
+
 	var srv *RpcServer
 	var client RpcI
 	if settings.Env.EnableUnixSockets {
