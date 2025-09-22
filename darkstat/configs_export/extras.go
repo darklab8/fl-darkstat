@@ -47,7 +47,17 @@ func (e *Exporter) GetExtraItems(ids []*Tractor) []ExtraItem {
 		item.InfoID = item_info.IdsInfo.Get()
 		item.Category = item_info.Category
 
-		if item.NameID == 0 && item.InfoID == 0 {
+		// if item.NameID == 0 && item.InfoID == 0 {
+		// 	continue
+		// }
+
+		if item.Category == "attachedfx" ||
+			item.Category == "cargopod" ||
+			item.Category == "internalfx" ||
+			item.Category == "light" ||
+			item.Category == "lootcrate" ||
+			item.Category == "motor" ||
+			item.Category == "tradelane" {
 			continue
 		}
 
