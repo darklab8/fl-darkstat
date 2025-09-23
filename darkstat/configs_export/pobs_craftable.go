@@ -5,7 +5,9 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
+	"github.com/darklab8/fl-darkstat/configs/discovery/base_recipe_items"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/go-utils/utils/ptr"
 )
 
 func (e *Exporter) pob_produced() map[string]bool {
@@ -63,7 +65,9 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 		var infocard_addition infocarder.InfocardBuilder
 		if e.Mapped.Discovery != nil {
+			var any_recipe *base_recipe_items.CommodityRecipe
 			if recipes, ok := e.Mapped.Discovery.BaseRecipeItems.RecipePerProduced[market_good.Nickname]; ok {
+
 				infocard_addition.WriteLineStr(`CRAFTING RECIPES:`)
 				for _, recipe := range recipes {
 					sector := recipe.Model.RenderModel()
@@ -72,6 +76,16 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 						infocard_addition.WriteLineStr(string(param.ToString(inireader.WithComments(false))))
 					}
 					infocard_addition.WriteLineStr("")
+					any_recipe = recipe
+				}
+			}
+
+			if any_recipe != nil {
+				if craft_type, ok := any_recipe.CraftType.GetValue(); ok {
+					if factory, ok := e.Mapped.Discovery.BaseRecipeModules.FactoryByCraftType[craft_type]; ok {
+						module_name := factory.Infotext.Get()
+						market_good.DiscoveryFactoryName = ptr.Ptr(module_name)
+					}
 				}
 			}
 		}

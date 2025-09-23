@@ -10,6 +10,7 @@ import (
 type CommodityRecipe struct {
 	semantic.Model
 	Nickname     *semantic.String
+	CraftType    *semantic.String
 	ProcucedItem []*semantic.String
 	ConsumedItem []*semantic.String
 }
@@ -31,7 +32,8 @@ func Read(input_file *iniload.IniLoader) *Config {
 	for _, recipe_info := range input_file.SectionMap["[recipe]"] {
 
 		recipe := &CommodityRecipe{
-			Nickname: semantic.NewString(recipe_info, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+			Nickname:  semantic.NewString(recipe_info, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+			CraftType: semantic.NewString(recipe_info, cfg.Key("craft_type"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 		}
 		recipe.Map(recipe_info)
 

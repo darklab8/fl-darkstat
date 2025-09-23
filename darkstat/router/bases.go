@@ -63,7 +63,7 @@ func (l *Router) LinkBases(
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseShowShops)),
-				front.BaseMarketGoods(base.Name, base.MarketGoodsPerNick, front.BaseShowShops),
+				front.BaseMarketGoods(base.Name, base.MarketGoodsPerNick, front.BaseShowShops, shared),
 			),
 		)
 

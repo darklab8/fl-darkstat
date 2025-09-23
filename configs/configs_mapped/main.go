@@ -43,6 +43,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/market_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/weaponmoddb"
 	"github.com/darklab8/fl-darkstat/configs/discovery/base_recipe_items"
+	"github.com/darklab8/fl-darkstat/configs/discovery/base_recipe_modules"
 	"github.com/darklab8/fl-darkstat/configs/discovery/discoprices"
 	"github.com/darklab8/fl-darkstat/configs/discovery/minecontrol"
 	"github.com/darklab8/fl-darkstat/configs/discovery/playercntl_rephacks"
@@ -63,6 +64,7 @@ type DiscoveryConfig struct {
 	Techcompat         *techcompat.Config
 	Prices             *discoprices.Config
 	BaseRecipeItems    *base_recipe_items.Config
+	BaseRecipeModules  *base_recipe_modules.Config
 	LatestPatch        autopatcher.Patch
 	PlayercntlRephacks *playercntl_rephacks.Config
 	PlayerOwnedBases   *pob_goods.Config
@@ -261,6 +263,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	var file_techcompat *iniload.IniLoader
 	var file_prices *iniload.IniLoader
 	var file_base_recipe_items *iniload.IniLoader
+	var file_base_recipe_modules *iniload.IniLoader
 	var file_playercntl_rephacks *iniload.IniLoader
 	var file_minecontrol *iniload.IniLoader
 
@@ -278,6 +281,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
 		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
 		file_base_recipe_items = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_items.cfg"))
+		file_base_recipe_modules = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_modules.cfg"))
 		file_playercntl_rephacks = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/playercntl_rephacks.cfg"))
 		file_minecontrol = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/minecontrol.cfg"))
 		all_files = append(
@@ -285,6 +289,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			file_techcompat,
 			file_prices,
 			file_base_recipe_items,
+			file_base_recipe_modules,
 			file_playercntl_rephacks,
 			file_minecontrol,
 		)
@@ -423,7 +428,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 		}()
 
 		if m.Discovery != nil {
-			wg.Add(5)
+			wg.Add(6)
 			go func() {
 				m.Discovery.Techcompat = techcompat.Read(file_techcompat)
 				wg.Done()
@@ -434,6 +439,10 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			}()
 			go func() {
 				m.Discovery.BaseRecipeItems = base_recipe_items.Read(file_base_recipe_items)
+				wg.Done()
+			}()
+			go func() {
+				m.Discovery.BaseRecipeModules = base_recipe_modules.Read(file_base_recipe_modules)
 				wg.Done()
 			}()
 			go func() {

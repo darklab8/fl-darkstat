@@ -28,6 +28,8 @@ type MarketGood struct {
 	NotBuyable             bool `json:"-" swaggerignore:"true"`
 	IsTransportUnreachable bool `json:"-" swaggerignore:"true"`
 
+	DiscoveryFactoryName *string `json:"-" swaggerignore:"true"`
+
 	PoBGood *ShopItem
 	PoB     *PoB
 

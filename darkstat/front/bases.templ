@@ -422,7 +422,7 @@ templ BasesT(
 				}
 				@tab.TableBottom() {
 					if tab_mode == BaseShowShops {
-						@BaseMarketGoodsBase()
+						@BaseMarketGoodsBase(false)
 					} else if tab_mode == BaseShowMissions {
 						@BaseMissionsBase()
 					} else if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo {
@@ -441,18 +441,24 @@ templ BasesT(
 	}
 }
 
-templ BaseMarketGoodsBase() {
+templ BaseMarketGoodsBase(is_pob bool) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:200px;">Good</th>
 				<th style="width:10px;">Type</th>
-				<th style="width:10px;">
-					@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
-				</th>
-				<th style="width:10px;">
-					@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
-				</th>
+				if !is_pob {
+					<th style="width:10px;">
+						@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
+					</th>
+					<th style="width:10px;">
+						@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
+					</th>
+				} else {
+					<th style="width:10px;">
+						@frmt.MultiLinestring([]string{"Factory", "name"})
+					</th>
+				}
 				<th style="width:10px;">
 					@frmt.MultiLinestring([]string{"Volume"})
 				</th>
@@ -488,12 +494,12 @@ templ BaseMarketGoodsBase() {
 	</table>
 }
 
-templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*configs_export.MarketGood, tab_mode BaseMode) {
+templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*configs_export.MarketGood, tab_mode BaseMode, shared *types.SharedData) {
 	<div class="bottom_name">
 		{ name }
 		// @tab.PageTime() // TODO add when having page proper live backend
 	</div>
-	@BaseMarketGoodsBase() {
+	@BaseMarketGoodsBase(shared.CraftableBaseName == name) {
 		for _, good := range frmt.SortedMarketGoods(goods) {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(infocarder.InfocardKey(good.Nickname)) }
@@ -511,12 +517,20 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 				<td>
 					@frmt.WriteGoodType(string(good.Category))
 				</td>
-				<td>
-					if good.PriceBaseBuysFor != nil {
-						{ strconv.Itoa(*good.PriceBaseBuysFor) }
-					}
-				</td>
-				<td>{ strconv.Itoa(good.PriceBaseSellsFor) }</td>
+				if shared.CraftableBaseName != name {
+					<td>
+						if good.PriceBaseBuysFor != nil {
+							{ strconv.Itoa(*good.PriceBaseBuysFor) }
+						}
+					</td>
+					<td>{ strconv.Itoa(good.PriceBaseSellsFor) }</td>
+				} else {
+					<td>
+						if good.DiscoveryFactoryName != nil {
+							{ *good.DiscoveryFactoryName }
+						}
+					</td>
+				}
 				<td>{ fmt.Sprintf("%.0f", good.Volume) }</td>
 				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
 				<td>{ strconv.Itoa(good.LevelRequired) }</td>
