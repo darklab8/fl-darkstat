@@ -6,7 +6,10 @@ variable "tag" {
   type    = string
   default = null
 }
-
+variable "replicas_count" {
+  type    = number
+  default = 1
+}
 variable "discovery_path" {
   type = string
 }

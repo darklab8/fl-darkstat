@@ -21,6 +21,7 @@ module "darkstat" {
   pprof_prefix      = "darkstat-pprof"
   zone              = "dd84ai.com"
   is_discovery      = true
+  replicas_count    = 2
 }
 
 resource "random_string" "random_password" {

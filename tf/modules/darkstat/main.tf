@@ -140,7 +140,11 @@ resource "docker_service" "darkstat" {
     ]
   }
   # with usage of docker networking, this is no longer necessary
-
+  mode {
+    replicated {
+      replicas = var.replicas_count
+    }
+  }
   update_config {
     parallelism    = 1
     delay          = "30s"
