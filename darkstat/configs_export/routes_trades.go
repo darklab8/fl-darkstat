@@ -238,9 +238,12 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 			}
 
 			profit_per_time := trade_route.Transport.GetProffitPerTime()
-			kilo_volume := math.Min(10, KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
 
-			if kilo_volume < 5 {
+			max_importance_of_kilo_volumes := float64(30)
+			// makes weight of this thing being important only in range between 0 to Min(N:=10?)
+			kilo_volume := math.Min(max_importance_of_kilo_volumes, KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
+
+			if kilo_volume < 10 {
 				continue
 			}
 			profit_per_time_for_kilo_volumes := kilo_volume * profit_per_time
@@ -251,13 +254,18 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 			}
 
 			var time_weight float64
-			time_weight = math.Min(time_s, 600) / 600
+			time_importance_seconds_until := float64(600 * 2)
+			time_weight = math.Min(time_s, time_importance_seconds_until) / time_importance_seconds_until
+
+			kilo_volume_weight := (math.Min(max_importance_of_kilo_volumes, kilo_volume) / max_importance_of_kilo_volumes)
+
+			profit_weight := (profit_per_time * profit_per_time) * ((kilo_volume_weight * 0.5) + (time_weight * time_weight))
 
 			trade_route.Transport.GetProffitPerTime()
 			trade_deals = append(trade_deals, &TradeDeal{
 				ComboTradeRoute:             trade_route,
 				ProfitPerTimeForKiloVolumes: profit_per_time_for_kilo_volumes,
-				ProfitWeight:                profit_per_time*math.Min(10, kilo_volume)/10 + profit_per_time*time_weight,
+				ProfitWeight:                profit_weight,
 			})
 		}
 		if len(trade_deals) > LimitBestPaths+500 {
