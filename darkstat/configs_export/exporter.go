@@ -6,10 +6,12 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/async"
 )
 
@@ -111,7 +113,7 @@ type GraphResults struct {
 func NewGraphResults(
 	e *Exporter,
 	avgCruiserSpeed int,
-	can_visit_freighter_only_jhs trades.WithFreighterPaths,
+	MapConfOptions trades.MapConfigOptions,
 	mining_bases_by_system map[string][]trades.ExtraBase,
 	graph_options trades.MappingOptions,
 ) *GraphResults {
@@ -119,7 +121,7 @@ func NewGraphResults(
 	graph := trades.MapConfigsToFGraph(
 		e.Mapped,
 		avgCruiserSpeed,
-		can_visit_freighter_only_jhs,
+		MapConfOptions,
 		mining_bases_by_system,
 		graph_options,
 	)
@@ -194,44 +196,84 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 		e.ship_speeds = trades.FLSRSpeeds
 	}
 
-	{
-		wg.Add(1)
-		go func() {
-			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Transports")
-			defer span.End()
-
-			logus.Log.Info("graph launching for tranposrt")
-			e.Transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false), extra_graph_bases, options.MappingOptions)
-			// e.Freighter = e.Transport
-			// e.Frigate = e.Transport
-			wg.Done()
-			logus.Log.Info("graph finished for tranposrt")
-		}()
-		wg.Add(1)
-		go func() {
-			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Freighters")
-			defer span.End()
-
-			e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true), extra_graph_bases, options.MappingOptions)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
-			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Frigate")
-			defer span.End()
-
-			e.Frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed, trades.WithFreighterPaths(false), extra_graph_bases, options.MappingOptions)
-			wg.Done()
-		}()
-	}
-
 	logus.Log.Info("getting get tractors")
-
 	e.Tractors = e.GetTractors()
 	e.TractorsByID = make(map[cfg.TractorID]*Tractor)
 	for _, tractor := range e.Tractors {
 		e.TractorsByID[tractor.Nickname] = tractor
 	}
+	equip_await := async.ToAsync(func() {
+		_, span := traces.Tracer.Start(ctx, "Exporter.EquipAwait")
+		defer span.End()
+
+		e.Mines = e.GetMines(e.Tractors)
+		e.Thrusters = e.GetThrusters(e.Tractors)
+		logus.Log.Info("getting ships")
+		e.Ships = e.GetShips(e.Tractors, e.TractorsByID, e.Thrusters)
+	})
+	<-equip_await
+
+	DockOpts := solararch_mapped.DockableOptions{
+		IsDisco: e.Mapped.Discovery != nil,
+	}
+	for _, ship := range e.FilterToUsefulShips(e.Ships) {
+		if ship.MissionProperty == solararch_mapped.MissionPropertyAllowsBerth {
+			DockOpts.PlayersCanDockBerth = true
+		}
+		if ship.MissionProperty == solararch_mapped.MissionPropertyAllowsMoorMedium {
+			DockOpts.PlayersCanDockMoorMedium = true
+		}
+		if ship.MissionProperty == solararch_mapped.MissionPropertyAllowsMoorLarge {
+			DockOpts.PlayersCanDockMoorLarge = true
+		}
+	}
+	logus.Log.Warn("DockOpts=", typelog.Struct(DockOpts))
+
+	{
+
+		wg.Add(1)
+		go func() {
+			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Transports")
+			defer span.End()
+			logus.Log.Info("graph launching for tranposrt")
+			e.Transport = NewGraphResults(e,
+				e.ship_speeds.AvgTransportCruiseSpeed,
+				trades.MapConfigOptions{
+					WithFreighterPaths: trades.WithFreighterPaths(false),
+					DockOpts:           DockOpts,
+				},
+				extra_graph_bases, options.MappingOptions)
+			// e.Freighter = e.Transport
+			// e.Frigate = e.Transport
+			wg.Done()
+			logus.Log.Info("graph finished for tranposrt")
+		}()
+
+		wg.Add(1)
+		go func() {
+			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Frigate")
+			defer span.End()
+			e.Frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed,
+				trades.MapConfigOptions{
+					WithFreighterPaths: trades.WithFreighterPaths(false),
+					DockOpts:           DockOpts,
+				}, extra_graph_bases, options.MappingOptions)
+			wg.Done()
+		}()
+		wg.Add(1)
+		go func() {
+			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Freighters")
+			defer span.End()
+			e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed,
+				trades.MapConfigOptions{
+					WithFreighterPaths: trades.WithFreighterPaths(true),
+					DockOpts:           DockOpts,
+				},
+				extra_graph_bases, options.MappingOptions)
+			wg.Done()
+		}()
+	}
+
 	e.Factions = e.GetFactions(e.Bases)
 	e.Bases = e.GetMissions(e.Bases, e.Factions)
 
@@ -252,15 +294,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 
 		e.Missiles = e.GetMissiles(e.Tractors, buyable_shield_tech)
 	})
-	equip_await := async.ToAsync(func() {
-		_, span := traces.Tracer.Start(ctx, "Exporter.EquipAwait")
-		defer span.End()
 
-		e.Mines = e.GetMines(e.Tractors)
-		e.Thrusters = e.GetThrusters(e.Tractors)
-		logus.Log.Info("getting ships")
-		e.Ships = e.GetShips(e.Tractors, e.TractorsByID, e.Thrusters)
-	})
 	equip2_await := async.ToAsync(func() {
 		_, span := traces.Tracer.Start(ctx, "Exporter.Equip2Await")
 		defer span.End()
@@ -278,7 +312,6 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 
 	<-guns_wait
 	<-missiles_await
-	<-equip_await
 	<-equip2_await
 
 	_, span_wg := traces.Tracer.Start(ctx, "Exporter.WgAwait")

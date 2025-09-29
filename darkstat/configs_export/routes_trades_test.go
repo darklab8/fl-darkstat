@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -32,19 +33,32 @@ func TestGetTrades(t *testing.T) {
 	var wg sync.WaitGroup
 	graph_options := trades.MappingOptions{TradeRoutesDetailedTradeLane: ptr.Ptr(true)}
 
+	var DockOpts solararch_mapped.DockableOptions
+
 	wg.Add(1)
 	go func() {
-		e.Transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.WithFreighterPaths(false), mining_bases_by_system, graph_options)
+		e.Transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.MapConfigOptions{
+			WithFreighterPaths: trades.WithFreighterPaths(false),
+			DockOpts:           DockOpts,
+		}, mining_bases_by_system, graph_options)
 		wg.Done()
 	}()
 	wg.Add(1)
 	go func() {
-		e.Frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed, trades.WithFreighterPaths(false), mining_bases_by_system, graph_options)
+		e.Frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed, trades.MapConfigOptions{
+			WithFreighterPaths: trades.WithFreighterPaths(false),
+			DockOpts:           DockOpts,
+		}, mining_bases_by_system, graph_options)
 		wg.Done()
 	}()
 	wg.Add(1)
 	go func() {
-		e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed, trades.WithFreighterPaths(true), mining_bases_by_system, graph_options)
+		e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed,
+			trades.MapConfigOptions{
+				WithFreighterPaths: trades.WithFreighterPaths(true),
+				DockOpts:           DockOpts,
+			},
+			mining_bases_by_system, graph_options)
 		wg.Done()
 	}()
 
