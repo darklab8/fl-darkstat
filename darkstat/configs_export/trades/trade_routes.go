@@ -7,7 +7,6 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -108,15 +107,10 @@ type MappingOptions struct {
 	TradeRoutesDetailedTradeLane *bool
 }
 
-type MapConfigOptions struct {
-	WithFreighterPaths WithFreighterPaths
-	DockOpts           solararch_mapped.DockableOptions
-}
-
 func MapConfigsToFGraph(
 	mapped *configs_mapped.MappedConfigs,
 	avgCruiseSpeed int,
-	DockOptions MapConfigOptions,
+	with_freighter_paths WithFreighterPaths,
 	extra_bases_by_system map[string][]ExtraBase,
 	opts MappingOptions,
 ) *GameGraph {
@@ -125,7 +119,7 @@ func MapConfigsToFGraph(
 	}
 	average_trade_lane_speed := mapped.GetAvgTradeLaneSpeed()
 
-	graph := NewGameGraph(avgCruiseSpeed, DockOptions.WithFreighterPaths)
+	graph := NewGameGraph(avgCruiseSpeed, with_freighter_paths)
 	for _, system := range mapped.Systems.Systems {
 		system_speed_multiplier := mapped.Overrides.GetSystemSpeedMultiplier(system.Nickname)
 
@@ -179,20 +173,21 @@ func MapConfigsToFGraph(
 			// get all objects with same Base?
 			// Check if any of them has docking sphere medium
 
-			var dock_results solararch_mapped.DockableResult
-			if bases, ok := system.AllBasesByDockWith[system_base_base]; ok {
-				for _, base_obj := range bases {
-					base_archetype := base_obj.Archetype.Get()
-					if solar, ok := mapped.Solararch.SolarsByNick[base_archetype]; ok {
-						dock_results = solar.IsDockable(DockOptions.DockOpts)
+			if mapped.Discovery != nil {
+				is_dockable_by_transports := false
+				if bases, ok := system.AllBasesByDockWith[system_base_base]; ok {
+					for _, base_obj := range bases {
+						base_archetype := base_obj.Archetype.Get()
+						if solar, ok := mapped.Solararch.SolarsByNick[base_archetype]; ok {
+							if solar.IsDockableByCaps() {
+								is_dockable_by_transports = true
+							}
+						}
 					}
 				}
-			}
-			if !dock_results.IsDockable {
-				continue
-			}
-			if !dock_results.IsDockableByTransports && bool(!DockOptions.WithFreighterPaths) {
-				continue
+				if !is_dockable_by_transports && bool(!with_freighter_paths) {
+					continue
+				}
 			}
 
 			// Lets allow flying between all bases
@@ -249,27 +244,25 @@ func MapConfigsToFGraph(
 				continue
 			}
 
-			var dock_results solararch_mapped.DockableResult
-			if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
-				// strings.Contains(jh_archetype, "_fighter") || // Atmospheric entry points. Dockable only by fighters/freighters
-				// included into `IsDockableByCaps` as they don't have capital docking_sphere dockings
-				dock_results = solar.IsDockable(DockOptions.DockOpts)
-			}
-
-			if !dock_results.IsDockable {
-				continue
-			}
-
 			if mapped.Discovery != nil {
+				is_dockable_by_transports := false
+				if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
+					// strings.Contains(jh_archetype, "_fighter") || // Atmospheric entry points. Dockable only by fighters/freighters
+					// included into `IsDockableByCaps` as they don't have capital docking_sphere dockings
+					if solar.IsDockableByCaps() {
+						is_dockable_by_transports = true
+					}
+				}
+
 				// Condition is initiallly taken from FLCompanion
 				// https://github.com/Corran-Raisu/FLCompanion/blob/021159e3b3a1b40188c93064f1db136780424ea9/Datas.cpp#L585
 				// but then rewritted to docking_sphere checks.
 				// only with docking_sphere =jump, moor_large we can dock in disco by transports
 				if strings.Contains(jh_archetype, "_notransport") { // jumphole_notransport Dockable only by ships with below 650 cargo on board
 					// "dsy_hypergate_all" is one directional hypergate dockable by everything, no need to exclude for freighter only paths
-					dock_results.IsDockableByTransports = false
+					is_dockable_by_transports = false
 				}
-				if !dock_results.IsDockableByTransports && bool(!DockOptions.WithFreighterPaths) {
+				if !is_dockable_by_transports && bool(!with_freighter_paths) {
 					continue
 				}
 			}

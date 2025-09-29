@@ -18,8 +18,6 @@ type Ship struct {
 	IdsInfo2  *semantic.Int
 	IdsInfo3  *semantic.Int
 
-	MissionProperty *semantic.String
-
 	Nanobots    *semantic.Int
 	Batteries   *semantic.Int
 	Mass        *semantic.Float
@@ -70,22 +68,21 @@ func Read(files []*iniload.IniLoader) *Config {
 
 		for _, section := range Iniconfig.SectionMap["[ship]"] {
 			ship := &Ship{
-				Nickname:        semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-				Type:            semantic.NewString(section, cfg.Key("type")),
-				ShipClass:       semantic.NewInt(section, cfg.Key("ship_class")),
-				MissionProperty: semantic.NewString(section, cfg.Key("mission_property"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-				IdsName:         semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
-				IdsInfo:         semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
-				IdsInfo1:        semantic.NewInt(section, cfg.Key("ids_info1")),
-				IdsInfo2:        semantic.NewInt(section, cfg.Key("ids_info2")),
-				IdsInfo3:        semantic.NewInt(section, cfg.Key("ids_info3")),
-				Nanobots:        semantic.NewInt(section, cfg.Key("nanobot_limit")),
-				Batteries:       semantic.NewInt(section, cfg.Key("shield_battery_limit")),
-				Mass:            semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
-				LinearDrag:      semantic.NewFloat(section, cfg.Key("linear_drag"), semantic.Precision(2)),
-				HoldSize:        semantic.NewInt(section, cfg.Key("hold_size")),
-				NudgeForce:      semantic.NewFloat(section, cfg.Key("nudge_force"), semantic.Precision(2)),
-				StrafeForce:     semantic.NewFloat(section, cfg.Key("strafe_force"), semantic.Precision(2)),
+				Nickname:    semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+				Type:        semantic.NewString(section, cfg.Key("type")),
+				ShipClass:   semantic.NewInt(section, cfg.Key("ship_class")),
+				IdsName:     semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
+				IdsInfo:     semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
+				IdsInfo1:    semantic.NewInt(section, cfg.Key("ids_info1")),
+				IdsInfo2:    semantic.NewInt(section, cfg.Key("ids_info2")),
+				IdsInfo3:    semantic.NewInt(section, cfg.Key("ids_info3")),
+				Nanobots:    semantic.NewInt(section, cfg.Key("nanobot_limit")),
+				Batteries:   semantic.NewInt(section, cfg.Key("shield_battery_limit")),
+				Mass:        semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
+				LinearDrag:  semantic.NewFloat(section, cfg.Key("linear_drag"), semantic.Precision(2)),
+				HoldSize:    semantic.NewInt(section, cfg.Key("hold_size")),
+				NudgeForce:  semantic.NewFloat(section, cfg.Key("nudge_force"), semantic.Precision(2)),
+				StrafeForce: semantic.NewFloat(section, cfg.Key("strafe_force"), semantic.Precision(2)),
 				ShieldLink: &ShieldLink{
 					ShieldClass: semantic.NewString(section, cfg.Key("shield_link"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 				},

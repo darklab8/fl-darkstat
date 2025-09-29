@@ -51,7 +51,6 @@ type Ship struct {
 	NameID      int     `json:"name_id" validate:"required"`
 	InfoID      int     `json:"info_id" validate:"required"`
 
-	MissionProperty  string                          `json:"-" swaggerignore:"true"`
 	Bases            map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	Slots            []EquipmentSlot                 `json:"equipment_slots" validate:"required"`
 	BiggestHardpoint []string                        `json:"biggest_hardpoint" validate:"required"`
@@ -198,7 +197,6 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 		// }()
 
 		ship.Class, _ = ship_info.ShipClass.GetValue()
-		ship.MissionProperty, _ = ship_info.MissionProperty.GetValue()
 		if _, ok := ship_info.Type.GetValue(); !ok {
 			logus.Log.Warn("ship problem with type", typelog.Any("nickname", ship.Nickname))
 		}

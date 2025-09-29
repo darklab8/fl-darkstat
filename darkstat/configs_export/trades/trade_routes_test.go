@@ -24,9 +24,7 @@ func TestTradeRoutes(t *testing.T) {
 	graph := MapConfigsToFGraph(
 		configs,
 		DiscoverySpeeds.AvgTransportCruiseSpeed,
-		MapConfigOptions{
-			WithFreighterPaths: WithFreighterPaths(false),
-		},
+		WithFreighterPaths(false),
 		make(map[string][]ExtraBase),
 		MappingOptions{},
 	)
