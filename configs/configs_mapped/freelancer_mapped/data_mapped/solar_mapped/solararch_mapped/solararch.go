@@ -14,15 +14,64 @@ type Solar struct {
 	DockingSpheres []*semantic.String
 }
 
-func (solar *Solar) IsDockableByCaps() bool {
+const (
+	DockingSphereJump       = "jump"
+	DockingSphereRing       = "ring"
+	DockingSphereBerth      = "berth"
+	DockingSphereMoorMedium = "moor_medium"
+	DockingSphereMoorLarge  = "moor_large"
+)
+
+const (
+	MissionPropertyAllowsBerth      = "can_use_berths"
+	MissionPropertyAllowsMoorMedium = "can_use_med_moors"
+	MissionPropertyAllowsMoorLarge  = "can_use_large_moors"
+)
+
+type DockableOptions struct {
+	IsDisco bool // disco allows for transports jump
+
+	PlayersCanDockBerth      bool
+	PlayersCanDockMoorMedium bool
+	PlayersCanDockMoorLarge  bool
+}
+
+type DockableResult struct {
+	IsDockable             bool
+	IsDockableByTransports bool // important distinguishing for disco. only jump and moor_large valid khm?
+}
+
+func (solar *Solar) IsDockable(options DockableOptions) DockableResult {
+	var result DockableResult
 	for _, docking_sphere := range solar.DockingSpheres {
 		if docking_sphere_name, dockable := docking_sphere.GetValue(); dockable {
-			if docking_sphere_name == "jump" || docking_sphere_name == "moor_large" {
-				return true
+			if docking_sphere_name == DockingSphereJump {
+				result.IsDockableByTransports = true
+				result.IsDockable = true
+			}
+			if docking_sphere_name == DockingSphereRing {
+				result.IsDockable = true
+			}
+			if options.PlayersCanDockBerth && docking_sphere_name == DockingSphereBerth {
+				result.IsDockable = true
+			}
+			if options.PlayersCanDockMoorMedium && docking_sphere_name == DockingSphereMoorMedium {
+				result.IsDockable = true
+			}
+			if options.PlayersCanDockMoorLarge && docking_sphere_name == DockingSphereMoorLarge {
+				result.IsDockable = true
+			}
+
+			if options.IsDisco {
+				if docking_sphere_name == DockingSphereMoorMedium {
+					result.IsDockableByTransports = true
+				}
+			} else {
+				result.IsDockableByTransports = result.IsDockable
 			}
 		}
 	}
-	return false
+	return result
 }
 
 type Config struct {
