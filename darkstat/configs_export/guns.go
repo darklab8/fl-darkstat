@@ -181,10 +181,10 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 
 	gun.DamageType = "undefined"
 
-	if hull_damange, ok := munition.HullDamage.GetValue(); ok {
+	if hull_damage, ok := munition.HullDamage.GetValue(); ok {
 		// regular gun or turret
-		gun.HullDamage = hull_damange
-		gun.EnergyDamage = munition.EnergyDamange.Get()
+		gun.HullDamage = hull_damage
+		gun.EnergyDamage = munition.EnergyDamage.Get()
 		if weapon_type, ok := munition.WeaponType.GetValue(); ok {
 			gun.DamageType = weapon_type
 		}
@@ -194,7 +194,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 			// rocket launcher
 			explosion := e.Mapped.Equip().ExplosionMap[explosion_arch]
 			gun.HullDamage = explosion.HullDamage.Get()
-			gun.EnergyDamage = explosion.EnergyDamange.Get()
+			gun.EnergyDamage = explosion.EnergyDamage.Get()
 			if weapon_type, ok := explosion.WeaponType.GetValue(); ok {
 				gun.DamageType = weapon_type
 			}

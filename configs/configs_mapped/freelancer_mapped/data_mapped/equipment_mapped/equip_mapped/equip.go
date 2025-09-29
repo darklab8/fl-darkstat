@@ -60,7 +60,7 @@ type Munition struct {
 	ExplosionArch      *semantic.String
 	RequiredAmmo       *semantic.Bool
 	HullDamage         *semantic.Int
-	EnergyDamange      *semantic.Int
+	EnergyDamage       *semantic.Int
 	HealintAmount      *semantic.Int
 	WeaponType         *semantic.String
 	Motor              *semantic.String
@@ -88,11 +88,11 @@ type Munition struct {
 
 type Explosion struct {
 	semantic.Model
-	Nickname      *semantic.String
-	HullDamage    *semantic.Int
-	EnergyDamange *semantic.Int
-	Radius        *semantic.Int
-	WeaponType    *semantic.String
+	Nickname     *semantic.String
+	HullDamage   *semantic.Int
+	EnergyDamage *semantic.Int
+	Radius       *semantic.Int
+	WeaponType   *semantic.String
 
 	ArmorPen *semantic.Float // Disco only
 }
@@ -455,7 +455,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				munition.ExplosionArch = semantic.NewString(section, cfg.Key("explosion_arch"))
 				munition.RequiredAmmo = semantic.NewBool(section, cfg.Key("requires_ammo"), semantic.StrBool)
 				munition.HullDamage = semantic.NewInt(section, cfg.Key("hull_damage"))
-				munition.EnergyDamange = semantic.NewInt(section, cfg.Key("energy_damage"))
+				munition.EnergyDamage = semantic.NewInt(section, cfg.Key("energy_damage"))
 				munition.HealintAmount = semantic.NewInt(section, cfg.Key("damage"))
 				munition.WeaponType = semantic.NewString(section, cfg.Key("weapon_type"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				munition.LifeTime = semantic.NewFloat(section, cfg.Key("lifetime"), semantic.Precision(2))
@@ -475,7 +475,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				explosion.Nickname = semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				explosion.HullDamage = semantic.NewInt(section, cfg.Key("hull_damage"))
-				explosion.EnergyDamange = semantic.NewInt(section, cfg.Key("energy_damage"))
+				explosion.EnergyDamage = semantic.NewInt(section, cfg.Key("energy_damage"))
 				explosion.WeaponType = semantic.NewString(section, cfg.Key("weapon_type"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				explosion.Radius = semantic.NewInt(section, cfg.Key("radius"))
 				frelconfig.Explosions = append(frelconfig.Explosions, explosion)

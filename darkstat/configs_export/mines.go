@@ -17,10 +17,10 @@ type Mine struct {
 	IdsName             int    `json:"ids_name" validate:"required"`
 	IdsInfo             int    `json:"ids_info" validate:"required"`
 
-	HullDamage    int     `json:"hull_damage" validate:"required"`
-	EnergyDamange int     `json:"energy_damage" validate:"required"`
-	ShieldDamage  int     `json:"shield_damage" validate:"required"`
-	PowerUsage    float64 `json:"power_usage" validate:"required"`
+	HullDamage   int     `json:"hull_damage" validate:"required"`
+	EnergyDamage int     `json:"energy_damage" validate:"required"`
+	ShieldDamage int     `json:"shield_damage" validate:"required"`
+	PowerUsage   float64 `json:"power_usage" validate:"required"`
 
 	Value              float64 `json:"value" validate:"required"`
 	Refire             float64 `json:"refire" validate:"required"`
@@ -93,8 +93,8 @@ func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 		explosion := e.Mapped.Equip().ExplosionMap[mine_info.ExplosionArch.Get()]
 
 		mine.HullDamage = explosion.HullDamage.Get()
-		mine.EnergyDamange = explosion.EnergyDamange.Get()
-		mine.ShieldDamage = int(float64(mine.HullDamage)*float64(e.Mapped.Consts.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get()) + float64(mine.EnergyDamange))
+		mine.EnergyDamage = explosion.EnergyDamage.Get()
+		mine.ShieldDamage = int(float64(mine.HullDamage)*float64(e.Mapped.Consts.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get()) + float64(mine.EnergyDamage))
 
 		mine.Radius = float64(explosion.Radius.Get())
 
