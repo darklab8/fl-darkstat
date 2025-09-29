@@ -2,6 +2,7 @@ package frmt
 
 import (
 	"strconv"
+	"fmt"
 )
 
 templ WriteBaseName(BaseName string) {
@@ -63,4 +64,8 @@ templ Tooltip(tooltip string) {
 
 templ MagnifyingGlass() {
 	<span class="magni_glass">&#x1F50D;</span>
+}
+
+templ MagnifyingGlassClickable(x, y, z float64) {
+	@templ.Raw("<button type=\"button\" class=\"magni_glass clickable\" onclick=\"copyWaypointToClipboard(" + fmt.Sprintf("%.0f,%.0f,%.0f", x, y, z) + ",this)\">&#x1F50D;</button>")
 }
