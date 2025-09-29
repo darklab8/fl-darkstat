@@ -41,6 +41,14 @@ type DockableResult struct {
 	IsDockableByTransports bool // important distinguishing for disco. only jump and moor_large valid khm?
 }
 
+/*
+important knowldge to calculate IsDockable right
+
+mission_property    This parameter sets where the ship may dock.
+Possible options: can_use_berths, can_use_med_moors, can_use_large_moors.
+Berths are the small docks, moors are in space and are disabled in vanilla.
+You can enable them with adoxas moors plugin. See dacom.ini and dacomsrv.ini for info on how to add the dll.
+*/
 func (solar *Solar) IsDockable(options DockableOptions) DockableResult {
 	var result DockableResult
 	for _, docking_sphere := range solar.DockingSpheres {
