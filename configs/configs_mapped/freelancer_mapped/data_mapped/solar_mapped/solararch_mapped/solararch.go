@@ -63,7 +63,7 @@ func (solar *Solar) IsDockable(options DockableOptions) DockableResult {
 			}
 
 			if options.IsDisco {
-				if docking_sphere_name == DockingSphereMoorLarge {
+				if docking_sphere_name == DockingSphereMoorMedium {
 					result.IsDockableByTransports = true
 				}
 			} else {
