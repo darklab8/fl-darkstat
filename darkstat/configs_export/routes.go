@@ -96,6 +96,21 @@ func (t *Route) GetPaths() []PathWithNavmap {
 			augmented_path.Pos = pos
 		}
 
+		if t.g.e.Mapped.Discovery != nil {
+			if pob_info, ok := t.g.e.Mapped.Discovery.PlayerOwnedBases.BasesByNick[path.NextName]; ok {
+				if pob_info.Pos != nil {
+					augmented_path.Pos = *StrPosToVectorPos(*pob_info.Pos)
+				}
+				if pob_info.SystemHash != nil {
+					if system, ok := t.g.e.hashes.systems_by_hash[*pob_info.SystemHash]; ok {
+						if pob_info.Pos != nil {
+							augmented_path.SectorCoord = VectorToSectorCoord(system, augmented_path.Pos)
+						}
+					}
+				}
+			}
+		}
+
 		results = append(results, augmented_path)
 	}
 	return results

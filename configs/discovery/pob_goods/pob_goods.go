@@ -63,6 +63,7 @@ type Config struct {
 	BasesByName map[string]*Base `json:"bases"`
 	Timestamp   string           `json:"timestamp"`
 	Bases       []*Base
+	BasesByNick map[string]*Base
 }
 
 var (
@@ -79,6 +80,7 @@ func (c *Config) Refresh() error {
 	c.BasesByName = reread.BasesByName
 	c.Timestamp = reread.Timestamp
 	c.Bases = reread.Bases
+	c.BasesByNick = reread.BasesByNick
 
 	if false {
 		// E2E Testing: if u wish End to End test periodic updates of darkstat
@@ -121,6 +123,9 @@ func Read(ctx context.Context, file *file.File) (*Config, error) {
 
 	var conf *Config
 	err = json.Unmarshal(byteValue, &conf)
+	if conf.BasesByNick == nil {
+		conf.BasesByNick = make(map[string]*Base)
+	}
 	if logus.Log.CheckError(err, "failed to read pob goods") {
 		return nil, errors.New("failed to read file")
 	}
@@ -131,6 +136,8 @@ func Read(ctx context.Context, file *file.File) (*Config, error) {
 		hash := NameToNickname(base.Name)
 		base.Nickname = hash
 		conf.Bases = append(conf.Bases, base)
+
+		conf.BasesByNick[base.Nickname] = base
 	}
 
 	conf.file = file
