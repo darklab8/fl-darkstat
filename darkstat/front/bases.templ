@@ -941,12 +941,16 @@ templ RouteInfo(name string, route *configs_export.Route, shared *types.SharedDa
 
 templ TooltipDestination(Pos cfg.Vector, shared *types.SharedData) {
 	<span class="tooltip">
-		@frmt.MagnifyingGlass()
+		if shared.ShowDisco {
+			@frmt.MagnifyingGlassClickable(Pos.X, Pos.Y, Pos.Z)
+		} else {
+			@frmt.MagnifyingGlass()
+		}
 		<span class="tooltiptext" style="left: 0px; top: 30px;">
 			if shared.ShowDisco {
 				{ fmt.Sprintf("/wp %.0f %.0f %.0f",Pos.X,Pos.Y,Pos.Z) }
 				<br/>
-				command to create waypoint
+				command to create waypoint (click to copy)
 			} else {
 				coordinates:
 				{ fmt.Sprintf("X %.0f,Y %.0f,Z %.0f",Pos.X,Pos.Y,Pos.Z) }
