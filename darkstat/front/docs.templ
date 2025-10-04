@@ -150,10 +150,13 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 				line-height: 1.3;
 			}
 			returntotop {
-				position: fixed;
-				bottom: 10px;
-				right: 10px;
+				position: sticky;
+				top: 0px;
+				left: 0px;
 				font-size: 1.3em;
+				padding: 10px;
+				background-color: var(--color_background);
+				display: block;
 			}
         </style>
 		<returntotop>
