@@ -31,6 +31,30 @@ templ SectionHeader(name string) {
 	</a>
 }
 
+templ SectionLink(name string) {
+	<a href={ templ.URL("#" + TurnToAnchor(name)) }>
+		{ name }
+	</a>
+}
+
+const (
+	HeaderAvailableTags           = "Available Tabs"
+	HeaderDiscoCoordsForWaypoints = "Coordinates for waypoint creations"
+	HeaderDiscoTechCompat         = "Tech compatibility"
+	HeaderAutoUpdate              = "Auto updating features"
+	HeaderDiscoCommodityVolumes   = "Discovery commoditity volumes changing per ship class"
+	HeaderLootable                = "Lootable"
+	HeaderPinningFeature          = "Pinning feature"
+	HeaderOrderingColums          = "Ordering content by columns"
+	HeaderSearchingFilteringBars  = "Searching/filtering bars"
+	HeaderMovableBorderSize       = "Movable border size"
+	HeaderFindingHpTypeCompatible = "Finding equipment compatible with specific hardpoint"
+	HeaderLegendExtra             = "Legend for extra markings"
+	HeaderPOBs                    = "Player Owned Bases (PoBs)"
+	HeaderPoBsHowToTurnOn         = "How to turn PoB visibility in darkstat?"
+	HeaderDiscoKiloVolumes        = "Kilo volumes in trade, ore routes and pob related tabs"
+)
+
 templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 	@TabMenu(urls.Docs, mode2, shared)
 	@tab.TabContent() {
@@ -117,261 +141,355 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
                 list-style-position: inside; 
                 margin-left: 15px; 
             }
+
+			textbody {
+				max-width: 1000px;
+    			margin: 40px auto;
+    			display: block;
+				font-size: 18px;
+				line-height: 1.3;
+			}
+			returntotop {
+				position: fixed;
+				bottom: 10px;
+				right: 10px;
+				font-size: 1.3em;
+			}
         </style>
-		<h1>Documentation to <a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>darkstat</a></h1>
-		<h2>Available tabs</h2>
-		<p>
-			<ul>
-				<li>Bases - shows their location, name and etc and on click what they sell (completely everything that is sold).</li>
-				<li>Missions - Instrument to find bar missions. U should look with good numbers of Min offers (high vengettes number) preferably.</li>
-				<li>Factions - info about them, reputation and empathy stuff</li>
-				<li>Bribes - same factions on click show where is the chance to find a bribe to increase repuration fo<span></span>r them at specific locations</li>
-				<li>
-					Trade Routes
-					<ul>
-						<li>Shows trade routes between bases. On click at main table shows all routes originiating from specific base</li>
-						<li>On specific route at bottom table row click, it will show exact path to show. On hover to magnifying glass it will tell waypoint coordinates</li>
-						if shared.ShowDisco {
-							<li>Trade routes are preshown fo<span></span>r Transport, Frigate and Freighter parameters of Discovey</li>
-							<li>Transports have 350 top speed. Too large for freighter's jump holes</li>
-							<li>Frigates 500 top speed. Too large for freighter's jump holes</li>
-							<li>Freighters 500 top speed and have ability to use freighter only jump holes, which are limited to 650 cargo size</li>
-						}
-					</ul>
-				</li>
-				<li>
-					Ore routes
-					<ul>
-						<li>Shows trade routes between ore fields to bases. On click at main table shows all routes originiating from specific ore field</li>
+		<returntotop>
+			<a href="#top">Back to top</a>
+		</returntotop>
+		<textbody>
+			<h1>Documentation to <a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>darkstat</a></h1>
+			<menu>
+				<ul>
+					<li>
+						@SectionLink(HeaderAvailableTags)
+					</li>
+					if shared.ShowDisco {
 						<li>
-							In addition also shows trading routes for items received from using the ore in one of pob processing recipes.
-							Convinient for showing trade routes for refined gold for example. The information about it is added into "Commodities" tab too
+							@SectionLink(HeaderDiscoCoordsForWaypoints)
+						</li>
+						<li>
+							@SectionLink(HeaderDiscoTechCompat)
+						</li>
+					}
+					<li>
+						@SectionLink(HeaderAutoUpdate)
+					</li>
+					if shared.ShowDisco {
+						<li>
+							@SectionLink(HeaderDiscoCommodityVolumes)
+						</li>
+					}
+					if shared.ShowDisco|| shared.ShowFLSR {
+						<li>
+							@SectionLink(shared.CraftableBaseName)
+						</li>
+					}
+					<li>
+						@SectionLink(HeaderLootable)
+					</li>
+					<li>
+						@SectionLink(HeaderPinningFeature)
+					</li>
+					<li>
+						@SectionLink(HeaderOrderingColums)
+					</li>
+					<li>
+						@SectionLink(HeaderSearchingFilteringBars)
+					</li>
+					<li>
+						@SectionLink(HeaderMovableBorderSize)
+					</li>
+					<li>
+						@SectionLink(HeaderSearchingFilteringBars)
+					</li>
+					<li>
+						@SectionLink(HeaderFindingHpTypeCompatible)
+					</li>
+					<li>
+						@SectionLink(HeaderLegendExtra)
+					</li>
+					<li>
+						@SectionLink(HeaderPOBs)
+					</li>
+					<li>
+						<a href="#how_to_turn_pob_feature_on">
+							{ HeaderPoBsHowToTurnOn }
+						</a>
+					</li>
+					<li>
+						@SectionLink(HeaderDiscoKiloVolumes)
+					</li>
+				</ul>
+			</menu>
+			@SectionHeader(HeaderAvailableTags)
+			<p>
+				<ul>
+					<li>Bases - shows their location, name and etc and on click what they sell (completely everything that is sold).</li>
+					<li>Missions - Instrument to find bar missions. U should look with good numbers of Min offers (high vengettes number) preferably.</li>
+					<li>Factions - info about them, reputation and empathy stuff</li>
+					<li>Bribes - same factions on click show where is the chance to find a bribe to increase repuration fo<span></span>r them at specific locations</li>
+					<li>
+						Trade Routes
+						<ul>
+							<li>Shows trade routes between bases. On click at main table shows all routes originiating from specific base</li>
+							<li>On specific route at bottom table row click, it will show exact path to show. On hover to magnifying glass it will tell waypoint coordinates</li>
+							if shared.ShowDisco {
+								<li>Trade routes are preshown fo<span></span>r Transport, Frigate and Freighter parameters of Discovey</li>
+								<li>Transports have 350 top speed. Too large for freighter's jump holes</li>
+								<li>Frigates 500 top speed. Too large for freighter's jump holes</li>
+								<li>Freighters 500 top speed and have ability to use freighter only jump holes, which are limited to 650 cargo size</li>
+							}
+						</ul>
+					</li>
+					<li>
+						Ore routes
+						<ul>
+							<li>Shows trade routes between ore fields to bases. On click at main table shows all routes originiating from specific ore field</li>
+							<li>
+								In addition also shows trading routes for items received from using the ore in one of pob processing recipes.
+								Convinient for showing trade routes for refined gold for example. The information about it is added into "Commodities" tab too
+							</li>
+						</ul>
+					</li>
+					<li>Travel Routes - routes between all bases. Convinient to lay path for travel for combat oriented ships not following specific trading events.</li>
+					<li>Commodities - Where to buy and where to sell all commodities</li>
+					<li>
+						Guns
+						<ul>
+							<li>All guns information and where to buy them, but some information about them in Missiles tab (including flaks)</li>
+							if shared.ShowDisco {
+								<li>Some parameters show extra information for burst period of damage usage of burst firing guns</li>
+								<li>Some guns have increased number of barrels affecting their DPS. This is visible in one of columns in square brackets (in same column where other burst params)</li>
+							}
+						</ul>
+					</li>
+					<li>Guns Mods - Guns modifiers against specific shields. Shield average damage already accounts for using average shield modifiers and uses only obtainable shields.</li>
+					<li>Missiles - tab with missiles and flak guns (some can be with burst fire stuff)</li>
+					<li>
+						Ammo
+						<ul>
+							<li>ammo and where to buy it. Convinient place to find Anomaly Scanner Batteries</li>
+							if shared.ShowDisco {
+								<li>Tabs ammo, guns, missiles and mines have specified Ammo limit amount, and possible max amount of catridges if u have installed multiple same type weapons</li>
+							}
+						</ul>
+					</li>
+					<li>Mines - mine launchers. For their ammo see "Ammo" tab ;)</li>
+					<li>CMs - Countermeasures and where to find them</li>
+					<li>Shields - Shields and where to buy them</li>
+					<li>Thrusters - thrusters and where to buy them</li>
+					<li>Ships - ship and where to buy them</li>
+					<li>
+						Ship Details
+						<ul>
+							<li>shows ship internal hardpoints. The hardpoint nickname is HpType that is shown in all relevant tabs like guns, shields and etc.</li>
+							<li>Use found HpType in searching bar of relevant tabs to find all compatible items, just insert it into search bar</li>
+						</ul>
+					</li>
+					<li>
+						IDs/Tractors - Tractors in vanilla 
+						if shared.ShowDisco {
+							, IDs in Discovery Freelancer containing rules. Note, the server side overrides from public configs are applied for showing
+						}
+					</li>
+					if shared.ShowDisco {
+						<li>ID Rep hacks - Reputation conditions applied to Discover Freelancer character when equipped with specific ID. Exactly this reputation u get after <strong>represet</strong> command</li>
+					}
+					<li>Engines - Engines and where to buy them</li>
+					<li>Scanners - Scanners and where to buy them</li>
+					<li>
+						Show all - button making sure to show all items, including potentially not very useful.
+						in 95%+ cases, not useful items are the ones which can't be bought. Sometimes it is admin or npc only related items.
+					</li>
+					<li>Color schemes switch - Available themes are Light, Dark and Vanilla</li>
+				</ul>
+			</p>
+			if shared.ShowDisco {
+				@SectionHeader(HeaderDiscoCoordsForWaypoints)
+				<p>
+					Hint: All coordinates shown for Discovery Freelancer can be used to create waypoint to find them in current system.
+					<strong>{ CommandWp }</strong>
+					Use this command for that
+				</p>
+				<p>
+					You can find coordinates on hover in Trade/Ore/Travel routes tab after clicking specific route at the bottom table and then hovering mouse over magnifying glass.
+					Also coordinates are shown in main top table in Bases tab for all base locations. And in every bottom table that tells item selling location for some tab.
+				</p>
+				<img src={ types.GetCtx(ctx).StaticRoot + "docs_coordinates_in_trade_routes.png" }/>
+				@SectionHeader(HeaderDiscoTechCompat)
+				<p>
+					For Freelancer Discovery you can find tech compatibility of specific items.
+					If you have tech compatible items, u can have up to 100% energy regeneration, if not, then no energy regeneration and green msg in chat about it on undock.
+					The information is avilable in two ways.
+					<ul>
+						<li>
+							For tables having "TechCell" column, hover your mouse On magnifying glass and you will see tech compatibility (with which IDs they are compatible) for specific items
+						</li>
+						<li><img src={ types.GetCtx(ctx).StaticRoot + "docs_techcompat_hover.png" }/></li>
+						<li>
+							On top right in tabs having tech compatible items, you have selector of ID. Once you chose specific ID, all items in tabs will be automatically filtered to compatible with chosen ID
+						</li>
+						<li><img src={ types.GetCtx(ctx).StaticRoot + "docs_tech_compat_id_selector.png" }/></li>
+					</ul>
+				</p>
+				@SectionHeader(HeaderAutoUpdate)
+				<p>
+					Darkstat tries its best to auto update itself according to latest patch. The time of lastet update and patch version are shown at top right.
+					It also applies all latest server configs at the moment of its autoupdate. The darkstat update happens 3 times per day.
+				</p>
+				<img src={ types.GetCtx(ctx).StaticRoot + "docs_timestamp.png" }/>
+				@SectionHeader(HeaderDiscoCommodityVolumes)
+				<p>
+					Addressed by having commodity duplicates with different volume/ship class parameter. Accordingly adjusts other shown parameters about them.
+					Also added suffix to their name end with ship class name.
+				</p>
+			}
+			if shared.ShowDisco || shared.ShowFLSR {
+				@SectionHeader(shared.CraftableBaseName)
+				<p>
+					<ul>
+						<li>Pseudo base "{ shared.CraftableBaseName }" is added into "Bases" tab for convinience of discovery of all craftable items.</li>
+						<li>All tabs are enhanced with ability to show if item can be bought or craftable (If craftable, then { shared.CraftableBaseName } location will be seen)</li>
+						<li>At the infocard bottom you can see crafting recipes</li>
+					</ul>
+				</p>
+				<img src={ types.GetCtx(ctx).StaticRoot + "pob_crafts_base.png" }/>
+				<img src={ types.GetCtx(ctx).StaticRoot + "pob_craft_enhanced_infocard.png" }/>
+			}
+			@SectionHeader(HeaderLootable)
+			<p>
+				<ul>
+					<li>Pseudo base "Lootable" is added into "Bases" tab for convinience of discovery of all lootable items from wrecks and missions.</li>
+					<li>All tabs are enhanced with ability to show if item can be bought or lootable</li>
+				</ul>
+			</p>
+			@SectionHeader(HeaderPinningFeature)
+			<p>
+				Items in top table can be pinned on gray text "pin". This convinient feature is for item comparison.
+				The pinned items have buttons to be reselected to one of two bottom tables, to the left or the right.
+			</p>
+			<p>
+				Find gray text "pin" on the left of rows at top table.
+			</p>
+			<img src={ types.GetCtx(ctx).StaticRoot + "docs_pinning.png" }/>
+			@SectionHeader(HeaderOrderingColums)
+			<p>
+				Clicking on a column names makes the rows ordered by it.
+				Clicking again orders in reverse order.
+				You can even order by several columns at the same time if u click them in a sequence.
+			</p>
+			<img src={ types.GetCtx(ctx).StaticRoot + "docs_ordering.png" }/>
+			@SectionHeader(HeaderSearchingFilteringBars)
+			<p>
+				Searching bar on the left is capable to search by most of avilable in the row content, plus it is able to search by first line in infocard in order to capture infocard ship names in addition for searches like "Hegemon" and etc.
+				Note that this search bar is capable to find multiple rows matching your query.
+			</p>
+			<p>
+				Searching filtering bar is a powerful feature, as you could use it to find all routes orginiating from some specific region like Liberty, and then use it at bottom table to find all routes leading to lets say Omicrons.
+			</p>
+			<img src={ types.GetCtx(ctx).StaticRoot + "docs_search_bar.png" }/>
+			<p>
+				Extra searching bar at the more right is available for infocard content search only.
+				This extra searching bar has convinient special feature of auto highlighting searched content with yellow colloration in opened infocards.
+			</p>
+			<img src={ types.GetCtx(ctx).StaticRoot + "docs_infocard_search.png" }/>
+			<p>
+				Additionally, bottom table has searching/filtering bar as well.
+			</p>
+			@SectionHeader(HeaderMovableBorderSize)
+			<p>
+				Darkstat is splitted by three main window sections. Top, bottom tables and infocard section. Borders between them are movable by mouse.
+			</p>
+			<img src={ types.GetCtx(ctx).StaticRoot + "docs_movable_borders.png" }/>
+			@SectionHeader(HeaderFindingHpTypeCompatible)
+			<p>
+				Grab exact HPType in Ship Details, for example <strong>hp_turret_special_6</strong> as seen on the picture below
+			</p>
+			<img src={ types.GetCtx(ctx).StaticRoot + "docs_grabbing_hptype.png" }/>
+			<p>
+				Then insert the nickname of hardpoint into tab "Guns", or "Missiles", or "Shields", "Engines" and etc, it will filter for compatible equipment.
+			</p>
+			<img src={ types.GetCtx(ctx).StaticRoot + "docs_seaching_for_hp_type.png" }/>
+			@SectionHeader(HeaderLegendExtra)
+			<img src={ types.GetCtx(ctx).StaticRoot + "docs_not_for_transports.png" }/>
+			<p>
+				row underlined, means transports can't reach this base location because
+				<ul></ul>
+				if shared.ShowDisco {
+					<li>jump holes are not allowing tranposrts</li>
+					<li>or jump holes can't be jumped with cargo more than 650 units</li>
+					<li>or there are no transporting docking spheres "jump" type</li>
+				}
+				<li>base could be in a system that just has no jump holes leading to it</li>
+			</p>
+			<p>
+				rows crossed out with line through means the base is invisible and not dockable at all
+			</p>
+			if shared.ShowDisco {
+				@SectionHeader(HeaderPOBs)
+				<p>Pob Tab:</p>
+				<p><img src={ types.GetCtx(ctx).StaticRoot + "pobs_pob_tab.png" }/></p>
+				<p>PoB in commodities:</p>
+				<p><img src={ types.GetCtx(ctx).StaticRoot + "pobs_in_commodities.png" }/></p>
+				<p>PoB goods search:</p>
+				<p><img src={ types.GetCtx(ctx).StaticRoot + "pob_goods_search.png" }/></p>
+				<p>
+					<ul>
+						<li>
+							New Tab "PoBs" to see pinned items of publicly observable pobs (Requires toggling this feature on by base owner!)
+							Amount of data depends on amount of turned on things in pob account (This tab is updated like every 5-15 minutes)
+						</li>
+						<li>All tabs are enhanced with ability to show if item can be bought from pob (Updates are only 2 times per day)</li>
+						<li>New tab "PoB goods" for search by shop items more easily</li>
+					</ul>
+				</p>
+				<p>
+					<a href={ templ.URL(types.GetCtx(ctx).SiteRoot + urls.IndexDocs.ToString() + "#" + "how_to_turn_pob_feature_on") }>
+						<h3 id="how_to_turn_pob_feature_on">
+							{ HeaderPoBsHowToTurnOn }
+						</h3>
+					</a>
+					<ul>
+						<li>login to base, <b>/base login base_password</b></li>
+						<li><b>/base setpublic public &lt;master password&gt;</b></li>
+						<li>
+							then go to Forum <a href="https://discoverygc.com/forums/base_admin.php">PoB account manager</a>
+							<ul>
+								<li>login to your base, and toggle all things you wish to show about your base to darkstat.</li>
+								<li>Within 15 minutes information will appear in "PoBs" tab, and within day will propagate to other tabs.</li>
+							</ul>
+						</li>
+						<li>
+							Declare some ship items to be visible in darkstat by one out of two methods below:
+							<ul>
+								<li>set more shop items to be pinned via <b>/shop pin item-index</b>. Than more are pinned, then more are visible.</li>
+								<li>or set some shop items to be just public without usage of pinned feature by commands: <b>/shop public item-index</b> and <b>/shop private item-index</b>.</li>
+							</ul>
 						</li>
 					</ul>
-				</li>
-				<li>Travel Routes - routes between all bases. Convinient to lay path for travel for combat oriented ships not following specific trading events.</li>
-				<li>Commodities - Where to buy and where to sell all commodities</li>
-				<li>
-					Guns
+				</p>
+				<p>How pob account manager looks like:</p>
+				<img src={ types.GetCtx(ctx).StaticRoot + "pobs_forun_account.png" }/>
+				<p>Note: some settings open multiple stuff. Opened position? then it will show Infocard</p>
+				<p>Opened defense status? Docking permissions are shown then</p>
+				<p>forum thread links are autolinked based on finding correct forum thread with the right forum thread name </p>
+				<p>Cargo space left on bases is seen as long as bases exposes shop items in more than non zero amount</p>
+				@SectionHeader(HeaderDiscoKiloVolumes)
+				<p>
+					The kilo volumes value accounts for how much volume of cargo you can deliver on a specific trade route, or buy or sell commodity.
 					<ul>
-						<li>All guns information and where to buy them, but some information about them in Missiles tab (including flaks)</li>
-						if shared.ShowDisco {
-							<li>Some parameters show extra information for burst period of damage usage of burst firing guns</li>
-							<li>Some guns have increased number of barrels affecting their DPS. This is visible in one of columns in square brackets (in same column where other burst params)</li>
-						}
+						<li>Kilo volumes are calculated in volume your ship can transport. So if you have 5000 cargo transport, 5k kilo volume means amount of commodities for a single trip (regardless of their volume per size)</li>
+						<li>The main point of kilo volume to account for the Player Owned Base having limited amount of commodity to sell or space and money to buy</li>
+						<li>Kilo volume accounts for how much commodity PoB can sell you</li>
+						<li>Kilo volume accounts for amount of space PoB has and money has in order to buy your goods, but it accounts that only if PoB made this information Public! Checkable in PoB tab</li>
+						<li>If NPC base participates in a trade route, it is automatically granted 100 kilo volumes</li>
+						<li>When you are shown final kilo volume, source base and destination base are accounted and minimal value out of them is shown</li>
 					</ul>
-				</li>
-				<li>Guns Mods - Guns modifiers against specific shields. Shield average damage already accounts for using average shield modifiers and uses only obtainable shields.</li>
-				<li>Missiles - tab with missiles and flak guns (some can be with burst fire stuff)</li>
-				<li>
-					Ammo
-					<ul>
-						<li>ammo and where to buy it. Convinient place to find Anomaly Scanner Batteries</li>
-						if shared.ShowDisco {
-							<li>Tabs ammo, guns, missiles and mines have specified Ammo limit amount, and possible max amount of catridges if u have installed multiple same type weapons</li>
-						}
-					</ul>
-				</li>
-				<li>Mines - mine launchers. For their ammo see "Ammo" tab ;)</li>
-				<li>CMs - Countermeasures and where to find them</li>
-				<li>Shields - Shields and where to buy them</li>
-				<li>Thrusters - thrusters and where to buy them</li>
-				<li>Ships - ship and where to buy them</li>
-				<li>
-					Ship Details
-					<ul>
-						<li>shows ship internal hardpoints. The hardpoint nickname is HpType that is shown in all relevant tabs like guns, shields and etc.</li>
-						<li>Use found HpType in searching bar of relevant tabs to find all compatible items, just insert it into search bar</li>
-					</ul>
-				</li>
-				<li>
-					IDs/Tractors - Tractors in vanilla 
-					if shared.ShowDisco {
-						, IDs in Discovery Freelancer containing rules. Note, the server side overrides from public configs are applied for showing
-					}
-				</li>
-				if shared.ShowDisco {
-					<li>ID Rep hacks - Reputation conditions applied to Discover Freelancer character when equipped with specific ID. Exactly this reputation u get after <strong>represet</strong> command</li>
-				}
-				<li>Engines - Engines and where to buy them</li>
-				<li>Scanners - Scanners and where to buy them</li>
-				<li>
-					Show all - button making sure to show all items, including potentially not very useful.
-					in 95%+ cases, not useful items are the ones which can't be bought. Sometimes it is admin or npc only related items.
-				</li>
-				<li>Color schemes switch - Available themes are Light, Dark and Vanilla</li>
-			</ul>
-		</p>
-		if shared.ShowDisco {
-			@SectionHeader("Coordinates for waypoint creations")
-			<p>
-				Hint: All coordinates shown for Discovery Freelancer can be used to create waypoint to find them in current system.
-				<strong>{ CommandWp }</strong>
-				Use this command for that
-			</p>
-			<p>
-				You can find coordinates on hover in Trade/Ore/Travel routes tab after clicking specific route at the bottom table and then hovering mouse over magnifying glass.
-				Also coordinates are shown in main top table in Bases tab for all base locations. And in every bottom table that tells item selling location for some tab.
-			</p>
-			<img src={ types.GetCtx(ctx).StaticRoot + "docs_coordinates_in_trade_routes.png" }/>
-			@SectionHeader("Tech compatibility")
-			<p>
-				For Freelancer Discovery you can find tech compatibility of specific items.
-				If you have tech compatible items, u can have up to 100% energy regeneration, if not, then no energy regeneration and green msg in chat about it on undock.
-				The information is avilable in two ways.
-				<ul>
-					<li>
-						For tables having "TechCell" column, hover your mouse On magnifying glass and you will see tech compatibility (with which IDs they are compatible) for specific items
-					</li>
-					<li><img src={ types.GetCtx(ctx).StaticRoot + "docs_techcompat_hover.png" }/></li>
-					<li>
-						On top right in tabs having tech compatible items, you have selector of ID. Once you chose specific ID, all items in tabs will be automatically filtered to compatible with chosen ID
-					</li>
-					<li><img src={ types.GetCtx(ctx).StaticRoot + "docs_tech_compat_id_selector.png" }/></li>
-				</ul>
-			</p>
-			@SectionHeader("Auto updating features")
-			<p>
-				Darkstat tries its best to auto update itself according to latest patch. The time of lastet update and patch version are shown at top right.
-				It also applies all latest server configs at the moment of its autoupdate. The darkstat update happens 3 times per day.
-			</p>
-			<img src={ types.GetCtx(ctx).StaticRoot + "docs_timestamp.png" }/>
-			@SectionHeader("Discovery commoditity volumes changing per ship class")
-			<p>
-				Addressed by having commodity duplicates with different volume/ship class parameter. Accordingly adjusts other shown parameters about them.
-				Also added suffix to their name end with ship class name.
-			</p>
-		}
-		if shared.ShowDisco || shared.ShowFLSR {
-			@SectionHeader(shared.CraftableBaseName)
-			<p>
-				<ul>
-					<li>Pseudo base "{ shared.CraftableBaseName }" is added into "Bases" tab for convinience of discovery of all craftable items.</li>
-					<li>All tabs are enhanced with ability to show if item can be bought or craftable (If craftable, then { shared.CraftableBaseName } location will be seen)</li>
-					<li>At the infocard bottom you can see crafting recipes</li>
-				</ul>
-			</p>
-			<img src={ types.GetCtx(ctx).StaticRoot + "pob_crafts_base.png" }/>
-			<img src={ types.GetCtx(ctx).StaticRoot + "pob_craft_enhanced_infocard.png" }/>
-		}
-		@SectionHeader("Lootable")
-		<p>
-			<ul>
-				<li>Pseudo base "Lootable" is added into "Bases" tab for convinience of discovery of all lootable items from wrecks and missions.</li>
-				<li>All tabs are enhanced with ability to show if item can be bought or lootable</li>
-			</ul>
-		</p>
-		@SectionHeader("Pinning feature")
-		<p>
-			Items in top table can be pinned on gray text "pin". This convinient feature is for item comparison.
-			The pinned items have buttons to be reselected to one of two bottom tables, to the left or the right.
-		</p>
-		<p>
-			Find gray text "pin" on the left of rows at top table.
-		</p>
-		<img src={ types.GetCtx(ctx).StaticRoot + "docs_pinning.png" }/>
-		@SectionHeader("Ordering content by columns")
-		<p>
-			Clicking on a column names makes the rows ordered by it.
-			Clicking again orders in reverse order.
-			You can even order by several columns at the same time if u click them in a sequence.
-		</p>
-		<img src={ types.GetCtx(ctx).StaticRoot + "docs_ordering.png" }/>
-		@SectionHeader("Searching/filtering bars")
-		<p>
-			Searching bar on the left is capable to search by most of avilable in the row content, plus it is able to search by first line in infocard in order to capture infocard ship names in addition for searches like "Hegemon" and etc.
-			Note that this search bar is capable to find multiple rows matching your query.
-		</p>
-		<p>
-			Searching filtering bar is a powerful feature, as you could use it to find all routes orginiating from some specific region like Liberty, and then use it at bottom table to find all routes leading to lets say Omicrons.
-		</p>
-		<img src={ types.GetCtx(ctx).StaticRoot + "docs_search_bar.png" }/>
-		<p>
-			Extra searching bar at the more right is available for infocard content search only.
-			This extra searching bar has convinient special feature of auto highlighting searched content with yellow colloration in opened infocards.
-		</p>
-		<img src={ types.GetCtx(ctx).StaticRoot + "docs_infocard_search.png" }/>
-		<p>
-			Additionally, bottom table has searching/filtering bar as well.
-		</p>
-		@SectionHeader("Movable border size")
-		<p>
-			Darkstat is splitted by three main window sections. Top, bottom tables and infocard section. Borders between them are movable by mouse.
-		</p>
-		<img src={ types.GetCtx(ctx).StaticRoot + "docs_movable_borders.png" }/>
-		@SectionHeader("Finding equipment compatible with specific hardpoint")
-		<p>
-			Grab exact HPType in Ship Details, for example <strong>hp_turret_special_6</strong> as seen on the picture below
-		</p>
-		<img src={ types.GetCtx(ctx).StaticRoot + "docs_grabbing_hptype.png" }/>
-		<p>
-			Then insert the nickname of hardpoint into tab "Guns", or "Missiles", or "Shields", "Engines" and etc, it will filter for compatible equipment.
-		</p>
-		<img src={ types.GetCtx(ctx).StaticRoot + "docs_seaching_for_hp_type.png" }/>
-		@SectionHeader("Legend for extra markings")
-		<img src={ types.GetCtx(ctx).StaticRoot + "docs_not_for_transports.png" }/>
-		<p>
-			row underlined, means transports can't reach this base location because
-			<ul></ul>
-			if shared.ShowDisco {
-				<li>jump holes are not allowing tranposrts</li>
-				<li>or jump holes can't be jumped with cargo more than 650 units</li>
-				<li>or there are no transporting docking spheres "jump" type</li>
+				</p>
 			}
-			<li>base could be in a system that just has no jump holes leading to it</li>
-		</p>
-		<p>
-			rows crossed out with line through means the base is invisible and not dockable at all
-		</p>
-		if shared.ShowDisco {
-			@SectionHeader("Player Owned Bases (PoBs)")
-			<p>Pob Tab:</p>
-			<p><img src={ types.GetCtx(ctx).StaticRoot + "pobs_pob_tab.png" }/></p>
-			<p>PoB in commodities:</p>
-			<p><img src={ types.GetCtx(ctx).StaticRoot + "pobs_in_commodities.png" }/></p>
-			<p>PoB goods search:</p>
-			<p><img src={ types.GetCtx(ctx).StaticRoot + "pob_goods_search.png" }/></p>
-			<p>
-				<ul>
-					<li>
-						New Tab "PoBs" to see pinned items of publicly observable pobs (Requires toggling this feature on by base owner!)
-						Amount of data depends on amount of turned on things in pob account (This tab is updated like every 5-15 minutes)
-					</li>
-					<li>All tabs are enhanced with ability to show if item can be bought from pob (Updates are only 2 times per day)</li>
-					<li>New tab "PoB goods" for search by shop items more easily</li>
-				</ul>
-			</p>
-			<p>
-				<a href={ templ.URL(types.GetCtx(ctx).SiteRoot + urls.IndexDocs.ToString() + "#" + "how_to_turn_pob_feature_on") }>
-					<h3 id="how_to_turn_pob_feature_on">
-						How to turn PoB visibility in darkstat?
-					</h3>
-				</a>
-				<ul>
-					<li>login to base, <b>/base login base_password</b></li>
-					<li><b>/base setpublic public &lt;master password&gt;</b></li>
-					<li>
-						then go to Forum <a href="https://discoverygc.com/forums/base_admin.php">PoB account manager</a>
-						<ul>
-							<li>login to your base, and toggle all things you wish to show about your base to darkstat.</li>
-							<li>Within 15 minutes information will appear in "PoBs" tab, and within day will propagate to other tabs.</li>
-						</ul>
-					</li>
-					<li>
-						Declare some ship items to be visible in darkstat by one out of two methods below:
-						<ul>
-							<li>set more shop items to be pinned via <b>/shop pin item-index</b>. Than more are pinned, then more are visible.</li>
-							<li>or set some shop items to be just public without usage of pinned feature by commands: <b>/shop public item-index</b> and <b>/shop private item-index</b>.</li>
-						</ul>
-					</li>
-				</ul>
-			</p>
-			<p>How pob account manager looks like:</p>
-			<img src={ types.GetCtx(ctx).StaticRoot + "pobs_forun_account.png" }/>
-			<p>Note: some settings open multiple stuff. Opened position? then it will show Infocard</p>
-			<p>Opened defense status? Docking permissions are shown then</p>
-			<p>forum thread links are autolinked based on finding correct forum thread with the right forum thread name </p>
-			<p>Cargo space left on bases is seen as long as bases exposes shop items in more than non zero amount</p>
-		}
+		</textbody>
 	}
 }
