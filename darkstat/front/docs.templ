@@ -24,8 +24,9 @@ func TurnToAnchor(text string) string {
 }
 
 templ SectionHeader(name string) {
+	<anchor id={ TurnToAnchor(name) }></anchor>
 	<a href={ templ.URL(types.GetCtx(ctx).SiteRoot + urls.IndexDocs.ToString() + "#" + TurnToAnchor(name)) }>
-		<h2 id={ TurnToAnchor(name) } class="section_header">
+		<h2 class="section_header">
 			{ name }
 		</h2>
 	</a>
