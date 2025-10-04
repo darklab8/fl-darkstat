@@ -56,6 +56,7 @@ const (
 	HeaderDiscoKiloVolumes        = "Kilo volumes in trade, ore routes and pob related tabs"
 	HeaderDifferentThemes         = "Tool themes (White, Dark, Vanilla)"
 	HeaderShowAll                 = "Show more items, not buyable and others"
+	HeaderOtherDeployment         = "Deployment versions"
 	HeadersContributeToDocs       = "Contribution to documentation or the tool itself"
 )
 
@@ -239,6 +240,9 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 					</li>
 					<li>
 						@SectionLink(HeaderShowAll)
+					</li>
+					<li>
+						@SectionLink(HeaderOtherDeployment)
 					</li>
 					<li>
 						@SectionLink(HeadersContributeToDocs)
@@ -526,6 +530,22 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 			@SectionHeader(HeaderShowAll)
 			<p>
 				By default we show in each tab items in use. If u wish to see not obtainable different items that are usually not of big interest, then press "Show All" button at the top located menu
+			</p>
+			@SectionHeader(HeaderOtherDeployment)
+			<p>
+				the app can work both as Static Site Generator to make html/css/js assets for deploymet to github pages,
+				or as live backend app with more frequent live updates to its data if necessary, also live backend option is useful for <a href="https://github.com/darklab8/fl-darkstat#local-usage">app local usage</a>
+			</p>
+			<p>
+				The deployment of the tool is provided for multiple mods:
+			</p>
+			<p>
+				<ul>
+					<li><a href="https://darklab8.github.io/fl-data-vanilla/">Freelancer Vanilla version at Github Pages</a></li>
+					<li><a href="https://darkstat-vanilla.dd84ai.com/">Freelancer Vanilla version as backend app</a></li>
+					<li><a href="https://darkstat.dd84ai.com/">Freelancer Discovery as backend app</a></li>
+					<li><a href="https://darklab8.github.io/fl-data-flsr/">Freelancer Sirius Revival at github pages</a></li>
+				</ul>
 			</p>
 			@SectionHeader(HeadersContributeToDocs)
 			<p>
