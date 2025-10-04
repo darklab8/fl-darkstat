@@ -174,9 +174,11 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 							@SectionLink(HeaderDiscoTechCompat)
 						</li>
 					}
-					<li>
-						@SectionLink(HeaderAutoUpdate)
-					</li>
+					if shared.ShowDisco {
+						<li>
+							@SectionLink(HeaderAutoUpdate)
+						</li>
+					}
 					if shared.ShowDisco {
 						<li>
 							@SectionLink(HeaderDiscoCommodityVolumes)
@@ -211,17 +213,19 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 					<li>
 						@SectionLink(HeaderLegendExtra)
 					</li>
-					<li>
-						@SectionLink(HeaderPOBs)
-					</li>
-					<li>
-						<a href="#how_to_turn_pob_feature_on">
-							{ HeaderPoBsHowToTurnOn }
-						</a>
-					</li>
-					<li>
-						@SectionLink(HeaderDiscoKiloVolumes)
-					</li>
+					if shared.ShowDisco {
+						<li>
+							@SectionLink(HeaderPOBs)
+						</li>
+						<li>
+							<a href="#how_to_turn_pob_feature_on">
+								{ HeaderPoBsHowToTurnOn }
+							</a>
+						</li>
+						<li>
+							@SectionLink(HeaderDiscoKiloVolumes)
+						</li>
+					}
 				</ul>
 			</menu>
 			@SectionHeader(HeaderAvailableTags)
