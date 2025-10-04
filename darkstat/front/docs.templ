@@ -54,6 +54,9 @@ const (
 	HeaderPOBs                    = "Player Owned Bases (PoBs)"
 	HeaderPoBsHowToTurnOn         = "How to turn PoB visibility in darkstat?"
 	HeaderDiscoKiloVolumes        = "Kilo volumes in trade, ore routes and pob related tabs"
+	HeaderDifferentThemes         = "Tool themes (White, Dark, Vanilla)"
+	HeaderShowAll                 = "Show more items, not buyable and others"
+	HeadersContributeToDocs       = "Contribution to documentation or the tool itself"
 )
 
 templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
@@ -231,6 +234,15 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 							@SectionLink(HeaderDiscoKiloVolumes)
 						</li>
 					}
+					<li>
+						@SectionLink(HeaderDifferentThemes)
+					</li>
+					<li>
+						@SectionLink(HeaderShowAll)
+					</li>
+					<li>
+						@SectionLink(HeadersContributeToDocs)
+					</li>
 				</ul>
 			</menu>
 			@SectionHeader(HeaderAvailableTags)
@@ -309,6 +321,11 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 					}
 					<li>Engines - Engines and where to buy them</li>
 					<li>Scanners - Scanners and where to buy them</li>
+					if shared.ShowDisco {
+						<li>PoBs - Player Owned Bases content checked from the point of view of bases themselves</li>
+						<li>PoB Goods - Player Owned Bases content checked from the point of view of goods themselves</li>
+					}
+					<li>Extra - contains everything not caught by other tabs, depending on mod it can contain Power Plants, Armors, Cloaks and etc</li>
 					<li>
 						Show all - button making sure to show all items, including potentially not very useful.
 						in 95%+ cases, not useful items are the ones which can't be bought. Sometimes it is admin or npc only related items.
@@ -502,6 +519,28 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 					</ul>
 				</p>
 			}
+			@SectionHeader(HeaderDifferentThemes)
+			<p>
+				The tool offers besides White theme also Dark and Vanilla theme. Click onto button "Color Scheme" at the top located menu to get them! :)
+			</p>
+			@SectionHeader(HeaderShowAll)
+			<p>
+				By default we show in each tab items in use. If u wish to see not obtainable different items that are usually not of big interest, then press "Show All" button at the top located menu
+			</p>
+			@SectionHeader(HeadersContributeToDocs)
+			<p>
+				The documentation is managed as a code at <a href="https://github.com/darklab8/fl-darkstat/blob/master/darkstat/front/docs.templ#L168">the place in a Github Repository</a>, feel free to add or fix its parts.
+			</p>
+			<p>
+				If you wish to make additions to the tool itself, <a href="https://github.com/darklab8/fl-darkstat/tree/master#development-setup">development setup instruction is provided</a>
+			</p>
+			<p>
+				The tool is <a href="https://github.com/darklab8/fl-darkstat/blob/master/LICENSE">licensed in AGPL3 way</a> with extra addition of request for appropriate credit to the original author.
+				You are free to copy, modify, build, publish it in a whatever way as long as each forked code remains publicly accessable (for example by some public git repository) and original author Andrei Novoselov(aka darkwind, aka dd84ai) is mentioned.
+			</p>
+			<p>
+				Continued development happens with management of <a href="https://github.com/darklab8/fl-darkstat/issues">task tracking through Github Issues</a> and communications at <a href="https://discord.gg/zFzSs82y3W">Discord Server</a>, or inside Github itself, or at last resort even through emails
+			</p>
 		</textbody>
 	}
 }
