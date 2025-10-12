@@ -271,7 +271,7 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 				item.OriginalVolume, _ = equip.Volume.GetValue()
 
 				if !found_vol {
-					logus.Log.Error("item without volume", typelog.Any("nickname", item.Nickname))
+					logus.Log.Info("item without volume", typelog.Any("nickname", item.Nickname))
 				}
 			}
 			pob_goods = append(pob_goods, item)
@@ -413,12 +413,12 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 				items_map := e.Mapped.Equip()
 				if equip, ok := items_map.ItemsMap[good.Nickname]; ok {
 					if _, ok := equip.Volume.GetValue(); !ok {
-						logus.Log.Error("pob good without volume defined", typelog.Any("nickname", good.Nickname))
+						logus.Log.Info("pob good without volume defined", typelog.Any("nickname", good.Nickname))
 					}
 					good.Volume, _ = equip.Volume.GetValue()
 					good.OriginalVolume, _ = equip.Volume.GetValue()
 				} else {
-					logus.Log.Error("haven't found item info for good.nickname", typelog.Any("nickname", good.Nickname))
+					logus.Log.Warn("haven't found item info for good.nickname", typelog.Any("nickname", good.Nickname))
 				}
 
 				pob.ShopItems = append(pob.ShopItems, good)
