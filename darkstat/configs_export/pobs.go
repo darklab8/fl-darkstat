@@ -1,7 +1,6 @@
 package configs_export
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -267,9 +266,13 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 		} else {
 			items_map := e.Mapped.Equip()
 			if equip, ok := items_map.ItemsMap[item.Nickname]; ok {
-				item.Volume = equip.Volume.Get()
-				item.OriginalVolume = equip.Volume.Get()
+				var found_vol bool
+				item.Volume, found_vol = equip.Volume.GetValue()
+				item.OriginalVolume, _ = equip.Volume.GetValue()
 
+				if !found_vol {
+					logus.Log.Error("item without volume", typelog.Any("nickname", item.Nickname))
+				}
 			}
 			pob_goods = append(pob_goods, item)
 		}
@@ -410,16 +413,12 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 				items_map := e.Mapped.Equip()
 				if equip, ok := items_map.ItemsMap[good.Nickname]; ok {
 					if _, ok := equip.Volume.GetValue(); !ok {
-						fmt.Println("nickname of good=", good.Nickname)
-						fmt.Println(good.Nickname, equip.RenderModel().ToString(false))
-
-						fmt.Println("adding without volume item in PoBs", *good)
-						data, _ := json.Marshal(good)
-						fmt.Println("adding 2 without volume item in PoBs", string(data))
-						panic("stop")
+						logus.Log.Error("pob good without volume defined", typelog.Any("nickname", good.Nickname))
 					}
 					good.Volume, _ = equip.Volume.GetValue()
 					good.OriginalVolume, _ = equip.Volume.GetValue()
+				} else {
+					logus.Log.Error("haven't found item info for good.nickname", typelog.Any("nickname", good.Nickname))
 				}
 
 				pob.ShopItems = append(pob.ShopItems, good)
