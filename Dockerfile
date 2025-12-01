@@ -31,6 +31,7 @@ RUN swag init --parseDependency
 
 ARG BUILD_VERSION
 RUN echo "${BUILD_VERSION}" > darkstat/settings/version.txt
+ENV GOEXPERIMENT=greenteagc
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
 FROM debian:12.11-slim AS runner
