@@ -7,6 +7,7 @@ RUN pip3 install --break-system-packages requests
 
 RUN mkdir ~/.ssh
 RUN chmod 7000 ~/.ssh
+ENV change_vers=1
 COPY --chmod=600 id_rsa.git.discoverygc.com /root/.ssh/id_rsa
 RUN ssh-keyscan -t rsa git.discoverygc.com >> ~/.ssh/known_hosts
 

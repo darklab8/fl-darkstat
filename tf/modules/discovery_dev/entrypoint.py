@@ -16,7 +16,7 @@ while True:
     OLD_PASSWORD=environ["DARKCORE_PASSWORD"]
 
     print("attempting to clone freelancer folder")
-    os.system("git clone gogs@git.discoverygc.com:DGCRepository/game-repository.git freelancer_folder")
+    os.system("git clone git@git.discoverygc.com:dgcrepository/game-repository.git freelancer_folder")
     os.system("cd freelancer_folder && git checkout 5.3 && git pull")
     NEW_PASSWORD=subprocess.run("cd freelancer_folder && git rev-parse HEAD", shell=True, capture_output=True).stdout.decode("utf8").replace("\n","")
     if OLD_PASSWORD != NEW_PASSWORD:
