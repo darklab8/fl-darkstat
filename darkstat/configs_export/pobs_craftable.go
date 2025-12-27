@@ -114,6 +114,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 			add_line := func(index int, line infocarder.InfocardLine) {
 				if index >= len(info) {
 					info = append(info, line)
+					return
 				}
 				info = append(info[:index+1], info[index:]...)
 				info[index] = line
