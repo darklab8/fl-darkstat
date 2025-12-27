@@ -5,8 +5,10 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/discovery/base_recipe_items"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -112,10 +114,12 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 		add_line_about_recipes := func(info infocarder.Infocard) infocarder.Infocard {
 			add_line := func(index int, line infocarder.InfocardLine) {
-				if index >= len(info) {
-					info = append(info, line)
-					return
-				}
+				defer func() {
+					if err := recover(); err != nil {
+						logus.Log.Error("badly added line", typelog.Any("err", err))
+						info = append(info, line)
+					}
+				}()
 				info = append(info[:index+1], info[index:]...)
 				info[index] = line
 			}
