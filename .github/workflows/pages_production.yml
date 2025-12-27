@@ -32,10 +32,15 @@ jobs:
       run: task build-version
     - name: Build Binaries
       run: task build:bins
+    - name: Get version from tag
+      run: |
+        set -x
+        echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+      id: version
     - name: Print release changelog
       run: |
         echo 'artifact<<EOF' >> $GITHUB_OUTPUT
-        autogit changelog >> "$GITHUB_OUTPUT"
+        autogit changelog --override ${{ steps.version.outputs.BUILD_VERSION }} >> "$GITHUB_OUTPUT"
         echo 'EOF' >> $GITHUB_OUTPUT
       id: changelog
     - name: upload binaries to release

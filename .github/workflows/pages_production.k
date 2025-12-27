@@ -36,6 +36,7 @@ _pages_production_job: gw.Job = {
             name: "Build Binaries"
             run: "task build:bins"
         }
+        autogit.GetVersionFromTagStep {}
         autogit.GetChangelogStep {}
         ghc.UploadBinariesStep(ghc.UploadBinariesStepOpts {
             body = autogit.GetChangelogOutput
