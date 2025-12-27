@@ -112,6 +112,12 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 		add_line_about_recipes := func(info infocarder.Infocard) infocarder.Infocard {
 			add_line := func(index int, line infocarder.InfocardLine) {
+
+				if len(info) == 0 {
+					info = append(info, line)
+					return
+				}
+
 				info = append(info[:index+1], info[index:]...)
 				info[index] = line
 			}
