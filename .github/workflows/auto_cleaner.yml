@@ -1,0 +1,23 @@
+name: Clean up assets automatically
+on:
+    push:
+        branches: ["master"]
+    pull_request:
+        branches: ["master"]
+    workflow_dispatch: {}
+jobs:
+    job:
+        name: Github Pages Production
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Install Go
+              uses: darklab8/infra/.github/actions/install-go@master
+            - name: Cleanup previous assets
+              run: |
+                  set -x
+                  go work init ./docker/clean_gh_assets | true
+                  go work use ./docker/clean_gh_assets | true
+                  cd ./docker/clean_gh_assets
+                  go run main.go
+              env:
+                  CLEAN_ASSETS_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

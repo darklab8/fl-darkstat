@@ -57,15 +57,6 @@ jobs:
             dist/darkstat-macos-arm64
             dist/darkstat-windows-amd64.exe
             dist/darkstat-windows-arm64.exe
-      - name: Cleanup previous assets
-        run: |
-          set -x
-          go work init ./docker/clean_gh_assets | true
-          go work use ./docker/clean_gh_assets | true
-          cd ./docker/clean_gh_assets
-          go run main.go
-        env:
-          CLEAN_ASSETS_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Repository Dispatch for Vanilla
         uses: peter-evans/repository-dispatch@v3
         with:
