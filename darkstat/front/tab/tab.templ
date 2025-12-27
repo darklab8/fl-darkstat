@@ -64,8 +64,7 @@ templ TabContent() {
 		}
 
 		.selected_row {
-			background-color: var(--selected) !important;
-			filter: brightness(95%);
+			background-color: color-mix(in srgb, var(--selected) 95%, var(--color_text)) !important;
 		}
 		.splitter {
 			display: flex;
