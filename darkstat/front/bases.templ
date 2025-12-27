@@ -71,6 +71,19 @@ templ BasesTable(
 					<th style="width:50px;">Select</th>
 					<th style="width:50px;">Select</th>
 				}
+				if tab_mode == BaseTabOres {
+					if shared.ShowDisco {
+						<th style="width:50px;">
+							@frmt.MultiLinestring([]string{"Nu", "rocks", "portion"})
+						</th>
+						<th style="width:50px;">
+							@frmt.MultiLinestring([]string{"Nu", "spawn", "time"})
+						</th>
+						<th style="width:50px;">
+							@frmt.MultiLinestring([]string{"Nu max", "spawn", "count"})
+						</th>
+					}
+				}
 				if tab_mode != BaseTabOres {
 					<th style="width:50px;">Owner - Faction</th>
 				}
@@ -236,6 +249,13 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 			<td>
 				@frmt.WriteFactioName(base.FactionName)
 			</td>
+		}
+		if tab_mode == BaseTabOres {
+			if shared.ShowDisco {
+				<td>{ fmt.Sprintf("%d/%d", base.NuAsteroidsCount, base.NuAsteroidsTotal) }</td>
+				<td>{ strconv.Itoa(base.RespawnCooldown) }</td>
+				<td>{ strconv.Itoa(base.MaxSpawnCount) }</td>
+			}
 		}
 		if tab_mode == BaseTabOres {
 			<td>{ strconv.Itoa(base.DynamicLootMin) } - { strconv.Itoa(base.DynamicLootMax) } ( { strconv.Itoa(base.DynamicLootDifficulty) } ) </td>

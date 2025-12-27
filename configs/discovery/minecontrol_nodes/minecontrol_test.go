@@ -1,4 +1,4 @@
-package minecontrol
+package minecontrol_nodes
 
 import (
 	"testing"
@@ -13,11 +13,8 @@ import (
 
 func TestReader(t *testing.T) {
 	test_directory := utils_os.GetCurrrentTestFolder()
-	fileref := file.NewFile(utils_types.FilePath(utils_filepath.Join(test_directory, "minecontrol.cfg")))
+	fileref := file.NewFile(utils_types.FilePath(utils_filepath.Join(test_directory, "minecontrol_nodes.cfg")))
 	config := Read(iniload.NewLoader(fileref).Scan())
-	assert.Greater(t, len(config.PlayerBonusByIDNickname), 0)
-	assert.Greater(t, len(config.PlayerBonusByOreNickname), 0)
-
-	assert.Greater(t, len(config.MiningSolarByAsteroidNick), 0)
-	assert.Greater(t, len(config.MiningSolarByAsteroidNick["mining_node_asteroid_gold01"].OreNicknamesCounts), 0)
+	assert.Greater(t, len(config.MiningSystems), 0)
+	assert.Greater(t, len(config.MiningSystemsBySystemNick), 0)
 }
