@@ -1,77 +1,86 @@
 name: Deploy pages production
-'on':
+"on":
   push:
     tags:
-    - '*'
-    - '!*-*'
+      - "*"
+      - "!*-*"
   workflow_dispatch: {}
 jobs:
   job:
     name: Github Pages Production
     runs-on: ubuntu-22.04
     steps:
-    - name: Install Autogit
-      uses: darklab8/infra/.github/actions/install-autogit@master
-    - name: Check out source repository with commits history
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Install Go
-      uses: darklab8/infra/.github/actions/install-go@master
-    - name: Install Taskfile
-      uses: darklab8/infra/.github/actions/install-taskfile@master
-    - name: Install Templ
-      uses: darklab8/infra/.github/actions/install-templ@master
-    - name: generate Templ files
-      run: templ generate
-    - name: Install Swag
-      uses: darklab8/infra/.github/actions/install-swag@master
-    - name: Build swag go stuff
-      run: swag init --parseDependency
-    - name: add versions
-      run: task build-version
-    - name: Write version from tag
-      run: echo "${{ steps.version.outputs.BUILD_VERSION }}" > darkstat/settings/version.txt
-    - name: Build Binaries
-      run: task build:bins_only
-    - name: Get version from tag
-      run: |
-        set -x
-        echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
-      id: version
-    - name: Print release changelog
-      run: |
-        echo 'artifact<<EOF' >> $GITHUB_OUTPUT
-        autogit changelog --override ${{ steps.version.outputs.BUILD_VERSION }} >> "$GITHUB_OUTPUT"
-        echo 'EOF' >> $GITHUB_OUTPUT
-      id: changelog
-    - name: upload binaries to release
-      if: ${{startsWith(github.ref, 'refs/tags/') }}
-      uses: softprops/action-gh-release@v2
-      with:
-        body: ${{ steps.changelog.outputs.artifact }}
-        files: |
-          dist/darkstat-linux-amd64
-          dist/darkstat-linux-arm64
-          dist/darkstat-macos-amd64
-          dist/darkstat-macos-arm64
-          dist/darkstat-windows-amd64.exe
-          dist/darkstat-windows-arm64.exe
-    - name: Repository Dispatch for Vanilla
-      uses: peter-evans/repository-dispatch@v3
-      with:
-        token: ${{ secrets.FL_DATA_KEY }}
-        repository: darklab8/fl-data-vanilla
-        event-type: publish
-    - name: Repository Dispatch for Discovery
-      uses: peter-evans/repository-dispatch@v3
-      with:
-        token: ${{ secrets.FL_DATA_KEY }}
-        repository: darklab8/fl-data-discovery
-        event-type: publish
-    - name: Repository Dispatch for FLSR
-      uses: peter-evans/repository-dispatch@v3
-      with:
-        token: ${{ secrets.FL_DATA_KEY }}
-        repository: darklab8/fl-data-flsr
-        event-type: publish
+      - name: Install Autogit
+        uses: darklab8/infra/.github/actions/install-autogit@master
+      - name: Check out source repository with commits history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Go
+        uses: darklab8/infra/.github/actions/install-go@master
+      - name: Install Taskfile
+        uses: darklab8/infra/.github/actions/install-taskfile@master
+      - name: Install Templ
+        uses: darklab8/infra/.github/actions/install-templ@master
+      - name: generate Templ files
+        run: templ generate
+      - name: Install Swag
+        uses: darklab8/infra/.github/actions/install-swag@master
+      - name: Build swag go stuff
+        run: swag init --parseDependency
+      - name: add versions
+        run: task build-version
+      - name: Write version from tag
+        run: echo "${{ steps.version.outputs.BUILD_VERSION }}" > darkstat/settings/version.txt
+      - name: Build Binaries
+        run: task build:bins_only
+      - name: Get version from tag
+        run: |
+          set -x
+          echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+        id: version
+      - name: Print release changelog
+        run: |
+          echo 'artifact<<EOF' >> $GITHUB_OUTPUT
+          autogit changelog --override ${{ steps.version.outputs.BUILD_VERSION }} >> "$GITHUB_OUTPUT"
+          echo 'EOF' >> $GITHUB_OUTPUT
+        id: changelog
+      - name: upload binaries to release
+        if: ${{startsWith(github.ref, 'refs/tags/') }}
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.changelog.outputs.artifact }}
+          files: |
+            dist/darkstat-linux-amd64
+            dist/darkstat-linux-arm64
+            dist/darkstat-macos-amd64
+            dist/darkstat-macos-arm64
+            dist/darkstat-windows-amd64.exe
+            dist/darkstat-windows-arm64.exe
+      - name: Cleanup previous assets
+        run: |
+          set -x
+          go work init ./docker/clean_gh_assets | true
+          go work use ./docker/clean_gh_assets | true
+          cd ./docker/clean_gh_assets
+          go run main.go
+        env:
+          CLEAN_ASSETS_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Repository Dispatch for Vanilla
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.FL_DATA_KEY }}
+          repository: darklab8/fl-data-vanilla
+          event-type: publish
+      - name: Repository Dispatch for Discovery
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.FL_DATA_KEY }}
+          repository: darklab8/fl-data-discovery
+          event-type: publish
+      - name: Repository Dispatch for FLSR
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.FL_DATA_KEY }}
+          repository: darklab8/fl-data-flsr
+          event-type: publish
