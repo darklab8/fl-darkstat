@@ -133,9 +133,12 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 					add_line(1, infocarder.NewInfocardSimpleLine(""))
 					line_position += 1
 				}
-				if strip_line(info[line_position+1].ToStr()) != "" {
-					add_line(line_position+1, infocarder.NewInfocardSimpleLine(""))
+				if line_position+1 < len(info) {
+					if strip_line(info[line_position+1].ToStr()) != "" {
+						add_line(line_position+1, infocarder.NewInfocardSimpleLine(""))
+					}
 				}
+
 			}
 			return info
 		}
