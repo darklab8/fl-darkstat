@@ -12,7 +12,7 @@ import (
 const (
 	owner      = "darklab8"
 	repo       = "fl-darkstat"
-	keepLatest = 8
+	keepLatest = 5
 	dryRun     = false
 )
 
