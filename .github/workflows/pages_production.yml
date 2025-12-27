@@ -30,8 +30,10 @@ jobs:
       run: swag init --parseDependency
     - name: add versions
       run: task build-version
+    - name: Write version from tag
+      run: echo "${{ steps.version.outputs.BUILD_VERSION }}" > darkstat/settings/version.txt
     - name: Build Binaries
-      run: task build:bins
+      run: task build:bins_only
     - name: Get version from tag
       run: |
         set -x

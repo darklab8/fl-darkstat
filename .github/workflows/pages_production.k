@@ -33,8 +33,12 @@ _pages_production_job: gw.Job = {
         swag.SwagBuild {}
         c.TaskfileBuildVersion
         ga.Step {
+            name: "Write version from tag"
+            run: r"""echo "${{ steps.version.outputs.BUILD_VERSION }}" > darkstat/settings/version.txt"""
+        }
+        ga.Step {
             name: "Build Binaries"
-            run: "task build:bins"
+            run: "task build:bins_only"
         }
         autogit.GetVersionFromTagStep {}
         autogit.GetChangelogStep {}

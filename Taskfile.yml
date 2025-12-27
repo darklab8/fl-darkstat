@@ -66,9 +66,8 @@ tasks:
     cmds:
       - autogit semver --publish > darkstat/settings/version.txt || echo 'v0.0.0' > darkstat/settings/version.txt
 
-  build:bins:
+  build:bins_only:
     cmds:
-      - task: build-version
       - mkdir -p dist
       - rm dist/* | true
 
@@ -84,7 +83,11 @@ tasks:
       # - GOOS=linux GOARCH=arm go build -v -o dist/darkstat-linux-arm main.go
       # - GOOS=windows GOARCH=386 go build -v -o dist/darkstat-windows-386.exe main.go
       # - GOOS=windows GOARCH=arm go build -v -o dist/darkstat-windows-arm.exe main.go
-
+  build:bins:
+    cmds:
+      - task: build-version
+      - task: build:bins_only
+      - rm dist/* | true
   hook:prod:
     cmds:
       - sudo rm /usr/local/bin/darkstat | true
