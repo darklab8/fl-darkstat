@@ -11,7 +11,7 @@ permissions:
 
 jobs:
     job:
-        name: Github Pages Production
+        name: Cleanup old GH assets
         runs-on: ubuntu-22.04
         steps:
             - name: Check out source repository with commits history
