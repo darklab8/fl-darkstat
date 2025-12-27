@@ -10,6 +10,8 @@ jobs:
         name: Github Pages Production
         runs-on: ubuntu-22.04
         steps:
+            - name: Check out source repository with commits history
+              uses: actions/checkout@v4
             - name: Install Go
               uses: darklab8/infra/.github/actions/install-go@master
             - name: Cleanup previous assets
@@ -20,4 +22,4 @@ jobs:
                   cd ./docker/clean_gh_assets
                   go run main.go
               env:
-                  CLEAN_ASSETS_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  CLEAN_ASSETS_GITHUB_TOKEN: ${{ secrets.CLEAN_ASSETS_GITHUB_TOKEN }}
