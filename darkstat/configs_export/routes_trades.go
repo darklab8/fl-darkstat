@@ -239,7 +239,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 			profit_per_time := trade_route.Transport.GetProffitPerTime()
 
-			max_importance_of_kilo_volumes := float64(30)
+			max_importance_of_kilo_volumes := float64(50)
 			// makes weight of this thing being important only in range between 0 to Min(N:=10?)
 			kilo_volume := math.Min(max_importance_of_kilo_volumes, KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
 
