@@ -215,7 +215,7 @@ type TradeDeal struct {
 	ProfitWeight                float64
 }
 
-const LimitBestPaths = 1500
+const LimitBestPaths = 2000
 
 func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) []*TradeDeal {
 	var trade_deals []*TradeDeal
@@ -273,6 +273,11 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 				return trade_deals[i].ProfitWeight > trade_deals[j].ProfitWeight
 			})
 			trade_deals = trade_deals[:LimitBestPaths]
+
+			sort.Slice(trade_deals, func(i, j int) bool {
+				return trade_deals[i].ProfitPerTimeForKiloVolumes > trade_deals[j].ProfitPerTimeForKiloVolumes
+			})
+			trade_deals = trade_deals[:LimitBestPaths-LimitBestPaths/10]
 		}
 
 		if index%100 == 0 {
@@ -282,7 +287,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 	// Final sorting
 	sort.Slice(trade_deals, func(i, j int) bool {
-		return trade_deals[i].ProfitPerTimeForKiloVolumes > trade_deals[j].ProfitPerTimeForKiloVolumes
+		return trade_deals[i].Transport.GetProffitPerTime() > trade_deals[j].Transport.GetProffitPerTime()
 	})
 	if len(trade_deals) > LimitBestPaths+500 {
 		trade_deals = trade_deals[:LimitBestPaths]
