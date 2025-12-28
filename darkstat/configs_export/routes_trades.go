@@ -215,7 +215,7 @@ type TradeDeal struct {
 	ProfitWeight                float64
 }
 
-const LimitBestPaths = 800
+const LimitBestPaths = 1500
 
 func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) []*TradeDeal {
 	var trade_deals []*TradeDeal
@@ -253,13 +253,13 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 				continue
 			}
 
-			var time_weight float64
-			time_importance_seconds_until := float64(600 * 2)
-			time_weight = math.Min(time_s, time_importance_seconds_until) / time_importance_seconds_until
+			// disabled formula variables deemed to be not important as expected, but left just in case
+			// var time_weight float64
+			// time_importance_seconds_until := float64(600 * 2)
+			// time_weight = math.Min(time_s, time_importance_seconds_until) / time_importance_seconds_until
+			// kilo_volume_weight := (math.Min(max_importance_of_kilo_volumes, kilo_volume) / max_importance_of_kilo_volumes)
 
-			kilo_volume_weight := (math.Min(max_importance_of_kilo_volumes, kilo_volume) / max_importance_of_kilo_volumes)
-
-			profit_weight := (profit_per_time * profit_per_time) * ((kilo_volume_weight * 0.5) + (time_weight * time_weight))
+			profit_weight := profit_per_time * time_s * kilo_volume
 
 			trade_route.Transport.GetProffitPerTime()
 			trade_deals = append(trade_deals, &TradeDeal{
@@ -279,8 +279,10 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 			runtime.GC()
 		}
 	}
+
+	// Final sorting
 	sort.Slice(trade_deals, func(i, j int) bool {
-		return trade_deals[i].ProfitWeight > trade_deals[j].ProfitWeight
+		return trade_deals[i].ProfitPerTimeForKiloVolumes > trade_deals[j].ProfitPerTimeForKiloVolumes
 	})
 	if len(trade_deals) > LimitBestPaths+500 {
 		trade_deals = trade_deals[:LimitBestPaths]
