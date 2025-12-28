@@ -125,6 +125,9 @@ templ BasesTable(
 				}
 				if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo || tab_mode == BaseTabOres {
 					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{"Best", "Transport", "profit", "volume"})
+					</th>
+					<th style="width:50px;">
 						@frmt.MultiLinestring([]string{"Best", "Transport", "profit/v", "¢/sec"})
 					</th>
 					if shared.ShowDisco {
@@ -288,6 +291,13 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 			}
 		}
 		if routes != nil {
+			<td>
+				if routes.TransportProfitVolume != nil {
+					{ fmt.Sprintf("%2.0f", *routes.TransportProfitVolume * 1000) }
+				} else {
+					0
+				}
+			</td>
 			<td
 				class="route_transport"
 			>
@@ -668,6 +678,9 @@ templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 			<tr class="flexed-tr">
 				<th style="width:200px;">Commodity</th>
 				<th style="width:50px;">
+					@frmt.MultiLinestring([]string{"Transport", "Profit", "volume"})
+				</th>
+				<th style="width:50px;">
 					@frmt.MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
 				</th>
 				if shared.ShowDisco {
@@ -798,6 +811,7 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 				{ trade_route.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.SellingGood.ShipClass) }
 			}
 		</td>
+		<td>{ fmt.Sprintf("%.0f", trade_route.Transport.GetProffitVolume() * 1000) }</td>
 		<td class="route_transport">{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
 		if shared.ShowDisco {
 			<td class="route_frigate">{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
