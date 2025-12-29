@@ -139,7 +139,11 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 					<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.PriceBaseSellsFor, base_info.Volume)) }</td>
 				}
 				if bool(is_commodity) && shared.ShowDisco {
-					<td>{ fmt.Sprintf("%d", base_info.ShipClass) }</td>
+					if base_info.ShipClass != nil {
+						<td>{ fmt.Sprintf("%d", int64(*base_info.ShipClass)) }</td>
+					} else {
+						<td>nil</td>
+					}
 				}
 				<td>{ fmt.Sprintf("%.0f", base_info.Volume) }</td>
 				<td>{ frmt.FormatBaseSells(base_info.BaseSells) }</td>
