@@ -158,7 +158,9 @@ func main() {
 			web.WithSiteRoot(settings.Env.SiteRoot),
 			web.WithAppData(app_data),
 		), app_data)
-		web_opts := web.WebServeOpts{}
+		web_opts := web.WebServeOpts{
+			Port: ptr.Ptr(settings.Env.WebPort),
+		}
 		if settings.Env.EnableUnixSockets {
 			web_opts.SockAddress = web.DarkstatHttpSock
 		}
@@ -304,8 +306,9 @@ func main() {
 						IdleConnTimeout:    10 * time.Second,
 						DisableCompression: true,
 					}
+
 					client := &http.Client{Transport: tr}
-					resp, err := client.Get(fmt.Sprintf("http://localhost:8000/ping?password=%s", settings.Env.DarkcoreEnvVars.Password))
+					resp, err := client.Get(fmt.Sprintf("http://localhost:%d/ping?password=%s", settings.Env.WebPort, settings.Env.DarkcoreEnvVars.Password))
 					logus.Log.CheckPanic(err, "failed to health check")
 					if resp.StatusCode != 200 {
 						logus.Log.Panic("status code is not 200", typelog.Any("code", resp.StatusCode))

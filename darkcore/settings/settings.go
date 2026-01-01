@@ -14,6 +14,7 @@ type DarkcoreEnvVars struct {
 	CacheControl        string
 	EnableUnixSockets   bool
 	Enver               *enverant.Enverant
+	WebPort             int
 }
 
 var Env DarkcoreEnvVars
@@ -28,7 +29,9 @@ func GetEnvs() DarkcoreEnvVars {
 		CacheControl:        envs.GetStrOr("CACHE_CONTROL", ""), // refactor to boolean and set as true
 		IsDiscoOauthEnabled: envs.GetBool("DISCO_OAUTH", enverant.WithDesc("an option to turn auth of darkstat for Discovery freelancer a protected dev instance of darkstat")),
 		EnableUnixSockets:   envs.GetBool("ENABLE_UNIX_SOCKETS", enverant.WithDesc("creating unix sockets, requires /tmp/darkstat or /tmp/darkstat-{environment} folder defined")),
-		Enver:               envs,
+		WebPort:             envs.GetIntOr("WEB_PORT", 8000, enverant.WithDesc("specify web port")),
+
+		Enver: envs,
 	}
 	return Env
 }
