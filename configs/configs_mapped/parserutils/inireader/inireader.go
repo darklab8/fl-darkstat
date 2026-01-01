@@ -4,6 +4,7 @@ Okay we need to create syntax. To augment currently possible stuff
 package inireader
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -230,6 +231,17 @@ func (v ValueNumber) AsString() string {
 	return strconv.FormatFloat(float64(v.Value), 'f', v.Precision, 64)
 }
 
+type FailedToReadNumber struct {
+	input any
+}
+
+func (e FailedToReadNumber) Error() string {
+	return fmt.Sprint("failed to read number. Converting to string input=", e.input)
+}
+func NewFailedToReadNumber(input any) error {
+	return FailedToReadNumber{input: input}
+}
+
 func UniParse(input string) (UniValue, error) {
 	letterMatch := regexLetter.FindAllString(input, -1)
 	if len(letterMatch) == 0 {
@@ -242,7 +254,7 @@ func UniParse(input string) (UniValue, error) {
 
 		if err != nil {
 			logus.Log.Warn("failed to read number. Converting to string", typelog.Any("input", input))
-			return ValueString(input), nil
+			return ValueString(input), NewFailedToReadNumber(input)
 		}
 
 		var precision int
@@ -260,6 +272,8 @@ func UniParse(input string) (UniValue, error) {
 	v := ValueString(input)
 	return v, nil
 }
+
+/*Is it deprecated, eh?*/
 func UniParseF(input string) UniValue {
 	value, err := UniParse(input)
 	if err != nil {
@@ -361,7 +375,15 @@ func Read(fileref *file.File) *INIFile {
 			}
 			for index, value := range splitted_values {
 				univalue, err := UniParse(value)
-				logus.Log.CheckFatal(err, "ini reader, failing to parse line because of UniParse #2, line="+line, utils_logus.FilePath(fileref.GetFilepath()))
+				if errors.Is(err, FailedToReadNumber{}) {
+					logus.Log.CheckWarn(err,
+						"failed to parse number at file.Read, line="+line,
+						utils_logus.FilePath(fileref.GetFilepath()),
+						typelog.Any("section", cur_section.ToString(false)),
+					)
+				} else {
+					logus.Log.CheckFatal(err, "ini reader, failing to parse line because of UniParse #2, line="+line, utils_logus.FilePath(fileref.GetFilepath()))
+				}
 
 				if index == 0 {
 					first_value = univalue
