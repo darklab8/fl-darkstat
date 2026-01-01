@@ -15,6 +15,8 @@ type DarkcoreEnvVars struct {
 	EnableUnixSockets   bool
 	Enver               *enverant.Enverant
 	WebPort             int
+	RelayPort           int
+	RPCPort             int
 }
 
 var Env DarkcoreEnvVars
@@ -30,6 +32,8 @@ func GetEnvs() DarkcoreEnvVars {
 		IsDiscoOauthEnabled: envs.GetBool("DISCO_OAUTH", enverant.WithDesc("an option to turn auth of darkstat for Discovery freelancer a protected dev instance of darkstat")),
 		EnableUnixSockets:   envs.GetBool("ENABLE_UNIX_SOCKETS", enverant.WithDesc("creating unix sockets, requires /tmp/darkstat or /tmp/darkstat-{environment} folder defined")),
 		WebPort:             envs.GetIntOr("WEB_PORT", 8000, enverant.WithDesc("specify web port")),
+		RelayPort:           envs.GetIntOr("RELAY_PORT", 8080, enverant.WithDesc("specify relay port")),
+		RPCPort:             envs.GetIntOr("RPC_PORT", 8100, enverant.WithDesc("specify rpc port")),
 
 		Enver: envs,
 	}

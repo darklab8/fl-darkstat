@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 )
 
 templ Html5(theme types.Theme, shared *types.SharedData) {
@@ -13,7 +14,7 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 		<head>
 			<meta charset="UTF-8"/>
 			@core_front.StaticFile(core_static.FaviconIco)
-			<title>{ "darkstat" }</title>
+			<title>{ settings.Env.SiteHtmlTitle }</title>
 			<style>
 				:root {
 					--color_fmt_sb_sells: rgba(0, 255, 0, 0.2);

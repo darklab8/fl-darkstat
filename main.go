@@ -233,7 +233,7 @@ func main() {
 		}
 		log.Printf("Elapsed web launch time %s", time.Since(start_time_total))
 
-		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(8080)})
+		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(settings.Env.RelayPort)})
 
 		var rpc_opts []darkrpc.ServerOpt
 		if settings.Env.EnableUnixSockets {

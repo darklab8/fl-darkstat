@@ -21,7 +21,7 @@ type RpcServer struct {
 
 func NewRpcServer(opts ...ServerOpt) *RpcServer {
 	srv := &RpcServer{
-		port: 8100,
+		port: settings.Env.RPCPort,
 	}
 	for _, opt := range opts {
 		opt(srv)

@@ -24,6 +24,7 @@ type DarkstatEnvVars struct {
 	SiteHost       string
 	SiteRoot       string
 	SiteUrl        string
+	SiteHtmlTitle  string
 
 	AppHeading string
 	AppVersion string
@@ -69,6 +70,7 @@ func init() {
 		SiteHost:       site_host,
 		SiteRoot:       site_root,
 		SiteUrl:        env.GetStrOr("SITE_URL", site_host+site_root, enverant.WithDesc("combined shortcut of site_host + site_root")),
+		SiteHtmlTitle:  env.GetStrOr("SITE_HTML_TITLE", "darkstat", enverant.WithDesc("site html title of a page")),
 		AppHeading:     env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr(""), enverant.WithDesc("What to show at the top of darkstat web UI. Possible to input any html")),
 		AppVersion:     getAppVersion(),
 		GrpcGatewayUrl: env.GetStr("GRPCGATEWAY_URL", enverant.OrStr("http://localhost:8081/"), enverant.WithDesc("grpc gateway url. for menu buttons at least of API to lead to it")),
