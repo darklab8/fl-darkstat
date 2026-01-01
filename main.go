@@ -326,8 +326,8 @@ func main() {
 				},
 			},
 			{
-				Nickname:    "darkmap",
-				Description: "darkmap group of commands. See `darkmap help` to discovery its commands",
+				Nickname:    "map",
+				Description: "map group of commands. See `map help` to discovery its commands",
 				Func: func(info cantil.ActionInfo) error {
 					darkmap.DarkmapCliGroup(info.CmdArgs[1:])
 					return nil
