@@ -5,10 +5,22 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/tests"
 	"github.com/darklab8/go-utils/utils/utils_os"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestErrors(t *testing.T) {
+	err := NewFailedToReadNumber("smth")
+
+	if _, ok := err.(FailedToReadNumber); ok {
+		logus.Log.CheckWarn(err, "it is failed to read number error")
+	} else {
+		logus.Log.CheckWarn(err, "it is not failed to read number error")
+
+	}
+}
 
 func TestReader(t *testing.T) {
 	fileref := tests.FixtureFileFind().GetFile("market_ships.ini")

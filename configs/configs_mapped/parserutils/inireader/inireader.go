@@ -4,7 +4,6 @@ Okay we need to create syntax. To augment currently possible stuff
 package inireader
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -375,7 +374,7 @@ func Read(fileref *file.File) *INIFile {
 			}
 			for index, value := range splitted_values {
 				univalue, err := UniParse(value)
-				if errors.Is(err, FailedToReadNumber{}) {
+				if _, ok := err.(FailedToReadNumber); ok {
 					logus.Log.CheckWarn(err,
 						"failed to parse number at file.Read, line="+line,
 						utils_logus.FilePath(fileref.GetFilepath()),
