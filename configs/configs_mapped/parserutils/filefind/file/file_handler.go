@@ -68,6 +68,15 @@ func (f *File) close() {
 
 var Log = logus.Log.WithScope("filefind.file")
 
+type RequestError struct {
+	status_code int
+	url         string
+}
+
+func (r RequestError) Error() string {
+	return fmt.Sprintln("non positive status code of request, status_code=", r.status_code, " url=", r.url)
+}
+
 func (f *File) ReadLines() ([]string, error) {
 
 	if len(f.lines) > 0 {
@@ -79,7 +88,13 @@ func (f *File) ReadLines() ([]string, error) {
 	if f.webfile != nil {
 		res, err := utils_http.Get(f.webfile.url)
 		if err != nil {
-			logus.Log.Error("error making http request: %s\n", typelog.OptError(err))
+			logus.Log.CheckError(err, "error making http request")
+			return []string{}, err
+		}
+
+		if res.StatusCode >= 400 {
+			err = RequestError{status_code: res.StatusCode, url: f.webfile.url}
+			logus.Log.CheckError(err, "error http request with non positive status code, status_code>=400")
 			return []string{}, err
 		}
 
