@@ -1,7 +1,10 @@
 package tab
 
-import "time"
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"time"
+)
 
 templ PageTime() {
-	&#32;Page Time: { time.Now().Format("15:04 -0700") }
+	&#32;Resp Time: { time.Now().Format("15:04 -0700") }, App Start: { types.GetCtx(ctx).AppStart.Format("15:04 -0700") }
 }

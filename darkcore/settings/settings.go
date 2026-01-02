@@ -1,6 +1,8 @@
 package settings
 
 import (
+	"time"
+
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
 )
@@ -17,6 +19,7 @@ type DarkcoreEnvVars struct {
 	WebPort             int
 	RelayPort           int
 	RPCPort             int
+	AppStart            time.Time
 }
 
 var Env DarkcoreEnvVars
@@ -34,6 +37,7 @@ func GetEnvs() DarkcoreEnvVars {
 		WebPort:             envs.GetIntOr("WEB_PORT", 8000, enverant.WithDesc("specify web port")),
 		RelayPort:           envs.GetIntOr("RELAY_PORT", 8080, enverant.WithDesc("specify relay port")),
 		RPCPort:             envs.GetIntOr("RPC_PORT", 8100, enverant.WithDesc("specify rpc port")),
+		AppStart:            time.Now(),
 
 		Enver: envs,
 	}

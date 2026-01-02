@@ -37,6 +37,8 @@ type GlobalParams struct {
 
 	RelayHost string
 	RelayRoot string
+
+	AppStart time.Time
 }
 
 func (g *GlobalParams) GetBuildPath() utils_types.FilePath {
