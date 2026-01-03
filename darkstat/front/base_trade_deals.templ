@@ -36,7 +36,7 @@ templ TradeDeals(
                 }
                 </style>
 				@tab.PageHint() {
-					Best routes selected by having best total profit and profit per second
+					Best one way routes selected by having best total profit and profit per second for transports
 					if shared.ShowDisco {
 						@tab.PageTime()
 					}
@@ -139,7 +139,7 @@ templ OneWayShared(shared *types.SharedData) {
 						@frmt.MultiLinestring([]string{"Freighter", "Time(sec)"})
 					</th>
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"profit", "sum"})
+						@frmt.MultiLinestring([]string{"freighter", "profit", "sum"})
 					</th>
 				}
 				<th style="width:50px;">
@@ -280,7 +280,7 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 				</span>
 			</td>
 			<td>
-				{   fmt.Sprintf("%.1f",trade_route.ProfitPerTimeForKiloVolumes) }
+				{   fmt.Sprintf("%.1f",trade_route.TransportInfo.ProfitPerTimeForKiloVolumes) }
 			</td>
 		}
 		<td class="route_transport">{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
@@ -309,7 +309,7 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 		<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.X) }</td>
 		<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Y) }</td>
 		<td>{ fmt.Sprintf("%.0f", trade_route.Transport.SellingGood.BasePos.Z) }</td>
-		<td>{   fmt.Sprintf("%.1f",trade_route.ProfitWeight) }</td>
+		<td>{   fmt.Sprintf("%.1f",trade_route.TransportInfo.ProfitWeight) }</td>
 		<td></td>
 	</tr>
 }

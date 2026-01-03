@@ -85,6 +85,15 @@ templ TwoWayTradesTable(
 						POBs involved
 					</th>
 				}
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"transport", "max gap", "time"})
+				</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"frigate", "max gap", "time"})
+				</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"freighter", "max gap", "time"})
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -172,6 +181,15 @@ templ TwoWayTradesTable(
 							}
 						}
 					</td>
+					<td>
+						{ fmt.Sprintf("%.0f", math.Max(two_way.TransportInfo.Route1ConnectTime, two_way.TransportInfo.Route2ConnectTime)) }
+					</td>
+					<td>
+						{ fmt.Sprintf("%.0f", math.Max(two_way.FrigateInfo.Route1ConnectTime, two_way.FrigateInfo.Route2ConnectTime)) }
+					</td>
+					<td>
+						{ fmt.Sprintf("%.0f", math.Max(two_way.FreighterInfo.Route1ConnectTime, two_way.FreighterInfo.Route2ConnectTime)) }
+					</td>
 					<td></td>
 				}
 			}
@@ -220,6 +238,12 @@ templ TwoWayTradesTableT(
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable() {
+				@tab.PageHint() {
+					Best two way routes selected by having best total profit and profit per second for transports. Max gap time limit { fmt.Sprintf("%.0f", configs_export.TwoWayLimitConnnectingTimeS) } sec.
+					if shared.ShowDisco {
+						@tab.PageTime()
+					}
+				}
 				@tab.TableTop() {
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
