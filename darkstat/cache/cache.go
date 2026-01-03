@@ -26,6 +26,7 @@ func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
 		timeToLive: timeToLive,
 	}
 
+	// Broken as it made appeared twice more calculations than it should. Disabled until better times.
 	// go func() {
 	// 	for {
 	// 		c.first_init.Add(1)
