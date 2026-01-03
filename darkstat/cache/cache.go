@@ -7,7 +7,6 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/typelog"
-	"github.com/darklab8/go-utils/utils/async"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -16,7 +15,7 @@ type Cached[T any] struct {
 	getter      func() T
 	timeToLive  time.Duration
 	timeCreated time.Time
-	first_init  sync.WaitGroup
+	// first_init  sync.WaitGroup
 }
 
 var Lock sync.Mutex
@@ -27,25 +26,26 @@ func NewCached[T any](getter func() T, timeToLive time.Duration) *Cached[T] {
 		timeToLive: timeToLive,
 	}
 
-	go func() {
-		for {
-			c.first_init.Add(1)
-			async.ToAsync(func() {
-				Lock.Lock()
-				defer Lock.Unlock()
-				c.get()
-				c.timeCreated = time.Now()
-				c.first_init.Done()
-				logus.Log.Debug("updated cache with time to live", typelog.Any("ttl_period", c.timeToLive.Seconds()))
-			})
-			time.Sleep(timeToLive - time.Second*20)
-		}
-	}()
+	// Broken as it made appeared twice more calculations than it should. Disabled until better times.
+	// go func() {
+	// 	for {
+	// 		c.first_init.Add(1)
+	// 		async.ToAsync(func() {
+	// 			Lock.Lock()
+	// 			defer Lock.Unlock()
+	// 			c.get()
+	// 			c.timeCreated = time.Now()
+	// 			c.first_init.Done()
+	// 			logus.Log.Debug("updated cache with time to live", typelog.Any("ttl_period", c.timeToLive.Seconds()))
+	// 		})
+	// 		time.Sleep(timeToLive - time.Second*20)
+	// 	}
+	// }()
 	return c
 }
 
 func (c *Cached[T]) Get(ctx context.Context) T {
-	c.first_init.Wait()
+	// c.first_init.Wait()
 	return c.get()
 }
 

@@ -118,7 +118,9 @@ func (b *Builder) BuildAll(to_mem bool, filesystem *Filesystem) *Filesystem {
 				}
 			}
 
-			fmt.Println("finished chunk=", chunk_index, "/", len_comps)
+			if chunk_index%10 == 0 {
+				fmt.Println("finished chunk=", chunk_index, "/", len_comps)
+			}
 		}
 
 	}, timeit.WithMsg("wrote components"))
