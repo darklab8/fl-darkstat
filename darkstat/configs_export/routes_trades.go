@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"slices"
 	"sort"
+	"sync"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkstat/cache"
@@ -275,6 +276,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	var result BestTradeDealsOutput
 	var trade_deals []*TradeDeal
 
+	time_start_best_trades := time.Now()
 	len_bases := len(bases)
 	for index, base := range bases {
 
@@ -330,48 +332,80 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		trade_deals = trade_deals[:LimitBestPaths]
 	}
 	runtime.GC()
-
 	result.OneWayDeals = trade_deals
+	fmt.Println("ONE WAY: finished gathering, elapsed=", time.Since(time_start_best_trades))
 
 	var found_two_way_hashes map[string]bool = make(map[string]bool)
+	var found_two_way_hashes_my sync.Mutex
+	start_time_two_ways := time.Now()
 	fmt.Println("TWO WAYS: starting calculating two way best trade routes")
-	for route_index1, trade_route1 := range result.OneWayDeals {
+	chunk_size := 10
+	two_ways_deals_chan := make(chan []*TwoWayDeal)
+	chunks_amount := 0
+	for trade_route_chunk := range slices.Chunk(result.OneWayDeals, chunk_size) {
+		chunks_amount++
 
-		if route_index1%100 == 0 {
-			fmt.Printf("TWO WAYS: processed %d out of %d\n", route_index1, len(result.OneWayDeals))
+		go func() {
+			two_ways_deals := []*TwoWayDeal{}
+
+			for _, trade_route1 := range trade_route_chunk {
+				for _, trade_route2 := range result.OneWayDeals {
+
+					route_info := trade_route_info(trade_route1.Transport, trade_route2.Transport)
+					if route_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS {
+						continue
+					}
+					if route_info.Route2ConnectTime > TwoWayLimitConnnectingTimeS {
+						continue
+					}
+
+					two_deal := &TwoWayDeal{
+						Route1:        trade_route1,
+						Route2:        trade_route2,
+						TransportInfo: trade_route_info(trade_route1.Transport, trade_route2.Transport),
+						FrigateInfo:   trade_route_info(trade_route1.Frigate, trade_route2.Frigate),
+						FreighterInfo: trade_route_info(trade_route1.Freighter, trade_route2.Freighter),
+					}
+
+					found_two_way_hashes_my.Lock()
+					hash := two_deal.HashStr()
+					if _, ok := found_two_way_hashes[hash]; !ok {
+						two_ways_deals = append(two_ways_deals, two_deal)
+						found_two_way_hashes[hash] = true
+					}
+					found_two_way_hashes_my.Unlock()
+
+					if len(two_ways_deals) > TwoWayLimitRoutes+500 {
+						sort.Slice(two_ways_deals, func(i, j int) bool {
+							return two_ways_deals[i].TransportInfo.ProfitPerTime > two_ways_deals[j].TransportInfo.ProfitPerTime
+						})
+						two_ways_deals = two_ways_deals[:TwoWayLimitRoutes]
+
+						runtime.GC()
+					}
+				}
+
+			}
+			two_ways_deals_chan <- two_ways_deals
+		}()
+
+	}
+	// Gather two deals from go channels
+	i := 0
+	for range slices.Chunk(result.OneWayDeals, chunk_size) {
+		two_way_deals := <-two_ways_deals_chan
+		result.TwoWayDeals = append(result.TwoWayDeals, two_way_deals...)
+
+		if i%5 == 0 && len(result.TwoWayDeals) > TwoWayLimitRoutes {
+			sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+				return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
+			})
+			result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
 		}
-		for _, trade_route2 := range result.OneWayDeals {
+		i++
 
-			route_info := trade_route_info(trade_route1.Transport, trade_route2.Transport)
-			if route_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS {
-				continue
-			}
-			if route_info.Route2ConnectTime > TwoWayLimitConnnectingTimeS {
-				continue
-			}
-
-			two_deal := &TwoWayDeal{
-				Route1:        trade_route1,
-				Route2:        trade_route2,
-				TransportInfo: trade_route_info(trade_route1.Transport, trade_route2.Transport),
-				FrigateInfo:   trade_route_info(trade_route1.Frigate, trade_route2.Frigate),
-				FreighterInfo: trade_route_info(trade_route1.Freighter, trade_route2.Freighter),
-			}
-			hash := two_deal.HashStr()
-			if _, ok := found_two_way_hashes[hash]; !ok {
-				result.TwoWayDeals = append(result.TwoWayDeals, two_deal)
-				found_two_way_hashes[hash] = true
-			}
-
-			if len(result.TwoWayDeals) > TwoWayLimitRoutes+500 {
-				sort.Slice(result.TwoWayDeals, func(i, j int) bool {
-					return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
-				})
-				result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
-
-				runtime.GC()
-			}
-
+		if i%10 == 0 {
+			fmt.Printf("TWO WAYS: processed %d out of %d\n", i, chunks_amount)
 		}
 	}
 	sort.Slice(result.TwoWayDeals, func(i, j int) bool {
@@ -380,7 +414,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	if len(result.TwoWayDeals) > TwoWayLimitRoutes {
 		result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
 	}
-	fmt.Println("TWO WAYS: finished calculating two way best trade routes, found=", len(result.TwoWayDeals))
+	fmt.Println("TWO WAYS: finished calculating two way best trade routes, found=", len(result.TwoWayDeals), " elapsed=", time.Since(start_time_two_ways))
 
 	runtime.GC()
 
