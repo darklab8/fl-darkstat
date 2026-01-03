@@ -101,7 +101,7 @@ templ TwoWayTradesTable(
 		<tbody>
 			for _, two_way := range trade_routes.Get(ctx).TwoWayDeals {
 				@tab.TrFromMainTb(TwoWayDealNickname(two_way), TwoWayDealDetailedUrl(two_way), "") {
-					<td>
+					<td class="seo">
 						@frmt.WriteLimit(300) {
 							{ two_way.Route1.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(two_way.Route1.Transport.SellingGood.ShipClass) },
 							{ two_way.Route2.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(two_way.Route2.Transport.SellingGood.ShipClass) }
@@ -165,7 +165,7 @@ templ TwoWayTradesTable(
 							configs_export.KiloVolumesDeliverable(two_way.Route2.Transport.BuyingGood, two_way.Route2.Transport.SellingGood),
 						))
 					}
-					<td>
+					<td class="seo">
 						for faction_name := range TwoWayUniqueFactions(two_way) {
 							@WriteSpanLimit(100) {
 								{ faction_name }
@@ -174,7 +174,7 @@ templ TwoWayTradesTable(
 						}
 					</td>
 					if shared.ShowDisco {
-						<td>
+						<td class="seo">
 							for faction_name := range TwoWayUniquePoBs(two_way) {
 								@WriteSpanLimit(100) {
 									{ faction_name }
