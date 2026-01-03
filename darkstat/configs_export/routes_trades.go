@@ -342,8 +342,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 				runtime.GC()
 			}
-			// Add to TwoWaysDeals
-			// Sort them peridically and remove worst ones
+
 		}
 	}
 	sort.Slice(result.TwoWayDeals, func(i, j int) bool {

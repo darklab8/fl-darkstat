@@ -113,7 +113,6 @@ func (l *Router) LinkBases(
 				),
 			)
 		}
-		// recalculate also here bottom tables for two ways tab
 		return best_deals
 	}, time.Minute*2+time.Second*5)
 
