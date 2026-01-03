@@ -110,6 +110,12 @@ func (e *TradePathExporter) GetBaseTradePathsFiltered(TradeRoutes []*ComboTradeR
 func (e *TradePathExporter) GetVolumedMarketGoods(buying_good *MarketGood, selling_good *MarketGood, callback func(*MarketGood, *MarketGood)) {
 	if commodity, ok := e.Mapped.Equip().CommoditiesMap[buying_good.Nickname]; ok {
 		// then it is commodity that can be duplicated through volumes
+
+		if len(commodity.Volumes) == 1 {
+			callback(buying_good, selling_good)
+			return
+		}
+
 		for _, volume_info := range commodity.Volumes {
 			copied_buying_good := GetPtrStructCopy(buying_good)
 			copied_buying_good.Volume = volume_info.Volume.Get()
