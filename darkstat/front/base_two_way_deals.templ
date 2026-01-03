@@ -51,14 +51,14 @@ templ TwoWayTradesTable(
 					@frmt.MultiLinestring([]string{"Profit", "per", "volume"})
 				</th>
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"Transport", "time"})
+					@frmt.MultiLinestring([]string{"Transport", "cycle", "time"})
 				</th>
 				if shared.ShowDisco {
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Frigate", "time"})
+						@frmt.MultiLinestring([]string{"Frigate", "cycle", "time"})
 					</th>
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Freighter", "time"})
+						@frmt.MultiLinestring([]string{"Freighter", "cycle", "time"})
 					</th>
 				}
 				<th style="width:25px;">
@@ -88,12 +88,14 @@ templ TwoWayTradesTable(
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"transport", "max gap", "time"})
 				</th>
-				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"frigate", "max gap", "time"})
-				</th>
-				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"freighter", "max gap", "time"})
-				</th>
+				if shared.ShowDisco {
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"frigate", "max gap", "time"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"freighter", "max gap", "time"})
+					</th>
+				}
 			</tr>
 		</thead>
 		<tbody>
@@ -184,12 +186,14 @@ templ TwoWayTradesTable(
 					<td>
 						{ fmt.Sprintf("%.0f", math.Max(two_way.TransportInfo.Route1ConnectTime, two_way.TransportInfo.Route2ConnectTime)) }
 					</td>
-					<td>
-						{ fmt.Sprintf("%.0f", math.Max(two_way.FrigateInfo.Route1ConnectTime, two_way.FrigateInfo.Route2ConnectTime)) }
-					</td>
-					<td>
-						{ fmt.Sprintf("%.0f", math.Max(two_way.FreighterInfo.Route1ConnectTime, two_way.FreighterInfo.Route2ConnectTime)) }
-					</td>
+					if shared.ShowDisco {
+						<td>
+							{ fmt.Sprintf("%.0f", math.Max(two_way.FrigateInfo.Route1ConnectTime, two_way.FrigateInfo.Route2ConnectTime)) }
+						</td>
+						<td>
+							{ fmt.Sprintf("%.0f", math.Max(two_way.FreighterInfo.Route1ConnectTime, two_way.FreighterInfo.Route2ConnectTime)) }
+						</td>
+					}
 					<td></td>
 				}
 			}
