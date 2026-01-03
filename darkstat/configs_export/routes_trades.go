@@ -211,13 +211,45 @@ func (e *TradePathExporter) GetBaseTradePathsTo(ctx context.Context, base *Base)
 
 type TradeDeal struct {
 	*ComboTradeRoute
-	ProfitPerTimeForKiloVolumes float64
-	ProfitWeight                float64
+	FreighterInfo OneWayRouteInfo
+	TransportInfo OneWayRouteInfo
 }
 
 const LimitBestPaths = 2000
 
-func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) []*TradeDeal {
+type BestTradeDealsOutput struct {
+	OneWayDeals []*TradeDeal
+	TwoWayDeals []*TwoWayDeal
+}
+
+type TwoWayDeal struct {
+	Route1        *TradeDeal
+	Route2        *TradeDeal
+	TransportInfo RouteInfo
+	FrigateInfo   RouteInfo
+	FreighterInfo RouteInfo
+}
+
+type OneWayRouteInfo struct {
+	KiloVolumes                 float64
+	ProfitPerTimeForKiloVolumes float64
+	ProfitWeight                float64
+	TimeS                       float64
+}
+
+func OneWayRouteInfoF(trade_route *TradeRoute) OneWayRouteInfo {
+	var result OneWayRouteInfo
+	profit_per_time := trade_route.GetProffitPerTime()
+	max_importance_of_kilo_volumes := float64(50)
+	result.KiloVolumes = math.Min(max_importance_of_kilo_volumes, KiloVolumesDeliverable(trade_route.BuyingGood, trade_route.SellingGood))
+	result.ProfitPerTimeForKiloVolumes = result.KiloVolumes * profit_per_time
+	result.TimeS = GetTimeS(trade_route.Route.g, trade_route.BuyingGood, trade_route.SellingGood)
+	result.ProfitWeight = profit_per_time * result.TimeS * result.KiloVolumes
+	return result
+}
+
+func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) BestTradeDealsOutput {
+	var result BestTradeDealsOutput
 	var trade_deals []*TradeDeal
 
 	len_bases := len(bases)
@@ -237,45 +269,27 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 				continue
 			}
 
-			profit_per_time := trade_route.Transport.GetProffitPerTime()
-
-			max_importance_of_kilo_volumes := float64(50)
-			// makes weight of this thing being important only in range between 0 to Min(N:=10?)
-			kilo_volume := math.Min(max_importance_of_kilo_volumes, KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
-
-			if kilo_volume < 10 {
+			route_info := OneWayRouteInfoF(trade_route.Transport)
+			if route_info.KiloVolumes < 10 {
 				continue
 			}
-			profit_per_time_for_kilo_volumes := kilo_volume * profit_per_time
-			time_s := GetTimeS(trade_route.Transport.Route.g, trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)
-
-			if time_s*trades.PrecisionMultipiler > float64(trades.INFthreshold) {
+			if route_info.TimeS*trades.PrecisionMultipiler > float64(trades.INFthreshold) {
 				continue
 			}
-
-			// disabled formula variables deemed to be not important as expected, but left just in case
-			// var time_weight float64
-			// time_importance_seconds_until := float64(600 * 2)
-			// time_weight = math.Min(time_s, time_importance_seconds_until) / time_importance_seconds_until
-			// kilo_volume_weight := (math.Min(max_importance_of_kilo_volumes, kilo_volume) / max_importance_of_kilo_volumes)
-
-			profit_weight := profit_per_time * time_s * kilo_volume
-
-			trade_route.Transport.GetProffitPerTime()
 			trade_deals = append(trade_deals, &TradeDeal{
-				ComboTradeRoute:             trade_route,
-				ProfitPerTimeForKiloVolumes: profit_per_time_for_kilo_volumes,
-				ProfitWeight:                profit_weight,
+				ComboTradeRoute: trade_route,
+				FreighterInfo:   OneWayRouteInfoF(trade_route.Freighter),
+				TransportInfo:   OneWayRouteInfoF(trade_route.Transport),
 			})
 		}
 		if len(trade_deals) > LimitBestPaths+500 {
 			sort.Slice(trade_deals, func(i, j int) bool {
-				return trade_deals[i].ProfitWeight > trade_deals[j].ProfitWeight
+				return trade_deals[i].TransportInfo.ProfitWeight > trade_deals[j].TransportInfo.ProfitWeight
 			})
 			trade_deals = trade_deals[:LimitBestPaths]
 
 			sort.Slice(trade_deals, func(i, j int) bool {
-				return trade_deals[i].ProfitPerTimeForKiloVolumes > trade_deals[j].ProfitPerTimeForKiloVolumes
+				return trade_deals[i].TransportInfo.ProfitPerTimeForKiloVolumes > trade_deals[j].TransportInfo.ProfitPerTimeForKiloVolumes
 			})
 			trade_deals = trade_deals[:LimitBestPaths-LimitBestPaths/10]
 		}
@@ -293,7 +307,89 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		trade_deals = trade_deals[:LimitBestPaths]
 	}
 	runtime.GC()
-	return trade_deals
+
+	result.OneWayDeals = trade_deals
+
+	fmt.Println("TWO WAYS: starting calculating two way best trade routes")
+	for route_index1, trade_route1 := range result.OneWayDeals {
+
+		if route_index1%100 == 0 {
+			fmt.Printf("TWO WAYS: processed %d out of %d\n", route_index1, len(result.OneWayDeals))
+		}
+		for _, trade_route2 := range result.OneWayDeals {
+
+			route_info := trade_route_info(trade_route1.Transport, trade_route2.Transport)
+			if route_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS {
+				continue
+			}
+			if route_info.Route2ConnectTime > TwoWayLimitConnnectingTimeS {
+				continue
+			}
+
+			result.TwoWayDeals = append(result.TwoWayDeals, &TwoWayDeal{
+				Route1:        trade_route1,
+				Route2:        trade_route2,
+				TransportInfo: trade_route_info(trade_route1.Transport, trade_route2.Transport),
+				FrigateInfo:   trade_route_info(trade_route1.Frigate, trade_route2.Frigate),
+				FreighterInfo: trade_route_info(trade_route1.Freighter, trade_route2.Freighter),
+			})
+
+			if len(result.TwoWayDeals) > TwoWayLimitRoutes+500 {
+				sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+					return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
+				})
+				result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
+
+				runtime.GC()
+			}
+
+		}
+	}
+	sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+		return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
+	})
+	if len(result.TwoWayDeals) > TwoWayLimitRoutes {
+		result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
+	}
+	fmt.Println("TWO WAYS: finished calculating two way best trade routes, found=", len(result.TwoWayDeals))
+
+	runtime.GC()
+
+	return result
+}
+
+var TwoWayLimitRoutes = 1000
+var TwoWayLimitConnnectingTimeS = float64(180)
+
+type RouteInfo struct {
+	ProfitPerTime     float64
+	Route1Time        float64
+	Route2Time        float64
+	Route1ConnectTime float64
+	Route2ConnectTime float64
+	TotalProfit       float64
+	TwoWayTime        float64
+}
+
+func trade_route_info(trade_route1 *TradeRoute, trade_route2 *TradeRoute) RouteInfo {
+	var route_info RouteInfo
+	// time of routes
+	route_info.Route1Time = GetTimeS(trade_route1.Route.g, trade_route1.BuyingGood, trade_route1.SellingGood)
+	route_info.Route2Time = GetTimeS(trade_route1.Route.g, trade_route2.BuyingGood, trade_route2.SellingGood)
+
+	// Calculate profit per second
+	profit1 := trade_route1.GetProffitPerTime() * route_info.Route1Time
+	profit2 := trade_route2.GetProffitPerTime() * route_info.Route2Time
+
+	// time to connect between routes
+	route_info.Route1ConnectTime = GetTimeS(trade_route1.Route.g, trade_route1.SellingGood, trade_route2.BuyingGood)
+	route_info.Route2ConnectTime = GetTimeS(trade_route2.Route.g, trade_route2.SellingGood, trade_route1.BuyingGood)
+
+	route_info.TotalProfit = (profit1 + profit2)
+	route_info.TwoWayTime = (route_info.Route1Time + route_info.Route2Time + route_info.Route1ConnectTime + route_info.Route2ConnectTime)
+
+	route_info.ProfitPerTime = route_info.TotalProfit / route_info.TwoWayTime
+	return route_info
 }
 
 type BaseBestPathTimes struct {

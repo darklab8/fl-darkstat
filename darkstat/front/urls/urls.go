@@ -39,4 +39,5 @@ const (
 	Scanners        utils_types.FilePath = "cdn/scanners.html"
 	PoBs            utils_types.FilePath = "cdn/pobs.html"
 	PoBGoods        utils_types.FilePath = "cdn/pob_goods.html"
+	TwoWayDeals     utils_types.FilePath = "cdn/two_way_deals.html"
 )
