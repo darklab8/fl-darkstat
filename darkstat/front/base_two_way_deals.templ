@@ -1,0 +1,238 @@
+package front
+
+import (
+	"crypto/sha256"
+	"fmt"
+	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/darkstat/cache"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"math"
+	"strconv"
+)
+
+func TwoWayDealNickname(trade_route *configs_export.TwoWayDeal) string {
+	h := sha256.New()
+	h.Write([]byte(trade_route.Route1.Transport.BuyingGood.BaseNickname))
+	h.Write([]byte(trade_route.Route1.Transport.SellingGood.BaseNickname))
+	h.Write([]byte(trade_route.Route2.Transport.BuyingGood.BaseNickname))
+	h.Write([]byte(trade_route.Route2.Transport.SellingGood.BaseNickname))
+	h.Write([]byte(trade_route.Route1.Transport.BuyingGood.Nickname))
+	h.Write([]byte(trade_route.Route2.Transport.BuyingGood.Nickname))
+	bs := h.Sum(nil)
+	return fmt.Sprintf("%x", bs)
+}
+
+func TwoWayDealDetailedUrl(trade_route *configs_export.TwoWayDeal) string {
+	return "cdn/two_ways/tw-" + TwoWayDealNickname(trade_route)
+}
+
+templ TwoWayDealDetailed(trade_route *configs_export.TwoWayDeal, shared *types.SharedData) {
+	@OneWayShared(shared) {
+		@OneWayRow(trade_route.Route1, shared)
+		@OneWayRow(trade_route.Route2, shared)
+	}
+}
+
+templ TwoWayTradesTable(
+	trade_routes *cache.Cached[configs_export.BestTradeDealsOutput],
+	shared *types.SharedData,
+	data *configs_export.Exporter,
+) {
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th style="width:100px;">Commoditities</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Profit", "per", "volume"})
+				</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Transport", "time"})
+				</th>
+				if shared.ShowDisco {
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"Frigate", "time"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"Freighter", "time"})
+					</th>
+				}
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Transport", "profit per", "vol & sec"})
+				</th>
+				if shared.ShowDisco {
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"Frigate", "profit per", "vol & sec"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"Frighter", "profit per", "vol & sec"})
+					</th>
+				}
+				if shared.ShowDisco {
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"min kilo", "volumes", "to trade"})
+					</th>
+				}
+				<th style="width:25px;">
+					Factions involved
+				</th>
+				if shared.ShowDisco {
+					<th style="width:25px;">
+						POBs involved
+					</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			for _, two_way := range trade_routes.Get(ctx).TwoWayDeals {
+				@tab.TrFromMainTb(TwoWayDealNickname(two_way), TwoWayDealDetailedUrl(two_way), "") {
+					<td>
+						@frmt.WriteLimit(300) {
+							{ two_way.Route1.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(two_way.Route1.Transport.SellingGood.ShipClass) },
+							{ two_way.Route2.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(two_way.Route2.Transport.SellingGood.ShipClass) }
+						}
+					</td>
+					<td>
+						{ fmt.Sprintf("%.0f", two_way.TransportInfo.TotalProfit) }
+					</td>
+					<td>
+						<span class="tooltip">
+							@TimeToHumanTime(cfg.MillisecondsI(two_way.TransportInfo.TwoWayTime*1000), two_way.TransportInfo.TwoWayTime)
+							<span class="tooltiptext">
+								if two_way.TransportInfo.TwoWayTime*1000 < float64(trades.INF/2) {
+									{ fmt.Sprintf("%.0f", two_way.TransportInfo.TwoWayTime) } secs
+								} else {
+									INF secs
+								}
+							</span>
+						</span>
+					</td>
+					if shared.ShowDisco {
+						<td>
+							<span class="tooltip">
+								@TimeToHumanTime(cfg.MillisecondsI(two_way.FreighterInfo.TwoWayTime*1000), two_way.FreighterInfo.TwoWayTime)
+								<span class="tooltiptext">
+									if two_way.FreighterInfo.TwoWayTime*1000 < float64(trades.INF/2) {
+										{ fmt.Sprintf("%.0f", two_way.FreighterInfo.TwoWayTime) } secs
+									} else {
+										INF secs
+									}
+								</span>
+							</span>
+						</td>
+						<td>
+							<span class="tooltip">
+								@TimeToHumanTime(cfg.MillisecondsI(two_way.FreighterInfo.TwoWayTime*1000), two_way.FreighterInfo.TwoWayTime)
+								<span class="tooltiptext">
+									if two_way.FreighterInfo.TwoWayTime*1000 < float64(trades.INF/2) {
+										{ fmt.Sprintf("%.0f", two_way.FreighterInfo.TwoWayTime) } secs
+									} else {
+										INF secs
+									}
+								</span>
+							</span>
+						</td>
+					}
+					<td>
+						{ fmt.Sprintf("%.2f", two_way.TransportInfo.ProfitPerTime* 100) }
+					</td>
+					if shared.ShowDisco {
+						<td>
+							{ fmt.Sprintf("%.2f", two_way.FrigateInfo.ProfitPerTime* 100) }
+						</td>
+						<td>
+							{ fmt.Sprintf("%.2f", two_way.FreighterInfo.ProfitPerTime* 100) }
+						</td>
+					}
+					if shared.ShowDisco {
+						@FormatKiloVolumes(math.Min(
+							configs_export.KiloVolumesDeliverable(two_way.Route1.Transport.BuyingGood, two_way.Route2.Transport.SellingGood),
+							configs_export.KiloVolumesDeliverable(two_way.Route2.Transport.BuyingGood, two_way.Route2.Transport.SellingGood),
+						))
+					}
+					<td>
+						for faction_name := range TwoWayUniqueFactions(two_way) {
+							@WriteSpanLimit(100) {
+								{ faction_name }
+							}
+							|
+						}
+					</td>
+					<td>
+						if shared.ShowDisco {
+							for faction_name := range TwoWayUniquePoBs(two_way) {
+								@WriteSpanLimit(100) {
+									{ faction_name }
+								}
+								|
+							}
+						}
+					</td>
+					<td></td>
+				}
+			}
+		</tbody>
+	</table>
+}
+
+templ WriteSpanLimit(limit int) {
+	@templ.Raw("<span style=\"display:inline-block;width:" + strconv.Itoa(limit) + "px;overflow-x:hidden;overflow-y:hidden;\">")
+	{ children... }
+	@templ.Raw("</span>")
+}
+
+func TwoWayUniqueFactions(trade_route *configs_export.TwoWayDeal) map[string]bool {
+	var result map[string]bool = make(map[string]bool)
+	result[trade_route.Route1.Transport.BuyingGood.FactionName] = true
+	result[trade_route.Route1.Transport.SellingGood.FactionName] = true
+	result[trade_route.Route2.Transport.BuyingGood.FactionName] = true
+	result[trade_route.Route2.Transport.SellingGood.FactionName] = true
+	return result
+}
+func TwoWayUniquePoBs(trade_route *configs_export.TwoWayDeal) map[string]bool {
+	var result map[string]bool = make(map[string]bool)
+	if trade_route.Route1.Transport.BuyingGood.PoB != nil {
+		result[trade_route.Route1.Transport.BuyingGood.PoB.Name] = true
+	}
+	if trade_route.Route1.Transport.SellingGood.PoB != nil {
+		result[trade_route.Route1.Transport.SellingGood.PoB.Name] = true
+	}
+	if trade_route.Route2.Transport.BuyingGood.PoB != nil {
+		result[trade_route.Route2.Transport.BuyingGood.PoB.Name] = true
+	}
+	if trade_route.Route2.Transport.SellingGood.PoB != nil {
+		result[trade_route.Route2.Transport.SellingGood.PoB.Name] = true
+	}
+	return result
+}
+
+templ TwoWayTradesTableT(
+	trade_routes *cache.Cached[configs_export.BestTradeDealsOutput],
+	shared *types.SharedData,
+	data *configs_export.Exporter,
+	mode tab.ShowEmpty,
+) {
+	@TabMenu(urls.TwoWayDeals, mode, shared)
+	@tab.TabContent() {
+		<div class="splitter">
+			@tab.LeftTable() {
+				@tab.TableTop() {
+					@tab.FilterBar(&types.SharedData{})
+					<div id="table-top-main">
+						@TwoWayTradesTable(trade_routes, shared, data)
+					</div>
+				}
+				@tab.TableBottom() {
+					@OneWayShared(shared)
+				}
+			}
+			@tab.InfocardTable() {
+				@tab.InfocardShared()
+			}
+		</div>
+	}
+}

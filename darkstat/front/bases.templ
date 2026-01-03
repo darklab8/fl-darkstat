@@ -742,8 +742,12 @@ templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 }
 
 templ TradeRouteHumanTime(route *configs_export.Route) {
-	if route.GetTimeMs() < trades.INF/2 {
-		{ fmt.Sprintf("%2.0f", math.Floor(route.GetTimeS()/60)) }m-{ fmt.Sprintf("%2.0f", route.GetTimeS() - 60*math.Floor(route.GetTimeS()/60)) }s
+	@TimeToHumanTime(route.GetTimeMs(), route.GetTimeS())
+}
+
+templ TimeToHumanTime(time_ms cfg.MillisecondsI, time_s cfg.Seconds) {
+	if time_ms < trades.INF/2 {
+		{ fmt.Sprintf("%2.0f", math.Floor(time_s/60)) }m-{ fmt.Sprintf("%2.0f", time_s - 60*math.Floor(time_s/60)) }s
 	} else {
 		INF
 	}

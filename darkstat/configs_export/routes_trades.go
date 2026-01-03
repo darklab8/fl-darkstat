@@ -217,7 +217,21 @@ type TradeDeal struct {
 
 const LimitBestPaths = 2000
 
-func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) []*TradeDeal {
+type BestTradeDealsOutput struct {
+	OneWayDeals []*TradeDeal
+	TwoWayDeals []*TwoWayDeal
+}
+
+type TwoWayDeal struct {
+	Route1        *TradeDeal
+	Route2        *TradeDeal
+	TransportInfo RouteInfo
+	FrigateInfo   RouteInfo
+	FreighterInfo RouteInfo
+}
+
+func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) BestTradeDealsOutput {
+	var result BestTradeDealsOutput
 	var trade_deals []*TradeDeal
 
 	len_bases := len(bases)
@@ -293,7 +307,90 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		trade_deals = trade_deals[:LimitBestPaths]
 	}
 	runtime.GC()
-	return trade_deals
+
+	result.OneWayDeals = trade_deals
+
+	fmt.Println("TWO WAYS: starting calculating two way best trade routes")
+	for route_index1, trade_route1 := range result.OneWayDeals {
+
+		if route_index1%100 == 0 {
+			fmt.Printf("TWO WAYS: processed %d out of %d\n", route_index1, len(result.OneWayDeals))
+		}
+		for _, trade_route2 := range result.OneWayDeals {
+
+			transport_route_info := trade_route_info(trade_route1.Transport, trade_route2.Transport)
+			if transport_route_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS {
+				continue
+			}
+			if transport_route_info.Route2ConnectTime > TwoWayLimitConnnectingTimeS {
+				continue
+			}
+
+			result.TwoWayDeals = append(result.TwoWayDeals, &TwoWayDeal{
+				Route1:        trade_route1,
+				Route2:        trade_route2,
+				TransportInfo: transport_route_info,
+				FrigateInfo:   trade_route_info(trade_route1.Frigate, trade_route2.Frigate),
+				FreighterInfo: trade_route_info(trade_route1.Freighter, trade_route2.Freighter),
+			})
+
+			if len(result.TwoWayDeals) > TwoWayLimitRoutes+500 {
+				sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+					return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
+				})
+				result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
+
+				runtime.GC()
+			}
+			// Add to TwoWaysDeals
+			// Sort them peridically and remove worst ones
+		}
+	}
+	sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+		return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
+	})
+	if len(result.TwoWayDeals) > TwoWayLimitRoutes {
+		result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
+	}
+	fmt.Println("TWO WAYS: finished calculating two way best trade routes, found=", len(result.TwoWayDeals))
+
+	runtime.GC()
+
+	return result
+}
+
+var TwoWayLimitRoutes = 1000
+var TwoWayLimitConnnectingTimeS = float64(240)
+
+type RouteInfo struct {
+	ProfitPerTime     float64
+	Route1Time        float64
+	Route2Time        float64
+	Route1ConnectTime float64
+	Route2ConnectTime float64
+	TotalProfit       float64
+	TwoWayTime        float64
+}
+
+func trade_route_info(trade_route1 *TradeRoute, trade_route2 *TradeRoute) RouteInfo {
+	var route_info RouteInfo
+	// time of routes
+	route_info.Route1Time = GetTimeS(trade_route1.Route.g, trade_route1.BuyingGood, trade_route1.SellingGood)
+	route_info.Route2Time = GetTimeS(trade_route1.Route.g, trade_route2.BuyingGood, trade_route2.SellingGood)
+
+	// Calculate profit per second
+	profit1 := trade_route1.GetProffitPerTime() * route_info.Route1Time
+	profit2 := trade_route2.GetProffitPerTime() * route_info.Route2Time
+
+	// time to connect between routes
+	route_info.Route1ConnectTime = GetTimeS(trade_route1.Route.g, trade_route1.SellingGood, trade_route2.BuyingGood)
+	route_info.Route2ConnectTime = GetTimeS(trade_route2.Route.g, trade_route2.SellingGood, trade_route1.BuyingGood)
+
+	route_info.TotalProfit = (profit1 + profit2)
+	route_info.TwoWayTime = (route_info.Route1Time + route_info.Route2Time + route_info.Route1ConnectTime + route_info.Route2ConnectTime)
+
+	route_info.ProfitPerTime = route_info.TotalProfit / route_info.TwoWayTime
+	return route_info
 }
 
 type BaseBestPathTimes struct {
