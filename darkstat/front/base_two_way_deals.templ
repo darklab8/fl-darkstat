@@ -1,7 +1,6 @@
 package front
 
 import (
-	"crypto/sha256"
 	"fmt"
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/cache"
@@ -15,20 +14,8 @@ import (
 	"strconv"
 )
 
-func TwoWayDealNickname(trade_route *configs_export.TwoWayDeal) string {
-	h := sha256.New()
-	h.Write([]byte(trade_route.Route1.Transport.BuyingGood.BaseNickname))
-	h.Write([]byte(trade_route.Route1.Transport.SellingGood.BaseNickname))
-	h.Write([]byte(trade_route.Route2.Transport.BuyingGood.BaseNickname))
-	h.Write([]byte(trade_route.Route2.Transport.SellingGood.BaseNickname))
-	h.Write([]byte(trade_route.Route1.Transport.BuyingGood.Nickname))
-	h.Write([]byte(trade_route.Route2.Transport.BuyingGood.Nickname))
-	bs := h.Sum(nil)
-	return fmt.Sprintf("%x", bs)
-}
-
 func TwoWayDealDetailedUrl(trade_route *configs_export.TwoWayDeal) string {
-	return "cdn/two_ways/tw-" + TwoWayDealNickname(trade_route)
+	return "cdn/two_ways/tw-" + trade_route.HashStr()
 }
 
 templ TwoWayDealDetailed(trade_route *configs_export.TwoWayDeal, shared *types.SharedData) {
@@ -100,7 +87,7 @@ templ TwoWayTradesTable(
 		</thead>
 		<tbody>
 			for _, two_way := range trade_routes.Get(ctx).TwoWayDeals {
-				@tab.TrFromMainTb(TwoWayDealNickname(two_way), TwoWayDealDetailedUrl(two_way), "") {
+				@tab.TrFromMainTb(two_way.HashStr(), TwoWayDealDetailedUrl(two_way), "") {
 					<td class="seo">
 						@frmt.WriteLimit(300) {
 							{ two_way.Route1.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(two_way.Route1.Transport.SellingGood.ShipClass) },

@@ -2,9 +2,11 @@ package configs_export
 
 import (
 	"context"
+	"crypto/sha256"
 	"fmt"
 	"math"
 	"runtime"
+	"slices"
 	"sort"
 	"time"
 
@@ -230,6 +232,27 @@ type TwoWayDeal struct {
 	FreighterInfo RouteInfo
 }
 
+func (trade_route *TwoWayDeal) HashStr() string {
+
+	strs := []string{}
+
+	h := sha256.New()
+	strs = append(strs, trade_route.Route1.Transport.BuyingGood.BaseNickname.ToStr())
+	strs = append(strs, trade_route.Route1.Transport.SellingGood.BaseNickname.ToStr())
+	strs = append(strs, trade_route.Route2.Transport.BuyingGood.BaseNickname.ToStr())
+	strs = append(strs, trade_route.Route2.Transport.SellingGood.BaseNickname.ToStr())
+	strs = append(strs, trade_route.Route1.Transport.BuyingGood.Nickname)
+	strs = append(strs, trade_route.Route2.Transport.BuyingGood.Nickname)
+	strs = append(strs, fmt.Sprintf("%.6f", trade_route.Route1.Transport.GetProffitPerTime()))
+	strs = append(strs, fmt.Sprintf("%.6f", trade_route.Route2.Transport.GetProffitPerTime()))
+	slices.Sort(strs)
+	for _, str := range strs {
+		h.Write([]byte(str))
+	}
+	bs := h.Sum(nil)
+	return fmt.Sprintf("%x", bs)
+}
+
 type OneWayRouteInfo struct {
 	KiloVolumes                 float64
 	ProfitPerTimeForKiloVolumes float64
@@ -310,6 +333,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 	result.OneWayDeals = trade_deals
 
+	var found_two_way_hashes map[string]bool = make(map[string]bool)
 	fmt.Println("TWO WAYS: starting calculating two way best trade routes")
 	for route_index1, trade_route1 := range result.OneWayDeals {
 
@@ -326,13 +350,18 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 				continue
 			}
 
-			result.TwoWayDeals = append(result.TwoWayDeals, &TwoWayDeal{
+			two_deal := &TwoWayDeal{
 				Route1:        trade_route1,
 				Route2:        trade_route2,
 				TransportInfo: trade_route_info(trade_route1.Transport, trade_route2.Transport),
 				FrigateInfo:   trade_route_info(trade_route1.Frigate, trade_route2.Frigate),
 				FreighterInfo: trade_route_info(trade_route1.Freighter, trade_route2.Freighter),
-			})
+			}
+			hash := two_deal.HashStr()
+			if _, ok := found_two_way_hashes[hash]; !ok {
+				result.TwoWayDeals = append(result.TwoWayDeals, two_deal)
+				found_two_way_hashes[hash] = true
+			}
 
 			if len(result.TwoWayDeals) > TwoWayLimitRoutes+500 {
 				sort.Slice(result.TwoWayDeals, func(i, j int) bool {
@@ -358,7 +387,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	return result
 }
 
-var TwoWayLimitRoutes = 2000
+var TwoWayLimitRoutes = 1000
 var TwoWayLimitConnnectingTimeS = float64(180)
 
 type RouteInfo struct {
