@@ -421,8 +421,8 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	return result
 }
 
-var TwoWayLimitRoutes = 1000
-var TwoWayLimitConnnectingTimeS = float64(180)
+var TwoWayLimitRoutes = 2000
+var TwoWayLimitConnnectingTimeS = float64(300)
 
 type RouteInfo struct {
 	ProfitPerTime     float64
