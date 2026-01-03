@@ -171,16 +171,16 @@ templ TwoWayTradesTable(
 							|
 						}
 					</td>
-					<td>
-						if shared.ShowDisco {
+					if shared.ShowDisco {
+						<td>
 							for faction_name := range TwoWayUniquePoBs(two_way) {
 								@WriteSpanLimit(100) {
 									{ faction_name }
 								}
 								|
 							}
-						}
-					</td>
+						</td>
+					}
 					<td>
 						{ fmt.Sprintf("%.0f", math.Max(two_way.TransportInfo.Route1ConnectTime, two_way.TransportInfo.Route2ConnectTime)) }
 					</td>
