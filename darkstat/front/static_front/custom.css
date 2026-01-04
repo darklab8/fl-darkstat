@@ -99,6 +99,20 @@ th {
     overflow: hidden;
 }
 
+.htmx-indicator {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+}
+
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 200ms ease-in;
+    display: block;
+}
+
 .loader {
     border: 8px solid var(--color_hover);
     border-radius: 50%;
