@@ -224,7 +224,7 @@ type TradeDeal struct {
 	TransportInfo OneWayRouteInfo
 }
 
-const LimitBestPaths = 4000
+const LimitBestPaths = 3000
 
 type BestTradeDealsOutput struct {
 	OneWayDeals []*TradeDeal
@@ -427,7 +427,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	return result
 }
 
-var TwoWayLimitRoutes = 3000
+var TwoWayLimitRoutes = 2500
 var TwoWayLimitConnnectingTimeS = float64(300)
 
 type RouteInfo struct {
