@@ -114,13 +114,12 @@ th {
     display: block;
     position: absolute;
     top: 0;
-    background-color: var(--color_scrollbar_background);
 }
 
 .loader {
-    border: 8px solid var(--color_hover);
+    border: 8px solid color-mix(in srgb, var(--color_hover) 80%, transparent);
     border-radius: 50%;
-    border-top: 8px solid #3498db;
+    border-top: 8px solid color-mix(in srgb, #3498db 80%, transparent);
     width: 20px;
     height: 20px;
     -webkit-animation: spin 2s linear infinite;
