@@ -103,6 +103,7 @@ th {
     opacity: 0;
     visibility: hidden;
     display: none;
+    position: relative;
 }
 
 .htmx-request .htmx-indicator,
@@ -111,6 +112,9 @@ th {
     visibility: visible;
     transition: opacity 200ms ease-in;
     display: block;
+    position: absolute;
+    top: 0;
+    background-color: var(--color_scrollbar_background);
 }
 
 .loader {

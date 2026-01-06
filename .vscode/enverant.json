@@ -21,6 +21,7 @@
     # "OTEL_SERVICE_NAME": "check2",
     # if u wish to speed up rerender by magnitude, then keep uncommended trade route calculations disabling
     "DARKSTAT_FLDARKSTAT_HEADING": 'Dev server for fl-darkstat | <a href="https://github.com/darklab8/fl-darkstat">Github</a>',
+    # "DARKSTAT_FLDARKSTAT_HEADING": '<a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-vanilla">Freelancer Vanilla</a>',
     # "DARKSTAT_DETAILED": "true"
     # "CONFIGS_FALLBACK_TO_NICKNAMES": "true",
     # "CONFIGS_STRICT": "false",

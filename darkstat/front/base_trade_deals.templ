@@ -36,7 +36,7 @@ templ TradeDeals(
                 }
                 </style>
 				@tab.PageHint() {
-					Best one way routes selected by having best total profit and profit per second for transports
+					{ strconv.Itoa(configs_export.LimitBestPaths) } Best (BUT NOT ALL) one way routes selected by having best total profit and profit per second for transports
 					if shared.ShowDisco {
 						@tab.PageTime()
 					}

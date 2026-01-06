@@ -230,7 +230,7 @@ templ TwoWayTradesTableT(
 		<div class="splitter">
 			@tab.LeftTable() {
 				@tab.PageHint() {
-					Best two way routes selected by having best total profit and profit per second for transports. Max gap time limit { fmt.Sprintf("%.0f", configs_export.TwoWayLimitConnnectingTimeS) } sec.
+					{ strconv.Itoa(configs_export.TwoWayLimitRoutes) } Best (BUT NOT ALL) two way routes selected by having best total profit and profit per second for transports. Max gap time limit { fmt.Sprintf("%.0f", configs_export.TwoWayLimitConnnectingTimeS) } sec.
 					if shared.ShowDisco {
 						@tab.PageTime()
 					}
