@@ -94,8 +94,6 @@ func (e *Exporter) GetOres(ctx context.Context, Commodities []*Commodity) []*Bas
 						mining_solar, ok := e.Mapped.Discovery.Minecontrol.MiningSolarByAsteroidNick[node_arch_nickname]
 						if !ok {
 							error_msg := fmt.Sprintln("cant find node_arch_nickname=", node_arch_nickname, " in MiningSolars")
-							logus.Log.Error(error_msg)
-							continue // TODO remove this hack when disco devs will fix minecontrol.cfg
 							logus.Log.Panic(error_msg)
 						}
 
