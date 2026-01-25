@@ -32,6 +32,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/docs"
+	"github.com/darklab8/fl-darkstat/helpers"
 	"github.com/darklab8/go-utils/otlp"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/cantil"
@@ -330,6 +331,14 @@ func main() {
 				Description: "darkmap group of commands. See `darkmap help` to discovery its commands",
 				Func: func(info cantil.ActionInfo) error {
 					darkmap.DarkmapCliGroup(info.CmdArgs[1:])
+					return nil
+				},
+			},
+			{
+				Nickname:    "helpers",
+				Description: "helpers group of commands. See `helpers help` to discovery its commands",
+				Func: func(info cantil.ActionInfo) error {
+					helpers.HelpersCliGroup(info.CmdArgs[1:])
 					return nil
 				},
 			},
