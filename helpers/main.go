@@ -145,13 +145,17 @@ DLL = DsyAddition.dll	; matches number 7
 						logus.Log.CheckPanic(err, "failed to open file for reading")
 
 						for name_id, content := range config.Infonames {
-							fmt.Fprintf(f, "[%d]\n", name_id)
-							fmt.Fprintln(f, string(content))
+							_, err = fmt.Fprintf(f, "[%d]\n", name_id)
+							logus.Log.CheckPanic(err, "failed to write to file")
+							_, err = fmt.Fprintln(f, string(content))
+							logus.Log.CheckPanic(err, "failed to write to file")
 						}
 
 						for name_id, content := range config.Infocards {
-							fmt.Fprintf(f, "[%d]\n", name_id)
-							fmt.Fprintln(f, string(content.GetContent()))
+							_, err = fmt.Fprintf(f, "[%d]\n", name_id)
+							logus.Log.CheckPanic(err, "failed to write to file")
+							_, err = fmt.Fprintln(f, string(content.GetContent()))
+							logus.Log.CheckPanic(err, "failed to write to file")
 						}
 					}
 
