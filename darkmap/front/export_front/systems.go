@@ -7,15 +7,15 @@ import (
 )
 
 type System struct {
-	Nickname string
-	Name     string
-	Pos      Coords2D
+	Nickname string   `json:"nickname"`
+	Name     string   `json:"name"`
+	Pos      Coords2D `json:"galaxy_pos"`
 
-	Region Region
+	Region Region `json:"region"`
 }
 
 type Region struct {
-	Name string
+	Name string `json:"name"`
 }
 
 func (region Region) ToHexColor() string {
@@ -65,7 +65,7 @@ type Coords2D struct {
 	Y float64
 }
 
-func exportSystems(configs *configs_mapped.MappedConfigs) []System {
+func ExportSystems(configs *configs_mapped.MappedConfigs) []System {
 	var systems []System
 	for _, system := range configs.Universe.Systems {
 		system_to_add := System{

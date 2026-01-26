@@ -36,5 +36,5 @@ func (e *Export) GetInfocardName(ids_name int, nickname string) string {
 }
 
 func (e *Export) export() {
-	e.Systems = exportSystems(e.Mapped)
+	e.Systems = ExportSystems(e.Mapped)
 }

@@ -10,7 +10,7 @@ import (
 func TestSystemsExport(t *testing.T) {
 	ctx := context.Background()
 	export := NewExport(ctx)
-	systems := exportSystems(export.Mapped)
+	systems := ExportSystems(export.Mapped)
 
 	assert.Greater(t, len(systems), 0)
 }
