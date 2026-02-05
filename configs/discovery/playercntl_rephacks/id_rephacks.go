@@ -79,6 +79,10 @@ func Read(input_file *iniload.IniLoader) *Config {
 		default_reps := resources[0]
 
 		for _, param := range default_reps.Params {
+			if param.Key == inireader.KEY_COMMENT {
+				continue
+			}
+
 			faction := Faction{
 				Nickname: cfg.FactionNick(param.Key),
 				Rep:      semantic.NewFloat(default_reps, param.Key, semantic.Precision(2)),
