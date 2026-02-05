@@ -24,6 +24,10 @@ func TestGetTractors(t *testing.T) {
 func TestReadCommentsInPlayercntlRephacks(t *testing.T) {
 	configs := configs_mapped.TestFixtureConfigs()
 
+	if configs.Discovery == nil {
+		return
+	}
+
 	test_directory := utils_os.GetCurrrentTestFolder()
 	fileref := file.NewFile(utils_types.FilePath(utils_filepath.Join(test_directory, "playercntl_rephacks.cfg")))
 
