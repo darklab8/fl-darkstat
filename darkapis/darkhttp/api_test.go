@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
@@ -102,6 +103,8 @@ func TestApiHealth(t *testing.T) {
 		}
 	}
 
+	AwaitHealthy(httpc)
+
 	t.Run("GetHealth", func(t *testing.T) {
 		res, err := httpc.Get("http://localhost/ping")
 		logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
@@ -118,6 +121,20 @@ func TestApiHealth(t *testing.T) {
 	})
 	web_closer.Close()
 
+}
+
+func AwaitHealthy(httpc http.Client) {
+	for range 10 {
+		res, err := httpc.Get("http://localhost/ping")
+		logus.Log.CheckPanic(err, "error making http request: %s\n", typelog.OptError(err))
+
+		if res != nil {
+			if res.StatusCode == 200 {
+				break
+			}
+		}
+		time.Sleep(time.Second * 2)
+	}
 }
 
 func TestApi(t *testing.T) {
@@ -160,6 +177,8 @@ func TestApi(t *testing.T) {
 			},
 		}
 	}
+
+	AwaitHealthy(httpc)
 
 	t.Run("GetHealth", func(t *testing.T) {
 		res, err := httpc.Get("http://localhost/ping")
