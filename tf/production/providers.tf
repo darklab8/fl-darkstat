@@ -16,6 +16,9 @@ data "external" "secrets_cloudflare" {
   program = ["pass", "personal/terraform/cloudflare/dd84ai"]
 }
 
+data "external" "secrets_darkbot" {
+  program = ["pass", "personal/terraform/hetzner/darkbot/production"]
+}
 provider "cloudflare" {
   api_token = data.external.secrets_cloudflare.result["token"]
 }

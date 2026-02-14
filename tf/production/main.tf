@@ -22,6 +22,13 @@ module "darkstat" {
   zone              = "dd84ai.com"
   is_discovery      = true
   replicas_count    = 2
+  extra_vars        = local.disco_extra_vars
+}
+
+locals {
+  disco_extra_vars = {
+    CONFIGS_DISCO_BASES_FULL_URL = data.external.secrets_darkbot.result["SCRAPPY_BASE_URL"]
+  }
 }
 
 resource "random_string" "random_password" {
@@ -58,6 +65,7 @@ module "darkstat_dev" {
   secret       = random_string.random_secret.result
   disco_oauth  = true
   is_discovery = true
+  extra_vars   = local.disco_extra_vars
 }
 
 module "vanilla" {

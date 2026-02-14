@@ -43,5 +43,6 @@ locals {
     var.environment == "production" ? {
       OTEL_TRACES_SAMPLER_ARG = "0.1"
     } : {},
+    var.extra_vars,
   )
 }
