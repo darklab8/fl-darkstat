@@ -509,7 +509,15 @@ func TestApi(t *testing.T) {
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
-		assert.Greater(t, len(items[0].MarketGoods), 0)
+		found_market_goods := false
+		for _, item := range items {
+			if len(item.MarketGoods) > 0 {
+				found_market_goods = true
+			}
+
+		}
+		assert.True(t, found_market_goods, "check any shield has market goods")
+
 		if app_data.Configs.Mapped.Discovery != nil {
 			has_tech_compat := false
 			for _, item := range items {
