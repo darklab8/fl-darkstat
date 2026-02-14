@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"fmt"
+	"html"
 	"strconv"
 	"strings"
 
@@ -65,9 +66,10 @@ type PoBCore struct {
 	ForumThreadUrl *string `json:"forum_thread_url"`
 	CargoSpaceLeft *int    `json:"cargospace"`
 
-	BasePos     *cfg.Vector `json:"base_pos"`
-	SectorCoord *string     `json:"sector_coord"`
-	Region      *string     `json:"region_name"`
+	BasePos        *cfg.Vector `json:"base_pos"`
+	SectorCoord    *string     `json:"sector_coord"`
+	Region         *string     `json:"region_name"`
+	IsFallbackInfo bool        `json:"is_fallback_info"`
 }
 
 // also known as Player Base Station
@@ -340,19 +342,56 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		return pobs
 	}
 
-	for _, pob_info := range e.Mapped.Discovery.PlayerOwnedBases.Bases {
-
-		var pob *PoB = &PoB{
-			PoBCore: PoBCore{
-				Nickname:       pob_info.Nickname,
-				Name:           pob_info.Name,
-				Pos:            pob_info.Pos,
-				Level:          pob_info.Level,
-				Money:          pob_info.Money,
-				Health:         pob_info.Health,
-				CargoSpaceLeft: pob_info.CargoSpaceLeft,
-			},
+	var pob_list_nicknames []string
+	if e.Mapped.Discovery.BasesFull != nil {
+		for _, pob := range e.Mapped.Discovery.BasesFull.Bases {
+			pob_list_nicknames = append(pob_list_nicknames, pob.Nickname)
 		}
+	} else {
+		for _, pob_info := range e.Mapped.Discovery.PlayerOwnedBases.Bases {
+			pob_list_nicknames = append(pob_list_nicknames, pob_info.Nickname)
+		}
+	}
+
+	for _, pob_nickname := range pob_list_nicknames {
+
+		pob_info, ok := e.Mapped.Discovery.PlayerOwnedBases.BasesByNick[pob_nickname]
+
+		is_fallback := false
+		var pob *PoB
+		if ok {
+			pob = &PoB{
+				PoBCore: PoBCore{
+					Nickname:       pob_info.Nickname,
+					Name:           pob_info.HtmlEscapedName,
+					Pos:            pob_info.Pos,
+					Level:          pob_info.Level,
+					Money:          pob_info.Money,
+					Health:         pob_info.Health,
+					CargoSpaceLeft: pob_info.CargoSpaceLeft,
+				},
+			}
+		} else {
+			is_fallback = true
+			pob_failback := e.Mapped.Discovery.BasesFull.BasesByNick[pob_nickname]
+			pob = &PoB{
+				PoBCore: PoBCore{
+					Nickname:       pob_failback.Nickname,
+					Name:           html.UnescapeString(pob_failback.Name),
+					FactionName:    ptr.Ptr(pob_failback.Affiliation),
+					Health:         ptr.Ptr(pob_failback.Health),
+					IsFallbackInfo: true,
+				},
+			}
+			pob_info = &pob_goods.Base{}
+		}
+
+		if e.Mapped.Discovery.BasesFull != nil && !is_fallback {
+			extra_info := e.Mapped.Discovery.BasesFull.BasesByNick[pob_info.Nickname]
+			pob.FactionName = ptr.Ptr(extra_info.Affiliation)
+			pob.Health = ptr.Ptr(extra_info.Health)
+		}
+
 		if pob_info.DefenseMode != nil {
 			pob.DefenseMode = (*DefenseMode)(pob_info.DefenseMode)
 		}
@@ -550,7 +589,7 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 			pob_item := &PobShopItem{
 				ShopItem:    good,
 				PobNickname: pob_info.Nickname,
-				PoBName:     pob_info.Name,
+				PoBName:     pob_info.HtmlEscapedName,
 			}
 
 			if pob_info.SystemHash != nil {
@@ -610,4 +649,16 @@ func StrPosToVectorPos(value string) *cfg.Vector {
 	logus.Log.CheckPanic(err3, "failed parsing z coord", typelog.Any("pos", value))
 
 	return &cfg.Vector{X: x, Y: y, Z: z}
+}
+
+func FilterToUserfulPobs(bases []*PoB) []*PoB {
+	var useful_bases []*PoB = make([]*PoB, 0, len(bases))
+	for _, item := range bases {
+		if item.IsFallbackInfo {
+			continue
+		}
+
+		useful_bases = append(useful_bases, item)
+	}
+	return useful_bases
 }

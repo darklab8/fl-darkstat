@@ -31,9 +31,9 @@ func (good ShopItem) BaseBuys() bool {
 }
 
 type Base struct {
-	Name      string
-	Nickname  string
-	ShopItems []ShopItem `json:"shop_items"`
+	HtmlEscapedName string
+	Nickname        string
+	ShopItems       []ShopItem `json:"shop_items"`
 
 	ForumThreadUrl *string `json:"thread"`
 	CargoSpaceLeft *int    `json:"cargospace"`
@@ -131,9 +131,9 @@ func Read(ctx context.Context, file *file.File) (*Config, error) {
 	}
 
 	for base_name, base := range conf.BasesByName {
-		base.Name = base_name
+		base.HtmlEscapedName = base_name
 
-		hash := NameToNickname(base.Name)
+		hash := NameToNickname(html.UnescapeString(base.HtmlEscapedName))
 		base.Nickname = hash
 		conf.Bases = append(conf.Bases, base)
 

@@ -34,6 +34,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/iniload"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/overrides"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
@@ -44,6 +45,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped/weaponmoddb"
 	"github.com/darklab8/fl-darkstat/configs/discovery/base_recipe_items"
 	"github.com/darklab8/fl-darkstat/configs/discovery/base_recipe_modules"
+	"github.com/darklab8/fl-darkstat/configs/discovery/bases"
 	"github.com/darklab8/fl-darkstat/configs/discovery/discoprices"
 	"github.com/darklab8/fl-darkstat/configs/discovery/minecontrol"
 	"github.com/darklab8/fl-darkstat/configs/discovery/minecontrol_nodes"
@@ -69,6 +71,7 @@ type DiscoveryConfig struct {
 	LatestPatch        autopatcher.Patch
 	PlayercntlRephacks *playercntl_rephacks.Config
 	PlayerOwnedBases   *pob_goods.Config
+	BasesFull          *bases.Config
 	Minecontrol        *minecontrol.Config
 	MinecontrolNodes   *minecontrol_nodes.Config
 }
@@ -465,7 +468,14 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			file_public_bases := file.NewWebFile(PobDataUrl)
 			var err error
 			m.Discovery.PlayerOwnedBases, err = pob_goods.Read(ctx, file_public_bases)
-			logus.Log.CheckPanic(err, "failed to read pods on darkstat start")
+			logus.Log.CheckPanic(err, "failed to read pobs data on darkstat start")
+
+			if configs_settings.Env.FullBasesAPIURL != nil {
+				file_private_bases := file.NewWebFile(*configs_settings.Env.FullBasesAPIURL)
+				m.Discovery.BasesFull, err = bases.Read(ctx, file_private_bases)
+				logus.Log.CheckPanic(err, "failed to read pobs full on darkstat start")
+			}
+
 		}
 		wg.Wait()
 	}, timeit.WithMsg("Mapped stuff"))

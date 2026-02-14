@@ -186,6 +186,13 @@ func main() {
 						if logus.Log.CheckError(err, "failed with refresh gracefully") {
 							return
 						}
+
+						if relay_data.Configs.Mapped.Discovery.BasesFull != nil {
+							err = relay_data.Configs.Mapped.Discovery.BasesFull.Refresh()
+							if logus.Log.CheckError(err, "failed with refresh gracefully bases full") {
+								return
+							}
+						}
 						relay_data.Configs.PoBs = relay_data.Configs.GetPoBs()
 						relay_data.Configs.PoBGoods = relay_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
 

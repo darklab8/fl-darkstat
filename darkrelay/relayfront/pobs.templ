@@ -75,6 +75,9 @@ templ PoBTableHeaders() {
 	<th style="width:25px;">
 		@frmt.MultiLinestring([]string{"Nickname"})
 	</th>
+	<th style="width:25px;">
+		@frmt.MultiLinestring([]string{"in darkstat"})
+	</th>
 	<th style="max-width:100%;"></th>
 }
 
@@ -109,9 +112,10 @@ templ PobTableRow(pob *configs_export.PoBCore) {
 		}
 	</td>
 	<td class="seo">{ pob.Nickname } </td>
+	<td>{ strconv.FormatBool(!pob.IsFallbackInfo) } </td>
 }
 
-templ PobTable(pobs []*configs_export.PoB, pinm tab.PinMod, shared *types.SharedData) {
+templ PobTable(pobs []*configs_export.PoB, show_empty tab.ShowEmpty, pinm tab.PinMod, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr>
@@ -128,13 +132,16 @@ templ PobTable(pobs []*configs_export.PoB, pinm tab.PinMod, shared *types.Shared
 		</thead>
 		<tbody>
 			for _, pob := range pobs {
-				@tab.TrFromMainTb2(tab.NewTr(pob.Nickname, PoBDetailedUrl(pob), pinm, tab.WithFromRelay()), false) {
-					@tab.PinTd(pob.Nickname, html.UnescapeString(pob.Name), pinm)
-					@tab.PinSelectLeftRight(pinm, PoBDetailedUrl(pob))
-					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
-					<td>{ strconv.Itoa(pob.ShopItemsLength()) } </td>
-					@PobTableRow(&pob.PoBCore)
-					@tab.TdInfoCardClick(infocarder.InfocardKey(pob.Nickname), pob.Nickname, pinm, shared, tab.InfocardClickOpts{IsRelayHosted: true})
+				if pob.IsFallbackInfo && show_empty != true {
+				} else {
+					@tab.TrFromMainTb2(tab.NewTr(pob.Nickname, PoBDetailedUrl(pob), pinm, tab.WithFromRelay()), false) {
+						@tab.PinTd(pob.Nickname, html.UnescapeString(pob.Name), pinm)
+						@tab.PinSelectLeftRight(pinm, PoBDetailedUrl(pob))
+						// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
+						<td>{ strconv.Itoa(pob.ShopItemsLength()) } </td>
+						@PobTableRow(&pob.PoBCore)
+						@tab.TdInfoCardClick(infocarder.InfocardKey(pob.Nickname), pob.Nickname, pinm, shared, tab.InfocardClickOpts{IsRelayHosted: true})
+					}
 				}
 			}
 		</tbody>
@@ -155,10 +162,10 @@ templ PoBsT(configs *configs_export.ExporterRelay, mode2 tab.ShowEmpty, shared *
 					}
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
-						@PobTable(configs.PoBs, tab.MainMode, shared)
+						@PobTable(configs.PoBs, mode2, tab.MainMode, shared)
 					</div>
 					<div id={ "table-top-main" + string(tab.PinMode) } class="hidden">
-						@PobTable(configs.PoBs, tab.PinMode, shared)
+						@PobTable(configs.PoBs, mode2, tab.PinMode, shared)
 					</div>
 				}
 				@tab.TableBottom() {
@@ -229,7 +236,7 @@ templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpac
 			>
 				<td>
 					@frmt.WriteLimit(200) {
-						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass),     }
+						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass),            }
 					}
 				</td>
 				<td>
