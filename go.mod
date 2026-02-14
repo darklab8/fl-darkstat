@@ -5,7 +5,7 @@ go 1.25.1
 require (
 	github.com/a-h/templ v0.3.857
 	github.com/darklab8/fl-data-discovery v0.4.0
-	github.com/darklab8/go-utils v0.29.1
+	github.com/darklab8/go-utils v0.30.0
 	github.com/prometheus/client_golang v1.23.2
 	github.com/stretchr/testify v1.11.1
 	github.com/swaggo/http-swagger v1.3.4
