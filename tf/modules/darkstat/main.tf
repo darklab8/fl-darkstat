@@ -5,7 +5,7 @@ resource "docker_network" "network" {
 }
 
 locals {
-  tag = var.tag != null ? var.tag : var.environment
+  tag = var.tag != null ? var.tag : "${var.environment}-arm64"
 }
 
 resource "docker_image" "darkstat" {

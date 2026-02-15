@@ -65,7 +65,7 @@ module "darkstat_dev" {
   secret       = random_string.random_secret.result
   disco_oauth  = true
   is_discovery = true
-  extra_vars   = local.disco_extra_vars
+  # extra_vars   = local.disco_extra_vars
 }
 
 module "vanilla" {
