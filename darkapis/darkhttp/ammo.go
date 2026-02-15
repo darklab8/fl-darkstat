@@ -90,3 +90,6 @@ func GetAmmos(webapp *web.Web, api *Api) *registry.Endpoint {
 		},
 	}
 }
+func (c *HttpClient) GetAmmos(input pb.GetCommoditiesInput) ([]*Ammo, error) {
+	return make_request[pb.GetCommoditiesInput, []*Ammo](c, ""+ApiRoute+"/ammos", input)
+}

@@ -72,3 +72,6 @@ func GetScanners(webapp *web.Web, api *Api) *registry.Endpoint {
 		}}
 
 }
+func (c *HttpClient) GetScanners(input pb.GetEquipmentInput) ([]*Scanner, error) {
+	return make_request[pb.GetEquipmentInput, []*Scanner](c, ""+ApiRoute+"/scanners", input)
+}

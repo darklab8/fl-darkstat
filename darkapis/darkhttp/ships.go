@@ -71,3 +71,6 @@ func GetShips(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, output)
 		}}
 }
+func (c *HttpClient) GetShips(input pb.GetEquipmentInput) ([]*Ship, error) {
+	return make_request[pb.GetEquipmentInput, []*Ship](c, ""+ApiRoute+"/ships", input)
+}

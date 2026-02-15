@@ -24,7 +24,7 @@ import (
 // @Param request body []appdata.GraphPathReq true "Request body"
 // @Success      200  {array}  	appdata.GraphPathsResp
 // @Router       /api/graph/paths [post]
-func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
+func GetGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "POST " + ApiRoute + "/graph/paths",
 		Handler: func(resp http.ResponseWriter, r *http.Request) {
@@ -55,4 +55,7 @@ func PostGraphPaths(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&resp, output_routes)
 		},
 	}
+}
+func (c *HttpClient) GetGraphPaths(requests []appdata.GraphPathReq) ([]appdata.GraphPathsResp, error) {
+	return make_request[[]appdata.GraphPathReq, []appdata.GraphPathsResp](c, ""+ApiRoute+"/graph/paths", requests)
 }

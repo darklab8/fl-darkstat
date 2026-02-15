@@ -8,9 +8,11 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"reflect"
 	"testing"
 	"time"
 
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated/statproto_deprecated"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
@@ -178,6 +180,8 @@ func TestApi(t *testing.T) {
 		}
 	}
 
+	api_client := NewClient("http://localhost:8432")
+
 	AwaitHealthy(httpc)
 
 	t.Run("GetHealth", func(t *testing.T) {
@@ -195,6 +199,11 @@ func TestApi(t *testing.T) {
 			CheckMarketGoods: true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
+
+		items2, err := api_client.GetBases(pb.GetBasesInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items2), 0)
+		items2 = []*Base{}
 
 		t.Run("GetGraphPaths", func(t *testing.T) {
 			nicknames := []appdata.GraphPathReq{
@@ -225,6 +234,11 @@ func TestApi(t *testing.T) {
 				fmt.Println("items[0].Error=", *items[0].Error)
 			}
 			assert.Nil(t, items[0].Error)
+
+			items, err = api_client.GetGraphPaths(nicknames)
+			logus.Log.CheckPanic(err, "errored to get items")
+			assert.Greater(t, len(items), 0)
+			items = []appdata.GraphPathsResp{}
 		})
 
 		t.Run("GetInfocards", func(t *testing.T) {
@@ -253,6 +267,11 @@ func TestApi(t *testing.T) {
 			assert.Nil(t, items[0].Error)
 			assert.Nil(t, items[1].Error)
 			assert.NotNil(t, items[2].Error)
+
+			items, err = api_client.GetInfocards(nickname)
+			logus.Log.CheckPanic(err, "errored to get items")
+			assert.Greater(t, len(items), 0)
+			items = []InfocardResp{}
 		})
 	})
 
@@ -279,6 +298,11 @@ func TestApi(t *testing.T) {
 		}
 		_ = FixtureTestItems[configs_export.PoB](t, httpc, "/pobs", "Pobs", TestOpts{})
 		_ = FixtureTestItems[configs_export.Base](t, httpc, "/pobs/bases", "PoBBases", TestOpts{})
+
+		items, err := api_client.GetPobs()
+		logus.Log.CheckPanic(err, "errored to get pobs")
+		assert.Greater(t, len(items), 0)
+		items = []*configs_export.PoB{}
 	})
 
 	t.Run("GetPoBGoods", func(t *testing.T) {
@@ -286,10 +310,15 @@ func TestApi(t *testing.T) {
 			return
 		}
 		_ = FixtureTestItems[configs_export.PoBGood](t, httpc, "/pob_goods", "PoBGodds", TestOpts{})
+
+		items, err := api_client.GetPoBGoods()
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*configs_export.PoBGood{}
 	})
 
 	t.Run("GetShips", func(t *testing.T) {
-		items := FixtureTestItems[Ship](t, httpc, "/ships", "Ships", TestOpts{
+		items := FixtureTestItems[*Ship](t, httpc, "/ships", "Ships", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -309,19 +338,25 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetShips(pb.GetEquipmentInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Ship{}
 	})
 
 	t.Run("GetTractors", func(t *testing.T) {
 		if !app_data.Configs.IsDiscovery {
 			return
 		}
-		items := FixtureTestItems[Tractor](t, httpc, "/tractors", "Tractors", TestOpts{
+		items := FixtureTestItems[*Tractor](t, httpc, "/tractors", "Tractors", TestOpts{
 			CheckMarketGoods: true,
 			IncludeRephacks:  true,
 		})
 		assert.Greater(t, len(items[0].MarketGoods), 0)
 
-		var found Tractor
+		var found *Tractor
 		for _, tractor := range items {
 			if len(tractor.Rephacks) > 0 {
 				found = tractor
@@ -329,10 +364,16 @@ func TestApi(t *testing.T) {
 			}
 		}
 		assert.Greater(t, len(found.Rephacks), 0)
+
+		var err error
+		items, err = api_client.GetTractors(pb.GetTractorsInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Tractor{}
 	})
 
 	t.Run("GetAmmos", func(t *testing.T) {
-		items := FixtureTestItems[Ammo](t, httpc, "/ammos", "Ammos", TestOpts{
+		items := FixtureTestItems[*Ammo](t, httpc, "/ammos", "Ammos", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -346,6 +387,12 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetAmmos(pb.GetCommoditiesInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Ammo{}
 	})
 
 	t.Run("GetGuns", func(t *testing.T) {
@@ -354,7 +401,7 @@ func TestApi(t *testing.T) {
 			assert.Nil(t, err)
 		}
 
-		items := FixtureTestItems[Gun](t, httpc, "/guns", "Ships", TestOpts{
+		items := FixtureTestItems[*Gun](t, httpc, "/guns", "Ships", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -375,10 +422,16 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetGuns(pb.GetGunsInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Gun{}
 	})
 
 	t.Run("GetMissiles", func(t *testing.T) {
-		items := FixtureTestItems[Gun](t, httpc, "/missiles", "Missiles", TestOpts{
+		items := FixtureTestItems[*Gun](t, httpc, "/missiles", "Missiles", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -401,10 +454,16 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetMissiles(pb.GetGunsInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Gun{}
 	})
 
 	t.Run("GetMines", func(t *testing.T) {
-		items := FixtureTestItems[Mine](t, httpc, "/mines", "Mines", TestOpts{
+		items := FixtureTestItems[*Mine](t, httpc, "/mines", "Mines", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -426,10 +485,16 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetMines(pb.GetEquipmentInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Mine{}
 	})
 
 	t.Run("GetCMs", func(t *testing.T) {
-		items := FixtureTestItems[CounterMeasure](t, httpc, "/counter_measures", "CounterMeasures", TestOpts{
+		items := FixtureTestItems[*CounterMeasure](t, httpc, "/counter_measures", "CounterMeasures", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -443,6 +508,12 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetCMs(pb.GetEquipmentInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*CounterMeasure{}
 	})
 
 	t.Run("GetEngines", func(t *testing.T) {
@@ -456,7 +527,7 @@ func TestApi(t *testing.T) {
 			}
 			assert.Nil(t, err)
 		}
-		items := FixtureTestItems[Engine](t, httpc, "/engines", "Engines", TestOpts{
+		items := FixtureTestItems[*Engine](t, httpc, "/engines", "Engines", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -476,13 +547,19 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetEngines(pb.GetEquipmentInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Engine{}
 	})
 
 	t.Run("GetScanners", func(t *testing.T) {
 		if !app_data.Configs.IsDiscovery {
 			return
 		}
-		items := FixtureTestItems[Scanner](t, httpc, "/scanners", "Scanners", TestOpts{
+		items := FixtureTestItems[*Scanner](t, httpc, "/scanners", "Scanners", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -502,10 +579,18 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetScanners(pb.GetEquipmentInput{
+			IncludeMarketGoods: true,
+		})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Scanner{}
 	})
 
 	t.Run("GetShields", func(t *testing.T) {
-		items := FixtureTestItems[Shield](t, httpc, "/shields", "Shields", TestOpts{
+		items := FixtureTestItems[*Shield](t, httpc, "/shields", "Shields", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -527,6 +612,12 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetShields(pb.GetEquipmentInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Shield{}
 	})
 
 	t.Run("GetThrusters", func(t *testing.T) {
@@ -537,7 +628,7 @@ func TestApi(t *testing.T) {
 			}
 			assert.Nil(t, err)
 		}
-		items := FixtureTestItems[Thruster](t, httpc, "/thrusters", "Thrusters", TestOpts{
+		items := FixtureTestItems[*Thruster](t, httpc, "/thrusters", "Thrusters", TestOpts{
 			CheckMarketGoods: true,
 			CheckTechCompat:  true,
 		})
@@ -551,10 +642,22 @@ func TestApi(t *testing.T) {
 			}
 			assert.True(t, has_tech_compat)
 		}
+
+		var err error
+		items, err = api_client.GetThrusters(pb.GetEquipmentInput{})
+		logus.Log.CheckPanic(err, "errored to get items")
+		assert.Greater(t, len(items), 0)
+		items = []*Thruster{}
 	})
 
 	// // Teardown code for given condition goes here
 	web_closer.Close()
 }
 
-const ApplicationJson = "application/json"
+func getType(myvar interface{}) string {
+	if t := reflect.TypeOf(myvar); t.Kind() == reflect.Ptr {
+		return "*" + t.Elem().Name()
+	} else {
+		return t.Name()
+	}
+}

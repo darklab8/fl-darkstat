@@ -4,10 +4,14 @@ import (
 	"net/http"
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
+	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	_ "github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
+
+var GetPobsUrl = core_types.Url("" + ApiRoute + "/pobs")
 
 // ShowAccount godoc
 // @Summary      Getting list of Player Owned Bases
@@ -20,7 +24,7 @@ import (
 // @Router       /api/pobs [post]
 func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
-		Url: "" + ApiRoute + "/pobs",
+		Url: GetPobsUrl,
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if webapp.AppDataMutex != nil {
 				webapp.AppDataMutex.RLock()
@@ -30,6 +34,9 @@ func GetPoBs(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, api.app_data.Configs.PoBs)
 		},
 	}
+}
+func (c *HttpClient) GetPobs() ([]*configs_export.PoB, error) {
+	return make_request[EmptyInput, []*configs_export.PoB](c, GetPobsUrl, EmptyInput{})
 }
 
 // ShowAccount godoc
@@ -51,4 +58,7 @@ func GetPobGoods(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, api.app_data.Configs.PoBGoods)
 		},
 	}
+}
+func (c *HttpClient) GetPoBGoods() ([]*configs_export.PoBGood, error) {
+	return make_request[EmptyInput, []*configs_export.PoBGood](c, ""+ApiRoute+"/pob_goods", EmptyInput{})
 }

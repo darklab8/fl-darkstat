@@ -62,6 +62,9 @@ func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registr
 		},
 	}
 }
+func (c *HttpClient) GetInfocards(nicknames []string) ([]InfocardResp, error) {
+	return make_request[[]string, []InfocardResp](c, ""+ApiRoute+"/infocards", nicknames)
+}
 
 type InfocardResp struct {
 	Infocard *infocarder.Infocard `json:"infocard,omitempty"`

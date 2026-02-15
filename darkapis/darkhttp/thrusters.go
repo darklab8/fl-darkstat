@@ -71,3 +71,6 @@ func GetThrusters(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, output)
 		}}
 }
+func (c *HttpClient) GetThrusters(input pb.GetEquipmentInput) ([]*Thruster, error) {
+	return make_request[pb.GetEquipmentInput, []*Thruster](c, ""+ApiRoute+"/thrusters", input)
+}

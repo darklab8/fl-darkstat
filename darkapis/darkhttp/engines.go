@@ -72,3 +72,6 @@ func GetEngines(webapp *web.Web, api *Api) *registry.Endpoint {
 		},
 	}
 }
+func (c *HttpClient) GetEngines(input pb.GetEquipmentInput) ([]*Engine, error) {
+	return make_request[pb.GetEquipmentInput, []*Engine](c, ""+ApiRoute+"/engines", input)
+}

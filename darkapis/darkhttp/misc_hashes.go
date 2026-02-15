@@ -29,3 +29,6 @@ func GetHashes(webapp *web.Web, api *Api) *registry.Endpoint {
 		},
 	}
 }
+func (c *HttpClient) GetHashes() (darkgrpc_deprecated.Hashes, error) {
+	return make_request[EmptyInput, darkgrpc_deprecated.Hashes](c, ""+ApiRoute+"/hashes", EmptyInput{})
+}

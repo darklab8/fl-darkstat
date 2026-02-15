@@ -72,3 +72,6 @@ func GetCommodities(webapp *web.Web, api *Api) *registry.Endpoint {
 		},
 	}
 }
+func (c *HttpClient) GetCommodities(input pb.GetCommoditiesInput) ([]*Commodity, error) {
+	return make_request[pb.GetCommoditiesInput, []*Commodity](c, ""+ApiRoute+"/commodities", input)
+}

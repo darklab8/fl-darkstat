@@ -71,3 +71,6 @@ func GetCMs(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, output)
 		}}
 }
+func (c *HttpClient) GetCMs(input pb.GetEquipmentInput) ([]*CounterMeasure, error) {
+	return make_request[pb.GetEquipmentInput, []*CounterMeasure](c, ""+ApiRoute+"/counter_measures", input)
+}

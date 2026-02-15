@@ -10,6 +10,10 @@ const GlobalParamsCtxKey CtxKey = "global_params"
 
 type Url string
 
+func (u Url) ToStr() string {
+	return string(u)
+}
+
 type StaticFileKind int64
 
 const (

@@ -71,3 +71,6 @@ func GetMines(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, output)
 		}}
 }
+func (c *HttpClient) GetMines(input pb.GetEquipmentInput) ([]*Mine, error) {
+	return make_request[pb.GetEquipmentInput, []*Mine](c, ""+ApiRoute+"/mines", input)
+}

@@ -57,6 +57,9 @@ func GetGuns(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url:     "" + ApiRoute + "/guns",
 		Handler: GunHandler(webapp, api, api.app_data.Configs.Guns)}
 }
+func (c *HttpClient) GetGuns(input pb.GetGunsInput) ([]*Gun, error) {
+	return make_request[pb.GetGunsInput, []*Gun](c, ""+ApiRoute+"/guns", input)
+}
 
 func GunHandler(webapp *web.Web, api *Api, guns []configs_export.Gun) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -117,4 +120,7 @@ func GetMissiles(webapp *web.Web, api *Api) *registry.Endpoint {
 		Url:     "" + ApiRoute + "/missiles",
 		Handler: GunHandler(webapp, api, api.app_data.Configs.Missiles),
 	}
+}
+func (c *HttpClient) GetMissiles(input pb.GetGunsInput) ([]*Gun, error) {
+	return make_request[pb.GetGunsInput, []*Gun](c, ""+ApiRoute+"/missiles", input)
 }

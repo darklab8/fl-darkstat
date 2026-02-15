@@ -71,3 +71,6 @@ func GetShields(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, output)
 		}}
 }
+func (c *HttpClient) GetShields(input pb.GetEquipmentInput) ([]*Shield, error) {
+	return make_request[pb.GetEquipmentInput, []*Shield](c, ""+ApiRoute+"/shields", input)
+}

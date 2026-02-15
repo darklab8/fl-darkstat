@@ -32,3 +32,6 @@ func GetSystems(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, systems)
 		}}
 }
+func (c *HttpClient) GetSystems() ([]export_front.System, error) {
+	return make_request[EmptyInput, []export_front.System](c, ""+ApiRoute+"/systems", EmptyInput{})
+}

@@ -38,7 +38,7 @@ func RegisterApiRoutes(w *web.Web, app_data *appdata.AppData) *web.Web {
 	api_routes.Register(GetPobGoods(w, api))
 	api_routes.Register(darkgrpc_deprecated.GetPobGoodsDeprecated(w, api))
 	api_routes.Register(GetHashes(w, api))
-	api_routes.Register(PostGraphPaths(w, api))
+	api_routes.Register(GetGraphPaths(w, api))
 	api_routes.Register(GetBases(w, api))
 	api_routes.Register(GetOreFields(w, api))
 	api_routes.Register(PostBaseMarketGoods(w, api))

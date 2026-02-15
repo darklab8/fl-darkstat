@@ -81,3 +81,6 @@ func GetTractors(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, output)
 		}}
 }
+func (c *HttpClient) GetTractors(input pb.GetTractorsInput) ([]*Tractor, error) {
+	return make_request[pb.GetTractorsInput, []*Tractor](c, ""+ApiRoute+"/tractors", input)
+}

@@ -84,6 +84,9 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 	}
 
 }
+func (c *HttpClient) GetBases(input pb.GetBasesInput) ([]*Base, error) {
+	return make_request[pb.GetBasesInput, []*Base](c, ""+ApiRoute+"/npc_bases", input)
+}
 
 // ShowAccount godoc
 // @Summary      Getting list of Mining Operations
@@ -135,6 +138,9 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 		},
 	}
 }
+func (c *HttpClient) GetOreFields(input pb.GetBasesInput) ([]*Base, error) {
+	return make_request[pb.GetBasesInput, []*Base](c, ""+ApiRoute+"/mining_operations", input)
+}
 
 // ShowAccount godoc
 // @Summary      Getting list of Player Owned Bases in Bases format. Lists only pobs that have known position coordinates
@@ -181,4 +187,7 @@ func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 			apiutils.ReturnJson(&w, output)
 		},
 	}
+}
+func (c *HttpClient) GetPoBBases(input pb.GetBasesInput) ([]*Base, error) {
+	return make_request[pb.GetBasesInput, []*Base](c, ""+ApiRoute+"/pobs/bases", input)
 }

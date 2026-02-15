@@ -60,3 +60,6 @@ func GetFactions(webapp *web.Web, api *Api) *registry.Endpoint {
 		},
 	}
 }
+func (c *HttpClient) GetFactions(input pb.GetEquipmentInput) ([]configs_export.Faction, error) {
+	return make_request[pb.GetEquipmentInput, []configs_export.Faction](c, ""+ApiRoute+"/factions", input)
+}
