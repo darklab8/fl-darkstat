@@ -8,7 +8,6 @@ import (
 	"io"
 	"net"
 	"net/http"
-	"reflect"
 	"testing"
 	"time"
 
@@ -652,12 +651,4 @@ func TestApi(t *testing.T) {
 
 	// // Teardown code for given condition goes here
 	web_closer.Close()
-}
-
-func getType(myvar interface{}) string {
-	if t := reflect.TypeOf(myvar); t.Kind() == reflect.Ptr {
-		return "*" + t.Elem().Name()
-	} else {
-		return t.Name()
-	}
 }
