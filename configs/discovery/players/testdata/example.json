@@ -1,0 +1,90 @@
+{
+    "error": null,
+    "players": [
+        {
+            "time": "3h56",
+            "name": "[FPKM]-Trepidation",
+            "system": "Kyushu",
+            "region": "Kusari Space"
+        },
+        {
+            "time": "3h11",
+            "name": "sinewolf",
+            "system": "New London",
+            "region": "Bretonia Space"
+        },
+        {
+            "time": "1h44",
+            "name": "anasazi",
+            "system": "New York",
+            "region": "Liberty Space"
+        },
+        {
+            "time": "1h38",
+            "name": "Uniform-0",
+            "system": "Colorado",
+            "region": "Liberty Space"
+        },
+        {
+            "time": "1h35",
+            "name": "Brown.Free",
+            "system": "Hudson",
+            "region": "Independent Worlds"
+        },
+        {
+            "time": "1h33",
+            "name": "Kal_Dargo",
+            "system": "New Berlin",
+            "region": "Rheinland Space"
+        },
+        {
+            "time": "1h09",
+            "name": "Robert_90",
+            "system": "Tau-61",
+            "region": "Gallic Border Worlds"
+        },
+        {
+            "time": "1h07",
+            "name": "Paper.Swan",
+            "system": "Honshu",
+            "region": "Kusari Space"
+        },
+        {
+            "time": "55m",
+            "name": "[RHW]HEV\u003EExt.02",
+            "system": "Tau-23",
+            "region": "Tau Border Worlds"
+        },
+        {
+            "time": "47m",
+            "name": "ZDF-Hinaichigo",
+            "system": "Connecticut",
+            "region": "Uncharted Space"
+        },
+        {
+            "time": "39m",
+            "name": "BoWoTraCor",
+            "system": "New York",
+            "region": "Liberty Space"
+        },
+        {
+            "time": "14m",
+            "name": "Weiss]ISS-Ansbach",
+            "system": "Stuttgart",
+            "region": "Rheinland Space"
+        },
+        {
+            "time": "3m",
+            "name": "Carpincho[TBH]",
+            "system": "Omicron Gamma",
+            "region": "South Edge Worlds"
+        },
+        {
+            "time": "2m",
+            "name": "Bowex)H.Godwinson",
+            "system": "New London",
+            "region": "Bretonia Space"
+        }
+    ],
+    "timestamp": "2026-02-15T00:43:01"
+}

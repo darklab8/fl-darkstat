@@ -25,6 +25,6 @@ func (f *File) ReadBytes() ([]byte, error) {
 	}
 
 	resBody, err := os.ReadFile(f.filepath.ToString())
-	logus.Log.Error("client: could not read os.ReadFile body: %s\n", typelog.OptError(err))
+	logus.Log.CheckError(err, "client: could not read os.ReadFile body: %s\n", typelog.OptError(err))
 	return resBody, err
 }

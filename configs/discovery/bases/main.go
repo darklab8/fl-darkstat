@@ -6,7 +6,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/discovery/pob_goods"
@@ -31,10 +30,6 @@ type Config struct {
 
 func Read(ctx context.Context, file *file.File) (*Config, error) {
 	byteValue, err := file.ReadBytes()
-	if file_data := ctx.Value(cfg.CtxKey("pob_goods_data_override")); file_data != nil {
-		byteValue = file_data.([]byte)
-		err = nil
-	}
 
 	if logus.Log.CheckError(err, "failed to read file") {
 		return nil, errors.New("failed to read file")
