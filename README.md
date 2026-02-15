@@ -90,6 +90,8 @@ If u have problems with configuring development environment, then seek my contac
   - deployed Discovery can be found at https://darkstat.dd84ai.com/swagger/index.html
   - deployed Vanilla can be found at https://darkstat-vanilla.dd84ai.com/swagger/index.html
 
+JSON API has **[http api client lib](./darkapis/darkhttp/api_client.go)** written in Go. :)
+
 # gRPC existed but was removed
 
 In the past we offered **grpc client** too, but it **was decommissioned** in https://github.com/darklab8/fl-darkstat/pull/158 due being not very used and creating maintanance overhead
