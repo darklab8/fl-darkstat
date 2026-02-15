@@ -118,21 +118,7 @@ func prometheusMidleware(next http.Handler) http.Handler {
 
 		metrics.HttpResponseByIpFinishedTotal.WithLabelValues(ip, strconv.Itoa(rec.status)).Inc()
 
-		var useragent string
-		if ug := rec.Header().Get("useragent"); ug != "" {
-			useragent = ug
-		}
-		if ug := rec.Header().Get("user-agent"); ug != "" {
-			useragent = ug
-		}
-		if ug := rec.Header().Get("User-Agent"); ug != "" {
-			useragent = ug
-		}
-		if useragent == "" {
-			useragent = "nil"
-		}
-
-		metrics.HttpResponseByPatternAndUserAgentTotal.WithLabelValues(pattern, useragent).Inc()
+		metrics.HttpResponseByPatternAndUserAgentTotal.WithLabelValues(pattern, user_agent).Inc()
 		metrics.HttpResponseByIpDurationSum.WithLabelValues(ip, strconv.Itoa(rec.status)).Add(time_finish)
 	})
 }
