@@ -91,6 +91,8 @@ If u have problems with configuring development environment, then seek my contac
   - deployed Vanilla can be found at https://darkstat-vanilla.dd84ai.com/swagger/index.html
 
 JSON API has **[http api client lib](./darkapis/darkhttp/api_client.go)** written in Go. :)
+- [How to use it](./darkapis/darkhttp/api_client_test.go)
+- it has more methods, check [here for all of them](./darkapis/darkhttp/)
 
 # gRPC existed but was removed
 
