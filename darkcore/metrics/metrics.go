@@ -35,6 +35,11 @@ var (
 		Help: "Duration histogram of http request in seconds",
 	}, []string{"pattern", "status_code"})
 
+	HttpResponseByPatternAndUserAgentTotal *prometheus.CounterVec = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "darkstat_http_by_useragent_finished_total",
+		Help: "Count of http requests by useragent and pattern",
+	}, []string{"pattern", "useragent"})
+
 	HttpResponseByIpFinishedTotal *prometheus.CounterVec = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "darkstat_http_by_ip_finished_total",
 		Help: "Finished http requests by ip total",
@@ -67,6 +72,7 @@ func NewMetronom(mux *http.ServeMux) *Metronom {
 		}, newreg)
 	reg.MustRegister(
 		upTime,
+		HttpResponseByPatternAndUserAgentTotal,
 		HttpResponseByPatternDurationHist,
 		HttpResponseByIpFinishedTotal,
 		HttpResponseByIpDurationSum,
