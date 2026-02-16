@@ -2,7 +2,6 @@ package web
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -65,9 +64,9 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 			// http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
 			// redirect with delay instead
 			buf := bytes.NewBuffer([]byte{})
-			err = RedirectPage(
+			err = RedirectPageRender(
 				"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
-				"/").Render(context.Background(), buf)
+				"/", buf)
 			logus.Log.CheckError(err, "failed to redirect oauth response")
 			_, err = fmt.Fprint(w, buf.String())
 			logus.Log.CheckError(err, "failed to print into response")

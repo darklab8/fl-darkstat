@@ -2,7 +2,6 @@ package web
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -79,9 +78,9 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 		if settings.Env.IsDiscoOauthEnabled {
 			buf := bytes.NewBuffer([]byte{})
-			err := RedirectPage(
+			err := RedirectPageRender(
 				"Password is incorrect, sending to oauth in 3 seconds",
-				"/oauth").Render(context.Background(), buf)
+				"/oauth", buf)
 			Log.CheckError(err, "failed to render redirect page")
 			_, err = fmt.Fprint(w, buf.String())
 			Log.CheckError(err, "failed to print buf in auth middleware")
