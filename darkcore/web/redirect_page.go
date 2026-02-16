@@ -2,8 +2,8 @@ package web
 
 import (
 	"fmt"
-	"html/template"
 	"io"
+	"text/template"
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 )
@@ -20,7 +20,7 @@ func init() {
 	<head>
 		<meta charset="UTF-8"/>
 		<title>{ "darkstat oauth" }</title>
-		<meta http-equiv="refresh" content={{.SiteUrl}}/>
+		<meta http-equiv="refresh" content="{{.SiteUrl}}"/>
 	</head>
 	<body>
 		{{.Msg}}
