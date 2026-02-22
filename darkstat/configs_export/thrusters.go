@@ -6,22 +6,22 @@ import (
 )
 
 type Thruster struct {
-	Name       string  `json:"name" validate:"required"`
-	Price      int     `json:"price" validate:"required"`
-	MaxForce   int     `json:"max_force" validate:"required"`
-	PowerUsage int     `json:"power_usage" validate:"required"`
-	Efficiency float64 `json:"efficiency" validate:"required"`
-	Value      float64 `json:"value" validate:"required"`
-	HitPts     int     `json:"hit_pts" validate:"required"`
-	Lootable   bool    `json:"lootable" validate:"required"`
+	Name       string  `json:"name"`
+	Price      int     `json:"price"`
+	MaxForce   int     `json:"max_force"`
+	PowerUsage int     `json:"power_usage"`
+	Efficiency float64 `json:"efficiency"`
+	Value      float64 `json:"value"`
+	HitPts     int     `json:"hit_pts"`
+	Lootable   bool    `json:"lootable"`
 	Nickname   string  `json:"nickname" validate:"required"`
-	NameID     int     `json:"name_id" validate:"required"`
-	InfoID     int     `json:"info_id" validate:"required"`
+	NameID     int     `json:"name_id"`
+	InfoID     int     `json:"info_id"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
-	Mass                 float64 `json:"mass" validate:"required"`
+	Mass                 float64 `json:"mass"`
 }
 
 func (b Thruster) GetNickname() string { return string(b.Nickname) }

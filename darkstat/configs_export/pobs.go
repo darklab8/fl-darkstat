@@ -23,11 +23,11 @@ import (
 
 type ShopItem struct {
 	pob_goods.ShopItem
-	Nickname string `json:"nickname" validate:"required"`
-	Name     string `json:"name" validate:"required"`
-	Category string `json:"category" validate:"required"`
+	Nickname string `json:"nickname"`
+	Name     string `json:"name"`
+	Category string `json:"category"`
 
-	Volume         float64        `json:"volume" validate:"required"`
+	Volume         float64        `json:"volume"`
 	OriginalVolume float64        `json:"original_volume"`
 	ShipClass      *cfg.ShipClass `json:"ship_class"`
 }
@@ -49,8 +49,8 @@ func (d DefenseMode) ToStr() string {
 }
 
 type PoBCore struct {
-	Nickname string `json:"nickname" validate:"required"`
-	Name     string `json:"name" validate:"required"`
+	Nickname string `json:"nickname"`
+	Name     string `json:"name"`
 
 	Pos         *string      `json:"pos"`
 	Level       *int         `json:"level"`
@@ -75,7 +75,7 @@ type PoBCore struct {
 // also known as Player Base Station
 type PoB struct {
 	PoBCore
-	ShopItems []*ShopItem `json:"shop_items" validate:"required"`
+	ShopItems []*ShopItem `json:"shop_items"`
 }
 
 // ShopItemsLength counts without accounting for volume dupicates
@@ -93,19 +93,19 @@ func (b PoB) GetNickname() string { return string(b.Nickname) }
 
 type PoBGood struct {
 	Nickname              string `json:"nickname" validate:"required"`
-	Name                  string `json:"name" validate:"required"`
-	TotalBuyableFromBases int    `json:"total_buyable_from_bases" validate:"required"`
-	TotalSellableToBases  int    `json:"total_sellable_to_bases" validate:"required"`
+	Name                  string `json:"name"`
+	TotalBuyableFromBases int    `json:"total_buyable_from_bases"`
+	TotalSellableToBases  int    `json:"total_sellable_to_bases"`
 
 	BestPriceToBuy  *int `json:"best_price_to_buy"`
 	BestPriceToSell *int `json:"best_price_to_sell"`
 
-	Category string         `json:"category" validate:"required"`
-	Bases    []*PoBGoodBase `json:"bases" validate:"required"`
+	Category string         `json:"category"`
+	Bases    []*PoBGoodBase `json:"bases"`
 
-	AnyBaseSells   bool           `json:"any_base_sells" validate:"required"`
-	AnyBaseBuys    bool           `json:"any_base_buys" validate:"required"`
-	Volume         float64        `json:"volume" validate:"required"`
+	AnyBaseSells   bool           `json:"any_base_sells"`
+	AnyBaseBuys    bool           `json:"any_base_buys"`
+	Volume         float64        `json:"volume"`
 	OriginalVolume float64        `json:"original_volume"`
 	ShipClass      *cfg.ShipClass `json:"ship_class"`
 }
@@ -116,8 +116,8 @@ func (good PoBGood) BaseSells() bool { return good.AnyBaseSells }
 func (good PoBGood) BaseBuys() bool  { return good.AnyBaseBuys }
 
 type PoBGoodBase struct {
-	ShopItem *ShopItem `json:"shop_item" validate:"required"`
-	Base     *PoBCore  `json:"base" validate:"required"`
+	ShopItem *ShopItem `json:"shop_item"`
+	Base     *PoBCore  `json:"base"`
 }
 
 type PoBsToBasesInput struct {

@@ -21,7 +21,12 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
+	"github.com/go-playground/validator/v10"
 	"github.com/stretchr/testify/assert"
+)
+
+var (
+	validate = validator.New(validator.WithRequiredStructEnabled())
 )
 
 type TestOpts struct {
@@ -62,7 +67,23 @@ func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string
 	assert.Greater(t, len(items), 0)
 	fmt.Println(items[0])
 
+	for _, item := range items {
+		err := validate.Struct(item)
+		assert.Nil(t, err, "validated correctly"+ErrStr(err))
+
+		// if err != nil {
+		// 	return items
+		// }
+	}
+
 	return items
+}
+
+func ErrStr(err error) string {
+	if err == nil {
+		return "nil"
+	}
+	return err.Error()
 }
 
 func TestApiHealth(t *testing.T) {

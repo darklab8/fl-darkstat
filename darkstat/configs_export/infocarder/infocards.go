@@ -41,13 +41,13 @@ func (c *Infocarder) GetInfocardsDict(callback func(infocards Infocards)) {
 }
 
 type InfocardPhrase struct {
-	Phrase string  `json:"phrase"  validate:"required"`
+	Phrase string  `json:"phrase"`
 	Link   *string `json:"link"`
-	Bold   bool    `json:"bold"  validate:"required"`
+	Bold   bool    `json:"bold"`
 }
 
 type InfocardLine struct {
-	Phrases []InfocardPhrase `json:"phrases"  validate:"required"`
+	Phrases []InfocardPhrase `json:"phrases"`
 }
 
 func (i InfocardLine) ToStr() string {

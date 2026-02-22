@@ -20,8 +20,8 @@ const intgmax = Intg(math.MaxInt32)
 
 type GameGraph struct {
 	matrix                    map[VertexName]map[VertexName]float64
-	IndexByNick               map[VertexName]Intg `json:"index_by_nickname" validate:"required"`
-	NicknameByIndex           map[Intg]VertexName `json:"nickname_by_index" validate:"required"`
+	IndexByNick               map[VertexName]Intg `json:"index_by_nickname"`
+	NicknameByIndex           map[Intg]VertexName `json:"nickname_by_index"`
 	AllowedVertixesForCalcs   map[VertexName]bool // Consider deleting this
 	AvgCruiseSpeed            Intg
 	idsNamesByNick            map[VertexName]int

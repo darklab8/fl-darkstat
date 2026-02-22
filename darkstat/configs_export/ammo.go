@@ -7,26 +7,26 @@ import (
 )
 
 type Ammo struct {
-	Name  string `json:"name" validate:"required"`
-	Price int    `json:"price" validate:"required"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 
-	HitPts           int     `json:"hit_pts" validate:"required"`
-	Volume           float64 `json:"volume" validate:"required"`
-	MunitionLifetime float64 `json:"munition_lifetime" validate:"required"`
+	HitPts           int     `json:"hit_pts"`
+	Volume           float64 `json:"volume"`
+	MunitionLifetime float64 `json:"munition_lifetime"`
 
-	Nickname     string `json:"nickname" validate:"required"`
-	NameID       int    `json:"name_id" validate:"required"`
-	InfoID       int    `json:"info_id" validate:"required"`
-	SeekerType   string `json:"seeker_type" validate:"required"`
-	SeekerRange  int    `json:"seeker_range" validate:"required"`
-	SeekerFovDeg int    `json:"seeker_fov_deg" validate:"required"`
+	Nickname     string `json:"nickname"`
+	NameID       int    `json:"name_id"`
+	InfoID       int    `json:"info_id"`
+	SeekerType   string `json:"seeker_type"`
+	SeekerRange  int    `json:"seeker_range"`
+	SeekerFovDeg int    `json:"seeker_fov_deg"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 
-	AmmoLimit AmmoLimit `json:"ammo_limit" validate:"required"`
-	Mass      float64   `json:"mass" validate:"required"`
+	AmmoLimit AmmoLimit `json:"ammo_limit"`
+	Mass      float64   `json:"mass"`
 }
 
 func (b Ammo) GetNickname() string { return string(b.Nickname) }

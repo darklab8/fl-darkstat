@@ -6,21 +6,21 @@ import (
 )
 
 type Scanner struct {
-	Name  string `json:"name" validate:"required"`
-	Price int    `json:"price" validate:"required"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 
-	Range          int `json:"range" validate:"required"`
-	CargoScanRange int `json:"cargo_scan_range" validate:"required"`
+	Range          int `json:"range"`
+	CargoScanRange int `json:"cargo_scan_range"`
 
-	Lootable bool   `json:"lootable" validate:"required"`
+	Lootable bool   `json:"lootable"`
 	Nickname string `json:"nickname" validate:"required"`
-	NameID   int    `json:"name_id" validate:"required"`
-	InfoID   int    `json:"info_id" validate:"required"`
+	NameID   int    `json:"name_id"`
+	InfoID   int    `json:"info_id"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
-	Mass                 float64 `json:"mass" validate:"required"`
+	Mass                 float64 `json:"mass"`
 }
 
 func (b Scanner) GetNickname() string { return string(b.Nickname) }

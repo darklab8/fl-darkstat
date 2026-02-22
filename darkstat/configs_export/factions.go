@@ -11,35 +11,35 @@ import (
 )
 
 type Reputation struct {
-	Name     string  `json:"name"  validate:"required"`
-	Rep      float64 `json:"rep"  validate:"required"`
-	Empathy  float64 `json:"empathy"  validate:"required"`
-	Nickname string  `json:"nickname"  validate:"required"`
+	Name     string  `json:"name"`
+	Rep      float64 `json:"rep"`
+	Empathy  float64 `json:"empathy"`
+	Nickname string  `json:"nickname" validate:"required"`
 }
 
 type Faction struct {
-	Name      string `json:"name"  validate:"required"`
-	ShortName string `json:"short_name"  validate:"required"`
-	Nickname  string `json:"nickname"  validate:"required"`
+	Name      string `json:"name"`
+	ShortName string `json:"short_name"`
+	Nickname  string `json:"nickname"`
 
-	ObjectDestruction float64 `json:"object_destruction"  validate:"required"`
-	MissionSuccess    float64 `json:"mission_success"  validate:"required"`
-	MissionFailure    float64 `json:"mission_failure"  validate:"required"`
-	MissionAbort      float64 `json:"mission_abort"  validate:"required"`
+	ObjectDestruction float64 `json:"object_destruction"`
+	MissionSuccess    float64 `json:"mission_success"`
+	MissionFailure    float64 `json:"mission_failure"`
+	MissionAbort      float64 `json:"mission_abort"`
 
-	InfonameID  int                    `json:"infoname_id"  validate:"required"`
-	InfocardID  int                    `json:"infocard_id"  validate:"required"`
+	InfonameID  int                    `json:"infoname_id"`
+	InfocardID  int                    `json:"infocard_id"`
 	InfocardKey infocarder.InfocardKey `json:"-" swaggerignore:"true"`
-	Reputations []Reputation           `json:"reputations"  validate:"required"`
-	Bribes      []Bribe                `json:"bribe"  validate:"required"`
+	Reputations []Reputation           `json:"reputations"`
+	Bribes      []Bribe                `json:"bribe"`
 }
 
 func (b Faction) GetNickname() string { return string(b.Nickname) }
 
 type Bribe struct {
-	BaseNickname string `json:"base_nickname"  validate:"required"`
+	BaseNickname string `json:"base_nickname"`
 	BaseInfo
-	Chance float64 `json:"chance"  validate:"required"`
+	Chance float64 `json:"chance"`
 }
 
 func (e *Exporter) GetFactions(bases []*Base) []Faction {

@@ -8,14 +8,14 @@ import (
 )
 
 type ExtraItem struct {
-	Name  string `json:"name"  validate:"required"`
-	Price int    `json:"price"  validate:"required"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 
-	Category string `json:"category"  validate:"required"`
-	Lootable bool   `json:"lootable"  validate:"required"`
-	Nickname string `json:"nickname"  validate:"required"`
-	NameID   int    `json:"name_id"  validate:"required"`
-	InfoID   int    `json:"indo_id"  validate:"required"`
+	Category string `json:"category"`
+	Lootable bool   `json:"lootable"`
+	Nickname string `json:"nickname"`
+	NameID   int    `json:"name_id"`
+	InfoID   int    `json:"indo_id"`
 
 	Mass   float64 `json:"mass"`
 	HpType string  `json:"hp_type"`

@@ -16,14 +16,14 @@ import (
 type MarketGood struct {
 	GoodInfo
 
-	LevelRequired        int            `json:"level_required" validate:"required"`
-	RepRequired          float64        `json:"rep_required" validate:"required"`
+	LevelRequired        int            `json:"level_required"`
+	RepRequired          float64        `json:"rep_required"`
 	PriceBaseBuysFor     *int           `json:"price_base_buys_for"`
-	PriceBaseSellsFor    int            `json:"price_base_sells_for" validate:"required"`
-	Volume               float64        `json:"volume" validate:"required"`
+	PriceBaseSellsFor    int            `json:"price_base_sells_for"`
+	Volume               float64        `json:"volume"`
 	ShipClass            *cfg.ShipClass `json:"ship_class"` // Discovery specific value. Volume can be different based on ship class. Duplicating market goods with different volumes for that
-	BaseSells            bool           `json:"base_sells" validate:"required"`
-	IsServerSideOverride bool           `json:"is_server_override" validate:"required"`
+	BaseSells            bool           `json:"base_sells"`
+	IsServerSideOverride bool           `json:"is_server_override"`
 
 	NotBuyable             bool `json:"-" swaggerignore:"true"`
 	IsTransportUnreachable bool `json:"-" swaggerignore:"true"`
@@ -44,20 +44,20 @@ func (g MarketGood) GetPriceBaseBuysFor() int {
 }
 
 type Commodity struct {
-	Nickname              string                          `json:"nickname"  validate:"required"`
-	PriceBase             int                             `json:"price_base"  validate:"required"`
-	Name                  string                          `json:"name"  validate:"required"`
-	Combinable            bool                            `json:"combinable"  validate:"required"`
-	Volume                float64                         `json:"volume"  validate:"required"`
+	Nickname              string                          `json:"nickname" validate:"required"`
+	PriceBase             int                             `json:"price_base"`
+	Name                  string                          `json:"name"`
+	Combinable            bool                            `json:"combinable"`
+	Volume                float64                         `json:"volume"`
 	ShipClass             *cfg.ShipClass                  `json:"ship_class"`
-	NameID                int                             `json:"name_id"  validate:"required"`
-	InfocardID            int                             `json:"infocard_id"  validate:"required"`
-	Infocard              infocarder.InfocardKey          `json:"infocard_key"  validate:"required"`
+	NameID                int                             `json:"name_id"`
+	InfocardID            int                             `json:"infocard_id"`
+	Infocard              infocarder.InfocardKey          `json:"infocard_key"`
 	Bases                 map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
-	PriceBestBaseBuysFor  int                             `json:"price_best_base_buys_for"  validate:"required"`
-	PriceBestBaseSellsFor int                             `json:"price_best_base_sells_for"  validate:"required"`
-	ProffitMargin         int                             `json:"proffit_margin"  validate:"required"`
-	Mass                  float64                         `json:"mass"  validate:"required"`
+	PriceBestBaseBuysFor  int                             `json:"price_best_base_buys_for"`
+	PriceBestBaseSellsFor int                             `json:"price_best_base_sells_for"`
+	ProffitMargin         int                             `json:"proffit_margin"`
+	Mass                  float64                         `json:"mass"`
 }
 
 func (b Commodity) GetNickname() string { return string(b.Nickname) }
@@ -341,13 +341,13 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 }
 
 type BaseInfo struct {
-	BaseNickname cfg.BaseUniNick `json:"base_nickname" validate:"required"`
-	BaseName     string          `json:"base_name" validate:"required"`
-	SystemName   string          `json:"system_name" validate:"required"`
-	Region       string          `json:"region_name" validate:"required"`
-	FactionName  string          `json:"faction_name" validate:"required"`
-	BasePos      cfg.Vector      `json:"base_pos" validate:"required"`
-	SectorCoord  string          `json:"sector_coord" validate:"required"`
+	BaseNickname cfg.BaseUniNick `json:"base_nickname"`
+	BaseName     string          `json:"base_name"`
+	SystemName   string          `json:"system_name"`
+	Region       string          `json:"region_name"`
+	FactionName  string          `json:"faction_name"`
+	BasePos      cfg.Vector      `json:"base_pos"`
+	SectorCoord  string          `json:"sector_coord"`
 }
 
 func (e *Exporter) GetRegionName(system *universe_mapped.System) string {

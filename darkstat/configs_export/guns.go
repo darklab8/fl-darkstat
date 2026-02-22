@@ -15,56 +15,56 @@ import (
 )
 
 type DamageBonus struct {
-	Type     string  `json:"type" validate:"required"`
-	Modifier float64 `json:"modifier" validate:"required"`
+	Type     string  `json:"type"`
+	Modifier float64 `json:"modifier"`
 }
 
 func (g Gun) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Gun struct {
-	Nickname string  `json:"nickname"  validate:"required"`
-	Name     string  `json:"name"  validate:"required"`
-	Type     string  `json:"type"  validate:"required"`
-	Price    int     `json:"price"  validate:"required"`
-	Class    string  `json:"class"  validate:"required"`
-	HpType   string  `json:"hp_type"  validate:"required"`
-	IdsName  int     `json:"ids_name"  validate:"required"`
-	IdsInfo  int     `json:"ids_info" validate:"required"`
-	Volume   float64 `json:"volume" validate:"required"`
+	Nickname string  `json:"nickname" validate:"required"`
+	Name     string  `json:"name"`
+	Type     string  `json:"type"`
+	Price    int     `json:"price"`
+	Class    string  `json:"class"`
+	HpType   string  `json:"hp_type"`
+	IdsName  int     `json:"ids_name"`
+	IdsInfo  int     `json:"ids_info"`
+	Volume   float64 `json:"volume"`
 
-	HitPts       string  `json:"hit_pts"  validate:"required"`
-	PowerUsage   float64 `json:"power_usage"  validate:"required"`
-	Refire       float64 `json:"refire" validate:"required"`
-	Range        float64 `json:"range"  validate:"required"`
-	Toughness    float64 `json:"toughness"  validate:"required"`
-	IsAutoTurret bool    `json:"is_auto_turret"  validate:"required"`
-	Lootable     bool    `json:"lootable"  validate:"required"`
+	HitPts       string  `json:"hit_pts"`
+	PowerUsage   float64 `json:"power_usage"`
+	Refire       float64 `json:"refire"`
+	Range        float64 `json:"range"`
+	Toughness    float64 `json:"toughness"`
+	IsAutoTurret bool    `json:"is_auto_turret"`
+	Lootable     bool    `json:"lootable"`
 
-	RequiredAmmo bool `json:"required_ammo"  validate:"required"`
+	RequiredAmmo bool `json:"required_ammo"`
 	// AmmoPrice     int
 	// AmmoBases     []*GoodAtBase
 	// AmmoName      string
-	HullDamage      int     `json:"hull_damage"  validate:"required"`
-	EnergyDamage    int     `json:"energy_damage"  validate:"required"`
-	ShieldDamage    int     `json:"shield_damage" validate:"required"`
-	AvgShieldDamage int     `json:"avg_shield_damage"  validate:"required"`
-	DamageType      string  `json:"damage_type"  validate:"required"`
-	LifeTime        float64 `json:"life_time" validate:"required"`
-	Speed           float64 `json:"speed" validate:"required"`
-	GunTurnRate     float64 `json:"gun_turn_rate" validate:"required"`
-	DispersionAngle float64 `json:"dispersion_angle" validate:"required"`
+	HullDamage      int     `json:"hull_damage"`
+	EnergyDamage    int     `json:"energy_damage"`
+	ShieldDamage    int     `json:"shield_damage"`
+	AvgShieldDamage int     `json:"avg_shield_damage"`
+	DamageType      string  `json:"damage_type"`
+	LifeTime        float64 `json:"life_time"`
+	Speed           float64 `json:"speed"`
+	GunTurnRate     float64 `json:"gun_turn_rate"`
+	DispersionAngle float64 `json:"dispersion_angle"`
 
-	HullDamagePerSec       float64 `json:"hull_damage_per_sec"  validate:"required"`
-	AvgShieldDamagePerSec  float64 `json:"avg_shield_damage_per_sec" validate:"required"`
-	EnergyDamagePerSec     float64 `json:"energy_damage_per_sec" validate:"required"`
-	PowerUsagePerSec       float64 `json:"power_usage_per_sec" validate:"required"`
-	AvgEfficiency          float64 `json:"avg_efficiency" validate:"required"`
-	HullEfficiency         float64 `json:"hull_efficiency" validate:"required"`
-	ShieldEfficiency       float64 `json:"shield_efficiency" validate:"required"`
-	EnergyDamageEfficiency float64 `json:"energy_damage_efficiency" validate:"required"`
+	HullDamagePerSec       float64 `json:"hull_damage_per_sec"`
+	AvgShieldDamagePerSec  float64 `json:"avg_shield_damage_per_sec"`
+	EnergyDamagePerSec     float64 `json:"energy_damage_per_sec"`
+	PowerUsagePerSec       float64 `json:"power_usage_per_sec"`
+	AvgEfficiency          float64 `json:"avg_efficiency"`
+	HullEfficiency         float64 `json:"hull_efficiency"`
+	ShieldEfficiency       float64 `json:"shield_efficiency"`
+	EnergyDamageEfficiency float64 `json:"energy_damage_efficiency"`
 
 	Bases         map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
-	DamageBonuses []DamageBonus                   `json:"damage_bonuses" validate:"required"`
+	DamageBonuses []DamageBonus                   `json:"damage_bonuses"`
 
 	Missile
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
@@ -73,7 +73,7 @@ type Gun struct {
 	BurstFire  *BurstFire `json:"burst_fire,omitempty"`
 	AmmoLimit  AmmoLimit  `json:"ammo_limit,omitempty"`
 
-	Mass float64 `json:"mass" validate:"required"`
+	Mass float64 `json:"mass"`
 
 	DiscoGun *DiscoGun `json:"disco_gun"`
 }
@@ -85,18 +85,18 @@ func (b Gun) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
 func (b Gun) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
 type DiscoGun struct {
-	ArmorPen float64 `json:"armor_pen" validate:"required"`
+	ArmorPen float64 `json:"armor_pen"`
 }
 
 type BurstFire struct {
-	SustainedRefire float64 `json:"sustained_fire" validate:"required"`
-	Ammo            int     `json:"ammo" validate:"required"`
-	ReloadTime      float64 `json:"reload_time" validate:"required"`
+	SustainedRefire float64 `json:"sustained_fire"`
+	Ammo            int     `json:"ammo"`
+	ReloadTime      float64 `json:"reload_time"`
 
-	SustainedHullDamagePerSec      float64 `json:"sustained_hull_dmg_per_sec" validate:"required"`
-	SustainedAvgShieldDamagePerSec float64 `json:"sustained_avg_shield_dmg_per_sec" validate:"required"`
-	SustainedEnergyDamagePerSec    float64 `json:"sustained_energy_dmg_per_sec" validate:"required"`
-	SustainedPowerUsagePerSec      float64 `json:"sustained_pwer_usage_per_sec" validate:"required"`
+	SustainedHullDamagePerSec      float64 `json:"sustained_hull_dmg_per_sec"`
+	SustainedAvgShieldDamagePerSec float64 `json:"sustained_avg_shield_dmg_per_sec"`
+	SustainedEnergyDamagePerSec    float64 `json:"sustained_energy_dmg_per_sec"`
+	SustainedPowerUsagePerSec      float64 `json:"sustained_pwer_usage_per_sec"`
 }
 
 func getGunClass(gun_info *equip_mapped.Gun) string {

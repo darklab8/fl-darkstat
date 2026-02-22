@@ -15,47 +15,47 @@ import (
 func (g Ship) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type ShipPackage struct {
-	Nickname           string                   `json:"nickname" validate:"required"`
-	equipped_thrusters []*equip_mapped.Thruster `json:"-" validate:"required"`
+	Nickname           string                   `json:"nickname"`
+	equipped_thrusters []*equip_mapped.Thruster `json:"-"`
 }
 
 type Ship struct {
 	Nickname  string  `json:"nickname" validate:"required"`
-	Name      string  `json:"name" validate:"required"`
-	Class     int     `json:"class" validate:"required"`
-	Type      string  `json:"type" validate:"required"`
-	Price     int     `json:"price" validate:"required"`
-	Armor     int     `json:"armor" validate:"required"`
-	HoldSize  int     `json:"hold_size" validate:"required"`
-	Nanobots  int     `json:"nanobots" validate:"required"`
-	Batteries int     `json:"batteries" validate:"required"`
-	Mass      float64 `json:"mass" validate:"required"`
+	Name      string  `json:"name"`
+	Class     int     `json:"class"`
+	Type      string  `json:"type"`
+	Price     int     `json:"price"`
+	Armor     int     `json:"armor"`
+	HoldSize  int     `json:"hold_size"`
+	Nanobots  int     `json:"nanobots"`
+	Batteries int     `json:"batteries"`
+	Mass      float64 `json:"mass"`
 
-	PowerCapacity     int     `json:"power_capacity" validate:"required"`
-	PowerRechargeRate int     `json:"power_recharge_rate" validate:"required"`
-	CruiseSpeed       int     `json:"cruise_speed" validate:"required"`
-	LinearDrag        float64 `json:"linear_drag" validate:"required"`
-	EngineMaxForce    int     `json:"engine_max_force" validate:"required"`
-	ImpulseSpeed      float64 `json:"impulse_speed" validate:"required"`
-	ThrusterSpeed     []int   `json:"thruster_speed" validate:"required"`
-	ReverseFraction   float64 `json:"reverse_fraction" validate:"required"`
-	ThrustCapacity    int     `json:"thrust_capacity" validate:"required"`
-	ThrustRecharge    int     `json:"thrust_recharge" validate:"required"`
+	PowerCapacity     int     `json:"power_capacity"`
+	PowerRechargeRate int     `json:"power_recharge_rate"`
+	CruiseSpeed       int     `json:"cruise_speed"`
+	LinearDrag        float64 `json:"linear_drag"`
+	EngineMaxForce    int     `json:"engine_max_force"`
+	ImpulseSpeed      float64 `json:"impulse_speed"`
+	ThrusterSpeed     []int   `json:"thruster_speed"`
+	ReverseFraction   float64 `json:"reverse_fraction"`
+	ThrustCapacity    int     `json:"thrust_capacity"`
+	ThrustRecharge    int     `json:"thrust_recharge"`
 
-	MaxAngularSpeedDegS           float64 `json:"max_ansgular_speed" validate:"required"`
-	AngularDistanceFrom0ToHalfSec float64 `json:"angular_distance_from_0_to_halfsec" validate:"required"`
-	TimeTo90MaxAngularSpeed       float64 `json:"time_to_90_max_angular_speed" validate:"required"`
+	MaxAngularSpeedDegS           float64 `json:"max_ansgular_speed"`
+	AngularDistanceFrom0ToHalfSec float64 `json:"angular_distance_from_0_to_halfsec"`
+	TimeTo90MaxAngularSpeed       float64 `json:"time_to_90_max_angular_speed"`
 
-	NudgeForce  float64 `json:"nudge_force" validate:"required"`
-	StrafeForce float64 `json:"strafe_force" validate:"required"`
-	NameID      int     `json:"name_id" validate:"required"`
-	InfoID      int     `json:"info_id" validate:"required"`
+	NudgeForce  float64 `json:"nudge_force"`
+	StrafeForce float64 `json:"strafe_force"`
+	NameID      int     `json:"name_id"`
+	InfoID      int     `json:"info_id"`
 
 	MissionProperty  string                          `json:"-" swaggerignore:"true"`
 	Bases            map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
-	Slots            []EquipmentSlot                 `json:"equipment_slots" validate:"required"`
-	BiggestHardpoint []string                        `json:"biggest_hardpoint" validate:"required"`
-	ShipPackages     []ShipPackage                   `json:"ship_packages" validate:"required"`
+	Slots            []EquipmentSlot                 `json:"equipment_slots"`
+	BiggestHardpoint []string                        `json:"biggest_hardpoint"`
+	ShipPackages     []ShipPackage                   `json:"ship_packages"`
 
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
 
@@ -173,7 +173,7 @@ func (s *Ship) getThrusterSpeed(
 }
 
 type DiscoShip struct {
-	ArmorMult float64 `json:"armor_mult" validate:"required"`
+	ArmorMult float64 `json:"armor_mult"`
 }
 
 func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Tractor, Thrusters []Thruster) []Ship {
@@ -384,8 +384,8 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 }
 
 type EquipmentSlot struct {
-	SlotName     string   `json:"slot_name" validate:"required"`
-	AllowedEquip []string `json:"allowed_equip" validate:"required"`
+	SlotName     string   `json:"slot_name"`
+	AllowedEquip []string `json:"allowed_equip"`
 }
 
 var Pi180 = 180 / math.Pi // number turning radians to degrees

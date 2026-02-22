@@ -6,19 +6,19 @@ import (
 )
 
 type Cloak struct {
-	Name  string `json:"name" validate:"required"`
-	Price int    `json:"price" validate:"required"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 
-	HitPts int     `json:"hit_pts" validate:"required"`
-	Volume float64 `json:"volume" validate:"required"`
+	HitPts int     `json:"hit_pts"`
+	Volume float64 `json:"volume"`
 
 	Nickname string `json:"nickname" validate:"required"`
-	NameID   int    `json:"name_id" validate:"required"`
-	InfoID   int    `json:"info_id" validate:"required"`
+	NameID   int    `json:"name_id"`
+	InfoID   int    `json:"info_id"`
 
-	PowerUsage   float64 `json:"power_usage" validate:"required"`
-	CloakInTime  int     `json:"cloakintime" validate:"required"`
-	CloakOutTime int     `json:"cloakouttime" validate:"required"`
+	PowerUsage   float64 `json:"power_usage"`
+	CloakInTime  int     `json:"cloakintime"`
+	CloakOutTime int     `json:"cloakouttime"`
 
 	Bases                map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`

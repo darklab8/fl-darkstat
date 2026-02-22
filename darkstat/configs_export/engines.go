@@ -9,27 +9,27 @@ import (
 func (g Engine) GetTechCompat() *DiscoveryTechCompat { return g.DiscoveryTechCompat }
 
 type Engine struct {
-	Name  string `json:"name"  validate:"required"`
-	Price int    `json:"price"  validate:"required"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 
-	CruiseSpeed      int     `json:"cruise_speed"  validate:"required"`
-	CruiseChargeTime int     `json:"cruise_charge_time"  validate:"required"`
-	LinearDrag       int     `json:"linear_drag"  validate:"required"`
-	MaxForce         int     `json:"max_force"  validate:"required"`
-	ReverseFraction  float64 `json:"reverse_fraction"  validate:"required"`
-	ImpulseSpeed     float64 `json:"impulse_speed"  validate:"required"`
+	CruiseSpeed      int     `json:"cruise_speed"`
+	CruiseChargeTime int     `json:"cruise_charge_time"`
+	LinearDrag       int     `json:"linear_drag"`
+	MaxForce         int     `json:"max_force"`
+	ReverseFraction  float64 `json:"reverse_fraction"`
+	ImpulseSpeed     float64 `json:"impulse_speed"`
 
-	HpType      string `json:"hp_type"  validate:"required"`
-	FlameEffect string `json:"flame_effect"  validate:"required"`
-	TrailEffect string `json:"trail_effect"  validate:"required"`
+	HpType      string `json:"hp_type"`
+	FlameEffect string `json:"flame_effect"`
+	TrailEffect string `json:"trail_effect"`
 
-	Nickname string `json:"nickname"  validate:"required"`
-	NameID   int    `json:"name_id"  validate:"required"`
-	InfoID   int    `json:"info_id"  validate:"required"`
+	Nickname string `json:"nickname" validate:"required"`
+	NameID   int    `json:"name_id"`
+	InfoID   int    `json:"info_id"`
 
 	Bases                map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 	*DiscoveryTechCompat `json:"-" swaggerignore:"true"`
-	Mass                 float64 `json:"mass"  validate:"required"`
+	Mass                 float64 `json:"mass"`
 }
 
 func (b Engine) GetNickname() string { return string(b.Nickname) }
