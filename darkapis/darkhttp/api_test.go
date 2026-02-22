@@ -71,9 +71,8 @@ func FixtureTestItems[T Nicknamable](t *testing.T, httpc http.Client, url string
 		err := validate.Struct(item)
 		assert.Nil(t, err, "validated correctly"+ErrStr(err))
 
-		// if err != nil {
-		// 	return items
-		// }
+		data, _ := json.Marshal(item)
+		logus.Log.CheckError(err, "failed to validete", typelog.Any("data", string(data)))
 	}
 
 	return items
