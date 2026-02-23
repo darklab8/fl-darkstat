@@ -1,4 +1,4 @@
-package darkrpc
+package darkrpc_deprecated
 
 import (
 	"fmt"

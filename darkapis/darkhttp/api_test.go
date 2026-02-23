@@ -345,6 +345,15 @@ func TestApi(t *testing.T) {
 		items = []*Ship{}
 	})
 
+	t.Run("GetInfo", func(t *testing.T) {
+		var reply *GetInfoReply
+		reply, err := api_client.GetInfo(GetInfoArgs{Query: "Akabat"})
+		logus.Log.CheckPanic(err, "failed to get info")
+		fmt.Println("Content=", reply.Content)
+
+		assert.Greater(t, len(reply.Content), 0)
+	})
+
 	t.Run("GetTractors", func(t *testing.T) {
 		if !app_data.Configs.IsDiscovery {
 			return

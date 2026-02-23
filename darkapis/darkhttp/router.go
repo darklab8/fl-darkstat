@@ -80,6 +80,7 @@ func RegisterApiRoutes(w *web.Web, app_data *appdata.AppData) *web.Web {
 	api_routes.Register(GetPoBBases(w, api))
 	api_routes.Register(GetInfocards(w, api.app_data, api))
 	api_routes.Register(GetSystems(w, api))
+	api_routes.Register(GetInfo(w, api))
 
 	w.GetMux().Handle("GET /swagger/", httpSwagger.Handler(
 		httpSwagger.URL("/swagger/doc.json"),

@@ -1,4 +1,4 @@
-package darkrpc
+package darkrpc_deprecated
 
 import (
 	"fmt"
@@ -99,7 +99,6 @@ func (r *ClientRpc) getClient() (*rpc.Client, error) {
 type RpcI interface {
 	GetBases(args Args, reply *Reply) error
 	GetHealth(args Args, reply *bool) error
-	GetInfo(args GetInfoArgs, reply *GetInfoReply) error
 }
 
 func (t *ServerRpc) GetBases(args Args, reply *Reply) error {

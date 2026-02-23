@@ -19,7 +19,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
-	"github.com/darklab8/fl-darkstat/darkapis/darkrpc"
+	"github.com/darklab8/fl-darkstat/darkapis/darkrpc_deprecated"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
@@ -243,11 +243,11 @@ func main() {
 
 		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(settings.Env.RelayPort)})
 
-		var rpc_opts []darkrpc.ServerOpt
+		var rpc_opts []darkrpc_deprecated.ServerOpt
 		if settings.Env.EnableUnixSockets {
-			rpc_opts = append(rpc_opts, darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
+			rpc_opts = append(rpc_opts, darkrpc_deprecated.WithSockSrv(darkrpc_deprecated.DarkstatRpcSock))
 		}
-		rpc_server := darkrpc.NewRpcServer(rpc_opts...)
+		rpc_server := darkrpc_deprecated.NewRpcServer(rpc_opts...)
 		rpc_server.Serve(app_data)
 
 		metronom := metrics.NewMetronom(web_server.GetMux())

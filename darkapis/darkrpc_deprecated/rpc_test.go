@@ -1,4 +1,4 @@
-package darkrpc
+package darkrpc_deprecated
 
 import (
 	"context"
@@ -44,13 +44,6 @@ func TestRpc(t *testing.T) {
 		err := client.GetBases(args, &reply)
 		logus.Log.CheckPanic(err, "failed to get bases")
 		fmt.Println("Bases[0]=", reply.Bases[0])
-	})
-
-	t.Run("GetInfo", func(t *testing.T) {
-		var reply GetInfoReply
-		err := client.GetInfo(GetInfoArgs{Query: "Akabat"}, &reply)
-		logus.Log.CheckPanic(err, "failed to get info")
-		fmt.Println("Content=", reply.Content)
 	})
 
 	// Teardown code for given condition goes here

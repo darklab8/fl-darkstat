@@ -1,11 +1,16 @@
-package darkrpc
+package darkhttp
 
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"sort"
 	"strings"
 
+	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
+	"github.com/darklab8/fl-darkstat/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
@@ -21,12 +26,12 @@ type GetInfoReply struct {
 	Found   []InfoFound
 }
 
-func (t *ServerRpc) IsInfoFound(args GetInfoArgs, name string, nickname string) (bool, bool) {
+func IsInfoFound(t *Api, args GetInfoArgs, name string, nickname string) (bool, bool) {
 	lowered_query := strings.ToLower(args.Query)
 
-	ok1, is_match1 := t.isInfoFound(lowered_query, name, nickname)
+	ok1, is_match1 := isInfoFound(t, lowered_query, name, nickname)
 
-	ok2, is_match2 := t.isInfoFound(strings.ReplaceAll(lowered_query, " ", ""), strings.ReplaceAll(name, " ", ""), strings.ReplaceAll(nickname, " ", ""))
+	ok2, is_match2 := isInfoFound(t, strings.ReplaceAll(lowered_query, " ", ""), strings.ReplaceAll(name, " ", ""), strings.ReplaceAll(nickname, " ", ""))
 
 	if ok1 {
 		return ok1, is_match1
@@ -34,7 +39,7 @@ func (t *ServerRpc) IsInfoFound(args GetInfoArgs, name string, nickname string) 
 	return ok2, is_match2
 }
 
-func (t *ServerRpc) isInfoFound(lowered_query string, name string, nickname string) (bool, bool) {
+func isInfoFound(t *Api, lowered_query string, name string, nickname string) (bool, bool) {
 	if strings.Contains(strings.ToLower(name), lowered_query) {
 		return true, false
 	}
@@ -102,7 +107,7 @@ type InfoFound struct {
 	Obtainable bool
 }
 
-func (t *ServerRpc) NewInfoFound(Nickname string, Name string, Entity string, Obtainable bool) InfoFound {
+func NewInfoFound(t *Api, Nickname string, Name string, Entity string, Obtainable bool) InfoFound {
 	return InfoFound{
 		Name:       Name,
 		Nickname:   string(Nickname),
@@ -112,7 +117,7 @@ func (t *ServerRpc) NewInfoFound(Nickname string, Name string, Entity string, Ob
 	}
 }
 
-func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
+func GetInfoF(t *Api, args GetInfoArgs, reply *GetInfoReply) error {
 
 	if strings.ReplaceAll(args.Query, " ", "") == "" {
 		reply.Content = []string{}
@@ -130,9 +135,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 	}
 
 	for _, item := range t.app_data.Configs.Bases {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Base**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Base", false))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Base", false))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -141,9 +146,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Ammos {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Ammo**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Ammo", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Ammo", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -152,9 +157,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.MiningOperations {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Mining Operation**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Mining Operation", false))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Mining Operation", false))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -163,9 +168,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Factions {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Faction**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Faction", false))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Faction", false))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -174,9 +179,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Commodities {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Commodity**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Commodity", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Commodity", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -185,9 +190,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Guns {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Gun**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Gun", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Gun", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -196,9 +201,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Missiles {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Missile**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Missile", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Missile", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -207,9 +212,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Mines {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Mine**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Mine", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Mine", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -218,9 +223,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Shields {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Shield**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Shield", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Shield", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -229,9 +234,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Ships {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Ship**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Ship", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Ship", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -240,9 +245,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Thrusters {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Thruster**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Thruster", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Thruster", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -251,9 +256,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Tractors {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Tractor**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Tractor", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Tractor", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -262,9 +267,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Engines {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Engine**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Engine", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Engine", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -273,9 +278,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Cloaks {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **CloakingDevice**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Cloak", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Cloak", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -284,9 +289,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.CMs {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Counter Measure**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "CM", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "CM", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -295,9 +300,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.Scanners {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Scanner**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "Scanner", t.app_data.Configs.Buyable(item.Bases)))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "Scanner", t.app_data.Configs.Buyable(item.Bases)))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -306,9 +311,9 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 		}
 	}
 	for _, item := range t.app_data.Configs.PoBs {
-		if ok, is_perfect_nickname_match := t.IsInfoFound(args, item.Name, string(item.Nickname)); ok {
+		if ok, is_perfect_nickname_match := IsInfoFound(t, args, item.Name, string(item.Nickname)); ok {
 			reply.Content = []string{"entity: **Player Owned Base**"}
-			reply.Found = append(reply.Found, t.NewInfoFound(string(item.Nickname), item.Name, "PoB", false))
+			reply.Found = append(reply.Found, NewInfoFound(t, string(item.Nickname), item.Name, "PoB", false))
 			reply.Content = append(reply.Content, EntityToYamlStrings(item.PoBCore)...)
 			set_infocard(string(item.Nickname))
 			if is_perfect_nickname_match {
@@ -349,17 +354,50 @@ func (t *ServerRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
 	return nil
 }
 
-func (r *ClientRpc) GetInfo(args GetInfoArgs, reply *GetInfoReply) error {
-	// Synchronous call
-	// return r.client.Call("ServerRpc.GetBases", args, &reply)
+// ShowAccount godoc
+// @Summary      Info Query
+// @Tags         misc
+// @Accept       json
+// @Produce      json
+// @Param request body GetInfoArgs true "Request body"
+// @Success      200  {object}  	GetInfoReply
+// @Router       /api/info_query [post]
+func GetInfo(t *web.Web, api *Api) *registry.Endpoint {
+	return &registry.Endpoint{
+		Url: "" + ApiRoute + "/info_query",
+		Handler: func(w http.ResponseWriter, r *http.Request) {
 
-	// // Asynchronous call
-	client, err := r.getClient()
-	if logus.Log.CheckWarn(err, "dialing:") {
-		return err
+			if t.AppDataMutex != nil {
+				t.AppDataMutex.RLock()
+				defer t.AppDataMutex.RUnlock()
+			}
+
+			var input GetInfoArgs
+			body, err := io.ReadAll(r.Body)
+			if logus.Log.CheckError(err, "failed to read body") {
+				w.WriteHeader(http.StatusBadRequest)
+				_, err = fmt.Fprintf(w, "err to ready body")
+				Log.CheckError(err, "fprintf post info query error")
+				return
+			}
+			err = json.Unmarshal(body, &input)
+			Log.CheckWarn(err, "failed to unparmshal input in info query")
+
+			var reply *GetInfoReply = &GetInfoReply{}
+			err = GetInfoF(api, input, reply)
+
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				_, err = fmt.Fprintln(w, "get info had bad result for reason="+err.Error())
+				Log.CheckError(err, "fprintf post info query error="+err.Error())
+				return
+			}
+
+			apiutils.ReturnJson(&w, reply)
+		},
 	}
+}
 
-	divCall := client.Go("ServerRpc.GetInfo", args, &reply, nil)
-	replyCall := <-divCall.Done // will be equal to divCall
-	return replyCall.Error
+func (c *HttpClient) GetInfo(args GetInfoArgs) (*GetInfoReply, error) {
+	return make_request[GetInfoArgs, *GetInfoReply](c, ""+ApiRoute+"/info_query", args)
 }

@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/rpc"
 
-	"github.com/darklab8/fl-darkstat/darkapis/darkrpc/example/server"
+	"github.com/darklab8/fl-darkstat/darkapis/darkrpc_deprecated/example/server"
 )
 
 func main() {
