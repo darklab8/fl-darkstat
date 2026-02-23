@@ -60,18 +60,18 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		// Gathering request info
 		pattern := new_r.Pattern
 		url := r.URL.Path[1:]
-		if strings.Contains(url, urls.Index.ToString()) ||
-			strings.Contains(url, urls.DarkIndex.ToString()) ||
-			strings.Contains(url, urls.VanillaIndex.ToString()) ||
-			strings.Contains(url, "cdn") {
-			pattern = UrlGeneralizer.ReplaceAllString(url, "-{item_id}")
-			logus.Log.Debug("generalized url to pattern", typelog.String("url_pattern", pattern))
-		}
-		if pattern == "" || pattern == "/" {
-			pattern = "unknown"
-		}
-		if rec.status == http.StatusNotFound {
-			pattern = "unknown"
+		if pattern == "/" {
+			if rec.status != http.StatusNotFound {
+				if strings.Contains(url, urls.Index.ToString()) ||
+					strings.Contains(url, urls.DarkIndex.ToString()) ||
+					strings.Contains(url, urls.VanillaIndex.ToString()) ||
+					strings.Contains(url, "cdn") {
+					pattern = UrlGeneralizer.ReplaceAllString(url, "-{item_id}")
+					logus.Log.Debug("generalized url to pattern", typelog.String("url_pattern", pattern))
+				}
+			} else {
+				pattern = "unknown"
+			}
 		}
 
 		ip, err := getIP(r)
