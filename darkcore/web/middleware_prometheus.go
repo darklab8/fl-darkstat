@@ -43,7 +43,7 @@ func (rec *statusRecorder) Write(bytes []byte) (int, error) {
 func prometheusMidleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Request
-		rec := statusRecorder{w, 200, 0}
+		rec := statusRecorder{w, http.StatusOK, 0}
 		time_start := time.Now()
 
 		opts := []trace.SpanStartOption{
@@ -70,6 +70,10 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		if pattern == "" || pattern == "/" {
 			pattern = "unknown"
 		}
+		if rec.status == http.StatusNotFound {
+			pattern = "unknown"
+		}
+
 		ip, err := getIP(r)
 		logus.Log.CheckError(err, "not found ip in prometheus middleware incoming request")
 
@@ -110,7 +114,10 @@ func prometheusMidleware(next http.Handler) http.Handler {
 
 		// confirm it is present
 		// curl -H 'Accept: application/openmetrics-text' localhost:8000/metrics | grep "darkstat_http_by_pattern_duration_seconds_hist"
-		metrics.HttpResponseByPatternDurationHist.WithLabelValues(pattern, strconv.Itoa(rec.status)).(prometheus.ExemplarObserver).ObserveWithExemplar(
+		metrics.HttpResponseByPatternDurationHist.WithLabelValues(
+			pattern,
+			strconv.Itoa(rec.status),
+		).(prometheus.ExemplarObserver).ObserveWithExemplar(
 			time_finish, prometheus.Labels{"traceID": trace_id},
 		)
 
