@@ -47,9 +47,9 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		Name:               e.Mapped.CraftableBaseName(),
 		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 		Nickname:           cfg.BaseUniNick(pob_crafts_nickname),
-		SystemNickname:     "neverwhere",
-		System:             "Neverwhere",
-		Region:             "NEVERWHERE",
+		SystemNickname:     "readme",
+		System:             "README",
+		Region:             "README",
 		FactionName:        "Player Crafts",
 	}
 
@@ -161,6 +161,8 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 	sb.WriteLineStr(`This is only pseudo base to show availability of player crafts`)
 	sb.WriteLineStr(``)
 	sb.WriteLineStr(`At the bottom of each item infocard it shows CRAFTING RECIPES`)
+	sb.WriteLineStr(``)
+	sb.WriteLineStr(`Go to tab "BASES" and find it in the list there to see FULL LIST of possible all recipes!!!`)
 
 	e.PutInfocard(infocarder.InfocardKey(base.Nickname), sb.Lines)
 

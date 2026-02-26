@@ -57,9 +57,9 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 		Name:               "Lootable",
 		MarketGoodsPerNick: make(map[CommodityKey]*MarketGood),
 		Nickname:           cfg.BaseUniNick(BaseLootableNickname),
-		SystemNickname:     "neverwhere",
-		System:             "Neverwhere",
-		Region:             "NEVERWHERE",
+		SystemNickname:     "readme",
+		System:             "README",
+		Region:             "README",
 		FactionName:        BaseLootableFaction,
 	}
 
@@ -80,6 +80,8 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 	sb = append(sb, infocarder.NewInfocardSimpleLine(base.Name))
 	sb = append(sb, infocarder.NewInfocardSimpleLine(`This is only pseudo base to show availability of lootable content`))
 	sb = append(sb, infocarder.NewInfocardSimpleLine(`The content is findable in wrecks or drops from ships at missions`))
+	sb = append(sb, infocarder.NewInfocardSimpleLine(``))
+	sb = append(sb, infocarder.NewInfocardSimpleLine(`Go to tab "BASES" and find this base there to see FULL LIST of possible lootable content`))
 
 	e.PutInfocard(infocarder.InfocardKey(base.Nickname), sb)
 
