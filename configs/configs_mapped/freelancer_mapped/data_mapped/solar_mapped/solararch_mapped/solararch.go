@@ -12,6 +12,7 @@ type Solar struct {
 	semantic.Model
 	Nickname       *semantic.String
 	DockingSpheres []*semantic.String
+	Fuses          []*semantic.String
 }
 
 const (
@@ -105,10 +106,15 @@ func Read(input_file *iniload.IniLoader) *Config {
 		}
 		solar.Map(section)
 
-		empathy_rate_key := cfg.Key("docking_sphere")
-		for good_index, _ := range section.ParamMap[empathy_rate_key] {
+		docking_sphere_key := cfg.Key("docking_sphere")
+		for good_index, _ := range section.ParamMap[docking_sphere_key] {
 			solar.DockingSpheres = append(solar.DockingSpheres,
 				semantic.NewString(section, cfg.Key("docking_sphere"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(good_index)), semantic.WithoutSpacesS()))
+		}
+
+		for good_index, _ := range section.ParamMap["fuse"] {
+			solar.Fuses = append(solar.Fuses,
+				semantic.NewString(section, cfg.Key("fuse"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(good_index)), semantic.WithoutSpacesS()))
 		}
 
 		frelconfig.Solars = append(frelconfig.Solars, solar)

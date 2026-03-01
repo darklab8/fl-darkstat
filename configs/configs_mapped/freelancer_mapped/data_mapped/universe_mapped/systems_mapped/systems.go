@@ -169,9 +169,10 @@ type Object struct {
 
 type Wreck struct {
 	semantic.Model
-	Nickname *semantic.String
-	Loadout  *semantic.String
-	Pos      *semantic.Vect
+	Nickname  *semantic.String
+	Loadout   *semantic.String
+	Archetype *semantic.String
+	Pos       *semantic.Vect
 }
 
 type Asteroids struct {
@@ -473,9 +474,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 					if _, ok := obj.ParamMap[cfg.Key("loadout")]; ok {
 						wreck := &Wreck{
-							Nickname: semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Loadout:  semantic.NewString(obj, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Pos:      semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Loadout:   semantic.NewString(obj, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
 						}
 
 						system_to_add.Wrecks = append(system_to_add.Wrecks, wreck)

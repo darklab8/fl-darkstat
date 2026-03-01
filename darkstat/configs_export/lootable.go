@@ -99,7 +99,7 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 	// get cargo and equip out of "wrecks" ships
 	// validate that wrecks have archetype at solar permitting  dump_cargo
 	// and validate that fuse destroy_hp_attachment at solar has fate = loot for the equip hptype
-	// [ ] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
+	// [x] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
 	unique_wreck_loot := make(map[string]bool)
 	for _, system := range e.Mapped.Systems.Systems {
 		for _, wreck := range system.Wrecks {
@@ -111,17 +111,48 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 					nickname    string
 					loot_source LootSource
 				}
-				var item_nicknames []Item
-				for _, cargo := range loadout.Cargos {
-					item_nicknames = append(item_nicknames, Item{
-						nickname:    cargo.Nickname.Get(),
-						loot_source: LootSourceCargo,
-					})
+
+				// query here archetype of wreck ? by archetype of wreck, get Solar
+
+				solar := e.Mapped.Solararch.SolarsByNick[wreck.Archetype.Get()]
+				allowed_cargo := false
+				allowed_hardpoints := make(map[string]bool)
+
+				for _, fuse := range solar.Fuses {
+					if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
+						if fuse.DoesDropCargo {
+							allowed_cargo = true
+						}
+						for key, _ := range fuse.LootableHardpoints {
+							allowed_hardpoints[key] = true
+						}
+					}
 				}
 
-				for _, nickname := range loadout.EquipNicknames {
+				var item_nicknames []Item
+				if allowed_cargo {
+					for _, cargo := range loadout.Cargos {
+						item_nicknames = append(item_nicknames, Item{
+							nickname:    cargo.Nickname.Get(),
+							loot_source: LootSourceCargo,
+						})
+					}
+				}
 
-					item_nickname := nickname.Get()
+				for _, equip := range loadout.Equips {
+
+					item_nickname := equip.Nickname.Get()
+
+					hardpoint, found_hardpoint := equip.Hardpoint.GetValue()
+					if !found_hardpoint {
+						continue
+					}
+
+					_, permitted_hardpoint := allowed_hardpoints[hardpoint]
+					if !permitted_hardpoint {
+						continue
+					}
+
 					item_nicknames = append(item_nicknames, Item{
 						nickname:    item_nickname,
 						loot_source: LootSourceEquip,
@@ -201,8 +232,8 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 						}
 						send_npc_loot(loot_npc_drop)
 					}
-					for _, nickname := range loadout.EquipNicknames {
-						item_nickname := nickname.Get()
+					for _, equip := range loadout.Equips {
+						item_nickname := equip.Nickname.Get()
 						if !e.IsLootable(item_nickname) {
 							continue
 						}

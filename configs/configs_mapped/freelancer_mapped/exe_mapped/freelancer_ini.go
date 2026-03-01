@@ -29,6 +29,7 @@ type Config struct {
 	Universe []*semantic.Path
 	Ships    []*semantic.Path
 	Loadouts []*semantic.Path
+	Fuses    []*semantic.Path
 }
 
 func Read(input_file *iniload.IniLoader) *Config {
@@ -72,6 +73,11 @@ func Read(input_file *iniload.IniLoader) *Config {
 		for equipment_index, _ := range resources[0].ParamMap[cfg.Key("ships")] {
 			frelconfig.Ships = append(frelconfig.Ships,
 				semantic.NewPath(resources[0], cfg.Key("ships"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(equipment_index))),
+			)
+		}
+		for equipment_index, _ := range resources[0].ParamMap[cfg.Key("fuses")] {
+			frelconfig.Fuses = append(frelconfig.Fuses,
+				semantic.NewPath(resources[0], cfg.Key("fuses"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(equipment_index))),
 			)
 		}
 	}

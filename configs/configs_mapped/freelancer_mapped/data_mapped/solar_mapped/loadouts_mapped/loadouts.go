@@ -15,9 +15,15 @@ type Cargo struct {
 
 type Loadout struct {
 	semantic.Model
-	Nickname       *semantic.String
-	Cargos         []*Cargo
-	EquipNicknames []*semantic.String
+	Nickname *semantic.String
+	Cargos   []*Cargo
+	Equips   []*Equip
+}
+
+type Equip struct {
+	semantic.Model
+	Nickname  *semantic.String
+	Hardpoint *semantic.String
 }
 
 type Config struct {
@@ -54,8 +60,13 @@ func Read(files []*iniload.IniLoader) *Config {
 			}
 
 			for good_index, _ := range section.ParamMap["equip"] {
-				loadout.EquipNicknames = append(loadout.EquipNicknames,
-					semantic.NewString(section, "equip", semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(good_index)), semantic.WithoutSpacesS()))
+
+				equip := &Equip{
+					Nickname:  semantic.NewString(section, "equip", semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(good_index)), semantic.WithoutSpacesS()),
+					Hardpoint: semantic.NewString(section, "equip", semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(good_index), semantic.Order(1)), semantic.WithoutSpacesS()),
+				}
+				loadout.Equips = append(loadout.Equips, equip)
+
 			}
 
 			frelconfig.Loadouts = append(frelconfig.Loadouts, loadout)

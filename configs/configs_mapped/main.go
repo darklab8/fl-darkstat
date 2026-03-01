@@ -13,6 +13,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/flsr/flsr_recipes"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/const_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/fx_mapped/fuse_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/interface_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/empathy_mapped"
@@ -106,6 +107,7 @@ type MappedConfigs struct {
 	ShipClasses  *shipclasses_mapped.Config
 	Solararch    *solararch_mapped.Config
 	Loadouts     *loadouts_mapped.Config
+	Fuses        *fuse_mapped.Config
 
 	Discovery *DiscoveryConfig
 	FLSR      *SiriusRevivalConfig
@@ -232,6 +234,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	m.FreelancerINI = exe_mapped.Read(iniload.NewLoader(filesystem.GetFile(exe_mapped.FILENAME_FL_INI)).Scan())
 
 	files_goods := getConfigs(filesystem, m.FreelancerINI.Goods)
+	files_fuses := getConfigs2(filesystem, m.FreelancerINI.Fuses)
 	files_market := getConfigs(filesystem, m.FreelancerINI.Markets)
 	files_equip := getConfigs(filesystem, m.FreelancerINI.Equips)
 	files_shiparch := getConfigs(filesystem, m.FreelancerINI.Ships)
@@ -259,6 +262,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	all_files = append(all_files, files_equip...)
 	all_files = append(all_files, files_shiparch...)
 	all_files = append(all_files, files_loadouts...)
+	all_files = append(all_files, files_fuses...)
 	all_files = append(all_files,
 		file_universe,
 		file_interface,
@@ -368,6 +372,11 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 		wg.Add(1)
 		go func() {
 			m.equip = equip_mapped.Read(files_equip)
+			wg.Done()
+		}()
+		wg.Add(1)
+		go func() {
+			m.Fuses = fuse_mapped.Read(files_fuses)
 			wg.Done()
 		}()
 		wg.Add(1)
