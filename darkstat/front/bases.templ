@@ -715,17 +715,15 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 					}
 				</td>
 				<td>{ strconv.FormatBool(good.IsServerSideOverride) }</td>
-				<td>
-					if good.LootInfo != nil {
+				if GetBaseKind(shared, name) == BaseLootable {
+					<td>
 						if good.LootInfo.Permitted {
 							{ good.LootInfo.PlaceNick }
 						} else {
 							no access
 						}
-					} else {
-						{ good.LootInfo.PlaceNick }
-					}
-				</td>
+					</td>
+				}
 				<td></td>
 			</tr>
 		}
