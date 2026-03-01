@@ -16,10 +16,23 @@ func SortedMarketGoods(goods_per_nick map[configs_export.CommodityKey]*configs_e
 	}
 
 	sort.Slice(market_goods, func(i, j int) bool {
-		if market_goods[i].Category != market_goods[j].Category {
-			return market_goods[i].Category < market_goods[j].Category
+
+		if market_goods[i].LootInfo != nil && market_goods[j].LootInfo != nil {
+			if market_goods[i].LootInfo.Kind != market_goods[j].LootInfo.Kind {
+				return market_goods[i].LootInfo.Kind < market_goods[j].LootInfo.Kind
+			}
+
+			if market_goods[i].Category != market_goods[j].Category {
+				return market_goods[i].Category < market_goods[j].Category
+			}
+			return market_goods[i].Name < market_goods[j].Name
+		} else {
+			if market_goods[i].Category != market_goods[j].Category {
+				return market_goods[i].Category < market_goods[j].Category
+			}
+			return market_goods[i].Name < market_goods[j].Name
 		}
-		return market_goods[i].Name < market_goods[j].Name
+
 	})
 
 	return market_goods

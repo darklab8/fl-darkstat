@@ -19,6 +19,7 @@ type Ship struct {
 	IdsInfo3  *semantic.Int
 
 	MissionProperty *semantic.String
+	Fuses           []*semantic.String
 
 	Nanobots    *semantic.Int
 	Batteries   *semantic.Int
@@ -119,6 +120,10 @@ func Read(files []*iniload.IniLoader) *Config {
 				ship.HpTypes = append(ship.HpTypes, hp_type)
 			}
 
+			for good_index, _ := range section.ParamMap["fuse"] {
+				ship.Fuses = append(ship.Fuses,
+					semantic.NewString(section, cfg.Key("fuse"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(good_index)), semantic.WithoutSpacesS()))
+			}
 			// ids_name, ids_name_exists := ship.IdsName.GetValue()
 
 			frelconfig.Ships = append(frelconfig.Ships, ship)

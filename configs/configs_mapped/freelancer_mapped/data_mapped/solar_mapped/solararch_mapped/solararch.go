@@ -12,6 +12,8 @@ type Solar struct {
 	semantic.Model
 	Nickname       *semantic.String
 	DockingSpheres []*semantic.String
+	Fuses          []*semantic.String
+	Destructible   *semantic.Bool
 }
 
 const (
@@ -101,14 +103,20 @@ func Read(input_file *iniload.IniLoader) *Config {
 	for _, section := range input_file.SectionMap["[solar]"] {
 
 		solar := &Solar{
-			Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+			Nickname:     semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+			Destructible: semantic.NewBool(section, cfg.ParamKey("destructible"), semantic.StrBool),
 		}
 		solar.Map(section)
 
-		empathy_rate_key := cfg.Key("docking_sphere")
-		for good_index, _ := range section.ParamMap[empathy_rate_key] {
+		docking_sphere_key := cfg.Key("docking_sphere")
+		for good_index, _ := range section.ParamMap[docking_sphere_key] {
 			solar.DockingSpheres = append(solar.DockingSpheres,
 				semantic.NewString(section, cfg.Key("docking_sphere"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(good_index)), semantic.WithoutSpacesS()))
+		}
+
+		for good_index, _ := range section.ParamMap["fuse"] {
+			solar.Fuses = append(solar.Fuses,
+				semantic.NewString(section, cfg.Key("fuse"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(good_index)), semantic.WithoutSpacesS()))
 		}
 
 		frelconfig.Solars = append(frelconfig.Solars, solar)

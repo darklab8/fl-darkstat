@@ -395,9 +395,12 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 			@SectionHeader(HeaderLootable)
 			<p>
 				<ul>
-					<li>Pseudo base "Lootable" is added into "Bases" tab for convinience of discovery of all lootable items from wrecks and missions.</li>
+					<li>Pseudo base "Lootable" is added into "Bases" tab for convinience of discovery of all lootable items from wrecks and encounters.</li>
 					<li>All tabs are enhanced with ability to show if item can be bought or lootable</li>
+					<li>by default items in them hidden unless verified as good to show for specific mod</li>
+					<li>by default even if shown, specific locations are under spoilers to be shown only on mouse hover</li>
 				</ul>
+				<img src={ types.GetCtx(ctx).StaticRoot + "lootable.png" }/>
 			</p>
 			@SectionHeader(HeaderPinningFeature)
 			<p>

@@ -6,3 +6,4 @@ configs/docs/** linguist-vendored
 configs/configs_mapped/freelancer_mapped/exe_mapped/testdata/dll_reader.py linguist-vendored
 grpc_python/** linguist-vendored
 configs/configs_mapped/parserutils/bini/bini.py linguist-vendored
+*.txt linguist-generated

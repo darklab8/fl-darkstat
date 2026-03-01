@@ -32,6 +32,14 @@ func (s *Vect) Get() cfg.Vector {
 	}
 }
 
+func (s *Vect) get() cfg.Vector {
+	return cfg.Vector{
+		X: s.X.get(),
+		Y: s.Y.get(),
+		Z: s.Z.get(),
+	}
+}
+
 func (s *Vect) GetValue() (cfg.Vector, bool) {
 	var value cfg.Vector
 	var ok bool = true
@@ -42,7 +50,7 @@ func (s *Vect) GetValue() (cfg.Vector, bool) {
 				ok = false
 			}
 		}()
-		value = s.Get()
+		value = s.get()
 	}()
 
 	return value, ok

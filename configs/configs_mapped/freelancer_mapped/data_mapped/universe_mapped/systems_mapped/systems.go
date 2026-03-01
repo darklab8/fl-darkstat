@@ -1,7 +1,6 @@
 package systems_mapped
 
 import (
-	"fmt"
 	"strings"
 	"sync"
 
@@ -11,6 +10,8 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -168,8 +169,10 @@ type Object struct {
 
 type Wreck struct {
 	semantic.Model
-	Nickname *semantic.String
-	Loadout  *semantic.String
+	Nickname  *semantic.String
+	Loadout   *semantic.String
+	Archetype *semantic.String
+	Pos       *semantic.Vect
 }
 
 type Asteroids struct {
@@ -192,10 +195,20 @@ type LootableZone struct {
 
 type Zone struct {
 	semantic.Model
+	Nickname        *semantic.String
+	Pos             *semantic.Vect
+	IDsInfo         *semantic.Int
+	IdsName         *semantic.Int
+	Density         *semantic.Float
+	FactionNickname []*semantic.String
+
+	Encounters []*semantic.String
+}
+
+type EncounterParameter struct {
+	semantic.Model
 	Nickname *semantic.String
-	Pos      *semantic.Vect
-	IDsInfo  *semantic.Int
-	IdsName  *semantic.Int
+	Filename *semantic.Path
 }
 
 type System struct {
@@ -220,6 +233,21 @@ type System struct {
 	ZonesByNick map[string]*Zone
 	Objects     []*Object
 	Wrecks      []*Wreck
+
+	EncounterParameters       []*EncounterParameter
+	EncounterParametersByName map[string]*EncounterParameter
+}
+
+type EncounterFormation struct {
+	semantic.Model
+	ShipClasses    []*semantic.String
+	ShipsByNpcArch []*semantic.String
+	Filepath       *semantic.Path
+}
+
+type EncounterConfig struct {
+	EncounterFormations []*EncounterFormation
+	EncounterParams     *EncounterParameter
 }
 
 type Config struct {
@@ -231,6 +259,14 @@ type Config struct {
 	BasesByDockWith map[string]*Base
 	BasesByNick     map[string]*Base
 	JumpholesByNick map[string]*Jumphole
+
+	EncounterByAfilliation       map[string][]*EncounterZoneInSystem
+	EncounterFormationByFilepath map[utils_types.FilePath]*EncounterFormation
+}
+
+type EncounterZoneInSystem struct {
+	Zone   *Zone
+	System *System
 }
 
 type FileRead struct {
@@ -244,8 +280,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 		BasesByBases:    make(map[string]*Base),
 		BasesByDockWith: make(map[string]*Base),
 
-		BasesByNick:     make(map[string]*Base),
-		JumpholesByNick: make(map[string]*Jumphole),
+		BasesByNick:                  make(map[string]*Base),
+		JumpholesByNick:              make(map[string]*Jumphole),
+		EncounterByAfilliation:       make(map[string][]*EncounterZoneInSystem),
+		EncounterFormationByFilepath: make(map[utils_types.FilePath]*EncounterFormation),
 	}
 	var wg sync.WaitGroup
 
@@ -295,9 +333,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 				AllBasesByBases:             make(map[string][]*Base),
 				AllBasesByDockWith:          make(map[string][]*Base),
 
-				BasesByNick:     make(map[string]*Base),
-				BasesByBases:    make(map[string]*Base),
-				BasesByDockWith: make(map[string]*Base),
+				BasesByNick:               make(map[string]*Base),
+				BasesByBases:              make(map[string]*Base),
+				BasesByDockWith:           make(map[string]*Base),
+				EncounterParametersByName: make(map[string]*EncounterParameter),
 			}
 			system_to_add.Init(sysiniconf.Sections, sysiniconf.Comments, sysiniconf.File.GetFilepath())
 
@@ -323,7 +362,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 						file_to_read := filesystem.GetFile(utils_types.FilePath(strings.ToLower(filename.ToString())))
 						if file_to_read == nil {
-							fmt.Println("not able to find mining file for asteroids zone", filename)
+							logus.Log.Error("not able to find mining file for asteroids zone", typelog.Any("filename", filename))
 							wg.Done()
 							return
 						}
@@ -349,6 +388,21 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					}(asteroids_to_add)
 				}
 			}
+
+			if objs, ok := sysiniconf.SectionMap["[encounterparameters]"]; ok {
+
+				for _, obj := range objs {
+					object_to_add := &EncounterParameter{
+						Nickname: semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						Filename: semantic.NewPath(obj, cfg.Key("filename"), semantic.WithoutSpacesP(), semantic.WithLowercaseP()),
+					}
+					object_to_add.Map(obj)
+
+					system_to_add.EncounterParameters = append(system_to_add.EncounterParameters, object_to_add)
+					system_to_add.EncounterParametersByName[object_to_add.Nickname.Get()] = object_to_add
+				}
+			}
+
 			if objects, ok := sysiniconf.SectionMap[KEY_OBJECT]; ok {
 				for _, obj := range objects {
 
@@ -427,8 +481,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 					if _, ok := obj.ParamMap[cfg.Key("loadout")]; ok {
 						wreck := &Wreck{
-							Nickname: semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Loadout:  semantic.NewString(obj, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Loadout:   semantic.NewString(obj, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
 						}
 
 						system_to_add.Wrecks = append(system_to_add.Wrecks, wreck)
@@ -459,8 +515,37 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						Pos:      semantic.NewVector(zone_info, cfg.Key("pos"), semantic.Precision(0)),
 						IdsName:  semantic.NewInt(zone_info, cfg.Key("ids_name"), semantic.Optional()),
 						IDsInfo:  semantic.NewInt(zone_info, cfg.Key("ids_info"), semantic.Optional()),
+						Density:  semantic.NewFloat(zone_info, cfg.Key("density"), semantic.Precision(2)),
 					}
 					system_to_add.ZonesByNick[zone_to_add.Nickname.Get()] = zone_to_add
+
+					if encounter_infos, ok := zone_info.ParamMap[cfg.Key("encounter")]; ok && len(encounter_infos) > 0 {
+						for index, _ := range encounter_infos {
+							zone_to_add.Encounters = append(zone_to_add.Encounters,
+								semantic.NewString(zone_info, "encounter",
+									semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Index(index), semantic.Order(0))))
+						}
+					}
+					if facctions, ok := zone_info.ParamMap[cfg.Key("faction")]; ok && len(facctions) > 0 {
+						for index, _ := range facctions {
+							zone_to_add.FactionNickname = append(zone_to_add.FactionNickname,
+								semantic.NewString(zone_info, "faction",
+									semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Index(index), semantic.Order(0))))
+						}
+					}
+					{
+						encounter_zone := &EncounterZoneInSystem{
+							Zone:   zone_to_add,
+							System: system_to_add,
+						}
+
+						for _, affiliation_param := range zone_to_add.FactionNickname {
+							affiliation := affiliation_param.Get()
+							frelconfig.EncounterByAfilliation[affiliation] = append(frelconfig.EncounterByAfilliation[affiliation], encounter_zone)
+
+						}
+
+					}
 
 					if vignette_type, ok := zone_info.ParamMap[cfg.Key("vignette_type")]; ok && len(vignette_type) > 0 {
 						vignette := &MissionVignetteZone{
@@ -508,7 +593,72 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 		}
 	}, timeit.WithMsg("Map universe itself"))
 
+	encounter_formations_unique := make(map[utils_types.FilePath]*EncounterParameter)
+	for _, system := range frelconfig.Systems {
+		for _, encounter_params := range system.EncounterParameters {
+
+			encounter_formations_unique[encounter_params.Filename.Get()] = encounter_params
+		}
+	}
+	var encounter_configs []*EncounterConfig
+	for _, encounter_params := range encounter_formations_unique {
+		cfg := &EncounterConfig{
+			EncounterParams: encounter_params,
+		}
+		encounter_configs = append(encounter_configs, cfg)
+		wg.Add(1)
+		go func(ast *EncounterConfig) {
+			filename := ast.EncounterParams.Filename.FileName()
+			file_to_read := filesystem.GetFile(utils_types.FilePath(strings.ToLower(filename.ToString())))
+			if file_to_read == nil {
+				logus.Log.Error("not able to find mining file for asteroids zone", typelog.Any("filename", filename))
+				wg.Done()
+				return
+			}
+			config := inireader.Read(file_to_read)
+
+			if objs, ok := config.SectionMap["[encounterformation]"]; ok {
+				for _, obj := range objs {
+					formation := &EncounterFormation{
+						Filepath: ast.EncounterParams.Filename,
+					}
+					formation.Map(obj)
+
+					if ship_classes, ok := obj.ParamMap["ship_by_class"]; ok {
+						for index := range ship_classes {
+							formation.ShipClasses = append(formation.ShipClasses,
+								semantic.NewString(obj, "ship_by_class",
+									semantic.WithLowercaseS(),
+									semantic.WithoutSpacesS(),
+									semantic.OptsS(semantic.Index(index), semantic.Order(2)),
+								))
+						}
+					}
+					if ship_classes, ok := obj.ParamMap["ship_by_npc_arch"]; ok {
+						for index := range ship_classes {
+							formation.ShipsByNpcArch = append(formation.ShipsByNpcArch,
+								semantic.NewString(obj, "ship_by_npc_arch",
+									semantic.WithLowercaseS(),
+									semantic.WithoutSpacesS(),
+									semantic.OptsS(semantic.Index(index), semantic.Order(2)),
+								))
+						}
+					}
+					ast.EncounterFormations = append(ast.EncounterFormations, formation)
+				}
+
+			}
+			wg.Done()
+		}(cfg)
+	}
+
 	wg.Wait()
+
+	for _, cfg := range encounter_configs {
+		for _, encounter_form := range cfg.EncounterFormations {
+			frelconfig.EncounterFormationByFilepath[encounter_form.Filepath.Get()] = encounter_form
+		}
+	}
 
 	// Making sure we selected Parent Bases to return
 	for _, base := range frelconfig.BasesByBases {

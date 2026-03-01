@@ -34,6 +34,8 @@ type MarketGood struct {
 	PoB     *PoB
 
 	BaseInfo
+
+	LootInfo *LootInfo
 }
 
 func (g MarketGood) GetPriceBaseBuysFor() int {
@@ -272,7 +274,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 		}
 	}
 
-	loot_findable := e.findable_in_loot()
+	loot_findable, _ := e.findable_in_loot()
 	if _, ok := loot_findable[commodity.Nickname]; ok {
 		good_to_add := &MarketGood{
 			GoodInfo:             e.GetGoodInfo(commodity.Nickname),

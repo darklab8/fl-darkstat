@@ -29,6 +29,33 @@
     z-index: 30;
 }
 
+.flsrtooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted var(--color_border);
+    /* Add dots under the hoverable text */
+    cursor: pointer;
+}
+
+/* Tooltip text */
+.flsrtooltiptext {
+    visibility: hidden;
+    /* Hidden by default */
+    background-color: var(--color_hover);
+    color: var(--color_text);
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    /* Ensure tooltip is displayed above content */
+}
+
+/* Show the tooltip text on hover */
+.flsrtooltip:hover .flsrtooltiptext {
+    visibility: visible;
+}
+
 .vertical_th {
     display: flex;
     flex-direction: column;
