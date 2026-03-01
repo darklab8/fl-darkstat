@@ -57,7 +57,7 @@ func (s *Bool) get() bool {
 	case IntBool:
 		return int(s.section.ParamMap[s.key][s.index].Values[s.order].(inireader.ValueNumber).Value) == 1
 	case StrBool:
-		return strings.Contains(s.section.ParamMap[s.key][s.index].Values[s.order].AsString(), "true")
+		return strings.Contains(strings.ToLower(s.section.ParamMap[s.key][s.index].Values[s.order].AsString()), "true")
 	}
 	panic("not expected bool type")
 }

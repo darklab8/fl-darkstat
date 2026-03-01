@@ -92,112 +92,123 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 	}
 
 	e.findable_in_loot_cache = make(map[string]bool)
+	{
+		// Purely wrecks stuff
+		// get cargo and equip out of "wrecks" ships
+		// validate that wrecks have archetype at solar permitting  dump_cargo
+		// and validate that fuse destroy_hp_attachment at solar has fate = loot for the equip hptype
+		// [x] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
+		findable_limit_wrecks := make(map[string]int)
+		unique_wreck_loot := make(map[string]bool)
+		for _, system := range e.Mapped.Systems.Systems {
+			for _, wreck := range system.Wrecks {
+				loadout_nickname := wreck.Loadout.Get()
 
-	findable_limit_wrecks := make(map[string]int)
+				if loadout, ok := e.Mapped.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
 
-	// Purely wrecks stuff
-	// get cargo and equip out of "wrecks" ships
-	// validate that wrecks have archetype at solar permitting  dump_cargo
-	// and validate that fuse destroy_hp_attachment at solar has fate = loot for the equip hptype
-	// [x] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
-	unique_wreck_loot := make(map[string]bool)
-	for _, system := range e.Mapped.Systems.Systems {
-		for _, wreck := range system.Wrecks {
-			loadout_nickname := wreck.Loadout.Get()
+					type Item struct {
+						nickname    string
+						loot_source LootSource
+					}
 
-			if loadout, ok := e.Mapped.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
+					// query here archetype of wreck ? by archetype of wreck, get Solar
 
-				type Item struct {
-					nickname    string
-					loot_source LootSource
-				}
+					solar := e.Mapped.Solararch.SolarsByNick[wreck.Archetype.Get()]
+					if is_destructible, _ := solar.Destructible.GetValue(); !is_destructible {
+						continue
+					}
 
-				// query here archetype of wreck ? by archetype of wreck, get Solar
+					allowed_cargo := false
+					allowed_hardpoints := make(map[string]bool)
 
-				solar := e.Mapped.Solararch.SolarsByNick[wreck.Archetype.Get()]
-				allowed_cargo := false
-				allowed_hardpoints := make(map[string]bool)
-
-				for _, fuse := range solar.Fuses {
-					if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
-						if fuse.DoesDropCargo {
-							allowed_cargo = true
-						}
-						for key, _ := range fuse.LootableHardpoints {
-							allowed_hardpoints[key] = true
+					for _, fuse := range solar.Fuses {
+						if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
+							if fuse.DoesDropCargo {
+								allowed_cargo = true
+							}
+							for key, _ := range fuse.LootableHardpoints {
+								allowed_hardpoints[key] = true
+							}
 						}
 					}
-				}
+					for _, fuse := range solar.Fuses {
+						if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
+							for key, _ := range fuse.NotLootableHardpoints {
+								delete(allowed_hardpoints, key)
+							}
+						}
+					}
 
-				var item_nicknames []Item
-				if allowed_cargo {
-					for _, cargo := range loadout.Cargos {
+					var item_nicknames []Item
+					if allowed_cargo {
+						for _, cargo := range loadout.Cargos {
+							item_nicknames = append(item_nicknames, Item{
+								nickname:    cargo.Nickname.Get(),
+								loot_source: LootSourceCargo,
+							})
+						}
+					}
+
+					for _, equip := range loadout.Equips {
+
+						item_nickname := equip.Nickname.Get()
+
+						hardpoint, found_hardpoint := equip.Hardpoint.GetValue()
+						if !found_hardpoint {
+							continue
+						}
+
+						_, permitted_hardpoint := allowed_hardpoints[hardpoint]
+						if !permitted_hardpoint {
+							continue
+						}
+
 						item_nicknames = append(item_nicknames, Item{
-							nickname:    cargo.Nickname.Get(),
-							loot_source: LootSourceCargo,
+							nickname:    item_nickname,
+							loot_source: LootSourceEquip,
 						})
 					}
-				}
 
-				for _, equip := range loadout.Equips {
+					for _, item := range item_nicknames {
+						if !e.IsLootable(item.nickname) {
+							continue
+						}
+						loot_info := &LootInfo{
+							Nickname:   item.nickname,
+							Kind:       LootWreck,
+							LootSource: LootSourceEquip,
+							PlaceNick:  wreck.Nickname.Get(),
+						}
 
-					item_nickname := equip.Nickname.Get()
+						system_uni := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system.Nickname)]
+						loot_info.Pos = wreck.Pos.Get()
+						loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
+						loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
 
-					hardpoint, found_hardpoint := equip.Hardpoint.GetValue()
-					if !found_hardpoint {
-						continue
-					}
+						key_uniqueness := loot_info.Nickname + loot_info.SystemName + loot_info.SectorCoord
+						if _, ok := unique_wreck_loot[key_uniqueness]; ok {
+							continue
+						}
+						unique_wreck_loot[key_uniqueness] = true
 
-					_, permitted_hardpoint := allowed_hardpoints[hardpoint]
-					if !permitted_hardpoint {
-						continue
-					}
+						// TODO [ ] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
+						is_fuse_allowed := true
+						if !is_fuse_allowed {
+							continue
+						}
 
-					item_nicknames = append(item_nicknames, Item{
-						nickname:    item_nickname,
-						loot_source: LootSourceEquip,
-					})
-				}
-
-				for _, item := range item_nicknames {
-					if !e.IsLootable(item.nickname) {
-						continue
-					}
-					loot_info := &LootInfo{
-						Nickname:   item.nickname,
-						Kind:       LootWreck,
-						LootSource: LootSourceEquip,
-					}
-
-					system_uni := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system.Nickname)]
-					loot_info.Pos = wreck.Pos.Get()
-					loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
-					loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
-
-					key_uniqueness := loot_info.Nickname + loot_info.SystemName + loot_info.SectorCoord
-					if _, ok := unique_wreck_loot[key_uniqueness]; ok {
-						continue
-					}
-					unique_wreck_loot[key_uniqueness] = true
-
-					// TODO [ ] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
-					is_fuse_allowed := true
-					if !is_fuse_allowed {
-						continue
-					}
-
-					e.findable_in_loot_cache[item.nickname] = true
-					findable_limit_wrecks[item.nickname] += 1
-					if findable_limit_wrecks[item.nickname] <= LootMaxWrecks {
-						SetPermitted(permitted_wrecks, permitted_encounters, loot_info)
-						loots = append(loots, loot_info)
+						e.findable_in_loot_cache[item.nickname] = true
+						findable_limit_wrecks[item.nickname] += 1
+						if findable_limit_wrecks[item.nickname] <= LootMaxWrecks {
+							SetPermitted(permitted_wrecks, permitted_encounters, loot_info)
+							loots = append(loots, loot_info)
+						}
 					}
 				}
 			}
 		}
 	}
-
-	if false { // TODO rewrite it
+	if false {
 
 		type NpcLoot struct {
 			*LootInfo
@@ -423,6 +434,7 @@ type LootInfo struct {
 	SystemName  string
 	Permitted   bool
 	LootSource  LootSource
+	PlaceNick   string
 }
 
 func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {

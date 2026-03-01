@@ -522,6 +522,11 @@ templ BaseMarketGoodsBase(base_kind BaseKind) {
 				<th style="width:10px;">
 					@frmt.MultiLinestring([]string{"Server", "Override"})
 				</th>
+				if base_kind == BaseLootable {
+					<th style="width:10px;">
+						@frmt.MultiLinestring([]string{"Place", "Nickname"})
+					</th>
+				}
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -710,6 +715,17 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 					}
 				</td>
 				<td>{ strconv.FormatBool(good.IsServerSideOverride) }</td>
+				<td>
+					if good.LootInfo != nil {
+						if good.LootInfo.Permitted {
+							{ good.LootInfo.PlaceNick }
+						} else {
+							no access
+						}
+					} else {
+						{ good.LootInfo.PlaceNick }
+					}
+				</td>
 				<td></td>
 			</tr>
 		}

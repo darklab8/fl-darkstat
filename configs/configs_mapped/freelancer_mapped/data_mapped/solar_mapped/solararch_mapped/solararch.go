@@ -13,6 +13,7 @@ type Solar struct {
 	Nickname       *semantic.String
 	DockingSpheres []*semantic.String
 	Fuses          []*semantic.String
+	Destructible   *semantic.Bool
 }
 
 const (
@@ -102,7 +103,8 @@ func Read(input_file *iniload.IniLoader) *Config {
 	for _, section := range input_file.SectionMap["[solar]"] {
 
 		solar := &Solar{
-			Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+			Nickname:     semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+			Destructible: semantic.NewBool(section, cfg.ParamKey("destructible"), semantic.StrBool),
 		}
 		solar.Map(section)
 

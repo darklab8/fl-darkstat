@@ -14,8 +14,9 @@ type Fuse struct {
 	Nickname  *semantic.String
 	DeathFuse *semantic.Bool
 
-	DoesDropCargo      bool
-	LootableHardpoints map[string]bool
+	DoesDropCargo         bool
+	LootableHardpoints    map[string]bool
+	NotLootableHardpoints map[string]bool
 }
 
 type Config struct {
@@ -39,9 +40,10 @@ func Read(configs []*iniload.IniLoader) *Config {
 
 				fuse_section := input_file.Sections[i]
 				fuse := &Fuse{
-					Nickname:           semantic.NewString(fuse_section, cfg.Key("name"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					DeathFuse:          semantic.NewBool(fuse_section, cfg.Key("death_fuse"), semantic.StrBool),
-					LootableHardpoints: make(map[string]bool),
+					Nickname:              semantic.NewString(fuse_section, cfg.Key("name"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+					DeathFuse:             semantic.NewBool(fuse_section, cfg.Key("death_fuse"), semantic.StrBool),
+					LootableHardpoints:    make(map[string]bool),
+					NotLootableHardpoints: make(map[string]bool),
 				}
 
 				if fuse.Nickname.Get() == "fuse_suprise_drop_loot" {
@@ -58,6 +60,8 @@ func Read(configs []*iniload.IniLoader) *Config {
 						fate := semantic.NewString(section, cfg.Key("fate"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 						if fate.Get() == "loot" {
 							fuse.LootableHardpoints[hardpoint.Get()] = true
+						} else {
+							fuse.NotLootableHardpoints[hardpoint.Get()] = true
 						}
 					case "[dump_cargo]":
 						fuse.DoesDropCargo = true
