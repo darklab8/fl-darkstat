@@ -15,9 +15,10 @@ type Cargo struct {
 
 type Loadout struct {
 	semantic.Model
-	Nickname *semantic.String
-	Cargos   []*Cargo
-	Equips   []*Equip
+	Nickname  *semantic.String
+	Cargos    []*Cargo
+	Equips    []*Equip
+	Archetype *semantic.String
 }
 
 type Equip struct {
@@ -46,7 +47,8 @@ func Read(files []*iniload.IniLoader) *Config {
 		for _, section := range input_file.SectionMap["[loadout]"] {
 
 			loadout := &Loadout{
-				Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+				Nickname:  semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+				Archetype: semantic.NewString(section, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 			}
 			loadout.Map(section)
 

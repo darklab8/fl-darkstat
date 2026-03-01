@@ -28,7 +28,7 @@ func (l LootKind) ToStr() string {
 	}
 
 	if l == LootNotFoundNpcArch {
-		return "notfound_npc"
+		return "no_match_npc"
 	}
 
 	return "unknown"
@@ -120,7 +120,6 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 
 					allowed_cargo := false
 					allowed_hardpoints := make(map[string]bool)
-
 					for _, fuse := range solar.Fuses {
 						if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
 							if fuse.DoesDropCargo {
@@ -227,6 +226,17 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 				unique_loadouts[loadout_nickname] = true
 
 				if loadout, ok := e.Mapped.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
+
+					shiparch := e.Mapped.Shiparch.ShipsMap[loadout.Archetype.Get()]
+					forbidden_hardpoints := make(map[string]bool)
+					for _, fuse := range shiparch.Fuses {
+						if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
+							for key, _ := range fuse.NotLootableHardpoints {
+								forbidden_hardpoints[key] = true
+							}
+						}
+					}
+
 					for _, cargo := range loadout.Cargos {
 						item_nickname := cargo.Nickname.Get()
 						if !e.IsLootable(item_nickname) {
@@ -248,6 +258,17 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 						if !e.IsLootable(item_nickname) {
 							continue
 						}
+
+						// skipping dissapearing hardpoint equips
+						hardpoint, found_hardpoint := equip.Hardpoint.GetValue()
+						if !found_hardpoint {
+							continue
+						}
+						_, is_forbidden_hardpoint := forbidden_hardpoints[hardpoint]
+						if is_forbidden_hardpoint {
+							continue
+						}
+
 						loot_info := &LootInfo{
 							Kind:       LootNotFoundNpcArch,
 							Nickname:   item_nickname,
@@ -340,8 +361,10 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 					continue
 				}
 				loot_info := &LootInfo{
-					Nickname: item_nickname,
-					Kind:     LootEncounter,
+					Nickname:   item_nickname,
+					Kind:       LootEncounter,
+					LootSource: npc_loot.LootSource,
+					PlaceNick:  zone.Zone.Nickname.Get(),
 				}
 
 				if _, ok := zone.Zone.Pos.GetValue(); ok {
