@@ -334,7 +334,6 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 			}
 
 			for _, zone := range found_zones {
-
 				// YOU FOUND IT. ADD POS/SYSTEM NAME/Sector CORD
 				item_nickname := npc_loot.LootInfo.Nickname
 				if !e.IsLootable(item_nickname) {
