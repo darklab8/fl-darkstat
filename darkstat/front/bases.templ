@@ -442,7 +442,7 @@ templ BasesT(
 				}
 				@tab.TableBottom() {
 					if tab_mode == BaseShowShops {
-						@BaseMarketGoodsBase(false)
+						@BaseMarketGoodsBase(BaseNPC)
 					} else if tab_mode == BaseShowMissions {
 						@BaseMissionsBase()
 					} else if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo {
@@ -461,23 +461,40 @@ templ BasesT(
 	}
 }
 
-templ BaseMarketGoodsBase(is_pob bool) {
+type BaseKind int8
+
+const (
+	BaseNPC BaseKind = iota
+	BasePOBCrafts
+	BaseLootable
+)
+
+templ BaseMarketGoodsBase(base_kind BaseKind) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:200px;">Good</th>
 				<th style="width:10px;">Type</th>
-				if !is_pob {
+				if base_kind == BaseNPC {
 					<th style="width:10px;">
 						@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
 					</th>
 					<th style="width:10px;">
 						@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
 					</th>
-				} else {
+				} else if base_kind == BasePOBCrafts {
 					<th style="width:10px;">
 						@frmt.MultiLinestring([]string{"Factory", "name"})
 					</th>
+				} else if base_kind == BaseLootable {
+					<th style="width:25px;">Kind</th>
+					<th style="width:50px;">System</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"Nav", "Map"})
+					</th>
+					<th style="width:20px;">Pos X</th>
+					<th style="width:20px;">Pos Y</th>
+					<th style="width:20px;">Pos Z</th>
 				}
 				<th style="width:10px;">
 					@frmt.MultiLinestring([]string{"Volume"})
@@ -514,12 +531,61 @@ templ BaseMarketGoodsBase(is_pob bool) {
 	</table>
 }
 
+func GetBaseKind(shared *types.SharedData, base_name string) BaseKind {
+	if shared.CraftableBaseName == base_name {
+		return BasePOBCrafts
+	}
+	if configs_export.BaseLootableName == base_name {
+		return BaseLootable
+	}
+
+	return BaseNPC
+}
+
+templ ShowSensitive(
+	shared *types.SharedData,
+	visible_if_spoiler string,
+	value_to_show string,
+	allowed_to_show_default bool,
+) {
+	if value_to_show == "" {
+	} else if value_to_show=="0" && allowed_to_show_default {
+		{ value_to_show }
+	} else {
+		if shared.ShowFLSR {
+			<div class="flsrtooltip">
+				{ visible_if_spoiler }
+				<span class="flsrtooltiptext">
+					{ children... }
+				</span>
+			</div>
+		} else {
+			{ children... }
+		}
+	}
+}
+
 templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*configs_export.MarketGood, tab_mode BaseMode, shared *types.SharedData) {
 	<div class="bottom_name">
-		{ name }
+		if GetBaseKind(shared, name) == BaseLootable {
+			if shared.ShowDisco {
+				Mode: Discovery. 
+			} else if shared.ShowFLSR {
+				Mode: FLSR. 
+			} else {
+				Mode: Vanilla. 
+			}
+			{ name } items where to find. For same item, 
+			it shows max { strconv.Itoa(configs_export.LootMaxWrecks) } wrecks, 
+			max { strconv.Itoa(configs_export.LootMaxEncounters) } encounters,
+			{ strconv.Itoa(configs_export.LootMaxNotFoundNPCDrops) } not found drops,
+			and { strconv.Itoa(configs_export.LootMaxPhantom) } phantom drop
+		} else {
+			{ name }
+		}
 		// @tab.PageTime() // TODO add when having page proper live backend
 	</div>
-	@BaseMarketGoodsBase(shared.CraftableBaseName == name) {
+	@BaseMarketGoodsBase(GetBaseKind(shared, name)) {
 		for _, good := range frmt.SortedMarketGoods(goods) {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(infocarder.InfocardKey(good.Nickname)) }
@@ -537,19 +603,66 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 				<td>
 					@frmt.WriteGoodType(string(good.Category))
 				</td>
-				if shared.CraftableBaseName != name {
+				if GetBaseKind(shared, name) == BaseLootable {
+					if good.LootInfo != nil {
+						if good.LootInfo.Permitted {
+							<td>
+								{ good.LootInfo.Kind.ToStr() }
+							</td>
+							<td>
+								@ShowSensitive(shared, "hover to see", good.LootInfo.SystemName, true) {
+									@frmt.WriteSystemName(good.LootInfo.SystemName)
+								}
+							</td>
+							<td>
+								@ShowSensitive(shared, "hover to see", good.LootInfo.SectorCoord, true) {
+									{ good.LootInfo.SectorCoord }
+								}
+							</td>
+							<td>
+								@ShowSensitive(shared, "hover", fmt.Sprintf("%.0f", good.LootInfo.Pos.X), false) {
+									{ fmt.Sprintf("%.0f", good.LootInfo.Pos.X) }
+								}
+							</td>
+							<td>
+								@ShowSensitive(shared, "hover", fmt.Sprintf("%.0f", good.LootInfo.Pos.Y), false) {
+									{ fmt.Sprintf("%.0f", good.LootInfo.Pos.Y) }
+								}
+							</td>
+							<td>
+								@ShowSensitive(shared, "hover", fmt.Sprintf("%.0f", good.LootInfo.Pos.Z), false) {
+									{ fmt.Sprintf("%.0f", good.LootInfo.Pos.Z) }
+								}
+							</td>
+						} else {
+							<td>no access</td>
+							<td>no access</td>
+							<td>*</td>
+							<td>*</td>
+							<td>*</td>
+							<td>*</td>
+						}
+					} else {
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					}
+				} else if GetBaseKind(shared, name) == BasePOBCrafts {
+					<td>
+						if good.DiscoveryFactoryName != nil {
+							{ *good.DiscoveryFactoryName }
+						}
+					</td>
+				} else {
 					<td>
 						if good.PriceBaseBuysFor != nil {
 							{ strconv.Itoa(*good.PriceBaseBuysFor) }
 						}
 					</td>
 					<td>{ strconv.Itoa(good.PriceBaseSellsFor) }</td>
-				} else {
-					<td>
-						if good.DiscoveryFactoryName != nil {
-							{ *good.DiscoveryFactoryName }
-						}
-					</td>
 				}
 				<td>{ fmt.Sprintf("%.0f", good.Volume) }</td>
 				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
@@ -557,13 +670,45 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
 				<td>{ frmt.FormatBaseSells(good.BaseSells) }</td>
 				// <td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
-				<td>{ strconv.Itoa(good.PriceBase) }</td>
 				<td>
-					@frmt.WriteLimit(200) {
-						{ good.Nickname }
+					if good.LootInfo != nil {
+						if good.LootInfo.Permitted {
+							@ShowSensitive(shared, "hover", strconv.Itoa(good.PriceBase), false) {
+								{ strconv.Itoa(good.PriceBase) }
+							}
+						} else {
+							*
+						}
+					} else {
+						{ strconv.Itoa(good.PriceBase) }
 					}
 				</td>
-				<td>{ good.HpType }</td>
+				<td>
+					if good.LootInfo != nil {
+						if good.LootInfo.Permitted {
+							@frmt.WriteLimit(200) {
+								{ good.Nickname }
+							}
+						} else {
+							no access
+						}
+					} else {
+						@frmt.WriteLimit(200) {
+							{ good.Nickname }
+						}
+					}
+				</td>
+				<td>
+					if good.LootInfo != nil {
+						if good.LootInfo.Permitted {
+							{ good.HpType }
+						} else {
+							no access
+						}
+					} else {
+						{ good.HpType }
+					}
+				</td>
 				<td>{ strconv.FormatBool(good.IsServerSideOverride) }</td>
 				<td></td>
 			</tr>

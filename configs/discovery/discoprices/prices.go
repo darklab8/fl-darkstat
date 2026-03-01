@@ -40,7 +40,7 @@ func Read(input_file *iniload.IniLoader) *Config {
 			market_good.CommodityNickname = semantic.NewString(price_info, marketgood_key, semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Index(mg_index), semantic.Order(1)))
 			market_good.PriceBaseBuysFor = semantic.NewInt(price_info, marketgood_key, semantic.Index(mg_index), semantic.Order(2))
 			market_good.PriceBaseSellsFor = semantic.NewInt(price_info, marketgood_key, semantic.Index(mg_index), semantic.Order(3))
-			market_good.BaseSells = semantic.NewBool(price_info, marketgood_key, semantic.IntBool, semantic.Index(mg_index), semantic.Order(4))
+			market_good.BaseSells = semantic.NewBool(price_info, marketgood_key, semantic.IntBool, semantic.OptsB(semantic.Index(mg_index), semantic.Order(4)))
 			conf.Prices = append(conf.Prices, market_good)
 			conf.BasesPerGood[market_good.CommodityNickname.Get()] = append(conf.BasesPerGood[market_good.CommodityNickname.Get()], market_good)
 			conf.GoodsPerBase[market_good.BaseNickname.Get()] = append(conf.GoodsPerBase[market_good.BaseNickname.Get()], market_good)

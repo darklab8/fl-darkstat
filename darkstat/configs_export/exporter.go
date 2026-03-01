@@ -80,6 +80,7 @@ type Exporter struct {
 	ExtraItems   []ExtraItem
 
 	findable_in_loot_cache map[string]bool
+	findable_wrecks        []*LootInfo
 	craftable_cached       map[string]bool
 	pob_buyable_cache      map[string][]*PobShopItem
 }

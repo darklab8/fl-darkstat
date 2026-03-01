@@ -18,15 +18,18 @@ import (
 )
 
 type Filesystem struct {
-	Files   []*file.File
-	Hashmap map[utils_types.FilePath]*file.File
+	Files          []*file.File
+	Hashmap        map[utils_types.FilePath]*file.File
+	HashmapDirPath map[utils_types.FilePath]*file.File
 }
 
 var FreelancerFolder Filesystem
 
 func FindConfigs(folderpath utils_types.FilePath) *Filesystem {
-	var filesystem *Filesystem = &Filesystem{}
-	filesystem.Hashmap = make(map[utils_types.FilePath]*file.File)
+	var filesystem *Filesystem = &Filesystem{
+		HashmapDirPath: make(map[utils_types.FilePath]*file.File),
+		Hashmap:        make(map[utils_types.FilePath]*file.File),
+	}
 
 	if configs_settings.Env.FreelancerFolderFailback != "" && folderpath != configs_settings.Env.FreelancerFolderFailback {
 		fs := FindConfigs(configs_settings.Env.FreelancerFolderFailback)
@@ -66,14 +69,38 @@ func FindConfigs(folderpath utils_types.FilePath) *Filesystem {
 		file := file.NewFile(utils_types.FilePath(path))
 		filesystem.Files = append(filesystem.Files, file)
 
-		key := utils_types.FilePath(strings.ToLower(filepath.Base(path)))
-		filesystem.Hashmap[key] = file
+		filename := utils_types.FilePath(strings.ToLower(filepath.Base(path)))
+
+		last_dir := utils_types.FilePath(strings.ToLower(filepath.Base(filepath.Dir(path))))
+
+		if _, ok := filesystem.Hashmap[filename]; ok {
+			logus.Log.Warn("FOUND name colision for file configs finding. Filename has duplicates with same name", typelog.Any("filename", filename))
+		}
+
+		filesystem.Hashmap[filename] = file
+		filesystem.HashmapDirPath[last_dir+"/"+filename] = file
 
 		return nil
 	})
 
 	logus.Log.CheckPanic(err, "unable to read files")
 	return filesystem
+}
+
+func (file1system Filesystem) GetFile2(file1names ...utils_types.FilePath) *file.File {
+	for _, file1name := range file1names {
+		file_, ok := file1system.HashmapDirPath[file1name]
+		if !ok {
+			logus.Log.Warn("Filesystem.GetFile, failed to find find in filesystesm file trying to recover", utils_logus.FilePath(file1name))
+			continue
+		}
+		logus.Log.Info("Filesystem.GetFile, found filepath=", utils_logus.FilePath(file_.GetFilepath()))
+		result_file := file.NewFile(file_.GetFilepath())
+		return result_file
+	}
+
+	logus.Log.Warn("failed to get file", typelog.Items[utils_types.FilePath]("filenames", file1names))
+	return nil
 }
 
 func (file1system Filesystem) GetFile(file1names ...utils_types.FilePath) *file.File {

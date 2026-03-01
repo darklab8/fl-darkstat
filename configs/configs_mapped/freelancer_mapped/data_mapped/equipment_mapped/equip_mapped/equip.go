@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/iniload"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
 	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/utils_types"
@@ -22,6 +23,8 @@ type Item struct {
 
 	Mass   *semantic.Float
 	HpType *semantic.String
+
+	Lootable *semantic.Bool
 }
 
 type Commodity struct {
@@ -331,6 +334,10 @@ const (
 	FILENAME_SELECT_EQUIP utils_types.FilePath = "select_equip.ini"
 )
 
+func NewLootable(section *inireader.Section) *semantic.Bool {
+	return semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool, semantic.WithDefaultB(true))
+}
+
 func Read(files []*iniload.IniLoader) *Config {
 	frelconfig := &Config{
 		Files:             files,
@@ -363,6 +370,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				Volume:   semantic.NewFloat(section, cfg.Key("volume"), semantic.Precision(6)),
 				HpType:   semantic.NewString(section, cfg.Key("hp_type"), semantic.OptsS(semantic.Optional()), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 				Mass:     semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(4)),
+				Lootable: NewLootable(section),
 			}
 			item.Map(section)
 
@@ -433,7 +441,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				gun.TurnRate = semantic.NewFloat(section, cfg.Key("turn_rate"), semantic.Precision(2))
 				gun.ProjectileArchetype = semantic.NewString(section, cfg.Key("projectile_archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				gun.HPGunType = semantic.NewString(section, cfg.Key("hp_gun_type"))
-				gun.Lootable = semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool)
+				gun.Lootable = NewLootable(section)
 				frelconfig.Guns = append(frelconfig.Guns, gun)
 				frelconfig.GunMap[gun.Nickname.Get()] = gun
 			case "[munition]":
@@ -492,7 +500,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					MuzzleVelocity:      semantic.NewFloat(section, cfg.Key("muzzle_velocity"), semantic.Precision(2)),
 					Toughness:           semantic.NewFloat(section, cfg.Key("toughness"), semantic.Precision(2)),
 					ProjectileArchetype: semantic.NewString(section, cfg.Key("projectile_archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-					Lootable:            semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool),
+					Lootable:            NewLootable(section),
 					Mass:                semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
 
@@ -532,7 +540,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					ConstPowerDraw:     semantic.NewInt(section, cfg.Key("constant_power_draw")),
 					RebuildPowerDraw:   semantic.NewInt(section, cfg.Key("rebuild_power_draw")),
 					OfflineRebuildTime: semantic.NewInt(section, cfg.Key("offline_rebuild_time")),
-					Lootable:           semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool),
+					Lootable:           NewLootable(section),
 					ShieldType:         semantic.NewString(section, cfg.Key("shield_type"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 					Mass:               semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
@@ -557,7 +565,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					IdsName:    semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
 					IdsInfo:    semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					HitPts:     semantic.NewInt(section, cfg.Key("hit_pts")),
-					Lootable:   semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool),
+					Lootable:   NewLootable(section),
 					MaxForce:   semantic.NewInt(section, cfg.Key("max_force")),
 					PowerUsage: semantic.NewInt(section, cfg.Key("power_usage")),
 					Mass:       semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
@@ -603,7 +611,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					IdsInfo:    semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					MaxLength:  semantic.NewInt(section, cfg.Key("max_length")),
 					ReachSpeed: semantic.NewInt(section, cfg.Key("reach_speed")),
-					Lootable:   semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool),
+					Lootable:   NewLootable(section),
 					Mass:       semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
 				frelconfig.Tractors = append(frelconfig.Tractors, tractor)
@@ -613,7 +621,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 					IdsName:  semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
 					IdsInfo:  semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
-					Lootable: semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool),
+					Lootable: NewLootable(section),
 
 					ProjectileArchetype: semantic.NewString(section, cfg.Key("projectile_archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 					HitPts:              semantic.NewInt(section, cfg.Key("hit_pts")),
@@ -644,7 +652,7 @@ func Read(files []*iniload.IniLoader) *Config {
 
 					Range:          semantic.NewInt(section, cfg.Key("range")),
 					CargoScanRange: semantic.NewInt(section, cfg.Key("cargo_scan_range")),
-					Lootable:       semantic.NewBool(section, cfg.Key("lootable"), semantic.StrBool),
+					Lootable:       NewLootable(section),
 					Mass:           semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
 				frelconfig.Scanners = append(frelconfig.Scanners, item)

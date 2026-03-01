@@ -97,6 +97,7 @@ func handleGetCrashReporting(value *Value) {
 				typelog.Any("key", value.key),
 				typelog.String("section", section.String()),
 				typelog.Any("r", r),
+				// typelog.Any("stacktrace", string(debug.Stack())),
 			)
 		}
 		panic(r)
