@@ -488,13 +488,9 @@ templ BaseMarketGoodsBase(base_kind BaseKind) {
 					</th>
 				} else if base_kind == BaseLootable {
 					<th style="width:25px;">Kind</th>
-					<th style="width:50px;">System</th>
-					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Nav", "Map"})
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{"System name", "NavMap + PosX + PosY + PosZ"})
 					</th>
-					<th style="width:20px;">Pos X</th>
-					<th style="width:20px;">Pos Y</th>
-					<th style="width:20px;">Pos Z</th>
 				}
 				<th style="width:10px;">
 					@frmt.MultiLinestring([]string{"Volume"})
@@ -617,42 +613,19 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 						</td>
 						if good.LootInfo.Permitted {
 							<td>
-								@ShowSensitive(shared, "hover to see", good.LootInfo.SystemName, true) {
+								@ShowSensitive(shared, "hover mouse over to see", good.LootInfo.SystemName, true) {
 									@frmt.WriteSystemName(good.LootInfo.SystemName)
-								}
-							</td>
-							<td>
-								@ShowSensitive(shared, "hover to see", good.LootInfo.SectorCoord, true) {
-									{ good.LootInfo.SectorCoord }
-								}
-							</td>
-							<td>
-								@ShowSensitive(shared, "hover", fmt.Sprintf("%.0f", good.LootInfo.Pos.X), false) {
-									{ fmt.Sprintf("%.0f", good.LootInfo.Pos.X) }
-								}
-							</td>
-							<td>
-								@ShowSensitive(shared, "hover", fmt.Sprintf("%.0f", good.LootInfo.Pos.Y), false) {
-									{ fmt.Sprintf("%.0f", good.LootInfo.Pos.Y) }
-								}
-							</td>
-							<td>
-								@ShowSensitive(shared, "hover", fmt.Sprintf("%.0f", good.LootInfo.Pos.Z), false) {
+									|
+									{ good.LootInfo.SectorCoord } |
+									{ fmt.Sprintf("%.0f", good.LootInfo.Pos.X) } |
+									{ fmt.Sprintf("%.0f", good.LootInfo.Pos.Y) } |
 									{ fmt.Sprintf("%.0f", good.LootInfo.Pos.Z) }
 								}
 							</td>
 						} else {
 							<td>no access</td>
-							<td>*</td>
-							<td>*</td>
-							<td>*</td>
-							<td>*</td>
 						}
 					} else {
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
 						<td></td>
 						<td></td>
 					}

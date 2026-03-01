@@ -240,8 +240,9 @@ type System struct {
 
 type EncounterFormation struct {
 	semantic.Model
-	ShipClasses []*semantic.String
-	Filepath    *semantic.Path
+	ShipClasses    []*semantic.String
+	ShipsByNpcArch []*semantic.String
+	Filepath       *semantic.Path
 }
 
 type EncounterConfig struct {
@@ -627,6 +628,16 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						for index := range ship_classes {
 							formation.ShipClasses = append(formation.ShipClasses,
 								semantic.NewString(obj, "ship_by_class",
+									semantic.WithLowercaseS(),
+									semantic.WithoutSpacesS(),
+									semantic.OptsS(semantic.Index(index), semantic.Order(2)),
+								))
+						}
+					}
+					if ship_classes, ok := obj.ParamMap["ship_by_npc_arch"]; ok {
+						for index := range ship_classes {
+							formation.ShipsByNpcArch = append(formation.ShipsByNpcArch,
+								semantic.NewString(obj, "ship_by_npc_arch",
 									semantic.WithLowercaseS(),
 									semantic.WithoutSpacesS(),
 									semantic.OptsS(semantic.Index(index), semantic.Order(2)),

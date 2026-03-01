@@ -363,14 +363,15 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 
 			var ship_class_members []string
 			var affiliations []string // like fc_n_grp, which we will be able to use valid Zones
+			var ship_arch_nickname string
 			if npcshiparch, ok := e.Mapped.NpcShips.NpcShipsByLoadout[npc_loot.LoadoutNickname]; ok {
 				for _, ship_cl := range npcshiparch.ShipClass {
 					ship_class_members = append(ship_class_members, ship_cl.Get())
 				}
 
-				npc_ship := npcshiparch.Nickname.Get()
+				ship_arch_nickname = npcshiparch.Nickname.Get()
 
-				if faction_props, ok := e.Mapped.FactionProps.FactionPropMapByNpcShip[npc_ship]; ok {
+				if faction_props, ok := e.Mapped.FactionProps.FactionPropMapByNpcShip[ship_arch_nickname]; ok {
 					for _, faction_prop := range faction_props {
 						affiliations = append(affiliations, faction_prop.Affiliation.Get())
 					}
@@ -406,6 +407,12 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 
 							for _, shipclass := range encounter_formation.ShipClasses {
 								if _, ok := ship_class_nicknames[shipclass.Get()]; ok {
+									matched_ship_class_in_formation = true
+									break
+								}
+							}
+							for _, ship_arch := range encounter_formation.ShipsByNpcArch {
+								if ship_arch_nickname == ship_arch.Get() {
 									matched_ship_class_in_formation = true
 									break
 								}
