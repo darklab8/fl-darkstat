@@ -4,8 +4,10 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/lootable_shown"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/google/uuid"
 )
 
@@ -207,7 +209,7 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 			}
 		}
 	}
-	if false {
+	{
 
 		type NpcLoot struct {
 			*LootInfo
@@ -227,7 +229,21 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 
 				if loadout, ok := e.Mapped.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
 
-					shiparch := e.Mapped.Shiparch.ShipsMap[loadout.Archetype.Get()]
+					var loadout_archetype string
+					if e.Mapped.Discovery != nil {
+						var found_arch bool
+						loadout_archetype, found_arch = loadout.Archetype.GetValue()
+
+						if !found_arch {
+							logus.Log.Error("haven't found archetype", typelog.Any("loadout_nickname", loadout_nickname))
+						}
+
+						loadout_archetype = npc_arch.ShipArchetype.Get()
+					} else {
+						loadout_archetype = loadout.Archetype.Get()
+					}
+
+					shiparch := e.Mapped.Shiparch.ShipsMap[loadout_archetype]
 					forbidden_hardpoints := make(map[string]bool)
 					for _, fuse := range shiparch.Fuses {
 						if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
@@ -308,6 +324,10 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 		max_notfound_npc_drop := make(map[string]int)
 		found_npc_loot_in_encounters := make(map[string]bool)
 		IteratorNpcShips(func(npc_loot *NpcLoot) {
+			// if npc_loot.LootInfo.Nickname == "special_nomad_gun01" {
+			// 	fmt.Println()
+			// }
+
 			if max_encounter_by_nick[npc_loot.LootInfo.Nickname] > LootMaxEncounters {
 				return
 			}
@@ -315,16 +335,28 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 			// by louadout nickname, find in [NPCShipArch] ship class of it like `class_deep_cbcr` (npcships.ini)
 
 			var ship_class_members []string
+			var affiliations []string // like fc_n_grp, which we will be able to use valid Zones
 			if npcshiparch, ok := e.Mapped.NpcShips.NpcShipsByLoadout[npc_loot.LoadoutNickname]; ok {
 				for _, ship_cl := range npcshiparch.ShipClass {
 					ship_class_members = append(ship_class_members, ship_cl.Get())
 				}
+
+				npc_ship := npcshiparch.Nickname.Get()
+
+				if faction_props, ok := e.Mapped.FactionProps.FactionPropMapByNpcShip[npc_ship]; ok {
+					for _, faction_prop := range faction_props {
+						affiliations = append(affiliations, faction_prop.Affiliation.Get())
+					}
+				}
 			}
 
-			var ship_class_nicknames []string
+			var ship_class_nicknames map[string]bool = make(map[string]bool)
+			ship_class_by_member := e.Mapped.ShipClasses.ShipClassByMember
 			for _, ship_class_member := range ship_class_members {
-				if ship_class, ok := e.Mapped.ShipClasses.ShipClassByMember[ship_class_member]; ok {
-					ship_class_nicknames = append(ship_class_nicknames, ship_class.Nickname.Get())
+				if ship_classes, ok := ship_class_by_member[ship_class_member]; ok {
+					for _, shipclass := range ship_classes {
+						ship_class_nicknames[shipclass.Nickname.Get()] = true
+					}
 				}
 			}
 
@@ -332,30 +364,46 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 			// by encounter filename, find nickname of it in [EncounterParameters]
 			// by encounter nickname, find in system [Object], relevant positions/system names and sector coords
 
-			var valid_encounters []string
-			for _, ship_class_nickname := range ship_class_nicknames {
-				if encounters, ok := e.Mapped.Systems.EncounterByShipClass[ship_class_nickname]; ok {
-					for _, encounter := range encounters {
-						valid_encounters = append(valid_encounters, encounter.Nickname.Get())
-					}
-				}
-			}
-
+			// Change to seek valid encounters by faction ?
 			// find zones by encounter nickname
 			found_zones := make(map[string]*systems_mapped.EncounterZoneInSystem)
+			for _, afilliation := range affiliations {
+				if encounters, ok := e.Mapped.Systems.EncounterByAfilliation[afilliation]; ok {
+					for _, encounter := range encounters {
+						// TODO Validate here that Encounter the zone has, has matching ShipClasses
+						matched_ship_class_in_formation := false
+						for _, encounter_name := range encounter.Zone.Encounters {
+							encounter_param := encounter.System.EncounterParametersByName[encounter_name.Get()]
+							encoutners_forms_by_filepath := e.Mapped.Systems.EncounterFormationByFilepath
+							encounter_formation := encoutners_forms_by_filepath[encounter_param.Filename.Get()]
 
-			for _, encounter_nick := range valid_encounters {
-				if encounter_zones, ok := e.Mapped.Systems.EncounterZonesByNickname[encounter_nick]; ok {
+							for _, shipclass := range encounter_formation.ShipClasses {
+								if _, ok := ship_class_nicknames[shipclass.Get()]; ok {
+									matched_ship_class_in_formation = true
+									break
+								}
+							}
+						}
+						if !matched_ship_class_in_formation {
+							continue
+						}
 
-					for _, zone := range encounter_zones {
-
-						found_zones[zone.Zone.Nickname.Get()] = zone
+						found_zones[encounter.Zone.Nickname.Get()] = encounter
 					}
 				}
 			}
 
 			for _, zone := range found_zones {
 				// YOU FOUND IT. ADD POS/SYSTEM NAME/Sector CORD
+
+				density, found_density := zone.Zone.Density.GetValue()
+				if !found_density {
+					continue
+				}
+				if density == 0 {
+					continue
+				}
+
 				item_nickname := npc_loot.LootInfo.Nickname
 				if !e.IsLootable(item_nickname) {
 					continue

@@ -195,10 +195,12 @@ type LootableZone struct {
 
 type Zone struct {
 	semantic.Model
-	Nickname *semantic.String
-	Pos      *semantic.Vect
-	IDsInfo  *semantic.Int
-	IdsName  *semantic.Int
+	Nickname        *semantic.String
+	Pos             *semantic.Vect
+	IDsInfo         *semantic.Int
+	IdsName         *semantic.Int
+	Density         *semantic.Float
+	FactionNickname *semantic.String
 
 	Encounters []*semantic.String
 }
@@ -232,12 +234,14 @@ type System struct {
 	Objects     []*Object
 	Wrecks      []*Wreck
 
-	EncounterParameters []*EncounterParameter
+	EncounterParameters       []*EncounterParameter
+	EncounterParametersByName map[string]*EncounterParameter
 }
 
 type EncounterFormation struct {
 	semantic.Model
 	ShipClasses []*semantic.String
+	Filepath    *semantic.Path
 }
 
 type EncounterConfig struct {
@@ -255,8 +259,8 @@ type Config struct {
 	BasesByNick     map[string]*Base
 	JumpholesByNick map[string]*Jumphole
 
-	EncounterByShipClass     map[string][]*EncounterParameter
-	EncounterZonesByNickname map[string][]*EncounterZoneInSystem
+	EncounterByAfilliation       map[string][]*EncounterZoneInSystem
+	EncounterFormationByFilepath map[utils_types.FilePath]*EncounterFormation
 }
 
 type EncounterZoneInSystem struct {
@@ -275,10 +279,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 		BasesByBases:    make(map[string]*Base),
 		BasesByDockWith: make(map[string]*Base),
 
-		BasesByNick:              make(map[string]*Base),
-		JumpholesByNick:          make(map[string]*Jumphole),
-		EncounterByShipClass:     make(map[string][]*EncounterParameter),
-		EncounterZonesByNickname: make(map[string][]*EncounterZoneInSystem),
+		BasesByNick:                  make(map[string]*Base),
+		JumpholesByNick:              make(map[string]*Jumphole),
+		EncounterByAfilliation:       make(map[string][]*EncounterZoneInSystem),
+		EncounterFormationByFilepath: make(map[utils_types.FilePath]*EncounterFormation),
 	}
 	var wg sync.WaitGroup
 
@@ -328,9 +332,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 				AllBasesByBases:             make(map[string][]*Base),
 				AllBasesByDockWith:          make(map[string][]*Base),
 
-				BasesByNick:     make(map[string]*Base),
-				BasesByBases:    make(map[string]*Base),
-				BasesByDockWith: make(map[string]*Base),
+				BasesByNick:               make(map[string]*Base),
+				BasesByBases:              make(map[string]*Base),
+				BasesByDockWith:           make(map[string]*Base),
+				EncounterParametersByName: make(map[string]*EncounterParameter),
 			}
 			system_to_add.Init(sysiniconf.Sections, sysiniconf.Comments, sysiniconf.File.GetFilepath())
 
@@ -393,6 +398,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					object_to_add.Map(obj)
 
 					system_to_add.EncounterParameters = append(system_to_add.EncounterParameters, object_to_add)
+					system_to_add.EncounterParametersByName[object_to_add.Nickname.Get()] = object_to_add
 				}
 			}
 
@@ -504,10 +510,12 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 				for _, zone_info := range zones {
 
 					zone_to_add := &Zone{
-						Nickname: semantic.NewString(zone_info, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-						Pos:      semantic.NewVector(zone_info, cfg.Key("pos"), semantic.Precision(0)),
-						IdsName:  semantic.NewInt(zone_info, cfg.Key("ids_name"), semantic.Optional()),
-						IDsInfo:  semantic.NewInt(zone_info, cfg.Key("ids_info"), semantic.Optional()),
+						Nickname:        semantic.NewString(zone_info, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						Pos:             semantic.NewVector(zone_info, cfg.Key("pos"), semantic.Precision(0)),
+						IdsName:         semantic.NewInt(zone_info, cfg.Key("ids_name"), semantic.Optional()),
+						IDsInfo:         semantic.NewInt(zone_info, cfg.Key("ids_info"), semantic.Optional()),
+						Density:         semantic.NewFloat(zone_info, cfg.Key("density"), semantic.Precision(2)),
+						FactionNickname: semantic.NewString(zone_info, cfg.Key("faction"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 					}
 					system_to_add.ZonesByNick[zone_to_add.Nickname.Get()] = zone_to_add
 
@@ -518,15 +526,17 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 									semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Index(index), semantic.Order(0))))
 						}
 					}
-					for _, encounter := range zone_to_add.Encounters {
-						nickname := encounter.Get()
+					{
+						encounter_zone := &EncounterZoneInSystem{
+							Zone:   zone_to_add,
+							System: system_to_add,
+						}
 
-						frelconfig.EncounterZonesByNickname[nickname] = append(frelconfig.EncounterZonesByNickname[nickname],
-							&EncounterZoneInSystem{
-								Zone:   zone_to_add,
-								System: system_to_add,
-							},
-						)
+						affiliation, found_afilliation := zone_to_add.FactionNickname.GetValue()
+						if !found_afilliation {
+							continue
+						}
+						frelconfig.EncounterByAfilliation[affiliation] = append(frelconfig.EncounterByAfilliation[affiliation], encounter_zone)
 					}
 
 					if vignette_type, ok := zone_info.ParamMap[cfg.Key("vignette_type")]; ok && len(vignette_type) > 0 {
@@ -575,11 +585,11 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 		}
 	}, timeit.WithMsg("Map universe itself"))
 
-	encounter_formations_unique := make(map[string]*EncounterParameter)
+	encounter_formations_unique := make(map[utils_types.FilePath]*EncounterParameter)
 	for _, system := range frelconfig.Systems {
 		for _, encounter_params := range system.EncounterParameters {
 
-			encounter_formations_unique[encounter_params.Nickname.Get()] = encounter_params
+			encounter_formations_unique[encounter_params.Filename.Get()] = encounter_params
 		}
 	}
 	var encounter_configs []*EncounterConfig
@@ -601,7 +611,9 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 			if objs, ok := config.SectionMap["[encounterformation]"]; ok {
 				for _, obj := range objs {
-					formation := &EncounterFormation{}
+					formation := &EncounterFormation{
+						Filepath: ast.EncounterParams.Filename,
+					}
 					formation.Map(obj)
 
 					if ship_classes, ok := obj.ParamMap["ship_by_class"]; ok {
@@ -626,11 +638,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 	for _, cfg := range encounter_configs {
 		for _, encounter_form := range cfg.EncounterFormations {
-			for _, shipclass := range encounter_form.ShipClasses {
-				frelconfig.EncounterByShipClass[shipclass.Get()] = append(frelconfig.EncounterByShipClass[shipclass.Get()], cfg.EncounterParams)
-
-			}
-
+			frelconfig.EncounterFormationByFilepath[encounter_form.Filepath.Get()] = encounter_form
 		}
 	}
 

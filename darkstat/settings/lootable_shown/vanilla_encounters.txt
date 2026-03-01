@@ -543,3 +543,4 @@ ge_s_thruster_04
 ge_s_thruster_02
 ge_s_thruster_03
 ge_s_thruster_01
+no_thruster

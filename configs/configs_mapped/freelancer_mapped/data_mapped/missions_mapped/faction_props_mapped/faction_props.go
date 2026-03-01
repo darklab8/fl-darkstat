@@ -22,12 +22,14 @@ type Config struct {
 
 	FactionProps             []*FactionProp
 	FactionPropMapByNickname map[string]*FactionProp
+	FactionPropMapByNpcShip  map[string][]*FactionProp
 }
 
 func Read(input_file *iniload.IniLoader) *Config {
 	frelconfig := &Config{
 		IniLoader:                input_file,
 		FactionPropMapByNickname: make(map[string]*FactionProp),
+		FactionPropMapByNpcShip:  make(map[string][]*FactionProp),
 	}
 	if sections, ok := frelconfig.SectionMap["[factionprops]"]; ok {
 		for _, section := range sections {
@@ -42,6 +44,12 @@ func Read(input_file *iniload.IniLoader) *Config {
 			}
 			frelconfig.FactionProps = append(frelconfig.FactionProps, faction_prop)
 			frelconfig.FactionPropMapByNickname[faction_prop.Affiliation.Get()] = faction_prop
+
+			for _, npc_ship := range faction_prop.NpcShips {
+				npc_ship_nick := npc_ship.Get()
+				frelconfig.FactionPropMapByNpcShip[npc_ship_nick] = append(frelconfig.FactionPropMapByNpcShip[npc_ship_nick], faction_prop)
+			}
+
 		}
 	}
 
