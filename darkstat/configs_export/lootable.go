@@ -1,13 +1,13 @@
 package configs_export
 
 import (
+	"fmt"
+
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
-	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/lootable_shown"
-	"github.com/darklab8/go-utils/typelog"
 	"github.com/google/uuid"
 )
 
@@ -48,7 +48,7 @@ func SetPermitted(permitted_wrecks map[string]bool, permitted_encounters map[str
 	if loot_info.Kind == LootNotFoundNpcArch {
 		loot_info.Permitted = true
 	} else if loot_info.Kind == LootEncounter {
-		loot_info.Permitted = permitted_encounters[loot_info.Nickname]
+		loot_info.Permitted = true
 
 	} else if loot_info.Kind == LootWreck {
 		loot_info.Permitted = permitted_wrecks[loot_info.Nickname]
@@ -211,6 +211,25 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 	}
 	{
 
+		// Now this is purely for encounter i think? because only they search in [Ship]
+		// By NPC ship loadout, we find ship class architecture
+		// then we need to find ship class
+		// through which we validate it is in encounters
+		// throughthat we find zones in which encounter is, and we get where it is dropped
+		// to validate if "equip" in mLootProps
+
+		// the loot will drop anyway regardless if it is in mlootprops
+		// only checking forbidding fuses is important?
+		mlootprops_allowed := make(map[string]bool)
+		for _, MLootProp := range e.Mapped.LookProps.LootProps {
+			equipment_nickname := MLootProp.Nickname.Get()
+			if !e.IsLootable(equipment_nickname) {
+				continue
+			}
+
+			mlootprops_allowed[equipment_nickname] = true
+		}
+
 		type NpcLoot struct {
 			*LootInfo
 			LoadoutNickname string
@@ -229,26 +248,24 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 
 				if loadout, ok := e.Mapped.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
 
-					var loadout_archetype string
-					if e.Mapped.Discovery != nil {
-						var found_arch bool
-						loadout_archetype, found_arch = loadout.Archetype.GetValue()
-
-						if !found_arch {
-							logus.Log.Error("haven't found archetype", typelog.Any("loadout_nickname", loadout_nickname))
-						}
-
-						loadout_archetype = npc_arch.ShipArchetype.Get()
-					} else {
-						loadout_archetype = loadout.Archetype.Get()
-					}
+					loadout_archetype := npc_arch.ShipArchetype.Get()
 
 					shiparch := e.Mapped.Shiparch.ShipsMap[loadout_archetype]
 					forbidden_hardpoints := make(map[string]bool)
+					fuse_drops_equips := make(map[string]bool)
+					fuse_cargo_drop := false
+
 					for _, fuse := range shiparch.Fuses {
 						if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
 							for key, _ := range fuse.NotLootableHardpoints {
 								forbidden_hardpoints[key] = true
+							}
+							if fuse.DoesDropCargo {
+								fuse_cargo_drop = true
+							}
+
+							for key, _ := range fuse.LootableHardpoints {
+								fuse_drops_equips[key] = true
 							}
 						}
 					}
@@ -267,6 +284,16 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 							LootInfo:        loot_info,
 							LoadoutNickname: loadout_nickname,
 						}
+
+						loot_droppable := false
+						if _, ok := mlootprops_allowed[loot_info.Nickname]; ok {
+							loot_droppable = true
+						}
+
+						if !loot_droppable && !fuse_cargo_drop {
+							continue
+						}
+
 						send_npc_loot(loot_npc_drop)
 					}
 					for _, equip := range loadout.Equips {
@@ -285,6 +312,19 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 							continue
 						}
 
+						loot_droppable := false
+						if _, ok := mlootprops_allowed[item_nickname]; ok {
+							loot_droppable = true
+						}
+						fuse_droppable := false
+						if _, ok := fuse_drops_equips[hardpoint]; ok {
+							fuse_droppable = true
+						}
+
+						if !loot_droppable && !fuse_droppable {
+							continue
+						}
+
 						loot_info := &LootInfo{
 							Kind:       LootNotFoundNpcArch,
 							Nickname:   item_nickname,
@@ -294,27 +334,13 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 							LootInfo:        loot_info,
 							LoadoutNickname: loadout_nickname,
 						}
+
 						send_npc_loot(loot_npc_drop)
 					}
 				}
 			}
 		}
 
-		// Now this is purely for encounter i think? because only they search in [Ship]
-		// By NPC ship loadout, we find ship class architecture
-		// then we need to find ship class
-		// through which we validate it is in encounters
-		// throughthat we find zones in which encounter is, and we get where it is dropped
-		// to validate if "equip" in mLootProps
-		mlootprops_allowed := make(map[string]bool)
-		for _, MLootProp := range e.Mapped.LookProps.LootProps {
-			equipment_nickname := MLootProp.Nickname.Get()
-			if !e.IsLootable(equipment_nickname) {
-				continue
-			}
-
-			mlootprops_allowed[equipment_nickname] = true
-		}
 		// [ ] missing to validate dump_cargo and destroy_hp_attachment at Ship fuses
 		// [ ] FIX to finding by faction=fc_c_grp, and there using encounter to validate only ship_class that will spawn
 		// encounter = deep_bossencounter01, 19, 1 , patrol
@@ -323,13 +349,14 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 		max_encounter_by_nick := make(map[string]int)
 		max_notfound_npc_drop := make(map[string]int)
 		found_npc_loot_in_encounters := make(map[string]bool)
+		var not_matched_loot []*NpcLoot
 		IteratorNpcShips(func(npc_loot *NpcLoot) {
-			// if npc_loot.LootInfo.Nickname == "special_nomad_gun01" {
-			// 	fmt.Println()
-			// }
-
 			if max_encounter_by_nick[npc_loot.LootInfo.Nickname] > LootMaxEncounters {
 				return
+			}
+
+			if npc_loot.LootInfo.Nickname == "no2_gun_medium03" {
+				fmt.Println()
 			}
 			// :x: by cargo find loadout name in [Loadout]
 			// by louadout nickname, find in [NPCShipArch] ship class of it like `class_deep_cbcr` (npcships.ini)
@@ -430,39 +457,43 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 				}
 				unique_encounter_loot[key_uniqueness] = true
 
-				if max_encounter_by_nick[loot_info.Nickname] > LootMaxEncounters {
+				if max_encounter_by_nick[loot_info.Nickname] > LootMaxEncounters && loot_info.Nickname != "commodity_sciencedata" {
 					continue
 				}
 				max_encounter_by_nick[loot_info.Nickname] += 1
 
-				found_npc_loot_in_encounters[loot_info.Nickname] = true
 				SetPermitted(permitted_wrecks, permitted_encounters, loot_info)
 
-				_, is_mloot_allowed := mlootprops_allowed[npc_loot.LootInfo.Nickname]
+				found_npc_loot_in_encounters[loot_info.Nickname] = true
+				e.findable_in_loot_cache[loot_info.Nickname] = true
 
-				is_fuse_allowed := true // TODO [ ] missing to validate dump_cargo and destroy_hp_attachment at Ship fuses
-
-				if is_mloot_allowed || is_fuse_allowed {
-					loots = append(loots, loot_info)
-				}
+				loots = append(loots, loot_info)
 
 			}
 
 			// Fallback, add to not found then
 			if _, ok := found_npc_loot_in_encounters[npc_loot.Nickname]; !ok {
+				not_matched_loot = append(not_matched_loot, npc_loot)
+			}
+
+		})
+
+		for _, npc_loot := range not_matched_loot {
+			// Fallback, add to not found then
+			if _, ok := found_npc_loot_in_encounters[npc_loot.Nickname]; !ok {
 				if !e.IsLootable(npc_loot.Nickname) {
-					return
+					continue
 				}
 				SetPermitted(permitted_wrecks, permitted_encounters, npc_loot.LootInfo)
 
 				if max_notfound_npc_drop[npc_loot.LootInfo.Nickname] > LootMaxNotFoundNPCDrops {
-					return
+					continue
 				}
 				max_notfound_npc_drop[npc_loot.LootInfo.Nickname] += 1
 
 				loots = append(loots, npc_loot.LootInfo)
 			}
-		})
+		}
 	}
 
 	e.findable_wrecks = loots

@@ -9,24 +9,24 @@ import (
 var vanilla_wrecks string
 var vanila_wrecks_cache map[string]bool = make(map[string]bool)
 
-//go:embed vanilla_encounters.txt
-var vanilla_encounters string
+// //go:embed vanilla_encounters.txt
+// var vanilla_encounters string
 var vanila_encounters_cache map[string]bool = make(map[string]bool)
 
 //go:embed flsr_wrecks.txt
 var flsr_wrecks string
 var flsr_wrecks_cache map[string]bool = make(map[string]bool)
 
-//go:embed flsr_encounters.txt
-var flsr_encounters string
+// //go:embed flsr_encounters.txt
+// var flsr_encounters string
 var flsr_encounters_cache map[string]bool = make(map[string]bool)
 
 //go:embed discovery_wrecks.txt
 var discovery_wrecks string
 var discovery_wrecks_cache map[string]bool = make(map[string]bool)
 
-//go:embed discovery_encounters.txt
-var discovery_encounters string
+// //go:embed discovery_encounters.txt
+// var discovery_encounters string
 var discovery_encounters_cache map[string]bool = make(map[string]bool)
 
 func GetGenericPermitted(data string, cached map[string]bool) map[string]bool {
@@ -53,11 +53,11 @@ func GetDiscoveryWrecksAllowed() map[string]bool {
 }
 
 func GetVanillaEncountersAlloed() map[string]bool {
-	return GetGenericPermitted(vanilla_encounters, vanila_encounters_cache)
+	return vanila_encounters_cache // GetGenericPermitted(vanilla_encounters, vanila_encounters_cache)
 }
 func GetFLSEncountersAllowed() map[string]bool {
-	return GetGenericPermitted(flsr_encounters, flsr_encounters_cache)
+	return flsr_encounters_cache // GetGenericPermitted(flsr_encounters, flsr_encounters_cache)
 }
 func GetDiscoveryEncountersAllowed() map[string]bool {
-	return GetGenericPermitted(discovery_encounters, discovery_encounters_cache)
+	return discovery_encounters_cache // GetGenericPermitted(discovery_encounters, discovery_encounters_cache)
 }

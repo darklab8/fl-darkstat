@@ -200,7 +200,7 @@ type Zone struct {
 	IDsInfo         *semantic.Int
 	IdsName         *semantic.Int
 	Density         *semantic.Float
-	FactionNickname *semantic.String
+	FactionNickname []*semantic.String
 
 	Encounters []*semantic.String
 }
@@ -510,12 +510,11 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 				for _, zone_info := range zones {
 
 					zone_to_add := &Zone{
-						Nickname:        semantic.NewString(zone_info, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-						Pos:             semantic.NewVector(zone_info, cfg.Key("pos"), semantic.Precision(0)),
-						IdsName:         semantic.NewInt(zone_info, cfg.Key("ids_name"), semantic.Optional()),
-						IDsInfo:         semantic.NewInt(zone_info, cfg.Key("ids_info"), semantic.Optional()),
-						Density:         semantic.NewFloat(zone_info, cfg.Key("density"), semantic.Precision(2)),
-						FactionNickname: semantic.NewString(zone_info, cfg.Key("faction"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						Nickname: semantic.NewString(zone_info, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						Pos:      semantic.NewVector(zone_info, cfg.Key("pos"), semantic.Precision(0)),
+						IdsName:  semantic.NewInt(zone_info, cfg.Key("ids_name"), semantic.Optional()),
+						IDsInfo:  semantic.NewInt(zone_info, cfg.Key("ids_info"), semantic.Optional()),
+						Density:  semantic.NewFloat(zone_info, cfg.Key("density"), semantic.Precision(2)),
 					}
 					system_to_add.ZonesByNick[zone_to_add.Nickname.Get()] = zone_to_add
 
@@ -526,17 +525,25 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 									semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Index(index), semantic.Order(0))))
 						}
 					}
+					if facctions, ok := zone_info.ParamMap[cfg.Key("faction")]; ok && len(facctions) > 0 {
+						for index, _ := range facctions {
+							zone_to_add.FactionNickname = append(zone_to_add.FactionNickname,
+								semantic.NewString(zone_info, "faction",
+									semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Index(index), semantic.Order(0))))
+						}
+					}
 					{
 						encounter_zone := &EncounterZoneInSystem{
 							Zone:   zone_to_add,
 							System: system_to_add,
 						}
 
-						affiliation, found_afilliation := zone_to_add.FactionNickname.GetValue()
-						if !found_afilliation {
-							continue
+						for _, affiliation_param := range zone_to_add.FactionNickname {
+							affiliation := affiliation_param.Get()
+							frelconfig.EncounterByAfilliation[affiliation] = append(frelconfig.EncounterByAfilliation[affiliation], encounter_zone)
+
 						}
-						frelconfig.EncounterByAfilliation[affiliation] = append(frelconfig.EncounterByAfilliation[affiliation], encounter_zone)
+
 					}
 
 					if vignette_type, ok := zone_info.ParamMap[cfg.Key("vignette_type")]; ok && len(vignette_type) > 0 {

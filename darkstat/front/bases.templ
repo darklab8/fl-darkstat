@@ -547,6 +547,8 @@ func GetBaseKind(shared *types.SharedData, base_name string) BaseKind {
 	return BaseNPC
 }
 
+var HideSensitiveByDefault = true
+
 templ ShowSensitive(
 	shared *types.SharedData,
 	visible_if_spoiler string,
@@ -557,7 +559,7 @@ templ ShowSensitive(
 	} else if value_to_show=="0" && allowed_to_show_default {
 		{ value_to_show }
 	} else {
-		if shared.ShowFLSR {
+		if HideSensitiveByDefault {
 			<div class="flsrtooltip">
 				{ visible_if_spoiler }
 				<span class="flsrtooltiptext">
@@ -610,10 +612,10 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 				</td>
 				if GetBaseKind(shared, name) == BaseLootable {
 					if good.LootInfo != nil {
+						<td>
+							{ good.LootInfo.Kind.ToStr() }
+						</td>
 						if good.LootInfo.Permitted {
-							<td>
-								{ good.LootInfo.Kind.ToStr() }
-							</td>
 							<td>
 								@ShowSensitive(shared, "hover to see", good.LootInfo.SystemName, true) {
 									@frmt.WriteSystemName(good.LootInfo.SystemName)
@@ -640,7 +642,6 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 								}
 							</td>
 						} else {
-							<td>no access</td>
 							<td>no access</td>
 							<td>*</td>
 							<td>*</td>
