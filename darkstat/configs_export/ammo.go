@@ -80,10 +80,6 @@ func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 			}
 		}
 
-		if !e.Buyable(munition.Bases) {
-			continue
-		}
-
 		e.exportInfocards(infocarder.InfocardKey(munition.Nickname), munition.InfoID)
 		munition.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, munition.Nickname)
 		tractors = append(tractors, munition)
