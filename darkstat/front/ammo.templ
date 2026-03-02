@@ -73,9 +73,21 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.Shar
 					<td>{ frmt.GetAmmoLimitFormatted(ammo.AmmoLimit) }</td>
 					<td>{ fmt.Sprintf("%.4f",ammo.Volume) }</td>
 					<td>{ fmt.Sprintf("%.2f",ammo.MunitionLifetime) }</td>
-					<td>{ ammo.SeekerType }</td>
-					<td>{ strconv.Itoa(ammo.SeekerRange) }</td>
-					<td>{ strconv.Itoa(ammo.SeekerFovDeg) }</td>
+					<td>
+						if ammo.SeekerType != nil {
+							{ *ammo.SeekerType }
+						}
+					</td>
+					<td>
+						if ammo.SeekerRange != nil {
+							{ strconv.Itoa(*ammo.SeekerRange) }
+						}
+					</td>
+					<td>
+						if ammo.SeekerFovDeg != nil {
+							{ strconv.Itoa(*ammo.SeekerFovDeg) }
+						}
+					</td>
 					<td class="seo">{ ammo.Nickname } </td>
 					<td class="seo">{ strconv.Itoa(ammo.NameID) } </td>
 					<td class="seo">{ strconv.Itoa(ammo.InfoID) } </td>

@@ -16,12 +16,12 @@ type Ammo struct {
 	Volume           float64 `json:"volume" validate:"required"`
 	MunitionLifetime float64 `json:"munition_lifetime" validate:"required"`
 
-	Nickname     string `json:"nickname" validate:"required"`
-	NameID       int    `json:"name_id" validate:"required"`
-	InfoID       int    `json:"info_id" validate:"required"`
-	SeekerType   string `json:"seeker_type" validate:"required"`
-	SeekerRange  int    `json:"seeker_range" validate:"required"`
-	SeekerFovDeg int    `json:"seeker_fov_deg" validate:"required"`
+	Nickname     string  `json:"nickname" validate:"required"`
+	NameID       int     `json:"name_id" validate:"required"`
+	InfoID       int     `json:"info_id" validate:"required"`
+	SeekerType   *string `json:"seeker_type" validate:"required"`
+	SeekerRange  *int    `json:"seeker_range" validate:"required"`
+	SeekerFovDeg *int    `json:"seeker_fov_deg" validate:"required"`
 
 	Bases map[cfg.BaseUniNick]*MarketGood `json:"-" swaggerignore:"true"`
 
@@ -53,6 +53,11 @@ func (e *Exporter) WriteConfigToInfocard(item_model *semantic.Model, item_nickna
 	e.PutInfocard(infocarder.InfocardKey(item_nickname), append(info.Lines, infocard_addition.Lines...))
 }
 
+func GetValuePtr[K any](some_func func() (K, bool)) *K {
+	value, _ := some_func()
+	return ptr.Ptr(value)
+}
+
 func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 	var ammos []Ammo
 
@@ -76,12 +81,12 @@ func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 		}
 
 		item.Volume, _ = item_info.Volume.GetValue()
-		item.SeekerRange, _ = item_info.SeekerRange.GetValue()
-		item.SeekerType, _ = item_info.SeekerType.GetValue()
+		item.SeekerRange = GetValuePtr(item_info.SeekerRange.GetValue)
+		item.SeekerType = GetValuePtr(item_info.SeekerType.GetValue)
 
 		item.MunitionLifetime, _ = item_info.LifeTime.GetValue()
 
-		item.SeekerFovDeg, _ = item_info.SeekerFovDeg.GetValue()
+		item.SeekerFovDeg = GetValuePtr(item_info.SeekerFovDeg.GetValue)
 
 		if ammo_ids_name, ok := item_info.IdsName.GetValue(); ok {
 			item.Name = e.GetInfocardName(ammo_ids_name, item.Nickname)
@@ -127,7 +132,7 @@ func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 
 		item.Volume, _ = item_info.Volume.GetValue()
 		item.MunitionLifetime, _ = item_info.LifeTime.GetValue()
-		item.SeekerRange, _ = item_info.SeekDist.GetValue()
+		item.SeekerRange = GetValuePtr(item_info.SeekDist.GetValue)
 
 		if ammo_ids_name, ok := item_info.IdsName.GetValue(); ok {
 			item.Name = e.GetInfocardName(ammo_ids_name, item.Nickname)

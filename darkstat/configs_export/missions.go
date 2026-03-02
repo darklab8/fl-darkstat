@@ -19,7 +19,7 @@ type EnemyFaction struct {
 NewEnemyFaction Calculates for enemy faction percentage of ships defined in faction_props/npcships.ini
 If they aren't defined, Freelancer will be showing corrupted no missions when they encounter.
 */
-func (e *Exporter) NewEnemyFaction(faction Faction, npc_ranks []int) EnemyFaction {
+func (e *Exporter) NewEnemyFaction(faction Faction, npc_ranks []int) *EnemyFaction {
 	var npc_ranks_need map[int]bool = make(map[int]bool)
 	for _, rank := range npc_ranks {
 		npc_ranks_need[rank] = true
@@ -27,7 +27,7 @@ func (e *Exporter) NewEnemyFaction(faction Faction, npc_ranks []int) EnemyFactio
 
 	var npc_ranks_exist map[int]bool = make(map[int]bool)
 
-	result := EnemyFaction{
+	result := &EnemyFaction{
 		Faction: faction,
 	}
 
@@ -41,16 +41,16 @@ func (e *Exporter) NewEnemyFaction(faction Faction, npc_ranks []int) EnemyFactio
 		npc_ship_nickname := npc_ship.Get()
 		if npc_shiparch, ok := e.Mapped.NpcShips.NpcShipsByNickname[npc_ship_nickname]; ok {
 
-			has_class_fighter := false
-			for _, npc_class := range npc_shiparch.NpcClass {
-				if npc_class.Get() == "class_fighter" {
-					has_class_fighter = true
-					break
-				}
-			}
-			if !has_class_fighter {
-				continue
-			}
+			// has_class_fighter := false
+			// for _, npc_class := range npc_shiparch.NpcClass {
+			// 	if npc_class.Get() == "class_fighter" { // why would it be important? it is not
+			// 		has_class_fighter = true
+			// 		break
+			// 	}
+			// }
+			// if !has_class_fighter {
+			// 	continue
+			// }
 			str_level := npc_shiparch.Level.Get()
 			if level, err := strconv.Atoi(str_level[1:]); err == nil {
 
@@ -76,18 +76,18 @@ type MissioNFaction struct {
 	MinAward int
 	MaxAward int
 	NpcRanks []int
-	Enemies  []EnemyFaction
+	Enemies  []*EnemyFaction
 	Err      cfg.Err
 }
 
 type BaseMissions struct {
 	MinOffers         int
 	MaxOffers         int
-	Factions          []MissioNFaction
+	Factions          []*MissioNFaction
 	NpcRanksAtBaseMap map[int]bool
 	NpcRanksAtBase    []int
 
-	EnemiesAtBaseMap map[string]EnemyFaction
+	EnemiesAtBaseMap map[string]*EnemyFaction
 
 	MinMoneyAward int
 	MaxMoneyAward int
@@ -120,7 +120,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 
 	for base_index, base := range bases {
 		base.Missions.NpcRanksAtBaseMap = make(map[int]bool)
-		base.Missions.EnemiesAtBaseMap = make(map[string]EnemyFaction)
+		base.Missions.EnemiesAtBaseMap = make(map[string]*EnemyFaction)
 
 		base_info, ok := e.Mapped.MBases.BaseMap[base.Nickname]
 		if !ok {
@@ -188,7 +188,7 @@ func (e *Exporter) GetMissions(bases []*Base, factions []Faction) []*Base {
 		}
 
 		for _, faction_info := range base_info.BaseFactions {
-			faction := MissioNFaction{
+			faction := &MissioNFaction{
 				FactionNickname: faction_info.Faction.Get(),
 			}
 			faction.MinDifficulty, _ = faction_info.MissionType.MinDifficulty.GetValue()

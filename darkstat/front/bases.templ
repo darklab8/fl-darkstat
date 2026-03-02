@@ -775,8 +775,8 @@ templ BaseMissions(name string, mission_givers configs_export.BaseMissions, tab_
 	}
 }
 
-func EnemistToList(enemies map[string]configs_export.EnemyFaction) []configs_export.EnemyFaction {
-	var result []configs_export.EnemyFaction = make([]configs_export.EnemyFaction, 0, len(enemies))
+func EnemistToList(enemies map[string]*configs_export.EnemyFaction) []*configs_export.EnemyFaction {
+	var result []*configs_export.EnemyFaction = make([]*configs_export.EnemyFaction, 0, len(enemies))
 	for _, enemy := range enemies {
 		if enemy.Nickname == "" {
 			continue
@@ -786,7 +786,7 @@ func EnemistToList(enemies map[string]configs_export.EnemyFaction) []configs_exp
 	return result
 }
 
-templ PrintEnemies(enemies []configs_export.EnemyFaction) {
+templ PrintEnemies(enemies []*configs_export.EnemyFaction) {
 	for enemy_index, enemy := range enemies {
 		{ enemy.Name } ( { enemy.Nickname }, { strconv.FormatBool(enemy.NpcExist) } )
 		if enemy_index != len(enemies) - 1 {
