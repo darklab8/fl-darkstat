@@ -55,6 +55,7 @@ type Exporter struct {
 	TravelBases []*Base
 
 	MiningOperations     []*Base
+	LootableBase         *Base
 	useful_bases_by_nick map[cfg.BaseUniNick]bool
 
 	ship_speeds trades.ShipSpeeds

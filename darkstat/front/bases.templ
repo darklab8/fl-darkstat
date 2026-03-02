@@ -466,7 +466,8 @@ type BaseKind int8
 const (
 	BaseNPC BaseKind = iota
 	BasePOBCrafts
-	BaseLootable
+	BaseLootableLocked
+	BaseLootableUnlocked
 )
 
 templ BaseMarketGoodsBase(base_kind BaseKind) {
@@ -486,10 +487,27 @@ templ BaseMarketGoodsBase(base_kind BaseKind) {
 					<th style="width:10px;">
 						@frmt.MultiLinestring([]string{"Factory", "name"})
 					</th>
-				} else if base_kind == BaseLootable {
+				} else if base_kind == BaseLootableLocked {
 					<th style="width:25px;">Kind</th>
 					<th style="width:50px;">
 						@frmt.MultiLinestring([]string{"System name", "NavMap + PosX + PosY + PosZ"})
+					</th>
+				} else if base_kind == BaseLootableUnlocked {
+					<th style="width:25px;">Kind</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"System name"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"NavMap"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"PosX"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"PosY"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"PosZ"})
 					</th>
 				}
 				<th style="width:10px;">
@@ -518,7 +536,7 @@ templ BaseMarketGoodsBase(base_kind BaseKind) {
 				<th style="width:10px;">
 					@frmt.MultiLinestring([]string{"Server", "Override"})
 				</th>
-				if base_kind == BaseLootable {
+				if base_kind == BaseLootableLocked || base_kind == BaseLootableUnlocked {
 					<th style="width:10px;">
 						@frmt.MultiLinestring([]string{"Place", "Nickname"})
 					</th>
@@ -537,7 +555,10 @@ func GetBaseKind(shared *types.SharedData, base_name string) BaseKind {
 		return BasePOBCrafts
 	}
 	if configs_export.BaseLootableName == base_name {
-		return BaseLootable
+		return BaseLootableLocked
+	}
+	if "lootable_unlocked" == base_name {
+		return BaseLootableUnlocked
 	}
 
 	return BaseNPC
@@ -570,7 +591,7 @@ templ ShowSensitive(
 
 templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*configs_export.MarketGood, tab_mode BaseMode, shared *types.SharedData) {
 	<div class="bottom_name">
-		if GetBaseKind(shared, name) == BaseLootable {
+		if GetBaseKind(shared, name) == BaseLootableLocked || GetBaseKind(shared, name) == BaseLootableUnlocked {
 			if shared.ShowDisco {
 				Mode: Discovery. 
 			} else if shared.ShowFLSR {
@@ -585,6 +606,27 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 			and { strconv.Itoa(configs_export.LootMaxPhantom) } phantom drop
 		} else {
 			{ name }
+		}
+		if GetBaseKind(shared, name) == BaseLootableLocked {
+			<button
+				class="btn primary"
+				hx-get={ types.GetCtx(ctx).SiteUrl + urls.LootableUnlocked.ToString() }
+				hx-target="#table-bottom-main"
+				hx-swap="innerHTML"
+				style="height:30px;background-color:var(--color_th_border)"
+			>
+				Unlock all spoilers<img class="loader htmx-indicator" id="unlock-spoilers"/>
+			</button>
+		} else if GetBaseKind(shared, name) == BaseLootableUnlocked {
+			<button
+				class="btn primary"
+				hx-get={ types.GetCtx(ctx).SiteUrl + urls.Lootablelocked.ToString() }
+				hx-target="#table-bottom-main"
+				hx-swap="innerHTML"
+				style="height:30px;background-color:var(--color_th_border)"
+			>
+				Lock back all spoilers<img class="loader htmx-indicator" id="lock-spoilers"/>
+			</button>
 		}
 		// @tab.PageTime() // TODO add when having page proper live backend
 	</div>
@@ -606,7 +648,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 				<td>
 					@frmt.WriteGoodType(string(good.Category))
 				</td>
-				if GetBaseKind(shared, name) == BaseLootable {
+				if GetBaseKind(shared, name) == BaseLootableLocked {
 					if good.LootInfo != nil {
 						<td>
 							{ good.LootInfo.Kind.ToStr() }
@@ -626,6 +668,43 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 							<td>no access</td>
 						}
 					} else {
+						<td></td>
+						<td></td>
+					}
+				}
+				if GetBaseKind(shared, name) == BaseLootableUnlocked {
+					if good.LootInfo != nil {
+						<td>
+							{ good.LootInfo.Kind.ToStr() }
+						</td>
+						if good.LootInfo.Permitted {
+							<td>
+								@frmt.WriteSystemName(good.LootInfo.SystemName)
+							</td>
+							<td>
+								{ good.LootInfo.SectorCoord }
+							</td>
+							<td>
+								{ fmt.Sprintf("%.0f", good.LootInfo.Pos.X) }
+							</td>
+							<td>
+								{ fmt.Sprintf("%.0f", good.LootInfo.Pos.Y) } |
+							</td>
+							<td>
+								{ fmt.Sprintf("%.0f", good.LootInfo.Pos.Z) }
+							</td>
+						} else {
+							<td>no access</td>
+							<td>*</td>
+							<td>*</td>
+							<td>*</td>
+							<td>*</td>
+						}
+					} else {
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
 						<td></td>
 						<td></td>
 					}
@@ -652,7 +731,11 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 				<td>
 					if good.LootInfo != nil {
 						if good.LootInfo.Permitted {
-							@ShowSensitive(shared, "hover", strconv.Itoa(good.PriceBase), false) {
+							if GetBaseKind(shared, name) == BaseLootableLocked {
+								@ShowSensitive(shared, "hover", strconv.Itoa(good.PriceBase), false) {
+									{ strconv.Itoa(good.PriceBase) }
+								}
+							} else {
 								{ strconv.Itoa(good.PriceBase) }
 							}
 						} else {
@@ -689,7 +772,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 					}
 				</td>
 				<td>{ strconv.FormatBool(good.IsServerSideOverride) }</td>
-				if GetBaseKind(shared, name) == BaseLootable {
+				if GetBaseKind(shared, name) == BaseLootableLocked || GetBaseKind(shared, name) == BaseLootableUnlocked {
 					<td>
 						if good.LootInfo.Permitted {
 							{ good.LootInfo.PlaceNick }

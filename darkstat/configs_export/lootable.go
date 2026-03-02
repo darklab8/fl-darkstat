@@ -594,5 +594,6 @@ func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 	e.PutInfocard(infocarder.InfocardKey(base.Nickname), sb)
 
 	bases = append(bases, base)
+	e.LootableBase = base
 	return bases
 }
