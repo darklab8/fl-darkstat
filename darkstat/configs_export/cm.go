@@ -10,11 +10,11 @@ type CounterMeasure struct {
 	Name  string `json:"name"  validate:"required"`
 	Price int    `json:"price"  validate:"required"`
 
-	HitPts        int `json:"hit_pts"  validate:"required"`
-	AIRange       int `json:"ai_range"  validate:"required"`
-	Lifetime      int `json:"lifetime"  validate:"required"`
-	Range         int `json:"range"  validate:"required"`
-	DiversionPctg int `json:"diversion_pctg"  validate:"required"`
+	HitPts        int     `json:"hit_pts"  validate:"required"`
+	AIRange       int     `json:"ai_range"  validate:"required"`
+	Lifetime      float64 `json:"lifetime"  validate:"required"`
+	Range         int     `json:"range"  validate:"required"`
+	DiversionPctg int     `json:"diversion_pctg"  validate:"required"`
 
 	Lootable bool   `json:"lootable"  validate:"required"`
 	Nickname string `json:"nickname"  validate:"required"`
@@ -73,7 +73,7 @@ func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 				cm.AmmoLimit.MaxCatridges = ptr.Ptr(value)
 			}
 
-			cm.Lifetime = ammo_info.Lifetime.Get()
+			cm.Lifetime = ammo_info.LifeTime.Get()
 			cm.Range = ammo_info.Range.Get()
 			cm.DiversionPctg = ammo_info.DiversionPctg.Get()
 

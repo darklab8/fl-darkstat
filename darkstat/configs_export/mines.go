@@ -105,7 +105,7 @@ func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 		mine.SeekDistance = mine_info.SeekDist.Get()
 		mine.TopSpeed = mine_info.TopSpeed.Get()
 		mine.Acceleration = mine_info.Acceleration.Get()
-		mine.LifeTime = mine_info.Lifetime.Get()
+		mine.LifeTime = mine_info.LifeTime.Get()
 		mine.LinearDrag = mine_info.LinearDrag.Get()
 
 		if mine_good_info, ok := e.Mapped.Goods.GoodsMap[mine_info.Nickname.Get()]; ok {

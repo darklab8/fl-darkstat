@@ -66,7 +66,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm tab.PinMod, shared *type
 					}
 					<td>{ strconv.Itoa(cm.DiversionPctg) } </td>
 					<td>{ frmt.GetAmmoLimitFormatted(cm.AmmoLimit) }</td>
-					<td>{ strconv.Itoa(cm.Lifetime) }</td>
+					<td>{ fmt.Sprintf("%.2f", cm.Lifetime) }</td>
 					<td>{ strconv.Itoa(cm.Range) }</td>
 					<td>{ strconv.Itoa(cm.AIRange) }</td>
 					<td>{ strconv.Itoa(cm.HitPts) }</td>

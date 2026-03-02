@@ -2,6 +2,8 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -35,56 +37,165 @@ func (b Ammo) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
 
 func (b Ammo) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
-func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
-	var tractors []Ammo
+func (e *Exporter) WriteConfigToInfocard(item_model *semantic.Model, item_nickname string) {
+	// add to item name its ini config
+	var infocard_addition infocarder.InfocardBuilder
+	sector := item_model.RenderModel()
+	infocard_addition.WriteLineStr(string(sector.OriginalType))
+	for _, param := range sector.Params {
+		infocard_addition.WriteLineStr(string(param.ToString(inireader.WithComments(false))))
+	}
+	infocard_addition.WriteLineStr("")
+	var info infocarder.InfocardBuilder
+	if value, ok := e.GetInfocard2(infocarder.InfocardKey(item_nickname)); ok {
+		info.Lines = value
+	}
+	e.PutInfocard(infocarder.InfocardKey(item_nickname), append(info.Lines, infocard_addition.Lines...))
+}
 
-	for _, munition_info := range e.Mapped.Equip().Munitions {
-		munition := Ammo{
+func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
+	var ammos []Ammo
+
+	for _, item_info := range e.Mapped.Equip().Munitions {
+		item := Ammo{
 			Bases: make(map[cfg.BaseUniNick]*MarketGood),
 		}
-		munition.Mass, _ = munition_info.Mass.GetValue()
+		item.Mass, _ = item_info.Mass.GetValue()
 
-		munition.Nickname = munition_info.Nickname.Get()
-		munition.NameID, _ = munition_info.IdsName.GetValue()
-		munition.InfoID, _ = munition_info.IdsInfo.GetValue()
+		item.Nickname = item_info.Nickname.Get()
+		item.NameID, _ = item_info.IdsName.GetValue()
+		item.InfoID, _ = item_info.IdsInfo.GetValue()
 
-		munition.HitPts, _ = munition_info.HitPts.GetValue()
+		item.HitPts, _ = item_info.HitPts.GetValue()
 
-		if value, ok := munition_info.AmmoLimitAmountInCatridge.GetValue(); ok {
-			munition.AmmoLimit.AmountInCatridge = ptr.Ptr(value)
+		if value, ok := item_info.AmmoLimitAmountInCatridge.GetValue(); ok {
+			item.AmmoLimit.AmountInCatridge = ptr.Ptr(value)
 		}
-		if value, ok := munition_info.AmmoLimitMaxCatridges.GetValue(); ok {
-			munition.AmmoLimit.MaxCatridges = ptr.Ptr(value)
-		}
-
-		munition.Volume, _ = munition_info.Volume.GetValue()
-		munition.SeekerRange, _ = munition_info.SeekerRange.GetValue()
-		munition.SeekerType, _ = munition_info.SeekerType.GetValue()
-
-		munition.MunitionLifetime, _ = munition_info.LifeTime.GetValue()
-
-		munition.SeekerFovDeg, _ = munition_info.SeekerFovDeg.GetValue()
-
-		if ammo_ids_name, ok := munition_info.IdsName.GetValue(); ok {
-			munition.Name = e.GetInfocardName(ammo_ids_name, munition.Nickname)
+		if value, ok := item_info.AmmoLimitMaxCatridges.GetValue(); ok {
+			item.AmmoLimit.MaxCatridges = ptr.Ptr(value)
 		}
 
-		munition.Price = -1
-		if good_info, ok := e.Mapped.Goods.GoodsMap[munition_info.Nickname.Get()]; ok {
+		item.Volume, _ = item_info.Volume.GetValue()
+		item.SeekerRange, _ = item_info.SeekerRange.GetValue()
+		item.SeekerType, _ = item_info.SeekerType.GetValue()
+
+		item.MunitionLifetime, _ = item_info.LifeTime.GetValue()
+
+		item.SeekerFovDeg, _ = item_info.SeekerFovDeg.GetValue()
+
+		if ammo_ids_name, ok := item_info.IdsName.GetValue(); ok {
+			item.Name = e.GetInfocardName(ammo_ids_name, item.Nickname)
+		}
+
+		item.Price = -1
+		if good_info, ok := e.Mapped.Goods.GoodsMap[item_info.Nickname.Get()]; ok {
 			if price, ok := good_info.Price.GetValue(); ok {
-				munition.Price = price
-				munition.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
+				item.Price = price
+				item.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
 					Nickname: good_info.Nickname.Get(),
 					Price:    price,
 				})
 			}
 		}
 
-		e.exportInfocards(infocarder.InfocardKey(munition.Nickname), munition.InfoID)
-		munition.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, munition.Nickname)
-		tractors = append(tractors, munition)
+		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
+		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
+		ammos = append(ammos, item)
+
+		e.WriteConfigToInfocard(&item_info.Model, item.Nickname)
+
 	}
-	return tractors
+
+	for _, item_info := range e.Mapped.Equip().Mines {
+		item := Ammo{
+			Bases: make(map[cfg.BaseUniNick]*MarketGood),
+		}
+		item.Mass, _ = item_info.Mass.GetValue()
+
+		item.Nickname = item_info.Nickname.Get()
+		item.NameID, _ = item_info.IdsName.GetValue()
+		item.InfoID, _ = item_info.IdsInfo.GetValue()
+
+		item.HitPts, _ = item_info.HitPts.GetValue()
+
+		if value, ok := item_info.AmmoLimitAmountInCatridge.GetValue(); ok {
+			item.AmmoLimit.AmountInCatridge = ptr.Ptr(value)
+		}
+		if value, ok := item_info.AmmoLimitMaxCatridges.GetValue(); ok {
+			item.AmmoLimit.MaxCatridges = ptr.Ptr(value)
+		}
+
+		item.Volume, _ = item_info.Volume.GetValue()
+		item.MunitionLifetime, _ = item_info.LifeTime.GetValue()
+		item.SeekerRange, _ = item_info.SeekDist.GetValue()
+
+		if ammo_ids_name, ok := item_info.IdsName.GetValue(); ok {
+			item.Name = e.GetInfocardName(ammo_ids_name, item.Nickname)
+		}
+
+		item.Price = -1
+		if good_info, ok := e.Mapped.Goods.GoodsMap[item_info.Nickname.Get()]; ok {
+			if price, ok := good_info.Price.GetValue(); ok {
+				item.Price = price
+				item.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
+					Nickname: good_info.Nickname.Get(),
+					Price:    price,
+				})
+			}
+		}
+
+		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
+		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
+		ammos = append(ammos, item)
+
+		e.WriteConfigToInfocard(&item_info.Model, item.Nickname)
+
+	}
+
+	for _, item_info := range e.Mapped.Equip().CounterMeasure {
+		item := Ammo{
+			Bases: make(map[cfg.BaseUniNick]*MarketGood),
+		}
+		item.Mass, _ = item_info.Mass.GetValue()
+
+		item.Nickname = item_info.Nickname.Get()
+		item.NameID, _ = item_info.IdsName.GetValue()
+		item.InfoID, _ = item_info.IdsInfo.GetValue()
+
+		if value, ok := item_info.AmmoLimitAmountInCatridge.GetValue(); ok {
+			item.AmmoLimit.AmountInCatridge = ptr.Ptr(value)
+		}
+		if value, ok := item_info.AmmoLimitMaxCatridges.GetValue(); ok {
+			item.AmmoLimit.MaxCatridges = ptr.Ptr(value)
+		}
+
+		item.HitPts, _ = item_info.HitPts.GetValue()
+		item.Volume, _ = item_info.Volume.GetValue()
+		item.MunitionLifetime, _ = item_info.LifeTime.GetValue()
+
+		if ammo_ids_name, ok := item_info.IdsName.GetValue(); ok {
+			item.Name = e.GetInfocardName(ammo_ids_name, item.Nickname)
+		}
+
+		item.Price = -1
+		if good_info, ok := e.Mapped.Goods.GoodsMap[item_info.Nickname.Get()]; ok {
+			if price, ok := good_info.Price.GetValue(); ok {
+				item.Price = price
+				item.Bases = e.GetAtBasesSold(GetCommodityAtBasesInput{
+					Nickname: good_info.Nickname.Get(),
+					Price:    price,
+				})
+			}
+		}
+
+		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
+		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
+		ammos = append(ammos, item)
+
+		e.WriteConfigToInfocard(&item_info.Model, item.Nickname)
+
+	}
+	return ammos
 }
 
 func (e *Exporter) FilterToUsefulAmmo(cms []Ammo) []Ammo {

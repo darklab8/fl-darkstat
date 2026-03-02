@@ -69,10 +69,12 @@ type Munition struct {
 	Motor              *semantic.String
 	MaxAngularVelocity *semantic.Float
 
-	HitPts                    *semantic.Int
 	AmmoLimitAmountInCatridge *semantic.Int
 	AmmoLimitMaxCatridges     *semantic.Int
-	Volume                    *semantic.Float
+
+	HitPts   *semantic.Int
+	Volume   *semantic.Float
+	LifeTime *semantic.Float
 
 	IdsName *semantic.Int
 	IdsInfo *semantic.Int
@@ -80,7 +82,6 @@ type Munition struct {
 	ConstEffect       *semantic.String
 	MunitionHitEffect *semantic.String
 
-	LifeTime     *semantic.Float
 	SeekerType   *semantic.String
 	SeekerRange  *semantic.Int
 	SeekerFovDeg *semantic.Int
@@ -133,7 +134,8 @@ type Mine struct {
 	AmmoLimitAmountInCatridge *semantic.Int
 	AmmoLimitMaxCatridges     *semantic.Int
 	HitPts                    *semantic.Int
-	Lifetime                  *semantic.Float
+	Volume                    *semantic.Float
+	LifeTime                  *semantic.Float
 	IdsName                   *semantic.Int
 	IdsInfo                   *semantic.Int
 	SeekDist                  *semantic.Int
@@ -269,7 +271,9 @@ type CounterMeasure struct {
 	IdsInfo                   *semantic.Int
 	AmmoLimitAmountInCatridge *semantic.Int
 	AmmoLimitMaxCatridges     *semantic.Int
-	Lifetime                  *semantic.Int
+	HitPts                    *semantic.Int
+	Volume                    *semantic.Float
+	LifeTime                  *semantic.Float
 	Range                     *semantic.Int
 	DiversionPctg             *semantic.Int
 	Mass                      *semantic.Float
@@ -455,6 +459,10 @@ func Read(files []*iniload.IniLoader) *Config {
 
 					ArmorPen: semantic.NewFloat(section, cfg.Key("armor_pen"), semantic.Precision(2), semantic.WithDefaultF(0)),
 					Mass:     semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
+
+					HitPts:   semantic.NewInt(section, cfg.Key("hit_pts")),
+					LifeTime: semantic.NewFloat(section, cfg.Key("lifetime"), semantic.Precision(2)),
+					Volume:   semantic.NewFloat(section, cfg.Key("volume"), semantic.Precision(4)),
 				}
 				munition.Map(section)
 				munition.Nickname = semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
@@ -466,15 +474,15 @@ func Read(files []*iniload.IniLoader) *Config {
 				munition.EnergyDamage = semantic.NewInt(section, cfg.Key("energy_damage"))
 				munition.HealintAmount = semantic.NewInt(section, cfg.Key("damage"))
 				munition.WeaponType = semantic.NewString(section, cfg.Key("weapon_type"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
-				munition.LifeTime = semantic.NewFloat(section, cfg.Key("lifetime"), semantic.Precision(2))
 				munition.Motor = semantic.NewString(section, cfg.Key("motor"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 				munition.MaxAngularVelocity = semantic.NewFloat(section, cfg.Key("max_angular_velocity"), semantic.Precision(4))
 
 				munition.HitPts = semantic.NewInt(section, cfg.Key("hit_pts"))
-				munition.AmmoLimitAmountInCatridge = semantic.NewInt(section, cfg.Key("ammo_limit"))
-				munition.AmmoLimitMaxCatridges = semantic.NewInt(section, cfg.Key("ammo_limit"), semantic.Order(1))
+				munition.LifeTime = semantic.NewFloat(section, cfg.Key("lifetime"), semantic.Precision(2))
 				munition.Volume = semantic.NewFloat(section, cfg.Key("volume"), semantic.Precision(4))
 
+				munition.AmmoLimitAmountInCatridge = semantic.NewInt(section, cfg.Key("ammo_limit"))
+				munition.AmmoLimitMaxCatridges = semantic.NewInt(section, cfg.Key("ammo_limit"), semantic.Order(1))
 				frelconfig.Munitions = append(frelconfig.Munitions, munition)
 				frelconfig.MunitionMap[munition.Nickname.Get()] = munition
 			case "[explosion]":
@@ -512,8 +520,10 @@ func Read(files []*iniload.IniLoader) *Config {
 					AmmoLimitAmountInCatridge: semantic.NewInt(section, cfg.Key("ammo_limit")),
 					AmmoLimitMaxCatridges:     semantic.NewInt(section, cfg.Key("ammo_limit"), semantic.Order(1)),
 
-					HitPts:             semantic.NewInt(section, cfg.Key("hit_pts")),
-					Lifetime:           semantic.NewFloat(section, cfg.Key("lifetime"), semantic.Precision(2)),
+					HitPts:   semantic.NewInt(section, cfg.Key("hit_pts")),
+					LifeTime: semantic.NewFloat(section, cfg.Key("lifetime"), semantic.Precision(2)),
+					Volume:   semantic.NewFloat(section, cfg.Key("volume"), semantic.Precision(4)),
+
 					IdsName:            semantic.NewInt(section, cfg.Key("ids_name"), semantic.Optional()),
 					IdsInfo:            semantic.NewInt(section, cfg.Key("ids_info"), semantic.Optional()),
 					SeekDist:           semantic.NewInt(section, cfg.Key("seek_dist")),
@@ -524,6 +534,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					LinearDrag:         semantic.NewFloat(section, cfg.Key("linear_drag"), semantic.Precision(6)),
 					Mass:               semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
+				mine.Map(section)
 				frelconfig.Mines = append(frelconfig.Mines, mine)
 				frelconfig.MinesMap[mine.Nickname.Get()] = mine
 			case "[shieldgenerator]":
@@ -637,11 +648,14 @@ func Read(files []*iniload.IniLoader) *Config {
 
 					AmmoLimitAmountInCatridge: semantic.NewInt(section, cfg.Key("ammo_limit")),
 					AmmoLimitMaxCatridges:     semantic.NewInt(section, cfg.Key("ammo_limit"), semantic.Order(1)),
-					Lifetime:                  semantic.NewInt(section, cfg.Key("lifetime")),
+					HitPts:                    semantic.NewInt(section, cfg.Key("hit_pts")),
+					LifeTime:                  semantic.NewFloat(section, cfg.Key("lifetime"), semantic.Precision(2)),
+					Volume:                    semantic.NewFloat(section, cfg.Key("volume"), semantic.Precision(4)),
 					Range:                     semantic.NewInt(section, cfg.Key("range")),
 					DiversionPctg:             semantic.NewInt(section, cfg.Key("diversion_pctg")),
 					Mass:                      semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
+				item.Map(section)
 				frelconfig.CounterMeasure = append(frelconfig.CounterMeasure, item)
 				frelconfig.CounterMeasureMap[item.Nickname.Get()] = item
 			case "[scanner]":

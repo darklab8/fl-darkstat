@@ -2,7 +2,6 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
-	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -79,20 +78,7 @@ func (e *Exporter) GetExtraItems(ids []*Tractor) []ExtraItem {
 		item.Name = e.GetInfocardName(item.NameID, item.Nickname)
 		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
 
-		// add to item name its ini config
-		var infocard_addition infocarder.InfocardBuilder
-		sector := item_info.Model.RenderModel()
-		infocard_addition.WriteLineStr(string(sector.OriginalType))
-		for _, param := range sector.Params {
-			infocard_addition.WriteLineStr(string(param.ToString(inireader.WithComments(false))))
-		}
-		infocard_addition.WriteLineStr("")
-
-		var info infocarder.InfocardBuilder
-		if value, ok := e.GetInfocard2(infocarder.InfocardKey(item.Nickname)); ok {
-			info.Lines = value
-		}
-		e.PutInfocard(infocarder.InfocardKey(item.Nickname), append(info.Lines, infocard_addition.Lines...))
+		e.WriteConfigToInfocard(&item_info.Model, item.Nickname)
 
 		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
 		tractors = append(tractors, item)
