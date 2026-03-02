@@ -610,7 +610,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 		if GetBaseKind(shared, name) == BaseLootableLocked {
 			<button
 				class="btn primary"
-				hx-get={ types.GetCtx(ctx).SiteUrl + urls.LootableUnlocked.ToString() }
+				hx-get={ types.GetCtx(ctx).SiteRoot + urls.LootableUnlocked.ToString() }
 				hx-target="#table-bottom-main"
 				hx-swap="innerHTML"
 				style="height:30px;background-color:var(--color_th_border)"
@@ -620,7 +620,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 		} else if GetBaseKind(shared, name) == BaseLootableUnlocked {
 			<button
 				class="btn primary"
-				hx-get={ types.GetCtx(ctx).SiteUrl + urls.Lootablelocked.ToString() }
+				hx-get={ types.GetCtx(ctx).SiteRoot + urls.Lootablelocked.ToString() }
 				hx-target="#table-bottom-main"
 				hx-swap="innerHTML"
 				style="height:30px;background-color:var(--color_th_border)"
