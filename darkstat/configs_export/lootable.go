@@ -53,6 +53,14 @@ func SetPermitted(permitted_wrecks map[string]bool, permitted_encounters map[str
 	} else if loot_info.Kind == LootWreck {
 		loot_info.Permitted = permitted_wrecks[loot_info.Nickname]
 	}
+
+	if !loot_info.Permitted {
+		loot_info.SystemName = ""
+		loot_info.SectorCoord = ""
+		loot_info.Pos = cfg.Vector{}
+		loot_info.PlaceNick = ""
+		loot_info.LootSource = LootSourceUnknown
+	}
 }
 
 func (e *Exporter) IsLootable(item_nickname string) bool {
