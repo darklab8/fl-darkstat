@@ -468,7 +468,7 @@ templ BasesT(
 				}
 				@tab.TableBottom() {
 					if tab_mode == BaseShowShops {
-						@BaseMarketGoodsBase(BaseNPC)
+						@BaseMarketGoodsBase(BaseNPC, shared)
 					} else if tab_mode == BaseShowMissions {
 						@BaseMissionsBase()
 					} else if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo {
@@ -496,7 +496,7 @@ const (
 	BaseLootableUnlocked
 )
 
-templ BaseMarketGoodsBase(base_kind BaseKind) {
+templ BaseMarketGoodsBase(base_kind BaseKind, shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
@@ -513,6 +513,14 @@ templ BaseMarketGoodsBase(base_kind BaseKind) {
 					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"Factory", "name"})
 					</th>
+					if shared.ShowFLSR {
+						<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"Recipe", "Cost"})
+						</th>
+						<th style="width:10px;">
+							@frmt.MultiLinestring([]string{"Crafting", "Command"})
+						</th>
+					}
 				} else if base_kind == BaseLootableLocked {
 					<th style="width:5px;">Kind</th>
 					<th style="width:25px;">
@@ -656,7 +664,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 		}
 		// @tab.PageTime() // TODO add when having page proper live backend
 	</div>
-	@BaseMarketGoodsBase(GetBaseKind(shared, name)) {
+	@BaseMarketGoodsBase(GetBaseKind(shared, name), shared) {
 		for _, good := range frmt.SortedMarketGoods(goods) {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(infocarder.InfocardKey(good.Nickname)) }
@@ -737,8 +745,38 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 					<td>
 						if good.DiscoveryFactoryName != nil {
 							{ *good.DiscoveryFactoryName }
+						} else if len(good.CraftableFLSRInfo) > 0 {
+							<div style="display:flex;flex-direction:column">
+								for _, recipe := range good.CraftableFLSRInfo {
+									if len(recipe.BaseNames) > 0 {
+										for _, base := range recipe.BaseNames {
+											<span>{ base }</span>
+										}
+									} else {
+										<span>Sirius Sector</span>
+									}
+								}
+							</div>
 						}
 					</td>
+					if shared.ShowFLSR {
+						<td>
+							<div style="display:flex;flex-direction:column">
+								for _, recipe := range good.CraftableFLSRInfo {
+									<span>{ strconv.Itoa(recipe.CostPrice) }</span>
+								}
+							</div>
+						</td>
+						<td>
+							if len(good.CraftableFLSRInfo) > 0 {
+								<div style="display:flex;flex-direction:column">
+									for _, recipe := range good.CraftableFLSRInfo {
+										<span>{ "/craft "+recipe.Command }</span>
+									}
+								</div>
+							}
+						</td>
+					}
 				} else {
 					<td>
 						if good.PriceBaseBuysFor != nil {

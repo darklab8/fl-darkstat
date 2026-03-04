@@ -35,7 +35,20 @@ type MarketGood struct {
 
 	BaseInfo
 
-	LootInfo *LootInfo
+	LootInfo          *LootInfo
+	CraftableFLSRInfo []CraftableFLSRInfo
+}
+
+type Ingredient struct {
+	Name   string
+	Amount int
+}
+
+type CraftableFLSRInfo struct {
+	Ingredients []Ingredient
+	BaseNames   []string
+	CostPrice   int
+	Command     string
 }
 
 func (g MarketGood) GetPriceBaseBuysFor() int {

@@ -1,9 +1,11 @@
 package configs_export
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/discovery/base_recipe_items"
@@ -93,7 +95,60 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		if e.Mapped.FLSR != nil {
 			if e.Mapped.FLSR.FLSRRecipes != nil {
 				if recipes, ok := e.Mapped.FLSR.FLSRRecipes.ProductsByNick[market_good.Nickname]; ok {
-					infocard_addition.WriteLineStr(`CRAFTING RECIPES:`)
+
+					for _, recipe := range recipes {
+
+						recipe_info := CraftableFLSRInfo{}
+
+						for _, base_nickname := range recipe.BaseNicknames {
+							base_nickname := base_nickname.Get()
+							universe_base, ok := e.Mapped.Universe.BasesMap[universe_mapped.BaseNickname(base_nickname)]
+							base_name := base_nickname
+							if ok {
+								base_name = e.GetInfocardName(universe_base.StridName.Get(), base_nickname)
+							}
+							recipe_info.BaseNames = append(recipe_info.BaseNames, base_name)
+						}
+
+						recipe_info.CostPrice, _ = recipe.Cost.GetValue()
+
+						for _, ingredient := range recipe.Ingridients {
+							nickname := ingredient.Nickname.Get()
+							name := nickname
+							if equip, ok := e.Mapped.Equip().ItemsMap[nickname]; ok {
+								name = e.GetInfocardName(equip.IdsName.Get(), nickname)
+							}
+							recipe_info.Ingredients = append(recipe_info.Ingredients, Ingredient{
+								Name:   name,
+								Amount: ingredient.Quantity.Get(),
+							})
+						}
+
+						command := strings.ReplaceAll(string(recipe.GetOriginalType()), "[", "")
+						command = strings.ReplaceAll(command, "]", "")
+						recipe_info.Command = command
+
+						market_good.CraftableFLSRInfo = append(market_good.CraftableFLSRInfo, recipe_info)
+					}
+
+					infocard_addition.WriteLineStr(`CRAFTING RECIPES (translated):`)
+					for index, recipe := range market_good.CraftableFLSRInfo {
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("[Recipe #%d]", index)))
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("command: /craft %s", recipe.Command)))
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("recipe cost: %d", recipe.CostPrice)))
+						for _, ingredient := range recipe.Ingredients {
+							infocard_addition.WriteLineStr(string(fmt.Sprintf("ingredient: %s (%d amount)", ingredient.Name, ingredient.Amount)))
+						}
+						if len(recipe.BaseNames) > 0 {
+							for _, base := range recipe.BaseNames {
+								infocard_addition.WriteLineStr(string(fmt.Sprintf("base: %s", base)))
+							}
+						}
+
+						infocard_addition.WriteLineStr("")
+					}
+
+					infocard_addition.WriteLineStr(`CRAFTING RECIPES (original):`)
 					for _, recipe := range recipes {
 						infocard_addition.WriteLineStr(string(recipe.GetOriginalType()))
 						for _, param := range GetModelWithoutLastComments(&recipe.Model) {
