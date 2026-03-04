@@ -57,6 +57,10 @@ func (l *Router) LinkBases(
 			utils_types.FilePath(urls.LootableUnlocked),
 			front.BaseMarketGoods("lootable_unlocked", data.LootableBase.MarketGoodsPerNick, front.BaseShowShops, shared),
 		),
+		builder.NewComponent(
+			utils_types.FilePath(urls.Craftable),
+			front.BaseMarketGoods(shared.CraftableBaseName, data.CraftableBase.MarketGoodsPerNick, front.BaseShowShops, shared),
+		),
 	)
 
 	for _, base := range data.Bases {

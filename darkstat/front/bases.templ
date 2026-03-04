@@ -414,11 +414,37 @@ templ BasesT(
 						}
 					}
 					if tab_mode == BaseShowShops {
-						@tab.PageHint() {
-							NPC base shops, goods are sorted by name and category.
-							if shared.ShowDisco {
-								See PoBs for player owned bases.
+						@tab.PageHintWithoutP() {
+							if data.LootableBase != nil {
+								<button
+									class="btn primary hintbutton"
+									hx-get={ types.GetCtx(ctx).SiteRoot + urls.Lootablelocked.ToString() }
+									hx-target="#table-bottom-main"
+									hx-swap="innerHTML"
+									hx-indicator="#lootable-loader"
+								>
+									{ configs_export.BaseLootableName }
+									<div class="loader htmx-indicator" id="lootable-loader"></div>
+								</button>
 							}
+							if data.CraftableBase != nil {
+								<button
+									class="btn primary hintbutton"
+									hx-get={ types.GetCtx(ctx).SiteRoot + urls.Craftable.ToString() }
+									hx-target="#table-bottom-main"
+									hx-swap="innerHTML"
+									hx-indicator="#craftable-loader"
+								>
+									{ shared.CraftableBaseName }
+									<div class="loader htmx-indicator" id="craftable-loader"></div>
+								</button>
+							}
+							<p>
+								NPC base shops, goods are sorted by name and category.
+								if shared.ShowDisco {
+									See PoBs for player owned bases.
+								}
+							</p>
 						}
 					}
 					@tab.FilterBar(&types.SharedData{}) {

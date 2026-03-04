@@ -42,4 +42,5 @@ const (
 	TwoWayDeals      utils_types.FilePath = "cdn/two_way_deals.html"
 	LootableUnlocked utils_types.FilePath = "cdn/lootable_unlocked.html"
 	Lootablelocked   utils_types.FilePath = "cdn/lootable_locked.html"
+	Craftable        utils_types.FilePath = "cdn/craftable.html"
 )

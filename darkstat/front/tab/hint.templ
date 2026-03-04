@@ -14,3 +14,22 @@ templ PageHint() {
 		</p>
 	</div>
 }
+
+templ PageHintWithoutP() {
+	<style>
+        .page_hint p {
+            margin-left: 5px;
+            margin-right: 5px;
+            font-size: 1em;
+        }
+
+        .page_hint {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+    </style>
+	<div class="page_hint">
+		{ children... }
+	</div>
+}

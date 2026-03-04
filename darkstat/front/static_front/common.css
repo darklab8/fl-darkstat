@@ -27,3 +27,15 @@ b,
 .bold {
     font-weight: bold;
 }
+
+.hintbutton {
+    cursor: pointer;
+    background-color: var(--color_background);
+    margin: 0px;
+    border-color: var(--color_border);
+    min-height: 30px
+}
+
+.hintbutton:hover {
+    background-color: var(--color_hover);
+}

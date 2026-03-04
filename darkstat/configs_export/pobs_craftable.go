@@ -166,6 +166,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 	e.PutInfocard(infocarder.InfocardKey(base.Nickname), sb.Lines)
 
+	e.CraftableBase = base
 	bases = append(bases, base)
 	return bases
 }
