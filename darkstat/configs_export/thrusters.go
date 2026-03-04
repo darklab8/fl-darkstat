@@ -90,6 +90,8 @@ func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 		}
 
 		e.exportInfocards(infocarder.InfocardKey(thruster.Nickname), thruster.InfoID)
+		e.WriteConfigToInfocard(&thruster_info.Model, thruster.Nickname)
+
 		thruster.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, thruster.Nickname)
 		thrusters = append(thrusters, thruster)
 	}

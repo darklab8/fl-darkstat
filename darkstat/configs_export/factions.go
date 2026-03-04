@@ -77,6 +77,7 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 		faction.Name = e.GetInfocardName(group.IdsName.Get(), faction.Nickname)
 
 		e.exportInfocards(infocarder.InfocardKey(nickname), group.IdsInfo.Get())
+		e.WriteConfigToInfocard(&group.Model, nickname)
 
 		faction.ShortName = e.GetInfocardName(group.IdsShortName.Get(), faction.Nickname)
 

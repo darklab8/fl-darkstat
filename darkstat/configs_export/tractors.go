@@ -159,6 +159,8 @@ func (e *Exporter) GetTractors() []*Tractor {
 			e.PutInfocard(infocarder.InfocardKey(tractor.Nickname), append(info.Lines, infocard_addition.Lines...))
 		}
 
+		e.WriteConfigToInfocard(&tractor_info.Model, string(tractor.Nickname))
+
 		tractors = append(tractors, tractor)
 	}
 	return tractors

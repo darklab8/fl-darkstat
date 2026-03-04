@@ -353,6 +353,21 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 			infocards = append(infocards, id)
 		}
 		e.exportInfocards(infocarder.InfocardKey(ship.Nickname), infocards...)
+		e.WriteConfigToInfocard(&ship_info.Model, ship.Nickname)
+
+		if ship_hull_good, ok := e.Mapped.Goods.ShipHullsMapByShip[ship.Nickname]; ok {
+			ship.Price = ship_hull_good.Price.Get()
+			e.WriteConfigToInfocard(&ship_hull_good.Model, ship.Nickname)
+
+			ship_hull_nickname := ship_hull_good.Nickname.Get()
+			if ship_package_goods, ok := e.Mapped.Goods.ShipsMapByHull[ship_hull_nickname]; ok {
+
+				for _, ship_package_good := range ship_package_goods {
+					e.WriteConfigToInfocard(&ship_package_good.Model, ship.Nickname)
+				}
+			}
+		}
+
 		ship.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, ship.Nickname)
 
 		if e.Mapped.Discovery != nil {

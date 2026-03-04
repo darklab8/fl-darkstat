@@ -16,11 +16,17 @@ type MLootProps struct {
 	Nickname *semantic.String
 }
 
+type PhantomLoot struct {
+	semantic.Model
+	Nickname *semantic.String
+}
+
 type Config struct {
 	semantic.ConfigModel
 	File *iniload.IniLoader
 
-	LootProps []*MLootProps
+	LootProps    []*MLootProps
+	PhantomLoots []*PhantomLoot
 }
 
 func Read(input_file *iniload.IniLoader) *Config {
@@ -31,11 +37,22 @@ func Read(input_file *iniload.IniLoader) *Config {
 		if input_file.Sections[i].Type == "[mlootprops]" {
 
 			section := input_file.Sections[i]
-			loot_prop := &MLootProps{}
+			loot_prop := &MLootProps{
+				Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+			}
 			loot_prop.Map(section)
-			loot_prop.Nickname = semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS())
 
 			frelconfig.LootProps = append(frelconfig.LootProps, loot_prop)
+		}
+		if input_file.Sections[i].Type == "[phantomloot]" {
+
+			section := input_file.Sections[i]
+			loot_prop := &PhantomLoot{
+				Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+			}
+			loot_prop.Map(section)
+
+			frelconfig.PhantomLoots = append(frelconfig.PhantomLoots, loot_prop)
 		}
 
 	}

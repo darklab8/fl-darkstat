@@ -64,22 +64,24 @@ type Exporter struct {
 	Freighter   *GraphResults
 	Frigate     *GraphResults
 
-	Factions     []Faction
-	Commodities  []*Commodity
-	Guns         []Gun
-	Missiles     []Gun
-	Mines        []Mine
-	Shields      []Shield
-	Thrusters    []Thruster
-	Ships        []Ship
-	Tractors     []*Tractor
-	TractorsByID map[cfg.TractorID]*Tractor
-	Cloaks       []Cloak
-	Engines      []Engine
-	CMs          []CounterMeasure
-	Scanners     []Scanner
-	Ammos        []Ammo
-	ExtraItems   []ExtraItem
+	Factions                    []Faction
+	Commodities                 []*Commodity
+	Guns                        []Gun
+	first_time_adding_gun       map[string]bool
+	first_time_adding_commodity map[string]bool
+	Missiles                    []Gun
+	Mines                       []Mine
+	Shields                     []Shield
+	Thrusters                   []Thruster
+	Ships                       []Ship
+	Tractors                    []*Tractor
+	TractorsByID                map[cfg.TractorID]*Tractor
+	Cloaks                      []Cloak
+	Engines                     []Engine
+	CMs                         []CounterMeasure
+	Scanners                    []Scanner
+	Ammos                       []Ammo
+	ExtraItems                  []ExtraItem
 
 	findable_in_loot_cache map[string]bool
 	findable_wrecks        []*LootInfo
@@ -98,6 +100,8 @@ func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Expor
 			Mapped:     mapped,
 			hashes:     NewHashesCategories(mapped),
 		},
+		first_time_adding_gun:       make(map[string]bool),
+		first_time_adding_commodity: make(map[string]bool),
 	}
 
 	for _, opt := range opts {
@@ -290,10 +294,6 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 		defer span.End()
 
 		e.Guns = e.GetGuns(e.Tractors, buyable_shield_tech)
-	})
-	missiles_await := async.ToAsync(func() {
-		_, span := traces.Tracer.Start(ctx, "Exporter.MissilesAwait")
-		defer span.End()
 
 		e.Missiles = e.GetMissiles(e.Tractors, buyable_shield_tech)
 	})
@@ -314,7 +314,6 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 	})
 
 	<-guns_wait
-	<-missiles_await
 	<-equip2_await
 
 	_, span_wg := traces.Tracer.Start(ctx, "Exporter.WgAwait")

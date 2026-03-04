@@ -90,6 +90,7 @@ func (e *Exporter) GetEngines(ids []*Tractor) []Engine {
 		engine.Name = e.GetInfocardName(engine.NameID, engine.Nickname)
 
 		e.exportInfocards(infocarder.InfocardKey(engine.Nickname), engine.InfoID)
+		e.WriteConfigToInfocard(&engine_info.Model, engine.Nickname)
 
 		engine.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, engine.Nickname)
 

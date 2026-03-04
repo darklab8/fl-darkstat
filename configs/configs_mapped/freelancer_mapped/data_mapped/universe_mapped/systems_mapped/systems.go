@@ -517,6 +517,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						IDsInfo:  semantic.NewInt(zone_info, cfg.Key("ids_info"), semantic.Optional()),
 						Density:  semantic.NewFloat(zone_info, cfg.Key("density"), semantic.Precision(2)),
 					}
+					zone_to_add.Map(zone_info)
 					system_to_add.ZonesByNick[zone_to_add.Nickname.Get()] = zone_to_add
 
 					if encounter_infos, ok := zone_info.ParamMap[cfg.Key("encounter")]; ok && len(encounter_infos) > 0 {

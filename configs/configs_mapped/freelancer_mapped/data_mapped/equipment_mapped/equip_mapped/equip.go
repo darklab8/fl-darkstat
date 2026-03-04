@@ -513,6 +513,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 
 				frelconfig.MineDroppers = append(frelconfig.MineDroppers, mine_dropper)
+				mine_dropper.Map(section)
 			case "[mine]":
 				mine := &Mine{
 					Nickname:                  semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -557,6 +558,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				frelconfig.ShieldGens = append(frelconfig.ShieldGens, shield)
 				frelconfig.ShidGenMap[shield.Nickname.Get()] = shield
+				shield.Map(section)
 			case "[cloakingdevice]":
 				cloak := &CloakingDevice{
 					Nickname:     semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -570,6 +572,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				frelconfig.Cloaks = append(frelconfig.Cloaks, cloak)
 				frelconfig.Extras = append(frelconfig.Extras, item)
+				cloak.Map(section)
 			case "[thruster]":
 				thruster := &Thruster{
 					Nickname:   semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -583,6 +586,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				frelconfig.Thrusters = append(frelconfig.Thrusters, thruster)
 				frelconfig.ThrusterMap[thruster.Nickname.Get()] = thruster
+				thruster.Map(section)
 			case "[power]":
 				power := &Power{
 					Nickname:       semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -615,6 +619,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				frelconfig.Engines = append(frelconfig.Engines, engine)
 				frelconfig.EnginesMap[engine.Nickname.Get()] = engine
+				engine.Map(section)
 			case "[tractor]":
 				tractor := &Tractor{
 					Nickname:   semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -627,6 +632,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				}
 				frelconfig.Tractors = append(frelconfig.Tractors, tractor)
 				frelconfig.TractorsMap[tractor.Nickname.Get()] = tractor
+				tractor.Map(section)
 			case "[countermeasuredropper]":
 				item := &CounterMeasureDropper{
 					Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -640,6 +646,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					Mass:                semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
 				frelconfig.CounterMeasureDroppers = append(frelconfig.CounterMeasureDroppers, item)
+				item.Map(section)
 			case "[countermeasure]":
 				item := &CounterMeasure{
 					Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
@@ -670,6 +677,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					Mass:           semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
 				frelconfig.Scanners = append(frelconfig.Scanners, item)
+				item.Map(section)
 
 			default:
 				frelconfig.Extras = append(frelconfig.Extras, item)

@@ -105,6 +105,16 @@ func (e *Exporter) GetBases(ctx context.Context) []*Base {
 		var nickname cfg.BaseUniNick = cfg.BaseUniNick(base.Nickname.Get())
 
 		e.exportInfocards(infocarder.InfocardKey(nickname), infocard_ids...)
+		e.WriteConfigToInfocard(&base.Model, string(nickname))
+
+		if system, ok := e.Mapped.Systems.SystemsMap[base.System.Get()]; ok {
+
+			if system_bases, ok := system.AllBasesByDockWith[base.Nickname.Get()]; ok {
+				for _, system_base := range system_bases {
+					e.WriteConfigToInfocard(&system_base.Model, string(nickname))
+				}
+			}
+		}
 
 		base := &Base{
 			Missions:           &BaseMissions{},

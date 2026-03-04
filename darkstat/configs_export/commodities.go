@@ -153,6 +153,12 @@ func (e *Exporter) GetCommodities(ctx context.Context) []*Commodity {
 			if !strings.Contains(info.Lines.StringsJoin(""), "MINING BONUSES") {
 				e.PutInfocard(infocarder.InfocardKey(commodity.Nickname), append(info.Lines, infocard_addition.Lines...))
 			}
+
+			if _, ok := e.first_time_adding_commodity[commodity.Nickname]; !ok {
+				e.WriteConfigToInfocard(&comm.Model, commodity.Nickname)
+				e.first_time_adding_commodity[commodity.Nickname] = true
+			}
+
 			commodities = append(commodities, commodity)
 		}
 

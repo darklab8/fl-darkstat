@@ -18,6 +18,7 @@ const (
 	LootWreck
 	LootEncounter
 	LootNotFoundNpcArch
+	LootPhantom
 	// LootPhantomLoop // lets not seek it
 )
 
@@ -30,7 +31,10 @@ func (l LootKind) ToStr() string {
 	}
 
 	if l == LootNotFoundNpcArch {
-		return "no_match_npc"
+		return "err_enc"
+	}
+	if l == LootPhantom {
+		return "global"
 	}
 
 	return "unknown"
@@ -509,6 +513,23 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 				loots = append(loots, npc_loot.LootInfo)
 			}
 		}
+	}
+
+	unique_phantom := make(map[string]bool)
+	for _, phantom_loot := range e.Mapped.LookProps.PhantomLoots {
+		item_nickname := phantom_loot.Nickname.Get()
+		if _, ok := unique_phantom[item_nickname]; ok {
+			continue
+		}
+		unique_phantom[item_nickname] = true
+		e.findable_in_loot_cache[item_nickname] = true
+		loots = append(loots, &LootInfo{
+			Nickname:   item_nickname,
+			Kind:       LootPhantom,
+			SystemName: "Sirius Sector",
+			Permitted:  true,
+			PlaceNick:  "phantom_loot",
+		})
 	}
 
 	e.findable_wrecks = loots

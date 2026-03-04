@@ -84,6 +84,11 @@ func (e *Exporter) GetCounterMeasures(ids []*Tractor) []CounterMeasure {
 
 		e.exportInfocards(infocarder.InfocardKey(cm.Nickname), infocards...)
 		cm.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, cm.Nickname)
+		e.WriteConfigToInfocard(&cm_info.Model, cm.Nickname)
+		if ammo_info, ok := e.Mapped.Equip().CounterMeasureMap[cm_info.ProjectileArchetype.Get()]; ok {
+			e.WriteConfigToInfocard(&ammo_info.Model, cm.Nickname)
+		}
+
 		tractors = append(tractors, cm)
 	}
 	return tractors

@@ -510,56 +510,56 @@ templ BaseMarketGoodsBase(base_kind BaseKind) {
 						@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
 					</th>
 				} else if base_kind == BasePOBCrafts {
-					<th style="width:10px;">
+					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"Factory", "name"})
 					</th>
 				} else if base_kind == BaseLootableLocked {
-					<th style="width:25px;">Kind</th>
-					<th style="width:50px;">
+					<th style="width:5px;">Kind</th>
+					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"System name", "NavMap + PosX + PosY + PosZ"})
 					</th>
 				} else if base_kind == BaseLootableUnlocked {
-					<th style="width:25px;">Kind</th>
+					<th style="width:5px;">Kind</th>
 					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"System name"})
 					</th>
-					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"NavMap"})
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Nav", "Map"})
 					</th>
-					<th style="width:25px;">
+					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"PosX"})
 					</th>
-					<th style="width:25px;">
+					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"PosY"})
 					</th>
-					<th style="width:25px;">
+					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"PosZ"})
 					</th>
 				}
-				<th style="width:10px;">
-					@frmt.MultiLinestring([]string{"Volume"})
+				<th style="width:5px;">
+					@frmt.MultiLinestring([]string{"Vol", "ume"})
 				</th>
-				<th style="width:10px;">
+				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"comm.", "ship", "class"})
 				</th>
-				<th style="width:10px;">
+				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Lev.", "Req."})
 				</th>
-				<th style="width:10px;">
+				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Rep.", "Req."})
 				</th>
-				<th style="width:10px;">
+				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Base", "Sells"})
 				</th>
 				// <th style="width:10px;">
 				// 	@frmt.MultiLinestring([]string{"Price", "Modifier"})
 				// </th>
-				<th style="width:10px;">
+				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Price", "Base"})
 				</th>
-				<th style="width:10px;">Nickname</th>
-				<th style="width:10px;">HpType</th>
-				<th style="width:10px;">
+				<th style="width:5px;">Nickname</th>
+				<th style="width:5px;">HpType</th>
+				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Server", "Override"})
 				</th>
 				if base_kind == BaseLootableLocked || base_kind == BaseLootableUnlocked {

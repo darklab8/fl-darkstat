@@ -356,6 +356,9 @@ for Freelancer Discovery we also add possible sub products of refinery at player
 	}
 
 	e.PutInfocard(infocarder.InfocardKey(base.Nickname), append(sb.Lines, infocard_addition.Lines...))
+	if input_data.zone != nil {
+		e.WriteConfigToInfocard(&input_data.zone.Model, string(base.Nickname))
+	}
 
 	return base
 }
