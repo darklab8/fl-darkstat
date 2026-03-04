@@ -37,12 +37,34 @@ func (b Ammo) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
 
 func (b Ammo) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
+// GetModelWithoutLastComments
+// this function eliminates bug https://github.com/darklab8/fl-darkstat/issues/94
+// when people write comments after the model ini params already for next ini sector
+// we should not be printing such comments
+func GetModelWithoutLastComments(item_model *semantic.Model) []*inireader.Param {
+	sector := item_model.RenderModel()
+
+	// strip from comments at the end
+	comment_lines_at_the_end := 0
+	for i := len(sector.Params) - 1; i > 0; i-- {
+
+		if sector.Params[i].Key == inireader.KEY_COMMENT {
+			comment_lines_at_the_end++
+		} else {
+			break
+		}
+	}
+
+	return sector.Params[:len(sector.Params)-comment_lines_at_the_end]
+}
+
 func (e *Exporter) WriteConfigToInfocard(item_model *semantic.Model, item_nickname string) {
 	// add to item name its ini config
 	var infocard_addition infocarder.InfocardBuilder
-	sector := item_model.RenderModel()
-	infocard_addition.WriteLineStr(string(sector.OriginalType))
-	for _, param := range sector.Params {
+
+	infocard_addition.WriteLineStr(string(item_model.GetOriginalType()))
+
+	for _, param := range GetModelWithoutLastComments(item_model) {
 		infocard_addition.WriteLineStr(string(param.ToString(inireader.WithComments(false))))
 	}
 	infocard_addition.WriteLineStr("")

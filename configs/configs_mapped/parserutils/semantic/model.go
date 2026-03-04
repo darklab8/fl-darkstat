@@ -3,6 +3,7 @@ package semantic
 import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader/inireader_types"
 
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -17,6 +18,10 @@ func (s *Model) Map(section *inireader.Section) {
 
 func (s *Model) RenderModel() *inireader.Section {
 	return s.section
+}
+
+func (s *Model) GetOriginalType() inireader_types.IniHeader {
+	return s.section.OriginalType
 }
 
 type ConfigModel struct {

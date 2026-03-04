@@ -72,9 +72,8 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 				infocard_addition.WriteLineStr(`CRAFTING RECIPES:`)
 				for _, recipe := range recipes {
-					sector := recipe.Model.RenderModel()
-					infocard_addition.WriteLineStr(string(sector.OriginalType))
-					for _, param := range sector.Params {
+					infocard_addition.WriteLineStr(string(recipe.Model.GetOriginalType()))
+					for _, param := range GetModelWithoutLastComments(&recipe.Model) {
 						infocard_addition.WriteLineStr(string(param.ToString(inireader.WithComments(false))))
 					}
 					infocard_addition.WriteLineStr("")
@@ -96,9 +95,8 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 				if recipes, ok := e.Mapped.FLSR.FLSRRecipes.ProductsByNick[market_good.Nickname]; ok {
 					infocard_addition.WriteLineStr(`CRAFTING RECIPES:`)
 					for _, recipe := range recipes {
-						sector := recipe.Model.RenderModel()
-						infocard_addition.WriteLineStr(string(sector.OriginalType))
-						for _, param := range sector.Params {
+						infocard_addition.WriteLineStr(string(recipe.GetOriginalType()))
+						for _, param := range GetModelWithoutLastComments(&recipe.Model) {
 							infocard_addition.WriteLineStr(string(param.ToString(inireader.WithComments(false))))
 						}
 						infocard_addition.WriteLineStr("")
