@@ -255,8 +255,13 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 
 	if _, ok := e.first_time_adding_gun[gun_nickname]; !ok {
 		e.WriteConfigToInfocard(&gun_info.Model, gun.Nickname)
-
 		e.WriteConfigToInfocard(&munition.Model, gun.Nickname)
+
+		if explosion_arch, ok := munition.ExplosionArch.GetValue(); ok {
+			// rocket launcher
+			explosion := e.Mapped.Equip().ExplosionMap[explosion_arch]
+			e.WriteConfigToInfocard(&explosion.Model, gun.Nickname)
+		}
 
 		e.first_time_adding_gun[gun_nickname] = true
 	}

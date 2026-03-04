@@ -496,6 +496,7 @@ func Read(files []*iniload.IniLoader) *Config {
 				explosion.Radius = semantic.NewInt(section, cfg.Key("radius"))
 				frelconfig.Explosions = append(frelconfig.Explosions, explosion)
 				frelconfig.ExplosionMap[explosion.Nickname.Get()] = explosion
+				explosion.Map(section)
 			case "[minedropper]":
 				mine_dropper := &MineDropper{
 					Nickname:            semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
