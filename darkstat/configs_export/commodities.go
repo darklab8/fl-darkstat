@@ -44,11 +44,18 @@ type Ingredient struct {
 	Amount int
 }
 
+type Product struct {
+	Name     string
+	Amount   int
+	Nickname string
+}
+
 type CraftableFLSRInfo struct {
 	Ingredients []Ingredient
 	BaseNames   []string
 	CostPrice   int
 	Command     string
+	Products    []Product
 }
 
 func (g MarketGood) GetPriceBaseBuysFor() int {

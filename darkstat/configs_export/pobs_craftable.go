@@ -31,7 +31,9 @@ func (e *Exporter) pob_produced() map[string]bool {
 
 	if e.Mapped.FLSR != nil {
 		for _, recipe := range e.Mapped.FLSR.FLSRRecipes.Products {
-			e.craftable_cached[recipe.Product.Get()] = true
+			for _, produced := range recipe.Product {
+				e.craftable_cached[produced.Nickname.Get()] = true
+			}
 		}
 	}
 
@@ -124,6 +126,19 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 							})
 						}
 
+						for _, product := range recipe.Product {
+							nickname := product.Nickname.Get()
+							name := nickname
+							if equip, ok := e.Mapped.Equip().ItemsMap[nickname]; ok {
+								name = e.GetInfocardName(equip.IdsName.Get(), nickname)
+							}
+							recipe_info.Products = append(recipe_info.Products, Product{
+								Name:     name,
+								Amount:   product.Quantity.Get(),
+								Nickname: nickname,
+							})
+						}
+
 						command := strings.ReplaceAll(string(recipe.GetOriginalType()), "[", "")
 						command = strings.ReplaceAll(command, "]", "")
 						recipe_info.Command = command
@@ -135,7 +150,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 					for index, recipe := range market_good.CraftableFLSRInfo {
 						infocard_addition.WriteLineStr(string(fmt.Sprintf("[Recipe #%d]", index)))
 						infocard_addition.WriteLineStr(string(fmt.Sprintf("command: /craft %s", recipe.Command)))
-						infocard_addition.WriteLineStr(string(fmt.Sprintf("recipe cost: %d", recipe.CostPrice)))
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("recipe cost: %d $ sirius credits", recipe.CostPrice)))
 						for _, ingredient := range recipe.Ingredients {
 							infocard_addition.WriteLineStr(string(fmt.Sprintf("ingredient: %s (%d amount)", ingredient.Name, ingredient.Amount)))
 						}
@@ -143,6 +158,10 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 							for _, base := range recipe.BaseNames {
 								infocard_addition.WriteLineStr(string(fmt.Sprintf("base: %s", base)))
 							}
+						}
+
+						for _, product := range recipe.Products {
+							infocard_addition.WriteLineStr(string(fmt.Sprintf("produces: %s (%d amount)", product.Name, product.Amount)))
 						}
 
 						infocard_addition.WriteLineStr("")

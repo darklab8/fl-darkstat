@@ -13,9 +13,14 @@ type Ingredient struct {
 	Quantity *semantic.Int
 }
 
+type Product struct {
+	Nickname *semantic.String
+	Quantity *semantic.Int
+}
+
 type Recipe struct {
 	semantic.Model
-	Product       *semantic.String
+	Product       []*Product
 	Ingridients   []*Ingredient
 	BaseNicknames []*semantic.String
 	Cost          *semantic.Int
@@ -40,8 +45,7 @@ func Read(input_file *iniload.IniLoader) *Config {
 	for _, section := range input_file.Sections {
 
 		recipe := &Recipe{
-			Product: semantic.NewString(section, cfg.Key("product"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-			Cost:    semantic.NewInt(section, cfg.Key("cost")),
+			Cost: semantic.NewInt(section, cfg.Key("cost")),
 		}
 		recipe.Map(section)
 
@@ -55,6 +59,16 @@ func Read(input_file *iniload.IniLoader) *Config {
 			}
 		}
 
+		if products, ok := section.ParamMap["product"]; ok {
+			for index, _ := range products {
+				info := &Product{
+					Nickname: semantic.NewString(section, cfg.Key("product"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(index)), semantic.WithoutSpacesS()),
+					Quantity: semantic.NewInt(section, cfg.Key("product"), semantic.Index(index), semantic.Order(1)),
+				}
+				recipe.Product = append(recipe.Product, info)
+			}
+		}
+
 		if base_nicknames, ok := section.ParamMap["base_nickname"]; ok {
 			for index, _ := range base_nicknames {
 				recipe.BaseNicknames = append(recipe.BaseNicknames,
@@ -62,14 +76,16 @@ func Read(input_file *iniload.IniLoader) *Config {
 			}
 		}
 
-		_, is_product := recipe.Product.GetValue()
-		if !is_product {
+		if len(recipe.Product) == 0 {
 			continue
 		}
 
 		frelconfig.Products = append(frelconfig.Products, recipe)
-		frelconfig.ProductsByNick[recipe.Product.Get()] = append(frelconfig.ProductsByNick[recipe.Product.Get()], recipe)
 
+		for _, product := range recipe.Product {
+			frelconfig.ProductsByNick[product.Nickname.Get()] = append(frelconfig.ProductsByNick[product.Nickname.Get()], recipe)
+
+		}
 	}
 
 	return frelconfig

@@ -515,7 +515,10 @@ templ BaseMarketGoodsBase(base_kind BaseKind, shared *types.SharedData) {
 					</th>
 					if shared.ShowFLSR {
 						<th style="width:5px;">
-							@frmt.MultiLinestring([]string{"Recipe", "Cost"})
+							@frmt.MultiLinestring([]string{"Recipe", "Cost ($)", "credits"})
+						</th>
+						<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"Produced", "amount"})
 						</th>
 						<th style="width:10px;">
 							@frmt.MultiLinestring([]string{"Crafting", "Command"})
@@ -764,6 +767,19 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 							<div style="display:flex;flex-direction:column">
 								for _, recipe := range good.CraftableFLSRInfo {
 									<span>{ strconv.Itoa(recipe.CostPrice) }</span>
+								}
+							</div>
+						</td>
+						<td>
+							<div style="display:flex;flex-direction:column">
+								for _, recipe := range good.CraftableFLSRInfo {
+									for _, product := range recipe.Products {
+										if product.Nickname == good.Nickname {
+											<span>{ strconv.Itoa(product.Amount) }</span>
+										} else {
+											<span>({ strconv.Itoa(product.Amount) })</span>
+										}
+									}
 								}
 							</div>
 						</td>
