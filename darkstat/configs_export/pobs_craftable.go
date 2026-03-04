@@ -128,7 +128,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 			}
 			if len(infocard_addition.Lines) > 0 {
 				line_position := 1
-				add_line(line_position, infocarder.InfocardLine{Phrases: []infocarder.InfocardPhrase{{Phrase: `Item has crafting recipes below`, Bold: true}}})
+				add_line(line_position, infocarder.InfocardLine{Phrases: []infocarder.InfocardPhrase{{Phrase: `Item has CRAFTING RECIPES below`, Bold: true}}})
 				if strip_line(info[0].ToStr()) != "" {
 					add_line(1, infocarder.NewInfocardSimpleLine(""))
 					line_position += 1
