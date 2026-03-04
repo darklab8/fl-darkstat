@@ -158,7 +158,11 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 				left := original[:beginning_of_ini_configs]  //store left slice elements in left variable
 				right := original[beginning_of_ini_configs:] //store right slice elements in right variable
 
-				e.PutInfocard(infocarder.InfocardKey(nickname), append(left, append(addition, right...)...))
+				addition_with_end := append(addition,
+					infocarder.InfocardLine{Phrases: []infocarder.InfocardPhrase{{Phrase: `CRAFTING RECIPES FINISHED`}}},
+					infocarder.InfocardLine{},
+				)
+				e.PutInfocard(infocarder.InfocardKey(nickname), append(left, append(addition_with_end, right...)...))
 			} else {
 				e.PutInfocard(infocarder.InfocardKey(nickname), append(original, addition...))
 			}
