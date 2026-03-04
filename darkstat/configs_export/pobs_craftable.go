@@ -144,7 +144,30 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 		}
 		info.Lines = add_line_about_recipes(info.Lines)
 
-		e.PutInfocard(infocarder.InfocardKey(market_good.Nickname), append(info.Lines, infocard_addition.Lines...))
+		TryPutBeforeIniConfigs := func(nickname infocarder.InfocardKey, original infocarder.Infocard, addition infocarder.Infocard) {
+
+			beginning_of_ini_configs := -1
+			for index, line := range original {
+				str_line := line.ToStr()
+				if strings.Contains(str_line, "[") && strings.Contains(str_line, "]") {
+					beginning_of_ini_configs = index
+
+					break
+				}
+			}
+
+			if beginning_of_ini_configs != -1 {
+				left := original[:beginning_of_ini_configs]  //store left slice elements in left variable
+				right := original[beginning_of_ini_configs:] //store right slice elements in right variable
+
+				e.PutInfocard(infocarder.InfocardKey(nickname), append(left, append(addition, right...)...))
+			} else {
+				e.PutInfocard(infocarder.InfocardKey(nickname), append(original, addition...))
+			}
+
+		}
+
+		TryPutBeforeIniConfigs(infocarder.InfocardKey(market_good.Nickname), info.Lines, infocard_addition.Lines)
 
 		if market_good.ShipNickname != "" {
 			var info infocarder.Infocard
