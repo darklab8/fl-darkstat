@@ -697,8 +697,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 						<td></td>
 						<td></td>
 					}
-				}
-				if GetBaseKind(shared, name) == BaseLootableUnlocked {
+				} else if GetBaseKind(shared, name) == BaseLootableUnlocked {
 					if good.LootInfo != nil {
 						<td>
 							{ good.LootInfo.Kind.ToStr() }
