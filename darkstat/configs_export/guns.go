@@ -263,6 +263,11 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 			e.WriteConfigToInfocard(&explosion.Model, gun.Nickname)
 		}
 
+		if motor_nick, ok := munition.Motor.GetValue(); ok {
+			motor := e.Mapped.Equip().MotorMap[motor_nick]
+			e.WriteConfigToInfocard(&motor.Model, gun.Nickname)
+		}
+
 		e.first_time_adding_gun[gun_nickname] = true
 	}
 

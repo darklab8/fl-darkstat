@@ -446,9 +446,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						}
 
 						if dock_with_base, ok := base_to_add.DockWith.GetValue(); ok {
-							if _, ok := system_to_add.AllBasesByDockWith[dock_with_base]; !ok {
-								system_to_add.AllBasesByDockWith[dock_with_base] = append(system_to_add.AllBasesByDockWith[dock_with_base], base_to_add)
-							}
+							// WTF i had bases adding twice?
+							// if _, ok := system_to_add.AllBasesByDockWith[dock_with_base]; !ok {
+							// 	system_to_add.AllBasesByDockWith[dock_with_base] = append(system_to_add.AllBasesByDockWith[dock_with_base], base_to_add)
+							// }
 							system_to_add.AllBasesByDockWith[dock_with_base] = append(system_to_add.AllBasesByDockWith[dock_with_base], base_to_add)
 
 							if _, ok := frelconfig.BasesByDockWith[dock_with_base]; !ok {

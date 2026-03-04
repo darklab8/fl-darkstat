@@ -112,6 +112,11 @@ func (e *Exporter) GetBases(ctx context.Context) []*Base {
 			if system_bases, ok := system.AllBasesByDockWith[base.Nickname.Get()]; ok {
 				for _, system_base := range system_bases {
 					e.WriteConfigToInfocard(&system_base.Model, string(nickname))
+
+					archetype := system_base.Archetype.Get()
+					solar := e.Mapped.Solararch.SolarsByNick[archetype]
+					e.WriteConfigToInfocard(&solar.Model, string(nickname))
+
 				}
 			}
 		}
