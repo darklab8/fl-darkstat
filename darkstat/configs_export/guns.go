@@ -163,20 +163,11 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 
 	munition, found_munition := e.Mapped.Equip().MunitionMap[gun_info.ProjectileArchetype.Get()]
 
-	if e.Mapped.FLSR != nil && !found_munition && gun.Nickname == "gd_ww_turret_laser_light02" && gun_info.ProjectileArchetype.Get() == "gd_ww_laser_light02_ammo" {
+	if !found_munition {
 		logus.Log.Error("gun does not have defined munition",
 			typelog.Any("nickname", gun.Nickname),
 			typelog.Any("projectile_archetype", gun_info.ProjectileArchetype.Get()))
 		return gun, errors.New("not defined munition")
-	}
-
-	if gun.Nickname == "gd_ww_turret_laser_light02" {
-		logus.Log.Warn("FLSR broken gun potentially",
-			typelog.String("gun.Nickname", gun.Nickname),
-			typelog.String("projectile", gun_info.ProjectileArchetype.Get()),
-			typelog.Bool("is_flsr", e.Mapped.FLSR != nil),
-			typelog.Bool("found_munition", found_munition),
-		)
 	}
 
 	gun.DamageType = "undefined"

@@ -108,6 +108,10 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 							base_name := base_nickname
 							if ok {
 								base_name = e.GetInfocardName(universe_base.StridName.Get(), base_nickname)
+							} else {
+								logus.Log.Error("craftable base has no name",
+									typelog.Any("base_nickname", base_nickname),
+								)
 							}
 							recipe_info.BaseNames = append(recipe_info.BaseNames, base_name)
 						}
