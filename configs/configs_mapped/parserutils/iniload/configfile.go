@@ -22,6 +22,8 @@ func NewLoader(input_file *file.File) *IniLoader {
 func (fileconfig *IniLoader) Scan() *IniLoader {
 	if fileconfig.input_file == nil {
 		logus.Log.Error("input_file is empty")
+		fileconfig.INIFile = &inireader.INIFile{}
+		return fileconfig
 	}
 
 	iniconfig := inireader.Read(fileconfig.input_file)
