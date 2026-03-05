@@ -62,6 +62,13 @@ tasks:
       - rm dist/darkstat-linux-amd64 | true
       - GOOS=linux GOARCH=amd64 go build -v -o dist/darkstat-linux-amd64 main.go
 
+  build:test_windows:
+    cmds:
+      - task: build-version
+      - mkdir -p dist
+      - rm dist/darkstat-linux-amd64 | true
+      - GOOS=windows GOARCH=amd64 go build -v -o ~/windows10shared/fl-files-discovery/darkstat.exe main.go
+
   build-version:
     cmds:
       - autogit semver --publish > darkstat/settings/version.txt || echo 'v0.0.0' > darkstat/settings/version.txt

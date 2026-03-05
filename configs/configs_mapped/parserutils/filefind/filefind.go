@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
@@ -89,6 +90,11 @@ func FindConfigs(folderpath utils_types.FilePath) *Filesystem {
 
 func (file1system Filesystem) GetFile2(file1names ...utils_types.FilePath) *file.File {
 	for _, file1name := range file1names {
+		if !cfg.IsLinux {
+			file1name = utils_types.FilePath(strings.ReplaceAll(strings.ToLower(file1name.ToString()), "\\\\", "/"))
+			file1name = utils_types.FilePath(strings.ReplaceAll(strings.ToLower(file1name.ToString()), "\\", "/"))
+		}
+
 		file_, ok := file1system.HashmapDirPath[file1name]
 		if !ok {
 			logus.Log.Warn("Filesystem.GetFile, failed to find find in filesystesm file trying to recover", utils_logus.FilePath(file1name))
@@ -99,7 +105,7 @@ func (file1system Filesystem) GetFile2(file1names ...utils_types.FilePath) *file
 		return result_file
 	}
 
-	logus.Log.Warn("failed to get file", typelog.Items[utils_types.FilePath]("filenames", file1names))
+	logus.Log.Warn("failed to get file", typelog.Items("filenames", file1names))
 	return nil
 }
 
@@ -115,6 +121,6 @@ func (file1system Filesystem) GetFile(file1names ...utils_types.FilePath) *file.
 		return result_file
 	}
 
-	logus.Log.Warn("failed to get file", typelog.Items[utils_types.FilePath]("filenames", file1names))
+	logus.Log.Warn("failed to get file", typelog.Items("filenames", file1names))
 	return nil
 }
