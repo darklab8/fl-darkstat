@@ -36,7 +36,16 @@ func NewTradeRoute(g *GraphResults, buying_good *MarketGood, selling_good *Marke
 
 	return route
 }
-
+func (t *TradeRoute) GetProffitVolume() float64 {
+	profit_v_t := GetProffitPerTime(t.Route.g, t.BuyingGood, t.SellingGood)
+	time_s := GetTimeS(t.Route.g, t.BuyingGood, t.SellingGood)
+	kilo_volume := KiloVolumesDeliverable(t.BuyingGood, t.SellingGood)
+	kilo_volume = math.Min(kilo_volume, 50)
+	if time_s == 0 || time_s > float64(trades.INF/2) {
+		return 0
+	}
+	return profit_v_t * time_s * kilo_volume
+}
 func (t *TradeRoute) GetProffitPerTime() float64 {
 	return GetProffitPerTime(t.Route.g, t.BuyingGood, t.SellingGood)
 }
@@ -102,7 +111,7 @@ func NewTradePathExporter(
 
 func (e *TradePathExporter) GetBaseTradePathsFiltered(TradeRoutes []*ComboTradeRoute) []*ComboTradeRoute {
 	sort.Slice(TradeRoutes, func(i, j int) bool {
-		return TradeRoutes[i].Transport.GetProffitPerTime() > TradeRoutes[j].Transport.GetProffitPerTime()
+		return TradeRoutes[i].Transport.GetProffitVolume() > TradeRoutes[j].Transport.GetProffitVolume()
 	})
 	return TradeRoutes
 }
@@ -157,7 +166,7 @@ func (e *TradePathExporter) GetBaseTradePathsFrom(ctx context.Context, base *Bas
 					return
 				}
 				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good_at_base)
-				if kilo_volumes < 5 {
+				if kilo_volumes <= 0.01 {
 					return
 				}
 				TradeRoutes = append(TradeRoutes, trade_route)
@@ -207,7 +216,7 @@ func (e *TradePathExporter) GetBaseTradePathsTo(ctx context.Context, base *Base)
 					return
 				}
 				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
-				if kilo_volumes < 5 {
+				if kilo_volumes <= 0.01 {
 					return
 				}
 				TradeRoutes = append(TradeRoutes, trade_route)
@@ -463,6 +472,7 @@ func trade_route_info(trade_route1 *TradeRoute, trade_route2 *TradeRoute) RouteI
 
 type BaseBestPathTimes struct {
 	TransportProfitPerTime *float64
+	TransportProfitVolume  *float64
 	FrigateProfitPerTime   *float64
 	FreighterProfitPerTime *float64
 }
@@ -501,14 +511,17 @@ func (e *TradePathExporter) GetBaseBestPathFrom(ctx context.Context, base *Base)
 				}
 
 				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
-				if kilo_volumes < 5 {
+				kilo_volumes = math.Min(kilo_volumes, 50)
+				if kilo_volumes <= 0.01 {
 					return
 				}
 
 				if result.TransportProfitPerTime == nil {
 					result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
+					result.TransportProfitVolume = ptr.Ptr(TransportProfitPerTime * time_s * kilo_volumes)
 				} else if TransportProfitPerTime > *result.TransportProfitPerTime {
 					result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
+					result.TransportProfitVolume = ptr.Ptr(TransportProfitPerTime * time_s * kilo_volumes)
 				}
 
 				if result.FrigateProfitPerTime == nil {
@@ -566,14 +579,17 @@ func (e *TradePathExporter) GetBaseBestPathTo(ctx context.Context, base *Base) *
 				}
 
 				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
-				if kilo_volumes < 5 {
+				kilo_volumes = math.Min(kilo_volumes, 50)
+				if kilo_volumes <= 0.01 {
 					return
 				}
 
 				if result.TransportProfitPerTime == nil {
 					result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
+					result.TransportProfitVolume = ptr.Ptr(TransportProfitPerTime * time_s * kilo_volumes)
 				} else if TransportProfitPerTime > *result.TransportProfitPerTime {
 					result.TransportProfitPerTime = ptr.Ptr(TransportProfitPerTime)
+					result.TransportProfitVolume = ptr.Ptr(TransportProfitPerTime * time_s * kilo_volumes)
 				}
 
 				if result.FrigateProfitPerTime == nil {
