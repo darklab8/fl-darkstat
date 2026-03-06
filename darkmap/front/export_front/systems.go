@@ -68,11 +68,13 @@ type Coords2D struct {
 func ExportSystems(configs *configs_mapped.MappedConfigs) []System {
 	var systems []System
 	for _, system := range configs.Universe.Systems {
+		posx, _ := system.PosX.GetValue()
+		posy, _ := system.PosY.GetValue()
 		system_to_add := System{
 			Nickname: system.Nickname.Get(),
 			Pos: Coords2D{
-				X: system.PosX.Get(),
-				Y: system.PosY.Get(),
+				X: posx,
+				Y: posy,
 			},
 			Region: Region{
 				Name: configs.GetRegionName(system),
