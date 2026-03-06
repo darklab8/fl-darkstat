@@ -10,6 +10,7 @@ import (
 	"os"
 	"sync"
 
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/flsr/flsr_missions"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/flsr/flsr_recipes"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/const_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped"
@@ -62,7 +63,8 @@ import (
 )
 
 type SiriusRevivalConfig struct {
-	FLSRRecipes *flsr_recipes.Config
+	FLSRRecipes  *flsr_recipes.Config
+	FLSRMissions *flsr_missions.Config
 }
 
 type DiscoveryConfig struct {
@@ -224,6 +226,11 @@ func getConfigs2(filesystem *filefind.Filesystem, paths []*semantic.Path) []*ini
 	})
 }
 
+const (
+	DiscoLauncherConfigName = "launcherconfig.xml"
+	FlsrLauncherConfigName  = "flsr-launcher.ini"
+)
+
 func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath) *MappedConfigs {
 	ctx, span := traces.Tracer.Start(ctx, "MappedConfigs.Read")
 	defer span.End()
@@ -288,7 +295,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	var file_minecontrol *iniload.IniLoader
 	var file_minecontrol_nodes *iniload.IniLoader
 
-	if filesystem.GetFile("flsr-launcher.ini") != nil ||
+	if filesystem.GetFile(FlsrLauncherConfigName) != nil ||
 		filesystem.GetFile("flsr-texts.dll") != nil ||
 		filesystem.GetFile("flsr-dialogs.dll") != nil {
 		m.FLSR = &SiriusRevivalConfig{}
@@ -297,7 +304,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			m.FLSR.FLSRRecipes = flsr_recipes.Read(iniload.NewLoader(flsr_recipes_file).Scan())
 		}
 	}
-	if techcom := filesystem.GetFile("launcherconfig.xml"); techcom != nil {
+	if techcom := filesystem.GetFile(DiscoLauncherConfigName); techcom != nil {
 		m.Discovery = &DiscoveryConfig{}
 		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
 		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
@@ -363,6 +370,19 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			}, timeit.WithMsg("map systems"))
 			wg.Done()
 		}()
+
+		if m.FLSR != nil {
+			filesystem := filefind.FindConfigs(file1path.Join("EXE", "flhook_plugins", "missions"))
+			if len(filesystem.Files) == 0 {
+				logus.Log.Panic("expected to find FLSR/flhoook_plugins/missions, but found none :|")
+			}
+
+			loaded_files := []*iniload.IniLoader{}
+			for _, file := range filesystem.Files {
+				loaded_files = append(loaded_files, iniload.NewLoader(file).Scan())
+			}
+			m.FLSR.FLSRMissions = flsr_missions.Read(loaded_files)
+		}
 
 		wg.Add(1)
 		go func() {

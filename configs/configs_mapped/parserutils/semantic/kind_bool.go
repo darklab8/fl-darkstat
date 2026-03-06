@@ -20,6 +20,7 @@ type BoolType int64
 const (
 	IntBool BoolType = iota
 	StrBool
+	FLSRActiveBool
 )
 
 type BoolOption func(s *Bool)
@@ -58,7 +59,10 @@ func (s *Bool) get() bool {
 		return int(s.section.ParamMap[s.key][s.index].Values[s.order].(inireader.ValueNumber).Value) == 1
 	case StrBool:
 		return strings.Contains(strings.ToLower(s.section.ParamMap[s.key][s.index].Values[s.order].AsString()), "true")
+	case FLSRActiveBool:
+		return strings.ToLower(s.section.ParamMap[s.key][s.index].Values[s.order].AsString()) == "active"
 	}
+
 	panic("not expected bool type")
 }
 
