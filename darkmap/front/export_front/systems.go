@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/go-utils/utils/ptr"
 )
 
 type System struct {
@@ -61,20 +62,27 @@ func (region Region) ToHexColor() string {
 }
 
 type Coords2D struct {
-	X float64
-	Y float64
+	X *float64
+	Y *float64
 }
 
 func ExportSystems(configs *configs_mapped.MappedConfigs) []System {
 	var systems []System
 	for _, system := range configs.Universe.Systems {
-		posx, _ := system.PosX.GetValue()
-		posy, _ := system.PosY.GetValue()
+
+		var pos_x *float64
+		var pos_y *float64
+		if posx, ok := system.PosX.GetValue(); ok {
+			pos_x = ptr.Ptr(posx)
+		}
+		if posy, ok := system.PosY.GetValue(); ok {
+			pos_y = ptr.Ptr(posy)
+		}
 		system_to_add := System{
 			Nickname: system.Nickname.Get(),
 			Pos: Coords2D{
-				X: posx,
-				Y: posy,
+				X: pos_x,
+				Y: pos_y,
 			},
 			Region: Region{
 				Name: configs.GetRegionName(system),
