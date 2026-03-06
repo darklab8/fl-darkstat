@@ -35,8 +35,10 @@ type DarkstatEnvVars struct {
 	RelayRoot       string
 	RelayLoopSecs   int
 
-	TradeRoutesDetailedTradeLane     bool
-	DarkstatDisablePobsForBestTrades bool
+	TradeRoutesDetailedTradeLane    bool
+	TradeRoutesBestDisablePobs      bool
+	TradeRoutesBestTwoWaysLimitPobs int
+	TradeRoutesBestDisableLiners    bool
 
 	IsCPUProfilerEnabled bool
 	IsMemProfilerEnabled bool
@@ -79,8 +81,10 @@ func init() {
 		RelayRoot:     env.GetStr("RELAY_ROOT", enverant.OrStr("/"), enverant.WithDesc("if u ever will need to serve relay from non root path, u could use it to make sure requests go correct path.")),
 		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 30, enverant.WithDesc("How often to update backend info during active app. Used for discovery to update PoB related info on a run")),
 
-		TradeRoutesDetailedTradeLane:     env.GetBoolOr("TRADE_ROUTES_DETAILED_TRADE_LANE", false, enverant.WithDesc("experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")),
-		DarkstatDisablePobsForBestTrades: env.GetBoolOr("DISABLE_POBS_FOR_BEST_TRADES", false, enverant.WithDesc("if u use discovery mod, an option to turn off pobs from best trades")),
+		TradeRoutesDetailedTradeLane:    env.GetBoolOr("TRADE_ROUTES_DETAILED_TRADE_LANE", false, enverant.WithDesc("experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")),
+		TradeRoutesBestDisablePobs:      env.GetBoolOr("DISABLE_POBS_FOR_BEST_TRADES", false, enverant.WithDesc("if u use discovery mod, an option to turn off pobs from best trades")),
+		TradeRoutesBestTwoWaysLimitPobs: env.GetIntOr("TRADE_ROUTES_BEST_TWO_WAY_LIMIT_POBS", 99, enverant.WithDesc("Limit amount of pobs participating in 2 way routes")),
+		TradeRoutesBestDisableLiners:    env.GetBoolOr("TRADE_ROUTES_DISABLE_LINERS", false, enverant.WithDesc("")),
 	}
 	Enverants = append(Enverants, Env.Enver, Env.DarkcoreEnvVars.Enver, Env.ConfEnvVars.Enver, Env.UtilsEnvs.Enver)
 	for _, enver := range Enverants {

@@ -278,6 +278,39 @@ func OneWayRouteInfoF(trade_route *TradeRoute) OneWayRouteInfo {
 	return result
 }
 
+func HasPoBs(trade_route *TwoWayDeal) int {
+	count := 0
+	if trade_route.Route1.Transport.BuyingGood.PoB != nil {
+		count += 1
+	}
+	if trade_route.Route1.Transport.SellingGood.PoB != nil {
+		count += 1
+	}
+	if trade_route.Route2.Transport.BuyingGood.PoB != nil {
+		count += 1
+	}
+	if trade_route.Route2.Transport.SellingGood.PoB != nil {
+		count += 1
+	}
+	return count
+}
+
+func HasLinersAndetc(trade_route *TwoWayDeal) bool {
+	if trade_route.Route1.Transport.BuyingGood.ShipClass != nil {
+		return true
+	}
+	if trade_route.Route1.Transport.SellingGood.ShipClass != nil {
+		return true
+	}
+	if trade_route.Route2.Transport.BuyingGood.ShipClass != nil {
+		return true
+	}
+	if trade_route.Route2.Transport.SellingGood.ShipClass != nil {
+		return true
+	}
+	return false
+}
+
 func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) BestTradeDealsOutput {
 	var result BestTradeDealsOutput
 	var trade_deals []*TradeDeal
@@ -286,7 +319,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	len_bases := len(bases)
 	for index, base := range bases {
 
-		if settings.Env.DarkstatDisablePobsForBestTrades && base.IsPob {
+		if settings.Env.TradeRoutesBestDisablePobs && base.IsPob {
 			continue
 		}
 
@@ -296,11 +329,27 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		trade_routes := e.GetBaseTradePathsFrom(ctx, base)
 		for _, trade_route := range trade_routes {
 
-			if settings.Env.DarkstatDisablePobsForBestTrades && trade_route.Transport.SellingGood.PoBGood != nil {
-				continue
+			if settings.Env.TradeRoutesBestDisablePobs {
+
+				if trade_route.Transport.BuyingGood.PoB != nil {
+					continue
+				}
+				if trade_route.Transport.SellingGood.PoB != nil {
+					continue
+				}
 			}
 
 			route_info := OneWayRouteInfoF(trade_route.Transport)
+
+			if settings.Env.TradeRoutesBestDisableLiners {
+				if trade_route.Transport.BuyingGood.ShipClass != nil {
+					continue
+				}
+				if trade_route.Transport.SellingGood.ShipClass != nil {
+					continue
+				}
+			}
+
 			if route_info.KiloVolumes < 10 {
 				continue
 			}
@@ -371,6 +420,10 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 						TransportInfo: trade_route_info(trade_route1.Transport, trade_route2.Transport),
 						FrigateInfo:   trade_route_info(trade_route1.Frigate, trade_route2.Frigate),
 						FreighterInfo: trade_route_info(trade_route1.Freighter, trade_route2.Freighter),
+					}
+
+					if HasPoBs(two_deal) > settings.Env.TradeRoutesBestTwoWaysLimitPobs {
+						continue
 					}
 
 					found_two_way_hashes_my.Lock()

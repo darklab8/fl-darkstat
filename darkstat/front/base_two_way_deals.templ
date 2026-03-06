@@ -25,10 +25,33 @@ templ TwoWayDealDetailed(trade_route *configs_export.TwoWayDeal, shared *types.S
 	}
 }
 
+func GetTwoRoutes(TwoWayDeals []*configs_export.TwoWayDeal, mode tab.ShowEmpty) []*configs_export.TwoWayDeal {
+	if mode == true {
+		return TwoWayDeals
+	}
+
+	var results []*configs_export.TwoWayDeal
+
+	for _, two_way_route := range TwoWayDeals {
+
+		if configs_export.HasPoBs(two_way_route) > 2 {
+			continue
+		}
+		if configs_export.HasLinersAndetc(two_way_route) {
+			continue
+		}
+
+		results = append(results, two_way_route)
+	}
+
+	return results
+}
+
 templ TwoWayTradesTable(
 	trade_routes *cache.Cached[configs_export.BestTradeDealsOutput],
 	shared *types.SharedData,
 	data *configs_export.Exporter,
+	mode tab.ShowEmpty,
 ) {
 	<table class="sortable">
 		<thead>
@@ -86,7 +109,7 @@ templ TwoWayTradesTable(
 			</tr>
 		</thead>
 		<tbody>
-			for _, two_way := range trade_routes.Get(ctx).TwoWayDeals {
+			for _, two_way := range GetTwoRoutes(trade_routes.Get(ctx).TwoWayDeals, mode) {
 				@tab.TrFromMainTb(two_way.HashStr(), TwoWayDealDetailedUrl(two_way), "") {
 					<td class="seo">
 						@frmt.WriteLimit(300) {
@@ -216,6 +239,11 @@ func TwoWayUniquePoBs(trade_route *configs_export.TwoWayDeal) map[string]bool {
 	if trade_route.Route2.Transport.SellingGood.PoB != nil {
 		result[trade_route.Route2.Transport.SellingGood.PoB.Name] = true
 	}
+
+	if len(result) == 0 {
+		result["no_pobs"] = true
+	}
+
 	return result
 }
 
@@ -238,7 +266,7 @@ templ TwoWayTradesTableT(
 				@tab.TableTop() {
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">
-						@TwoWayTradesTable(trade_routes, shared, data)
+						@TwoWayTradesTable(trade_routes, shared, data, mode)
 					</div>
 				}
 				@tab.TableBottom() {
