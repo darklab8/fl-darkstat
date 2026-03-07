@@ -64,6 +64,8 @@ func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 
 		RelayHost: settings.Env.RelayHost,
 		RelayRoot: settings.Env.RelayRoot,
+
+		ShowDisco: bool(is_discovery),
 	}
 
 	static_files := []builder.StaticFile{

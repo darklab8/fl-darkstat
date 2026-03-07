@@ -41,6 +41,8 @@ type GlobalParams struct {
 	RelayRoot string
 
 	AppStart time.Time
+
+	ShowDisco bool
 }
 
 func (g *GlobalParams) GetBuildPath() utils_types.FilePath {

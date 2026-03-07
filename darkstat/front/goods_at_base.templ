@@ -120,7 +120,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 				onclick="RowHighlighter(this)"
 				class={
 					templ.KV("line_through", base_info.NotBuyable),
-					templ.KV("line_underline", !base_info.IsTransportReachable),
+					templ.KV("line_underline", !base_info.IsTransportReachable && types.GetCtx(ctx).ShowDisco),
 				}
 			>
 				<td>

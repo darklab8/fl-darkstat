@@ -216,7 +216,7 @@ templ TrFromMainTb2(tr *Tr, prerender bool) {
 		preload="mouseover"
 		class={
 			templ.KV("hidden", tr.pinm == PinMode && !prerender),
-			templ.KV("line_underline", !tr.is_tranport_reachable),
+			templ.KV("line_underline", !tr.is_tranport_reachable && types.GetCtx(ctx).ShowDisco),
 		}
 		onclick="RowHighlighter(this)"
 	>
