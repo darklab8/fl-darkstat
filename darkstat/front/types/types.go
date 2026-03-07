@@ -85,4 +85,11 @@ type SharedData struct {
 	ShipNames             ShipNames
 }
 
-var Capital = cases.Title(language.English, cases.NoLower)
+var capital = cases.Title(language.English, cases.NoLower)
+
+func ToCapital(value string) string {
+	if value == "" {
+		return value
+	}
+	return capital.String(value)
+}

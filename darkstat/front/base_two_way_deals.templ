@@ -68,25 +68,25 @@ templ TwoWayTradesTable(
 					@frmt.MultiLinestring([]string{"Profit", "per", "volume"})
 				</th>
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Transport), "cycle", "time"})
+					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "cycle", "time"})
 				</th>
 				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Frigate), "cycle", "time"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "cycle", "time"})
 					</th>
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Freighter), "cycle", "time"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "cycle", "time"})
 					</th>
 				}
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Transport), "profit per", "vol & sec"})
+					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "profit per", "vol & sec"})
 				</th>
 				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Frigate), "profit per", "vol & sec"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "profit per", "vol & sec"})
 					</th>
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Freighter), "profit per", "vol & sec"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "profit per", "vol & sec"})
 					</th>
 				}
 				if shared.ShowDisco {

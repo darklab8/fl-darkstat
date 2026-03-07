@@ -133,24 +133,24 @@ templ OneWayShared(shared *types.SharedData) {
 				</th>
 				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Frigate), "Time(sec)"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "Time(sec)"})
 					</th>
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Freighter), "Time(sec)"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "Time(sec)"})
 					</th>
 					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{shared.ShipNames.Freighter, "profit", "sum"})
 					</th>
 				}
 				<th style="width:50px;">
-					@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Transport), "Profit/v/t", "¢ents/sec"})
+					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "Profit/v/t", "¢ents/sec"})
 				</th>
 				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Frigate), "Profit/v/t", "¢ents/sec"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "Profit/v/t", "¢ents/sec"})
 					</th>
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Freighter), "Profit/v/t", "¢ents/sec"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "Profit/v/t", "¢ents/sec"})
 					</th>
 				}
 				<th style="width:5px;">Vol.</th>

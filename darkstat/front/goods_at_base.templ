@@ -75,13 +75,13 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 				}
 				if shared.ShowFLSR {
 					<th style="width:5px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Transport), "reachable"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "reachable"})
 					</th>
 					<th style="width:5px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Frigate), "reachable"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "reachable"})
 					</th>
 					<th style="width:5px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Freighter), "reachable"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "reachable"})
 					</th>
 				}
 				<th style="width:100px;">Base Nickname</th>
