@@ -2,7 +2,9 @@ package types
 
 import (
 	"context"
+	"strings"
 	"time"
+	"unicode"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/discovery/minecontrol"
@@ -87,9 +89,8 @@ type SharedData struct {
 
 var capital = cases.Title(language.English, cases.NoLower)
 
+func ToTitle(s string) string { return strings.Map(unicode.ToTitle, s) }
+
 func ToCapital(value string) string {
-	if value == "" {
-		return value
-	}
-	return capital.String(value)
+	return ToTitle(value)
 }
