@@ -17,13 +17,13 @@ templ BriberyBottomBase(shared *types.SharedData) {
 				<th style="width:250px;">Owner Faction</th>
 				if shared.ShowFLSR {
 					<th style="width:5px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Transport), "dock"})
+						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Transport), "reachable"})
 					</th>
 					<th style="width:5px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Frigate), "dock"})
+						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Frigate), "reachable"})
 					</th>
 					<th style="width:5px;">
-						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Freighter), "dock"})
+						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Freighter), "reachable"})
 					</th>
 				}
 				<th style="width:50px;">Probability %</th>

@@ -34,7 +34,7 @@ func (l *Router) LinkBases(
 	build.RegComps(
 		builder.NewComponent(
 			urls.Bases,
-			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowShops, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
+			front.BasesT(data.FilterToUserfulBases(data.Bases, true), front.BaseShowShops, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Bases),
@@ -42,7 +42,7 @@ func (l *Router) LinkBases(
 		),
 		builder.NewComponent(
 			urls.Missions,
-			front.BasesT(configs_export.FilterToUserfulBases(data.Bases), front.BaseShowMissions, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
+			front.BasesT(data.FilterToUserfulBases(data.Bases, true), front.BaseShowMissions, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.Missions),
@@ -174,13 +174,13 @@ func (l *Router) LinkBases(
 		builder.NewComponent( // move to back?
 			urls.TradesFrom,
 			front.BasesT(
-				configs_export.FilterToUserfulBases(data.TradeBases),
+				data.FilterToUserfulBases(data.TradeBases, true),
 				front.BaseTabTradesFrom,
 				tab.ShowEmpty(false),
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePathsFrom(ctx, configs_export.FilterToUserfulBases(data.TradeBases), data)
+					return front.GetBasesWithTradePathsFrom(ctx, data.FilterToUserfulBases(data.TradeBases, true), data)
 				}, time.Minute*2+time.Second*10)},
 			),
 		),
@@ -200,13 +200,13 @@ func (l *Router) LinkBases(
 		builder.NewComponent( // move to back?
 			urls.TradesTo,
 			front.BasesT(
-				configs_export.FilterToUserfulBases(data.TradeBases),
+				data.FilterToUserfulBases(data.TradeBases, true),
 				front.BaseTabTradesTo,
 				tab.ShowEmpty(false),
 				shared,
 				data,
 				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
-					return front.GetBasesWithTradePathsTo(ctx, configs_export.FilterToUserfulBases(data.TradeBases), data)
+					return front.GetBasesWithTradePathsTo(ctx, data.FilterToUserfulBases(data.TradeBases, true), data)
 				}, time.Minute*2+time.Second*20)},
 			),
 		),
@@ -252,7 +252,7 @@ func (l *Router) LinkBases(
 
 		builder.NewComponent(
 			urls.TravelRoutes,
-			front.BasesT(configs_export.FilterToUserfulBases(data.TravelBases), front.BaseAllRoutes, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
+			front.BasesT(data.FilterToUserfulBases(data.TravelBases, true), front.BaseAllRoutes, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
 		),
 		builder.NewComponent(
 			tab.AllItemsUrl(urls.TravelRoutes),

@@ -32,8 +32,7 @@ func TestTradeRoutes(t *testing.T) {
 		configs,
 		DiscoverySpeeds.AvgTransportCruiseSpeed,
 		MapConfigOptions{
-			WithDiscoFreighterPaths: WithDiscoFreighterPaths(false),
-			DockOpts:                DockOpts,
+			DockOpts: DockOpts,
 		},
 		make(map[string][]ExtraBase),
 		MappingOptions{},

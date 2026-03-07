@@ -1,6 +1,7 @@
 package trades
 
 import (
+	"fmt"
 	"math"
 	"strings"
 
@@ -32,8 +33,6 @@ func DistanceForVecs(Pos1 cfg.Vector, Pos2 cfg.Vector) float64 {
 	distance := math.Pow((x_dist + y_dist + z_dist), 0.5)
 	return distance
 }
-
-type WithDiscoFreighterPaths bool
 
 type RouteShipType int64
 
@@ -109,8 +108,7 @@ type MappingOptions struct {
 }
 
 type MapConfigOptions struct {
-	WithDiscoFreighterPaths WithDiscoFreighterPaths
-	DockOpts                solararch_mapped.DockableOptions
+	DockOpts solararch_mapped.DockableOptions
 }
 
 func MapConfigsToFGraph(
@@ -161,6 +159,11 @@ func MapConfigsToFGraph(
 			if !dockable {
 				continue
 			}
+
+			// if system.Nickname == "li01" {
+			// 	fmt.Println()
+			// }
+
 			object := SystemObject{
 				nickname: system_base_base,
 				pos:      system_obj.Pos.Get(),
@@ -197,8 +200,10 @@ func MapConfigsToFGraph(
 			if !dock_results.IsDockable {
 				continue
 			}
-			if !dock_results.IsDockableByDiscoTransports && bool(!DockOptions.WithDiscoFreighterPaths) {
-				continue
+			if mapped.Discovery != nil {
+				if !dock_results.IsDockableByDiscoTransports && bool(!DockOptions.DockOpts.WithDiscoFreighterPaths) {
+					continue
+				}
 			}
 
 			// Lets allow flying between all bases
@@ -237,6 +242,10 @@ func MapConfigsToFGraph(
 			graph.SetIdsName(object.nickname, jumphole.IdsName.Get())
 
 			jh_archetype := jumphole.Archetype.Get()
+
+			if jh_archetype == strings.ToLower("Li05_super_jumpgate") {
+				fmt.Print()
+			}
 
 			// Check Solar if this is Dockable
 			if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
@@ -281,7 +290,7 @@ func MapConfigsToFGraph(
 					// "dsy_hypergate_all" is one directional hypergate dockable by everything, no need to exclude for freighter only paths
 					dock_results.IsDockableByDiscoTransports = false
 				}
-				if !dock_results.IsDockableByDiscoTransports && bool(!DockOptions.WithDiscoFreighterPaths) {
+				if !dock_results.IsDockableByDiscoTransports && bool(!DockOptions.DockOpts.WithDiscoFreighterPaths) {
 					continue
 				}
 			}

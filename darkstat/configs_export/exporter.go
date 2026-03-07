@@ -162,7 +162,8 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 
 	logus.Log.Info("getting bases")
 	e.Bases = e.GetBases(ctx)
-	useful_bases := FilterToUserfulBases(e.Bases)
+
+	useful_bases := e.FilterToUserfulBases(e.Bases, false)
 	e.useful_bases_by_nick = make(map[cfg.BaseUniNick]bool)
 	for _, base := range useful_bases {
 		e.useful_bases_by_nick[base.Nickname] = true
@@ -236,6 +237,8 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 			TransportDockOpts.PlayersCanDockMoorLarge = true
 		}
 	}
+	FreighterDockOpts = TransportDockOpts
+	FrigateDockOpts = TransportDockOpts
 
 	if e.Mapped.FLSR != nil {
 		TransportDockOpts = solararch_mapped.DockableOptions{
@@ -247,9 +250,24 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 		FrigateDockOpts = solararch_mapped.DockableOptions{
 			PlayersCanDockMoorLarge: true,
 		}
-	} else {
-		FreighterDockOpts = TransportDockOpts
-		FrigateDockOpts = TransportDockOpts
+	} else if e.Mapped.Discovery != nil {
+		TransportDockOpts = solararch_mapped.DockableOptions{
+			IsDisco:                  true,
+			PlayersCanDockMoorMedium: true,
+		}
+		FreighterDockOpts = solararch_mapped.DockableOptions{
+			IsDisco:                 true,
+			WithDiscoFreighterPaths: true,
+			PlayersCanDockBerth:     true,
+		}
+		FrigateDockOpts = solararch_mapped.DockableOptions{
+			IsDisco:                  true,
+			PlayersCanDockMoorMedium: true,
+		}
+
+		// Who can dock PlayersCanDockMoorLarge ?
+		// Only large battleships :/ for which we have no room to show information,
+		// unless we intend to show 4th choice
 	}
 
 	logus.Log.Warn("DockOpts=", typelog.Struct(TransportDockOpts))
@@ -264,8 +282,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 			e.Transport = NewGraphResults(e,
 				e.ship_speeds.AvgTransportCruiseSpeed,
 				trades.MapConfigOptions{
-					WithDiscoFreighterPaths: trades.WithDiscoFreighterPaths(false),
-					DockOpts:                TransportDockOpts,
+					DockOpts: TransportDockOpts,
 				},
 				extra_graph_bases, options.MappingOptions)
 			// e.Freighter = e.Transport
@@ -280,8 +297,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 			defer span.End()
 			e.Frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed,
 				trades.MapConfigOptions{
-					WithDiscoFreighterPaths: trades.WithDiscoFreighterPaths(false),
-					DockOpts:                FrigateDockOpts,
+					DockOpts: FrigateDockOpts,
 				}, extra_graph_bases, options.MappingOptions)
 			wg.Done()
 		}()
@@ -291,12 +307,13 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 			defer span.End()
 			e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed,
 				trades.MapConfigOptions{
-					WithDiscoFreighterPaths: trades.WithDiscoFreighterPaths(true),
-					DockOpts:                FreighterDockOpts,
+					DockOpts: FreighterDockOpts,
 				},
 				extra_graph_bases, options.MappingOptions)
 			wg.Done()
 		}()
+		// _ = FreighterDockOpts
+		// _ = FrigateDockOpts
 	}
 
 	e.Factions = e.GetFactions(e.Bases)
@@ -354,7 +371,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 		e.MiningOperations,
 	)
 
-	e.EnhanceBasesWithIsTransportReachable(e.Bases, e.Transport, e.Freighter, e.Frigate)
+	e.EnhanceBasesWithIsTransportReachable(e.TravelBases, e.Transport, e.Freighter, e.Frigate)
 	e.Bases = e.EnhanceBasesWithPobCrafts(e.Bases)
 	e.Bases = e.EnhanceBasesWithLoot(e.Bases)
 	logus.Log.Info("finished exporting")
@@ -362,28 +379,44 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 	return e
 }
 
+func (e *Exporter) EnhanceOnlyBasesWithIsTransportReachable(
+	bases []*Base,
+	transports_graph *GraphResults,
+	freighter_graph *GraphResults,
+	frigate_graph *GraphResults,
+) {
+	tg := transports_graph
+	fg := freighter_graph
+	for index, base := range bases {
+		base_nickname := base.Nickname.ToStr()
+		// if base_nickname == "trents_bar_and_grill" {
+		// 	fmt.Print()
+		// }
+
+		if trades.GetTimeMs2(tg.Graph, tg.Time, reachable_base_example, base_nickname) < trades.INFthreshold {
+			bases[index].IsTransportReachable = true
+		}
+		if trades.GetTimeMs2(fg.Graph, fg.Time, reachable_base_example, base_nickname) < trades.INFthreshold {
+			bases[index].IsFreighterReachable = true
+		}
+		if trades.GetTimeMs2(frigate_graph.Graph, frigate_graph.Time, reachable_base_example, base_nickname) < trades.INFthreshold {
+			bases[index].IsFrigateReachable = true
+		}
+	}
+}
+
+var reachable_base_example = "li01_01_base"
+
 func (e *Exporter) EnhanceBasesWithIsTransportReachable(
 	bases []*Base,
 	transports_graph *GraphResults,
 	freighter_graph *GraphResults,
 	frigate_graph *GraphResults,
 ) {
-	reachable_base_example := "li01_01_base"
 	tg := transports_graph
 	fg := freighter_graph
 
-	for _, base := range bases {
-		base_nickname := base.Nickname.ToStr()
-		if trades.GetTimeMs2(tg.Graph, tg.Time, reachable_base_example, base_nickname) < trades.INFthreshold {
-			base.IsTransportReachable = true
-		}
-		if trades.GetTimeMs2(fg.Graph, fg.Time, reachable_base_example, base_nickname) < trades.INFthreshold {
-			base.IsFreighterReachable = true
-		}
-		if trades.GetTimeMs2(frigate_graph.Graph, frigate_graph.Time, reachable_base_example, base_nickname) < trades.INFthreshold {
-			base.IsFrigateReachable = true
-		}
-	}
+	e.EnhanceOnlyBasesWithIsTransportReachable(bases, transports_graph, freighter_graph, frigate_graph)
 
 	for _, faction := range e.Factions {
 		for index, _ := range faction.Bribes {

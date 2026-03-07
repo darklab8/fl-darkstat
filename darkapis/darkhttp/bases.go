@@ -61,7 +61,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 
 			var result []*configs_export.Base
 			if in.FilterToUseful {
-				result = configs_export.FilterToUserfulBases(api.app_data.Configs.Bases)
+				result = api.app_data.Configs.FilterToUserfulBases(api.app_data.Configs.Bases, true)
 			} else {
 				result = api.app_data.Configs.Bases
 			}

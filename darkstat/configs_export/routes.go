@@ -60,7 +60,7 @@ func (t *Route) GetCanVisitFreighterOnlyJH() bool {
 	if t.is_disabled {
 		return false
 	}
-	return bool(t.g.Graph.DockOptions.WithDiscoFreighterPaths)
+	return bool(t.g.Graph.DockOptions.DockOpts.WithDiscoFreighterPaths)
 }
 
 func (t *Route) GetMapConfig() trades.MapConfigOptions {

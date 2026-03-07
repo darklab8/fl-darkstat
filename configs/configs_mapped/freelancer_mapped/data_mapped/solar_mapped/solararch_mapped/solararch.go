@@ -14,6 +14,7 @@ type Solar struct {
 	DockingSpheres []*semantic.String
 	Fuses          []*semantic.String
 	Destructible   *semantic.Bool
+	CargoLimit     *semantic.Int
 }
 
 const (
@@ -31,7 +32,8 @@ const (
 )
 
 type DockableOptions struct {
-	IsDisco bool // disco allows for transports jump
+	IsDisco                 bool // disco allows for transports jump
+	WithDiscoFreighterPaths cfg.WithDiscoFreighterPaths
 
 	PlayersCanDockBerth      bool
 	PlayersCanDockMoorMedium bool
@@ -72,11 +74,10 @@ func (solar *Solar) IsDockable(options DockableOptions) DockableResult {
 			}
 
 			if options.IsDisco {
-				if docking_sphere_name == DockingSphereMoorMedium {
+				if docking_sphere_name == DockingSphereMoorMedium ||
+					docking_sphere_name == DockingSphereJump {
 					result.IsDockableByDiscoTransports = true
 				}
-			} else {
-				result.IsDockableByDiscoTransports = result.IsDockable
 			}
 		}
 	}
@@ -104,6 +105,7 @@ func Read(input_file *iniload.IniLoader) *Config {
 		solar := &Solar{
 			Nickname:     semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 			Destructible: semantic.NewBool(section, cfg.ParamKey("destructible"), semantic.StrBool),
+			CargoLimit:   semantic.NewInt(section, cfg.ParamKey("cargo_limit")),
 		}
 		solar.Map(section)
 

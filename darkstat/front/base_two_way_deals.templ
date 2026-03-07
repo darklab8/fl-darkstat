@@ -48,7 +48,7 @@ func GetTwoRoutes(TwoWayDeals []*configs_export.TwoWayDeal, mode tab.ShowEmpty) 
 }
 
 func FormatProfitPerTime(value float64) string {
-	if value < 0.5 {
+	if value*100 < 0.5 {
 		return "0.00"
 	}
 	return fmt.Sprintf("%.2f", value*100)

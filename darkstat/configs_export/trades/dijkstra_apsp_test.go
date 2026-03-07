@@ -3,6 +3,8 @@ package trades
 import (
 	"fmt"
 	"testing"
+
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 )
 
 // // Driver Code
@@ -49,7 +51,12 @@ func TestDijkstraAPSP(t *testing.T) {
 
 func TestDijkstraAPSPWithGraph(t *testing.T) {
 	graph := NewGameGraph(DiscoverySpeeds.AvgTransportCruiseSpeed, MapConfigOptions{
-		WithDiscoFreighterPaths: true,
+		DockOpts: solararch_mapped.DockableOptions{
+			WithDiscoFreighterPaths:  true,
+			PlayersCanDockBerth:      true,
+			PlayersCanDockMoorMedium: true,
+			PlayersCanDockMoorLarge:  true,
+		},
 	})
 	graph.SetEdge("a", "b", 5)
 	graph.SetEdge("a", "d", 10)

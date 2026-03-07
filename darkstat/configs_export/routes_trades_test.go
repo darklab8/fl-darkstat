@@ -43,16 +43,14 @@ func TestGetTrades(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		e.Transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.MapConfigOptions{
-			WithDiscoFreighterPaths: trades.WithDiscoFreighterPaths(false),
-			DockOpts:                DockOpts,
+			DockOpts: DockOpts,
 		}, mining_bases_by_system, graph_options)
 		wg.Done()
 	}()
 	wg.Add(1)
 	go func() {
 		e.Frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed, trades.MapConfigOptions{
-			WithDiscoFreighterPaths: trades.WithDiscoFreighterPaths(false),
-			DockOpts:                DockOpts,
+			DockOpts: DockOpts,
 		}, mining_bases_by_system, graph_options)
 		wg.Done()
 	}()
@@ -60,8 +58,9 @@ func TestGetTrades(t *testing.T) {
 	go func() {
 		e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed,
 			trades.MapConfigOptions{
-				WithDiscoFreighterPaths: trades.WithDiscoFreighterPaths(true),
-				DockOpts:                DockOpts,
+				DockOpts: solararch_mapped.DockableOptions{
+					WithDiscoFreighterPaths: true,
+				},
 			},
 			mining_bases_by_system, graph_options)
 		wg.Done()
