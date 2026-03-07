@@ -10,10 +10,17 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/stretchr/testify/assert"
 )
+
+var DockOpts = solararch_mapped.DockableOptions{
+	PlayersCanDockBerth:      true,
+	PlayersCanDockMoorMedium: true,
+	PlayersCanDockMoorLarge:  true,
+}
 
 func TestTradeRoutes(t *testing.T) {
 
@@ -26,6 +33,7 @@ func TestTradeRoutes(t *testing.T) {
 		DiscoverySpeeds.AvgTransportCruiseSpeed,
 		MapConfigOptions{
 			WithDiscoFreighterPaths: WithDiscoFreighterPaths(false),
+			DockOpts:                DockOpts,
 		},
 		make(map[string][]ExtraBase),
 		MappingOptions{},
