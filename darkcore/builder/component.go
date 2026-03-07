@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"runtime/debug"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
@@ -47,6 +48,14 @@ func (h *Component) GetPagePath(gp Params) utils_types.FilePath {
 func (h *Component) Write(ctx context.Context, gp Params) WriteResult {
 	ctx, span := traces.Tracer.Start(ctx, "component-write")
 	defer span.End()
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Component.Write crashed", r, h.pagepath)
+			debug.PrintStack()
+			panic(r)
+		}
+	}()
 
 	buf := bytes.NewBuffer([]byte{})
 	buf.Write([]byte(fmt.Sprintf("<!--ts %s-->\n", time.Now().Format("2006-01-02T15:04:05.999Z"))))
