@@ -14,8 +14,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-utils/utils/utils_types"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
 type Theme int64
@@ -86,8 +84,6 @@ type SharedData struct {
 	AverageTradeLaneSpeed int
 	ShipNames             ShipNames
 }
-
-var capital = cases.Title(language.English, cases.NoLower)
 
 func ToTitle(s string) string { return strings.Map(unicode.ToTitle, s) }
 
