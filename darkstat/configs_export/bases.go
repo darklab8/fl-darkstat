@@ -171,10 +171,6 @@ func (e *Exporter) FilterToUserfulBases(bases []*Base, for_front_view bool) []*B
 	var useful_bases []*Base = make([]*Base, 0, len(bases))
 	for _, item := range bases {
 
-		if item.Nickname == "carrier_li_dreadnought_base" {
-			fmt.Print()
-		}
-
 		if item.IsPob {
 			useful_bases = append(useful_bases, item)
 			continue

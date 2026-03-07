@@ -142,10 +142,10 @@ templ TwoWayTradesTable(
 					if shared.ShowDisco || shared.ShowFLSR {
 						<td>
 							<span class="tooltip">
-								@TimeToHumanTime(cfg.MillisecondsI(two_way.FreighterInfo.TwoWayTime*1000), two_way.FreighterInfo.TwoWayTime)
+								@TimeToHumanTime(cfg.MillisecondsI(two_way.FrigateInfo.TwoWayTime*1000), two_way.FrigateInfo.TwoWayTime)
 								<span class="tooltiptext">
-									if two_way.FreighterInfo.TwoWayTime*1000 < float64(trades.INFbelow) {
-										{ fmt.Sprintf("%.0f", two_way.FreighterInfo.TwoWayTime) } secs
+									if two_way.FrigateInfo.TwoWayTime*1000 < float64(trades.INFbelow) {
+										{ fmt.Sprintf("%.0f", two_way.FrigateInfo.TwoWayTime) } secs
 									} else {
 										INF secs
 									}

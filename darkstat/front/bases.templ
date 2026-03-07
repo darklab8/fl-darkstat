@@ -1075,7 +1075,7 @@ templ TradeRouteHumanTime(route *configs_export.Route) {
 }
 
 templ TimeToHumanTime(time_ms cfg.MillisecondsI, time_s cfg.Seconds) {
-	if time_ms < trades.INFbelow {
+	if int32(time_s) < trades.INFthreshold {
 		{ fmt.Sprintf("%2.0f", math.Floor(time_s/60)) }m-{ fmt.Sprintf("%2.0f", time_s - 60*math.Floor(time_s/60)) }s
 	} else {
 		INF

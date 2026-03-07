@@ -494,6 +494,18 @@ type RouteInfo struct {
 }
 
 func trade_route_info(trade_route1 *TradeRoute, trade_route2 *TradeRoute) RouteInfo {
+	// if trade_route1.BuyingGood.Nickname == "commodity_cardamine" {
+	// 	if trade_route2.BuyingGood.Nickname == "commodity_luxury_consumer_goods" {
+	// 		if trade_route1.SellingGood.BaseNickname == "li01_01_base" {
+	// 			if trade_route2.SellingGood.BaseNickname == "ku05_02_base" {
+	// 				if ship == ShipCategoryFrigate {
+	// 					fmt.Print()
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
+
 	var route_info RouteInfo
 	// time of routes
 	route_info.Route1Time = GetTimeS(trade_route1.Route.g, trade_route1.BuyingGood, trade_route1.SellingGood)
@@ -508,7 +520,14 @@ func trade_route_info(trade_route1 *TradeRoute, trade_route2 *TradeRoute) RouteI
 	route_info.Route2ConnectTime = GetTimeS(trade_route2.Route.g, trade_route2.SellingGood, trade_route1.BuyingGood)
 
 	route_info.TotalProfit = (profit1 + profit2)
-	route_info.TwoWayTime = (route_info.Route1Time + route_info.Route2Time + route_info.Route1ConnectTime + route_info.Route2ConnectTime)
+
+	if route_info.Route1Time > float64(trades.INFthreshold) {
+		route_info.TwoWayTime = route_info.Route1Time
+	} else if route_info.Route2Time > float64(trades.INFthreshold) {
+		route_info.TwoWayTime = route_info.Route2Time
+	} else {
+		route_info.TwoWayTime = (route_info.Route1Time + route_info.Route2Time + route_info.Route1ConnectTime + route_info.Route2ConnectTime)
+	}
 
 	route_info.ProfitPerTime = route_info.TotalProfit / route_info.TwoWayTime
 	return route_info
