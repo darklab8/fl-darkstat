@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"runtime/debug"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
@@ -51,8 +50,7 @@ func (h *Component) Write(ctx context.Context, gp Params) WriteResult {
 
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("Component.Write crashed", r, h.pagepath)
-			debug.PrintStack()
+			logus.Log.Error("Component.Write crashed", typelog.Any("pagepath", h.pagepath), typelog.Any("error", r))
 			panic(r)
 		}
 	}()
