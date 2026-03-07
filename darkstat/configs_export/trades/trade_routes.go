@@ -1,7 +1,6 @@
 package trades
 
 import (
-	"fmt"
 	"math"
 	"strings"
 
@@ -191,19 +190,12 @@ func MapConfigsToFGraph(
 						if results.IsDockable {
 							dock_results.IsDockable = true
 						}
-						if results.IsDockableByDiscoTransports {
-							dock_results.IsDockableByDiscoTransports = true
-						}
+
 					}
 				}
 			}
 			if !dock_results.IsDockable {
 				continue
-			}
-			if mapped.Discovery != nil {
-				if !dock_results.IsDockableByDiscoTransports && bool(!DockOptions.DockOpts.WithDiscoFreighterPaths) {
-					continue
-				}
 			}
 
 			// Lets allow flying between all bases
@@ -243,10 +235,6 @@ func MapConfigsToFGraph(
 
 			jh_archetype := jumphole.Archetype.Get()
 
-			if jh_archetype == strings.ToLower("Li05_super_jumpgate") {
-				fmt.Print()
-			}
-
 			// Check Solar if this is Dockable
 			if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
 				if len(solar.DockingSpheres) == 0 {
@@ -265,6 +253,7 @@ func MapConfigsToFGraph(
 			}
 
 			var dock_results solararch_mapped.DockableResult
+			var disco_cargo_limit *int
 			if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
 				// strings.Contains(jh_archetype, "_fighter") || // Atmospheric entry points. Dockable only by fighters/freighters
 				// included into `IsDockableByCaps` as they don't have capital docking_sphere dockings
@@ -272,8 +261,9 @@ func MapConfigsToFGraph(
 				if results.IsDockable {
 					dock_results.IsDockable = true
 				}
-				if results.IsDockableByDiscoTransports {
-					dock_results.IsDockableByDiscoTransports = true
+
+				if cargo_limit, ok := solar.CargoLimit.GetValue(); ok {
+					disco_cargo_limit = ptr.Ptr(cargo_limit)
 				}
 			}
 
@@ -282,16 +272,12 @@ func MapConfigsToFGraph(
 			}
 
 			if mapped.Discovery != nil {
-				// Condition is initiallly taken from FLCompanion
-				// https://github.com/Corran-Raisu/FLCompanion/blob/021159e3b3a1b40188c93064f1db136780424ea9/Datas.cpp#L585
-				// but then rewritted to docking_sphere checks.
-				// only with docking_sphere =jump, moor_large we can dock in disco by transports
-				if strings.Contains(jh_archetype, "_notransport") { // jumphole_notransport Dockable only by ships with below 650 cargo on board
-					// "dsy_hypergate_all" is one directional hypergate dockable by everything, no need to exclude for freighter only paths
-					dock_results.IsDockableByDiscoTransports = false
-				}
-				if !dock_results.IsDockableByDiscoTransports && bool(!DockOptions.DockOpts.WithDiscoFreighterPaths) {
-					continue
+				if !DockOptions.DockOpts.WithDiscoFreighterPaths {
+					if disco_cargo_limit != nil {
+						if *disco_cargo_limit < 1000 {
+							continue
+						}
+					}
 				}
 			}
 

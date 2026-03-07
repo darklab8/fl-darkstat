@@ -41,8 +41,7 @@ type DockableOptions struct {
 }
 
 type DockableResult struct {
-	IsDockable                  bool
-	IsDockableByDiscoTransports bool // important distinguishing for disco. only jump and moor_large valid khm?
+	IsDockable bool
 }
 
 /*
@@ -71,13 +70,6 @@ func (solar *Solar) IsDockable(options DockableOptions) DockableResult {
 			}
 			if options.PlayersCanDockMoorLarge && docking_sphere_name == DockingSphereMoorLarge {
 				result.IsDockable = true
-			}
-
-			if options.IsDisco {
-				if docking_sphere_name == DockingSphereMoorMedium ||
-					docking_sphere_name == DockingSphereJump {
-					result.IsDockableByDiscoTransports = true
-				}
 			}
 		}
 	}
