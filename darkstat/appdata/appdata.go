@@ -118,6 +118,11 @@ var FlsrShipNames = types.ShipNames{
 	Frigate:   "liner",
 	Freighter: "freighter",
 }
+var VanillaShipNames = types.ShipNames{
+	Transport: "transport",
+	Frigate:   "frigate",
+	Freighter: "freighter",
+}
 
 func NewAppData(ctx context.Context) *AppData {
 	ctx, span := traces.Tracer.Start(ctx, "NewAppData")
@@ -131,6 +136,7 @@ func NewAppData(ctx context.Context) *AppData {
 
 	var shared *types.SharedData = &types.SharedData{
 		AverageTradeLaneSpeed: mapped.GetAvgTradeLaneSpeed(),
+		ShipNames:             VanillaShipNames,
 	}
 
 	timeit.NewTimerMF("filtering to useful stuff", func() {
