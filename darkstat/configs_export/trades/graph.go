@@ -19,30 +19,30 @@ type Intg = int32
 const intgmax = Intg(math.MaxInt32)
 
 type GameGraph struct {
-	matrix                    map[VertexName]map[VertexName]float64
-	IndexByNick               map[VertexName]Intg `json:"index_by_nickname" validate:"required"`
-	NicknameByIndex           map[Intg]VertexName `json:"nickname_by_index" validate:"required"`
-	AllowedVertixesForCalcs   map[VertexName]bool // Consider deleting this
-	AvgCruiseSpeed            Intg
-	idsNamesByNick            map[VertexName]int
-	IsTradelane               map[VertexName]bool
-	CanVisitFreightersOnlyJHs WithFreighterPaths
+	matrix                  map[VertexName]map[VertexName]float64
+	IndexByNick             map[VertexName]Intg `json:"index_by_nickname" validate:"required"`
+	NicknameByIndex         map[Intg]VertexName `json:"nickname_by_index" validate:"required"`
+	AllowedVertixesForCalcs map[VertexName]bool // Consider deleting this
+	AvgCruiseSpeed          Intg
+	idsNamesByNick          map[VertexName]int
+	IsTradelane             map[VertexName]bool
+	DockOptions             MapConfigOptions
 }
 
 func (g *GameGraph) WipeMatrix() {
 	g.matrix = nil
 }
 
-func NewGameGraph(avgCruiseSpeed int, canVisitFreighterOnlyJHs WithFreighterPaths) *GameGraph {
+func NewGameGraph(avgCruiseSpeed int, DockOptions MapConfigOptions) *GameGraph {
 	return &GameGraph{
-		matrix:                    make(map[VertexName]map[VertexName]float64),
-		IndexByNick:               map[VertexName]Intg{},
-		NicknameByIndex:           make(map[Intg]VertexName),
-		AllowedVertixesForCalcs:   make(map[VertexName]bool),
-		AvgCruiseSpeed:            Intg(avgCruiseSpeed),
-		idsNamesByNick:            make(map[VertexName]int),
-		IsTradelane:               make(map[VertexName]bool),
-		CanVisitFreightersOnlyJHs: canVisitFreighterOnlyJHs,
+		matrix:                  make(map[VertexName]map[VertexName]float64),
+		IndexByNick:             map[VertexName]Intg{},
+		NicknameByIndex:         make(map[Intg]VertexName),
+		AllowedVertixesForCalcs: make(map[VertexName]bool),
+		AvgCruiseSpeed:          Intg(avgCruiseSpeed),
+		idsNamesByNick:          make(map[VertexName]int),
+		IsTradelane:             make(map[VertexName]bool),
+		DockOptions:             DockOptions,
 	}
 }
 

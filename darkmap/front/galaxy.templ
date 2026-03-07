@@ -1,32 +1,36 @@
 package front
 
 import (
-    "github.com/darklab8/fl-darkstat/darkmap/front/export_front"
-    "fmt"
+	"fmt"
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
 )
 
-func GalayPosToPerc(position float64) float64 {
-    // positions are from 0 to 15. then center is 7.5
+func GalayPosToPerc(position *float64) float64 {
+	// positions are from 0 to 15. then center is 7.5
 
-    return 100*(3+position)/(15+6)
+	if position == nil {
+		return 0
+	}
+
+	return 100 * (3 + *position) / (15 + 6)
 }
 
 templ System(sys export_front.System, attrs templ.Attributes) {
-    <system-
-        nickname={ sys.Nickname }
-        { attrs... }
-    >   
-        <system-label-wrap>
-        { sys.Name }
-        <system-label>
-        { sys.Name }
-        </system-label>
-        </system-label-wrap>
-    </system->
+	<system-
+		nickname={ sys.Nickname }
+		{ attrs... }
+	>
+		<system-label-wrap>
+			{ sys.Name }
+			<system-label>
+				{ sys.Name }
+			</system-label>
+		</system-label-wrap>
+	</system->
 }
 
 templ GalalaxyMap(data *export_front.Export) {
-    <style>
+	<style>
         centeralizer- {
             height: calc(100vh - 2.4em);
             width: calc(100vh - 2.4em);
@@ -86,20 +90,19 @@ templ GalalaxyMap(data *export_front.Export) {
             margin-bottom: 10px;
         }
     </style>
-    <centeralizer->
-    for _, sys := range data.Systems {
-        
-        @System(sys, templ.Attributes{
-            "style": fmt.Sprintf(
-                "top: %.1f%%; left: %.1f%%; border-color: %s;",
-                GalayPosToPerc(sys.Pos.Y),
-                GalayPosToPerc(sys.Pos.X),
-                sys.Region.ToHexColor(),
-            ),
-            "region-name": sys.Region.Name,
-            "system-name": sys.Name,
-        })
-    }
-    <system-title>Sirius</system-title>
-    </centeralizer->
+	<centeralizer->
+		for _, sys := range data.Systems {
+			@System(sys, templ.Attributes{
+				"style": fmt.Sprintf(
+					"top: %.1f%%; left: %.1f%%; border-color: %s;",
+					GalayPosToPerc(sys.Pos.Y),
+					GalayPosToPerc(sys.Pos.X),
+					sys.Region.ToHexColor(),
+				),
+				"region-name": sys.Region.Name,
+				"system-name": sys.Name,
+			})
+		}
+		<system-title>Sirius</system-title>
+	</centeralizer->
 }

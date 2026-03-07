@@ -33,7 +33,7 @@ func DistanceForVecs(Pos1 cfg.Vector, Pos2 cfg.Vector) float64 {
 	return distance
 }
 
-type WithFreighterPaths bool
+type WithDiscoFreighterPaths bool
 
 type RouteShipType int64
 
@@ -109,8 +109,8 @@ type MappingOptions struct {
 }
 
 type MapConfigOptions struct {
-	WithFreighterPaths WithFreighterPaths
-	DockOpts           solararch_mapped.DockableOptions
+	WithDiscoFreighterPaths WithDiscoFreighterPaths
+	DockOpts                solararch_mapped.DockableOptions
 }
 
 func MapConfigsToFGraph(
@@ -125,7 +125,7 @@ func MapConfigsToFGraph(
 	}
 	average_trade_lane_speed := mapped.GetAvgTradeLaneSpeed()
 
-	graph := NewGameGraph(avgCruiseSpeed, DockOptions.WithFreighterPaths)
+	graph := NewGameGraph(avgCruiseSpeed, DockOptions)
 	for _, system := range mapped.Systems.Systems {
 		system_speed_multiplier := mapped.Overrides.GetSystemSpeedMultiplier(system.Nickname)
 
@@ -188,8 +188,8 @@ func MapConfigsToFGraph(
 						if results.IsDockable {
 							dock_results.IsDockable = true
 						}
-						if results.IsDockableByTransports {
-							dock_results.IsDockableByTransports = true
+						if results.IsDockableByDiscoTransports {
+							dock_results.IsDockableByDiscoTransports = true
 						}
 					}
 				}
@@ -197,7 +197,7 @@ func MapConfigsToFGraph(
 			if !dock_results.IsDockable {
 				continue
 			}
-			if !dock_results.IsDockableByTransports && bool(!DockOptions.WithFreighterPaths) {
+			if !dock_results.IsDockableByDiscoTransports && bool(!DockOptions.WithDiscoFreighterPaths) {
 				continue
 			}
 
@@ -263,8 +263,8 @@ func MapConfigsToFGraph(
 				if results.IsDockable {
 					dock_results.IsDockable = true
 				}
-				if results.IsDockableByTransports {
-					dock_results.IsDockableByTransports = true
+				if results.IsDockableByDiscoTransports {
+					dock_results.IsDockableByDiscoTransports = true
 				}
 			}
 
@@ -279,9 +279,9 @@ func MapConfigsToFGraph(
 				// only with docking_sphere =jump, moor_large we can dock in disco by transports
 				if strings.Contains(jh_archetype, "_notransport") { // jumphole_notransport Dockable only by ships with below 650 cargo on board
 					// "dsy_hypergate_all" is one directional hypergate dockable by everything, no need to exclude for freighter only paths
-					dock_results.IsDockableByTransports = false
+					dock_results.IsDockableByDiscoTransports = false
 				}
-				if !dock_results.IsDockableByTransports && bool(!DockOptions.WithFreighterPaths) {
+				if !dock_results.IsDockableByDiscoTransports && bool(!DockOptions.WithDiscoFreighterPaths) {
 					continue
 				}
 			}

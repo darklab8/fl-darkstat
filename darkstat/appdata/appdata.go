@@ -108,6 +108,17 @@ func NewMapped(ctx context.Context) *configs_mapped.MappedConfigs {
 	return mapped
 }
 
+var DiscoShipNames = types.ShipNames{
+	Transport: "transport",
+	Frigate:   "frigate",
+	Freighter: "freighter",
+}
+var FlsrShipNames = types.ShipNames{
+	Transport: "transport",
+	Frigate:   "liner",
+	Freighter: "freighter",
+}
+
 func NewAppData(ctx context.Context) *AppData {
 	ctx, span := traces.Tracer.Start(ctx, "NewAppData")
 	defer span.End()
@@ -127,6 +138,7 @@ func NewAppData(ctx context.Context) *AppData {
 			shared.FLSRData = types.FLSRData{
 				ShowFLSR: true,
 			}
+			shared.ShipNames = FlsrShipNames
 		}
 
 		if mapped.Discovery != nil {
@@ -139,6 +151,7 @@ func NewAppData(ctx context.Context) *AppData {
 				OrderedTechcompat: *configs_export.NewOrderedTechCompat(configs),
 				Minecontrol:       mapped.Discovery.Minecontrol,
 			}
+			shared.ShipNames = DiscoShipNames
 		}
 		fmt.Println("attempting to access l.configs.Infocards")
 		shared.Infocarder = configs.Infocarder

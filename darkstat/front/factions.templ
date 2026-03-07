@@ -127,7 +127,7 @@ templ FactionsT(factions []configs_export.Faction, mode FactionTabMode, mode2 ta
 					if mode == FactionShowBases {
 						@FactionRepsBase()
 					} else if mode == FactionShowBribes {
-						@BriberyBottomBase()
+						@BriberyBottomBase(shared)
 					}
 				}
 			}

@@ -15,14 +15,14 @@ templ BasesRoutesShared(shared *types.SharedData) {
 			<tr class="flexed-tr">
 				<th style="width:100px;">Base</th>
 				<th style="width:50px;">
-					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
+					@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Transport), "Time(sec)"})
 				</th>
-				if shared.ShowDisco {
+				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Frigate", "Time(sec)"})
+						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Frigate), "Time(sec)"})
 					</th>
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Freighter", "Time(sec)"})
+						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Freighter), "Time(sec)"})
 					</th>
 				}
 				<th style="width:100px;">System</th>
@@ -72,7 +72,7 @@ templ BaseRoutes(name string, base *configs_export.Base, data *configs_export.Ex
 					<span class="tooltip">
 						@TradeRouteHumanTime(route.Transport.Route)
 						<span class="tooltiptext">
-							if route.Transport.Route.GetTimeMs() < trades.INF/2 {
+							if route.Transport.Route.GetTimeMs() < trades.INFbelow {
 								{ fmt.Sprintf("%.0f", route.Transport.Route.GetTimeS()) } secs
 							} else {
 								INF secs
@@ -80,12 +80,12 @@ templ BaseRoutes(name string, base *configs_export.Base, data *configs_export.Ex
 						</span>
 					</span>
 				</td>
-				if shared.ShowDisco {
+				if shared.ShowDisco || shared.ShowFLSR {
 					<td>
 						<span class="tooltip">
 							@TradeRouteHumanTime(route.Frigate.Route)
 							<span class="tooltiptext">
-								if route.Frigate.Route.GetTimeMs() < trades.INF/2 {
+								if route.Frigate.Route.GetTimeMs() < trades.INFbelow {
 									{ fmt.Sprintf("%.0f", route.Frigate.Route.GetTimeS()) } secs
 								} else {
 									INF secs
@@ -97,7 +97,7 @@ templ BaseRoutes(name string, base *configs_export.Base, data *configs_export.Ex
 						<span class="tooltip">
 							@TradeRouteHumanTime(route.Freighter.Route)
 							<span class="tooltiptext">
-								if route.Freighter.Route.GetTimeMs() < trades.INF/2 {
+								if route.Freighter.Route.GetTimeMs() < trades.INFbelow {
 									{ fmt.Sprintf("%.0f", route.Freighter.Route.GetTimeS()) } secs
 								} else {
 									INF secs

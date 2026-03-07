@@ -217,7 +217,7 @@ func main() {
 							app_data.Configs.Bases,
 							app_data.Configs.MiningOperations,
 						)
-						app_data.Configs.EnhanceBasesWithIsTransportReachable(app_data.Configs.Bases, app_data.Configs.Transport, app_data.Configs.Freighter)
+						app_data.Configs.EnhanceBasesWithIsTransportReachable(app_data.Configs.Bases, app_data.Configs.Transport, app_data.Configs.Freighter, app_data.Configs.Frigate)
 
 						logus.Log.Info("refreshed content")
 						runtime.GC()

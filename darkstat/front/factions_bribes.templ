@@ -9,12 +9,23 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 )
 
-templ BriberyBottomBase() {
+templ BriberyBottomBase(shared *types.SharedData) {
 	<table class="sortable">
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:250px;">Base Selling Rep Hack</th>
 				<th style="width:250px;">Owner Faction</th>
+				if shared.ShowFLSR {
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Transport), "dock"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Frigate), "dock"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{types.Capital.String(shared.ShipNames.Freighter), "dock"})
+					</th>
+				}
 				<th style="width:50px;">Probability %</th>
 				<th style="width:150px;">System</th>
 				<th style="width:25px;">
@@ -33,12 +44,12 @@ templ BriberyBottomBase() {
 	</table>
 }
 
-templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Bribe) {
+templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Bribe, shared *types.SharedData) {
 	<div class="bottom_name">
 		{ faction.Name }
 		// @tab.PageTime() // add if u will make page proper live
 	</div>
-	@BriberyBottomBase() {
+	@BriberyBottomBase(shared) {
 		for _, rep := range rephacks {
 			<tr
 				hx-get={ types.GetCtx(ctx).SiteRoot + tab.InfocardURL(infocarder.InfocardKey(rep.BaseNickname)) }
@@ -54,6 +65,23 @@ templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Br
 				<td>
 					@frmt.WriteFactioName(rep.FactionName)
 				</td>
+				if shared.ShowFLSR {
+					<td class="seo">
+						if rep.IsTransportReachable {
+							d_medium
+						}
+					</td>
+					<td class="seo">
+						if rep.IsFrigateReachable {
+							d_large
+						}
+					</td>
+					<td class="seo">
+						if rep.IsFreighterReachable {
+							d_small
+						}
+					</td>
+				}
 				<td>{ fmt.Sprintf("%.2f", rep.Chance * 100) }</td>
 				<td>
 					@frmt.WriteSystemName(rep.SystemName)

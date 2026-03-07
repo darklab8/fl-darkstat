@@ -12,6 +12,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-utils/utils/utils_types"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type Theme int64
@@ -70,9 +72,17 @@ type DiscoveryData struct {
 	OrderedTechcompat configs_export.TechCompatOrderer
 }
 
+type ShipNames struct {
+	Transport string
+	Frigate   string
+	Freighter string
+}
 type SharedData struct {
 	DiscoveryData
 	FLSRData
 	CraftableBaseName     string
 	AverageTradeLaneSpeed int
+	ShipNames             ShipNames
 }
+
+var Capital = cases.Title(language.English, cases.NoLower)
