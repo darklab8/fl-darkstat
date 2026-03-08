@@ -87,8 +87,50 @@ type SharedData struct {
 	ShipNames             ShipNames
 }
 
-func ToTitle(s string) string { return strings.Map(unicode.ToTitle, s) }
+// COPY PASTE FROM https://cs.opensource.google/go/go/+/refs/tags/go1.21.10:src/strings/strings.go;l=752
+// isSeparator reports whether the rune could mark a word boundary.
+// TODO: update when package unicode captures more of the properties.
+func isSeparator(r rune) bool {
+	// ASCII alphanumerics and underscore are not separators
+	if r <= 0x7F {
+		switch {
+		case '0' <= r && r <= '9':
+			return false
+		case 'a' <= r && r <= 'z':
+			return false
+		case 'A' <= r && r <= 'Z':
+			return false
+		case r == '_':
+			return false
+		}
+		return true
+	}
+	// Letters and digits are not separators
+	if unicode.IsLetter(r) || unicode.IsDigit(r) {
+		return false
+	}
+	// Otherwise, all we can do for now is treat spaces as separators.
+	return unicode.IsSpace(r)
+}
+
+// COPY PASTE FROM https://cs.opensource.google/go/go/+/refs/tags/go1.21.10:src/strings/strings.go;l=782
+func Title(s string) string {
+	// Use a closure here to remember state.
+	// Hackish but effective. Depends on Map scanning in order and calling
+	// the closure once per rune.
+	prev := ' '
+	return strings.Map(
+		func(r rune) rune {
+			if isSeparator(prev) {
+				prev = r
+				return unicode.ToTitle(r)
+			}
+			prev = r
+			return r
+		},
+		s)
+}
 
 func ToCapital(value string) string {
-	return ToTitle(value)
+	return Title(value)
 }
