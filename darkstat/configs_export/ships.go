@@ -42,6 +42,8 @@ type Ship struct {
 	ThrustCapacity    int     `json:"thrust_capacity" validate:"required"`
 	ThrustRecharge    int     `json:"thrust_recharge" validate:"required"`
 
+	DockType string `json:"dock_type" validate:"required"`
+
 	MaxAngularSpeedDegS           float64 `json:"max_ansgular_speed" validate:"required"`
 	AngularDistanceFrom0ToHalfSec float64 `json:"angular_distance_from_0_to_halfsec" validate:"required"`
 	TimeTo90MaxAngularSpeed       float64 `json:"time_to_90_max_angular_speed" validate:"required"`
@@ -198,6 +200,17 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 		// }()
 
 		ship.Class, _ = ship_info.ShipClass.GetValue()
+		ship.DockType, _ = ship_info.MissionProperty.GetValue()
+		if ship.DockType == "can_use_large_moors" {
+			ship.DockType = "d_large"
+		}
+		if ship.DockType == "can_use_med_moors" {
+			ship.DockType = "d_medium"
+		}
+		if ship.DockType == "can_use_berths" {
+			ship.DockType = "d_small"
+		}
+
 		ship.MissionProperty, _ = ship_info.MissionProperty.GetValue()
 		if _, ok := ship_info.Type.GetValue(); !ok {
 			logus.Log.Warn("ship problem with type", typelog.Any("nickname", ship.Nickname))

@@ -55,6 +55,9 @@ templ ShipTable(
 				@disco.ThDisco(shared)
 				<th style="width:25px;">Class</th>
 				<th style="width:25px;">Type</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Dock", "type"})
+				</th>
 				<th style="width:25px;">Price</th>
 				<th style="width:25px;">Buyable</th>
 				if shared.ShowFLSR {
@@ -156,6 +159,7 @@ templ ShipRow(ship configs_export.Ship, mode ShipTabMode, pinm tab.PinMod, share
 		@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, ship.Nickname))
 		<td class="seo">{ strconv.Itoa(ship.Class) }</td>
 		<td class="seo">{ ship.Type }</td>
+		<td class="seo">{ ship.DockType }</td>
 		<td class="seo">{ strconv.Itoa(ship.Price) }</td>
 		<td>{ frmt.FormatBoolAsYesNo(configs_export.Buyable(ship.Bases)) }</td>
 		if shared.ShowFLSR {
