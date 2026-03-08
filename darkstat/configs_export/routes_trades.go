@@ -546,26 +546,54 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	}
 
 	// taking slice of top the best
-	sort.Slice(result.TwoWayDeals, func(i, j int) bool {
-		first_deal := math.Max(math.Max(
-			result.TwoWayDeals[i].TransportInfo.ProfitPerTime,
-			result.TwoWayDeals[i].FreighterInfo.ProfitPerTime,
-		),
-			result.TwoWayDeals[i].FrigateInfo.ProfitPerTime,
-		)
-		second_deal := math.Max(math.Max(
-			result.TwoWayDeals[j].TransportInfo.ProfitPerTime,
-			result.TwoWayDeals[j].FreighterInfo.ProfitPerTime,
-		),
-			result.TwoWayDeals[j].FrigateInfo.ProfitPerTime,
-		)
-
-		return first_deal > second_deal
-	})
 	var top_slice_of_two_way_deals []*TwoWayDeal
-	if len(result.TwoWayDeals) > 100 {
-		for i := 0; i < 100; i++ {
-			top_slice_of_two_way_deals = append(top_slice_of_two_way_deals, result.TwoWayDeals[i])
+
+	if e.Mapped.FLSR != nil {
+		sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+			return result.TwoWayDeals[i].FreighterInfo.ProfitPerTime > result.TwoWayDeals[j].FreighterInfo.ProfitPerTime
+		})
+		if len(result.TwoWayDeals) > 100 {
+			for i := 0; i < 100; i++ {
+				top_slice_of_two_way_deals = append(top_slice_of_two_way_deals, result.TwoWayDeals[i])
+			}
+		}
+		sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+			return result.TwoWayDeals[i].FrigateInfo.ProfitPerTime > result.TwoWayDeals[j].FrigateInfo.ProfitPerTime
+		})
+		if len(result.TwoWayDeals) > 100 {
+			for i := 0; i < 100; i++ {
+				top_slice_of_two_way_deals = append(top_slice_of_two_way_deals, result.TwoWayDeals[i])
+			}
+		}
+		sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+			return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
+		})
+		if len(result.TwoWayDeals) > 100 {
+			for i := 0; i < 100; i++ {
+				top_slice_of_two_way_deals = append(top_slice_of_two_way_deals, result.TwoWayDeals[i])
+			}
+		}
+	} else {
+		sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+			first_deal := math.Max(math.Max(
+				result.TwoWayDeals[i].TransportInfo.ProfitPerTime,
+				result.TwoWayDeals[i].FreighterInfo.ProfitPerTime,
+			),
+				result.TwoWayDeals[i].FrigateInfo.ProfitPerTime,
+			)
+			second_deal := math.Max(math.Max(
+				result.TwoWayDeals[j].TransportInfo.ProfitPerTime,
+				result.TwoWayDeals[j].FreighterInfo.ProfitPerTime,
+			),
+				result.TwoWayDeals[j].FrigateInfo.ProfitPerTime,
+			)
+
+			return first_deal > second_deal
+		})
+		if len(result.TwoWayDeals) > 100 {
+			for i := 0; i < 100; i++ {
+				top_slice_of_two_way_deals = append(top_slice_of_two_way_deals, result.TwoWayDeals[i])
+			}
 		}
 	}
 
