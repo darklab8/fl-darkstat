@@ -389,9 +389,11 @@ func (e *Exporter) EnhanceOnlyBasesWithIsTransportReachable(
 	fg := freighter_graph
 	for index, base := range bases {
 		base_nickname := base.Nickname.ToStr()
-		// if base_nickname == "trents_bar_and_grill" {
-		// 	fmt.Print()
-		// }
+		if base.IsPob { // TODO should work without this, but for some reason needed
+			bases[index].IsTransportReachable = true
+			bases[index].IsFreighterReachable = true
+			bases[index].IsFrigateReachable = true
+		}
 
 		if trades.GetTimeMs2(tg.Graph, tg.Time, reachable_base_example, base_nickname) < trades.INFthreshold {
 			bases[index].IsTransportReachable = true

@@ -370,37 +370,43 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		}
 		if len(trade_deals) > LimitBestPaths+500 {
 			sort.Slice(trade_deals, func(i, j int) bool {
-				first_deal := math.Max(math.Max(
-					trade_deals[i].TransportInfo.ProfitWeight,
-					trade_deals[i].FreighterInfo.ProfitWeight,
-				),
-					trade_deals[i].FrigateInfo.ProfitWeight,
-				)
-				second_deal := math.Max(math.Max(
-					trade_deals[j].TransportInfo.ProfitWeight,
-					trade_deals[j].FreighterInfo.ProfitWeight,
-				),
-					trade_deals[j].FrigateInfo.ProfitWeight,
-				)
-				return first_deal > second_deal
-
+				if e.Mapped.FLSR != nil {
+					first_deal := math.Max(math.Max(
+						trade_deals[i].TransportInfo.ProfitWeight,
+						trade_deals[i].FreighterInfo.ProfitWeight,
+					),
+						trade_deals[i].FrigateInfo.ProfitWeight,
+					)
+					second_deal := math.Max(math.Max(
+						trade_deals[j].TransportInfo.ProfitWeight,
+						trade_deals[j].FreighterInfo.ProfitWeight,
+					),
+						trade_deals[j].FrigateInfo.ProfitWeight,
+					)
+					return first_deal > second_deal
+				}
+				return trade_deals[i].TransportInfo.ProfitWeight > trade_deals[j].TransportInfo.ProfitWeight
 			})
 			trade_deals = trade_deals[:LimitBestPaths]
 
 			sort.Slice(trade_deals, func(i, j int) bool {
-				first_deal := math.Max(math.Max(
-					trade_deals[i].TransportInfo.ProfitPerTimeForKiloVolumes,
-					trade_deals[i].FreighterInfo.ProfitPerTimeForKiloVolumes,
-				),
-					trade_deals[i].FrigateInfo.ProfitPerTimeForKiloVolumes,
-				)
-				second_deal := math.Max(math.Max(
-					trade_deals[j].TransportInfo.ProfitPerTimeForKiloVolumes,
-					trade_deals[j].FreighterInfo.ProfitPerTimeForKiloVolumes,
-				),
-					trade_deals[j].FrigateInfo.ProfitPerTimeForKiloVolumes,
-				)
-				return first_deal > second_deal
+				if e.Mapped.FLSR != nil {
+					first_deal := math.Max(math.Max(
+						trade_deals[i].TransportInfo.ProfitPerTimeForKiloVolumes,
+						trade_deals[i].FreighterInfo.ProfitPerTimeForKiloVolumes,
+					),
+						trade_deals[i].FrigateInfo.ProfitPerTimeForKiloVolumes,
+					)
+					second_deal := math.Max(math.Max(
+						trade_deals[j].TransportInfo.ProfitPerTimeForKiloVolumes,
+						trade_deals[j].FreighterInfo.ProfitPerTimeForKiloVolumes,
+					),
+						trade_deals[j].FrigateInfo.ProfitPerTimeForKiloVolumes,
+					)
+					return first_deal > second_deal
+				}
+				return trade_deals[i].TransportInfo.ProfitPerTimeForKiloVolumes > trade_deals[j].TransportInfo.ProfitPerTimeForKiloVolumes
+
 			})
 			trade_deals = trade_deals[:LimitBestPaths-LimitBestPaths/10]
 		}
@@ -474,20 +480,23 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 					if len(two_ways_deals) > TwoWayLimitRoutes+500 {
 						sort.Slice(two_ways_deals, func(i, j int) bool {
-							first_deal := math.Max(math.Max(
-								two_ways_deals[i].TransportInfo.ProfitPerTime,
-								two_ways_deals[i].FreighterInfo.ProfitPerTime,
-							),
-								two_ways_deals[i].FrigateInfo.ProfitPerTime,
-							)
-							second_deal := math.Max(math.Max(
-								two_ways_deals[j].TransportInfo.ProfitPerTime,
-								two_ways_deals[j].FreighterInfo.ProfitPerTime,
-							),
-								two_ways_deals[j].FrigateInfo.ProfitPerTime,
-							)
+							if e.Mapped.FLSR != nil {
+								first_deal := math.Max(math.Max(
+									two_ways_deals[i].TransportInfo.ProfitPerTime,
+									two_ways_deals[i].FreighterInfo.ProfitPerTime,
+								),
+									two_ways_deals[i].FrigateInfo.ProfitPerTime,
+								)
+								second_deal := math.Max(math.Max(
+									two_ways_deals[j].TransportInfo.ProfitPerTime,
+									two_ways_deals[j].FreighterInfo.ProfitPerTime,
+								),
+									two_ways_deals[j].FrigateInfo.ProfitPerTime,
+								)
 
-							return first_deal > second_deal
+								return first_deal > second_deal
+							}
+							return two_ways_deals[i].TransportInfo.ProfitPerTime > two_ways_deals[j].TransportInfo.ProfitPerTime
 						})
 						two_ways_deals = two_ways_deals[:TwoWayLimitRoutes]
 
@@ -508,20 +517,24 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 		if i%5 == 0 && len(result.TwoWayDeals) > TwoWayLimitRoutes {
 			sort.Slice(result.TwoWayDeals, func(i, j int) bool {
-				first_deal := math.Max(math.Max(
-					result.TwoWayDeals[i].TransportInfo.ProfitPerTime,
-					result.TwoWayDeals[i].FreighterInfo.ProfitPerTime,
-				),
-					result.TwoWayDeals[i].FrigateInfo.ProfitPerTime,
-				)
-				second_deal := math.Max(math.Max(
-					result.TwoWayDeals[j].TransportInfo.ProfitPerTime,
-					result.TwoWayDeals[j].FreighterInfo.ProfitPerTime,
-				),
-					result.TwoWayDeals[j].FrigateInfo.ProfitPerTime,
-				)
+				if e.Mapped.FLSR != nil {
+					first_deal := math.Max(math.Max(
+						result.TwoWayDeals[i].TransportInfo.ProfitPerTime,
+						result.TwoWayDeals[i].FreighterInfo.ProfitPerTime,
+					),
+						result.TwoWayDeals[i].FrigateInfo.ProfitPerTime,
+					)
+					second_deal := math.Max(math.Max(
+						result.TwoWayDeals[j].TransportInfo.ProfitPerTime,
+						result.TwoWayDeals[j].FreighterInfo.ProfitPerTime,
+					),
+						result.TwoWayDeals[j].FrigateInfo.ProfitPerTime,
+					)
 
-				return first_deal > second_deal
+					return first_deal > second_deal
+				}
+				return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
+
 			})
 			result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
 		}
@@ -532,6 +545,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		}
 	}
 
+	// taking slice of top the best
 	sort.Slice(result.TwoWayDeals, func(i, j int) bool {
 		first_deal := math.Max(math.Max(
 			result.TwoWayDeals[i].TransportInfo.ProfitPerTime,
@@ -548,7 +562,6 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 		return first_deal > second_deal
 	})
-
 	var top_slice_of_two_way_deals []*TwoWayDeal
 	if len(result.TwoWayDeals) > 100 {
 		for i := 0; i < 100; i++ {
