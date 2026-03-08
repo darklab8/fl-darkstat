@@ -48,6 +48,13 @@ func (h *Component) Write(ctx context.Context, gp Params) WriteResult {
 	ctx, span := traces.Tracer.Start(ctx, "component-write")
 	defer span.End()
 
+	defer func() {
+		if r := recover(); r != nil {
+			logus.Log.Error("Component.Write crashed", typelog.Any("pagepath", h.pagepath), typelog.Any("error", r))
+			panic(r)
+		}
+	}()
+
 	buf := bytes.NewBuffer([]byte{})
 	buf.Write([]byte(fmt.Sprintf("<!--ts %s-->\n", time.Now().Format("2006-01-02T15:04:05.999Z"))))
 	// gp.Pagepath = string(h.pagepath)

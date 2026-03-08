@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
@@ -164,9 +165,12 @@ func EnhanceBasesWithServerOverrides(bases []*Base, commodities []*Commodity) {
 	}
 }
 
-func FilterToUserfulBases(bases []*Base) []*Base {
+// you can use for_front_view=true, only after bases were already enhanced with IsTransportReachable and etc values
+// otheriwise u have to use for_front_view=false
+func (e *Exporter) FilterToUserfulBases(bases []*Base, for_front_view bool) []*Base {
 	var useful_bases []*Base = make([]*Base, 0, len(bases))
 	for _, item := range bases {
+
 		if item.IsPob {
 			useful_bases = append(useful_bases, item)
 			continue
@@ -176,9 +180,10 @@ func FilterToUserfulBases(bases []*Base) []*Base {
 			continue
 		}
 
-		if item.Reachable {
-			useful_bases = append(useful_bases, item)
-			continue
+		if for_front_view {
+			if !item.IsFreighterReachable && !item.IsFrigateReachable && !item.IsTransportReachable {
+				continue
+			}
 		}
 
 		if strings.Contains(item.System, "Bastille") {
@@ -194,6 +199,26 @@ func FilterToUserfulBases(bases []*Base) []*Base {
 		if is_invisible {
 			continue
 		}
+
+		is_dockable := false
+		for _, archetype := range item.Archetypes {
+
+			if solar, ok := e.Mapped.Solararch.SolarsByNick[archetype]; ok {
+				dockable := solar.IsDockable(solararch_mapped.DockableOptions{
+					IsDisco:                  e.Mapped.Discovery != nil,
+					PlayersCanDockBerth:      true,
+					PlayersCanDockMoorMedium: true,
+					PlayersCanDockMoorLarge:  true,
+				})
+				if dockable.IsDockable {
+					is_dockable = true
+				}
+			}
+		}
+		if !is_dockable {
+			continue
+		}
+
 		useful_bases = append(useful_bases, item)
 	}
 	return useful_bases
@@ -215,13 +240,11 @@ type Base struct {
 	Pos                cfg.Vector                   `json:"pos" validate:"required"`
 	SectorCoord        string                       `json:"sector_coord" validate:"required"`
 
-	IsTransportUnreachable bool `json:"is_transport_unreachable" validate:"required"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
+	cfg.Reachability
 
 	Missions    *BaseMissions `json:"-" swaggerignore:"true"`
 	*MiningInfo `json:"mining_info,omitempty"`
-
-	Reachable bool `json:"is_reachhable" validate:"required"` // is base IS Rechable by frighter from Manhattan
-	IsPob     bool `validate:"required"`
+	IsPob       bool `validate:"required"`
 }
 
 func (b Base) GetNickname() string { return string(b.Nickname) }

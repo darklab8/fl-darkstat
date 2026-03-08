@@ -60,7 +60,11 @@ func (t *Route) GetCanVisitFreighterOnlyJH() bool {
 	if t.is_disabled {
 		return false
 	}
-	return bool(t.g.Graph.CanVisitFreightersOnlyJHs)
+	return bool(t.g.Graph.DockOptions.DockOpts.WithDiscoFreighterPaths)
+}
+
+func (t *Route) GetMapConfig() trades.MapConfigOptions {
+	return t.g.Graph.DockOptions
 }
 
 type PathWithNavmap struct {
@@ -134,7 +138,7 @@ func (e *Exporter) GetTravelRoutes(from_base *Base) []*ComboRoute {
 		// it can fly everywhere so we use it for checking
 		freighter_route := NewBaseRoute(e.Freighter, from_base, to_base)
 
-		if freighter_route.GetTimeMs() > trades.INF/2 {
+		if freighter_route.GetTimeMs() > trades.INFbelow {
 			continue
 		}
 

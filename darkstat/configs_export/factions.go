@@ -39,6 +39,7 @@ func (b Faction) GetNickname() string { return string(b.Nickname) }
 type Bribe struct {
 	BaseNickname string `json:"base_nickname"  validate:"required"`
 	BaseInfo
+	cfg.Reachability
 	Chance float64 `json:"chance"  validate:"required"`
 }
 

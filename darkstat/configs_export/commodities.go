@@ -25,8 +25,8 @@ type MarketGood struct {
 	BaseSells            bool           `json:"base_sells" validate:"required"`
 	IsServerSideOverride bool           `json:"is_server_override" validate:"required"`
 
-	NotBuyable             bool `json:"-" swaggerignore:"true"`
-	IsTransportUnreachable bool `json:"-" swaggerignore:"true"`
+	NotBuyable       bool `json:"-" swaggerignore:"true"`
+	cfg.Reachability `json:"-" swaggerignore:"true"`
 
 	DiscoveryFactoryName *string `json:"-" swaggerignore:"true"`
 

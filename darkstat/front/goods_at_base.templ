@@ -21,7 +21,7 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 				<th style="width:100px;">System</th>
 				if shared.ShowDisco {
 					<th style="width:5px;">
-						@frmt.MultiLinestring([]string{"Not for", "tran", "sports"})
+						@frmt.MultiLinestring([]string{"For", "tran", "sports"})
 					</th>
 				}
 				<th style="width:25px;">
@@ -73,13 +73,26 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 						@frmt.MultiLinestring([]string{"Server", "Override"})
 					</th>
 				}
+				if shared.ShowFLSR {
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "reachable"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "reachable"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "reachable"})
+					</th>
+				}
 				<th style="width:100px;">Base Nickname</th>
 				<th style="width:20px;">Pos X</th>
 				<th style="width:20px;">Pos Y</th>
 				<th style="width:20px;">Pos Z</th>
-				<th style="width:5px;">
-					@frmt.MultiLinestring([]string{"Base is", "Reachable"})
-				</th>
+				if !shared.ShowFLSR {
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Base is", "Reachable"})
+					</th>
+				}
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -107,7 +120,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 				onclick="RowHighlighter(this)"
 				class={
 					templ.KV("line_through", base_info.NotBuyable),
-					templ.KV("line_underline", base_info.IsTransportUnreachable),
+					templ.KV("line_underline", !base_info.IsTransportReachable && types.GetCtx(ctx).ShowDisco),
 				}
 			>
 				<td>
@@ -124,7 +137,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 				</td>
 				if shared.ShowDisco {
 					<td>
-						{ strconv.FormatBool(base_info.IsTransportUnreachable) }
+						{ strconv.FormatBool(base_info.IsTransportReachable) }
 					</td>
 				}
 				<td>{ base_info.SectorCoord }</td>
@@ -152,6 +165,23 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 				if shared.ShowDisco {
 					<td>{ strconv.FormatBool(base_info.IsServerSideOverride) }</td>
 				}
+				if shared.ShowFLSR {
+					<td class="seo">
+						if base_info.IsTransportReachable {
+							d_medium
+						}
+					</td>
+					<td class="seo">
+						if base_info.IsFrigateReachable {
+							d_large
+						}
+					</td>
+					<td class="seo">
+						if base_info.IsFreighterReachable {
+							d_small
+						}
+					</td>
+				}
 				<td>
 					@frmt.WriteLimit(100) {
 						{ base_info.BaseNickname.ToStr() }
@@ -160,7 +190,9 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.X) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Y) }</td>
 				<td>{ fmt.Sprintf("%.0f", base_info.BasePos.Z) }</td>
-				<td>{ frmt.FormatBoolAsYesNo(!base_info.NotBuyable) }</td>
+				if !shared.ShowFLSR {
+					<td>{ frmt.FormatBoolAsYesNo(base_info.IsTransportReachable) }</td>
+				}
 				<td></td>
 			</tr>
 		}

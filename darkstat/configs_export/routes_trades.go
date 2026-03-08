@@ -222,6 +222,7 @@ type TradeDeal struct {
 	*ComboTradeRoute
 	FreighterInfo OneWayRouteInfo
 	TransportInfo OneWayRouteInfo
+	FrigateInfo   OneWayRouteInfo
 }
 
 const LimitBestPaths = 3000
@@ -339,7 +340,9 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 				}
 			}
 
-			route_info := OneWayRouteInfoF(trade_route.Transport)
+			transport_route_info := OneWayRouteInfoF(trade_route.Transport)
+			freighter_route_info := OneWayRouteInfoF(trade_route.Freighter)
+			frigate_route_info := OneWayRouteInfoF(trade_route.Frigate)
 
 			if settings.Env.TradeRoutesBestDisableLiners {
 				if trade_route.Transport.BuyingGood.ShipClass != nil {
@@ -350,26 +353,60 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 				}
 			}
 
-			if route_info.KiloVolumes < 10 {
+			if transport_route_info.KiloVolumes < 10 && freighter_route_info.KiloVolumes < 10 && frigate_route_info.KiloVolumes < 10 {
 				continue
 			}
-			if route_info.TimeS*trades.PrecisionMultipiler > float64(trades.INFthreshold) {
+			if transport_route_info.TimeS > float64(trades.INFthreshold) &&
+				freighter_route_info.TimeS > float64(trades.INFthreshold) &&
+				frigate_route_info.TimeS > float64(trades.INFthreshold) {
 				continue
 			}
 			trade_deals = append(trade_deals, &TradeDeal{
 				ComboTradeRoute: trade_route,
-				FreighterInfo:   OneWayRouteInfoF(trade_route.Freighter),
-				TransportInfo:   OneWayRouteInfoF(trade_route.Transport),
+				FreighterInfo:   freighter_route_info,
+				TransportInfo:   transport_route_info,
+				FrigateInfo:     frigate_route_info,
 			})
 		}
 		if len(trade_deals) > LimitBestPaths+500 {
 			sort.Slice(trade_deals, func(i, j int) bool {
+				if e.Mapped.FLSR != nil {
+					first_deal := math.Max(math.Max(
+						trade_deals[i].TransportInfo.ProfitWeight,
+						trade_deals[i].FreighterInfo.ProfitWeight,
+					),
+						trade_deals[i].FrigateInfo.ProfitWeight,
+					)
+					second_deal := math.Max(math.Max(
+						trade_deals[j].TransportInfo.ProfitWeight,
+						trade_deals[j].FreighterInfo.ProfitWeight,
+					),
+						trade_deals[j].FrigateInfo.ProfitWeight,
+					)
+					return first_deal > second_deal
+				}
 				return trade_deals[i].TransportInfo.ProfitWeight > trade_deals[j].TransportInfo.ProfitWeight
 			})
 			trade_deals = trade_deals[:LimitBestPaths]
 
 			sort.Slice(trade_deals, func(i, j int) bool {
+				if e.Mapped.FLSR != nil {
+					first_deal := math.Max(math.Max(
+						trade_deals[i].TransportInfo.ProfitPerTimeForKiloVolumes,
+						trade_deals[i].FreighterInfo.ProfitPerTimeForKiloVolumes,
+					),
+						trade_deals[i].FrigateInfo.ProfitPerTimeForKiloVolumes,
+					)
+					second_deal := math.Max(math.Max(
+						trade_deals[j].TransportInfo.ProfitPerTimeForKiloVolumes,
+						trade_deals[j].FreighterInfo.ProfitPerTimeForKiloVolumes,
+					),
+						trade_deals[j].FrigateInfo.ProfitPerTimeForKiloVolumes,
+					)
+					return first_deal > second_deal
+				}
 				return trade_deals[i].TransportInfo.ProfitPerTimeForKiloVolumes > trade_deals[j].TransportInfo.ProfitPerTimeForKiloVolumes
+
 			})
 			trade_deals = trade_deals[:LimitBestPaths-LimitBestPaths/10]
 		}
@@ -406,20 +443,27 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 			for _, trade_route1 := range trade_route_chunk {
 				for _, trade_route2 := range result.OneWayDeals {
 
-					route_info := trade_route_info(trade_route1.Transport, trade_route2.Transport)
-					if route_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS {
+					transport_info := trade_route_info(trade_route1.Transport, trade_route2.Transport)
+					frigate_info := trade_route_info(trade_route1.Frigate, trade_route2.Frigate)
+					freighter_info := trade_route_info(trade_route1.Freighter, trade_route2.Freighter)
+
+					if transport_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS &&
+						frigate_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS &&
+						freighter_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS {
 						continue
 					}
-					if route_info.Route2ConnectTime > TwoWayLimitConnnectingTimeS {
+					if transport_info.Route2ConnectTime > TwoWayLimitConnnectingTimeS &&
+						frigate_info.Route2ConnectTime > TwoWayLimitConnnectingTimeS &&
+						freighter_info.Route2ConnectTime > TwoWayLimitConnnectingTimeS {
 						continue
 					}
 
 					two_deal := &TwoWayDeal{
 						Route1:        trade_route1,
 						Route2:        trade_route2,
-						TransportInfo: trade_route_info(trade_route1.Transport, trade_route2.Transport),
-						FrigateInfo:   trade_route_info(trade_route1.Frigate, trade_route2.Frigate),
-						FreighterInfo: trade_route_info(trade_route1.Freighter, trade_route2.Freighter),
+						TransportInfo: transport_info,
+						FrigateInfo:   frigate_info,
+						FreighterInfo: freighter_info,
 					}
 
 					if HasPoBs(two_deal) > settings.Env.TradeRoutesBestTwoWaysLimitPobs {
@@ -436,6 +480,22 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 					if len(two_ways_deals) > TwoWayLimitRoutes+500 {
 						sort.Slice(two_ways_deals, func(i, j int) bool {
+							if e.Mapped.FLSR != nil {
+								first_deal := math.Max(math.Max(
+									two_ways_deals[i].TransportInfo.ProfitPerTime,
+									two_ways_deals[i].FreighterInfo.ProfitPerTime,
+								),
+									two_ways_deals[i].FrigateInfo.ProfitPerTime,
+								)
+								second_deal := math.Max(math.Max(
+									two_ways_deals[j].TransportInfo.ProfitPerTime,
+									two_ways_deals[j].FreighterInfo.ProfitPerTime,
+								),
+									two_ways_deals[j].FrigateInfo.ProfitPerTime,
+								)
+
+								return first_deal > second_deal
+							}
 							return two_ways_deals[i].TransportInfo.ProfitPerTime > two_ways_deals[j].TransportInfo.ProfitPerTime
 						})
 						two_ways_deals = two_ways_deals[:TwoWayLimitRoutes]
@@ -457,7 +517,24 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 		if i%5 == 0 && len(result.TwoWayDeals) > TwoWayLimitRoutes {
 			sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+				if e.Mapped.FLSR != nil {
+					first_deal := math.Max(math.Max(
+						result.TwoWayDeals[i].TransportInfo.ProfitPerTime,
+						result.TwoWayDeals[i].FreighterInfo.ProfitPerTime,
+					),
+						result.TwoWayDeals[i].FrigateInfo.ProfitPerTime,
+					)
+					second_deal := math.Max(math.Max(
+						result.TwoWayDeals[j].TransportInfo.ProfitPerTime,
+						result.TwoWayDeals[j].FreighterInfo.ProfitPerTime,
+					),
+						result.TwoWayDeals[j].FrigateInfo.ProfitPerTime,
+					)
+
+					return first_deal > second_deal
+				}
 				return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
+
 			})
 			result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
 		}
@@ -467,12 +544,79 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 			fmt.Printf("TWO WAYS: processed %d out of %d\n", i, chunks_amount)
 		}
 	}
+
+	// taking slice of top the best
+	var top_slice_of_two_way_deals []*TwoWayDeal
+
+	if e.Mapped.FLSR != nil {
+		sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+			return result.TwoWayDeals[i].FreighterInfo.ProfitPerTime > result.TwoWayDeals[j].FreighterInfo.ProfitPerTime
+		})
+		if len(result.TwoWayDeals) > 100 {
+			for i := 0; i < 100; i++ {
+				top_slice_of_two_way_deals = append(top_slice_of_two_way_deals, result.TwoWayDeals[i])
+			}
+		}
+		sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+			return result.TwoWayDeals[i].FrigateInfo.ProfitPerTime > result.TwoWayDeals[j].FrigateInfo.ProfitPerTime
+		})
+		if len(result.TwoWayDeals) > 100 {
+			for i := 0; i < 100; i++ {
+				top_slice_of_two_way_deals = append(top_slice_of_two_way_deals, result.TwoWayDeals[i])
+			}
+		}
+		sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+			return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
+		})
+		if len(result.TwoWayDeals) > 100 {
+			for i := 0; i < 100; i++ {
+				top_slice_of_two_way_deals = append(top_slice_of_two_way_deals, result.TwoWayDeals[i])
+			}
+		}
+	} else {
+		sort.Slice(result.TwoWayDeals, func(i, j int) bool {
+			first_deal := math.Max(math.Max(
+				result.TwoWayDeals[i].TransportInfo.ProfitPerTime,
+				result.TwoWayDeals[i].FreighterInfo.ProfitPerTime,
+			),
+				result.TwoWayDeals[i].FrigateInfo.ProfitPerTime,
+			)
+			second_deal := math.Max(math.Max(
+				result.TwoWayDeals[j].TransportInfo.ProfitPerTime,
+				result.TwoWayDeals[j].FreighterInfo.ProfitPerTime,
+			),
+				result.TwoWayDeals[j].FrigateInfo.ProfitPerTime,
+			)
+
+			return first_deal > second_deal
+		})
+		if len(result.TwoWayDeals) > 100 {
+			for i := 0; i < 100; i++ {
+				top_slice_of_two_way_deals = append(top_slice_of_two_way_deals, result.TwoWayDeals[i])
+			}
+		}
+	}
+
 	sort.Slice(result.TwoWayDeals, func(i, j int) bool {
 		return result.TwoWayDeals[i].TransportInfo.ProfitPerTime > result.TwoWayDeals[j].TransportInfo.ProfitPerTime
 	})
 	if len(result.TwoWayDeals) > TwoWayLimitRoutes {
 		result.TwoWayDeals = result.TwoWayDeals[:TwoWayLimitRoutes]
 	}
+
+	last_two_way_hashes := make(map[string]bool)
+	for _, two_deal := range result.TwoWayDeals {
+		last_two_way_hashes[two_deal.HashStr()] = true
+	}
+
+	for _, two_deal := range top_slice_of_two_way_deals {
+		hash := two_deal.HashStr()
+		if _, ok := last_two_way_hashes[hash]; !ok {
+			result.TwoWayDeals = append(result.TwoWayDeals, two_deal)
+			last_two_way_hashes[hash] = true
+		}
+	}
+
 	fmt.Println("TWO WAYS: finished calculating two way best trade routes, found=", len(result.TwoWayDeals), " elapsed=", time.Since(start_time_two_ways))
 
 	runtime.GC()
@@ -494,6 +638,18 @@ type RouteInfo struct {
 }
 
 func trade_route_info(trade_route1 *TradeRoute, trade_route2 *TradeRoute) RouteInfo {
+	// if trade_route1.BuyingGood.Nickname == "commodity_cardamine" {
+	// 	if trade_route2.BuyingGood.Nickname == "commodity_luxury_consumer_goods" {
+	// 		if trade_route1.SellingGood.BaseNickname == "li01_01_base" {
+	// 			if trade_route2.SellingGood.BaseNickname == "ku05_02_base" {
+	// 				if ship == ShipCategoryFrigate {
+	// 					fmt.Print()
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
+
 	var route_info RouteInfo
 	// time of routes
 	route_info.Route1Time = GetTimeS(trade_route1.Route.g, trade_route1.BuyingGood, trade_route1.SellingGood)
@@ -508,7 +664,14 @@ func trade_route_info(trade_route1 *TradeRoute, trade_route2 *TradeRoute) RouteI
 	route_info.Route2ConnectTime = GetTimeS(trade_route2.Route.g, trade_route2.SellingGood, trade_route1.BuyingGood)
 
 	route_info.TotalProfit = (profit1 + profit2)
-	route_info.TwoWayTime = (route_info.Route1Time + route_info.Route2Time + route_info.Route1ConnectTime + route_info.Route2ConnectTime)
+
+	if route_info.Route1Time > float64(trades.INFthreshold) {
+		route_info.TwoWayTime = route_info.Route1Time
+	} else if route_info.Route2Time > float64(trades.INFthreshold) {
+		route_info.TwoWayTime = route_info.Route2Time
+	} else {
+		route_info.TwoWayTime = (route_info.Route1Time + route_info.Route2Time + route_info.Route1ConnectTime + route_info.Route2ConnectTime)
+	}
 
 	route_info.ProfitPerTime = route_info.TotalProfit / route_info.TwoWayTime
 	return route_info
@@ -541,8 +704,9 @@ func (e *TradePathExporter) GetBaseBestPathFrom(ctx context.Context, base *Base)
 			}
 
 			e.GetVolumedMarketGoods(buying_good, selling_good, func(copied_buying_good, copied_selling_good *MarketGood) {
-				time_s := GetTimeS(e.Transport, buying_good, selling_good)
-				if time_s*trades.PrecisionMultipiler > float64(trades.INFthreshold) {
+				if GetTimeS(e.Transport, buying_good, selling_good) > float64(trades.INFthreshold) &&
+					GetTimeS(e.Freighter, buying_good, selling_good) > float64(trades.INFthreshold) &&
+					GetTimeS(e.Frigate, buying_good, selling_good) > float64(trades.INFthreshold) {
 					return
 				}
 
@@ -606,8 +770,9 @@ func (e *TradePathExporter) GetBaseBestPathTo(ctx context.Context, base *Base) *
 				continue
 			}
 			e.GetVolumedMarketGoods(buying_good, selling_good, func(copied_buying_good, copied_selling_good *MarketGood) {
-				time_s := GetTimeS(e.Transport, buying_good, selling_good)
-				if time_s*trades.PrecisionMultipiler > float64(trades.INFthreshold) {
+				if GetTimeS(e.Transport, buying_good, selling_good) > float64(trades.INFthreshold) &&
+					GetTimeS(e.Freighter, buying_good, selling_good) > float64(trades.INFthreshold) &&
+					GetTimeS(e.Frigate, buying_good, selling_good) > float64(trades.INFthreshold) {
 					return
 				}
 

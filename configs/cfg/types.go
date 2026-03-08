@@ -61,3 +61,11 @@ func NewErr(msg string) Err {
 func (r *ErrP) Error() string {
 	return string(*r)
 }
+
+type WithDiscoFreighterPaths bool
+
+type Reachability struct {
+	IsTransportReachable bool `json:"is_transport_reachable"` // Check if base is NOT reachable from manhattan by Transport through Graph method (at Discovery base has to have Transport dockable spheres)
+	IsFreighterReachable bool `json:"is_freighter_reachable"` // is base IS Rechable by freighter from Manhattan
+	IsFrigateReachable   bool `json:"is_frigate_reachhable"`  // is base IS Rechable by frigate from Manhattan
+}

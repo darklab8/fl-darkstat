@@ -64,6 +64,8 @@ func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 
 		RelayHost: settings.Env.RelayHost,
 		RelayRoot: settings.Env.RelayRoot,
+
+		ShowDisco: bool(is_discovery),
 	}
 
 	static_files := []builder.StaticFile{
@@ -108,6 +110,22 @@ func NewMapped(ctx context.Context) *configs_mapped.MappedConfigs {
 	return mapped
 }
 
+var DiscoShipNames = types.ShipNames{
+	Transport: "transport",
+	Frigate:   "frigate",
+	Freighter: "freighter",
+}
+var FlsrShipNames = types.ShipNames{
+	Transport: "transport",
+	Frigate:   "liner",
+	Freighter: "freighter",
+}
+var VanillaShipNames = types.ShipNames{
+	Transport: "transport",
+	Frigate:   "frigate",
+	Freighter: "freighter",
+}
+
 func NewAppData(ctx context.Context) *AppData {
 	ctx, span := traces.Tracer.Start(ctx, "NewAppData")
 	defer span.End()
@@ -120,6 +138,7 @@ func NewAppData(ctx context.Context) *AppData {
 
 	var shared *types.SharedData = &types.SharedData{
 		AverageTradeLaneSpeed: mapped.GetAvgTradeLaneSpeed(),
+		ShipNames:             VanillaShipNames,
 	}
 
 	timeit.NewTimerMF("filtering to useful stuff", func() {
@@ -127,6 +146,7 @@ func NewAppData(ctx context.Context) *AppData {
 			shared.FLSRData = types.FLSRData{
 				ShowFLSR: true,
 			}
+			shared.ShipNames = FlsrShipNames
 		}
 
 		if mapped.Discovery != nil {
@@ -139,6 +159,7 @@ func NewAppData(ctx context.Context) *AppData {
 				OrderedTechcompat: *configs_export.NewOrderedTechCompat(configs),
 				Minecontrol:       mapped.Discovery.Minecontrol,
 			}
+			shared.ShipNames = DiscoShipNames
 		}
 		fmt.Println("attempting to access l.configs.Infocards")
 		shared.Infocarder = configs.Infocarder

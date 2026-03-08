@@ -131,26 +131,26 @@ templ OneWayShared(shared *types.SharedData) {
 				<th style="width:50px;">
 					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
 				</th>
-				if shared.ShowDisco {
+				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Frigate", "Time(sec)"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "Time(sec)"})
 					</th>
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Freighter", "Time(sec)"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "Time(sec)"})
 					</th>
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"freighter", "profit", "sum"})
+						@frmt.MultiLinestring([]string{shared.ShipNames.Freighter, "profit", "sum"})
 					</th>
 				}
 				<th style="width:50px;">
-					@frmt.MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
+					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "Profit/v/t", "¢ents/sec"})
 				</th>
-				if shared.ShowDisco {
+				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "Profit/v/t", "¢ents/sec"})
 					</th>
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "Profit/v/t", "¢ents/sec"})
 					</th>
 				}
 				<th style="width:5px;">Vol.</th>
@@ -246,7 +246,7 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 			<span class="tooltip">
 				@TradeRouteHumanTime(trade_route.Transport.Route)
 				<span class="tooltiptext">
-					if trade_route.Transport.Route.GetTimeMs() < trades.INF/2 {
+					if trade_route.Transport.Route.GetTimeMs() < trades.INFbelow {
 						{ fmt.Sprintf("%.0f", trade_route.Transport.Route.GetTimeS()) } secs
 					} else {
 						INF secs
@@ -254,12 +254,12 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 				</span>
 			</span>
 		</td>
-		if shared.ShowDisco {
+		if shared.ShowDisco || shared.ShowFLSR {
 			<td>
 				<span class="tooltip">
 					@TradeRouteHumanTime(trade_route.Frigate.Route)
 					<span class="tooltiptext">
-						if trade_route.Frigate.Route.GetTimeMs() < trades.INF/2 {
+						if trade_route.Frigate.Route.GetTimeMs() < trades.INFbelow {
 							{ fmt.Sprintf("%.0f", trade_route.Frigate.Route.GetTimeS()) } secs
 						} else {
 							INF secs
@@ -271,7 +271,7 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 				<span class="tooltip">
 					@TradeRouteHumanTime(trade_route.Freighter.Route)
 					<span class="tooltiptext">
-						if trade_route.Freighter.Route.GetTimeMs() < trades.INF/2 {
+						if trade_route.Freighter.Route.GetTimeMs() < trades.INFbelow {
 							{ fmt.Sprintf("%.0f", trade_route.Freighter.Route.GetTimeS()) } secs
 						} else {
 							INF secs
@@ -283,10 +283,10 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 				{   fmt.Sprintf("%.1f",trade_route.TransportInfo.ProfitPerTimeForKiloVolumes) }
 			</td>
 		}
-		<td class="route_transport">{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
-		if shared.ShowDisco {
-			<td class="route_frigate">{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
-			<td class="route_freighter">{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
+		<td class="route_transport">{ FormatProfitPerTime(trade_route.Transport.GetProffitPerTime()) }</td>
+		if shared.ShowDisco || shared.ShowFLSR {
+			<td class="route_frigate">{ FormatProfitPerTime(trade_route.Frigate.GetProffitPerTime()) }</td>
+			<td class="route_freighter">{ FormatProfitPerTime( trade_route.Freighter.GetProffitPerTime()) }</td>
 		}
 		<td>{ fmt.Sprintf("%.2f", trade_route.Transport.SellingGood.Volume) }</td>
 		if shared.ShowDisco {

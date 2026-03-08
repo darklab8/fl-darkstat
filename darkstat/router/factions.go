@@ -75,7 +75,7 @@ func (l *Router) LinkFactions(
 				),
 				builder.NewComponent(
 					utils_types.FilePath(front.FactionRepUrl(faction, front.FactionShowBribes)),
-					front.RephackBottom(faction, faction.Bribes),
+					front.RephackBottom(faction, faction.Bribes, shared),
 				),
 			)
 		}

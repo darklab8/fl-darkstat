@@ -26,7 +26,8 @@ type DijkstraAPSP struct {
 }
 
 const INF = intgmax
-const INFthreshold = intgmax / int32(PrecisionMultipiler)
+const INFbelow = INF - 1000
+const INFthreshold = intgmax / int32(PrecisionMultipiler) / 10
 
 // On using the below constructor,
 // edges must be added manually

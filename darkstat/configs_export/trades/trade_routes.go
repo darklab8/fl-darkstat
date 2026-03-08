@@ -33,8 +33,6 @@ func DistanceForVecs(Pos1 cfg.Vector, Pos2 cfg.Vector) float64 {
 	return distance
 }
 
-type WithFreighterPaths bool
-
 type RouteShipType int64
 
 const (
@@ -109,8 +107,7 @@ type MappingOptions struct {
 }
 
 type MapConfigOptions struct {
-	WithFreighterPaths WithFreighterPaths
-	DockOpts           solararch_mapped.DockableOptions
+	DockOpts solararch_mapped.DockableOptions
 }
 
 func MapConfigsToFGraph(
@@ -125,7 +122,7 @@ func MapConfigsToFGraph(
 	}
 	average_trade_lane_speed := mapped.GetAvgTradeLaneSpeed()
 
-	graph := NewGameGraph(avgCruiseSpeed, DockOptions.WithFreighterPaths)
+	graph := NewGameGraph(avgCruiseSpeed, DockOptions)
 	for _, system := range mapped.Systems.Systems {
 		system_speed_multiplier := mapped.Overrides.GetSystemSpeedMultiplier(system.Nickname)
 
@@ -161,6 +158,11 @@ func MapConfigsToFGraph(
 			if !dockable {
 				continue
 			}
+
+			// if system.Nickname == "li01" {
+			// 	fmt.Println()
+			// }
+
 			object := SystemObject{
 				nickname: system_base_base,
 				pos:      system_obj.Pos.Get(),
@@ -188,16 +190,11 @@ func MapConfigsToFGraph(
 						if results.IsDockable {
 							dock_results.IsDockable = true
 						}
-						if results.IsDockableByTransports {
-							dock_results.IsDockableByTransports = true
-						}
+
 					}
 				}
 			}
 			if !dock_results.IsDockable {
-				continue
-			}
-			if !dock_results.IsDockableByTransports && bool(!DockOptions.WithFreighterPaths) {
 				continue
 			}
 
@@ -256,6 +253,7 @@ func MapConfigsToFGraph(
 			}
 
 			var dock_results solararch_mapped.DockableResult
+			var disco_cargo_limit *int
 			if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
 				// strings.Contains(jh_archetype, "_fighter") || // Atmospheric entry points. Dockable only by fighters/freighters
 				// included into `IsDockableByCaps` as they don't have capital docking_sphere dockings
@@ -263,8 +261,9 @@ func MapConfigsToFGraph(
 				if results.IsDockable {
 					dock_results.IsDockable = true
 				}
-				if results.IsDockableByTransports {
-					dock_results.IsDockableByTransports = true
+
+				if cargo_limit, ok := solar.CargoLimit.GetValue(); ok {
+					disco_cargo_limit = ptr.Ptr(cargo_limit)
 				}
 			}
 
@@ -273,16 +272,12 @@ func MapConfigsToFGraph(
 			}
 
 			if mapped.Discovery != nil {
-				// Condition is initiallly taken from FLCompanion
-				// https://github.com/Corran-Raisu/FLCompanion/blob/021159e3b3a1b40188c93064f1db136780424ea9/Datas.cpp#L585
-				// but then rewritted to docking_sphere checks.
-				// only with docking_sphere =jump, moor_large we can dock in disco by transports
-				if strings.Contains(jh_archetype, "_notransport") { // jumphole_notransport Dockable only by ships with below 650 cargo on board
-					// "dsy_hypergate_all" is one directional hypergate dockable by everything, no need to exclude for freighter only paths
-					dock_results.IsDockableByTransports = false
-				}
-				if !dock_results.IsDockableByTransports && bool(!DockOptions.WithFreighterPaths) {
-					continue
+				if !DockOptions.DockOpts.WithDiscoFreighterPaths {
+					if disco_cargo_limit != nil {
+						if *disco_cargo_limit < 1000 {
+							continue
+						}
+					}
 				}
 			}
 

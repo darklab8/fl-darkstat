@@ -2,7 +2,9 @@ package types
 
 import (
 	"context"
+	"strings"
 	"time"
+	"unicode"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/discovery/minecontrol"
@@ -39,6 +41,8 @@ type GlobalParams struct {
 	RelayRoot string
 
 	AppStart time.Time
+
+	ShowDisco bool
 }
 
 func (g *GlobalParams) GetBuildPath() utils_types.FilePath {
@@ -70,9 +74,21 @@ type DiscoveryData struct {
 	OrderedTechcompat configs_export.TechCompatOrderer
 }
 
+type ShipNames struct {
+	Transport string
+	Frigate   string
+	Freighter string
+}
 type SharedData struct {
 	DiscoveryData
 	FLSRData
 	CraftableBaseName     string
 	AverageTradeLaneSpeed int
+	ShipNames             ShipNames
+}
+
+func ToTitle(s string) string { return strings.Map(unicode.ToTitle, s) }
+
+func ToCapital(value string) string {
+	return ToTitle(value)
 }

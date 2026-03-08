@@ -14,6 +14,7 @@ type Solar struct {
 	DockingSpheres []*semantic.String
 	Fuses          []*semantic.String
 	Destructible   *semantic.Bool
+	CargoLimit     *semantic.Int
 }
 
 const (
@@ -31,7 +32,8 @@ const (
 )
 
 type DockableOptions struct {
-	IsDisco bool // disco allows for transports jump
+	IsDisco                 bool // disco allows for transports jump
+	WithDiscoFreighterPaths cfg.WithDiscoFreighterPaths
 
 	PlayersCanDockBerth      bool
 	PlayersCanDockMoorMedium bool
@@ -39,8 +41,7 @@ type DockableOptions struct {
 }
 
 type DockableResult struct {
-	IsDockable             bool
-	IsDockableByTransports bool // important distinguishing for disco. only jump and moor_large valid khm?
+	IsDockable bool
 }
 
 /*
@@ -56,10 +57,9 @@ func (solar *Solar) IsDockable(options DockableOptions) DockableResult {
 	for _, docking_sphere := range solar.DockingSpheres {
 		if docking_sphere_name, dockable := docking_sphere.GetValue(); dockable {
 			if docking_sphere_name == DockingSphereJump {
-				result.IsDockableByTransports = true
 				result.IsDockable = true
 			}
-			if docking_sphere_name == DockingSphereRing {
+			if options.PlayersCanDockBerth && docking_sphere_name == DockingSphereRing {
 				result.IsDockable = true
 			}
 			if options.PlayersCanDockBerth && docking_sphere_name == DockingSphereBerth {
@@ -70,14 +70,6 @@ func (solar *Solar) IsDockable(options DockableOptions) DockableResult {
 			}
 			if options.PlayersCanDockMoorLarge && docking_sphere_name == DockingSphereMoorLarge {
 				result.IsDockable = true
-			}
-
-			if options.IsDisco {
-				if docking_sphere_name == DockingSphereMoorMedium {
-					result.IsDockableByTransports = true
-				}
-			} else {
-				result.IsDockableByTransports = result.IsDockable
 			}
 		}
 	}
@@ -105,6 +97,7 @@ func Read(input_file *iniload.IniLoader) *Config {
 		solar := &Solar{
 			Nickname:     semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 			Destructible: semantic.NewBool(section, cfg.ParamKey("destructible"), semantic.StrBool),
+			CargoLimit:   semantic.NewInt(section, cfg.ParamKey("cargo_limit")),
 		}
 		solar.Map(section)
 

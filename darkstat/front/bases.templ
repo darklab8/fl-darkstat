@@ -100,7 +100,7 @@ templ BasesTable(
 				<th style="width:50px;">System</th>
 				if shared.ShowDisco {
 					<th style="width:5px;">
-						@frmt.MultiLinestring([]string{"Not for", "tran", "sports"})
+						@frmt.MultiLinestring([]string{"For", "tran", "sports"})
 					</th>
 				}
 				<th style="width:25px;">
@@ -125,18 +125,29 @@ templ BasesTable(
 				}
 				if tab_mode == BaseTabTradesFrom || tab_mode == BaseTabTradesTo || tab_mode == BaseTabOres {
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Best", "Transport", "profit/v", "¢/sec"})
+						@frmt.MultiLinestring([]string{"Best", types.ToCapital(shared.ShipNames.Transport), "profit/v", "¢/sec"})
 					</th>
-					if shared.ShowDisco {
+					if shared.ShowDisco || shared.ShowFLSR {
 						<th style="width:50px;">
-							@frmt.MultiLinestring([]string{"Best", "Frigate", "profit/v", "¢/sec"})
+							@frmt.MultiLinestring([]string{"Best", types.ToCapital(shared.ShipNames.Frigate), "profit/v", "¢/sec"})
 						</th>
 						<th style="width:50px;">
-							@frmt.MultiLinestring([]string{"Best", "Freighter", "profit/v", "¢/sec"})
+							@frmt.MultiLinestring([]string{"Best", types.ToCapital(shared.ShipNames.Freighter), "profit/v", "¢/sec"})
 						</th>
 					}
 				}
 				<th style="width:100px;">Region</th>
+				if shared.ShowFLSR {
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "reachable"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "reachable"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "reachable"})
+					</th>
+				}
 				if tab_mode == BaseShowMissions {
 					<th style="width:50px;">Ship Ranks</th>
 					<th style="width:50px;">Enemies</th>
@@ -159,9 +170,11 @@ templ BasesTable(
 				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Infocard", "ID"})
 				</th>
-				<th style="width:5px;">
-					@frmt.MultiLinestring([]string{"Rech", "able"})
-				</th>
+				if !shared.ShowFLSR {
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Rech", "able"})
+					</th>
+				}
 				<th style="max-width:100%;"></th>
 			</tr>
 		</thead>
@@ -241,7 +254,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		base.Nickname.ToStr(),
 		BaseDetailedUrl(base, tab_mode),
 		pinm,
-		tab.WithTransportUnreachable(base.IsTransportUnreachable),
+		tab.WithTransportReachable(base.IsTransportReachable),
 	)) {
 		@tab.PinTd(base.Nickname.ToStr(), base.Name, pinm)
 		@tab.PinSelectLeftRight(pinm, BaseDetailedUrl(base, tab_mode))
@@ -268,7 +281,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		</td>
 		if shared.ShowDisco {
 			<td>
-				{ strconv.FormatBool(base.IsTransportUnreachable) }
+				{ strconv.FormatBool(base.IsTransportReachable) }
 			</td>
 		}
 		<td>{ base.SectorCoord }</td>
@@ -293,16 +306,16 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 			>
 				// routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteTransport) }
 				if routes.TransportProfitPerTime != nil {
-					{ fmt.Sprintf("%2.2f", *routes.TransportProfitPerTime * 100) }
+					{ FormatProfitPerTime(*routes.TransportProfitPerTime) }
 				} else {
 					0
 				}
 			</td>
-			if shared.ShowDisco {
+			if shared.ShowDisco || shared.ShowFLSR {
 				<td class="route_frigate">
 					// routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFrigate) }
 					if routes.FrigateProfitPerTime != nil {
-						{ fmt.Sprintf("%2.2f", *routes.FrigateProfitPerTime * 100) }
+						{ FormatProfitPerTime(*routes.FrigateProfitPerTime) }
 					} else {
 						0
 					}
@@ -310,7 +323,7 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 				<td class="route_freighter">
 					// routesinfo={ RoutesInfoJSON(base.BaseAllTradeRoutes, shared, trades.RouteFreighter) }
 					if routes.FreighterProfitPerTime != nil {
-						{ fmt.Sprintf("%2.2f", *routes.FreighterProfitPerTime * 100) }
+						{ FormatProfitPerTime(*routes.FreighterProfitPerTime) }
 					} else {
 						0
 					}
@@ -320,6 +333,23 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		<td>
 			@frmt.WriteRegionName(base.Region)
 		</td>
+		if shared.ShowFLSR {
+			<td class="seo">
+				if base.IsTransportReachable {
+					d_medium
+				}
+			</td>
+			<td class="seo">
+				if base.IsFrigateReachable {
+					d_large
+				}
+			</td>
+			<td class="seo">
+				if base.IsFreighterReachable {
+					d_small
+				}
+			</td>
+		}
 		if tab_mode == BaseShowMissions {
 			if base.Missions != nil {
 				<td>{ strings.Join(strings.Fields(fmt.Sprint(base.Missions.NpcRanksAtBase)), ",") }</td>
@@ -344,7 +374,9 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 		<td>{ fmt.Sprintf("%.0f", base.Pos.Z) }</td>
 		<td class="seo">{ strconv.Itoa(base.StridName) }</td>
 		<td class="seo">{ strconv.Itoa(base.InfocardID) }</td>
-		<td>{ frmt.FormatBoolAsYesNo(base.Reachable) }</td>
+		if !shared.ShowFLSR {
+			<td>{ frmt.FormatBoolAsYesNo(base.IsFreighterReachable) }</td>
+		}
 		@tab.TdInfoCardClick(infocarder.InfocardKey(base.Nickname), base.Nickname.ToStr(), pinm, shared, tab.InfocardClickOpts{})
 	}
 }
@@ -963,28 +995,30 @@ templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 			<tr class="flexed-tr">
 				<th style="width:200px;">Commodity</th>
 				<th style="width:50px;">
-					@frmt.MultiLinestring([]string{"Transport", "Profit/v/t", "¢ents/sec"})
+					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "Profit/v/t", "¢ents/sec"})
 				</th>
+				if shared.ShowDisco || shared.ShowFLSR {
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "Profit/v/t", "¢ents/sec"})
+					</th>
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "Profit/v/t", "¢ents/sec"})
+					</th>
+				}
 				if shared.ShowDisco {
-					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Frigate", "Profit/v/t", "¢ents/sec"})
-					</th>
-					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Freighter", "Profit/v/t", "¢ents/sec"})
-					</th>
 					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"kilo", "volumes", "to trade"})
 					</th>
 				}
 				<th style="width:50px;">
-					@frmt.MultiLinestring([]string{"Transport", "Time(sec)"})
+					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "Time(sec)"})
 				</th>
-				if shared.ShowDisco {
+				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Frigate", "Time(sec)"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "Time(sec)"})
 					</th>
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Freighter", "Time(sec)"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "Time(sec)"})
 					</th>
 				}
 				<th style="width:50px;">Profit/v</th>
@@ -1041,7 +1075,7 @@ templ TradeRouteHumanTime(route *configs_export.Route) {
 }
 
 templ TimeToHumanTime(time_ms cfg.MillisecondsI, time_s cfg.Seconds) {
-	if time_ms < trades.INF/2 {
+	if int32(time_s) < trades.INFthreshold {
 		{ fmt.Sprintf("%2.0f", math.Floor(time_s/60)) }m-{ fmt.Sprintf("%2.0f", time_s - 60*math.Floor(time_s/60)) }s
 	} else {
 		INF
@@ -1097,17 +1131,19 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 				{ trade_route.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.SellingGood.ShipClass) }
 			}
 		</td>
-		<td class="route_transport">{ fmt.Sprintf("%.2f", trade_route.Transport.GetProffitPerTime() * 100) }</td>
+		<td class="route_transport">{ FormatProfitPerTime(trade_route.Transport.GetProffitPerTime()) }</td>
+		if shared.ShowDisco || shared.ShowFLSR {
+			<td class="route_frigate">{ FormatProfitPerTime(trade_route.Frigate.GetProffitPerTime()) }</td>
+			<td class="route_freighter">{ FormatProfitPerTime(trade_route.Freighter.GetProffitPerTime()) }</td>
+		}
 		if shared.ShowDisco {
-			<td class="route_frigate">{ fmt.Sprintf("%.2f", trade_route.Frigate.GetProffitPerTime() * 100) }</td>
-			<td class="route_freighter">{ fmt.Sprintf("%.2f", trade_route.Freighter.GetProffitPerTime() * 100) }</td>
 			@FormatKiloVolumes(configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
 		}
 		<td>
 			<span class="tooltip">
 				@TradeRouteHumanTime(trade_route.Transport.Route)
 				<span class="tooltiptext">
-					if trade_route.Transport.Route.GetTimeMs() < trades.INF/2 {
+					if trade_route.Transport.Route.GetTimeMs() < trades.INFbelow {
 						{ fmt.Sprintf("%.0f", trade_route.Transport.Route.GetTimeS()) } secs
 					} else {
 						INF secs
@@ -1115,12 +1151,12 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 				</span>
 			</span>
 		</td>
-		if shared.ShowDisco {
+		if shared.ShowDisco || shared.ShowFLSR {
 			<td>
 				<span class="tooltip">
 					@TradeRouteHumanTime(trade_route.Frigate.Route)
 					<span class="tooltiptext">
-						if trade_route.Frigate.Route.GetTimeMs() < trades.INF/2 {
+						if trade_route.Frigate.Route.GetTimeMs() < trades.INFbelow {
 							{ fmt.Sprintf("%.0f", trade_route.Frigate.Route.GetTimeS()) } secs
 						} else {
 							INF secs
@@ -1132,7 +1168,7 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 				<span class="tooltip">
 					@TradeRouteHumanTime(trade_route.Freighter.Route)
 					<span class="tooltiptext">
-						if trade_route.Freighter.Route.GetTimeMs() < trades.INF/2 {
+						if trade_route.Freighter.Route.GetTimeMs() < trades.INFbelow {
 							{ fmt.Sprintf("%.0f", trade_route.Freighter.Route.GetTimeS()) } secs
 						} else {
 							INF secs
@@ -1232,12 +1268,12 @@ templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs
 		<p>{ ">" } TradeLaneDockingDelaySec: { strconv.Itoa(trades.TradeLaneDockingDelaySec) }</p>
 		<p>{ ">" } BaseDockingDelay: { strconv.Itoa(trades.BaseDockingDelay) }</p>
 		<br/>
-		@RouteInfo("Transport", TransportRoute, shared)
-		if shared.ShowDisco {
+		@RouteInfo(types.ToCapital(shared.ShipNames.Transport), TransportRoute, shared)
+		if shared.ShowDisco || shared.ShowFLSR {
 			<br/>
-			@RouteInfo("Frigate", FrigateRoute, shared)
+			@RouteInfo(types.ToCapital(shared.ShipNames.Frigate), FrigateRoute, shared)
 			<br/>
-			@RouteInfo("Freighter", FreighterRoute, shared)
+			@RouteInfo(types.ToCapital(shared.ShipNames.Freighter), FreighterRoute, shared)
 		}
 	}
 }
@@ -1245,7 +1281,20 @@ templ TradeRouteInfo(TransportRoute *configs_export.Route, FrigateRoute *configs
 templ RouteInfo(name string, route *configs_export.Route, shared *types.SharedData) {
 	<p>{ name } Route:</p>
 	<p>{ ">" } Avg Cruise Speed: { strconv.Itoa(route.GetCruiseSpeed()) }</p>
-	<p>{ ">" } Visit Freighter Only JHs: { strconv.FormatBool(route.GetCanVisitFreighterOnlyJH()) }</p>
+	if shared.ShowDisco {
+		<p>{ ">" } Visit Freighter Only JHs: { strconv.FormatBool(route.GetCanVisitFreighterOnlyJH()) }</p>
+	}
+	if shared.ShowFLSR {
+		if route.GetMapConfig().DockOpts.PlayersCanDockBerth {
+			<p>{ ">" } Can Dock Berth, small ships </p>
+		}
+		if route.GetMapConfig().DockOpts.PlayersCanDockMoorMedium {
+			<p>{ ">" } Can Dock Medium Moor, transports </p>
+		}
+		if route.GetMapConfig().DockOpts.PlayersCanDockMoorLarge {
+			<p>{ ">" } Can Dock Large Moor, liners </p>
+		}
+	}
 	for _, path := range route.GetPaths() {
 		if path.NextName != "" {
 			if path.Dist != 0 {

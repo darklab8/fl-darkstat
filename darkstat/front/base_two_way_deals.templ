@@ -47,6 +47,13 @@ func GetTwoRoutes(TwoWayDeals []*configs_export.TwoWayDeal, mode tab.ShowEmpty) 
 	return results
 }
 
+func FormatProfitPerTime(value float64) string {
+	if value*100 < 0.5 {
+		return "0.00"
+	}
+	return fmt.Sprintf("%.2f", value*100)
+}
+
 templ TwoWayTradesTable(
 	trade_routes *cache.Cached[configs_export.BestTradeDealsOutput],
 	shared *types.SharedData,
@@ -61,25 +68,25 @@ templ TwoWayTradesTable(
 					@frmt.MultiLinestring([]string{"Profit", "per", "volume"})
 				</th>
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"Transport", "cycle", "time"})
+					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "cycle", "time"})
 				</th>
-				if shared.ShowDisco {
+				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Frigate", "cycle", "time"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "cycle", "time"})
 					</th>
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Freighter", "cycle", "time"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "cycle", "time"})
 					</th>
 				}
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"Transport", "profit per", "vol & sec"})
+					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "profit per", "vol & sec"})
 				</th>
-				if shared.ShowDisco {
+				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Frigate", "profit per", "vol & sec"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "profit per", "vol & sec"})
 					</th>
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Frighter", "profit per", "vol & sec"})
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "profit per", "vol & sec"})
 					</th>
 				}
 				if shared.ShowDisco {
@@ -96,14 +103,14 @@ templ TwoWayTradesTable(
 					</th>
 				}
 				<th style="width:25px;">
-					@frmt.MultiLinestring([]string{"transport", "max gap", "time"})
+					@frmt.MultiLinestring([]string{shared.ShipNames.Transport, "max gap", "time"})
 				</th>
-				if shared.ShowDisco {
+				if shared.ShowDisco || shared.ShowFLSR {
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"frigate", "max gap", "time"})
+						@frmt.MultiLinestring([]string{shared.ShipNames.Frigate, "max gap", "time"})
 					</th>
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"freighter", "max gap", "time"})
+						@frmt.MultiLinestring([]string{shared.ShipNames.Freighter, "max gap", "time"})
 					</th>
 				}
 			</tr>
@@ -124,7 +131,7 @@ templ TwoWayTradesTable(
 						<span class="tooltip">
 							@TimeToHumanTime(cfg.MillisecondsI(two_way.TransportInfo.TwoWayTime*1000), two_way.TransportInfo.TwoWayTime)
 							<span class="tooltiptext">
-								if two_way.TransportInfo.TwoWayTime*1000 < float64(trades.INF/2) {
+								if two_way.TransportInfo.TwoWayTime*1000 < float64(trades.INFbelow) {
 									{ fmt.Sprintf("%.0f", two_way.TransportInfo.TwoWayTime) } secs
 								} else {
 									INF secs
@@ -132,13 +139,13 @@ templ TwoWayTradesTable(
 							</span>
 						</span>
 					</td>
-					if shared.ShowDisco {
+					if shared.ShowDisco || shared.ShowFLSR {
 						<td>
 							<span class="tooltip">
-								@TimeToHumanTime(cfg.MillisecondsI(two_way.FreighterInfo.TwoWayTime*1000), two_way.FreighterInfo.TwoWayTime)
+								@TimeToHumanTime(cfg.MillisecondsI(two_way.FrigateInfo.TwoWayTime*1000), two_way.FrigateInfo.TwoWayTime)
 								<span class="tooltiptext">
-									if two_way.FreighterInfo.TwoWayTime*1000 < float64(trades.INF/2) {
-										{ fmt.Sprintf("%.0f", two_way.FreighterInfo.TwoWayTime) } secs
+									if two_way.FrigateInfo.TwoWayTime*1000 < float64(trades.INFbelow) {
+										{ fmt.Sprintf("%.0f", two_way.FrigateInfo.TwoWayTime) } secs
 									} else {
 										INF secs
 									}
@@ -149,7 +156,7 @@ templ TwoWayTradesTable(
 							<span class="tooltip">
 								@TimeToHumanTime(cfg.MillisecondsI(two_way.FreighterInfo.TwoWayTime*1000), two_way.FreighterInfo.TwoWayTime)
 								<span class="tooltiptext">
-									if two_way.FreighterInfo.TwoWayTime*1000 < float64(trades.INF/2) {
+									if two_way.FreighterInfo.TwoWayTime*1000 < float64(trades.INFbelow) {
 										{ fmt.Sprintf("%.0f", two_way.FreighterInfo.TwoWayTime) } secs
 									} else {
 										INF secs
@@ -159,14 +166,14 @@ templ TwoWayTradesTable(
 						</td>
 					}
 					<td>
-						{ fmt.Sprintf("%.2f", two_way.TransportInfo.ProfitPerTime* 100) }
+						{ FormatProfitPerTime(two_way.TransportInfo.ProfitPerTime) }
 					</td>
-					if shared.ShowDisco {
+					if shared.ShowDisco || shared.ShowFLSR {
 						<td>
-							{ fmt.Sprintf("%.2f", two_way.FrigateInfo.ProfitPerTime* 100) }
+							{ FormatProfitPerTime(two_way.FrigateInfo.ProfitPerTime) }
 						</td>
 						<td>
-							{ fmt.Sprintf("%.2f", two_way.FreighterInfo.ProfitPerTime* 100) }
+							{ FormatProfitPerTime(two_way.FreighterInfo.ProfitPerTime) }
 						</td>
 					}
 					if shared.ShowDisco {
@@ -196,7 +203,7 @@ templ TwoWayTradesTable(
 					<td>
 						{ fmt.Sprintf("%.0f", math.Max(two_way.TransportInfo.Route1ConnectTime, two_way.TransportInfo.Route2ConnectTime)) }
 					</td>
-					if shared.ShowDisco {
+					if shared.ShowDisco || shared.ShowFLSR {
 						<td>
 							{ fmt.Sprintf("%.0f", math.Max(two_way.FrigateInfo.Route1ConnectTime, two_way.FrigateInfo.Route2ConnectTime)) }
 						</td>
