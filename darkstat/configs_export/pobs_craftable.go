@@ -142,17 +142,18 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 					}
 
 					cooking_rate := recipe.CookingRate.Get()
+					infocard_addition.WriteLineStr(string(fmt.Sprintf("Cooking: %d volume in minute", cooking_rate)))
+
 					var sb_time strings.Builder
-					sb_time.WriteString(string(fmt.Sprintf("Cooking: %d volume in minute", cooking_rate)))
-					sb_time.WriteString(" [")
+					sb_time.WriteString(fmt.Sprintf("Total recipe time: %.0f minutes", craft.CookMinutes))
 					if math.Floor(craft.CookMinutes/60) > 0 {
+						sb_time.WriteString(" [")
 						sb_time.WriteString(fmt.Sprintf("%2.0fh - ", math.Floor(craft.CookMinutes/60)))
+						sb_time.WriteString(fmt.Sprintf("%2.0fm", craft.CookMinutes-60*math.Floor(craft.CookMinutes/60)))
+						sb_time.WriteString("]")
 					}
-					sb_time.WriteString(fmt.Sprintf("%2.0fm", craft.CookMinutes-60*math.Floor(craft.CookMinutes/60)))
-					sb_time.WriteString("]")
 					infocard_addition.WriteLineStr(sb_time.String())
 
-					infocard_addition.WriteLineStr(string(fmt.Sprintf("Total recipe time: %.0f minutes", craft.CookMinutes)))
 					infocard_addition.WriteLineStr(string(fmt.Sprintf("Total recipe volume: %.0f", craft.TotalVolume)))
 
 					if level, ok := recipe.RequiredLevel.GetValue(); ok {
