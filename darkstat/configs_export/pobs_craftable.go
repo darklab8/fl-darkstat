@@ -117,7 +117,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 					}
 
 					cooking_rate := recipe.CookingRate.Get()
-					infocard_addition.WriteLineStr(string(fmt.Sprintf("Cooking: %d mats in minute", cooking_rate)))
+					infocard_addition.WriteLineStr(string(fmt.Sprintf("Cooking: %d volume in minute", cooking_rate)))
 
 					if level, ok := recipe.RequiredLevel.GetValue(); ok {
 						infocard_addition.WriteLineStr(string(fmt.Sprintf("Required core level: %d", level)))
