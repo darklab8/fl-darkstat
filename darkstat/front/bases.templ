@@ -550,7 +550,13 @@ templ BaseMarketGoodsBase(base_kind BaseKind, shared *types.SharedData) {
 							@frmt.MultiLinestring([]string{"Crafting", "Command"})
 						</th>
 						<th style="width:5px;">
-							@frmt.MultiLinestring([]string{"Required", "Core", "level"})
+							@frmt.MultiLinestring([]string{"Total", "recipe", "time", "(hum.fmt)"})
+						</th>
+						<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"recipe", "avg", "time", "minut."})
+						</th>
+						<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"Req.", "Core", "level"})
 						</th>
 						<th style="width:5px;">
 							@frmt.MultiLinestring([]string{"does", "prod", "uction", "loop"})
@@ -669,6 +675,14 @@ templ ShowSensitive(
 			{ children... }
 		}
 	}
+}
+
+func AvgCookTime(crafts []configs_export.CraftableInfo) float64 {
+	sum := 0.0
+	for _, craft := range crafts {
+		sum += craft.Disco.CookMinutes
+	}
+	return sum / float64(len(crafts))
 }
 
 templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*configs_export.MarketGood, tab_mode BaseMode, shared *types.SharedData) {
@@ -821,6 +835,25 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 										<span>{ recipe.Disco.Command }</span>
 									}
 								</div>
+							}
+						</td>
+						<td>
+							if len(good.CraftableInfos) > 0 {
+								<div style="display:flex;flex-direction:column">
+									for _, recipe := range good.CraftableInfos {
+										<span>
+											if math.Floor(recipe.Disco.CookMinutes/60) > 0 {
+												{ fmt.Sprintf("%2.0f", math.Floor(recipe.Disco.CookMinutes/60)) }h - 
+											}
+											{ fmt.Sprintf("%2.0f", recipe.Disco.CookMinutes - 60*math.Floor(recipe.Disco.CookMinutes/60)) }m
+										</span>
+									}
+								</div>
+							}
+						</td>
+						<td>
+							if len(good.CraftableInfos) != 0 {
+								{ fmt.Sprintf("%2.0f",  AvgCookTime(good.CraftableInfos)) }
 							}
 						</td>
 						<td>
@@ -1127,10 +1160,10 @@ templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 }
 
 templ TradeRouteHumanTime(route *configs_export.Route) {
-	@TimeToHumanTime(route.GetTimeMs(), route.GetTimeS())
+	@TimeToHumanTime(route.GetTimeS())
 }
 
-templ TimeToHumanTime(time_ms cfg.MillisecondsI, time_s cfg.Seconds) {
+templ TimeToHumanTime(time_s cfg.Seconds) {
 	if int32(time_s) < trades.INFthreshold {
 		{ fmt.Sprintf("%2.0f", math.Floor(time_s/60)) }m-{ fmt.Sprintf("%2.0f", time_s - 60*math.Floor(time_s/60)) }s
 	} else {

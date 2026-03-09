@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
@@ -99,6 +100,30 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 						craft.LoopProduction = does_loop
 					}
 
+					{
+						amount_volume_to_cook := 0.0
+						for _, item := range recipe.ConsumedItem {
+							name := item.Nickname.Get()
+							equip := e.Mapped.Equip().ItemsMap[name]
+							amount_volume_to_cook += equip.Volume.Get() * float64(item.Amount.Get())
+						}
+						for _, item := range recipe.ConsumedAlt {
+							item_volume := 0.0
+							for _, nickname := range item.Items {
+								name := nickname.Get()
+								equip := e.Mapped.Equip().ItemsMap[name]
+
+								item_volume += equip.Volume.Get() * float64(item.Amount.Get())
+							}
+							item_volume = item_volume / float64(len(item.Items))
+							amount_volume_to_cook += item_volume
+						}
+
+						cooking_rate := recipe.CookingRate.Get()
+						craft.TotalVolume = amount_volume_to_cook
+						craft.CookMinutes = amount_volume_to_cook / float64(cooking_rate)
+					}
+
 					market_good.CraftableInfos = append(market_good.CraftableInfos, CraftableInfo{Disco: craft})
 				}
 			}
@@ -117,7 +142,18 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 					}
 
 					cooking_rate := recipe.CookingRate.Get()
-					infocard_addition.WriteLineStr(string(fmt.Sprintf("Cooking: %d volume in minute", cooking_rate)))
+					var sb_time strings.Builder
+					sb_time.WriteString(string(fmt.Sprintf("Cooking: %d volume in minute", cooking_rate)))
+					sb_time.WriteString(" [")
+					if math.Floor(craft.CookMinutes/60) > 0 {
+						sb_time.WriteString(fmt.Sprintf("%2.0fh - ", math.Floor(craft.CookMinutes/60)))
+					}
+					sb_time.WriteString(fmt.Sprintf("%2.0fm", craft.CookMinutes-60*math.Floor(craft.CookMinutes/60)))
+					sb_time.WriteString("]")
+					infocard_addition.WriteLineStr(sb_time.String())
+
+					infocard_addition.WriteLineStr(string(fmt.Sprintf("Total recipe time: %.0f minutes", craft.CookMinutes)))
+					infocard_addition.WriteLineStr(string(fmt.Sprintf("Total recipe volume: %.0f", craft.TotalVolume)))
 
 					if level, ok := recipe.RequiredLevel.GetValue(); ok {
 						infocard_addition.WriteLineStr(string(fmt.Sprintf("Required core level: %d", level)))
@@ -138,11 +174,13 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 					}
 					for _, item := range recipe.ConsumedItem {
 						name := item.Nickname.Get()
+						volume := 0.0
 						if equip, ok := e.Mapped.Equip().ItemsMap[name]; ok {
 							name = e.GetInfocardName(equip.IdsName.Get(), name)
+							volume = equip.Volume.Get()
 						}
 						amount := item.Amount.Get()
-						infocard_addition.WriteLineStr(string(fmt.Sprintf("] consumed: %s (%d amount)", name, amount)))
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("] consumed: %s (%d amount, %.0f vol)", name, amount, volume*float64(amount))))
 					}
 					for _, item := range recipe.ConsumedAlt {
 						amount := item.Amount.Get()
@@ -151,10 +189,12 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 						for _, nickname := range item.Items {
 							name := nickname.Get()
+							volume := 0.0
 							if equip, ok := e.Mapped.Equip().ItemsMap[name]; ok {
 								name = e.GetInfocardName(equip.IdsName.Get(), name)
+								volume = equip.Volume.Get()
 							}
-							infocard_addition.WriteLineStr(string(fmt.Sprintf("] --- %s", name)))
+							infocard_addition.WriteLineStr(string(fmt.Sprintf("] --- %s (%.0f vol)", name, volume*float64(amount))))
 						}
 					}
 					for _, item := range recipe.ProducedItem {

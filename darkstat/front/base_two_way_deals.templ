@@ -2,7 +2,6 @@ package front
 
 import (
 	"fmt"
-	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkstat/cache"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
@@ -129,7 +128,7 @@ templ TwoWayTradesTable(
 					</td>
 					<td>
 						<span class="tooltip">
-							@TimeToHumanTime(cfg.MillisecondsI(two_way.TransportInfo.TwoWayTime*1000), two_way.TransportInfo.TwoWayTime)
+							@TimeToHumanTime(two_way.TransportInfo.TwoWayTime)
 							<span class="tooltiptext">
 								if two_way.TransportInfo.TwoWayTime*1000 < float64(trades.INFbelow) {
 									{ fmt.Sprintf("%.0f", two_way.TransportInfo.TwoWayTime) } secs
@@ -142,7 +141,7 @@ templ TwoWayTradesTable(
 					if shared.ShowDisco || shared.ShowFLSR {
 						<td>
 							<span class="tooltip">
-								@TimeToHumanTime(cfg.MillisecondsI(two_way.FrigateInfo.TwoWayTime*1000), two_way.FrigateInfo.TwoWayTime)
+								@TimeToHumanTime(two_way.FrigateInfo.TwoWayTime)
 								<span class="tooltiptext">
 									if two_way.FrigateInfo.TwoWayTime*1000 < float64(trades.INFbelow) {
 										{ fmt.Sprintf("%.0f", two_way.FrigateInfo.TwoWayTime) } secs
@@ -154,7 +153,7 @@ templ TwoWayTradesTable(
 						</td>
 						<td>
 							<span class="tooltip">
-								@TimeToHumanTime(cfg.MillisecondsI(two_way.FreighterInfo.TwoWayTime*1000), two_way.FreighterInfo.TwoWayTime)
+								@TimeToHumanTime(two_way.FreighterInfo.TwoWayTime)
 								<span class="tooltiptext">
 									if two_way.FreighterInfo.TwoWayTime*1000 < float64(trades.INFbelow) {
 										{ fmt.Sprintf("%.0f", two_way.FreighterInfo.TwoWayTime) } secs

@@ -76,6 +76,8 @@ type CraftableDiscoInfo struct {
 	Products       []Product
 	RequiredLevel  *int
 	LoopProduction bool
+	CookMinutes    float64
+	TotalVolume    float64
 }
 
 func (g MarketGood) GetPriceBaseBuysFor() int {
