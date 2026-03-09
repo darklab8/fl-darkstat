@@ -28,15 +28,13 @@ type MarketGood struct {
 	NotBuyable       bool `json:"-" swaggerignore:"true"`
 	cfg.Reachability `json:"-" swaggerignore:"true"`
 
-	DiscoveryFactoryName *string `json:"-" swaggerignore:"true"`
-
 	PoBGood *ShopItem
 	PoB     *PoB
 
 	BaseInfo
 
-	LootInfo          *LootInfo
-	CraftableFLSRInfo []CraftableFLSRInfo
+	LootInfo       *LootInfo
+	CraftableInfos []CraftableInfo
 }
 
 type Ingredient struct {
@@ -50,12 +48,34 @@ type Product struct {
 	Nickname string
 }
 
+type IngredientAlt struct {
+	Amount int
+	Names  []string
+}
+
+type CraftableInfo struct {
+	FLSR  CraftableFLSRInfo
+	Disco CraftableDiscoInfo
+}
+
 type CraftableFLSRInfo struct {
 	Ingredients []Ingredient
 	BaseNames   []string
 	CostPrice   int
 	Command     string
 	Products    []Product
+}
+
+type FactionBonus struct {
+	Name  string
+	Bonus float64
+}
+type CraftableDiscoInfo struct {
+	FactoryName    *string
+	Command        string
+	Products       []Product
+	RequiredLevel  *int
+	LoopProduction bool
 }
 
 func (g MarketGood) GetPriceBaseBuysFor() int {
@@ -151,7 +171,7 @@ func (e *Exporter) GetCommodities(ctx context.Context) []*Commodity {
 			var infocard_addition infocarder.InfocardBuilder
 			if e.Mapped.Discovery != nil {
 				if player_bonuses, ok := e.Mapped.Discovery.Minecontrol.PlayerBonusByOreNickname[commodity.Nickname]; ok {
-					infocard_addition.WriteLineStr(`MINING BONUSES (darkstat):`)
+					infocard_addition.WriteLineStr(`MINING BONUSES (parsed):`)
 					for _, player_bonus := range player_bonuses {
 						id_nickname := player_bonus.IDNickname.Get()
 						id_name := id_nickname

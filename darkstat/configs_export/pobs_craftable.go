@@ -8,7 +8,6 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
-	"github.com/darklab8/fl-darkstat/configs/discovery/base_recipe_items"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -23,8 +22,12 @@ func (e *Exporter) pob_produced() map[string]bool {
 
 	if e.Mapped.Discovery != nil {
 		for _, recipe := range e.Mapped.Discovery.BaseRecipeItems.Recipes {
-			for _, produced := range recipe.ProcucedItem {
-				e.craftable_cached[produced.Get()] = true
+			for _, produced := range recipe.ProducedItem {
+				e.craftable_cached[produced.Nickname.Get()] = true
+
+				for _, alternates := range produced.FactionProduced {
+					e.craftable_cached[alternates.Nickname.Get()] = true
+				}
 			}
 		}
 	}
@@ -71,28 +74,145 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 		var infocard_addition infocarder.InfocardBuilder
 		if e.Mapped.Discovery != nil {
-			var any_recipe *base_recipe_items.CommodityRecipe
+			if recipes, ok := e.Mapped.Discovery.BaseRecipeItems.RecipePerProduced[market_good.Nickname]; ok {
+				for _, recipe := range recipes {
+					craft := CraftableDiscoInfo{}
+
+					if command_group, ok := recipe.CraftType.GetValue(); ok {
+						if command_shortcut, ok2 := recipe.ShortCutNum.GetValue(); ok2 {
+							craft.Command = string(fmt.Sprintf("/craft %s %d", command_group, command_shortcut))
+						}
+					}
+
+					if craft_type, ok := recipe.CraftType.GetValue(); ok {
+						if factory, ok := e.Mapped.Discovery.BaseRecipeModules.FactoryByCraftType[craft_type]; ok {
+							module_name := factory.Infotext.Get()
+							craft.FactoryName = ptr.Ptr(module_name)
+						}
+					}
+
+					if required_level, ok := recipe.RequiredLevel.GetValue(); ok {
+						craft.RequiredLevel = ptr.Ptr(required_level)
+					}
+
+					if does_loop, ok := recipe.LoopProduction.GetValue(); ok {
+						craft.LoopProduction = does_loop
+					}
+
+					market_good.CraftableInfos = append(market_good.CraftableInfos, CraftableInfo{Disco: craft})
+				}
+			}
 			if recipes, ok := e.Mapped.Discovery.BaseRecipeItems.RecipePerProduced[market_good.Nickname]; ok {
 
 				infocard_addition.WriteLineStr(`CRAFTING RECIPES:`)
-				for _, recipe := range recipes {
-					infocard_addition.WriteLineStr(string(recipe.Model.GetOriginalType()))
+				for index, recipe := range recipes {
+					craft := market_good.CraftableInfos[index].Disco
+					infocard_addition.WriteLineStrBold(string(fmt.Sprintf("[RECIPE #%d] (translated)", index+1)))
+
+					if craft.Command != "" {
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("command: %s", craft.Command)))
+					}
+					if craft.FactoryName != nil {
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("Factory: %s", *craft.FactoryName)))
+					}
+
+					cooking_rate := recipe.CookingRate.Get()
+					infocard_addition.WriteLineStr(string(fmt.Sprintf("Cooking: %d mats in minute", cooking_rate)))
+
+					if level, ok := recipe.RequiredLevel.GetValue(); ok {
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("Required core level: %d", level)))
+					}
+					if does_loop, ok := recipe.LoopProduction.GetValue(); ok {
+						if does_loop {
+							infocard_addition.WriteLineStr(string("recipe does loop in production"))
+						}
+					}
+
+					for _, catalyst := range recipe.Catalysts {
+						name := catalyst.Nickname.Get()
+						if equip, ok := e.Mapped.Equip().ItemsMap[name]; ok {
+							name = e.GetInfocardName(equip.IdsName.Get(), name)
+						}
+						amount := catalyst.Amount.Get()
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("* catalyst: %s (%d amount)", name, amount)))
+					}
+					for _, item := range recipe.ConsumedItem {
+						name := item.Nickname.Get()
+						if equip, ok := e.Mapped.Equip().ItemsMap[name]; ok {
+							name = e.GetInfocardName(equip.IdsName.Get(), name)
+						}
+						amount := item.Amount.Get()
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("] consumed: %s (%d amount)", name, amount)))
+					}
+					for _, item := range recipe.ConsumedAlt {
+						amount := item.Amount.Get()
+
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("] consumed one of next items (in %d amount):", amount)))
+
+						for _, nickname := range item.Items {
+							name := nickname.Get()
+							if equip, ok := e.Mapped.Equip().ItemsMap[name]; ok {
+								name = e.GetInfocardName(equip.IdsName.Get(), name)
+							}
+							infocard_addition.WriteLineStr(string(fmt.Sprintf("] --- %s", name)))
+						}
+					}
+					for _, item := range recipe.ProducedItem {
+						name := item.Nickname.Get()
+						if equip, ok := e.Mapped.Equip().ItemsMap[name]; ok {
+							name = e.GetInfocardName(equip.IdsName.Get(), name)
+						}
+						amount := item.Amount.Get()
+						var sb strings.Builder
+						sb.WriteString(string(fmt.Sprintf("> produced: %s (%d amount)", name, amount)))
+						if len(item.FactionProduced) > 0 {
+							sb.WriteString(" or alternatively:")
+						}
+
+						infocard_addition.WriteLineStr(sb.String())
+
+						for key, value := range item.FactionProduced {
+							faction_name := key
+							if group, ok := e.Mapped.InitialWorld.GroupsMap[faction_name]; ok {
+								faction_name = e.GetInfocardName(group.IdsName.Get(), faction_name)
+							}
+							name := value.Nickname.Get()
+							if equip, ok := e.Mapped.Equip().ItemsMap[name]; ok {
+								name = e.GetInfocardName(equip.IdsName.Get(), name)
+							}
+							amount := value.Amount.Get()
+
+							infocard_addition.WriteLineStr(string(fmt.Sprintf("> --- [%s (%d amount) if %s]", name, amount, faction_name)))
+						}
+					}
+
+					if len(recipe.AffiliationBonus) > 0 {
+						infocard_addition.WriteLineStr("# faction multipliers of needed mats:")
+					}
+					if restricted, ok := recipe.Restricted.GetValue(); ok {
+						if restricted {
+							infocard_addition.WriteLineStr("# !!! also restricted to only factions below:")
+						}
+					}
+					for _, item := range recipe.AffiliationBonus {
+						faction_name := item.FactionNickname.Get()
+						if group, ok := e.Mapped.InitialWorld.GroupsMap[faction_name]; ok {
+							faction_name = e.GetInfocardName(group.IdsName.Get(), faction_name)
+						}
+						amount := item.BonusMultiplier.Get()
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("# --- %s (%.2f multiplier)", faction_name, amount)))
+					}
+
+					infocard_addition.WriteLineStr("")
+
+					infocard_addition.WriteLineStr(fmt.Sprintf("%s ; ([RECIPE #%d] original)", string(recipe.GetOriginalType()), index+1))
 					for _, param := range GetModelWithoutLastComments(&recipe.Model) {
 						infocard_addition.WriteLineStr(string(param.ToString(inireader.WithComments(false))))
 					}
 					infocard_addition.WriteLineStr("")
-					any_recipe = recipe
 				}
 			}
 
-			if any_recipe != nil {
-				if craft_type, ok := any_recipe.CraftType.GetValue(); ok {
-					if factory, ok := e.Mapped.Discovery.BaseRecipeModules.FactoryByCraftType[craft_type]; ok {
-						module_name := factory.Infotext.Get()
-						market_good.DiscoveryFactoryName = ptr.Ptr(module_name)
-					}
-				}
-			}
 		}
 		if e.Mapped.FLSR != nil {
 			if e.Mapped.FLSR.FLSRRecipes != nil {
@@ -145,36 +265,34 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 
 						command := strings.ReplaceAll(string(recipe.GetOriginalType()), "[", "")
 						command = strings.ReplaceAll(command, "]", "")
-						recipe_info.Command = command
+						recipe_info.Command = fmt.Sprintf("/craft %s", command)
 
-						market_good.CraftableFLSRInfo = append(market_good.CraftableFLSRInfo, recipe_info)
+						market_good.CraftableInfos = append(market_good.CraftableInfos, CraftableInfo{FLSR: recipe_info})
 					}
 
-					infocard_addition.WriteLineStr(`CRAFTING RECIPES (translated):`)
-					for index, recipe := range market_good.CraftableFLSRInfo {
-						infocard_addition.WriteLineStr(string(fmt.Sprintf("[Recipe #%d]", index)))
-						infocard_addition.WriteLineStr(string(fmt.Sprintf("command: /craft %s", recipe.Command)))
-						infocard_addition.WriteLineStr(string(fmt.Sprintf("recipe cost: %d $ sirius credits", recipe.CostPrice)))
-						for _, ingredient := range recipe.Ingredients {
+					infocard_addition.WriteLineStr(`CRAFTING RECIPES:`)
+					for index, recipe := range market_good.CraftableInfos {
+						infocard_addition.WriteLineStrBold(string(fmt.Sprintf("[RECIPE #%d] (translated)", index+1)))
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("command: %s", recipe.FLSR.Command)))
+						infocard_addition.WriteLineStr(string(fmt.Sprintf("recipe cost: %d $ sirius credits", recipe.FLSR.CostPrice)))
+						for _, ingredient := range recipe.FLSR.Ingredients {
 							infocard_addition.WriteLineStr(string(fmt.Sprintf("ingredient: %s (%d amount)", ingredient.Name, ingredient.Amount)))
 						}
-						if len(recipe.BaseNames) > 0 {
-							for _, base := range recipe.BaseNames {
+						if len(recipe.FLSR.BaseNames) > 0 {
+							for _, base := range recipe.FLSR.BaseNames {
 								infocard_addition.WriteLineStr(string(fmt.Sprintf("base: %s", base)))
 							}
 						}
 
-						for _, product := range recipe.Products {
+						for _, product := range recipe.FLSR.Products {
 							infocard_addition.WriteLineStr(string(fmt.Sprintf("produces: %s (%d amount)", product.Name, product.Amount)))
 						}
 
 						infocard_addition.WriteLineStr("")
-					}
 
-					infocard_addition.WriteLineStr(`CRAFTING RECIPES (original):`)
-					for _, recipe := range recipes {
-						infocard_addition.WriteLineStr(string(recipe.GetOriginalType()))
-						for _, param := range GetModelWithoutLastComments(&recipe.Model) {
+						original_recipe := recipes[index]
+						infocard_addition.WriteLineStr(fmt.Sprintf("%s ; (#%d original)", string(original_recipe.GetOriginalType()), index+1))
+						for _, param := range GetModelWithoutLastComments(&original_recipe.Model) {
 							infocard_addition.WriteLineStr(string(param.ToString(inireader.WithComments(false))))
 						}
 						infocard_addition.WriteLineStr("")

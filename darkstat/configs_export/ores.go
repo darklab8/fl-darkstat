@@ -255,9 +255,9 @@ func (e *Exporter) NewOreBase(input_data NewOreBaseInput) *Base {
 			for _, recipe := range recipes {
 				recipe_produces_only_commodities := true
 
-				for _, produced := range recipe.ProcucedItem {
+				for _, produced := range recipe.ProducedItem {
 
-					_, is_commodity := e.Mapped.Equip().CommoditiesMap[produced.Get()]
+					_, is_commodity := e.Mapped.Equip().CommoditiesMap[produced.Nickname.Get()]
 					if !is_commodity {
 						recipe_produces_only_commodities = false
 						break
@@ -266,8 +266,8 @@ func (e *Exporter) NewOreBase(input_data NewOreBaseInput) *Base {
 				}
 
 				if recipe_produces_only_commodities {
-					for _, produced := range recipe.ProcucedItem {
-						commodity_produced := produced.Get()
+					for _, produced := range recipe.ProducedItem {
+						commodity_produced := produced.Nickname.Get()
 
 						if _, ok := added_goods[commodity_produced]; ok {
 							continue

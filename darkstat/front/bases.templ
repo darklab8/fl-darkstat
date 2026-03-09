@@ -545,6 +545,17 @@ templ BaseMarketGoodsBase(base_kind BaseKind, shared *types.SharedData) {
 					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"Factory", "name"})
 					</th>
+					if shared.ShowDisco {
+						<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"Crafting", "Command"})
+						</th>
+						<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"Required", "Core", "level"})
+						</th>
+						<th style="width:5px;">
+							@frmt.MultiLinestring([]string{"does", "prod", "uction", "loop"})
+						</th>
+					}
 					if shared.ShowFLSR {
 						<th style="width:5px;">
 							@frmt.MultiLinestring([]string{"Recipe", "Cost ($)", "credits"})
@@ -579,21 +590,23 @@ templ BaseMarketGoodsBase(base_kind BaseKind, shared *types.SharedData) {
 						@frmt.MultiLinestring([]string{"PosZ"})
 					</th>
 				}
-				<th style="width:5px;">
-					@frmt.MultiLinestring([]string{"Vol", "ume"})
-				</th>
-				<th style="width:5px;">
-					@frmt.MultiLinestring([]string{"comm.", "ship", "class"})
-				</th>
-				<th style="width:5px;">
-					@frmt.MultiLinestring([]string{"Lev.", "Req."})
-				</th>
-				<th style="width:5px;">
-					@frmt.MultiLinestring([]string{"Rep.", "Req."})
-				</th>
-				<th style="width:5px;">
-					@frmt.MultiLinestring([]string{"Base", "Sells"})
-				</th>
+				if base_kind != BasePOBCrafts {
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Vol", "ume"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"comm.", "ship", "class"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Lev.", "Req."})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Rep.", "Req."})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Base", "Sells"})
+					</th>
+				}
 				// <th style="width:10px;">
 				// 	@frmt.MultiLinestring([]string{"Price", "Modifier"})
 				// </th>
@@ -778,13 +791,19 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 					}
 				} else if GetBaseKind(shared, name) == BasePOBCrafts {
 					<td>
-						if good.DiscoveryFactoryName != nil {
-							{ *good.DiscoveryFactoryName }
-						} else if len(good.CraftableFLSRInfo) > 0 {
+						if shared.ShowDisco {
 							<div style="display:flex;flex-direction:column">
-								for _, recipe := range good.CraftableFLSRInfo {
-									if len(recipe.BaseNames) > 0 {
-										for _, base := range recipe.BaseNames {
+								if len(good.CraftableInfos) > 0 {
+									if good.CraftableInfos[0].Disco.FactoryName != nil {
+										<span>{ *good.CraftableInfos[0].Disco.FactoryName }</span>
+									}
+								}
+							</div>
+						} else if shared.ShowFLSR {
+							<div style="display:flex;flex-direction:column">
+								for _, recipe := range good.CraftableInfos {
+									if len(recipe.FLSR.BaseNames) > 0 {
+										for _, base := range recipe.FLSR.BaseNames {
 											<span>{ base }</span>
 										}
 									} else {
@@ -794,18 +813,53 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 							</div>
 						}
 					</td>
+					if shared.ShowDisco {
+						<td>
+							if len(good.CraftableInfos) > 0 {
+								<div style="display:flex;flex-direction:column">
+									for _, recipe := range good.CraftableInfos {
+										<span>{ recipe.Disco.Command }</span>
+									}
+								</div>
+							}
+						</td>
+						<td>
+							if len(good.CraftableInfos) > 0 {
+								<div style="display:flex;flex-direction:column">
+									for _, recipe := range good.CraftableInfos {
+										<span>
+											if recipe.Disco.RequiredLevel != nil {
+												{ strconv.Itoa(*recipe.Disco.RequiredLevel) }
+											}
+										</span>
+									}
+								</div>
+							}
+						</td>
+						<td>
+							if len(good.CraftableInfos) > 0 {
+								<div style="display:flex;flex-direction:column">
+									for _, recipe := range good.CraftableInfos {
+										<span>
+											{ strconv.FormatBool(recipe.Disco.LoopProduction) }
+										</span>
+									}
+								</div>
+							}
+						</td>
+					}
 					if shared.ShowFLSR {
 						<td>
 							<div style="display:flex;flex-direction:column">
-								for _, recipe := range good.CraftableFLSRInfo {
-									<span>{ strconv.Itoa(recipe.CostPrice) }</span>
+								for _, recipe := range good.CraftableInfos {
+									<span>{ strconv.Itoa(recipe.FLSR.CostPrice) }</span>
 								}
 							</div>
 						</td>
 						<td>
 							<div style="display:flex;flex-direction:column">
-								for _, recipe := range good.CraftableFLSRInfo {
-									for _, product := range recipe.Products {
+								for _, recipe := range good.CraftableInfos {
+									for _, product := range recipe.FLSR.Products {
 										if product.Nickname == good.Nickname {
 											<span>{ strconv.Itoa(product.Amount) }</span>
 										} else {
@@ -816,10 +870,10 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 							</div>
 						</td>
 						<td>
-							if len(good.CraftableFLSRInfo) > 0 {
+							if len(good.CraftableInfos) > 0 {
 								<div style="display:flex;flex-direction:column">
-									for _, recipe := range good.CraftableFLSRInfo {
-										<span>{ "/craft "+recipe.Command }</span>
+									for _, recipe := range good.CraftableInfos {
+										<span>{ recipe.FLSR.Command }</span>
 									}
 								</div>
 							}
@@ -833,11 +887,13 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 					</td>
 					<td>{ strconv.Itoa(good.PriceBaseSellsFor) }</td>
 				}
-				<td>{ fmt.Sprintf("%.0f", good.Volume) }</td>
-				<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
-				<td>{ strconv.Itoa(good.LevelRequired) }</td>
-				<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
-				<td>{ frmt.FormatBaseSells(good.BaseSells) }</td>
+				if GetBaseKind(shared, name) != BasePOBCrafts {
+					<td>{ fmt.Sprintf("%.0f", good.Volume) }</td>
+					<td>{ frmt.FormattedShipClassOfCommodity2(good.ShipClass) }</td>
+					<td>{ strconv.Itoa(good.LevelRequired) }</td>
+					<td>{ fmt.Sprintf("%.2f", good.RepRequired) }</td>
+					<td>{ frmt.FormatBaseSells(good.BaseSells) }</td>
+				}
 				// <td>{ fmt.Sprintf("%.2f", good.PriceModifier) }</td>
 				<td>
 					if good.LootInfo != nil {

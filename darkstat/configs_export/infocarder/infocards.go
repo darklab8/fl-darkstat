@@ -75,6 +75,13 @@ func (i *InfocardBuilder) WriteLineStr(phrase_strs ...string) {
 	}
 	i.Lines = append(i.Lines, InfocardLine{Phrases: phrases})
 }
+func (i *InfocardBuilder) WriteLineStrBold(phrase_strs ...string) {
+	var phrases []InfocardPhrase
+	for _, phrase := range phrase_strs {
+		phrases = append(phrases, InfocardPhrase{Phrase: phrase, Bold: true})
+	}
+	i.Lines = append(i.Lines, InfocardLine{Phrases: phrases})
+}
 
 type InfocardBuilder struct {
 	Lines Infocard
