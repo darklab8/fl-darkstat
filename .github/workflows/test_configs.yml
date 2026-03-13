@@ -26,7 +26,7 @@ jobs:
         id: cache-freelancer
         uses: actions/cache@v3
         with:
-          key: ${{ runner.os }}-${{ github.workspace }}/${{ matrix.freelancer-mod }}-freelancer
+          key: ${{ runner.os }}-${{ github.workspace }}/${{ matrix.freelancer-mod }}-freelancer-configs
           path: "${{ github.workspace }}/${{ matrix.freelancer-mod }}"
       - uses: darklab8/infra/.github/actions/checkout-freelancer@master
         with:

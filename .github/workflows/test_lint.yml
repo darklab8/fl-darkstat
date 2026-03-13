@@ -17,7 +17,7 @@ jobs:
         id: cache-freelancer
         uses: actions/cache@v3
         with:
-          key: ${{ runner.os }}-${{ github.workspace }}/discovery-freelancer
+          key: ${{ runner.os }}-${{ github.workspace }}/discovery-freelancer-lint
           path: "${{ github.workspace }}/fl-data"
       - name: Checkout Freelancer
         uses: darklab8/infra/.github/actions/checkout-freelancer@master
