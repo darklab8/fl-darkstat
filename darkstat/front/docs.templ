@@ -164,6 +164,15 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 				display: block;
 				max-width: 100px;
 			}
+			menu {
+				font-size: 1.3em;
+			}
+			menu .section {
+				font-size: 1.5em;
+			}
+			menu a {
+				text-decoration: none;
+			}
         </style>
 		<returntotop>
 			<a href="#top">Back to top</a>
@@ -171,33 +180,11 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 		<textbody>
 			<h1>Documentation to <a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>darkstat</a></h1>
 			<menu>
+				<span class="section">Vanilla features:</span>
 				<ul>
 					<li>
 						@SectionLink(HeaderAvailableTags)
 					</li>
-					if shared.ShowDisco {
-						<li>
-							@SectionLink(HeaderDiscoCoordsForWaypoints)
-						</li>
-						<li>
-							@SectionLink(HeaderDiscoTechCompat)
-						</li>
-					}
-					if shared.ShowDisco {
-						<li>
-							@SectionLink(HeaderAutoUpdate)
-						</li>
-					}
-					if shared.ShowDisco {
-						<li>
-							@SectionLink(HeaderDiscoCommodityVolumes)
-						</li>
-					}
-					if shared.ShowDisco|| shared.ShowFLSR {
-						<li>
-							@SectionLink(shared.CraftableBaseName)
-						</li>
-					}
 					<li>
 						@SectionLink(HeaderLootable)
 					</li>
@@ -222,19 +209,6 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 					<li>
 						@SectionLink(HeaderLegendExtra)
 					</li>
-					if shared.ShowDisco {
-						<li>
-							@SectionLink(HeaderPOBs)
-						</li>
-						<li>
-							<a href="#how_to_turn_pob_feature_on">
-								{ HeaderPoBsHowToTurnOn }
-							</a>
-						</li>
-						<li>
-							@SectionLink(HeaderDiscoKiloVolumes)
-						</li>
-					}
 					<li>
 						@SectionLink(HeaderDifferentThemes)
 					</li>
@@ -248,6 +222,45 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 						@SectionLink(HeadersContributeToDocs)
 					</li>
 				</ul>
+				if shared.ShowDisco {
+					<span class="section">Disco features:</span>
+					<ul>
+						<li>
+							@SectionLink(HeaderDiscoCoordsForWaypoints)
+						</li>
+						<li>
+							@SectionLink(HeaderDiscoTechCompat)
+						</li>
+						<li>
+							@SectionLink(HeaderAutoUpdate)
+						</li>
+						<li>
+							@SectionLink(HeaderDiscoCommodityVolumes)
+						</li>
+						<li>
+							@SectionLink(HeaderDiscoKiloVolumes)
+						</li>
+						<li>
+							@SectionLink(shared.CraftableBaseName)
+						</li>
+						<li>
+							@SectionLink(HeaderPOBs)
+						</li>
+						<li>
+							<a href="#how_to_turn_pob_feature_on">
+								{ HeaderPoBsHowToTurnOn }
+							</a>
+						</li>
+					</ul>
+				}
+				if shared.ShowFLSR {
+					FLSR features
+					<ul>
+						<li>
+							@SectionLink(shared.CraftableBaseName)
+						</li>
+					</ul>
+				}
 			</menu>
 			@SectionHeader(HeaderAvailableTags)
 			<p>
