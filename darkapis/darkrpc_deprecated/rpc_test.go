@@ -12,10 +12,6 @@ import (
 )
 
 func TestRpc(t *testing.T) {
-	if true { // not in  use anyway
-		return
-	}
-
 	ctx := context.Background()
 	app_data := router.GetAppDataFixture(ctx)
 
@@ -42,15 +38,13 @@ func TestRpc(t *testing.T) {
 		assert.True(t, *reply)
 	})
 
-	if false { // we don't use it in prod, therefore can be skipped maintanance of tests
-		// Setup code for given condition goes here
-		t.Run("GetBaseCheck", func(t *testing.T) {
-			var reply Reply
-			err := client.GetBases(args, &reply)
-			logus.Log.CheckPanic(err, "failed to get bases")
-			fmt.Println("Bases[0]=", reply.Bases[0])
-		})
-	}
+	// Setup code for given condition goes here
+	t.Run("GetBaseCheck", func(t *testing.T) {
+		var reply Reply
+		err := client.GetBases(args, &reply)
+		logus.Log.CheckPanic(err, "failed to get bases")
+		fmt.Println("Bases[0]=", reply.Bases[0])
+	})
 
 	// Teardown code for given condition goes here
 	srv.Close()
