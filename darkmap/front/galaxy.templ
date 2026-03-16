@@ -2,7 +2,9 @@ package front
 
 import (
 	"fmt"
+	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"strings"
 )
@@ -112,6 +114,55 @@ templ GalalaxyMap(data *export_front.Export) {
 		}
 		<system-title>Sirius</system-title>
 	</centeralizer->
+}
+
+templ GalaxyGrid() {
+	<style>
+		background- {
+			display: block;
+			height: 100vh;
+			width: 100vw;
+			display: flex;
+			justify-content: center;
+		}
+		map- {
+			width: 100%;
+			height: 100%;
+		}
+
+		.panzoom-parent{
+			position: relative;
+			box-sizing: border-box;
+
+			background-color: black;
+			background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../static/Sirius_Map.png);
+			background-size: cover;
+			border: 0.2em rgb(25, 47, 96) solid;
+		}
+		.panzoom{
+			position: relative;
+			box-sizing: border-box;
+
+			height: calc(100vh - 2.4em);
+			top: 2.4em;
+			width: calc(100vh - 2.4em);
+			margin: 0 auto;
+			box-sizing: border-box;
+		}
+
+	</style>
+	<background->
+		<div class="panzoom-parent">
+			<div class="panzoom">
+				<map->
+					<content->
+						{ children... }
+					</content->
+				</map->
+			</div>
+		</div>
+	</background->
+	@core_front.StaticFile(static_front.MapGalaxyJS)
 }
 
 type SystemFaction int8

@@ -6,9 +6,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 )
 
-//go:embed custom.js
-var CustomJSContent string
-
 //go:embed panzoom.min.js
 var PanzoomJSContent string
 
@@ -18,9 +15,21 @@ var PanzoomJS core_types.StaticFile = core_types.StaticFile{
 	Kind:     core_types.StaticFileJS,
 }
 
+//go:embed custom.js
+var CustomJSContent string
+
 var CustomJS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomJSContent,
 	Filename: "custom.js",
+	Kind:     core_types.StaticFileJS,
+}
+
+//go:embed map_galaxy.js
+var MapGalaxyJSContent string
+
+var MapGalaxyJS core_types.StaticFile = core_types.StaticFile{
+	Content:  MapGalaxyJSContent,
+	Filename: "map_galaxy.js",
 	Kind:     core_types.StaticFileJS,
 }
 
