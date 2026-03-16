@@ -9,6 +9,15 @@ import (
 //go:embed custom.js
 var CustomJSContent string
 
+//go:embed panzoom.min.js
+var PanzoomJSContent string
+
+var PanzoomJS core_types.StaticFile = core_types.StaticFile{
+	Content:  PanzoomJSContent,
+	Filename: "panzoom.min.js",
+	Kind:     core_types.StaticFileJS,
+}
+
 var CustomJS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomJSContent,
 	Filename: "custom.js",

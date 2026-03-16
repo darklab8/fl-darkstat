@@ -56,6 +56,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.CommonCSS),
 		builder.NewStaticFileFromCore(static_front.CustomCSS),
 		builder.NewStaticFileFromCore(static_front.CustomJS),
+		builder.NewStaticFileFromCore(static_front.PanzoomJS),
 	}
 
 	for _, file := range static.StaticFilesystem.Files {

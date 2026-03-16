@@ -48,3 +48,11 @@
 .card[data-size="small"] {
     width: 25px;
 }
+
+/* .contents div[data-ids-info]:hover,
+.contents div[data-jump-dest]:hover,
+.contents div.mineable:hover  */
+system-:hover {
+    box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
+    color: rgb(255, 167, 6);
+}

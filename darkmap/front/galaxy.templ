@@ -3,6 +3,8 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"github.com/darklab8/fl-darkstat/darkmap/types"
+	"strings"
 )
 
 func GalayPosToPerc(position *float64) float64 {
@@ -15,18 +17,32 @@ func GalayPosToPerc(position *float64) float64 {
 	return 100 * (3 + *position) / (15 + 6)
 }
 
-templ System(sys export_front.System, attrs templ.Attributes) {
-	<system-
-		nickname={ sys.Nickname }
-		{ attrs... }
-	>
-		<system-label-wrap>
-			{ sys.Name }
-			<system-label>
-				{ sys.Name }
-			</system-label>
-		</system-label-wrap>
-	</system->
+templ System(sys export_front.System, sys_fac SystemFaction) {
+	<system-wrapper hx-boost="true">
+		<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + sys.Nickname) }>
+			<system-
+				nickname={ sys.Nickname }
+				{ templ.Attributes{
+				"style": fmt.Sprintf(
+					"top: %.1f%%; left: %.1f%%; border-color: %s; border-width: %dpx;",
+					GalayPosToPerc(sys.Pos.Y),
+					GalayPosToPerc(sys.Pos.X),
+					SystemFacToHexColor(sys_fac),
+                    SystemFacToBorderWidth(sys_fac),
+				),
+				"region-name": sys.Region.Name,
+				"system-name": sys.Name,
+			}... }
+			>
+				<system-label-wrap>
+					{ sys.Name }
+					<system-label>
+						{ sys.Name }
+					</system-label>
+				</system-label-wrap>
+			</system->
+		</a>
+	</system-wrapper>
 }
 
 templ GalalaxyMap(data *export_front.Export) {
@@ -92,17 +108,115 @@ templ GalalaxyMap(data *export_front.Export) {
     </style>
 	<centeralizer->
 		for _, sys := range data.Systems {
-			@System(sys, templ.Attributes{
-				"style": fmt.Sprintf(
-					"top: %.1f%%; left: %.1f%%; border-color: %s;",
-					GalayPosToPerc(sys.Pos.Y),
-					GalayPosToPerc(sys.Pos.X),
-					sys.Region.ToHexColor(),
-				),
-				"region-name": sys.Region.Name,
-				"system-name": sys.Name,
-			})
+			@System(sys, GetSystemFac(sys))
 		}
 		<system-title>Sirius</system-title>
 	</centeralizer->
+}
+
+type SystemFaction int8
+
+const (
+	FacUnknown SystemFaction = iota
+	FacLiberty
+	FacGalica
+	FacNomad
+	FacKusari
+	FacBretonia
+	FacRheinland
+	FacIndependent
+	FacOutcasts
+	FacCorsairs
+	FacEdge
+	FacSigma
+	FacOmega
+)
+
+func GetSystemFac(sys export_front.System) SystemFaction {
+
+	sys_name := strings.ToLower(sys.Name)
+
+	region_name := strings.ToLower(sys.Region.Name)
+	if strings.Contains(region_name, "liberty") {
+		return FacLiberty
+	}
+	if strings.Contains(region_name, "gallia") {
+		return FacGalica
+	}
+	if strings.Contains(region_name, "nomad") {
+		return FacNomad
+	}
+	if strings.Contains(region_name, "kusari") {
+		return FacKusari
+	}
+	if strings.Contains(region_name, "bretonia") {
+		return FacBretonia
+	}
+	if strings.Contains(region_name, "rheinland") {
+		return FacRheinland
+	}
+	if strings.Contains(region_name, "independent") {
+		return FacIndependent
+	}
+	if strings.Contains(region_name, "outcasts") {
+		return FacOutcasts
+	}
+	if strings.Contains(region_name, "corsairs") {
+		return FacCorsairs
+	}
+	if strings.Contains(region_name, "edge") {
+		return FacEdge
+	}
+
+	if strings.Contains(sys_name, "sigma") {
+		return FacSigma
+	}
+	if strings.Contains(sys_name, "omega") {
+		return FacOmega
+	}
+
+	return FacUnknown
+}
+
+func SystemFacToBorderWidth(sysfac SystemFaction) int {
+	switch sysfac {
+	case FacEdge:
+		return 5
+	case FacUnknown:
+		return 4
+	}
+
+	return 3
+}
+
+func SystemFacToHexColor(sysfac SystemFaction) string {
+
+	switch sysfac {
+	case FacLiberty:
+		return "#2299F5"
+	case FacGalica:
+		return "#5961ff"
+	case FacNomad:
+		return "#368674"
+	case FacKusari:
+		return "#FED433"
+	case FacBretonia:
+		return "#d7363c"
+	case FacRheinland:
+		return "#00AD1D"
+	case FacIndependent:
+		return "#DBDBDB"
+	case FacOutcasts:
+		return "#A42AFA"
+	case FacCorsairs:
+		return "#A42AFA"
+	case FacEdge:
+		return "#414141"
+	case FacSigma:
+		return "#14e7f2"
+	case FacOmega:
+		return "#C35B2B"
+	}
+
+	return "#959597" // FacUnknown
 }
