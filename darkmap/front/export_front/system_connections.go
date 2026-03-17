@@ -12,8 +12,8 @@ import (
 )
 
 type SystemGraphInfo struct {
-	Reachable bool                       // from manhattan as usual
-	LeadsTo   map[string]*JumpConnection // edges to other systems
+	VisibleByDefault bool                       // from manhattan as usual
+	LeadsTo          map[string]*JumpConnection // edges to other systems
 }
 
 type SystemGraphs struct {
@@ -44,7 +44,7 @@ func (g *SystemGraphs) DFSUtil(vertex *System, visited map[string]bool) {
 	// }
 
 	visited[vertex.Nickname] = true
-	vertex.Reachable = true
+	vertex.VisibleByDefault = true
 
 	for _, v := range g.Systems[vertex.Nickname].LeadsTo {
 		if !visited[v.Nickname] {
@@ -121,6 +121,19 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 	}
 
 	graph.DFS(graph.Systems["li01"])
+
+	if e.Mapped.Discovery != nil {
+		graph.DFS(graph.Systems["ew12"])
+		for _, system := range graph.Systems {
+			if strings.Contains(strings.ToLower(system.Name), "planet") {
+				system.VisibleByDefault = false
+			} else if strings.Contains(strings.ToLower(system.Name), "anomaly") {
+				system.VisibleByDefault = false
+			} else if strings.Contains(strings.ToLower(system.Name), "atmosphere") {
+				system.VisibleByDefault = false
+			}
+		}
+	}
 
 	return graph
 }

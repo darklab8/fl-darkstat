@@ -22,7 +22,7 @@ func GalayPosToPerc(position *float64) float64 {
 templ System(sys *export_front.System, sys_fac SystemFaction) {
 	<system-wrapper
 		hx-boost="true"
-		class={ templ.KV("hidden_system", !sys.Reachable), }
+		class={ templ.KV("hidden_system", !sys.VisibleByDefault), }
 		nickname={ sys.Nickname }
 	>
 		<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + sys.Nickname) }>

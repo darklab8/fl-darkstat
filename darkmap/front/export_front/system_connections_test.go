@@ -18,7 +18,7 @@ func TestSystemsConnections(t *testing.T) {
 		if system.Nickname != "hi10" {
 			continue
 		}
-		fmt.Println(system.Nickname, system.Reachable)
+		fmt.Println(system.Nickname, system.VisibleByDefault)
 	}
 
 	assert.Greater(t, len(systems), 0)
