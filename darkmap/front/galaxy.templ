@@ -117,7 +117,18 @@ templ GalalaxyMap(data *export_front.Export) {
 			@System(sys, GetSystemFac(sys))
 		}
 		<system-title>Sirius</system-title>
-		// for _, edge := range data.
+		// for origin_system_nick, origin_system := range data.Graph.Systems {
+		// 	for _, target_conn := range origin_system.LeadsTo {
+		// 		if target_conn.Kind == export_front.JumpKindJumpgate &&
+		//             data.Graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick].Kind == export_front.JumpKindJumpgate {
+		//                 <connection->
+		//                 </connection->
+		// 		}
+		// 	}
+		// }
+		// <svg width="100" height="100">
+		// 	<circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle>
+		// </svg>
 	</centeralizer->
 }
 

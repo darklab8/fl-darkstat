@@ -1,32 +1,41 @@
 package export_front
 
 import (
+	"strings"
+
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/go-utils/typelog"
+	"github.com/darklab8/go-utils/utils/ptr"
 )
 
 type SystemGraphInfo struct {
-	Reachable bool               // from manhattan as usual
-	LeadsTo   map[string]*System // edges to other systems
+	Reachable bool                       // from manhattan as usual
+	LeadsTo   map[string]*JumpConnection // edges to other systems
 }
 
 type SystemGraphs struct {
 	Systems map[string]*System // sparse graph of systems
+
 }
 
-/*
-TODO: Wtf all those errors
-time=2026-03-17T02:45:23.472+01:00 level=ERROR msg=" has no system file" system_nick=hlp1
-time=2026-03-17T02:45:23.474+01:00 level=ERROR msg=" has no system file" system_nick=sector01
-time=2026-03-17T02:45:23.474+01:00 level=ERROR msg=" has no system file" system_nick=sector02
-time=2026-03-17T02:45:23.474+01:00 level=ERROR msg=" has no system file" system_nick=sector03
-time=2026-03-17T02:45:23.474+01:00 level=ERROR msg=" has no system file" system_nick=sector04
-time=2026-03-17T02:45:23.474+01:00 level=ERROR msg=" has no system file" system_nick=unch04b
-time=2026-03-17T02:45:23.474+01:00 level=ERROR msg=" has no system file" system_nick=st02c
-time=2026-03-17T02:45:23.474+01:00 level=ERROR msg="found system in DFSUtil. Reachable but has no file" err=hi10
-*/
+type JumpConnectionKind int8
+
+const (
+	JumpKindUnknown JumpConnectionKind = iota
+	JumpKindJumpgate
+	JumpKindJumphole
+	JumpKindUnstable
+	JumpKindAlien
+)
+
+type JumpConnection struct {
+	Kind JumpConnectionKind
+	*System
+}
+
 func (g *SystemGraphs) DFSUtil(vertex *System, visited map[string]bool) {
 
 	// if _, ok := g.Systems[vertex.Nickname]; !ok {
@@ -39,7 +48,7 @@ func (g *SystemGraphs) DFSUtil(vertex *System, visited map[string]bool) {
 
 	for _, v := range g.Systems[vertex.Nickname].LeadsTo {
 		if !visited[v.Nickname] {
-			g.DFSUtil(v, visited)
+			g.DFSUtil(v.System, visited)
 		}
 	}
 }
@@ -53,9 +62,10 @@ func (g *SystemGraphs) DFS(startVertex *System) {
 // we have to find only one between each system
 // and mark if it is
 // - Two Way Jump Gate (Blue Connection)
-// - Two way Jump hole (Yellow or White weak connection)
+// - Two way Jump hole (Yellow connection)
 // - One Way (Purple Connection)
-// - or Unstable (Orange connection)
+// - Two Way Unstable (Orange connection)
+// - Pink, unidentified
 
 // How to find them?
 // per system go? and in hashmap... marking data about each system pair ergh?
@@ -100,7 +110,12 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 				graph.Systems[system_info.Nickname] = system
 
 			}
-			system.LeadsTo[jh.GotoSystem.Get()] = graph.Systems[jh.GotoSystem.Get()]
+
+			target_system := graph.Systems[jh.GotoSystem.Get()]
+			system.LeadsTo[jh.GotoSystem.Get()] = &JumpConnection{
+				System: target_system,
+				Kind:   e.GetJumpConnectionKind(jh),
+			}
 		}
 
 	}
@@ -108,4 +123,36 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 	graph.DFS(graph.Systems["li01"])
 
 	return graph
+}
+
+func (e *Export) GetJumpConnectionKind(jh *systems_mapped.Jumphole) JumpConnectionKind {
+	jh_archetype := jh.Archetype.Get()
+
+	var disco_cargo_limit *int
+	if solar, ok := e.Mapped.Solararch.SolarsByNick[jh_archetype]; ok {
+		if cargo_limit, ok := solar.CargoLimit.GetValue(); ok {
+			disco_cargo_limit = ptr.Ptr(cargo_limit)
+		}
+	}
+	if e.Mapped.Discovery != nil {
+		if disco_cargo_limit != nil {
+			if *disco_cargo_limit < trades.DiscoCargoLimitedThreshold {
+				return JumpKindUnstable
+			}
+		}
+	}
+
+	if strings.Contains(jh_archetype, "jumpgate") {
+		return JumpKindJumpgate
+	}
+
+	if strings.Contains(jh_archetype, "jumphole") {
+		return JumpKindJumphole
+	}
+
+	if strings.Contains(jh_archetype, "nomad") {
+		return JumpKindAlien
+	}
+
+	return JumpKindUnknown
 }

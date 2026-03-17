@@ -338,6 +338,10 @@ func MapConfigsToFGraph(
 	return graph
 }
 
+const (
+	DiscoCargoLimitedThreshold = 1000
+)
+
 func GetDockableJumpholes(
 	system *systems_mapped.System,
 	mapped *configs_mapped.MappedConfigs,
@@ -395,7 +399,7 @@ func GetDockableJumpholes(
 		if mapped.Discovery != nil {
 			if !DockOpts.WithDiscoFreighterPaths {
 				if disco_cargo_limit != nil {
-					if *disco_cargo_limit < 1000 {
+					if *disco_cargo_limit < DiscoCargoLimitedThreshold {
 						continue
 					}
 				}

@@ -46,7 +46,7 @@ func ExportSystems(configs *configs_mapped.MappedConfigs) []*System {
 				Name: configs.GetRegionName(system),
 			},
 			SystemGraphInfo: SystemGraphInfo{
-				LeadsTo: make(map[string]*System),
+				LeadsTo: make(map[string]*JumpConnection),
 			},
 		}
 		system_to_add.Name = configs.GetInfocardName(system.StridName.Get(), system.Nickname.Get())
