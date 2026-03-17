@@ -33,6 +33,12 @@
     flex-direction: column;
 }
 
+.vertical_options {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 .card {
     background-color: blue;
