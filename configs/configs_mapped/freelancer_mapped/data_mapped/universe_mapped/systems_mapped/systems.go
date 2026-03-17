@@ -153,11 +153,12 @@ const (
 
 type Jumphole struct {
 	semantic.Model
-	Nickname  *semantic.String
-	GotoHole  *semantic.String
-	Archetype *semantic.String
-	Pos       *semantic.Vect
-	IdsName   *semantic.Int
+	Nickname    *semantic.String
+	GotoObjHole *semantic.String
+	GotoSystem  *semantic.String
+	Archetype   *semantic.String
+	Pos         *semantic.Vect
+	IdsName     *semantic.Int
 
 	System *System
 }
@@ -290,12 +291,14 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 	var system_files map[string]*file.File = make(map[string]*file.File)
 
 	timeit.NewTimerF(func() {
-		for _, base := range universe_config.Bases {
-			base_system := base.System.Get()
-			universe_system := universe_config.SystemMap[universe_mapped.SystemNickname(base_system)]
+		for _, universe_system := range universe_config.Systems {
+			if _, ok := universe_system.File.GetValue(); !ok {
+				continue
+			}
+
 			filename := universe_system.File.FileName()
 			path := filesystem.GetFile(filename)
-			system_files[base.System.Get()] = file.NewFile(path.GetFilepath())
+			system_files[universe_system.Nickname.Get()] = file.NewFile(path.GetFilepath())
 		}
 	}, timeit.WithMsg("systems prepared files"))
 
@@ -468,12 +471,14 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 					if _, ok := obj.ParamMap[cfg.Key("goto")]; ok {
 						jumphole := &Jumphole{
-							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							GotoHole:  semantic.NewString(obj, cfg.Key("goto"), semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Order(1))),
-							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
-							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
-							System:    system_to_add,
+							Archetype:   semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Nickname:    semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							GotoObjHole: semantic.NewString(obj, cfg.Key("goto"), semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Order(1))),
+							GotoSystem:  semantic.NewString(obj, cfg.Key("goto"), semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Order(0))),
+
+							Pos:     semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+							IdsName: semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
+							System:  system_to_add,
 						}
 
 						system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)

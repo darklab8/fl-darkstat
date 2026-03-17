@@ -19,8 +19,12 @@ func GalayPosToPerc(position *float64) float64 {
 	return 100 * (3 + *position) / (15 + 6)
 }
 
-templ System(sys export_front.System, sys_fac SystemFaction) {
-	<system-wrapper hx-boost="true">
+templ System(sys *export_front.System, sys_fac SystemFaction) {
+	<system-wrapper
+		hx-boost="true"
+		class={ templ.KV("hidden_system", !sys.Reachable), }
+		nickname={ sys.Nickname }
+	>
 		<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + sys.Nickname) }>
 			<system-
 				nickname={ sys.Nickname }
@@ -113,6 +117,7 @@ templ GalalaxyMap(data *export_front.Export) {
 			@System(sys, GetSystemFac(sys))
 		}
 		<system-title>Sirius</system-title>
+		// for _, edge := range data.
 	</centeralizer->
 }
 
@@ -176,18 +181,20 @@ const (
 	FacBretonia
 	FacRheinland
 	FacIndependent
-	FacOutcasts
-	FacCorsairs
-	FacEdge
 	FacSigma
 	FacOmega
+	FacDeepOmega
 )
 
-func GetSystemFac(sys export_front.System) SystemFaction {
+func GetSystemFac(sys *export_front.System) SystemFaction {
 
 	sys_name := strings.ToLower(sys.Name)
 
 	region_name := strings.ToLower(sys.Region.Name)
+
+	if strings.Contains(region_name, "deep") && strings.Contains(region_name, "omega") {
+		return FacDeepOmega
+	}
 	if strings.Contains(region_name, "liberty") {
 		return FacLiberty
 	}
@@ -209,15 +216,6 @@ func GetSystemFac(sys export_front.System) SystemFaction {
 	if strings.Contains(region_name, "independent") {
 		return FacIndependent
 	}
-	if strings.Contains(region_name, "outcasts") {
-		return FacOutcasts
-	}
-	if strings.Contains(region_name, "corsairs") {
-		return FacCorsairs
-	}
-	if strings.Contains(region_name, "edge") {
-		return FacEdge
-	}
 
 	if strings.Contains(sys_name, "sigma") {
 		return FacSigma
@@ -226,14 +224,18 @@ func GetSystemFac(sys export_front.System) SystemFaction {
 		return FacOmega
 	}
 
+	if strings.Contains(sys_name, "omicron") {
+		return FacNomad
+	}
+
 	return FacUnknown
 }
 
 func SystemFacToBorderWidth(sysfac SystemFaction) int {
 	switch sysfac {
-	case FacEdge:
-		return 5
 	case FacUnknown:
+		return 4
+	case FacDeepOmega:
 		return 4
 	}
 
@@ -256,17 +258,13 @@ func SystemFacToHexColor(sysfac SystemFaction) string {
 	case FacRheinland:
 		return "#00AD1D"
 	case FacIndependent:
-		return "#DBDBDB"
-	case FacOutcasts:
-		return "#A42AFA"
-	case FacCorsairs:
-		return "#A42AFA"
-	case FacEdge:
-		return "#414141"
+		return "#C3E1FF"
 	case FacSigma:
 		return "#14e7f2"
 	case FacOmega:
 		return "#C35B2B"
+	case FacDeepOmega:
+		return "#A14C22"
 	}
 
 	return "#959597" // FacUnknown

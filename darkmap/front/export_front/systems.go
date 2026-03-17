@@ -11,6 +11,8 @@ type System struct {
 	Pos      Coords2D `json:"galaxy_pos"`
 
 	Region Region `json:"region"`
+
+	SystemGraphInfo
 }
 
 type Region struct {
@@ -22,8 +24,8 @@ type Coords2D struct {
 	Y *float64
 }
 
-func ExportSystems(configs *configs_mapped.MappedConfigs) []System {
-	var systems []System
+func ExportSystems(configs *configs_mapped.MappedConfigs) []*System {
+	var systems []*System
 	for _, system := range configs.Universe.Systems {
 
 		var pos_x *float64
@@ -34,7 +36,7 @@ func ExportSystems(configs *configs_mapped.MappedConfigs) []System {
 		if posy, ok := system.PosY.GetValue(); ok {
 			pos_y = ptr.Ptr(posy)
 		}
-		system_to_add := System{
+		system_to_add := &System{
 			Nickname: system.Nickname.Get(),
 			Pos: Coords2D{
 				X: pos_x,
@@ -42,6 +44,9 @@ func ExportSystems(configs *configs_mapped.MappedConfigs) []System {
 			},
 			Region: Region{
 				Name: configs.GetRegionName(system),
+			},
+			SystemGraphInfo: SystemGraphInfo{
+				LeadsTo: make(map[string]*System),
 			},
 		}
 		system_to_add.Name = configs.GetInfocardName(system.StridName.Get(), system.Nickname.Get())

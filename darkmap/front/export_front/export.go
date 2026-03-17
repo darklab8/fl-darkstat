@@ -12,7 +12,8 @@ import (
 
 type Export struct {
 	Mapped  *configs_mapped.MappedConfigs
-	Systems []System
+	Systems []*System
+	Graph   SystemGraphs
 }
 
 func NewExport(ctx context.Context) *Export {
@@ -37,4 +38,5 @@ func (e *Export) GetInfocardName(ids_name int, nickname string) string {
 
 func (e *Export) export() {
 	e.Systems = ExportSystems(e.Mapped)
+	e.Graph = e.GetSystemConnections(e.Systems)
 }

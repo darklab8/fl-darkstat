@@ -33,7 +33,7 @@ func (b ExtraItem) GetBases() map[cfg.BaseUniNick]*MarketGood { return b.Bases }
 func (b ExtraItem) GetDiscoveryTechCompat() *DiscoveryTechCompat { return b.DiscoveryTechCompat }
 
 func (e *Exporter) GetExtraItems(ids []*Tractor) []ExtraItem {
-	var tractors []ExtraItem
+	var items []ExtraItem
 
 	for _, item_info := range e.Mapped.Equip().Extras {
 		item := ExtraItem{
@@ -81,9 +81,25 @@ func (e *Exporter) GetExtraItems(ids []*Tractor) []ExtraItem {
 		e.WriteConfigToInfocard(&item_info.Model, item.Nickname)
 
 		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
-		tractors = append(tractors, item)
+		items = append(items, item)
 	}
-	return tractors
+
+	for _, item_info := range e.Mapped.Universe.Systems {
+		item := ExtraItem{
+			Bases: make(map[cfg.BaseUniNick]*MarketGood),
+		}
+
+		item.Nickname = item_info.Nickname.Get()
+		item.NameID = item_info.StridName.Get()
+		item.InfoID = item_info.IdsInfo.Get()
+		item.Category = "system"
+
+		item.Name = e.GetInfocardName(item.NameID, item.Nickname)
+		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
+		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
+		items = append(items, item)
+	}
+	return items
 }
 
 func (e *Exporter) FilterToUsefulItems(cms []ExtraItem) []ExtraItem {

@@ -25,7 +25,7 @@ func GetSystems(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.RUnlock()
 			}
 
-			var systems []export_front.System
+			var systems []*export_front.System
 
 			systems = export_front.ExportSystems(api.app_data.Configs.Mapped)
 
