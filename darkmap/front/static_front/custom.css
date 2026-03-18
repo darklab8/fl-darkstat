@@ -83,8 +83,11 @@ system-:hover {
 }
 
 .conn_jumphole {
-    box-shadow: 0px 0px 0.3em 0.1em rgb(255 252 69 / 24%);
-    background-color: rgb(230 255 4 / 67%);
+    /*box-shadow: 0px 0px 0.3em 0.1em rgb(255 252 69 / 24%);
+    background-color: rgb(230 255 4 / 67%);*/
+
+    box-shadow: 0px 0px 0.3em 0.1em rgb(243 229 171 / 24%);
+    background-color: rgb(243 229 171 / 67%);
 
     /*background-color: rgba(143, 192, 255, 0.5)*/
 }
