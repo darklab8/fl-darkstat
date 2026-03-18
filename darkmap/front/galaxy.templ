@@ -6,10 +6,11 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
+	"github.com/darklab8/go-utils/utils/ptr"
 	"strings"
 )
 
-func GalayPosToPerc(position *float64) float64 {
+func GalaxyPosToPerc(position *float64) float64 {
 	// positions are from 0 to 15. then center is 7.5
 
 	if position == nil {
@@ -27,12 +28,13 @@ templ System(sys *export_front.System, sys_fac SystemFaction) {
 	>
 		<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + sys.Nickname) }>
 			<system-
+				id={ fmt.Sprintf("system-%s", sys.Nickname) }
 				nickname={ sys.Nickname }
 				{ templ.Attributes{
 				"style": fmt.Sprintf(
-					"top: %.1f%%; left: %.1f%%; border-color: %s; border-width: %dpx;",
-					GalayPosToPerc(sys.Pos.Y),
-					GalayPosToPerc(sys.Pos.X),
+					"top: %.5f%%; left: %.5f%%; border-color: %s; border-width: %dpx;",
+					GalaxyPosToPerc(sys.Pos.Y),
+					GalaxyPosToPerc(sys.Pos.X),
 					SystemFacToHexColor(sys_fac),
                     SystemFacToBorderWidth(sys_fac),
 				),
@@ -111,7 +113,17 @@ templ GalalaxyMap(data *export_front.Export) {
             font-weight: bold;
             margin-bottom: 10px;
         }
-       
+        connection- {
+            position: absolute;
+            z-index: -1;
+        }
+
+        line- {
+            position: absolute;
+            width: 0.125em;
+            background-color: rgba(69, 150, 255, 0.9);
+            display: block;
+        }
     </style>
 	<centeralizer->
 		for _, sys := range data.Systems {
@@ -123,7 +135,28 @@ templ GalalaxyMap(data *export_front.Export) {
 				data-key={ key }
 				data-system1-nickname={ edge.FirstSystem.Nickname }
 				data-system2-nickname={ edge.SecondSystem.Nickname }
-			></connection->
+				{ templ.Attributes{
+				"style": fmt.Sprintf(
+					"top: %.5f%%; left: %.5f%%;",
+					GalaxyPosToPerc(ptr.Ptr(edge.GetPosY())),
+					GalaxyPosToPerc(ptr.Ptr(edge.GetPosX())),
+				),
+			}... }
+				class={ templ.KV("hidden_system", !(edge.FirstSystem.VisibleByDefault && edge.SecondSystem.VisibleByDefault)), }
+			>
+				<line-
+					data-key={ key }
+					data-system1-nickname={ edge.FirstSystem.Nickname }
+					data-system2-nickname={ edge.SecondSystem.Nickname }
+					class={
+						templ.KV("conn_alien", edge.Kind == export_front.JumpKindAlien),
+						templ.KV("conn_jumpgate", edge.Kind == export_front.JumpKindJumpgate),
+						templ.KV("conn_jumphole", edge.Kind == export_front.JumpKindJumphole),
+						templ.KV("conn_unstable", edge.Kind == export_front.JumpKindUnstable),
+						templ.KV("conn_unknown", edge.Kind == export_front.JumpKindUnknown),
+					}
+				></line->
+			</connection->
 		}
 		// <svg width="100" height="100">
 		// 	<circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle>

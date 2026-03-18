@@ -59,3 +59,65 @@ if (checkbox_systems_state !== null) {
     toggle_option(checked, "checkbox_systems", "hidden_system", "unhidden_system");
     checkbox_systems.checked = checked;
 }
+
+function getOffset1(el) {
+    const rect = el.getBoundingClientRect();
+    return {
+        x: rect.left + window.scrollX,
+        y: rect.top + window.scrollY
+    };
+}
+
+function getOffset2(el) {
+    var _x = 0;
+    var _y = 0;
+    while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
+}
+
+// function getCenter(el) {
+//     const rect = getOffset2(el);
+//     return {
+//         x: rect.left,
+//         y: rect.top,
+//     };
+// }
+
+function getCenter(el) {
+    const rect = el.getBoundingClientRect();
+    return {
+        x: (rect.right + rect.left) / 2.0,
+        y: (rect.top + rect.bottom) / 2.0,
+    };
+}
+
+function refresh_edges() {
+    let edges = document.querySelectorAll("line-");
+
+    for (let row = 0; row < edges.length; row++) {
+        let sys1_nick = edges[row].attributes['data-system1-nickname'].value
+        let sys2_nick = edges[row].attributes['data-system2-nickname'].value
+
+        let system1 = document.querySelector("#system-" + sys1_nick)
+        let system2 = document.querySelector("#system-" + sys2_nick)
+
+        let p1 = getCenter(system1);
+        let p2 = getCenter(system2);
+
+        let dx = p2.x - p1.x;
+        let dy = p2.y - p1.y;
+
+        let range = Math.sqrt(dx * dx + dy * dy);
+
+        edges[row].style.height = range + "px";
+        edges[row].style.transform = "translateY(-" + range / 2.0 + "px)";
+
+        edges[row].parentElement.style.transform = "rotate(" + (Math.atan2(dy, dx) - Math.PI / 2.0) + "rad)";
+    }
+}
+
+refresh_edges();

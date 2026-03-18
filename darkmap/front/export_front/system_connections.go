@@ -1,6 +1,7 @@
 package export_front
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -37,6 +38,13 @@ type ConnectionEdge struct {
 
 func (c ConnectionEdge) IsBireDirectional() bool {
 	return c.FromFirstToSecondJumpable && c.FromSecondToFirstJumpable
+}
+
+func (c ConnectionEdge) GetPosX() float64 {
+	return (*c.FirstSystem.Pos.X + *c.SecondSystem.Pos.X) / 2
+}
+func (c ConnectionEdge) GetPosY() float64 {
+	return (*c.FirstSystem.Pos.Y + *c.SecondSystem.Pos.Y) / 2
 }
 
 func (c *ConnectionEdge) SetJumpable(FromSystemNick string, ToSystemNick string) {
@@ -169,14 +177,21 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 		for _, jh := range jumpholes {
 			if _, ok := graph.Systems[system_info.Nickname]; !ok {
 				graph.Systems[system_info.Nickname] = system
-
 			}
 
 			target_system := graph.Systems[jh.GotoSystem.Get()]
-			system.LeadsTo[jh.GotoSystem.Get()] = &JumpConnection{
-				System: target_system,
-				Kind:   e.GetJumpConnectionKind(jh),
+
+			if conn, ok := system.LeadsTo[jh.GotoSystem.Get()]; ok {
+				if e.GetJumpConnectionKind(jh) > conn.Kind {
+					conn.Kind = e.GetJumpConnectionKind(jh)
+				}
+			} else {
+				system.LeadsTo[jh.GotoSystem.Get()] = &JumpConnection{
+					System: target_system,
+					Kind:   e.GetJumpConnectionKind(jh),
+				}
 			}
+
 		}
 
 	}
@@ -197,15 +212,19 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 	}
 
 	// preparing final edges for front render
-	for origin_system_nick, origin_system := range e.Graph.Systems {
+	for origin_system_nick, origin_system := range graph.Systems {
 		for _, target_conn := range origin_system.LeadsTo {
+
+			if origin_system_nick == "ga07" || target_conn.Nickname == "ga07" {
+				fmt.Println("DEBUG=", origin_system_nick, target_conn.Nickname, target_conn.Kind)
+			}
 
 			key := GetConnKey(origin_system_nick, target_conn.Nickname)
 
-			connection, ok := e.Graph.ConnectionEdges[key]
+			connection, ok := graph.ConnectionEdges[key]
 			if !ok {
 				connection = NewConnectionEdge(origin_system, target_conn.System)
-				e.Graph.ConnectionEdges[key] = connection
+				graph.ConnectionEdges[key] = connection
 			}
 
 			connection.SetKind(target_conn.Kind)
@@ -232,16 +251,12 @@ func (e *Export) GetJumpConnectionKind(jh *systems_mapped.Jumphole) JumpConnecti
 		}
 	}
 
-	if strings.Contains(jh_archetype, "jumpgate") {
-		return JumpKindJumpgate
-	}
-
-	if strings.Contains(jh_archetype, "jumphole") {
-		return JumpKindJumphole
-	}
-
 	if strings.Contains(jh_archetype, "nomad") {
 		return JumpKindAlien
+	} else if strings.Contains(jh_archetype, "jumpgate") {
+		return JumpKindJumpgate
+	} else if strings.Contains(jh_archetype, "jumphole") {
+		return JumpKindJumphole
 	}
 
 	return JumpKindUnknown
