@@ -1,6 +1,8 @@
 package export_front
 
 import (
+	"strings"
+
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -49,8 +51,12 @@ func ExportSystems(configs *configs_mapped.MappedConfigs) []*System {
 				LeadsTo: make(map[string]*JumpConnection),
 			},
 		}
-		system_to_add.Name = configs.GetInfocardName(system.StridName.Get(), system.Nickname.Get())
 
+		system_to_add.Name = configs.GetInfocardName(system.StridName.Get(), system.Nickname.Get())
+		if strings.Contains(strings.ToLower(system_to_add.Name), "pennsyl") {
+			// Fixed connection lines laying onto each other
+			system_to_add.Pos.Y = ptr.Ptr(*system_to_add.Pos.Y + 0.25)
+		}
 		systems = append(systems, system_to_add)
 	}
 

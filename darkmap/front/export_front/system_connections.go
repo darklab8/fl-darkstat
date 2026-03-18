@@ -1,7 +1,6 @@
 package export_front
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 
@@ -63,9 +62,32 @@ func (c *ConnectionEdge) SetJumpable(FromSystemNick string, ToSystemNick string)
 	}
 }
 
-func (c *ConnectionEdge) SetKind(Kind JumpConnectionKind) {
-	if Kind > c.Kind {
-		c.Kind = Kind
+func (c *ConnectionEdge) SetKind(first map[JumpConnectionKind]bool, second map[JumpConnectionKind]bool) {
+	c.Kind = JumpKindUnknown
+
+	if _, ok := first[JumpKindAlien]; ok {
+		if _, ok := second[JumpKindAlien]; ok {
+			c.Kind = JumpKindAlien
+			return
+		}
+	}
+	if _, ok := first[JumpKindJumpgate]; ok {
+		if _, ok := second[JumpKindJumpgate]; ok {
+			c.Kind = JumpKindJumpgate
+			return
+		}
+	}
+	if _, ok := first[JumpKindJumphole]; ok {
+		if _, ok := second[JumpKindJumphole]; ok {
+			c.Kind = JumpKindJumphole
+			return
+		}
+	}
+	if _, ok := first[JumpKindUnstable]; ok {
+		if _, ok := second[JumpKindUnstable]; ok {
+			c.Kind = JumpKindUnstable
+			return
+		}
 	}
 }
 
@@ -100,7 +122,7 @@ const (
 )
 
 type JumpConnection struct {
-	Kind JumpConnectionKind
+	Kind map[JumpConnectionKind]bool
 	*System
 }
 
@@ -182,14 +204,14 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 			target_system := graph.Systems[jh.GotoSystem.Get()]
 
 			if conn, ok := system.LeadsTo[jh.GotoSystem.Get()]; ok {
-				if e.GetJumpConnectionKind(jh) > conn.Kind {
-					conn.Kind = e.GetJumpConnectionKind(jh)
-				}
+				conn.Kind[e.GetJumpConnectionKind(jh)] = true
 			} else {
-				system.LeadsTo[jh.GotoSystem.Get()] = &JumpConnection{
+				cn := &JumpConnection{
 					System: target_system,
-					Kind:   e.GetJumpConnectionKind(jh),
+					Kind:   make(map[JumpConnectionKind]bool),
 				}
+				system.LeadsTo[jh.GotoSystem.Get()] = cn
+				cn.Kind[e.GetJumpConnectionKind(jh)] = true
 			}
 
 		}
@@ -214,11 +236,6 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 	// preparing final edges for front render
 	for origin_system_nick, origin_system := range graph.Systems {
 		for _, target_conn := range origin_system.LeadsTo {
-
-			if origin_system_nick == "ga07" || target_conn.Nickname == "ga07" {
-				fmt.Println("DEBUG=", origin_system_nick, target_conn.Nickname, target_conn.Kind)
-			}
-
 			key := GetConnKey(origin_system_nick, target_conn.Nickname)
 
 			connection, ok := graph.ConnectionEdges[key]
@@ -227,7 +244,12 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 				graph.ConnectionEdges[key] = connection
 			}
 
-			connection.SetKind(target_conn.Kind)
+			target_kinds := make(map[JumpConnectionKind]bool)
+			if _, ok := graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick]; ok {
+				target_kinds = graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick].Kind
+			}
+
+			connection.SetKind(target_conn.Kind, target_kinds)
 			connection.SetJumpable(origin_system_nick, target_conn.Nickname)
 		}
 	}
