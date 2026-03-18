@@ -54,8 +54,8 @@ templ System(sys *export_front.System, sys_fac SystemFaction) {
 templ GalalaxyMap(data *export_front.Export) {
 	<style>
         centeralizer- {
-            height: calc(100vh - 2.4em);
-            width: calc(100vh - 2.4em);
+            height: 100%;
+            width: 100%;
             position: absolute;
         }
         system- {
@@ -118,15 +118,13 @@ templ GalalaxyMap(data *export_front.Export) {
 			@System(sys, GetSystemFac(sys))
 		}
 		<system-title>Sirius</system-title>
-		// for origin_system_nick, origin_system := range data.Graph.Systems {
-		// 	for _, target_conn := range origin_system.LeadsTo {
-		// 		if target_conn.Kind == export_front.JumpKindJumpgate &&
-		//             data.Graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick].Kind == export_front.JumpKindJumpgate {
-		//                 <connection->
-		//                 </connection->
-		// 		}
-		// 	}
-		// }
+		for key, edge := range data.Graph.ConnectionEdges {
+			<connection-
+				data-key={ key }
+				data-system1-nickname={ edge.FirstSystem.Nickname }
+				data-system2-nickname={ edge.SecondSystem.Nickname }
+			></connection->
+		}
 		// <svg width="100" height="100">
 		// 	<circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle>
 		// </svg>
@@ -155,14 +153,14 @@ templ GalaxyGrid() {
 			background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../static/Sirius_Map.png);
 			background-size: cover;
 			border: 0.2em rgb(25, 47, 96) solid;
+            height: 100%;
 		}
 		.panzoom{
-			position: relative;
 			box-sizing: border-box;
 
-			height: calc(100vh - 2.4em);
+            height: 100%;
 			top: 2.4em;
-			width: calc(100vh - 2.4em);
+			width: 100%;
 			margin: 0 auto;
 			box-sizing: border-box;
 		}
@@ -170,6 +168,8 @@ templ GalaxyGrid() {
         map-with-interface- {
             display: flex;
             flex-direction: column;
+            height: calc(100vh);
+            width: calc(100vh - 2.4em);
         }
         menu- {
             display: grid;

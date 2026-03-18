@@ -1,6 +1,7 @@
 package export_front
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
@@ -17,17 +18,76 @@ type SystemGraphInfo struct {
 }
 
 type SystemGraphs struct {
-	Systems map[string]*System // sparse graph of systems
+	Systems         map[string]*System         // sparse graph of systems
+	ConnectionEdges map[string]*ConnectionEdge // ready for printing. Only single one per each two systems.
+}
 
+type ConnectionEdge struct {
+	FirstSystem  *System
+	SecondSystem *System
+
+	FromFirstToSecondJumpable bool
+	FromSecondToFirstJumpable bool
+
+	// Const is made in values ordered by priority
+	// if Alien gate is present, then it is most important
+	// after that Jumpgate, then Jumphole, then Unstable, and then Unknown
+	Kind JumpConnectionKind
+}
+
+func (c ConnectionEdge) IsBireDirectional() bool {
+	return c.FromFirstToSecondJumpable && c.FromSecondToFirstJumpable
+}
+
+func (c *ConnectionEdge) SetJumpable(FromSystemNick string, ToSystemNick string) {
+	if c.FirstSystem.Nickname == FromSystemNick && c.SecondSystem.Nickname == ToSystemNick {
+		c.FromFirstToSecondJumpable = true
+	} else if c.SecondSystem.Nickname == FromSystemNick && c.FirstSystem.Nickname == ToSystemNick {
+		c.FromSecondToFirstJumpable = true
+	} else {
+		logus.Log.Panic(
+			"Received unexpected SetJumptable values for ConnectionEdge",
+			typelog.Any("FromSystem", FromSystemNick),
+			typelog.Any("ToSystem", ToSystemNick),
+			typelog.Any("c.FirstSystem", c.FirstSystem),
+			typelog.Any("c.SecondSystem", c.SecondSystem),
+		)
+	}
+}
+
+func (c *ConnectionEdge) SetKind(Kind JumpConnectionKind) {
+	if Kind > c.Kind {
+		c.Kind = Kind
+	}
+}
+
+func GetConnKey(from_system string, to_system string) string {
+	systems := []string{from_system, to_system}
+	sort.Strings(systems)
+	return strings.Join(systems, "-")
+}
+
+func NewConnectionEdge(first_system *System, second_system *System) *ConnectionEdge {
+	systems := []*System{first_system, second_system}
+
+	sort.Slice(systems, func(i, j int) bool { // this sorting is not necessary technically. just nice to do for more deterministic debug
+		return systems[i].Nickname > systems[j].Nickname
+	})
+	e := &ConnectionEdge{
+		FirstSystem:  systems[0],
+		SecondSystem: systems[1],
+	}
+
+	return e
 }
 
 type JumpConnectionKind int8
 
 const (
 	JumpKindUnknown JumpConnectionKind = iota
-	JumpKindJumpgate
-	JumpKindJumphole
 	JumpKindUnstable
+	JumpKindJumphole
+	JumpKindJumpgate
 	JumpKindAlien
 )
 
@@ -74,7 +134,8 @@ func (g *SystemGraphs) DFS(startVertex *System) {
 */
 func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 	var graph SystemGraphs = SystemGraphs{
-		Systems: make(map[string]*System),
+		Systems:         make(map[string]*System),
+		ConnectionEdges: make(map[string]*ConnectionEdge),
 	}
 
 	for _, system := range systems {
@@ -135,6 +196,22 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 		}
 	}
 
+	// preparing final edges for front render
+	for origin_system_nick, origin_system := range e.Graph.Systems {
+		for _, target_conn := range origin_system.LeadsTo {
+
+			key := GetConnKey(origin_system_nick, target_conn.Nickname)
+
+			connection, ok := e.Graph.ConnectionEdges[key]
+			if !ok {
+				connection = NewConnectionEdge(origin_system, target_conn.System)
+				e.Graph.ConnectionEdges[key] = connection
+			}
+
+			connection.SetKind(target_conn.Kind)
+			connection.SetJumpable(origin_system_nick, target_conn.Nickname)
+		}
+	}
 	return graph
 }
 
