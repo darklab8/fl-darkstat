@@ -32,11 +32,9 @@ templ System(sys *export_front.System, sys_fac SystemFaction) {
 				nickname={ sys.Nickname }
 				{ templ.Attributes{
 				"style": fmt.Sprintf(
-					"top: %.5f%%; left: %.5f%%; border-color: %s; border-width: %dpx;",
+					"top: %.5f%%; left: %.5f%%;",
 					GalaxyPosToPerc(sys.Pos.Y),
 					GalaxyPosToPerc(sys.Pos.X),
-					SystemFacToHexColor(sys_fac),
-                    SystemFacToBorderWidth(sys_fac),
 				),
 				"region-name": sys.Region.Name,
 				"system-name": sys.Name,
@@ -48,6 +46,17 @@ templ System(sys *export_front.System, sys_fac SystemFaction) {
 						{ sys.Name }
 					</system-label>
 				</system-label-wrap>
+				<cycle-
+					{ templ.Attributes{
+				"style": fmt.Sprintf(
+					"border-color: %s; border-width: %dpx;",
+					SystemFacToHexColor(sys_fac),
+                    SystemFacToBorderWidth(sys_fac),
+				),
+				"region-name": sys.Region.Name,
+				"system-name": sys.Name,
+			}... }
+				></cycle->
 			</system->
 		</a>
 	</system-wrapper>
@@ -62,16 +71,23 @@ templ GalalaxyMap(data *export_front.Export) {
         }
         system- {
             position: absolute;
-
             height: 0.65em;
             width: 0.65em;
-            background-color: rgb(36, 36, 36);
-            border: 0.15em solid;
-            border-radius: 100%;
             margin-top: -0.325em;
             margin-left: -0.325em;
-
             border-color: white;
+        }
+        cycle- {
+            border-color: #2299F5;
+            border-width: 3px;
+            border-radius: 100%;
+            border-style: solid;
+            background-color: rgb(36, 36, 36);
+            left: -25%;
+            top: -25%;
+            position: absolute;
+            height: 0.65em;
+            width: 0.65em;
         }
         system-label-wrap {
             color: transparent; /* make the text invisible */

@@ -121,3 +121,6 @@ function refresh_edges() {
 }
 
 refresh_edges();
+window.addEventListener('resize', function (event) {
+    refresh_edges();
+});
