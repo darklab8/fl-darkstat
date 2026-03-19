@@ -20,7 +20,7 @@ func GalaxyPosToPerc(position *float64) float64 {
 	return 100 * (3 + *position) / (15 + 6)
 }
 
-templ System(sys *export_front.System, sys_fac SystemFaction) {
+templ GalaxySystem(sys *export_front.System, sys_fac SystemFaction) {
 	<system-wrapper
 		hx-boost="true"
 		class={ templ.KV("hidden_system", !sys.VisibleByDefault), }
@@ -143,7 +143,7 @@ templ GalalaxyMap(data *export_front.Export) {
     </style>
 	<centeralizer->
 		for _, sys := range data.Systems {
-			@System(sys, GetSystemFac(sys))
+			@GalaxySystem(sys, GetSystemFac(sys))
 		}
 		<system-title>Sirius</system-title>
 		for key, edge := range data.Graph.ConnectionEdges {
@@ -158,7 +158,7 @@ templ GalalaxyMap(data *export_front.Export) {
 					GalaxyPosToPerc(ptr.Ptr(edge.GetPosX())),
 				),
 			}... }
-				class={ templ.KV("hidden_system", !(edge.FirstSystem.VisibleByDefault && edge.SecondSystem.VisibleByDefault)), }
+				class={ templ.KV("hidden_system", !(edge.FirstSystem.VisibleByDefault && edge.SecondSystem.VisibleByDefault)), "connection" }
 			>
 				<line-
 					data-key={ key }

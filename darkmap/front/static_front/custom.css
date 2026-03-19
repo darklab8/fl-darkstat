@@ -87,7 +87,7 @@ system-:hover {
     /*box-shadow: 0px 0px 0.3em 0.1em rgb(255 252 69 / 24%);
     background-color: rgb(230 255 4 / 67%);*/
 
-    box-shadow: 0px 0px 0.3em 0.1em rgb(243 229 171 / 24%);
+    box-shadow: 0px 0px 0.3em 0.1em rgba(243, 229, 171, 0.5);
     background-color: rgb(243 229 171 / 67%);
 
     /*background-color: rgba(143, 192, 255, 0.5)*/
@@ -96,7 +96,7 @@ system-:hover {
 
 .conn_unstable {
     background-color: rgba(219, 72, 55, 0.9);
-    box-shadow: 0px 0px 0.3em 0.1em rgba(121, 80, 76, 0.9);
+    box-shadow: 0px 0px 0.3em 0.1em rgba(121, 80, 76, 0.5);
 }
 
 .conn_alien {
@@ -104,14 +104,17 @@ system-:hover {
     box-shadow: 0px 0px 0.3em 0.1em rgba(152, 69, 255, 0.5);
 }
 
+.conn_hover {
+    box-shadow: 0px 0px 0.3em 0.3em rgba(255, 255, 255, 0.45);
+}
 
 /* CSS TOGLE SWITCH START */
 .toggle-container {
     --active-color: #1868e3;
-    --inactive-color: #d3d3d6;
+    --inactive-color: #98989c;
     position: relative;
     aspect-ratio: 292 / 142;
-    height: 1.875em;
+    height: 1.275em;
 }
 
 .toggle-input {

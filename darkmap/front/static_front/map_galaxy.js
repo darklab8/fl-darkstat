@@ -73,6 +73,32 @@ if (checkbox_label_state !== null) {
     checkbox_labels.checked = checked;
 }
 
+var systems = document.querySelectorAll("system-");
+for (let row = 0; row < systems.length; row++) {
+    systems[row].addEventListener('mouseover', function () {
+        let system_nickname = systems[row].attributes["nickname"].value
+        let systems1 = document.querySelectorAll('connection-[data-system2-nickname="' + system_nickname + '"]')
+        let systems2 = document.querySelectorAll('connection-[data-system1-nickname="' + system_nickname + '"]')
+        for (let i = 0; i < systems1.length; i++) {
+            systems1[i].firstElementChild.classList.add("conn_hover");
+        }
+        for (let i = 0; i < systems2.length; i++) {
+            systems2[i].firstElementChild.classList.add("conn_hover");
+        }
+    });
+    systems[row].addEventListener('mouseout', function () {
+        let system_nickname = systems[row].attributes["nickname"].value
+        let systems1 = document.querySelectorAll('connection-[data-system2-nickname="' + system_nickname + '"]')
+        let systems2 = document.querySelectorAll('connection-[data-system1-nickname="' + system_nickname + '"]')
+        for (let i = 0; i < systems1.length; i++) {
+            systems1[i].firstElementChild.classList.remove("conn_hover");
+        }
+        for (let i = 0; i < systems2.length; i++) {
+            systems2[i].firstElementChild.classList.remove("conn_hover");
+        }
+    });
+}
+
 function getOffset1(el) {
     const rect = el.getBoundingClientRect();
     return {
