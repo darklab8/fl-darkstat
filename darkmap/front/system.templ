@@ -1,4 +1,18 @@
 package front
 
-templ System() {
+import (
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"strings"
+)
+
+func SystemDetailedUrl(system *export_front.System) string {
+	return "cdn/system/system-" + strings.ToLower(system.Nickname) + ".html"
+}
+
+templ System(system *export_front.System) {
+	@Html5() {
+		@GalaxyGrid(MenuKindSystem) {
+			{ system.Nickname }
+		}
+	}
 }

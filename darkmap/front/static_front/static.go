@@ -50,3 +50,12 @@ var CustomCSS core_types.StaticFile = core_types.StaticFile{
 	Filename: "custom.css",
 	Kind:     core_types.StaticFileCSS,
 }
+
+//go:embed galaxy.css
+var GalaxyCSSContent string
+
+var GalaxyCSS core_types.StaticFile = core_types.StaticFile{
+	Content:  GalaxyCSSContent,
+	Filename: "galaxy.css",
+	Kind:     core_types.StaticFileCSS,
+}

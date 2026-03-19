@@ -19,24 +19,12 @@ templ Html5() {
 			@core_front.StaticFile(core_static.HtmxPreloadJS)
 			@core_front.StaticFile(static_front.CommonCSS)
 			@core_front.StaticFile(static_front.CustomCSS)
+			@core_front.StaticFile(static_front.GalaxyCSS)
 			@core_front.StaticFile(static_front.PanzoomJS)
 			@core_front.StaticFile(static_front.CustomJS)
 			<script>
 
 			</script>
-			<style>
-				html {
-					background-image: url(../static/blue_space_with_planets_by_darkdissolution-updCont.jpg);
-					background-size: cover;
-					background-repeat: no-repeat;
-					background-color: rgb(9, 15, 24);
-					position: absolute;
-					top: 0;
-					left: 0;
-					right: 0;
-					bottom: 0;
-				}
-			</style>
 		</head>
 		<body>
 			{ children... }
@@ -46,7 +34,7 @@ templ Html5() {
 
 templ Index(data *export_front.Export) {
 	@Html5() {
-		@GalaxyGrid() {
+		@GalaxyGrid(MenuKindGalaxy) {
 			@GalalaxyMap(data)
 		}
 	}

@@ -15,6 +15,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"github.com/darklab8/go-utils/utils/timeit"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type Linker struct {
@@ -55,6 +56,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(core_static.FaviconIco),
 		builder.NewStaticFileFromCore(static_front.CommonCSS),
 		builder.NewStaticFileFromCore(static_front.CustomCSS),
+		builder.NewStaticFileFromCore(static_front.GalaxyCSS),
 		builder.NewStaticFileFromCore(static_front.CustomJS),
 		builder.NewStaticFileFromCore(static_front.MapGalaxyJS),
 		builder.NewStaticFileFromCore(static_front.PanzoomJS),
@@ -72,6 +74,15 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 			front.Index(l.Export),
 		),
 	)
+
+	for _, system := range l.Export.Systems {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.SystemDetailedUrl(system)),
+				front.System(system),
+			),
+		)
+	}
 
 	return build
 }

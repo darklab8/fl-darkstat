@@ -1,0 +1,185 @@
+html {
+    background-image: url(../static/blue_space_with_planets_by_darkdissolution-updCont.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: rgb(9, 15, 24);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+background- {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}
+
+map- {
+    width: 100%;
+    height: 100%;
+}
+
+.panzoom-parent-galaxy {
+    position: relative;
+    box-sizing: border-box;
+
+    background-color: black;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../static/Sirius_Map.png);
+    background-size: cover;
+    border: 0.2em rgb(25, 47, 96) solid;
+    height: 100%;
+}
+
+.panzoom-parent-system {
+    position: relative;
+    box-sizing: border-box;
+    border: 0.2em rgb(25, 47, 96) solid;
+    height: 100%;
+}
+
+.panzoom {
+    box-sizing: border-box;
+
+    height: 100%;
+    top: 2.4em;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+map-with-interface- {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh);
+    width: calc(100vh - 2.4em);
+}
+
+menu- {
+    display: grid;
+    row-gap: 2px;
+    grid-template-columns: 16% 16% 16% 16% 16% 16%;
+    grid-template-rows: 30% 70%;
+    background: #000 url(../static/nnwall.jpg) repeat scroll 0% 0%;
+    box-shadow: 0em 0em 0.5em 0em #1EA6C5;
+    border: 0.2em solid #1EA6C5;
+    color: #FFF;
+    min-height: 60px;
+}
+
+/* .button_galaxy {
+    grid-row: span 2 / span 2;
+    grid-column-start: 6;
+    grid-row-start: 1;
+} */
+
+.disabled {
+    color: #AAA;
+}
+
+.toggle-input {}
+
+menu- div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+menu- .top {
+    margin-top: 5px;
+}
+
+menu- .bottom {
+    margin-bottom: 5px;
+}
+
+
+centeralizer- {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+system- {
+    position: absolute;
+    height: 0.65em;
+    width: 0.65em;
+    margin-top: -0.325em;
+    margin-left: -0.325em;
+    border-color: white;
+}
+
+cycle- {
+    border-color: #2299F5;
+    border-width: 3px;
+    border-radius: 100%;
+    border-style: solid;
+    background-color: rgb(36, 36, 36);
+    left: -25%;
+    top: -25%;
+    position: absolute;
+    height: 0.65em;
+    width: 0.65em;
+}
+
+system-label-wrap {
+    color: transparent;
+    /* make the text invisible */
+    user-select: none;
+    /* prevent selection of the text */
+    position: absolute;
+    left: 50%;
+
+    font-family: "Agency FB", "Oswald", sans-serif;
+    font-size: 0.8em;
+    position: absolute;
+    display: inline-block;
+    top: 1em;
+    white-space: nowrap;
+}
+
+system-label {
+    margin-left: 0px;
+    left: -50%;
+    position: absolute;
+
+    display: inline-block;
+    top: 0.3em;
+    white-space: nowrap;
+    text-shadow: 0em 0em 0.3em black !important;
+    color: white;
+}
+
+system-title {
+    position: absolute;
+    bottom: 0.1em;
+    color: white;
+    text-align: center;
+    width: 100%;
+    font-family: "Agency FB", "Oswald", sans-serif;
+    font-size: 3em;
+    padding: 0;
+    margin: 0;
+    color: rgb(135, 195, 224);
+
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+connection- {
+    position: absolute;
+    z-index: -1;
+}
+
+line- {
+    position: absolute;
+    width: 0.125em;
+    background-color: rgba(69, 150, 255, 0.9);
+    display: block;
+}

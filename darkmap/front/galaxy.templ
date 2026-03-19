@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"github.com/darklab8/go-utils/utils/ptr"
 	"strings"
@@ -26,7 +27,7 @@ templ GalaxySystem(sys *export_front.System, sys_fac SystemFaction) {
 		class={ templ.KV("hidden_system", !sys.VisibleByDefault), }
 		nickname={ sys.Nickname }
 	>
-		<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + sys.Nickname) }>
+		<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + SystemDetailedUrl(sys)) }>
 			<system-
 				id={ fmt.Sprintf("system-%s", sys.Nickname) }
 				nickname={ sys.Nickname }
@@ -63,84 +64,6 @@ templ GalaxySystem(sys *export_front.System, sys_fac SystemFaction) {
 }
 
 templ GalalaxyMap(data *export_front.Export) {
-	<style>
-        centeralizer- {
-            height: 100%;
-            width: 100%;
-            position: absolute;
-        }
-        system- {
-            position: absolute;
-            height: 0.65em;
-            width: 0.65em;
-            margin-top: -0.325em;
-            margin-left: -0.325em;
-            border-color: white;
-        }
-        cycle- {
-            border-color: #2299F5;
-            border-width: 3px;
-            border-radius: 100%;
-            border-style: solid;
-            background-color: rgb(36, 36, 36);
-            left: -25%;
-            top: -25%;
-            position: absolute;
-            height: 0.65em;
-            width: 0.65em;
-        }
-        system-label-wrap {
-            color: transparent; /* make the text invisible */
-            user-select: none; /* prevent selection of the text */
-            position:absolute;
-            left:50%;
-
-            font-family: "Agency FB", "Oswald", sans-serif;
-            font-size: 0.8em;
-            position: absolute;
-            display: inline-block;
-            top: 1em;
-            white-space: nowrap;
-        }
-        system-label {
-            margin-left: 0px;
-            left: -50%;
-            position: absolute;
-
-            display: inline-block;
-            top: 0.3em;
-            white-space: nowrap;
-            text-shadow: 0em 0em 0.3em black !important;
-            color: white;
-        }
-        system-title {
-            position: absolute;
-            bottom: 0.1em;
-            color: white;
-            text-align: center;
-            width: 100%;
-            font-family: "Agency FB", "Oswald", sans-serif;
-            font-size: 3em;
-            padding: 0;
-            margin: 0;
-            color: rgb(135, 195, 224);
-
-            display: block;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        connection- {
-            position: absolute;
-            z-index: -1;
-        }
-
-        line- {
-            position: absolute;
-            width: 0.125em;
-            background-color: rgba(69, 150, 255, 0.9);
-            display: block;
-        }
-    </style>
 	<centeralizer->
 		for _, sys := range data.Systems {
 			@GalaxySystem(sys, GetSystemFac(sys))
@@ -180,75 +103,24 @@ templ GalalaxyMap(data *export_front.Export) {
 	</centeralizer->
 }
 
-templ GalaxyGrid() {
-	<style>
-		background- {
-			display: block;
-			height: 100vh;
-			width: 100vw;
-			display: flex;
-			justify-content: center;
-		}
-		map- {
-			width: 100%;
-			height: 100%;
-		}
+type MenuKind int8
 
-		.panzoom-parent{
-			position: relative;
-			box-sizing: border-box;
+const (
+	MenuKindGalaxy MenuKind = iota
+	MenuKindSystem
+)
 
-			background-color: black;
-			background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../static/Sirius_Map.png);
-			background-size: cover;
-			border: 0.2em rgb(25, 47, 96) solid;
-            height: 100%;
-		}
-		.panzoom{
-			box-sizing: border-box;
+func (m MenuKind) ToNickname() string {
+	if m == MenuKindGalaxy {
+		return "galaxy"
+	}
+	if m == MenuKindSystem {
+		return "system"
+	}
+	return "unknown"
+}
 
-            height: 100%;
-			top: 2.4em;
-			width: 100%;
-			margin: 0 auto;
-			box-sizing: border-box;
-		}
-
-        map-with-interface- {
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh);
-            width: calc(100vh - 2.4em);
-        }
-        menu- {
-            display: grid;
-            grid-template-columns: 20% 20% 20% 20% 20%;
-            grid-template-rows: 30% 70%;
-            background: #000 url(../static/nnwall.jpg) repeat scroll 0% 0%;
-            box-shadow: 0em 0em 0.5em 0em #1EA6C5;
-            border: 0.2em solid #1EA6C5;
-            color: #FFF;
-            min-height: 60px;
-        }
-         .disabled {
-            color: #AAA;
-        }
-        .toggle-input {
-        }
-        menu- div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-        }
-        menu- .top {
-            margin-top: 5px;
-        }
-        menu- .bottom {
-            margin-bottom: 5px;
-        }
-	</style>
+templ GalaxyGrid(menu_kind MenuKind) {
 	// font-family: "Agency FB", "Oswald", sans-serif;
 	<background->
 		<map-with-interface->
@@ -268,6 +140,9 @@ templ GalaxyGrid() {
 				<div class="top disabled">
 					@MultiLineOption([]string{"Zones"})
 				</div>
+				<div class="top">
+					@MultiLineOption([]string{"To Galaxy"})
+				</div>
 				// <input type="checkbox" id="checkbox_systems" name="systems" value="systems"/>
 				// <input type="checkbox" id="checkbox_swrecks" name="wrecks" value="wrecks" disabled/>
 				<div class="bottom">
@@ -285,8 +160,17 @@ templ GalaxyGrid() {
 				<div class="bottom">
 					@ToggleSwitch("checkbox_zones")
 				</div>
+				<div>
+					if menu_kind == MenuKindGalaxy {
+						<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
+					} else {
+						<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>
+							<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
+						</a>
+					}
+				</div>
 			</menu->
-			<div class="panzoom-parent">
+			<div class={ fmt.Sprintf("panzoom-parent-%s", menu_kind.ToNickname()) }>
 				<div class="panzoom">
 					<map->
 						<content->
@@ -298,6 +182,9 @@ templ GalaxyGrid() {
 		</map-with-interface->
 	</background->
 	@core_front.StaticFile(static_front.MapGalaxyJS)
+}
+
+templ GalaxyButton() {
 }
 
 templ ToggleSwitch(id string) {
