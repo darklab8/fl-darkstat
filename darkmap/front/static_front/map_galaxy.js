@@ -60,6 +60,19 @@ if (checkbox_systems_state !== null) {
     checkbox_systems.checked = checked;
 }
 
+
+var checkbox_labels = document.querySelector("#checkbox_map_labels");
+checkbox_labels.addEventListener('change', function () {
+    toggle_option(this.checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
+});
+
+let checkbox_label_state = sessionStorage.getItem("checkbox_map_labels");
+if (checkbox_label_state !== null) {
+    let checked = checkbox_label_state === "true";
+    toggle_option(checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
+    checkbox_labels.checked = checked;
+}
+
 function getOffset1(el) {
     const rect = el.getBoundingClientRect();
     return {
