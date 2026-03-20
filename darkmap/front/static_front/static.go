@@ -33,6 +33,15 @@ var MapGalaxyJS core_types.StaticFile = core_types.StaticFile{
 	Kind:     core_types.StaticFileJS,
 }
 
+//go:embed map_system.js
+var MapSystemJSContent string
+
+var MapSystemJS core_types.StaticFile = core_types.StaticFile{
+	Content:  MapSystemJSContent,
+	Filename: "map_system.js",
+	Kind:     core_types.StaticFileJS,
+}
+
 //go:embed common.css
 var CommonCSSContent string
 

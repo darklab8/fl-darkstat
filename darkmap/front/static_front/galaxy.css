@@ -21,6 +21,8 @@ background- {
 map- {
     width: 100%;
     height: 100%;
+    user-select: none;
+    touch-action: none;
 }
 
 .panzoom-parent-galaxy {
@@ -35,6 +37,8 @@ map- {
 }
 
 .panzoom-parent-system {
+    background: rgb(9, 12, 21);
+
     position: relative;
     box-sizing: border-box;
     border: 0.2em rgb(25, 47, 96) solid;

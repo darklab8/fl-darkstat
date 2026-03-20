@@ -59,6 +59,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.GalaxyCSS),
 		builder.NewStaticFileFromCore(static_front.CustomJS),
 		builder.NewStaticFileFromCore(static_front.MapGalaxyJS),
+		builder.NewStaticFileFromCore(static_front.MapSystemJS),
 		builder.NewStaticFileFromCore(static_front.PanzoomJS),
 	}
 

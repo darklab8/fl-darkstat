@@ -1,7 +1,9 @@
 package front
 
 import (
+	"fmt"
 	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"strconv"
 	"strings"
 )
 
@@ -9,10 +11,82 @@ func SystemDetailedUrl(system *export_front.System) string {
 	return "cdn/system/system-" + strings.ToLower(system.Nickname) + ".html"
 }
 
+var GridRows []int = []int{2, 3, 4, 5, 6, 7, 8}
+var GridColumns []rune = []rune{'B', 'C', 'D', 'E', 'F', 'G', 'H'}
+
 templ System(system *export_front.System) {
 	@Html5() {
 		@GalaxyGrid(MenuKindSystem) {
-			{ system.Nickname }
+			<style>
+                .grid {
+                    width: 100%;
+                    height: 100%;
+                    color: #fff;
+                }
+                .grid .hzGridLine {
+                    height: 0.1em;
+                    width: 100%;
+                }
+                .grid .vertGridLine {
+                    width: 0.1em;
+                    height: 100%;
+                }
+                .grid .hzGridLine, .grid .vertGridLine {
+                    background: rgb(25, 47, 96);
+                    position: absolute;
+                    box-shadow: 0 0 1em 0.1em rgb(25, 47, 96);
+                }
+                .hzGridLine h3 {
+                    position: relative;
+                    top: -0.5em;
+                    left: 0.6em;
+                }
+                .vertGridLine h3 {
+                    position: relative;
+                    left: 0.6em;
+                    top: -0.8em;
+                }
+                .hzGridLine h3, .vertGridLine h3, #nullGridCell {
+                    color: white;
+                    font-family: "Agency FB", "Oswald", sans-serif;
+                    z-index: 1;
+                }
+                h3 {
+                    display: block;
+                    font-size: 1.17em;
+                    margin-block-start: 1em;
+                    margin-block-end: 1em;
+                    margin-inline-start: 0px;
+                    margin-inline-end: 0px;
+                    font-weight: bold;
+                    unicode-bidi: isolate;
+                }
+                #nullGridCell {
+                    position: absolute;
+                    top: -0.75em;
+                    left: 0.55em;
+                }
+                </style>
+			<div style="position: absolute; top:0%">
+				{ system.Nickname }
+			</div>
+			<grid- class="grid">
+				for index, i := range GridRows {
+					<div class="hzGridLine" style={ fmt.Sprintf("display: block; top: %.1f%%", 100*float64(index+1)/8.0) }>
+						<h3 style="transform: translateX(0px);">
+							{ strconv.Itoa(i) }
+						</h3>
+					</div>
+				}
+				for index, i := range GridColumns {
+					<div class="vertGridLine" style={ fmt.Sprintf("display: block; left: %.1f%%", 100*float64(index+1)/8.0) }>
+						<h3 style="transform: translateX(0px);">
+							{ string(i) }
+						</h3>
+					</div>
+				}
+				<h3 id="nullGridCell" style="display: block;">A1</h3>
+			</grid->
 		}
 	}
 }
