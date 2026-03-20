@@ -1,6 +1,7 @@
 package export_front
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -120,6 +121,20 @@ const (
 	JumpKindJumpgate
 	JumpKindAlien
 )
+
+func (j JumpConnectionKind) ToStr() string {
+	switch j {
+	case JumpKindAlien:
+		return "alien"
+	case JumpKindJumpgate:
+		return "jumpgate"
+	case JumpKindJumphole:
+		return "jumphole"
+	case JumpKindUnstable:
+		return "unstable"
+	}
+	return "unknown"
+}
 
 type JumpConnection struct {
 	Kind map[JumpConnectionKind]bool
@@ -253,7 +268,61 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 			connection.SetJumpable(origin_system_nick, target_conn.Nickname)
 		}
 	}
+
+	// Printer debugger of unstable connections
+	unique_msgs := make(map[string]bool)
+	for origin_system_nick, origin_system := range graph.Systems {
+		for _, target_conn := range origin_system.LeadsTo {
+
+			target_system := &JumpConnection{System: &System{}}
+			if value, ok := graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick]; ok {
+				target_system = value
+			}
+
+			if !origin_system.VisibleByDefault &&
+				!target_system.VisibleByDefault {
+				continue
+			}
+
+			key := GetConnKey(origin_system_nick, target_conn.Nickname)
+			if _, ok := unique_msgs[key]; ok {
+				continue
+			}
+			unique_msgs[key] = true
+
+			connection, ok := graph.ConnectionEdges[key]
+			if !ok {
+				connection = NewConnectionEdge(origin_system, target_conn.System)
+				graph.ConnectionEdges[key] = connection
+			}
+
+			target_kinds := make(map[JumpConnectionKind]bool)
+			if _, ok := graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick]; ok {
+				target_kinds = graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick].Kind
+			}
+
+			if connection.Kind == JumpKindUnknown {
+				logus.Log.Warn("asymetric connection",
+					typelog.Any("sys1-2", fmt.Sprintln(origin_system_nick, target_conn.Nickname)),
+					typelog.Any("target_name", target_conn.Name),
+					typelog.Any("origin_name", origin_system.Name),
+					typelog.Any("target_conns", PrintFormatedConns(target_conn.Kind)),
+					typelog.Any("origin_conns", PrintFormatedConns(target_kinds)))
+
+			}
+		}
+	}
+
 	return graph
+}
+
+func PrintFormatedConns(target_kinds map[JumpConnectionKind]bool) map[string]bool {
+	result := make(map[string]bool)
+
+	for key, _ := range target_kinds {
+		result[key.ToStr()] = true
+	}
+	return result
 }
 
 func (e *Export) GetJumpConnectionKind(jh *systems_mapped.Jumphole) JumpConnectionKind {
@@ -265,14 +334,11 @@ func (e *Export) GetJumpConnectionKind(jh *systems_mapped.Jumphole) JumpConnecti
 			disco_cargo_limit = ptr.Ptr(cargo_limit)
 		}
 	}
-	if e.Mapped.Discovery != nil {
-		if disco_cargo_limit != nil {
-			if *disco_cargo_limit < trades.DiscoCargoLimitedThreshold {
-				return JumpKindUnstable
-			}
+	if disco_cargo_limit != nil {
+		if *disco_cargo_limit < trades.DiscoCargoLimitedThreshold {
+			return JumpKindUnstable
 		}
 	}
-
 	if strings.Contains(jh_archetype, "nomad") {
 		return JumpKindAlien
 	} else if strings.Contains(jh_archetype, "jumpgate") {

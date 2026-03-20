@@ -222,14 +222,14 @@ templ MultiLineOption(lines []string) {
 type SystemFaction int8
 
 const (
-	FacUnknown SystemFaction = iota
+	FacIndependent SystemFaction = iota
 	FacLiberty
 	FacGalica
 	FacNomad
 	FacKusari
 	FacBretonia
 	FacRheinland
-	FacIndependent
+	FacTau
 	FacSigma
 	FacOmega
 	FacDeepOmega
@@ -243,46 +243,38 @@ func GetSystemFac(sys *export_front.System) SystemFaction {
 
 	if strings.Contains(region_name, "deep") && strings.Contains(region_name, "omega") {
 		return FacDeepOmega
-	}
-	if strings.Contains(region_name, "liberty") {
+	} else if strings.Contains(region_name, "liberty") {
 		return FacLiberty
-	}
-	if strings.Contains(region_name, "gallia") {
+	} else if strings.Contains(region_name, "gallia") {
 		return FacGalica
-	}
-	if strings.Contains(region_name, "nomad") {
+	} else if strings.Contains(region_name, "nomad") {
 		return FacNomad
-	}
-	if strings.Contains(region_name, "kusari") {
+	} else if strings.Contains(region_name, "kusari") {
 		return FacKusari
-	}
-	if strings.Contains(region_name, "bretonia") {
+	} else if strings.Contains(region_name, "bretonia") {
 		return FacBretonia
-	}
-	if strings.Contains(region_name, "rheinland") {
+	} else if strings.Contains(region_name, "rheinland") {
 		return FacRheinland
-	}
-	if strings.Contains(region_name, "independent") {
-		return FacIndependent
-	}
-
-	if strings.Contains(sys_name, "sigma") {
-		return FacSigma
-	}
-	if strings.Contains(sys_name, "omega") {
+	} else if strings.Contains(region_name, "tau") {
+		return FacTau
+	} else if strings.Contains(region_name, "omega") {
 		return FacOmega
-	}
-
-	if strings.Contains(sys_name, "omicron") {
+	} else if strings.Contains(sys_name, "sigma") {
+		return FacSigma
+	} else if strings.Contains(sys_name, "omega") {
+		return FacOmega
+	} else if strings.Contains(sys_name, "tau") {
+		return FacTau
+	} else if strings.Contains(sys_name, "omicron") {
 		return FacNomad
 	}
 
-	return FacUnknown
+	return FacIndependent
 }
 
 func SystemFacToBorderWidth(sysfac SystemFaction) int {
 	switch sysfac {
-	case FacUnknown:
+	case FacTau:
 		return 4
 	case FacDeepOmega:
 		return 4
@@ -307,7 +299,7 @@ func SystemFacToHexColor(sysfac SystemFaction) string {
 	case FacRheinland:
 		return "#00AD1D"
 	case FacIndependent:
-		return "#E5CCFF"
+		return "#DDD"
 	case FacSigma:
 		return "#14e7f2"
 	case FacOmega:
