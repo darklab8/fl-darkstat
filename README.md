@@ -2,7 +2,7 @@
 
 # Description
 
-online version of the [flstat](https://discoverygc.com/forums/showthread.php?tid=115254) to navigate game data of [the game Freelancer](https://youtu.be/RHlH_qOH5zc). You can see data about Bases, Guns, Ships and multiple other stuff.
+online version of the [flstat](https://discoverygc.com/forums/showthread.php?tid=115254) (and NavMap) to navigate game data of [the game Freelancer](https://youtu.be/RHlH_qOH5zc). You can see data about Bases, Guns, Ships and multiple other stuff.
 
 It is able to work in two mods:
 - Static Site Generator to build html/css/js files to deploy them for example to github pages (In this way runs for Freelancer Vanilla and FLSR)
@@ -77,6 +77,8 @@ If u have problems with configuring development environment, then seek my contac
   - Freelancer Discovery
   - Vanilla Freelancer
   - Freelancer Sirius Revival
+  - helped to make it working for Freelancer Universe
+  - at some point debugged its working for Freelancer HD Edition
   - may be will working for any other mod, if not, then request support
 
 # Darkstat has API access
@@ -168,6 +170,8 @@ So don't have folder "DATA2" duplicating all files in same Freelancer folder
 - Honorary mentions for very active moral support and extra ideas by
   - IrateRedKite (from starport Discord)
   - Bolte (from starport Discord)
+- [Space icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/space) for darkmap Galaxy button
+- Darkmap part made is basically rewrite of abandoned project [Navmap](https://github.com/AudunVN/Navmap) made by AudunVN also known as Error.
 
 <!--- 
 - In case it will be ever needed, [just in case linking flcompanion](<https://github.com/Corran-Raisu/FLCompanion>)

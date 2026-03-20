@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_logus"
 )
@@ -14,6 +15,8 @@ type Export struct {
 	Mapped  *configs_mapped.MappedConfigs
 	Systems []*System
 	Graph   SystemGraphs
+
+	Exp *configs_export.Exporter
 }
 
 func NewExport(ctx context.Context) *Export {
@@ -27,7 +30,7 @@ func NewExport(ctx context.Context) *Export {
 		e.Mapped = configs_mapped.NewMappedConfigs().Read(ctx, freelancer_folder)
 	}
 
-	e.export()
+	e.Export(ctx)
 
 	return e
 }
@@ -36,7 +39,10 @@ func (e *Export) GetInfocardName(ids_name int, nickname string) string {
 	return e.Mapped.GetInfocardName(ids_name, nickname)
 }
 
-func (e *Export) export() {
+func (e *Export) Export(ctx context.Context) {
 	e.Systems = ExportSystems(e.Mapped)
 	e.Graph = e.GetSystemConnections(e.Systems)
+
+	e.Exp = configs_export.NewExporter(e.Mapped)
+	e.Exp.Bases = e.Exp.GetBases(ctx)
 }
