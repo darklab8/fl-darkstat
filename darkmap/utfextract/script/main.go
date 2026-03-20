@@ -2,7 +2,7 @@
 //
 // Usage:
 //
-//	utfextract -in <file_or_dir> -out <output_dir> [-r]
+//	utfextract -in <file_or_dir> -out <output_dir> [-r] [-preserve-paths]
 //
 // Examples:
 //
@@ -12,8 +12,9 @@
 //	# Extract from all UTF files in a directory (non-recursive)
 //	utfextract -in DATA/INTERFACE/NEURONET/NAVMAP/NEWNAVMAP -out ./images
 //
-//	# Extract recursively
-//	utfextract -in DATA -out ./images -r
+//	# Extract recursively, mirroring the source directory tree in the output
+//	# (useful for validating results against a reference Perl extraction)
+//	utfextract -in DATA -out ./images -r -preserve-paths
 package main
 
 import (
@@ -41,7 +42,7 @@ diff:
 nav_navmap_right.cmp => 30.tgaframetexture.tga backgroundpattern.dds edgecolor.tgaagain4.tga
 */
 
-// go run . -r -in /home/naa/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/Discovery/DATA/INTERFACE/NEURONET/NAVMAP/NEWNAVMAP/ -out ./received
+// go run . -preserve-paths -r -in /home/naa/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/Discovery/DATA/INTERFACE/NEURONET/NAVMAP/NEWNAVMAP/ -out ./received
 
 // go run . -in nav_addwaypoint.cmp -out ./images
 
@@ -49,6 +50,7 @@ func main() {
 	inPath := flag.String("in", "", "Input file or directory (required)")
 	outPath := flag.String("out", ".", "Output directory (default: current directory)")
 	recursive := flag.Bool("r", false, "Recurse into sub-directories")
+	preservePaths := flag.Bool("preserve-paths", false, "Mirror source sub-directory structure under output dir (useful for diff-based testing)")
 	flag.Parse()
 
 	if *inPath == "" {
@@ -69,7 +71,10 @@ func main() {
 	}
 
 	if info.IsDir() {
-		fr, iw, err := utfextract.ExtractFromDir(*inPath, *outPath, *recursive)
+		if *preservePaths && !*recursive {
+			fmt.Fprintln(os.Stderr, "note: -preserve-paths has no effect without -r")
+		}
+		fr, iw, err := utfextract.ExtractFromDir(*inPath, *outPath, *recursive, *preservePaths)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "warning: %v\n", err)
 		}

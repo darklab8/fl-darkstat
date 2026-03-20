@@ -310,9 +310,25 @@ func ensureExt(name, ext string) string {
 // ────────────────────────────────────────────────────────────────────────────
 
 // ExtractFromFile reads one UTF file and writes all found images into
-// outputDir/<basename>/<imagefile>.
+//
+//	outputDir/<basename>/<imagefile>
+//
 // Returns the number of images written.
 func ExtractFromFile(inputPath, outputDir string) (int, error) {
+	return extractFromFileWithSubdir(inputPath, outputDir, "")
+}
+
+// extractFromFileWithSubdir is the internal implementation that also accepts
+// an optional subdir (relative path of the UTF file's parent directory
+// measured from the original input root).  When non-empty it is inserted
+// between outputDir and the UTF file's basename so that the full output path
+// becomes:
+//
+//	outputDir/<subdir>/<basename>/<imagefile>
+//
+// This preserves the original directory tree when extracting recursively,
+// making it easy to diff output against a reference tree.
+func extractFromFileWithSubdir(inputPath, outputDir, subdir string) (int, error) {
 	raw, err := os.ReadFile(inputPath)
 	if err != nil {
 		return 0, fmt.Errorf("reading %s: %w", inputPath, err)
@@ -327,7 +343,7 @@ func ExtractFromFile(inputPath, outputDir string) (int, error) {
 	count := 0
 
 	for _, img := range images {
-		dest := filepath.Join(outputDir, basename, filepath.FromSlash(img.Filename))
+		dest := filepath.Join(outputDir, subdir, basename, filepath.FromSlash(img.Filename))
 		if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
 			return count, fmt.Errorf("creating directory for %s: %w", dest, err)
 		}
@@ -342,7 +358,29 @@ func ExtractFromFile(inputPath, outputDir string) (int, error) {
 
 // ExtractFromDir walks inputDir for UTF files and extracts images into outputDir.
 // When recursive is true it descends into sub-directories.
-func ExtractFromDir(inputDir, outputDir string, recursive bool) (filesRead, imagesWritten int, err error) {
+//
+// When preservePaths is true the sub-directory structure inside inputDir is
+// mirrored under outputDir, so a file found at
+//
+//	inputDir/foo/bar/model.3db
+//
+// produces images under
+//
+//	outputDir/foo/bar/model.3db/<imagefile>
+//
+// rather than the flat
+//
+//	outputDir/model.3db/<imagefile>
+//
+// Use preservePaths=true when validating output against a known-good reference
+// tree extracted with the Perl tool.
+func ExtractFromDir(inputDir, outputDir string, recursive, preservePaths bool) (filesRead, imagesWritten int, err error) {
+	return extractDir(inputDir, outputDir, "", recursive, preservePaths)
+}
+
+// extractDir is the recursive implementation; subdir accumulates the relative
+// path from the original inputDir root as we descend.
+func extractDir(inputDir, outputDir, subdir string, recursive, preservePaths bool) (filesRead, imagesWritten int, err error) {
 	entries, err := os.ReadDir(inputDir)
 	if err != nil {
 		return 0, 0, fmt.Errorf("reading directory %s: %w", inputDir, err)
@@ -353,7 +391,11 @@ func ExtractFromDir(inputDir, outputDir string, recursive bool) (filesRead, imag
 
 		if entry.IsDir() {
 			if recursive {
-				fr, iw, e := ExtractFromDir(fullPath, outputDir, true)
+				childSubdir := entry.Name()
+				if subdir != "" {
+					childSubdir = filepath.Join(subdir, entry.Name())
+				}
+				fr, iw, e := extractDir(fullPath, outputDir, childSubdir, recursive, preservePaths)
 				filesRead += fr
 				imagesWritten += iw
 				if e != nil {
@@ -368,7 +410,11 @@ func ExtractFromDir(inputDir, outputDir string, recursive bool) (filesRead, imag
 		}
 
 		filesRead++
-		n, e := ExtractFromFile(fullPath, outputDir)
+		outSubdir := ""
+		if preservePaths {
+			outSubdir = subdir
+		}
+		n, e := extractFromFileWithSubdir(fullPath, outputDir, outSubdir)
 		imagesWritten += n
 		if e != nil {
 			fmt.Fprintf(os.Stderr, "warning: %v\n", e)

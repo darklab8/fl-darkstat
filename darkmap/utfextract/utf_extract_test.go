@@ -3,6 +3,8 @@ package utfextract
 import (
 	"bytes"
 	"encoding/binary"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -219,4 +221,77 @@ func childNames(n *Node) []string {
 		names[i] = c.Name
 	}
 	return names
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Path-preservation tests
+// ─────────────────────────────────────────────────────────────────────────────
+
+// TestExtractFromDirPreservePaths verifies that with preservePaths=true the
+// sub-directory structure of the input root is mirrored under outputDir.
+//
+// Input layout:
+//
+//	<tmpIn>/
+//	  a/
+//	    b/
+//	      tex.txm   (one TGA image inside)
+//
+// Expected output (preservePaths=true, recursive=true):
+//
+//	<tmpOut>/a/b/tex.txm/<image>.tga
+//
+// Expected output (preservePaths=false, recursive=true):
+//
+//	<tmpOut>/tex.txm/<image>.tga   ← sub-dirs stripped
+func TestExtractFromDirPreservePaths(t *testing.T) {
+	fakeImg := make([]byte, 32) // TGA
+	utfData := buildUTF(t, "icon.tga", fakeImg)
+
+	// Build  <tmpIn>/a/b/tex.txm
+	tmpIn := t.TempDir()
+	subDir := filepath.Join(tmpIn, "a", "b")
+	if err := os.MkdirAll(subDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	utfPath := filepath.Join(subDir, "tex.txm")
+	if err := os.WriteFile(utfPath, utfData, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	t.Run("preserve=true", func(t *testing.T) {
+		tmpOut := t.TempDir()
+		fr, iw, err := ExtractFromDir(tmpIn, tmpOut, true, true)
+		if err != nil {
+			t.Fatalf("ExtractFromDir: %v", err)
+		}
+		if fr != 1 || iw != 1 {
+			t.Fatalf("expected 1 file / 1 image, got files=%d images=%d", fr, iw)
+		}
+		want := filepath.Join(tmpOut, "a", "b", "tex.txm", "icon.tga")
+		if _, err := os.Stat(want); os.IsNotExist(err) {
+			t.Errorf("expected output at %s (not found)", want)
+		}
+	})
+
+	t.Run("preserve=false", func(t *testing.T) {
+		tmpOut := t.TempDir()
+		fr, iw, err := ExtractFromDir(tmpIn, tmpOut, true, false)
+		if err != nil {
+			t.Fatalf("ExtractFromDir: %v", err)
+		}
+		if fr != 1 || iw != 1 {
+			t.Fatalf("expected 1 file / 1 image, got files=%d images=%d", fr, iw)
+		}
+		// Sub-dirs NOT preserved — file sits directly under tex.txm/
+		want := filepath.Join(tmpOut, "tex.txm", "icon.tga")
+		if _, err := os.Stat(want); os.IsNotExist(err) {
+			t.Errorf("expected flat output at %s (not found)", want)
+		}
+		// And the deep path must NOT exist
+		deep := filepath.Join(tmpOut, "a", "b", "tex.txm", "icon.tga")
+		if _, err := os.Stat(deep); err == nil {
+			t.Errorf("deep path %s should not exist when preservePaths=false", deep)
+		}
+	})
 }
