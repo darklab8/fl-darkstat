@@ -40,7 +40,7 @@ func GetImages() *utfextract.Shapes {
 	}
 
 	shapes := utfextract.NewShapes()
-	err = utfextract.ExtractFromDir(newnavmaps[0], "", true, false, shapes)
+	err = utfextract.ExtractFromDir(newnavmaps[0], "", true, true, shapes)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "warning: %v\n", err)
 	}

@@ -4,7 +4,7 @@ import (
 	"image/jpeg"
 	"os"
 
-	"github.com/darklab8/fl-darkstat/darkmap/tga"
+	"github.com/darklab8/fl-darkstat/darkmap/tga_ftrvxmtrx"
 )
 
 func main() {
@@ -14,7 +14,7 @@ func main() {
 	}
 	defer input.Close()
 
-	img, err := tga.Decode(input)
+	img, err := tga_ftrvxmtrx.Decode(input)
 	if err != nil {
 		panic(err)
 	}

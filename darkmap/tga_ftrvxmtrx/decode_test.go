@@ -1,10 +1,10 @@
-package tga_test
+package tga_ftrvxmtrx_test
 
 import (
 	"bufio"
 
-	_ "github.com/darklab8/fl-darkstat/darkmap/tga" // should be the first one, because TGA doesn't have any constant "header"
-	//_ "github.com/ftrvxmtrx/tga"                    // should be the first one, because TGA doesn't have any constant "header"
+	_ "github.com/darklab8/fl-darkstat/darkmap/tga_ftrvxmtrx" // should be the first one, because TGA doesn't have any constant "header"
+	//_ "github.com/ftrvxmtrx/tga_ftrvxmtrx"                    // should be the first one, because TGA doesn't have any constant "header"
 
 	"image"
 	"image/color"

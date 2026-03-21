@@ -2,10 +2,13 @@ package linker
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
+	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 
 	"github.com/darklab8/fl-darkstat/darkmap/front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
@@ -13,7 +16,10 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
+	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
+	"github.com/darklab8/fl-darkstat/darkmap/utfextract"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -66,7 +72,6 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 	for _, file := range static.StaticFilesystem.Files {
 		files = append(files, builder.NewStaticFileFromCore(file))
 	}
-
 	build = builder.NewBuilder(params, files)
 
 	build.RegComps(
@@ -85,5 +90,43 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		)
 	}
 
+	var extra_files []builder.StaticFile
+
+	for _, shape := range l.Export.Shapes.ShapesByNick {
+
+		if shape.Nickname == "nav_terrain_ice" {
+			fmt.Print()
+		}
+
+		image, err := SelectImageTga(shape)
+		if logus.Log.CheckWarn(err, "not found imega tga for shape, skipping",
+			typelog.Any("shape", shape.Nickname+"."+shape.Extension),
+		) {
+			continue
+		}
+		jpeg_result, err := utfextract.TransformToJpeg(image.Data)
+		if logus.Log.CheckWarn(err, "unable decoding tga image",
+			typelog.Any("image_name", image.Nickname+"."+image.Extension),
+			typelog.Any("shape", shape.Nickname+"."+shape.Extension),
+		) {
+			continue
+		}
+		extra_files = append(extra_files, builder.NewStaticFileFromCore(core_types.StaticFile{
+			Content:  jpeg_result.String(),
+			Filename: fmt.Sprintf("%s.jpeg", shape.Nickname),
+			Kind:     core_types.StaticFileUnknown,
+		}))
+	}
+	build.AddStaticFiles(extra_files)
+
 	return build
+}
+
+func SelectImageTga(shape *utfextract.Shape) (*utfextract.Image, error) {
+	for _, image := range shape.Images {
+		if image.Extension == "tga" {
+			return image, nil
+		}
+	}
+	return nil, errors.New("not found image tga")
 }

@@ -1,13 +1,10 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"image/jpeg"
 	"os"
 	"testing"
 
-	"github.com/darklab8/fl-darkstat/darkmap/tga"
 	"github.com/darklab8/fl-darkstat/darkmap/utfextract"
 	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/utils_os"
@@ -38,30 +35,14 @@ func TestMain(t *testing.T) {
 	assert.Equal(t, shapes.ImageWritten, 173, "expected to extract 173 utf files")
 
 	image_data := shapes.ShapesByNick["nav_addwaypoint"].Images[0].Data
-	jpeg_result := TransformToJpeg(image_data)
-
+	jpeg_result, err := utfextract.TransformToJpeg(image_data)
+	if err != nil {
+		panic(err)
+	}
 	file_output, err := os.Create("output.jpg")
 	if err != nil {
 		panic(err)
 	}
 	defer file_output.Close()
 	file_output.Write(jpeg_result.Bytes())
-}
-
-func TransformToJpeg(data []byte) *bytes.Buffer {
-	input := bytes.NewReader(data)
-	img, err := tga.Decode(input)
-	if err != nil {
-		panic(err)
-	}
-
-	var output *bytes.Buffer = &bytes.Buffer{} // zero value is ready to use
-
-	err = jpeg.Encode(output, img, &jpeg.Options{
-		Quality: 90,
-	})
-	if err != nil {
-		panic(err)
-	}
-	return output
 }

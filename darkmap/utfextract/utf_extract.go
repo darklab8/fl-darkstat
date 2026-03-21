@@ -14,6 +14,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
 )
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -348,17 +350,30 @@ func extractFromFileWithSubdir(inputPath, outputDir, subdir string, shapes *Shap
 	basename := filepath.Base(inputPath)
 	for _, img := range images {
 		dest := filepath.Join(outputDir, subdir, basename, filepath.FromSlash(img.Filename))
-
+		if strings.Contains(img.Filename, semantic.PATH_SEPARATOR) {
+			basename = filepath.Dir(img.Filename)
+		}
+		img.Filename = filepath.Base(img.Filename)
 		name := strings.Split(strings.ToLower(img.Filename), ".")
+
+		// if strings.Contains(strings.ToLower(dest), "navmaptextures.txm") {
+		// 	fmt.Print()
+		// }
 
 		image := &Image{
 			Nickname:  name[0],
 			Extension: name[1],
 			Data:      img.Data,
 		}
-		shape_naming := strings.Split(strings.ToLower(basename), ".")
-		shape_nickname := shape_naming[0]
-		shape_extension := shape_naming[1]
+
+		var shape_nickname, shape_extension string
+		if strings.Contains(basename, ".") {
+			shape_naming := strings.Split(strings.ToLower(basename), ".")
+			shape_nickname = shape_naming[0]
+			shape_extension = shape_naming[1]
+		} else {
+			shape_nickname = basename
+		}
 
 		shape, ok := shapes.ShapesByNick[shape_nickname]
 		if !ok {

@@ -1,4 +1,4 @@
-package tga_test
+package tga_ftrvxmtrx_test
 
 import (
 	"image"
@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/darklab8/fl-darkstat/darkmap/tga"
-	_ "github.com/darklab8/fl-darkstat/darkmap/tga"
+	"github.com/darklab8/fl-darkstat/darkmap/tga_ftrvxmtrx"
+	_ "github.com/darklab8/fl-darkstat/darkmap/tga_ftrvxmtrx"
 )
 
 const dstFilename = "encode_test.tga"
@@ -20,7 +20,7 @@ func encode(m image.Image) (err error) {
 	}
 
 	defer f.Close()
-	err = tga.Encode(f, m)
+	err = tga_ftrvxmtrx.Encode(f, m)
 
 	return
 }
