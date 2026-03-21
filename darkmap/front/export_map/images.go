@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
@@ -30,24 +31,33 @@ func findDirs(root, target string) ([]string, error) {
 	return matches, err
 }
 
-func GetImages() *utfextract.Shapes {
-	newnavmaps, err := findDirs(string(settings.Env.FreelancerFolder), "NEWNAVMAP")
+func GetImages(folder_name string) *utfextract.Shapes {
+	folders, err := findDirs(string(settings.Env.FreelancerFolder), filepath.Base(folder_name))
+
+	var filtered_folders []string
+	for _, folder := range folders {
+		if strings.Contains(folder, folder_name) {
+			filtered_folders = append(filtered_folders, folder)
+		}
+	}
+	folders = filtered_folders
+
 	if err != nil {
 		panic(err)
 	}
-	if len(newnavmaps) != 1 {
-		panic(fmt.Sprintln("expected to find NEWNAVMAP in freelancer folder", settings.Env.FreelancerFolder))
+	if len(folders) != 1 {
+		panic(fmt.Sprintln("expected to find ", folder_name, " in freelancer folder", settings.Env.FreelancerFolder))
 	}
 
 	shapes := utfextract.NewShapes()
-	err = utfextract.ExtractFromDir(newnavmaps[0], "", true, true, shapes)
+	err = utfextract.ExtractFromDir(folders[0], "", true, true, shapes)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "warning: %v\n", err)
 	}
 	fmt.Printf("Done. UTF files read: %d  Images written: %d\n", shapes.FilesRead, shapes.ImageWritten)
 
 	if shapes.ImageWritten == 0 {
-		logus.Log.Panic("expected finding inames in NEWNAVMAP folder. but not found by the path", typelog.Any("path", settings.Env.FreelancerFolder))
+		logus.Log.Panic(fmt.Sprintln("expected finding inames in ", folder_name, " folder. but not found by the path"), typelog.Any("path", settings.Env.FreelancerFolder))
 	}
 	return shapes
 }

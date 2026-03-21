@@ -34,7 +34,7 @@ func TestMain(t *testing.T) {
 	assert.Equal(t, shapes.FilesRead, 3, "expected to read 3 utf files")
 	assert.Equal(t, shapes.ImageWritten, 173, "expected to extract 173 utf files")
 
-	image_data := shapes.ShapesByNick["nav_addwaypoint"].Images[0].Data
+	image_data := shapes.ShapesByNick["nav_addwaypoint"].Images[0]
 	jpeg_result, err := utfextract.TransformToJpeg(image_data)
 	if err != nil {
 		panic(err)

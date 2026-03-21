@@ -94,18 +94,21 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 
 	for _, shape := range l.Export.Shapes.ShapesByNick {
 
-		if shape.Nickname == "nav_terrain_ice" {
+		if shape.Nickname == "dsy_planet_earthgrncld" {
 			fmt.Print()
 		}
 
-		image, err := SelectImageTga(shape)
-		if logus.Log.CheckWarn(err, "not found imega tga for shape, skipping",
+		image, err := SelectImage(shape, "tga")
+		if err != nil {
+			image, err = SelectImage(shape, "dds")
+		}
+		if logus.Log.CheckWarn(err, "not found image for shape, skipping",
 			typelog.Any("shape", shape.Nickname+"."+shape.Extension),
 		) {
 			continue
 		}
-		jpeg_result, err := utfextract.TransformToJpeg(image.Data)
-		if logus.Log.CheckWarn(err, "unable decoding tga image",
+		jpeg_result, err := utfextract.TransformToJpeg(image)
+		if logus.Log.CheckWarn(err, fmt.Sprintln("unable decoding "+image.Extension+" image"),
 			typelog.Any("image_name", image.Nickname+"."+image.Extension),
 			typelog.Any("shape", shape.Nickname+"."+shape.Extension),
 		) {
@@ -122,12 +125,12 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 	return build
 }
 
-func SelectImageTga(shape *utfextract.Shape) (*utfextract.Image, error) {
+func SelectImage(shape *utfextract.Shape, extension string) (*utfextract.Image, error) {
 
 	var result *utfextract.Image
 
 	for _, image := range shape.Images {
-		if image.Extension == "tga" {
+		if image.Extension == extension {
 			if result == nil {
 				result = image
 			} else {
@@ -143,5 +146,5 @@ func SelectImageTga(shape *utfextract.Shape) (*utfextract.Image, error) {
 		return result, nil
 	}
 
-	return nil, errors.New("not found image tga")
+	return nil, errors.New(fmt.Sprintln("not found image ", extension))
 }

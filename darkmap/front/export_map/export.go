@@ -42,7 +42,14 @@ func (e *Export) GetInfocardName(ids_name int, nickname string) string {
 }
 
 func (e *Export) Export(ctx context.Context) {
-	e.Shapes = GetImages()
+	e.Shapes = GetImages("NEWNAVMAP")
+	more_shapes := GetImages("DATA/SOLAR")
+	for key, shape := range more_shapes.ShapesByNick {
+		e.Shapes.ShapesByNick[key] = shape
+	}
+	e.Shapes.FilesRead += more_shapes.FilesRead
+	e.Shapes.ImageWritten += more_shapes.ImageWritten
+
 	e.Systems = e.ExportSystems(e.Mapped)
 	e.Graph = e.GetSystemConnections(e.Systems)
 
