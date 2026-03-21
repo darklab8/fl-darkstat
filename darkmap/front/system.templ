@@ -66,6 +66,74 @@ templ System(system *export_map.System) {
                     top: -0.75em;
                     left: 0.55em;
                 }
+
+                .grid .mapScale.arrows {
+                    border-left: none !important;
+                    border-right: none !important;
+                    border-bottom-style: dashed !important;
+                    bottom: 1% !important;
+                }
+                .grid .mapScale {
+                    position: absolute;
+                    right: 0.75%;
+                    bottom: 0.75%;
+                    width: 10.5%;
+                    border: solid #F3F3F3 0.2em;
+                    box-sizing: border-box;
+                    border-top: none;
+                    height: 1%;
+                    text-align: center;
+                }
+                .grid .mapScale .arrowR.arrowHead {
+                    transform: rotate(135deg);
+                    -webkit-transform: rotate(135deg);
+                    right: 0;
+                }
+                .grid .mapScale .arrowL.arrowHead {
+                    transform: rotate(-45deg);
+                    -webkit-transform: rotate(-45deg);
+                    left: 0;
+                }
+                .grid .mapScale.arrows .arrowHead {
+                    display: block !important;
+                }
+                .grid .mapScale .arrowHead {
+                    position: absolute;
+                    border-top: 0.2em solid white;
+                    border-left: 0.2em solid white;
+                    height: 0.3em;
+                    width: 0.3em;
+                    bottom: -0.3em;
+                    display: none;
+                }
+                .grid .mapScale h2 {
+                    color: white;
+                    font-family: "Agency FB", "Oswald", sans-serif;
+                    position: relative;
+                    top: -2em;
+                }
+                h2 {
+                    display: block;
+                    font-size: 1.5em;
+                    margin-block-start: 0.83em;
+                    margin-block-end: 0.83em;
+                    margin-inline-start: 0px;
+                    margin-inline-end: 0px;
+                    font-weight: bold;
+                    unicode-bidi: isolate;
+                }
+                .systemTitle {
+                    position: absolute;
+                    bottom: 0.1em;
+                    color: white;
+                    text-align: center;
+                    width: 100%;
+                    font-family: "Agency FB", "Oswald", sans-serif;
+                    font-size: 3em;
+                    padding: 0;
+                    margin: 0;
+                    color: rgb(135, 195, 224);
+                }
                 </style>
 			<div style="position: absolute; top:0%">
 				{ system.Nickname }
@@ -86,7 +154,16 @@ templ System(system *export_map.System) {
 					</div>
 				}
 				<h3 id="nullGridCell" style="display: block;">A1</h3>
+				<div class="mapScale arrows">
+					<div class="arrowHead arrowR"></div>
+					<div class="arrowHead arrowL"></div>
+					<h2>{ fmt.Sprintf("%.0fK",system.GetSquareScale()) }</h2>
+				</div>
+				<h2 class="systemTitle">{ system.Name }</h2>
 			</grid->
+			// for _, obj := range system.Objs {
+			//     <obj></obj>
+			// }
 		}
 	}
 }

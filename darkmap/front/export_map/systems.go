@@ -12,15 +12,20 @@ import (
 )
 
 type System struct {
-	Nickname string   `json:"nickname"`
-	Name     string   `json:"name"`
-	Pos      Coords2D `json:"galaxy_pos"`
+	Nickname    string   `json:"nickname"`
+	Name        string   `json:"name"`
+	Pos         Coords2D `json:"galaxy_pos"`
+	NavMapScale float64
 
 	Region Region `json:"region"`
 
 	SystemGraphInfo
 
 	Objs []*Obj
+}
+
+func (s System) GetSquareScale() float64 {
+	return 30.0 / s.NavMapScale
 }
 
 type Obj struct {
@@ -67,6 +72,12 @@ func (e *Export) ExportSystems(configs *configs_mapped.MappedConfigs) []*System 
 			SystemGraphInfo: SystemGraphInfo{
 				LeadsTo: make(map[string]*JumpConnection),
 			},
+		}
+
+		if navmapscale, ok := system.NavMapScale.GetValue(); ok {
+			system_to_add.NavMapScale = navmapscale
+		} else {
+			system_to_add.NavMapScale = 1.0
 		}
 
 		system_to_add.Name = configs.GetInfocardName(system.StridName.Get(), system.Nickname.Get())
