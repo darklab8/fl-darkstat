@@ -3,7 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
-	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
@@ -21,7 +21,7 @@ func GalaxyPosToPerc(position *float64) float64 {
 	return 100 * (3 + *position) / (15 + 6)
 }
 
-templ GalaxySystem(sys *export_front.System, sys_fac SystemFaction) {
+templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
 	<system-wrapper
 		hx-boost="true"
 		class={ templ.KV("hidden_system", !sys.VisibleByDefault), }
@@ -63,7 +63,7 @@ templ GalaxySystem(sys *export_front.System, sys_fac SystemFaction) {
 	</system-wrapper>
 }
 
-templ GalalaxyMap(data *export_front.Export) {
+templ GalalaxyMap(data *export_map.Export) {
 	<centeralizer->
 		for _, sys := range data.Systems {
 			@GalaxySystem(sys, GetSystemFac(sys))
@@ -88,11 +88,11 @@ templ GalalaxyMap(data *export_front.Export) {
 					data-system1-nickname={ edge.FirstSystem.Nickname }
 					data-system2-nickname={ edge.SecondSystem.Nickname }
 					class={
-						templ.KV("conn_alien", edge.Kind == export_front.JumpKindAlien),
-						templ.KV("conn_jumpgate", edge.Kind == export_front.JumpKindJumpgate),
-						templ.KV("conn_jumphole", edge.Kind == export_front.JumpKindJumphole),
-						templ.KV("conn_unstable", edge.Kind == export_front.JumpKindUnstable),
-						templ.KV("conn_unknown", edge.Kind == export_front.JumpKindUnknown),
+						templ.KV("conn_alien", edge.Kind == export_map.JumpKindAlien),
+						templ.KV("conn_jumpgate", edge.Kind == export_map.JumpKindJumpgate),
+						templ.KV("conn_jumphole", edge.Kind == export_map.JumpKindJumphole),
+						templ.KV("conn_unstable", edge.Kind == export_map.JumpKindUnstable),
+						templ.KV("conn_unknown", edge.Kind == export_map.JumpKindUnknown),
 					}
 				></line->
 			</connection->
@@ -235,7 +235,7 @@ const (
 	FacDeepOmega
 )
 
-func GetSystemFac(sys *export_front.System) SystemFaction {
+func GetSystemFac(sys *export_map.System) SystemFaction {
 
 	sys_name := strings.ToLower(sys.Name)
 

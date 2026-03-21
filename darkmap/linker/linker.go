@@ -8,7 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
 
 	"github.com/darklab8/fl-darkstat/darkmap/front"
-	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
@@ -19,7 +19,7 @@ import (
 )
 
 type Linker struct {
-	Export *export_front.Export
+	Export *export_map.Export
 }
 
 type LinkOption func(l *Linker)
@@ -34,7 +34,7 @@ func NewLinker(opts ...LinkOption) *Linker {
 }
 
 func (l *Linker) Link(ctx context.Context) *builder.Builder {
-	l.Export = export_front.NewExport(ctx)
+	l.Export = export_map.NewExport(ctx)
 
 	defer timeit.NewTimer("Link").Close()
 	var build *builder.Builder

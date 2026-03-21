@@ -2,19 +2,19 @@ package front
 
 import (
 	"fmt"
-	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
 	"strconv"
 	"strings"
 )
 
-func SystemDetailedUrl(system *export_front.System) string {
+func SystemDetailedUrl(system *export_map.System) string {
 	return "cdn/system/system-" + strings.ToLower(system.Nickname) + ".html"
 }
 
 var GridRows []int = []int{2, 3, 4, 5, 6, 7, 8}
 var GridColumns []rune = []rune{'B', 'C', 'D', 'E', 'F', 'G', 'H'}
 
-templ System(system *export_front.System) {
+templ System(system *export_map.System) {
 	@Html5() {
 		@GalaxyGrid(MenuKindSystem) {
 			<style>

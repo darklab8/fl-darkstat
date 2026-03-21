@@ -1,4 +1,4 @@
-package export_front
+package export_map
 
 import "testing"
 

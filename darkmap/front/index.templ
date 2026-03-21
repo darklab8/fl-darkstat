@@ -3,7 +3,7 @@ package front
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
-	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 )
 
@@ -32,7 +32,7 @@ templ Html5() {
 	</html>
 }
 
-templ Index(data *export_front.Export) {
+templ Index(data *export_map.Export) {
 	@Html5() {
 		@GalaxyGrid(MenuKindGalaxy) {
 			@GalalaxyMap(data)

@@ -6,7 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
-	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
 )
 
 // ShowAccount godoc
@@ -14,7 +14,7 @@ import (
 // @Tags         equipment
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  	export_front.System
+// @Success      200  {array}  	export_map.System
 // @Router       /api/systems [post]
 func GetSystems(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
@@ -25,13 +25,13 @@ func GetSystems(webapp *web.Web, api *Api) *registry.Endpoint {
 				defer webapp.AppDataMutex.RUnlock()
 			}
 
-			var systems []*export_front.System
+			var systems []*export_map.System
 
-			systems = export_front.ExportSystems(api.app_data.Configs.Mapped)
+			systems = export_map.ExportSystems(api.app_data.Configs.Mapped)
 
 			apiutils.ReturnJson(&w, systems)
 		}}
 }
-func (c *HttpClient) GetSystems() ([]export_front.System, error) {
-	return make_request[EmptyInput, []export_front.System](c, ""+ApiRoute+"/systems", EmptyInput{})
+func (c *HttpClient) GetSystems() ([]export_map.System, error) {
+	return make_request[EmptyInput, []export_map.System](c, ""+ApiRoute+"/systems", EmptyInput{})
 }
