@@ -5,7 +5,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkmap/utfextract"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/utils_os"
 	"github.com/stretchr/testify/assert"
@@ -72,5 +74,69 @@ func TestDecodeDds(t *testing.T) {
 	}
 	defer file_output.Close()
 	file_output.Write(jpeg_result.Bytes())
+
+}
+
+func TestDecodeDds2(t *testing.T) {
+	currentDir := utils_os.GetCurrentFolder()
+	files := []string{"dsy_earthgrncld_neg_x", "dsy_earthgrncld_neg_y", "dsy_earthgrncld_neg_z", "dsy_earthgrncld_pos_x", "dsy_earthgrncld_pos_y", "dsy_earthgrncld_pos_z"}
+	for index, filename := range files {
+		inPath := currentDir.Join("testdata_trickydds", filename).ToString()
+
+		data, err := os.ReadFile(inPath)
+		if err != nil {
+			panic(err)
+		}
+
+		var image_data *utfextract.Image = &utfextract.Image{
+			Extension: "dds",
+			Nickname:  "backgroundpattern",
+			Data:      data,
+		}
+
+		jpeg_result, err := utfextract.TransformToJpeg(image_data)
+		if err != nil {
+			panic(err)
+		}
+		file_output, err := os.Create(fmt.Sprintf("output-%d.jpg", index))
+		if err != nil {
+			panic(err)
+		}
+		defer file_output.Close()
+		file_output.Write(jpeg_result.Bytes())
+	}
+
+}
+
+func TestDecodeDds3(t *testing.T) {
+	currentDir := utils_os.GetCurrentFolder()
+	files := []string{"rock_detail.dds", "uranium_tile.dds", "uranium_tile1.dds"}
+	for index, filename := range files {
+		inPath := currentDir.Join("testdata_ast_uranium.mat", filename).ToString()
+
+		data, err := os.ReadFile(inPath)
+		if err != nil {
+			panic(err)
+		}
+
+		var image_data *utfextract.Image = &utfextract.Image{
+			Extension: "dds",
+			Nickname:  "backgroundpattern",
+			Data:      data,
+		}
+
+		jpeg_result, err := utfextract.TransformToJpeg(image_data)
+		if err != nil {
+			logus.Log.CheckError(err, "failed transforming image to jpeg", typelog.Any("filename", filename))
+			continue
+			panic(err)
+		}
+		file_output, err := os.Create(fmt.Sprintf("output-%d.jpg", index))
+		if err != nil {
+			panic(err)
+		}
+		defer file_output.Close()
+		file_output.Write(jpeg_result.Bytes())
+	}
 
 }

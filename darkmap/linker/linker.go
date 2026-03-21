@@ -111,6 +111,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		if logus.Log.CheckWarn(err, fmt.Sprintln("unable decoding "+image.Extension+" image"),
 			typelog.Any("image_name", image.Nickname+"."+image.Extension),
 			typelog.Any("shape", shape.Nickname+"."+shape.Extension),
+			typelog.Any("image_dest", image.Dest),
 		) {
 			continue
 		}
