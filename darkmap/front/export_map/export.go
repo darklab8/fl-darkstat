@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkmap/utfextract"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_logus"
@@ -15,6 +16,7 @@ type Export struct {
 	Mapped  *configs_mapped.MappedConfigs
 	Systems []*System
 	Graph   SystemGraphs
+	Shapes  *utfextract.Shapes
 
 	Exp *configs_export.Exporter
 }
@@ -40,6 +42,7 @@ func (e *Export) GetInfocardName(ids_name int, nickname string) string {
 }
 
 func (e *Export) Export(ctx context.Context) {
+	e.Shapes = GetImages()
 	e.Systems = e.ExportSystems(e.Mapped)
 	e.Graph = e.GetSystemConnections(e.Systems)
 

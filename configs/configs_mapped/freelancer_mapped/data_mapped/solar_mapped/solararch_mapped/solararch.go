@@ -15,6 +15,7 @@ type Solar struct {
 	Fuses          []*semantic.String
 	Destructible   *semantic.Bool
 	CargoLimit     *semantic.Int
+	ShapeName      *semantic.String
 }
 
 const (
@@ -98,6 +99,7 @@ func Read(input_file *iniload.IniLoader) *Config {
 			Nickname:     semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 			Destructible: semantic.NewBool(section, cfg.ParamKey("destructible"), semantic.StrBool),
 			CargoLimit:   semantic.NewInt(section, cfg.ParamKey("cargo_limit")),
+			ShapeName:    semantic.NewString(section, cfg.ParamKey("shape_name")),
 		}
 		solar.Map(section)
 

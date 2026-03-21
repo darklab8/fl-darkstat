@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"image/jpeg"
 	"os"
 	"testing"
 
+	"github.com/darklab8/fl-darkstat/darkmap/tga"
 	"github.com/darklab8/fl-darkstat/darkmap/utfextract"
 	"github.com/darklab8/go-utils/utils/ptr"
 	"github.com/darklab8/go-utils/utils/utils_os"
@@ -23,13 +26,42 @@ func TestMain(t *testing.T) {
 	if *preservePaths && !*recursive {
 		fmt.Fprintln(os.Stderr, "note: -preserve-paths has no effect without -r")
 	}
-	fr, iw, err := utfextract.ExtractFromDir(*inPath, *outPath, *recursive, *preservePaths)
+	shapes := utfextract.NewShapes()
+	err := utfextract.ExtractFromDir(*inPath, *outPath, *recursive, *preservePaths, shapes)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "warning: %v\n", err)
 	}
-	fmt.Printf("Done. UTF files read: %d  Images written: %d\n", fr, iw)
+	fmt.Printf("Done. UTF files read: %d  Images written: %d\n", shapes.FilesRead, shapes.ImageWritten)
 	fmt.Printf("Output: %s\n", absPath(*outPath))
 
-	assert.Equal(t, fr, 3, "expected to read 3 utf files")
-	assert.Equal(t, iw, 173, "expected to extract 173 utf files")
+	assert.Equal(t, shapes.FilesRead, 3, "expected to read 3 utf files")
+	assert.Equal(t, shapes.ImageWritten, 173, "expected to extract 173 utf files")
+
+	image_data := shapes.ShapesByNick["nav_addwaypoint"].Images[0].Data
+	jpeg_result := TransformToJpeg(image_data)
+
+	file_output, err := os.Create("output.jpg")
+	if err != nil {
+		panic(err)
+	}
+	defer file_output.Close()
+	file_output.Write(jpeg_result.Bytes())
+}
+
+func TransformToJpeg(data []byte) *bytes.Buffer {
+	input := bytes.NewReader(data)
+	img, err := tga.Decode(input)
+	if err != nil {
+		panic(err)
+	}
+
+	var output *bytes.Buffer = &bytes.Buffer{} // zero value is ready to use
+
+	err = jpeg.Encode(output, img, &jpeg.Options{
+		Quality: 90,
+	})
+	if err != nil {
+		panic(err)
+	}
+	return output
 }

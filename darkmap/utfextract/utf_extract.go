@@ -314,8 +314,14 @@ func ensureExt(name, ext string) string {
 //	outputDir/<basename>/<imagefile>
 //
 // Returns the number of images written.
-func ExtractFromFile(inputPath, outputDir string) (int, error) {
-	return extractFromFileWithSubdir(inputPath, outputDir, "")
+func ExtractFromFile(inputPath, outputDir string, shapes *Shapes) error {
+	return extractFromFileWithSubdir(inputPath, outputDir, "", shapes)
+}
+
+func NewShapes() *Shapes {
+	return &Shapes{
+		ShapesByNick: make(map[string]*Shape),
+	}
 }
 
 // extractFromFileWithSubdir is the internal implementation that also accepts
@@ -328,32 +334,76 @@ func ExtractFromFile(inputPath, outputDir string) (int, error) {
 //
 // This preserves the original directory tree when extracting recursively,
 // making it easy to diff output against a reference tree.
-func extractFromFileWithSubdir(inputPath, outputDir, subdir string) (int, error) {
+func extractFromFileWithSubdir(inputPath, outputDir, subdir string, shapes *Shapes) error {
 	raw, err := os.ReadFile(inputPath)
 	if err != nil {
-		return 0, fmt.Errorf("reading %s: %w", inputPath, err)
+		return fmt.Errorf("reading %s: %w", inputPath, err)
 	}
 
 	images, err := ExtractImages(raw)
 	if err != nil {
-		return 0, fmt.Errorf("extracting from %s: %w", inputPath, err)
+		return fmt.Errorf("extracting from %s: %w", inputPath, err)
 	}
 
 	basename := filepath.Base(inputPath)
-	count := 0
-
 	for _, img := range images {
 		dest := filepath.Join(outputDir, subdir, basename, filepath.FromSlash(img.Filename))
-		if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
-			return count, fmt.Errorf("creating directory for %s: %w", dest, err)
+
+		name := strings.Split(strings.ToLower(img.Filename), ".")
+
+		image := &Image{
+			Nickname:  name[0],
+			Extension: name[1],
+			Data:      img.Data,
 		}
-		if err := os.WriteFile(dest, img.Data, 0o644); err != nil {
-			return count, fmt.Errorf("writing %s: %w", dest, err)
+		shape_naming := strings.Split(strings.ToLower(basename), ".")
+		shape_nickname := shape_naming[0]
+		shape_extension := shape_naming[1]
+
+		shape, ok := shapes.ShapesByNick[shape_nickname]
+		if !ok {
+			shape = &Shape{
+				Nickname:  shape_nickname,
+				Extension: shape_extension,
+			}
+			shapes.ShapesByNick[shape_nickname] = shape
 		}
-		count++
+		shape.Images = append(shape.Images, image)
+
+		if shapes.WriteToFile {
+			if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
+				return fmt.Errorf("creating directory for %s: %w", dest, err)
+			}
+			if err := os.WriteFile(dest, img.Data, 0o644); err != nil {
+				return fmt.Errorf("writing %s: %w", dest, err)
+			}
+		}
+
+		shapes.ImageWritten++
 	}
 
-	return count, nil
+	return nil
+}
+
+type ShapesConfig struct {
+	WriteToFile bool
+}
+type Shapes struct {
+	ShapesConfig
+	ImageWritten int
+	FilesRead    int
+	ShapesByNick map[string]*Shape
+}
+
+type Shape struct {
+	Nickname  string
+	Extension string
+	Images    []*Image
+}
+type Image struct {
+	Nickname  string
+	Extension string
+	Data      []byte
 }
 
 // ExtractFromDir walks inputDir for UTF files and extracts images into outputDir.
@@ -374,16 +424,16 @@ func extractFromFileWithSubdir(inputPath, outputDir, subdir string) (int, error)
 //
 // Use preservePaths=true when validating output against a known-good reference
 // tree extracted with the Perl tool.
-func ExtractFromDir(inputDir, outputDir string, recursive, preservePaths bool) (filesRead, imagesWritten int, err error) {
-	return extractDir(inputDir, outputDir, "", recursive, preservePaths)
+func ExtractFromDir(inputDir, outputDir string, recursive, preservePaths bool, shapes *Shapes) (err error) {
+	return extractDir(inputDir, outputDir, "", recursive, preservePaths, shapes)
 }
 
 // extractDir is the recursive implementation; subdir accumulates the relative
 // path from the original inputDir root as we descend.
-func extractDir(inputDir, outputDir, subdir string, recursive, preservePaths bool) (filesRead, imagesWritten int, err error) {
+func extractDir(inputDir, outputDir, subdir string, recursive, preservePaths bool, shapes *Shapes) (err error) {
 	entries, err := os.ReadDir(inputDir)
 	if err != nil {
-		return 0, 0, fmt.Errorf("reading directory %s: %w", inputDir, err)
+		return fmt.Errorf("reading directory %s: %w", inputDir, err)
 	}
 
 	for _, entry := range entries {
@@ -395,9 +445,8 @@ func extractDir(inputDir, outputDir, subdir string, recursive, preservePaths boo
 				if subdir != "" {
 					childSubdir = filepath.Join(subdir, entry.Name())
 				}
-				fr, iw, e := extractDir(fullPath, outputDir, childSubdir, recursive, preservePaths)
-				filesRead += fr
-				imagesWritten += iw
+				e := extractDir(fullPath, outputDir, childSubdir, recursive, preservePaths, shapes)
+
 				if e != nil {
 					err = e
 				}
@@ -409,19 +458,18 @@ func extractDir(inputDir, outputDir, subdir string, recursive, preservePaths boo
 			continue
 		}
 
-		filesRead++
+		shapes.FilesRead++
 		outSubdir := ""
 		if preservePaths {
 			outSubdir = subdir
 		}
-		n, e := extractFromFileWithSubdir(fullPath, outputDir, outSubdir)
-		imagesWritten += n
+		e := extractFromFileWithSubdir(fullPath, outputDir, outSubdir, shapes)
 		if e != nil {
 			fmt.Fprintf(os.Stderr, "warning: %v\n", e)
 		}
 	}
 
-	return filesRead, imagesWritten, err
+	return err
 }
 
 func isUTFExtension(fname string) bool {

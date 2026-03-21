@@ -70,23 +70,26 @@ func main() {
 		os.Exit(1)
 	}
 
+	shapes := utfextract.NewShapes()
+
 	if info.IsDir() {
 		if *preservePaths && !*recursive {
 			fmt.Fprintln(os.Stderr, "note: -preserve-paths has no effect without -r")
 		}
-		fr, iw, err := utfextract.ExtractFromDir(*inPath, *outPath, *recursive, *preservePaths)
+		err := utfextract.ExtractFromDir(*inPath, *outPath, *recursive, *preservePaths, shapes)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "warning: %v\n", err)
 		}
-		fmt.Printf("Done. UTF files read: %d  Images written: %d\n", fr, iw)
+		fmt.Printf("Done. UTF files read: %d  Images written: %d\n", shapes.FilesRead, shapes.ImageWritten)
 		fmt.Printf("Output: %s\n", absPath(*outPath))
 	} else {
-		n, err := utfextract.ExtractFromFile(*inPath, *outPath)
+
+		err := utfextract.ExtractFromFile(*inPath, *outPath, shapes)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Done. Images written: %d\n", n)
+		fmt.Printf("Done. Images written: %d\n", shapes.ImageWritten)
 		fmt.Printf("Output: %s%c%s\n", absPath(*outPath), filepath.Separator, filepath.Base(*inPath))
 	}
 }

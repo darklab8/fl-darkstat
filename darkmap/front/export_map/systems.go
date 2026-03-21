@@ -6,6 +6,8 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
+	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -18,13 +20,14 @@ type System struct {
 
 	SystemGraphInfo
 
-	BaseObjs []*BaseObj
+	Objs []*Obj
 }
 
-type BaseObj struct {
-	Nickname string
-	Name     string
-	Pos      cfg.Vector
+type Obj struct {
+	Nickname  string
+	Name      string
+	Pos       cfg.Vector
+	ShapeName string
 }
 
 type Region struct {
@@ -37,6 +40,10 @@ type Coords2D struct {
 }
 
 func (e *Export) ExportSystems(configs *configs_mapped.MappedConfigs) []*System {
+	stats := &MissingShapes{
+		solars_without_shapes: make(map[string]bool),
+		shape_without_images:  make(map[string]bool),
+	}
 	var systems []*System
 	for _, system := range configs.Universe.Systems {
 
@@ -68,14 +75,30 @@ func (e *Export) ExportSystems(configs *configs_mapped.MappedConfigs) []*System 
 			system_to_add.Pos.Y = ptr.Ptr(*system_to_add.Pos.Y + 0.25)
 		}
 
-		e.EnrichSystemWithObjects(configs, system_to_add)
+		e.EnrichSystemWithObjects(configs, system_to_add, stats)
 		systems = append(systems, system_to_add)
+	}
+
+	for archetype, _ := range stats.solars_without_shapes {
+		logus.Log.Warn("solar without archetype", typelog.Any("archetype", archetype))
+	}
+	for shape, _ := range stats.shape_without_images {
+		logus.Log.Warn("shape without image", typelog.Any("shape", shape))
 	}
 
 	return systems
 }
 
-func (e *Export) EnrichSystemWithObjects(configs *configs_mapped.MappedConfigs, system_to_add *System) {
+type MissingShapes struct {
+	solars_without_shapes map[string]bool
+	shape_without_images  map[string]bool
+}
+
+func (e *Export) EnrichSystemWithObjects(
+	configs *configs_mapped.MappedConfigs,
+	system_to_add *System,
+	stats *MissingShapes,
+) {
 	system_info := configs.Systems.SystemsMap[system_to_add.Nickname]
 
 	if system_info == nil {
@@ -95,16 +118,32 @@ func (e *Export) EnrichSystemWithObjects(configs *configs_mapped.MappedConfigs, 
 	}
 
 	for _, base := range all_bases {
-		base_obj := &BaseObj{
+		base_obj := &Obj{
 			Nickname: base.Nickname.Get(),
 			Pos:      base.Pos.Get(),
 		}
 		base_obj.Name = configs.GetInfocardName(base.IdsName.Get(), base_obj.Nickname)
 
+		archetype := base.Archetype.Get()
+		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+
+		shape_name, found_shape := solararch.ShapeName.GetValue()
+		if !found_shape {
+			// logus.Log.Info("not found shape for", typelog.Any("archetype", archetype), typelog.Any("base", base_obj.Nickname), typelog.Any("base_name", base_obj.Name))
+			stats.solars_without_shapes[archetype] = true
+		}
+
+		base_obj.ShapeName = strings.ToLower(shape_name)
+
+		if _, ok := e.Shapes.ShapesByNick[base_obj.ShapeName]; !ok && base_obj.ShapeName != "" {
+			stats.shape_without_images[base_obj.ShapeName] = true
+			// logus.Log.Warn("not found shape in images for", typelog.Any("base_obj.ShapeName", base_obj.ShapeName))
+		}
 		// TODO export infocards
 		// if ids_info, ok := base.IDsInfo.GetValue(); ok && ids_info != 0 {
 		// 	e.Exp.ExportInfocards(infocarder.InfocardKey(base_obj.Nickname), ids_info)
 		// }
-		system_to_add.BaseObjs = append(system_to_add.BaseObjs, base_obj)
+		system_to_add.Objs = append(system_to_add.Objs, base_obj)
 	}
+
 }

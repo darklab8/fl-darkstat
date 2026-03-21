@@ -261,12 +261,13 @@ func TestExtractFromDirPreservePaths(t *testing.T) {
 
 	t.Run("preserve=true", func(t *testing.T) {
 		tmpOut := t.TempDir()
-		fr, iw, err := ExtractFromDir(tmpIn, tmpOut, true, true)
+		shapes := NewShapes()
+		err := ExtractFromDir(tmpIn, tmpOut, true, true, shapes)
 		if err != nil {
 			t.Fatalf("ExtractFromDir: %v", err)
 		}
-		if fr != 1 || iw != 1 {
-			t.Fatalf("expected 1 file / 1 image, got files=%d images=%d", fr, iw)
+		if shapes.FilesRead != 1 || shapes.ImageWritten != 1 {
+			t.Fatalf("expected 1 file / 1 image, got files=%d images=%d", shapes.FilesRead, shapes.ImageWritten)
 		}
 		want := filepath.Join(tmpOut, "a", "b", "tex.txm", "icon.tga")
 		if _, err := os.Stat(want); os.IsNotExist(err) {
@@ -276,12 +277,13 @@ func TestExtractFromDirPreservePaths(t *testing.T) {
 
 	t.Run("preserve=false", func(t *testing.T) {
 		tmpOut := t.TempDir()
-		fr, iw, err := ExtractFromDir(tmpIn, tmpOut, true, false)
+		shapes := NewShapes()
+		err := ExtractFromDir(tmpIn, tmpOut, true, false, shapes)
 		if err != nil {
 			t.Fatalf("ExtractFromDir: %v", err)
 		}
-		if fr != 1 || iw != 1 {
-			t.Fatalf("expected 1 file / 1 image, got files=%d images=%d", fr, iw)
+		if shapes.FilesRead != 1 || shapes.ImageWritten != 1 {
+			t.Fatalf("expected 1 file / 1 image, got files=%d images=%d", shapes.FilesRead, shapes.ImageWritten)
 		}
 		// Sub-dirs NOT preserved — file sits directly under tex.txm/
 		want := filepath.Join(tmpOut, "tex.txm", "icon.tga")
