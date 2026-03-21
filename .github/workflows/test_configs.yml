@@ -22,12 +22,12 @@ jobs:
     name: Test ${{ matrix.freelancer-mod }}
     steps:
       - uses: actions/checkout@v3
-      - name: Cache Freelancer
-        id: cache-freelancer
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-${{ github.workspace }}/${{ matrix.freelancer-mod }}-freelancer-configs
-          path: "${{ github.workspace }}/${{ matrix.freelancer-mod }}"
+      # - name: Cache Freelancer
+      #   id: cache-freelancer
+      #   uses: actions/cache@v3
+      #   with:
+      #     key: ${{ runner.os }}-${{ github.workspace }}/${{ matrix.freelancer-mod }}-freelancer-configs
+      #     path: "${{ github.workspace }}/${{ matrix.freelancer-mod }}"
       - uses: darklab8/infra/.github/actions/checkout-freelancer@master
         with:
           freelancer-mod: "${{ matrix.freelancer-mod }}"
