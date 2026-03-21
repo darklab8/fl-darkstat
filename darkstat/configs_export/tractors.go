@@ -96,7 +96,7 @@ func (e *Exporter) GetTractors() []*Tractor {
 
 		tractor.Name = e.GetInfocardName(tractor.NameID, string(tractor.Nickname))
 
-		e.exportInfocards(infocarder.InfocardKey(tractor.Nickname), tractor.InfoID)
+		e.ExportInfocards(infocarder.InfocardKey(tractor.Nickname), tractor.InfoID)
 
 		if e.Mapped.Discovery != nil {
 

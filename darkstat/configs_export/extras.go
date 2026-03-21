@@ -76,7 +76,7 @@ func (e *Exporter) GetExtraItems(ids []*Tractor) []ExtraItem {
 		}
 
 		item.Name = e.GetInfocardName(item.NameID, item.Nickname)
-		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
+		e.ExportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
 
 		e.WriteConfigToInfocard(&item_info.Model, item.Nickname)
 
@@ -95,7 +95,7 @@ func (e *Exporter) GetExtraItems(ids []*Tractor) []ExtraItem {
 		item.Category = "system"
 
 		item.Name = e.GetInfocardName(item.NameID, item.Nickname)
-		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
+		e.ExportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
 		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
 		items = append(items, item)
 	}

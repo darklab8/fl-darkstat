@@ -558,7 +558,7 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 		nickname := item.Nickname.Get()
 		hash := flhash.HashNickname(nickname)
 		goods_by_hash[hash] = item
-		e.exportInfocards(infocarder.InfocardKey(nickname), item.IdsInfo.Get())
+		e.ExportInfocards(infocarder.InfocardKey(nickname), item.IdsInfo.Get())
 	}
 	ships_by_hash := make(map[flhash.HashCode]*equipment_mapped.Ship)
 	for _, item := range e.Mapped.Goods.Ships {

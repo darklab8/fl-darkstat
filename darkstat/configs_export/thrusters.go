@@ -89,7 +89,7 @@ func (e *Exporter) GetThrusters(ids []*Tractor) []Thruster {
 			thruster.Value = float64(thruster.Price) * 1000
 		}
 
-		e.exportInfocards(infocarder.InfocardKey(thruster.Nickname), thruster.InfoID)
+		e.ExportInfocards(infocarder.InfocardKey(thruster.Nickname), thruster.InfoID)
 		e.WriteConfigToInfocard(&thruster_info.Model, thruster.Nickname)
 
 		thruster.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, thruster.Nickname)

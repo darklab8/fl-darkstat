@@ -122,7 +122,7 @@ func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 			mine.AmmoLimit.MaxCatridges = ptr.Ptr(value)
 		}
 
-		e.exportInfocards(infocarder.InfocardKey(mine.Nickname), mine.IdsInfo)
+		e.ExportInfocards(infocarder.InfocardKey(mine.Nickname), mine.IdsInfo)
 		mine.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, mine.Nickname)
 		e.WriteConfigToInfocard(&mine_dropper.Model, mine.Nickname)
 		e.WriteConfigToInfocard(&mine_info.Model, mine.Nickname)

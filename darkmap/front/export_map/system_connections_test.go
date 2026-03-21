@@ -11,7 +11,7 @@ import (
 func TestSystemsConnections(t *testing.T) {
 	ctx := context.Background()
 	export := NewExport(ctx)
-	systems := ExportSystems(export.Mapped)
+	systems := export.ExportSystems(export.Mapped)
 	graph := export.GetSystemConnections(systems)
 
 	for _, system := range graph.Systems {

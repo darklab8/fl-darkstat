@@ -16,7 +16,7 @@ import (
 )
 
 /* TODO move into infocarder */
-func (e *Exporter) exportInfocards(nickname infocarder.InfocardKey, infocard_ids ...int) {
+func (e *Exporter) ExportInfocards(nickname infocarder.InfocardKey, infocard_ids ...int) {
 	if _, ok := e.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
 		return
 	}

@@ -11,7 +11,7 @@ import (
 
 // ShowAccount godoc
 // @Summary      Getting list of Systems
-// @Tags         equipment
+// @Tags         others
 // @Accept       json
 // @Produce      json
 // @Success      200  {array}  	export_map.System
@@ -26,8 +26,9 @@ func GetSystems(webapp *web.Web, api *Api) *registry.Endpoint {
 			}
 
 			var systems []*export_map.System
+			export := export_map.NewExport(r.Context())
 
-			systems = export_map.ExportSystems(api.app_data.Configs.Mapped)
+			systems = export.ExportSystems(api.app_data.Configs.Mapped)
 
 			apiutils.ReturnJson(&w, systems)
 		}}

@@ -110,7 +110,7 @@ func (e *Exporter) GetShields(ids []*Tractor) []Shield {
 			}
 		}
 
-		e.exportInfocards(infocarder.InfocardKey(shield.Nickname), shield.IdsInfo)
+		e.ExportInfocards(infocarder.InfocardKey(shield.Nickname), shield.IdsInfo)
 		e.WriteConfigToInfocard(&shield_gen.Model, shield.Nickname)
 		shield.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, shield.Nickname)
 

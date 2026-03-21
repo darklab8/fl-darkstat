@@ -62,7 +62,7 @@ func (e *Exporter) GetCloaks(ids []*Tractor) []Cloak {
 			}
 		}
 
-		e.exportInfocards(infocarder.InfocardKey(cloak.Nickname), cloak.InfoID)
+		e.ExportInfocards(infocarder.InfocardKey(cloak.Nickname), cloak.InfoID)
 		cloak.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, cloak.Nickname)
 		items = append(items, cloak)
 	}

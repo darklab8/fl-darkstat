@@ -40,7 +40,7 @@ func (e *Export) GetInfocardName(ids_name int, nickname string) string {
 }
 
 func (e *Export) Export(ctx context.Context) {
-	e.Systems = ExportSystems(e.Mapped)
+	e.Systems = e.ExportSystems(e.Mapped)
 	e.Graph = e.GetSystemConnections(e.Systems)
 
 	e.Exp = configs_export.NewExporter(e.Mapped)
