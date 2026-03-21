@@ -123,10 +123,25 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 }
 
 func SelectImageTga(shape *utfextract.Shape) (*utfextract.Image, error) {
+
+	var result *utfextract.Image
+
 	for _, image := range shape.Images {
 		if image.Extension == "tga" {
-			return image, nil
+			if result == nil {
+				result = image
+			} else {
+				if len(image.Data) > len(result.Data) {
+					result = image
+				}
+			}
+
 		}
 	}
+
+	if result != nil {
+		return result, nil
+	}
+
 	return nil, errors.New("not found image tga")
 }
