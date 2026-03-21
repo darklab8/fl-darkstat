@@ -53,7 +53,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(core_static.HtmxPreloadJS),
 		builder.NewStaticFileFromCore(core_static.SortableJS),
 		builder.NewStaticFileFromCore(core_static.ResetCSS),
-		builder.NewStaticFileFromCore(core_static.FaviconIco),
+		builder.NewStaticFileFromCore(static_front.FaviconIco),
 		builder.NewStaticFileFromCore(static_front.CommonCSS),
 		builder.NewStaticFileFromCore(static_front.CustomCSS),
 		builder.NewStaticFileFromCore(static_front.GalaxyCSS),

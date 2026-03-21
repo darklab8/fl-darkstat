@@ -68,3 +68,12 @@ var GalaxyCSS core_types.StaticFile = core_types.StaticFile{
 	Filename: "galaxy.css",
 	Kind:     core_types.StaticFileCSS,
 }
+
+//go:embed favicon.ico
+var FaviconIcoContent string
+
+var FaviconIco core_types.StaticFile = core_types.StaticFile{
+	Content:  FaviconIcoContent,
+	Filename: "favicon.ico",
+	Kind:     core_types.StaticFileIco,
+}
