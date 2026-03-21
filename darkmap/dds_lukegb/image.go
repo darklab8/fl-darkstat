@@ -19,8 +19,9 @@ limitations under the License.
 //
 // It should normally be used by importing it with a blank name, which
 // will cause it to register itself with the image package:
-//  import _ "github.com/lukegb/dds"
-package dds
+//
+//	import _ "github.com/lukegb/dds"
+package dds_lukegb
 
 import (
 	"fmt"

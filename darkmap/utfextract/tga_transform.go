@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"image/jpeg"
 
-	"github.com/darklab8/fl-darkstat/darkmap/dds"
+	"github.com/darklab8/fl-darkstat/darkmap/dds_lukegb"
+
 	"github.com/darklab8/fl-darkstat/darkmap/tga_ftrvxmtrx"
 )
 
@@ -27,7 +28,7 @@ func TransformToJpeg(image *Image) (*bytes.Buffer, error) {
 		return output, nil
 
 	} else if image.Extension == "dds" {
-		img, err := dds.Decode(input)
+		img, err := dds_lukegb.Decode(input)
 		if err != nil {
 			return nil, err
 		}
