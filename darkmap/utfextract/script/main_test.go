@@ -46,3 +46,31 @@ func TestMain(t *testing.T) {
 	defer file_output.Close()
 	file_output.Write(jpeg_result.Bytes())
 }
+
+func TestDecodeDds(t *testing.T) {
+	currentDir := utils_os.GetCurrentFolder()
+	inPath := currentDir.Join("testdata", "backgroundpattern_expected.dds").ToString()
+
+	data, err := os.ReadFile(inPath)
+	if err != nil {
+		panic(err)
+	}
+
+	var image_data *utfextract.Image = &utfextract.Image{
+		Extension: "dds",
+		Nickname:  "backgroundpattern",
+		Data:      data,
+	}
+
+	jpeg_result, err := utfextract.TransformToJpeg(image_data)
+	if err != nil {
+		panic(err)
+	}
+	file_output, err := os.Create("output.jpg")
+	if err != nil {
+		panic(err)
+	}
+	defer file_output.Close()
+	file_output.Write(jpeg_result.Bytes())
+
+}

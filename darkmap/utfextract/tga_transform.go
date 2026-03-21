@@ -4,15 +4,14 @@ import (
 	"bytes"
 	"image/jpeg"
 
-	"github.com/darklab8/fl-darkstat/darkmap/dds_lukegb"
-
+	"github.com/darklab8/fl-darkstat/darkmap/dds"
 	"github.com/darklab8/fl-darkstat/darkmap/tga_ftrvxmtrx"
 )
 
-func TransformToJpeg(image *Image) (*bytes.Buffer, error) {
-	input := bytes.NewReader(image.Data)
+func TransformToJpeg(img *Image) (*bytes.Buffer, error) {
+	input := bytes.NewReader(img.Data)
 
-	if image.Extension == "tga" {
+	if img.Extension == "tga" {
 		img, err := tga_ftrvxmtrx.Decode(input)
 		if err != nil {
 			return nil, err
@@ -27,21 +26,20 @@ func TransformToJpeg(image *Image) (*bytes.Buffer, error) {
 		}
 		return output, nil
 
-	} else if image.Extension == "dds" {
-		img, err := dds_lukegb.Decode(input)
+	} else if img.Extension == "dds" {
+		// var input *bytes.Buffer = bytes.NewBuffer(img.Data)
+		// img, _, err := image.Decode(input)
+		img, err := dds.Decode(input, true)
 		if err != nil {
 			return nil, err
 		}
 		var output *bytes.Buffer = &bytes.Buffer{} // zero value is ready to use
 
-		err = jpeg.Encode(output, img, &jpeg.Options{
-			Quality: 90,
-		})
+		err = jpeg.Encode(output, img, &jpeg.Options{})
 		if err != nil {
 			return nil, err
 		}
 		return output, nil
-
 	}
 
 	panic("not supported extension to transform to jpeg")
