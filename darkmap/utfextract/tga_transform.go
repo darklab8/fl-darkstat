@@ -2,6 +2,7 @@ package utfextract
 
 import (
 	"bytes"
+	"image"
 	"image/jpeg"
 
 	"github.com/darklab8/fl-darkstat/darkmap/dds"
@@ -33,9 +34,17 @@ func TransformToJpeg(img *Image) (*bytes.Buffer, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		nrgba, ok := img.Image.(*image.NRGBA)
+		if ok {
+			img.Image = CompositeOverWhite(nrgba)
+		}
+
 		var output *bytes.Buffer = &bytes.Buffer{} // zero value is ready to use
 
-		err = jpeg.Encode(output, img, &jpeg.Options{})
+		err = jpeg.Encode(output, img, &jpeg.Options{
+			Quality: 90,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -43,4 +52,18 @@ func TransformToJpeg(img *Image) (*bytes.Buffer, error) {
 	}
 
 	panic("not supported extension to transform to jpeg")
+}
+
+func CompositeOverWhite(img *image.NRGBA) *image.NRGBA {
+	out := image.NewNRGBA(img.Bounds())
+	for i := 0; i < len(img.Pix); i += 4 {
+		a := uint32(img.Pix[i+3])
+		invA := 255 - a
+		// Blend: (pixel*alpha + 255*invAlpha + 127) / 255
+		out.Pix[i+0] = uint8((uint32(img.Pix[i+0])*a + 255*invA + 127) / 255)
+		out.Pix[i+1] = uint8((uint32(img.Pix[i+1])*a + 255*invA + 127) / 255)
+		out.Pix[i+2] = uint8((uint32(img.Pix[i+2])*a + 255*invA + 127) / 255)
+		out.Pix[i+3] = 255
+	}
+	return out
 }

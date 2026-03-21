@@ -81,7 +81,7 @@ func TestDecodeDds2(t *testing.T) {
 	currentDir := utils_os.GetCurrentFolder()
 	files := []string{"dsy_earthgrncld_neg_x", "dsy_earthgrncld_neg_y", "dsy_earthgrncld_neg_z", "dsy_earthgrncld_pos_x", "dsy_earthgrncld_pos_y", "dsy_earthgrncld_pos_z"}
 	for index, filename := range files {
-		inPath := currentDir.Join("testdata_trickydds", filename).ToString()
+		inPath := currentDir.Join("testdata_trickydds", filename+".dds").ToString()
 
 		data, err := os.ReadFile(inPath)
 		if err != nil {
@@ -105,7 +105,6 @@ func TestDecodeDds2(t *testing.T) {
 		defer file_output.Close()
 		file_output.Write(jpeg_result.Bytes())
 	}
-
 }
 
 func TestDecodeDds3(t *testing.T) {

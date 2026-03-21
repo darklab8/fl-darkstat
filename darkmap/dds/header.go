@@ -100,8 +100,8 @@ func DecodeHeader(r io.Reader) (Header, error) {
 		return Header{}, fmt.Errorf("invalid header size: %v", hdr.Size)
 	}
 
-	if hdr.Flags&HeaderFlagCaps == 0 ||
-		hdr.Flags&HeaderFlagWidth == 0 ||
+	// HeaderFlagCaps check is removed for Freelancer game purposes
+	if hdr.Flags&HeaderFlagWidth == 0 ||
 		hdr.Flags&HeaderFlagHeight == 0 ||
 		hdr.Flags&HeaderFlagPixelFormat == 0 {
 		return Header{}, errors.New("required header flags missing (required: Caps | Width | Height | PixelFormat)")
