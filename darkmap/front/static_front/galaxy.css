@@ -125,6 +125,11 @@ system- {
     margin-top: -0.75em;
     margin-left: -0.75em;
     border-color: white;
+    /* box-shadow: 0 0 0.7em 1em rgba(250, 0, 0, 0.1) inset; */
+}
+
+.jumphole img {
+    /* box-shadow: 0 0 0.7em 0.3em rgba(250, 0, 0, 0.1); */
 }
 
 .tradelane {
@@ -134,7 +139,7 @@ system- {
     margin-top: -0.375em;
     margin-left: -0.375em;
     border-color: white;
-    box-shadow: 0 0 0.7em 0.2em rgba(137, 136, 136, 0.2);
+    box-shadow: 0 0 0.7em 0.2em rgba(137, 136, 136, 0.15);
 }
 
 .jumphole,
