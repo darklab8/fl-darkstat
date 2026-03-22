@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
@@ -32,6 +33,7 @@ func findDirs(root, target string) ([]string, error) {
 }
 
 func GetImages(folder_name string) *utfextract.Shapes {
+	time_start := time.Now()
 	folders, err := findDirs(string(settings.Env.FreelancerFolder), filepath.Base(folder_name))
 
 	var filtered_folders []string
@@ -54,7 +56,7 @@ func GetImages(folder_name string) *utfextract.Shapes {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "warning: %v\n", err)
 	}
-	fmt.Printf("Done. UTF files read: %d  Images written: %d\n", shapes.FilesRead, shapes.ImageWritten)
+	fmt.Printf("Done. UTF files read: %d  Images written: %d, time elapsed %.2f sec:\n", shapes.FilesRead, shapes.ImageWritten, time.Since(time_start).Seconds())
 
 	if shapes.ImageWritten == 0 {
 		logus.Log.Panic(fmt.Sprintln("expected finding inames in ", folder_name, " folder. but not found by the path"), typelog.Any("path", settings.Env.FreelancerFolder))

@@ -161,9 +161,14 @@ templ System(system *export_map.System) {
 				</div>
 				<h2 class="systemTitle">{ system.Name }</h2>
 			</grid->
-			// for _, obj := range system.Objs {
-			//     <obj></obj>
-			// }
 		}
 	}
+}
+
+templ SystemContents(system *export_map.System) {
+	<content->
+		// for _, obj := range system.Objs {
+		// 	<obj-></obj->
+		// }
+	</content->
 }

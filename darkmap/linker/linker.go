@@ -92,35 +92,61 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 
 	var extra_files []builder.StaticFile
 
-	for _, shape := range l.Export.Shapes.ShapesByNick {
-
-		if shape.Nickname == "dsy_planet_earthgrncld" {
-			fmt.Print()
-		}
-
-		image, err := SelectImage(shape, "tga")
-		if err != nil {
-			image, err = SelectImage(shape, "dds")
-		}
-		if logus.Log.CheckWarn(err, "not found image for shape, skipping",
-			typelog.Any("shape", shape.Nickname+"."+shape.Extension),
-		) {
-			continue
-		}
-		jpeg_result, err := utfextract.TransformToJpeg(image)
-		if logus.Log.CheckWarn(err, fmt.Sprintln("unable decoding "+image.Extension+" image"),
-			typelog.Any("image_name", image.Nickname+"."+image.Extension),
-			typelog.Any("shape", shape.Nickname+"."+shape.Extension),
-			typelog.Any("image_dest", image.Dest),
-		) {
-			continue
-		}
-		extra_files = append(extra_files, builder.NewStaticFileFromCore(core_types.StaticFile{
-			Content:  jpeg_result.String(),
-			Filename: fmt.Sprintf("%s.jpeg", shape.Nickname),
-			Kind:     core_types.StaticFileUnknown,
-		}))
+	type StaticFileInParallel struct {
+		core_types.StaticFile
+		made bool
 	}
+	decoded_shape_files := make(chan StaticFileInParallel)
+
+	time_start := time.Now()
+	fmt.Println("SHAPES STARTING SENDING JOBS")
+	for _, shape := range l.Export.Shapes.ShapesByNick {
+		go func() {
+
+			var result StaticFileInParallel
+			if shape.Nickname == "dsy_planet_earthgrncld" {
+				fmt.Print()
+			}
+
+			image, err := SelectImage(shape, "tga")
+			if err != nil {
+				image, err = SelectImage(shape, "dds")
+			}
+			if logus.Log.CheckWarn(err, "not found image for shape, skipping",
+				typelog.Any("shape", shape.Nickname+"."+shape.Extension),
+			) {
+				decoded_shape_files <- result
+				return
+			}
+			jpeg_result, err := utfextract.TransformToJpeg(image)
+			if logus.Log.CheckWarn(err, fmt.Sprintln("unable decoding "+image.Extension+" image"),
+				typelog.Any("image_name", image.Nickname+"."+image.Extension),
+				typelog.Any("shape", shape.Nickname+"."+shape.Extension),
+				typelog.Any("image_dest", image.Dest),
+			) {
+				decoded_shape_files <- result
+				return
+			}
+			result.StaticFile = core_types.StaticFile{
+				Content:  jpeg_result.String(),
+				Filename: fmt.Sprintf("%s.jpeg", shape.Nickname),
+				Kind:     core_types.StaticFileUnknown,
+			}
+			result.made = true
+			decoded_shape_files <- result
+		}()
+	}
+	fmt.Println("SHAPES SENT ALL JOBS")
+
+	for _ = range l.Export.Shapes.ShapesByNick {
+		result := <-decoded_shape_files
+		if !result.made {
+			continue
+		}
+		extra_files = append(extra_files, builder.NewStaticFileFromCore(result.StaticFile))
+	}
+	fmt.Println("SHAPES FINISHED ACCEPTING ALL JOBS, took time seconds=", time.Since(time_start).Seconds())
+
 	build.AddStaticFiles(extra_files)
 
 	return build
