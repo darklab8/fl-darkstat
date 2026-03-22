@@ -26,7 +26,7 @@ func DarkmapCliGroup(Args []string) {
 				Nickname:    "build",
 				Description: "build darkmap to static assets: html, css, js files",
 				Func: func(info cantil.ActionInfo) error {
-					linker.NewLinker().Link(context.Background()).BuildAll(false, nil)
+					linker.NewLinker(false).Link(context.Background()).BuildAll(false, nil)
 					return nil
 				},
 			},
@@ -39,7 +39,7 @@ func DarkmapCliGroup(Args []string) {
 
 					var linked_build *builder.Builder
 					timer_NewLinkerLink := timeit.NewTimer("linking stuff linker.NewLinker().Link()")
-					linked_build = linker.NewLinker().Link(context.Background())
+					linked_build = linker.NewLinker(true).Link(context.Background())
 					timer_NewLinkerLink.Close()
 
 					timer_buildall := timeit.NewTimer("building stuff linked_build.BuildAll()")

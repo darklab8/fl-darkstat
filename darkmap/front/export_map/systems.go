@@ -193,6 +193,7 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		shape_name, found_shape := solararch.ShapeName.GetValue()
+		e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
 		if !found_shape {
 			// logus.Log.Info("not found shape for", typelog.Any("archetype", archetype), typelog.Any("base", base_obj.Nickname), typelog.Any("base_name", base_obj.Name))
 			stats.solars_without_shapes[archetype] = true

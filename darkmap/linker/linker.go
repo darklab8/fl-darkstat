@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
@@ -25,13 +26,16 @@ import (
 )
 
 type Linker struct {
-	Export *export_map.Export
+	Export   *export_map.Export
+	ToMemory bool
 }
 
 type LinkOption func(l *Linker)
 
-func NewLinker(opts ...LinkOption) *Linker {
-	l := &Linker{}
+func NewLinker(to_memory bool, opts ...LinkOption) *Linker {
+	l := &Linker{
+		ToMemory: to_memory,
+	}
 	for _, opt := range opts {
 		opt(l)
 	}
@@ -100,7 +104,15 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 
 	time_start := time.Now()
 	fmt.Println("SHAPES STARTING SENDING JOBS")
+	created_jobs := 0
 	for _, shape := range l.Export.Shapes.ShapesByNick {
+		if l.ToMemory {
+			if _, permitted := l.Export.Shapes.PermittedShapes[strings.ToLower(shape.Nickname)]; !permitted {
+				continue
+			}
+		}
+
+		created_jobs++
 		go func() {
 
 			var result StaticFileInParallel
@@ -138,14 +150,14 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 	}
 	fmt.Println("SHAPES SENT ALL JOBS")
 
-	for _ = range l.Export.Shapes.ShapesByNick {
+	for i := 0; i < created_jobs; i++ {
 		result := <-decoded_shape_files
 		if !result.made {
 			continue
 		}
 		extra_files = append(extra_files, builder.NewStaticFileFromCore(result.StaticFile))
 	}
-	fmt.Println("SHAPES FINISHED ACCEPTING ALL JOBS, took time seconds=", time.Since(time_start).Seconds())
+	fmt.Println("SHAPES FINISHED ACCEPTING ALL JOBS, took time seconds=", time.Since(time_start).Seconds(), " handled jobs=", created_jobs)
 
 	build.AddStaticFiles(extra_files)
 

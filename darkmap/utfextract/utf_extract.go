@@ -323,6 +323,9 @@ func ExtractFromFile(inputPath, outputDir string, shapes *Shapes) error {
 func NewShapes() *Shapes {
 	return &Shapes{
 		ShapesByNick: make(map[string]*Shape),
+		ShapesConfig: ShapesConfig{
+			PermittedShapes: make(map[string]bool),
+		},
 	}
 }
 
@@ -403,6 +406,10 @@ func extractFromFileWithSubdir(inputPath, outputDir, subdir string, shapes *Shap
 
 type ShapesConfig struct {
 	WriteToFile bool
+
+	//optimization to use less for purpose of in memory faster dev run
+	UsePermittedShapesWhitelist bool
+	PermittedShapes             map[string]bool
 }
 type Shapes struct {
 	ShapesConfig
