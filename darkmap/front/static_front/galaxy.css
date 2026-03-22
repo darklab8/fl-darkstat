@@ -127,12 +127,31 @@ system- {
     border-color: white;
 }
 
-.jumphole {
+.tradelane {
+    position: absolute;
+    height: 0.75em;
+    width: 0.75em;
+    margin-top: -0.375em;
+    margin-left: -0.375em;
+    border-color: white;
+    box-shadow: 0 0 0.7em 0.2em rgba(137, 136, 136, 0.2);
+}
+
+.jumphole,
+.tradelane {
     cursor: pointer;
+}
+
+.jumphole {
     z-index: 10;
 }
 
-.jumphole img {
+.tradelane {
+    z-index: 9;
+}
+
+.jumphole img,
+.tradelane img {
     width: 100%;
     height: 100%;
 }
@@ -141,7 +160,8 @@ system- {
 .contents div[data-jump-dest]:hover,
 .contents div.mineable:hover  */
 system-:hover,
-.jumphole:hover {
+.jumphole:hover,
+.tradelane:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
     color: rgb(255, 167, 6);
 }

@@ -210,6 +210,28 @@ templ SystemContents(system *export_map.System) {
 				</obj->
 			</a>
 		}
+		for _, obj := range system.Objs {
+			<obj-
+				data-nickname={ obj.Nickname }
+				class={ fmt.Sprintf("%s tooltip", obj.Kind.ToNick()) }
+				style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+                    SystemPosToPerc(obj.Pos.Z, system),
+                    SystemPosToPerc(obj.Pos.X, system),
+                ) }
+			>
+				<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
+				<span class="tooltiptext">
+					{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
+					<br/>
+					{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
+					<br/>
+					{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
+				</span>
+				if obj.Kind != export_map.ObjTradelane {
+					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
+				}
+			</obj->
+		}
 	</content->
 }
 

@@ -128,6 +128,10 @@ type TradeLaneRing struct {
 	Pos      *semantic.Vect
 	NextRing *semantic.String
 	PrevRing *semantic.String
+
+	Archetype *semantic.String
+	IdsName   *semantic.Int
+
 	// has next_ring, then it is tradelane
 	// or if has Trade_Lane_Ring, then trade lane too.
 }
@@ -500,10 +504,12 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					_, is_trade_lane2 := obj.ParamMap[cfg.Key("prev_ring")]
 					if is_trade_lane1 || is_trade_lane2 {
 						tradelane := &TradeLaneRing{
-							Nickname: semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Pos:      semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
-							NextRing: semantic.NewString(obj, cfg.Key("next_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							PrevRing: semantic.NewString(obj, cfg.Key("prev_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+							NextRing:  semantic.NewString(obj, cfg.Key("next_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							PrevRing:  semantic.NewString(obj, cfg.Key("prev_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
 						}
 
 						system_to_add.Tradelanes = append(system_to_add.Tradelanes, tradelane)

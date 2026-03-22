@@ -37,6 +37,24 @@ type Obj struct {
 	Pos              cfg.Vector
 	ShapeName        string
 	VisibleByDefault bool
+	Kind             ObjKind
+}
+type ObjKind int8
+
+const (
+	ObjUnknown ObjKind = iota
+	ObjJumphole
+	ObjTradelane
+)
+
+func (o ObjKind) ToNick() string {
+	switch o {
+	case ObjJumphole:
+		return "jumphole"
+	case ObjTradelane:
+		return "tradelane"
+	}
+	return "unknown"
 }
 
 type Jumphole struct {
@@ -151,7 +169,6 @@ func (e *Export) EnrichSystemWithObjects(
 
 		shape_name, found_shape := solararch.ShapeName.GetValue()
 		if !found_shape {
-			// logus.Log.Info("not found shape for", typelog.Any("archetype", archetype), typelog.Any("base", base_obj.Nickname), typelog.Any("base_name", base_obj.Name))
 			stats.solars_without_shapes[archetype] = true
 		}
 
@@ -159,22 +176,23 @@ func (e *Export) EnrichSystemWithObjects(
 
 		if _, ok := e.Shapes.ShapesByNick[base_obj.ShapeName]; !ok && base_obj.ShapeName != "" {
 			stats.shape_without_images[base_obj.ShapeName] = true
-			// logus.Log.Warn("not found shape in images for", typelog.Any("base_obj.ShapeName", base_obj.ShapeName))
 		}
 		// TODO export infocards
 		// if ids_info, ok := base.IDsInfo.GetValue(); ok && ids_info != 0 {
 		// 	e.Exp.ExportInfocards(infocarder.InfocardKey(base_obj.Nickname), ids_info)
 		// }
 		base_obj.VisibleByDefault = true
-		system_to_add.Objs = append(system_to_add.Objs, base_obj)
+
+		// TODO add bases
+		// system_to_add.Objs = append(system_to_add.Objs, base_obj)
 	}
 
 	for _, jh_info := range system_info.Jumpholes {
-
 		jumphole := &Jumphole{
 			Obj: Obj{
 				Nickname: jh_info.Nickname.Get(),
 				Pos:      jh_info.Pos.Get(),
+				Kind:     ObjJumphole,
 			},
 		}
 		jumphole.Name = configs.GetInfocardName(jh_info.IdsName.Get(), jumphole.Nickname)
@@ -195,7 +213,6 @@ func (e *Export) EnrichSystemWithObjects(
 		shape_name, found_shape := solararch.ShapeName.GetValue()
 		e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
 		if !found_shape {
-			// logus.Log.Info("not found shape for", typelog.Any("archetype", archetype), typelog.Any("base", base_obj.Nickname), typelog.Any("base_name", base_obj.Name))
 			stats.solars_without_shapes[archetype] = true
 		}
 
@@ -214,4 +231,27 @@ func (e *Export) EnrichSystemWithObjects(
 		system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)
 	}
 
+	for _, obj_info := range system_info.Tradelanes {
+		obj := &Obj{
+			Nickname: obj_info.Nickname.Get(),
+			Pos:      obj_info.Pos.Get(),
+			Kind:     ObjTradelane,
+		}
+		obj.Name = configs.GetInfocardName(obj_info.IdsName.Get(), obj.Nickname)
+
+		archetype := obj_info.Archetype.Get()
+		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+
+		shape_name, found_shape := solararch.ShapeName.GetValue()
+		e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
+		if !found_shape {
+			stats.solars_without_shapes[archetype] = true
+		}
+		obj.ShapeName = strings.ToLower(shape_name)
+
+		if _, ok := e.Shapes.ShapesByNick[obj.ShapeName]; !ok && obj.ShapeName != "" {
+			stats.shape_without_images[obj.ShapeName] = true
+		}
+		system_to_add.Objs = append(system_to_add.Objs, obj)
+	}
 }
