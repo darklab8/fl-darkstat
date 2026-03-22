@@ -120,10 +120,10 @@ system- {
 
 .jumphole {
     position: absolute;
-    height: 2em;
-    width: 2em;
-    margin-top: -1em;
-    margin-left: -1em;
+    height: 1.5em;
+    width: 1.5em;
+    margin-top: -0.75em;
+    margin-left: -0.75em;
     border-color: white;
 }
 

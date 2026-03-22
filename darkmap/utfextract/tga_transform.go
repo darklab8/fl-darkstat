@@ -3,7 +3,7 @@ package utfextract
 import (
 	"bytes"
 	"image"
-	"image/jpeg"
+	"image/png"
 
 	"github.com/darklab8/fl-darkstat/darkmap/dds"
 	"github.com/darklab8/fl-darkstat/darkmap/tga_ftrvxmtrx"
@@ -19,9 +19,7 @@ func TransformToJpeg(img *Image) (*bytes.Buffer, error) {
 		}
 		var output *bytes.Buffer = &bytes.Buffer{} // zero value is ready to use
 
-		err = jpeg.Encode(output, img, &jpeg.Options{
-			Quality: 90,
-		})
+		err = png.Encode(output, img)
 		if err != nil {
 			return nil, err
 		}
@@ -42,9 +40,7 @@ func TransformToJpeg(img *Image) (*bytes.Buffer, error) {
 
 		var output *bytes.Buffer = &bytes.Buffer{} // zero value is ready to use
 
-		err = jpeg.Encode(output, img, &jpeg.Options{
-			Quality: 90,
-		})
+		err = png.Encode(output, img)
 		if err != nil {
 			return nil, err
 		}

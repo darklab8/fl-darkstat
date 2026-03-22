@@ -129,7 +129,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 			}
 			result.StaticFile = core_types.StaticFile{
 				Content:  jpeg_result.String(),
-				Filename: fmt.Sprintf("%s.jpeg", shape.Nickname),
+				Filename: fmt.Sprintf("%s.png", shape.Nickname),
 				Kind:     core_types.StaticFileUnknown,
 			}
 			result.made = true

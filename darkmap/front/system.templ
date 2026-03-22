@@ -9,7 +9,10 @@ import (
 )
 
 func SystemDetailedUrl(system *export_map.System) string {
-	return "cdn/system/system-" + strings.ToLower(system.Nickname) + ".html"
+	return SystemDetailedUrlNick(system.Nickname)
+}
+func SystemDetailedUrlNick(system_nick string) string {
+	return "cdn/system/system-" + strings.ToLower(system_nick) + ".html"
 }
 
 var GridRows []int = []int{2, 3, 4, 5, 6, 7, 8}
@@ -182,18 +185,30 @@ templ SystemContents(system *export_map.System) {
             }
         </style>
 		for _, obj := range system.Jumpholes {
-			<obj-
-				data-nickname={ obj.Nickname }
-				class="jumphole tooltip"
-				style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+			<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + SystemDetailedUrlNick(obj.GotoSystem)) }>
+				<obj-
+					data-nickname={ obj.Nickname }
+					class="jumphole tooltip"
+					style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
                     SystemPosToPerc(obj.Pos.Z, system),
                     SystemPosToPerc(obj.Pos.X, system),
                 ) }
-			>
-				<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".jpeg" }/>
-				<span class="tooltiptext">{ fmt.Sprintf("x:%.0f,y:%.0f,z:%0f", obj.Pos.X,obj.Pos.Y,obj.Pos.Z) }</span>
-				<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
-			</obj->
+				>
+					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
+					<span class="tooltiptext">
+						{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
+						<br/>
+						{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
+						<br/>
+						{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
+						<br/>
+						{ fmt.Sprintf("jh_kind:%s", obj.Kind.ToStr()) }
+						<br/>
+						{ fmt.Sprintf("target:%s", obj.GotoSystemName) }
+					</span>
+					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
+				</obj->
+			</a>
 		}
 	</content->
 }

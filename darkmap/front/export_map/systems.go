@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/go-utils/typelog"
@@ -23,7 +24,7 @@ type System struct {
 	SystemGraphInfo
 
 	Objs      []*Obj
-	Jumpholes []*Obj
+	Jumpholes []*Jumphole
 }
 
 func (s System) GetSquareScale() float64 {
@@ -36,6 +37,13 @@ type Obj struct {
 	Pos              cfg.Vector
 	ShapeName        string
 	VisibleByDefault bool
+}
+
+type Jumphole struct {
+	Obj
+	GotoSystem     string
+	GotoSystemName string
+	Kind           JumpConnectionKind
 }
 
 type Region struct {
@@ -163,9 +171,11 @@ func (e *Export) EnrichSystemWithObjects(
 
 	for _, jh_info := range system_info.Jumpholes {
 
-		jumphole := &Obj{
-			Nickname: jh_info.Nickname.Get(),
-			Pos:      jh_info.Pos.Get(),
+		jumphole := &Jumphole{
+			Obj: Obj{
+				Nickname: jh_info.Nickname.Get(),
+				Pos:      jh_info.Pos.Get(),
+			},
 		}
 		jumphole.Name = configs.GetInfocardName(jh_info.IdsName.Get(), jumphole.Nickname)
 
@@ -189,8 +199,18 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		jumphole.ShapeName = strings.ToLower(shape_name)
-		system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)
 
+		if target, ok := jh_info.GotoSystem.GetValue(); ok {
+			jumphole.GotoSystem = target
+
+			if value, ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(target)]; ok {
+				jumphole.GotoSystemName = configs.GetInfocardName(value.StridName.Get(), target)
+			}
+		}
+
+		jumphole.Kind = e.GetJumpConnectionKind(jh_info)
+
+		system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)
 	}
 
 }
