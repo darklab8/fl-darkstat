@@ -181,6 +181,7 @@ templ GalaxyGrid(menu_kind MenuKind) {
 			</div>
 		</map-with-interface->
 	</background->
+	@core_front.StaticFile(static_front.CustomJS)
 	if menu_kind == MenuKindGalaxy {
 		@core_front.StaticFile(static_front.MapGalaxyJS)
 	} else {

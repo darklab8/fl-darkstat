@@ -5,6 +5,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/go-utils/typelog"
@@ -21,7 +22,8 @@ type System struct {
 
 	SystemGraphInfo
 
-	Objs []*Obj
+	Objs      []*Obj
+	Jumpholes []*Obj
 }
 
 func (s System) GetSquareScale() float64 {
@@ -29,10 +31,11 @@ func (s System) GetSquareScale() float64 {
 }
 
 type Obj struct {
-	Nickname  string
-	Name      string
-	Pos       cfg.Vector
-	ShapeName string
+	Nickname         string
+	Name             string
+	Pos              cfg.Vector
+	ShapeName        string
+	VisibleByDefault bool
 }
 
 type Region struct {
@@ -154,7 +157,40 @@ func (e *Export) EnrichSystemWithObjects(
 		// if ids_info, ok := base.IDsInfo.GetValue(); ok && ids_info != 0 {
 		// 	e.Exp.ExportInfocards(infocarder.InfocardKey(base_obj.Nickname), ids_info)
 		// }
+		base_obj.VisibleByDefault = true
 		system_to_add.Objs = append(system_to_add.Objs, base_obj)
+	}
+
+	for _, jh_info := range system_info.Jumpholes {
+
+		jumphole := &Obj{
+			Nickname: jh_info.Nickname.Get(),
+			Pos:      jh_info.Pos.Get(),
+		}
+		jumphole.Name = configs.GetInfocardName(jh_info.IdsName.Get(), jumphole.Nickname)
+
+		archetype := jh_info.Archetype.Get()
+		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+
+		dockable := solararch.IsDockable(solararch_mapped.DockableOptions{
+			IsDisco:                  e.Mapped.Discovery != nil,
+			PlayersCanDockBerth:      true,
+			PlayersCanDockMoorMedium: true,
+			PlayersCanDockMoorLarge:  true,
+		})
+		if dockable.IsDockable {
+			jumphole.VisibleByDefault = true
+		}
+
+		shape_name, found_shape := solararch.ShapeName.GetValue()
+		if !found_shape {
+			// logus.Log.Info("not found shape for", typelog.Any("archetype", archetype), typelog.Any("base", base_obj.Nickname), typelog.Any("base_name", base_obj.Name))
+			stats.solars_without_shapes[archetype] = true
+		}
+
+		jumphole.ShapeName = strings.ToLower(shape_name)
+		system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)
+
 	}
 
 }

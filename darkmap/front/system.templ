@@ -3,6 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
+	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"strconv"
 	"strings"
 )
@@ -161,14 +162,45 @@ templ System(system *export_map.System) {
 				</div>
 				<h2 class="systemTitle">{ system.Name }</h2>
 			</grid->
+			@SystemContents(system)
 		}
 	}
 }
 
 templ SystemContents(system *export_map.System) {
 	<content->
-		// for _, obj := range system.Objs {
-		// 	<obj-></obj->
-		// }
+		<style>
+            label- {
+                margin-left: 0px;
+                left: -50%;
+                position: absolute;
+                display: inline-block;
+                top: 0.3em;
+                white-space: nowrap;
+                text-shadow: 0em 0em 0.3em black !important;
+                color: white;
+            }
+        </style>
+		for _, obj := range system.Jumpholes {
+			<obj-
+				data-nickname={ obj.Nickname }
+				class="jumphole tooltip"
+				style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+                    SystemPosToPerc(obj.Pos.Z, system),
+                    SystemPosToPerc(obj.Pos.X, system),
+                ) }
+			>
+				<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".jpeg" }/>
+				<span class="tooltiptext">{ fmt.Sprintf("x:%.0f,y:%.0f,z:%0f", obj.Pos.X,obj.Pos.Y,obj.Pos.Z) }</span>
+				<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
+			</obj->
+		}
 	</content->
+}
+
+func SystemPosToPerc(position float64, system *export_map.System) float64 {
+	// divide by cell size
+	// shift to +4 cells forward because our coordinate center from corner and not from center
+	// divide by amount of cells total and move to percentage
+	return 100 * (position/(system.GetSquareScale()*1000) + 4) / 8
 }
