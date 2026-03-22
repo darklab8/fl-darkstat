@@ -30,6 +30,7 @@ type Config struct {
 	Ships    []*semantic.Path
 	Loadouts []*semantic.Path
 	Fuses    []*semantic.Path
+	Stars    []*semantic.Path
 }
 
 func Read(input_file *iniload.IniLoader) *Config {
@@ -45,9 +46,9 @@ func Read(input_file *iniload.IniLoader) *Config {
 	}
 
 	if resources, ok := input_file.SectionMap["[data]"]; ok {
-		for equipment_index, _ := range resources[0].ParamMap[cfg.Key("equipment")] {
+		for index, _ := range resources[0].ParamMap[cfg.Key("equipment")] {
 			frelconfig.Equips = append(frelconfig.Equips,
-				semantic.NewPath(resources[0], cfg.Key("equipment"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(equipment_index))),
+				semantic.NewPath(resources[0], cfg.Key("equipment"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(index))),
 			)
 		}
 		for index, _ := range resources[0].ParamMap[cfg.Key("loadouts")] {
@@ -55,9 +56,9 @@ func Read(input_file *iniload.IniLoader) *Config {
 				semantic.NewPath(resources[0], cfg.Key("loadouts"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(index))),
 			)
 		}
-		for equipment_index, _ := range resources[0].ParamMap[cfg.Key("markets")] {
+		for index, _ := range resources[0].ParamMap[cfg.Key("markets")] {
 			frelconfig.Markets = append(frelconfig.Markets,
-				semantic.NewPath(resources[0], cfg.Key("markets"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(equipment_index))),
+				semantic.NewPath(resources[0], cfg.Key("markets"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(index))),
 			)
 		}
 		for equipment_index, _ := range resources[0].ParamMap[cfg.Key("universe")] {
@@ -65,9 +66,9 @@ func Read(input_file *iniload.IniLoader) *Config {
 				semantic.NewPath(resources[0], cfg.Key("universe"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(equipment_index))),
 			)
 		}
-		for equipment_index, _ := range resources[0].ParamMap[cfg.Key("goods")] {
+		for index, _ := range resources[0].ParamMap[cfg.Key("goods")] {
 			frelconfig.Goods = append(frelconfig.Goods,
-				semantic.NewPath(resources[0], cfg.Key("goods"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(equipment_index))),
+				semantic.NewPath(resources[0], cfg.Key("goods"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(index))),
 			)
 		}
 		for equipment_index, _ := range resources[0].ParamMap[cfg.Key("ships")] {
@@ -75,9 +76,14 @@ func Read(input_file *iniload.IniLoader) *Config {
 				semantic.NewPath(resources[0], cfg.Key("ships"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(equipment_index))),
 			)
 		}
-		for equipment_index, _ := range resources[0].ParamMap[cfg.Key("fuses")] {
+		for index, _ := range resources[0].ParamMap[cfg.Key("fuses")] {
 			frelconfig.Fuses = append(frelconfig.Fuses,
-				semantic.NewPath(resources[0], cfg.Key("fuses"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(equipment_index))),
+				semantic.NewPath(resources[0], cfg.Key("fuses"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(index))),
+			)
+		}
+		for index, _ := range resources[0].ParamMap[cfg.Key("stars")] {
+			frelconfig.Stars = append(frelconfig.Stars,
+				semantic.NewPath(resources[0], cfg.Key("stars"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(index))),
 			)
 		}
 	}

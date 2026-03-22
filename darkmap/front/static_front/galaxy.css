@@ -142,8 +142,15 @@ system- {
     box-shadow: 0 0 0.7em 0.2em rgba(137, 136, 136, 0.15);
 }
 
+.star {
+    position: absolute;
+    border-color: white;
+    border-radius: 50%;
+}
+
 .jumphole,
-.tradelane {
+.tradelane,
+.star {
     cursor: pointer;
 }
 
@@ -151,7 +158,8 @@ system- {
     z-index: 10;
 }
 
-.tradelane {
+.tradelane,
+.star {
     z-index: 9;
 }
 
@@ -166,7 +174,8 @@ system- {
 .contents div.mineable:hover  */
 system-:hover,
 .jumphole:hover,
-.tradelane:hover {
+.tradelane:hover,
+.star:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
     color: rgb(255, 167, 6);
 }

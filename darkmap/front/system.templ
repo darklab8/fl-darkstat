@@ -212,18 +212,48 @@ templ SystemContents(system *export_map.System) {
 		}
 		for _, obj := range system.Objs {
 			// templ.KV("tradelane_css_shape", obj.Kind == export_map.ObjTradelane && obj.UserCSSShape),
+			// star = med_white_sun
+			// atmosphere_range = 11000
+			// burn_color = 160, 222, 245
+			// radius from stararch.radius
 			<obj-
 				data-nickname={ obj.Nickname }
 				class={
 					"tooltip",
 					obj.Kind.ToNick(),
 				}
-				style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
-                    SystemPosToPerc(obj.Pos.Z, system),
-                    SystemPosToPerc(obj.Pos.X, system),
-                ) }
+				style={
+					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+						SystemPosToPerc(obj.Pos.Z, system),
+						SystemPosToPerc(obj.Pos.X, system),
+					),
+					templ.KV(fmt.Sprintf("background-color: rgb(%d %d %d)",
+						int(obj.Star.StarCenter.InnerColor.X*255),
+						int(obj.Star.StarCenter.InnerColor.Y*255),
+						int(obj.Star.StarCenter.InnerColor.Z*255),
+					), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("width: %.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("margin-top: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)/2), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("margin-left: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)/2), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("box-shadow: inset 0em 0em 0.2em %.1fem rgba(%d,%d,%d,0.6), 0em 0em 0.9em %.1fem rgba(%d,%d,%d,0.25);",
+						obj.Star.StarGlow.Scale,
+						int(obj.Star.StarGlow.InnerColor.X*255),
+						int(obj.Star.StarGlow.InnerColor.Y*255),
+						int(obj.Star.StarGlow.InnerColor.Z*255),
+						obj.Star.StarGlow.Scale,
+						int(obj.Star.StarGlow.OuterColor.X*255),
+						int(obj.Star.StarGlow.OuterColor.Y*255),
+						int(obj.Star.StarGlow.OuterColor.Z*255),
+					), obj.Kind == export_map.ObjStar),
+				}
 			>
-				<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
+				if obj.Kind == export_map.ObjStar {
+					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
+				}
+				if obj.Kind != export_map.ObjStar {
+					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
+				}
 				<span class="tooltiptext">
 					{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
 					<br/>
@@ -244,4 +274,8 @@ func SystemPosToPerc(position float64, system *export_map.System) float64 {
 	// shift to +4 cells forward because our coordinate center from corner and not from center
 	// divide by amount of cells total and move to percentage
 	return 100 * (position/(system.GetSquareScale()*1000) + 4) / 8
+}
+
+func SizeInPerc(size float64, system *export_map.System) float64 {
+	return 100 * (size / (system.GetSquareScale() * 1000)) / 8
 }

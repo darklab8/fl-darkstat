@@ -38,14 +38,31 @@ type Obj struct {
 	ShapeName        string
 	VisibleByDefault bool
 	Kind             ObjKind
-	// UserCSSShape     bool
+
+	Star Star
 }
+
+type Star struct {
+	AtmosphereRange int
+	StarRadius      float64
+	StarGlow        Glow
+	StarCenter      Glow
+}
+
+type Glow struct {
+	Scale      float64
+	InnerColor cfg.Vector
+	OuterColor cfg.Vector
+}
+
 type ObjKind int8
 
 const (
 	ObjUnknown ObjKind = iota
 	ObjJumphole
 	ObjTradelane
+	ObjStar
+	ObjBase
 )
 
 func (o ObjKind) ToNick() string {
@@ -54,8 +71,15 @@ func (o ObjKind) ToNick() string {
 		return "jumphole"
 	case ObjTradelane:
 		return "tradelane"
+	case ObjStar:
+		return "star"
+	case ObjBase:
+		return "base"
+	case ObjUnknown:
+		return "unknown"
 	}
-	return "unknown"
+
+	panic("you forgot to declare ObjKind ToNick() for some entity")
 }
 
 type Jumphole struct {
@@ -158,36 +182,6 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 	}
 
-	for _, base := range all_bases {
-		base_obj := &Obj{
-			Nickname: base.Nickname.Get(),
-			Pos:      base.Pos.Get(),
-		}
-		base_obj.Name = configs.GetInfocardName(base.IdsName.Get(), base_obj.Nickname)
-
-		archetype := base.Archetype.Get()
-		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
-
-		shape_name, found_shape := solararch.ShapeName.GetValue()
-		if !found_shape {
-			stats.solars_without_shapes[archetype] = true
-		}
-
-		base_obj.ShapeName = strings.ToLower(shape_name)
-
-		if _, ok := e.Shapes.ShapesByNick[base_obj.ShapeName]; !ok && base_obj.ShapeName != "" {
-			stats.shape_without_images[base_obj.ShapeName] = true
-		}
-		// TODO export infocards
-		// if ids_info, ok := base.IDsInfo.GetValue(); ok && ids_info != 0 {
-		// 	e.Exp.ExportInfocards(infocarder.InfocardKey(base_obj.Nickname), ids_info)
-		// }
-		base_obj.VisibleByDefault = true
-
-		// TODO add bases
-		// system_to_add.Objs = append(system_to_add.Objs, base_obj)
-	}
-
 	for _, jh_info := range system_info.Jumpholes {
 		jumphole := &Jumphole{
 			Obj: Obj{
@@ -277,5 +271,89 @@ func (e *Export) EnrichSystemWithObjects(
 			stats.shape_without_images[obj.ShapeName] = true
 		}
 		system_to_add.Objs = append(system_to_add.Objs, obj)
+	}
+
+	for _, star_info := range system_info.Stars {
+		star := &Obj{
+			Nickname: star_info.Nickname.Get(),
+			Pos:      star_info.Pos.Get(),
+			Kind:     ObjStar,
+			Star: Star{
+				AtmosphereRange: star_info.AtmosphereRange.Get(),
+			},
+		}
+
+		stararch_nick := star_info.Star.Get()
+
+		stararch := e.Mapped.Stararch.StarsByNick[stararch_nick]
+
+		star.Star.StarRadius = stararch.Radius.Get()
+		star_glow := e.Mapped.Stararch.GlowsByNick[stararch.StarGlow.Get()]
+
+		star.Star.StarGlow = Glow{
+			Scale:      star_glow.Scale.Get(),
+			OuterColor: star_glow.OuterColor.Get(),
+		}
+		if inner_color, ok := star_glow.InnerColor.GetValue(); ok {
+			star.Star.StarGlow.InnerColor = inner_color
+		} else {
+			star.Star.StarGlow.InnerColor = star.Star.StarGlow.OuterColor
+		}
+
+		star_center := e.Mapped.Stararch.GlowsByNick[stararch.StarCenter.Get()]
+		star.Star.StarCenter = Glow{
+			Scale:      star_center.Scale.Get(),
+			OuterColor: star_center.OuterColor.Get(),
+		}
+		if inner_color, ok := star_center.InnerColor.GetValue(); ok {
+			star.Star.StarCenter.InnerColor = inner_color
+		} else {
+			star.Star.StarCenter.InnerColor = star.Star.StarGlow.OuterColor
+		}
+
+		star.Name = configs.GetInfocardName(star_info.IdsName.Get(), star.Nickname)
+
+		star.VisibleByDefault = true
+		system_to_add.Objs = append(system_to_add.Objs, star)
+	}
+
+	for _, base_info := range all_bases {
+		continue
+		base := &Obj{
+			Nickname: base_info.Nickname.Get(),
+			Pos:      base_info.Pos.Get(),
+			Kind:     ObjBase,
+		}
+		base.Name = configs.GetInfocardName(base_info.IdsName.Get(), base.Nickname)
+
+		archetype := base_info.Archetype.Get()
+		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+
+		shape_name, found_shape := solararch.ShapeName.GetValue()
+
+		if _, ok := e.Shapes.ShapesByNick[strings.ToLower(shape_name)]; ok {
+			e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
+		} else {
+			logus.Log.Panic("can't find shape for base",
+				typelog.Any("shape", strings.ToLower(shape_name)),
+				typelog.Any("obj_nick", strings.ToLower(base.Nickname)),
+			)
+		}
+
+		if !found_shape {
+			stats.solars_without_shapes[archetype] = true
+		}
+
+		base.ShapeName = strings.ToLower(shape_name)
+
+		if _, ok := e.Shapes.ShapesByNick[base.ShapeName]; !ok && base.ShapeName != "" {
+			stats.shape_without_images[base.ShapeName] = true
+		}
+		// TODO export infocards
+		// if ids_info, ok := base.IDsInfo.GetValue(); ok && ids_info != 0 {
+		// 	e.Exp.ExportInfocards(infocarder.InfocardKey(base_obj.Nickname), ids_info)
+		// }
+		base.VisibleByDefault = true
+		// system_to_add.Objs = append(system_to_add.Objs, base)
 	}
 }
