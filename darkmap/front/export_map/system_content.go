@@ -38,6 +38,7 @@ type Obj struct {
 	ShapeName        string
 	VisibleByDefault bool
 	Kind             ObjKind
+	// UserCSSShape     bool
 }
 type ObjKind int8
 
@@ -211,7 +212,14 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		shape_name, found_shape := solararch.ShapeName.GetValue()
-		e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
+		if _, ok := e.Shapes.ShapesByNick[strings.ToLower(shape_name)]; ok {
+			e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
+		} else {
+			logus.Log.Panic("can't find shape for jumphole",
+				typelog.Any("shape", strings.ToLower(shape_name)),
+				typelog.Any("obj_nick", strings.ToLower(jumphole.Nickname)),
+			)
+		}
 		if !found_shape {
 			stats.solars_without_shapes[archetype] = true
 		}
@@ -242,12 +250,28 @@ func (e *Export) EnrichSystemWithObjects(
 		archetype := obj_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 
-		shape_name, found_shape := solararch.ShapeName.GetValue()
-		e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
+		fallback_shape_name, found_shape := solararch.ShapeName.GetValue()
+		if _, ok := e.Shapes.ShapesByNick[strings.ToLower(fallback_shape_name)]; ok {
+			e.Shapes.PermittedShapes[strings.ToLower(fallback_shape_name)] = true
+		} else {
+			logus.Log.Error("can't find shape for tradelane, going for fallback",
+				typelog.Any("shape", strings.ToLower(fallback_shape_name)),
+				typelog.Any("obj_nickname", strings.ToLower(obj.Nickname)),
+			)
+			fallback_shape_name = "nav_tradelanering"
+			if _, ok := e.Shapes.ShapesByNick[strings.ToLower(fallback_shape_name)]; ok {
+				e.Shapes.PermittedShapes[strings.ToLower(fallback_shape_name)] = true
+			} else {
+				logus.Log.Panic("fallback for tradelane model is not found",
+					typelog.Any("shape", strings.ToLower(fallback_shape_name)),
+					typelog.Any("obj_nickname", strings.ToLower(obj.Nickname)),
+				)
+			}
+		}
 		if !found_shape {
 			stats.solars_without_shapes[archetype] = true
 		}
-		obj.ShapeName = strings.ToLower(shape_name)
+		obj.ShapeName = strings.ToLower(fallback_shape_name)
 
 		if _, ok := e.Shapes.ShapesByNick[obj.ShapeName]; !ok && obj.ShapeName != "" {
 			stats.shape_without_images[obj.ShapeName] = true

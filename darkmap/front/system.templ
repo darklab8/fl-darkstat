@@ -211,9 +211,13 @@ templ SystemContents(system *export_map.System) {
 			</a>
 		}
 		for _, obj := range system.Objs {
+			// templ.KV("tradelane_css_shape", obj.Kind == export_map.ObjTradelane && obj.UserCSSShape),
 			<obj-
 				data-nickname={ obj.Nickname }
-				class={ fmt.Sprintf("%s tooltip", obj.Kind.ToNick()) }
+				class={
+					"tooltip",
+					obj.Kind.ToNick(),
+				}
 				style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
                     SystemPosToPerc(obj.Pos.Z, system),
                     SystemPosToPerc(obj.Pos.X, system),
