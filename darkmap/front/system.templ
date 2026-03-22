@@ -212,10 +212,7 @@ templ SystemContents(system *export_map.System) {
 		}
 		for _, obj := range system.Objs {
 			// templ.KV("tradelane_css_shape", obj.Kind == export_map.ObjTradelane && obj.UserCSSShape),
-			// star = med_white_sun
-			// atmosphere_range = 11000
-			// burn_color = 160, 222, 245
-			// radius from stararch.radius
+			// to be fair inner shadow does not work according to expectations. at least the star_glow one i think
 			<obj-
 				data-nickname={ obj.Nickname }
 				class={
@@ -236,21 +233,31 @@ templ SystemContents(system *export_map.System) {
 					templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf("margin-top: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)/2), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf("margin-left: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)/2), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("box-shadow: inset 0em 0em 0.2em %.1fem rgba(%d,%d,%d,0.6), 0em 0em 0.9em %.1fem rgba(%d,%d,%d,0.25);",
-						obj.Star.StarGlow.Scale,
+					templ.KV(fmt.Sprintf(
+						"box-shadow: inset 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.9), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.8), inset 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.3), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.4);",
+						obj.Star.StarCenter.Scale-1,
+						obj.Star.StarCenter.Scale-1,
+						int(obj.Star.StarCenter.InnerColor.X*255),
+						int(obj.Star.StarCenter.InnerColor.Y*255),
+						int(obj.Star.StarCenter.InnerColor.Z*255),
+						obj.Star.StarCenter.Scale-1,
+						obj.Star.StarCenter.Scale-1,
+						int(obj.Star.StarCenter.OuterColor.X*255),
+						int(obj.Star.StarCenter.OuterColor.Y*255),
+						int(obj.Star.StarCenter.OuterColor.Z*255),
+						obj.Star.StarGlow.Scale-1,
+						obj.Star.StarGlow.Scale-1,
 						int(obj.Star.StarGlow.InnerColor.X*255),
 						int(obj.Star.StarGlow.InnerColor.Y*255),
 						int(obj.Star.StarGlow.InnerColor.Z*255),
-						obj.Star.StarGlow.Scale,
+						obj.Star.StarGlow.Scale-1,
+						obj.Star.StarGlow.Scale-1,
 						int(obj.Star.StarGlow.OuterColor.X*255),
 						int(obj.Star.StarGlow.OuterColor.Y*255),
 						int(obj.Star.StarGlow.OuterColor.Z*255),
 					), obj.Kind == export_map.ObjStar),
 				}
 			>
-				if obj.Kind == export_map.ObjStar {
-					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
-				}
 				if obj.Kind != export_map.ObjStar {
 					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
 				}
