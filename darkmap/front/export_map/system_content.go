@@ -1,6 +1,7 @@
 package export_map
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
@@ -39,7 +40,8 @@ type Obj struct {
 	VisibleByDefault bool
 	Kind             ObjKind
 
-	Star Star
+	Star              Star
+	PlanetSolarRadius float64
 }
 
 type Star struct {
@@ -63,6 +65,7 @@ const (
 	ObjTradelane
 	ObjStar
 	ObjBase
+	ObjPlanet
 )
 
 func (o ObjKind) ToNick() string {
@@ -75,6 +78,8 @@ func (o ObjKind) ToNick() string {
 		return "star"
 	case ObjBase:
 		return "base"
+	case ObjPlanet:
+		return "planet"
 	case ObjUnknown:
 		return "unknown"
 	}
@@ -329,31 +334,66 @@ func (e *Export) EnrichSystemWithObjects(
 		archetype := base_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 
-		shape_name, found_shape := solararch.ShapeName.GetValue()
+		if base.Nickname == "li01_01" {
+			fmt.Print()
+		}
 
-		if _, ok := e.Shapes.ShapesByNick[strings.ToLower(shape_name)]; ok {
-			e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
-		} else {
-			if strings.Contains(archetype, "docking_fixture") {
-				continue
+		shape_name, found_shape := solararch.ShapeName.GetValue()
+		if _, ok := e.Shapes.ShapesByNick[shape_name]; !ok {
+			if shape_name == "nnm_sm_depot" {
+				shape_name = "nav_depot"
+			} else if shape_name == "nnm_sm_communications" {
+				shape_name = "nav_outpost"
+			} else if shape_name == "nnm_sm_mining" {
+				shape_name = "nav_outpost"
+			} else if shape_name == "nnm_sm_medium_rocky_moon" {
+				base.Kind = ObjPlanet
+			} else if shape_name == "nnm_sm_medium_forest_moon" {
+				base.Kind = ObjPlanet
+			} else if shape_name == "nnm_sm_small_ice_moon" {
+				base.Kind = ObjPlanet
+			} else if shape_name == "nnm_sm_rock_asteroid" {
+				base.Kind = ObjPlanet
 			}
 
-			logus.Log.Error("can't find shape for base",
-				typelog.Any("shape", strings.ToLower(shape_name)),
-				typelog.Any("obj_nick", strings.ToLower(base.Nickname)),
-			)
+			if base.Kind == ObjPlanet {
+				material := solararch.MaterialLibrary[0].Get()
+				shape_name = material.Base().ToString()
+				if strings.Contains(shape_name, ".") {
+					shape_name = strings.Split(shape_name, ".")[0]
+				}
+				base.PlanetSolarRadius = solararch.SolarRadius.Get()
+			}
+
+			if shape_name == "indust" { // disco hardcoded fix
+				shape_name = "nav_outpost"
+			}
+		}
+		if strings.Contains(archetype, "docking_fixture") {
 			continue
+		} else if shape_name == "" {
+			logus.Log.Error("can't find shape for base, going for fallbacks",
+				typelog.Any("shape", shape_name),
+				typelog.Any("obj_nick", base.Nickname),
+			)
+			shape_name = "nav_depot"
+		}
+
+		if _, ok := e.Shapes.ShapesByNick[shape_name]; ok {
+			e.Shapes.PermittedShapes[shape_name] = true
+		} else {
+			stats.solars_without_shapes[shape_name] = true
 			logus.Log.Panic("can't find shape for base",
-				typelog.Any("shape", strings.ToLower(shape_name)),
-				typelog.Any("obj_nick", strings.ToLower(base.Nickname)),
+				typelog.Any("shape", shape_name),
+				typelog.Any("obj_nick", base.Nickname),
 			)
 		}
 
 		if !found_shape {
-			stats.solars_without_shapes[archetype] = true
+			stats.shape_without_images[archetype] = true
 		}
 
-		base.ShapeName = strings.ToLower(shape_name)
+		base.ShapeName = shape_name
 
 		if _, ok := e.Shapes.ShapesByNick[base.ShapeName]; !ok && base.ShapeName != "" {
 			stats.shape_without_images[base.ShapeName] = true

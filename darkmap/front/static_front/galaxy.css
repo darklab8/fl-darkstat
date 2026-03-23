@@ -158,10 +158,25 @@ system- {
     margin-left: -0.375em;
 }
 
+.planet {
+    position: absolute;
+    border-color: white;
+    height: 0.75em;
+    width: 0.75em;
+    margin-top: -0.375em;
+    margin-left: -0.375em;
+    border-radius: 50%;
+}
+
+.planet img {
+    border-radius: 50%;
+}
+
 .jumphole,
 .tradelane,
 .star,
-.base {
+.base,
+.planet {
     cursor: pointer;
 }
 
@@ -171,13 +186,15 @@ system- {
 }
 
 .tradelane,
-.star {
+.star,
+.planet {
     z-index: 9;
 }
 
 .jumphole img,
 .tradelane img,
-.base img {
+.base img,
+.planet img {
     width: 100%;
     height: 100%;
 }
@@ -189,7 +206,8 @@ system-:hover,
 .jumphole:hover,
 .tradelane:hover,
 .star:hover,
-.base:hover {
+.base:hover,
+.planet:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
     color: rgb(255, 167, 6);
 }
