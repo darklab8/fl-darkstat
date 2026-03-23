@@ -229,12 +229,12 @@ templ SystemContents(system *export_map.System) {
 						int(obj.Star.StarCenter.InnerColor.Y*255),
 						int(obj.Star.StarCenter.InnerColor.Z*255),
 					), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("width: %.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("margin-top: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)/2), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("margin-left: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)/2), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("margin-top: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("margin-left: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf(
-						"box-shadow: inset 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.9), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.8), inset 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.3), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.4);",
+						"box-shadow: inset 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.9), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.8), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.4);",
 						obj.Star.StarCenter.Scale-1,
 						obj.Star.StarCenter.Scale-1,
 						int(obj.Star.StarCenter.InnerColor.X*255),
@@ -250,16 +250,30 @@ templ SystemContents(system *export_map.System) {
 						int(obj.Star.StarGlow.InnerColor.X*255),
 						int(obj.Star.StarGlow.InnerColor.Y*255),
 						int(obj.Star.StarGlow.InnerColor.Z*255),
-						obj.Star.StarGlow.Scale-1,
-						obj.Star.StarGlow.Scale-1,
-						int(obj.Star.StarGlow.OuterColor.X*255),
-						int(obj.Star.StarGlow.OuterColor.Y*255),
-						int(obj.Star.StarGlow.OuterColor.Z*255),
+						// obj.Star.StarGlow.Scale-1,
+						// obj.Star.StarGlow.Scale-1,
+						// int(obj.Star.StarGlow.OuterColor.X*255),
+						// int(obj.Star.StarGlow.OuterColor.Y*255),
+						// int(obj.Star.StarGlow.OuterColor.Z*255),
 					), obj.Kind == export_map.ObjStar),
 				}
 			>
 				if obj.Kind != export_map.ObjStar {
 					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
+				}
+				if obj.Kind == export_map.ObjStar {
+					<div
+						class="atmosphere"
+						style={
+							"top: 50%",
+							"left: 50%",
+							fmt.Sprintf("margin-top: -%.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
+							fmt.Sprintf("margin-left: -%.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
+							"position: absolute",
+							fmt.Sprintf("width: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
+							fmt.Sprintf("height: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
+						}
+					></div>
 				}
 				<span class="tooltiptext">
 					{ fmt.Sprintf("x:%.0f", obj.Pos.X) }

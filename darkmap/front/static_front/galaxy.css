@@ -180,6 +180,13 @@ system-:hover,
     color: rgb(255, 167, 6);
 }
 
+.atmosphere {
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 0, 0.3);
+    z-index: -1;
+    box-sizing: border-box;
+}
+
 cycle- {
     border-color: #2299F5;
     border-width: 3px;
