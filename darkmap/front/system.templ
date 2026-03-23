@@ -218,6 +218,7 @@ templ SystemContents(system *export_map.System) {
 				class={
 					"tooltip",
 					obj.Kind.ToNick(),
+					templ.KV("hidden_obj", !obj.VisibleByDefault),
 				}
 				style={
 					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
@@ -259,7 +260,9 @@ templ SystemContents(system *export_map.System) {
 				}
 			>
 				if obj.Kind != export_map.ObjStar {
-					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
+					<img
+						src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }
+					/>
 				}
 				if obj.Kind == export_map.ObjStar {
 					<div

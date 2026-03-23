@@ -229,7 +229,6 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		jumphole.Kind = e.GetJumpConnectionKind(jh_info)
-
 		system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)
 	}
 
@@ -270,6 +269,7 @@ func (e *Export) EnrichSystemWithObjects(
 		if _, ok := e.Shapes.ShapesByNick[obj.ShapeName]; !ok && obj.ShapeName != "" {
 			stats.shape_without_images[obj.ShapeName] = true
 		}
+		obj.VisibleByDefault = true
 		system_to_add.Objs = append(system_to_add.Objs, obj)
 	}
 
@@ -318,7 +318,7 @@ func (e *Export) EnrichSystemWithObjects(
 	}
 
 	for _, base_info := range all_bases {
-		continue
+
 		base := &Obj{
 			Nickname: base_info.Nickname.Get(),
 			Pos:      base_info.Pos.Get(),
@@ -334,6 +334,15 @@ func (e *Export) EnrichSystemWithObjects(
 		if _, ok := e.Shapes.ShapesByNick[strings.ToLower(shape_name)]; ok {
 			e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
 		} else {
+			if strings.Contains(archetype, "docking_fixture") {
+				continue
+			}
+
+			logus.Log.Error("can't find shape for base",
+				typelog.Any("shape", strings.ToLower(shape_name)),
+				typelog.Any("obj_nick", strings.ToLower(base.Nickname)),
+			)
+			continue
 			logus.Log.Panic("can't find shape for base",
 				typelog.Any("shape", strings.ToLower(shape_name)),
 				typelog.Any("obj_nick", strings.ToLower(base.Nickname)),
@@ -353,7 +362,24 @@ func (e *Export) EnrichSystemWithObjects(
 		// if ids_info, ok := base.IDsInfo.GetValue(); ok && ids_info != 0 {
 		// 	e.Exp.ExportInfocards(infocarder.InfocardKey(base_obj.Nickname), ids_info)
 		// }
+		base.Name = configs.GetInfocardName(base_info.IdsName.Get(), base.Nickname)
+
+		// dockable := solararch.IsDockable(solararch_mapped.DockableOptions{
+		// 	IsDisco:                  e.Mapped.Discovery != nil,
+		// 	PlayersCanDockBerth:      true,
+		// 	PlayersCanDockMoorMedium: true,
+		// 	PlayersCanDockMoorLarge:  true,
+		// })
+		// if dockable.IsDockable {
+		// 	base.VisibleByDefault = true
+		// }
+
 		base.VisibleByDefault = true
-		// system_to_add.Objs = append(system_to_add.Objs, base)
+
+		if archetype == "invisible_base" {
+			base.VisibleByDefault = false
+		}
+
+		system_to_add.Objs = append(system_to_add.Objs, base)
 	}
 }

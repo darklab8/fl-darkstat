@@ -148,13 +148,25 @@ system- {
     border-radius: 50%;
 }
 
+.base {
+    position: absolute;
+    border-color: white;
+
+    height: 0.75em;
+    width: 0.75em;
+    margin-top: -0.375em;
+    margin-left: -0.375em;
+}
+
 .jumphole,
 .tradelane,
-.star {
+.star,
+.base {
     cursor: pointer;
 }
 
-.jumphole {
+.jumphole,
+.base {
     z-index: 10;
 }
 
@@ -164,7 +176,8 @@ system- {
 }
 
 .jumphole img,
-.tradelane img {
+.tradelane img,
+.base img {
     width: 100%;
     height: 100%;
 }
@@ -175,7 +188,8 @@ system- {
 system-:hover,
 .jumphole:hover,
 .tradelane:hover,
-.star:hover {
+.star:hover,
+.base:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
     color: rgb(255, 167, 6);
 }
