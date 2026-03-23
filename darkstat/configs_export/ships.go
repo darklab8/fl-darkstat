@@ -289,10 +289,57 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 
 							ship.MaxAngularSpeedDegS *= Pi180
 
-							if ship.TimeTo90MaxAngularSpeed > 0.5 {
-								ship.AngularDistanceFrom0ToHalfSec = ship.MaxAngularSpeedDegS * (0.5 / ship.TimeTo90MaxAngularSpeed) / 2
-							} else {
-								ship.AngularDistanceFrom0ToHalfSec = ship.MaxAngularSpeedDegS*(0.5-ship.TimeTo90MaxAngularSpeed) + ship.MaxAngularSpeedDegS*ship.TimeTo90MaxAngularSpeed/2
+							{
+								// original haste's formula
+								// time += stepSize
+								// drag = ship.angularDrag[0] * angularVelocity
+								// netTorque = ship.steeringTorque[0] - drag
+								// angularAcceleration = netTorque / ship.rotationInertia[0]
+								// angularVelocity += angularAcceleration * stepSize
+								// angularDistance += angularVelocity * stepSize
+							}
+
+							{ //Iterative computations version
+
+								// t := 0.5
+								// angularVelocity := 0.0
+								// angularDistance := 0.0
+
+								// for i := 0; i <= 10000; i++ {
+								// 	stepSize := t / 10000
+
+								// 	drag := AngularDrag * angularVelocity
+								// 	netTorque := ship_info.SteeringTorque.X.Get() - drag
+								// 	angularAcceleration := netTorque / RoutationIntertia
+
+								// 	angularVelocity += angularAcceleration * stepSize
+								// 	angularDistance += angularVelocity * stepSize
+								// }
+
+								// ship.AngularDistanceFrom0ToHalfSec = angularDistance * (180 / math.Pi)
+
+							}
+							{
+								AngularDistanceClosed := func(t, torque, drag, inertia float64) float64 {
+									k := drag / inertia   // drag coefficient
+									a := torque / inertia // angular acceleration at rest
+
+									// Guard: if drag is ~0, simplifies to θ = ½at²
+									if math.Abs(k) < 1e-10 {
+										return 0.5 * a * t * t
+									}
+
+									theta := (a/k)*t - (a/(k*k))*(1-math.Exp(-k*t))
+									return theta * (180 / math.Pi)
+								}
+								t := 0.5
+								theta := AngularDistanceClosed(
+									t,
+									ship_info.SteeringTorque.X.Get(),
+									AngularDrag,
+									RoutationIntertia,
+								)
+								ship.AngularDistanceFrom0ToHalfSec = theta
 							}
 						}
 					}
