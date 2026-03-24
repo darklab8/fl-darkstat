@@ -305,15 +305,17 @@ func (e *Export) EnrichSystemWithObjects(
 			star.Star.StarGlow.InnerColor = star.Star.StarGlow.OuterColor
 		}
 
-		star_center := e.Mapped.Stararch.GlowsByNick[stararch.StarCenter.Get()]
-		star.Star.StarCenter = Glow{
-			Scale:      star_center.Scale.Get(),
-			OuterColor: star_center.OuterColor.Get(),
-		}
-		if inner_color, ok := star_center.InnerColor.GetValue(); ok {
-			star.Star.StarCenter.InnerColor = inner_color
-		} else {
-			star.Star.StarCenter.InnerColor = star.Star.StarGlow.OuterColor
+		if star_center_nick, ok := stararch.StarCenter.GetValue(); ok {
+			star_center := e.Mapped.Stararch.GlowsByNick[star_center_nick]
+			star.Star.StarCenter = Glow{
+				Scale:      star_center.Scale.Get(),
+				OuterColor: star_center.OuterColor.Get(),
+			}
+			if inner_color, ok := star_center.InnerColor.GetValue(); ok {
+				star.Star.StarCenter.InnerColor = inner_color
+			} else {
+				star.Star.StarCenter.InnerColor = star.Star.StarGlow.OuterColor
+			}
 		}
 
 		star.Name = configs.GetInfocardName(star_info.IdsName.Get(), star.Nickname)
