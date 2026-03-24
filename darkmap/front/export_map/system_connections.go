@@ -137,8 +137,8 @@ func (j JumpConnectionKind) ToStr() string {
 }
 
 type JumpConnection struct {
-	Kind map[JumpConnectionKind]bool
-	*System
+	Kind    map[JumpConnectionKind]bool
+	*System `json:"-" swaggerignore:"true"`
 }
 
 func (g *SystemGraphs) DFSUtil(vertex *System, visited map[string]bool) {
