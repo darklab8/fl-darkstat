@@ -21,7 +21,7 @@ while True:
     NEW_PASSWORD=subprocess.run("cd freelancer_folder && git rev-parse HEAD", shell=True, capture_output=True).stdout.decode("utf8").replace("\n","")
     if OLD_PASSWORD != NEW_PASSWORD:
         print(f"Detected New Password {NEW_PASSWORD}")
-        os.system(f'docker service update --env-add DARKCORE_PASSWORD={NEW_PASSWORD} --env-add "FLDARKSTAT_HEADING=commit:{NEW_PASSWORD}" --image darkwind8/darkstat:production dev-darkstat-app')
+        os.system(f'docker service update --env-add DARKCORE_PASSWORD={NEW_PASSWORD} --env-add "FLDARKSTAT_HEADING=commit:{NEW_PASSWORD}" dev-darkstat-app')
         OLD_PASSWORD=NEW_PASSWORD
         STATE=json.loads(subprocess.run("docker service inspect dev-darkstat-app", shell=True, capture_output=True).stdout.decode("utf8").replace("\n",""))[0]["UpdateStatus"]["State"]
         while "updating" in STATE:

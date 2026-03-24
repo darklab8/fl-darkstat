@@ -51,7 +51,7 @@ resource "docker_service" "darkstat" {
         interval     = "14s"
         timeout      = "20s"
         retries      = 6
-        start_period = "1m"
+        start_period = "2m"
       }
 
       image = docker_image.darkstat.name
@@ -128,7 +128,7 @@ resource "docker_service" "darkstat" {
     # }
     resources {
       limits {
-        memory_bytes = 1000 * 1000 * 5000 # 5 gb
+        memory_bytes = 1000 * 1000 * 8000 # 5 gb
       }
     }
   }
