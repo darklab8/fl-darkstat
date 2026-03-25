@@ -42,7 +42,7 @@ func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 			if equip, ok := e.Mapped.Equip().ItemsMap[good_nickname]; ok {
 				info.Category = equip.Category
 				info.Name = e.GetInfocardName(equip.IdsName.Get(), good_nickname)
-				e.exportInfocards(infocarder.InfocardKey(good_nickname), equip.IdsInfo.Get())
+				e.ExportInfocards(infocarder.InfocardKey(good_nickname), equip.IdsInfo.Get())
 			}
 		case "ship":
 			ship := e.Mapped.Goods.ShipsMap[good.Nickname.Get()]
@@ -65,10 +65,10 @@ func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 							logus.Log.Debug("Failed to get infocard",
 								typelog.String("nickname", good_nickname),
 							)
-							e.exportInfocards(infocarder.InfocardKey(good_nickname))
+							e.ExportInfocards(infocarder.InfocardKey(good_nickname))
 						}
 					}()
-					e.exportInfocards(infocarder.InfocardKey(good_nickname),
+					e.ExportInfocards(infocarder.InfocardKey(good_nickname),
 						shiparch.IdsInfo1.Get(), shiparch.IdsInfo.Get())
 				}()
 			}

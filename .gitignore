@@ -19,3 +19,4 @@ openapi-generator-cli.jar
 node_modules/
 .venv/
 .idea/
+build2/

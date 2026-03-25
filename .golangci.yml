@@ -20,3 +20,17 @@ linters:
         - "-ST1016"
         - "-ST1020"
         - "-ST1023"
+  exclusions:
+    rules:
+      - path: darkmap/front/static_front/scripts/
+        linters:
+          - errcheck
+      - path: darkmap/dds/dds_test.go
+        linters:
+          - errcheck
+      - path: darkmap/tga/
+        linters:
+          - errcheck
+      - path: darkmap/utfextract/script/
+        linters:
+          - errcheck

@@ -18,7 +18,7 @@ func (configs *MappedConfigs) GetInfocardName(ids_name int, nickname string) str
 func (configs *MappedConfigs) GetRegionName(system *universe_mapped.System) string {
 
 	var Region string
-	system_infocard_Id := system.Ids_info.Get()
+	system_infocard_Id := system.IdsInfo.Get()
 	if value, ok := configs.Infocards.GetInfocard2(system_infocard_Id); ok {
 		if len(value.Lines) > 0 {
 			Region = value.Lines[0]

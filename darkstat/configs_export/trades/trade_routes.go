@@ -223,6 +223,15 @@ func MapConfigsToFGraph(
 		}
 
 		for _, jumphole := range system.Jumpholes {
+			_, found_pos := jumphole.Pos.GetValue()
+			if !found_pos {
+				continue
+			}
+			graph.SetIdsName(jumphole.Nickname.Get(), jumphole.IdsName.Get())
+
+		}
+
+		for _, jumphole := range GetDockableJumpholes(system, mapped, DockOptions.DockOpts) {
 			pos_vector, found_pos := jumphole.Pos.GetValue()
 			if !found_pos {
 				continue
@@ -230,55 +239,6 @@ func MapConfigsToFGraph(
 			object := SystemObject{
 				nickname: jumphole.Nickname.Get(),
 				pos:      pos_vector,
-			}
-			graph.SetIdsName(object.nickname, jumphole.IdsName.Get())
-
-			jh_archetype := jumphole.Archetype.Get()
-
-			// Check Solar if this is Dockable
-			if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
-				if len(solar.DockingSpheres) == 0 {
-					continue
-				}
-			}
-
-			// Check locked_gate if it is enterable.
-			hash_id := flhash.HashNickname(object.nickname)
-			if _, ok := mapped.InitialWorld.LockedGates[hash_id]; ok {
-				continue
-			}
-
-			if strings.Contains(jh_archetype, "invisible") {
-				continue
-			}
-
-			var dock_results solararch_mapped.DockableResult
-			var disco_cargo_limit *int
-			if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
-				// strings.Contains(jh_archetype, "_fighter") || // Atmospheric entry points. Dockable only by fighters/freighters
-				// included into `IsDockableByCaps` as they don't have capital docking_sphere dockings
-				results := solar.IsDockable(DockOptions.DockOpts)
-				if results.IsDockable {
-					dock_results.IsDockable = true
-				}
-
-				if cargo_limit, ok := solar.CargoLimit.GetValue(); ok {
-					disco_cargo_limit = ptr.Ptr(cargo_limit)
-				}
-			}
-
-			if !dock_results.IsDockable {
-				continue
-			}
-
-			if mapped.Discovery != nil {
-				if !DockOptions.DockOpts.WithDiscoFreighterPaths {
-					if disco_cargo_limit != nil {
-						if *disco_cargo_limit < 1000 {
-							continue
-						}
-					}
-				}
 			}
 
 			for _, existing_object := range system_objects {
@@ -289,7 +249,7 @@ func MapConfigsToFGraph(
 				graph.SetEdge(existing_object.nickname, object.nickname, distance)
 			}
 
-			jumphole_target_hole := jumphole.GotoHole.Get()
+			jumphole_target_hole := jumphole.GotoObjHole.Get()
 			graph.SetEdge(object.nickname, jumphole_target_hole, 0)
 			system_objects = append(system_objects, object)
 		}
@@ -376,6 +336,79 @@ func MapConfigsToFGraph(
 		}
 	}
 	return graph
+}
+
+const (
+	DiscoCargoLimitedThreshold = 1000
+)
+
+func GetDockableJumpholes(
+	system *systems_mapped.System,
+	mapped *configs_mapped.MappedConfigs,
+	DockOpts solararch_mapped.DockableOptions,
+) []*systems_mapped.Jumphole {
+	var Jumpholes []*systems_mapped.Jumphole
+	for _, jumphole := range system.Jumpholes {
+		pos_vector, found_pos := jumphole.Pos.GetValue()
+		if !found_pos {
+			continue
+		}
+		object := SystemObject{
+			nickname: jumphole.Nickname.Get(),
+			pos:      pos_vector,
+		}
+
+		jh_archetype := jumphole.Archetype.Get()
+
+		// Check Solar if this is Dockable
+		if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
+			if len(solar.DockingSpheres) == 0 {
+				continue
+			}
+		}
+
+		// Check locked_gate if it is enterable.
+		hash_id := flhash.HashNickname(object.nickname)
+		if _, ok := mapped.InitialWorld.LockedGates[hash_id]; ok {
+			continue
+		}
+
+		if strings.Contains(jh_archetype, "invisible") {
+			continue
+		}
+
+		var dock_results solararch_mapped.DockableResult
+		var disco_cargo_limit *int
+		if solar, ok := mapped.Solararch.SolarsByNick[jh_archetype]; ok {
+			// strings.Contains(jh_archetype, "_fighter") || // Atmospheric entry points. Dockable only by fighters/freighters
+			// included into `IsDockableByCaps` as they don't have capital docking_sphere dockings
+			results := solar.IsDockable(DockOpts)
+			if results.IsDockable {
+				dock_results.IsDockable = true
+			}
+
+			if cargo_limit, ok := solar.CargoLimit.GetValue(); ok {
+				disco_cargo_limit = ptr.Ptr(cargo_limit)
+			}
+		}
+
+		if !dock_results.IsDockable {
+			continue
+		}
+
+		if mapped.Discovery != nil {
+			if !DockOpts.WithDiscoFreighterPaths {
+				if disco_cargo_limit != nil {
+					if *disco_cargo_limit < DiscoCargoLimitedThreshold {
+						continue
+					}
+				}
+			}
+		}
+
+		Jumpholes = append(Jumpholes, jumphole)
+	}
+	return Jumpholes
 }
 
 // func (graph *GameGraph) GetDistForTime(time int) float64 {

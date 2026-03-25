@@ -1,6 +1,14 @@
 /* Tooltip container */
 .tooltip {
     display: inline-block;
+    user-select: none;
+    touch-action: none;
+}
+
+.tooltiptext {
+    user-select: none;
+    touch-action: none;
+    pointer-events: none;
 }
 
 /* Tooltip text */
@@ -14,7 +22,7 @@
 
     /* Position the tooltip text - see examples below! */
     position: absolute;
-    z-index: 1;
+    z-index: 2;
 
     opacity: 0;
     transition: 0.0s;
@@ -33,6 +41,12 @@
     flex-direction: column;
 }
 
+.vertical_options {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 .card {
     background-color: blue;
@@ -48,3 +62,135 @@
 .card[data-size="small"] {
     width: 25px;
 }
+
+.hidden_system,
+.hidden_label,
+.hidden_obj {
+    visibility: hidden;
+}
+
+
+.conn_jumpgate {
+    box-shadow: 0px 0px 0.3em 0.1em rgba(69, 150, 255, 0.5);
+    background-color: rgba(69, 150, 255, 0.9);
+}
+
+.conn_unknown {
+    /*background-color: rgba(143, 192, 255, 0.5);*/
+    box-shadow: 0px 0px 0.3em 0.1em rgba(249, 69, 255, 0.5);
+    background-color: rgba(247, 4, 255, 0.849);
+}
+
+.conn_jumphole {
+    /*box-shadow: 0px 0px 0.3em 0.1em rgb(255 252 69 / 24%);
+    background-color: rgb(230 255 4 / 67%);*/
+
+    box-shadow: 0px 0px 0.3em 0.1em rgba(243, 229, 171, 0.5);
+    background-color: rgb(243 229 171 / 67%);
+
+    /*background-color: rgba(143, 192, 255, 0.5)*/
+}
+
+
+.conn_unstable {
+    background-color: rgba(219, 72, 55, 0.9);
+    box-shadow: 0px 0px 0.3em 0.1em rgba(121, 80, 76, 0.5);
+}
+
+.conn_alien {
+    background-color: rgba(152, 69, 255, 0.9);
+    box-shadow: 0px 0px 0.3em 0.1em rgba(152, 69, 255, 0.5);
+}
+
+.conn_hover {
+    box-shadow: 0px 0px 0.3em 0.3em rgba(255, 255, 255, 0.45);
+}
+
+/* CSS TOGLE SWITCH START */
+.toggle-container {
+    --active-color: #1868e3;
+    --inactive-color: #98989c;
+    position: relative;
+    aspect-ratio: 292 / 142;
+    height: 1.275em;
+}
+
+.toggle-input {
+    appearance: none;
+    margin: 0;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.toggle {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.toggle-background {
+    fill: var(--inactive-color);
+    transition: fill .4s;
+}
+
+.toggle-input:checked+.toggle .toggle-background {
+    fill: var(--active-color);
+}
+
+.toggle-circle-center {
+    transform-origin: center;
+    transition: transform .6s;
+}
+
+.toggle-input:checked+.toggle .toggle-circle-center {
+    transform: translateX(150px);
+}
+
+.toggle-circle {
+    transform-origin: center;
+    transition: transform .45s;
+    backface-visibility: hidden;
+}
+
+.toggle-circle.left {
+    transform: scale(1);
+}
+
+.toggle-input:checked+.toggle .toggle-circle.left {
+    transform: scale(0);
+}
+
+.toggle-circle.right {
+    transform: scale(0);
+}
+
+.toggle-input:checked+.toggle .toggle-circle.right {
+    transform: scale(1);
+}
+
+.toggle-icon {
+    transition: fill .4s;
+}
+
+.toggle-icon.on {
+    fill: var(--inactive-color);
+}
+
+.toggle-input:checked+.toggle .toggle-icon.on {
+    fill: #fff;
+}
+
+.toggle-icon.off {
+    fill: #eaeaec;
+}
+
+.toggle-input:checked+.toggle .toggle-icon.off {
+    fill: var(--active-color);
+}
+
+/* CSS TOGLE SWITCH END */

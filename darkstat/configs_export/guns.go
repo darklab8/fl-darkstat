@@ -242,7 +242,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		gun.Name = "Undefined"
 	}
 
-	e.exportInfocards(infocarder.InfocardKey(gun.Nickname), gun.IdsInfo)
+	e.ExportInfocards(infocarder.InfocardKey(gun.Nickname), gun.IdsInfo)
 
 	if _, ok := e.first_time_adding_gun[gun_nickname]; !ok {
 		e.WriteConfigToInfocard(&gun_info.Model, gun.Nickname)

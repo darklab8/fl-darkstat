@@ -316,6 +316,10 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	var result BestTradeDealsOutput
 	var trade_deals []*TradeDeal
 
+	if !settings.Env.TradeDealsEnabled {
+		return result
+	}
+
 	time_start_best_trades := time.Now()
 	len_bases := len(bases)
 	for index, base := range bases {
@@ -339,6 +343,12 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 					continue
 				}
 			}
+
+			// if rand.IntN(1) == 0 {
+			// 	if trade_route.Transport.BuyingGood.Nickname != "commodity_scrap_metal" {
+			// 		continue
+			// 	}
+			// }
 
 			transport_route_info := OneWayRouteInfoF(trade_route.Transport)
 			freighter_route_info := OneWayRouteInfoF(trade_route.Freighter)
@@ -446,6 +456,10 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 					transport_info := trade_route_info(trade_route1.Transport, trade_route2.Transport)
 					frigate_info := trade_route_info(trade_route1.Frigate, trade_route2.Frigate)
 					freighter_info := trade_route_info(trade_route1.Freighter, trade_route2.Freighter)
+
+					// if trade_route1.Transport.BuyingGood.Nickname != "commodity_scrap_metal" && trade_route2.Transport.BuyingGood.Nickname != "commodity_scrap_metal" {
+					// 	continue
+					// }
 
 					if transport_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS &&
 						frigate_info.Route1ConnectTime > TwoWayLimitConnnectingTimeS &&

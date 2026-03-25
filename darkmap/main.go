@@ -7,11 +7,11 @@ import (
 	"syscall"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/envers"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
-	stat_settings "github.com/darklab8/fl-darkstat/darkstat/settings"
 
 	"github.com/darklab8/go-utils/utils/cantil"
 	"github.com/darklab8/go-utils/utils/timeit"
@@ -26,7 +26,7 @@ func DarkmapCliGroup(Args []string) {
 				Nickname:    "build",
 				Description: "build darkmap to static assets: html, css, js files",
 				Func: func(info cantil.ActionInfo) error {
-					linker.NewLinker().Link(context.Background()).BuildAll(false, nil)
+					linker.NewLinker(false).Link(context.Background()).BuildAll(false, nil)
 					return nil
 				},
 			},
@@ -39,7 +39,7 @@ func DarkmapCliGroup(Args []string) {
 
 					var linked_build *builder.Builder
 					timer_NewLinkerLink := timeit.NewTimer("linking stuff linker.NewLinker().Link()")
-					linked_build = linker.NewLinker().Link(context.Background())
+					linked_build = linker.NewLinker(true).Link(context.Background())
 					timer_NewLinkerLink.Close()
 
 					timer_buildall := timeit.NewTimer("building stuff linked_build.BuildAll()")
@@ -64,7 +64,7 @@ func DarkmapCliGroup(Args []string) {
 		},
 		cantil.ParserOpts{
 			ParentArgs: []string{"darkmap"},
-			Enverants:  stat_settings.Enverants,
+			Enverants:  envers.Enverants,
 		},
 	)
 	err := parser.Run(Args)

@@ -138,7 +138,7 @@ func (e *Exporter) GetCommodities(ctx context.Context) []*Commodity {
 			commodity.NameID = equipment.IdsName.Get()
 
 			commodity.Name = e.GetInfocardName(equipment.IdsName.Get(), commodity.Nickname)
-			e.exportInfocards(commodity.Infocard, equipment.IdsInfo.Get())
+			e.ExportInfocards(commodity.Infocard, equipment.IdsInfo.Get())
 			commodity.InfocardID = equipment.IdsInfo.Get()
 
 			commodity.Volume = volume_info.Volume.Get()

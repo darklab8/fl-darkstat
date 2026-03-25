@@ -1,40 +1,29 @@
 package settings
 
 import (
-	"fmt"
-
 	_ "embed"
 
-	"runtime/debug"
-
 	"github.com/darklab8/fl-darkstat/configs/configs_settings"
+	"github.com/darklab8/fl-darkstat/darkcore/envers/darkflag"
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
 )
 
-type DarkstatEnvVars struct {
+type DarkmapEnvVars struct {
 	utils_settings.UtilsEnvs
 	configs_settings.ConfEnvVars
-	SiteRoot   string
-	AppVersion string
+	SiteRoot string
+	Enver    *enverant.Enverant
 }
 
-var Env DarkstatEnvVars
-
-var Version = "development"
+var Env DarkmapEnvVars
 
 func init() {
-	fmt.Println("Version:\t", Version)
-	var GolangVersion string
-	if info, ok := debug.ReadBuildInfo(); ok {
-		fmt.Println(info.GoVersion)
-		GolangVersion = info.GoVersion
-	}
-	env := enverant.NewEnverant()
-	Env = DarkstatEnvVars{
+	env := enverant.NewEnverant(enverant.WithPrefix("DARKMAP_"))
+	Env = DarkmapEnvVars{
+		Enver:       env,
 		UtilsEnvs:   utils_settings.GetEnvs(),
 		ConfEnvVars: configs_settings.GetEnvs(),
-		SiteRoot:    env.GetStr("SITE_ROOT", enverant.OrStr("/")),
-		AppVersion:  GolangVersion,
+		SiteRoot:    env.GetStr("SITE_ROOT", enverant.OrStr(*darkflag.ArgMapRoot)),
 	}
 }

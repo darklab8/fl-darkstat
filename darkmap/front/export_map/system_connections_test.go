@@ -1,0 +1,25 @@
+package export_map
+
+import (
+	"context"
+	"fmt"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestSystemsConnections(t *testing.T) {
+	ctx := context.Background()
+	export := NewExport(ctx)
+	systems := export.ExportSystems(export.Mapped)
+	graph := export.GetSystemConnections(systems)
+
+	for _, system := range graph.Systems {
+		if system.Nickname != "hi10" {
+			continue
+		}
+		fmt.Println(system.Nickname, system.VisibleByDefault)
+	}
+
+	assert.Greater(t, len(systems), 0)
+}

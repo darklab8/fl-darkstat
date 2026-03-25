@@ -28,6 +28,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/ship_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/loadouts_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/stararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/exe_mapped"
@@ -108,6 +109,7 @@ type MappedConfigs struct {
 	NpcShips     *npc_ships.Config
 	ShipClasses  *shipclasses_mapped.Config
 	Solararch    *solararch_mapped.Config
+	Stararch     *stararch_mapped.Config
 	Loadouts     *loadouts_mapped.Config
 	Fuses        *fuse_mapped.Config
 
@@ -262,14 +264,14 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	file_faction_props := iniload.NewLoader(filesystem.GetFile(faction_props_mapped.FILENAME))
 	file_npc_ships := iniload.NewLoader(filesystem.GetFile(npc_ships.FILENAME))
 	file_solararch := iniload.NewLoader(filesystem.GetFile(solararch_mapped.FILENAME))
-
+	files_stararch := getConfigs2(filesystem, m.FreelancerINI.Stars)
 	file_shipclasses := iniload.NewLoader(filesystem.GetFile(shipclasses_mapped.FILENAME))
-
 	all_files := append(files_goods, files_market...)
 	all_files = append(all_files, files_equip...)
 	all_files = append(all_files, files_shiparch...)
 	all_files = append(all_files, files_loadouts...)
 	all_files = append(all_files, files_fuses...)
+	all_files = append(all_files, files_stararch...)
 	all_files = append(all_files,
 		file_universe,
 		file_interface,
@@ -397,6 +399,11 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 		wg.Add(1)
 		go func() {
 			m.Fuses = fuse_mapped.Read(files_fuses)
+			wg.Done()
+		}()
+		wg.Add(1)
+		go func() {
+			m.Stararch = stararch_mapped.Read(files_stararch)
 			wg.Done()
 		}()
 		wg.Add(1)

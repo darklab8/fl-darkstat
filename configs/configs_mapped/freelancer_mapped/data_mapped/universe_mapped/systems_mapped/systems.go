@@ -128,6 +128,10 @@ type TradeLaneRing struct {
 	Pos      *semantic.Vect
 	NextRing *semantic.String
 	PrevRing *semantic.String
+
+	Archetype *semantic.String
+	IdsName   *semantic.Int
+
 	// has next_ring, then it is tradelane
 	// or if has Trade_Lane_Ring, then trade lane too.
 }
@@ -153,11 +157,12 @@ const (
 
 type Jumphole struct {
 	semantic.Model
-	Nickname  *semantic.String
-	GotoHole  *semantic.String
-	Archetype *semantic.String
-	Pos       *semantic.Vect
-	IdsName   *semantic.Int
+	Nickname    *semantic.String
+	GotoObjHole *semantic.String
+	GotoSystem  *semantic.String
+	Archetype   *semantic.String
+	Pos         *semantic.Vect
+	IdsName     *semantic.Int
 
 	System *System
 }
@@ -165,6 +170,22 @@ type Jumphole struct {
 type Object struct {
 	semantic.Model
 	Nickname *semantic.String
+
+	Archetype *semantic.String
+	Pos       *semantic.Vect
+	IdsName   *semantic.Int
+}
+type Star struct {
+	semantic.Model
+	Nickname *semantic.String
+
+	Star      *semantic.String
+	Archetype *semantic.String
+	Pos       *semantic.Vect
+	IdsName   *semantic.Int
+
+	AtmosphereRange *semantic.Int
+	BurnColor       *semantic.Vect
 }
 
 type Wreck struct {
@@ -232,6 +253,7 @@ type System struct {
 	Asteroids   []*Asteroids
 	ZonesByNick map[string]*Zone
 	Objects     []*Object
+	Stars       []*Star
 	Wrecks      []*Wreck
 
 	EncounterParameters       []*EncounterParameter
@@ -290,12 +312,14 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 	var system_files map[string]*file.File = make(map[string]*file.File)
 
 	timeit.NewTimerF(func() {
-		for _, base := range universe_config.Bases {
-			base_system := base.System.Get()
-			universe_system := universe_config.SystemMap[universe_mapped.SystemNickname(base_system)]
+		for _, universe_system := range universe_config.Systems {
+			if _, ok := universe_system.File.GetValue(); !ok {
+				continue
+			}
+
 			filename := universe_system.File.FileName()
 			path := filesystem.GetFile(filename)
-			system_files[base.System.Get()] = file.NewFile(path.GetFilepath())
+			system_files[universe_system.Nickname.Get()] = file.NewFile(path.GetFilepath())
 		}
 	}, timeit.WithMsg("systems prepared files"))
 
@@ -407,7 +431,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 				for _, obj := range objects {
 
 					object_to_add := &Object{
-						Nickname: semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+						Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
 					}
 					object_to_add.Map(obj)
 					system_to_add.Objects = append(system_to_add.Objects, object_to_add)
@@ -427,7 +454,8 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							IDsInfo:     semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
 							IdsName:     semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
 							Pos:         semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
-							System:      system_to_add,
+
+							System: system_to_add,
 						}
 						base_to_add.Map(obj)
 
@@ -468,16 +496,32 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 
 					if _, ok := obj.ParamMap[cfg.Key("goto")]; ok {
 						jumphole := &Jumphole{
-							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							GotoHole:  semantic.NewString(obj, cfg.Key("goto"), semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Order(1))),
-							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
-							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
-							System:    system_to_add,
+							Archetype:   semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Nickname:    semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							GotoObjHole: semantic.NewString(obj, cfg.Key("goto"), semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Order(1))),
+							GotoSystem:  semantic.NewString(obj, cfg.Key("goto"), semantic.WithLowercaseS(), semantic.WithoutSpacesS(), semantic.OptsS(semantic.Order(0))),
+
+							Pos:     semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+							IdsName: semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
+							System:  system_to_add,
 						}
 
 						system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)
 						frelconfig.JumpholesByNick[jumphole.Nickname.Get()] = jumphole
+					}
+					if _, ok := obj.ParamMap[cfg.Key("star")]; ok {
+						Star := &Star{
+							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Star:      semantic.NewString(obj, cfg.Key("star"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
+
+							BurnColor:       semantic.NewVector(obj, cfg.Key("burn_color"), semantic.Precision(0)),
+							AtmosphereRange: semantic.NewInt(obj, cfg.Key("atmosphere_range"), semantic.Optional()),
+						}
+
+						system_to_add.Stars = append(system_to_add.Stars, Star)
 					}
 
 					if _, ok := obj.ParamMap[cfg.Key("loadout")]; ok {
@@ -495,10 +539,12 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					_, is_trade_lane2 := obj.ParamMap[cfg.Key("prev_ring")]
 					if is_trade_lane1 || is_trade_lane2 {
 						tradelane := &TradeLaneRing{
-							Nickname: semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Pos:      semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
-							NextRing: semantic.NewString(obj, cfg.Key("next_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							PrevRing: semantic.NewString(obj, cfg.Key("prev_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+							NextRing:  semantic.NewString(obj, cfg.Key("next_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							PrevRing:  semantic.NewString(obj, cfg.Key("prev_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
 						}
 
 						system_to_add.Tradelanes = append(system_to_add.Tradelanes, tradelane)

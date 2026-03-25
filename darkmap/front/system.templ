@@ -1,0 +1,309 @@
+package front
+
+import (
+	"fmt"
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
+	"github.com/darklab8/fl-darkstat/darkmap/types"
+	"strconv"
+	"strings"
+)
+
+func SystemDetailedUrl(system *export_map.System) string {
+	return SystemDetailedUrlNick(system.Nickname)
+}
+func SystemDetailedUrlNick(system_nick string) string {
+	return "cdn/system/system-" + strings.ToLower(system_nick) + ".html"
+}
+
+var GridRows []int = []int{2, 3, 4, 5, 6, 7, 8}
+var GridColumns []rune = []rune{'B', 'C', 'D', 'E', 'F', 'G', 'H'}
+
+templ System(system *export_map.System) {
+	@Html5() {
+		@GalaxyGrid(MenuKindSystem) {
+			<style>
+                .grid {
+                    width: 100%;
+                    height: 100%;
+                    color: #fff;
+                }
+                .grid .hzGridLine {
+                    height: 0.1em;
+                    width: 100%;
+                }
+                .grid .vertGridLine {
+                    width: 0.1em;
+                    height: 100%;
+                }
+                .grid .hzGridLine, .grid .vertGridLine {
+                    background: rgb(25, 47, 96);
+                    position: absolute;
+                    box-shadow: 0 0 1em 0.1em rgb(25, 47, 96);
+                }
+                .hzGridLine h3 {
+                    position: relative;
+                    top: -0.5em;
+                    left: 0.6em;
+                }
+                .vertGridLine h3 {
+                    position: relative;
+                    left: 0.6em;
+                    top: -0.8em;
+                }
+                .hzGridLine h3, .vertGridLine h3, #nullGridCell {
+                    color: white;
+                    font-family: "Agency FB", "Oswald", sans-serif;
+                    z-index: 1;
+                }
+                h3 {
+                    display: block;
+                    font-size: 1.17em;
+                    margin-block-start: 1em;
+                    margin-block-end: 1em;
+                    margin-inline-start: 0px;
+                    margin-inline-end: 0px;
+                    font-weight: bold;
+                    unicode-bidi: isolate;
+                }
+                #nullGridCell {
+                    position: absolute;
+                    top: -0.75em;
+                    left: 0.55em;
+                }
+
+                .grid .mapScale.arrows {
+                    border-left: none !important;
+                    border-right: none !important;
+                    border-bottom-style: dashed !important;
+                    bottom: 1% !important;
+                }
+                .grid .mapScale {
+                    position: absolute;
+                    right: 0.75%;
+                    bottom: 0.75%;
+                    width: 10.5%;
+                    border: solid #F3F3F3 0.2em;
+                    box-sizing: border-box;
+                    border-top: none;
+                    height: 1%;
+                    text-align: center;
+                }
+                .grid .mapScale .arrowR.arrowHead {
+                    transform: rotate(135deg);
+                    -webkit-transform: rotate(135deg);
+                    right: 0;
+                }
+                .grid .mapScale .arrowL.arrowHead {
+                    transform: rotate(-45deg);
+                    -webkit-transform: rotate(-45deg);
+                    left: 0;
+                }
+                .grid .mapScale.arrows .arrowHead {
+                    display: block !important;
+                }
+                .grid .mapScale .arrowHead {
+                    position: absolute;
+                    border-top: 0.2em solid white;
+                    border-left: 0.2em solid white;
+                    height: 0.3em;
+                    width: 0.3em;
+                    bottom: -0.3em;
+                    display: none;
+                }
+                .grid .mapScale h2 {
+                    color: white;
+                    font-family: "Agency FB", "Oswald", sans-serif;
+                    position: relative;
+                    top: -2em;
+                }
+                h2 {
+                    display: block;
+                    font-size: 1.5em;
+                    margin-block-start: 0.83em;
+                    margin-block-end: 0.83em;
+                    margin-inline-start: 0px;
+                    margin-inline-end: 0px;
+                    font-weight: bold;
+                    unicode-bidi: isolate;
+                }
+                .systemTitle {
+                    position: absolute;
+                    bottom: 0.1em;
+                    color: white;
+                    text-align: center;
+                    width: 100%;
+                    font-family: "Agency FB", "Oswald", sans-serif;
+                    font-size: 3em;
+                    padding: 0;
+                    margin: 0;
+                    color: rgb(135, 195, 224);
+                }
+                </style>
+			<div style="position: absolute; top:0%">
+				{ system.Nickname }
+			</div>
+			<grid- class="grid">
+				for index, i := range GridRows {
+					<div class="hzGridLine" style={ fmt.Sprintf("display: block; top: %.1f%%", 100*float64(index+1)/8.0) }>
+						<h3 style="transform: translateX(0px);">
+							{ strconv.Itoa(i) }
+						</h3>
+					</div>
+				}
+				for index, i := range GridColumns {
+					<div class="vertGridLine" style={ fmt.Sprintf("display: block; left: %.1f%%", 100*float64(index+1)/8.0) }>
+						<h3 style="transform: translateX(0px);">
+							{ string(i) }
+						</h3>
+					</div>
+				}
+				<h3 id="nullGridCell" style="display: block;">A1</h3>
+				<div class="mapScale arrows">
+					<div class="arrowHead arrowR"></div>
+					<div class="arrowHead arrowL"></div>
+					<h2>{ fmt.Sprintf("%.0fK",system.GetSquareScale()) }</h2>
+				</div>
+				<h2 class="systemTitle">{ system.Name }</h2>
+			</grid->
+			@SystemContents(system)
+		}
+	}
+}
+
+templ SystemContents(system *export_map.System) {
+	<content->
+		<style>
+            label- {
+                margin-left: 0px;
+                left: -50%;
+                position: absolute;
+                display: inline-block;
+                top: 0.3em;
+                white-space: nowrap;
+                text-shadow: 0em 0em 0.3em black !important;
+                color: white;
+            }
+        </style>
+		for _, obj := range system.Jumpholes {
+			<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + SystemDetailedUrlNick(obj.GotoSystem)) }>
+				<obj-
+					data-nickname={ obj.Nickname }
+					class="jumphole tooltip"
+					style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+                    SystemPosToPerc(obj.Pos.Z, system),
+                    SystemPosToPerc(obj.Pos.X, system),
+                ) }
+				>
+					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
+					<span class="tooltiptext">
+						{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
+						<br/>
+						{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
+						<br/>
+						{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
+						<br/>
+						{ fmt.Sprintf("jh_kind:%s", obj.Kind.ToStr()) }
+						<br/>
+						{ fmt.Sprintf("target:%s", obj.GotoSystemName) }
+					</span>
+					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
+				</obj->
+			</a>
+		}
+		for _, obj := range system.Objs {
+			// templ.KV("tradelane_css_shape", obj.Kind == export_map.ObjTradelane && obj.UserCSSShape),
+			// to be fair inner shadow does not work according to expectations. at least the star_glow one i think
+			<obj-
+				data-nickname={ obj.Nickname }
+				class={
+					"tooltip",
+					obj.Kind.ToNick(),
+					templ.KV("hidden_obj", !obj.VisibleByDefault),
+				}
+				style={
+					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+						SystemPosToPerc(obj.Pos.Z, system),
+						SystemPosToPerc(obj.Pos.X, system),
+					),
+					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
+					templ.KV(fmt.Sprintf("margin-top: -%.5f%%", SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
+					templ.KV(fmt.Sprintf("margin-left: -%.5f%%", SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
+					templ.KV(fmt.Sprintf("background-color: rgb(%d %d %d)",
+						int(obj.Star.StarCenter.InnerColor.X*255),
+						int(obj.Star.StarCenter.InnerColor.Y*255),
+						int(obj.Star.StarCenter.InnerColor.Z*255),
+					), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("margin-top: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("margin-left: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf(
+						"box-shadow: inset 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.9), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.8), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.4);",
+						obj.Star.StarCenter.Scale-1,
+						obj.Star.StarCenter.Scale-1,
+						int(obj.Star.StarCenter.InnerColor.X*255),
+						int(obj.Star.StarCenter.InnerColor.Y*255),
+						int(obj.Star.StarCenter.InnerColor.Z*255),
+						obj.Star.StarCenter.Scale-1,
+						obj.Star.StarCenter.Scale-1,
+						int(obj.Star.StarCenter.OuterColor.X*255),
+						int(obj.Star.StarCenter.OuterColor.Y*255),
+						int(obj.Star.StarCenter.OuterColor.Z*255),
+						obj.Star.StarGlow.Scale-1,
+						obj.Star.StarGlow.Scale-1,
+						int(obj.Star.StarGlow.InnerColor.X*255),
+						int(obj.Star.StarGlow.InnerColor.Y*255),
+						int(obj.Star.StarGlow.InnerColor.Z*255),
+						// obj.Star.StarGlow.Scale-1,
+						// obj.Star.StarGlow.Scale-1,
+						// int(obj.Star.StarGlow.OuterColor.X*255),
+						// int(obj.Star.StarGlow.OuterColor.Y*255),
+						// int(obj.Star.StarGlow.OuterColor.Z*255),
+					), obj.Kind == export_map.ObjStar),
+				}
+			>
+				if obj.Kind != export_map.ObjStar {
+					<img
+						src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }
+					/>
+				}
+				if obj.Kind == export_map.ObjStar {
+					<div
+						class="atmosphere"
+						style={
+							"top: 50%",
+							"left: 50%",
+							fmt.Sprintf("margin-top: -%.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
+							fmt.Sprintf("margin-left: -%.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
+							"position: absolute",
+							fmt.Sprintf("width: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
+							fmt.Sprintf("height: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
+						}
+					></div>
+				}
+				<span class="tooltiptext">
+					{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
+					<br/>
+					{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
+					<br/>
+					{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
+				</span>
+				if obj.Kind != export_map.ObjTradelane {
+					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
+				}
+			</obj->
+		}
+	</content->
+}
+
+func SystemPosToPerc(position float64, system *export_map.System) float64 {
+	// divide by cell size
+	// shift to +4 cells forward because our coordinate center from corner and not from center
+	// divide by amount of cells total and move to percentage
+	return 100 * (position/(system.GetSquareScale()*1000) + 4) / 8
+}
+
+func SizeInPerc(size float64, system *export_map.System) float64 {
+	return 100 * (size / (system.GetSquareScale() * 1000)) / 8
+}

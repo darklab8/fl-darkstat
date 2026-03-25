@@ -53,6 +53,10 @@ func NewBuilder(params Params, static_files []StaticFile, opts ...BuilderOption)
 	return b
 }
 
+func (b *Builder) AddStaticFiles(static_files []StaticFile) {
+	b.static_files = append(b.static_files, static_files...)
+}
+
 func (b *Builder) RegComps(components ...*Component) {
 	b.components = append(b.components, components...)
 }

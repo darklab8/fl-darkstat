@@ -8,13 +8,21 @@ import (
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
+// material_library = solar\planets\planet_rckmnt.txm
+// material_library = solar\planets\detailmaps\detailmap_rock01.txm
+// material_library = solar\planets\atmosphere.txm
+// material_library = solar\planets\planet_rckmnt\planet_rckmnt.mat
+
 type Solar struct {
 	semantic.Model
-	Nickname       *semantic.String
-	DockingSpheres []*semantic.String
-	Fuses          []*semantic.String
-	Destructible   *semantic.Bool
-	CargoLimit     *semantic.Int
+	Nickname        *semantic.String
+	DockingSpheres  []*semantic.String
+	Fuses           []*semantic.String
+	Destructible    *semantic.Bool
+	CargoLimit      *semantic.Int
+	ShapeName       *semantic.String
+	MaterialLibrary []*semantic.Path
+	SolarRadius     *semantic.Float
 }
 
 const (
@@ -98,6 +106,8 @@ func Read(input_file *iniload.IniLoader) *Config {
 			Nickname:     semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 			Destructible: semantic.NewBool(section, cfg.ParamKey("destructible"), semantic.StrBool),
 			CargoLimit:   semantic.NewInt(section, cfg.ParamKey("cargo_limit")),
+			SolarRadius:  semantic.NewFloat(section, cfg.ParamKey("solar_radius"), semantic.Precision(2)),
+			ShapeName:    semantic.NewString(section, cfg.ParamKey("shape_name"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 		}
 		solar.Map(section)
 
@@ -110,6 +120,11 @@ func Read(input_file *iniload.IniLoader) *Config {
 		for good_index, _ := range section.ParamMap["fuse"] {
 			solar.Fuses = append(solar.Fuses,
 				semantic.NewString(section, cfg.Key("fuse"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(good_index)), semantic.WithoutSpacesS()))
+		}
+
+		for index, _ := range section.ParamMap["material_library"] {
+			solar.MaterialLibrary = append(solar.MaterialLibrary,
+				semantic.NewPath(section, cfg.Key("material_library"), semantic.WithoutSpacesP(), semantic.WithLowercaseP(), semantic.OptsP(semantic.Index(index))))
 		}
 
 		frelconfig.Solars = append(frelconfig.Solars, solar)

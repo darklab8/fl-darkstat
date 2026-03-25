@@ -412,7 +412,7 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 		if id, ok := ship_info.IdsInfo.GetValue(); ok {
 			infocards = append(infocards, id)
 		}
-		e.exportInfocards(infocarder.InfocardKey(ship.Nickname), infocards...)
+		e.ExportInfocards(infocarder.InfocardKey(ship.Nickname), infocards...)
 		e.WriteConfigToInfocard(&ship_info.Model, ship.Nickname)
 
 		if ship_hull_good, ok := e.Mapped.Goods.ShipHullsMapByShip[ship.Nickname]; ok {

@@ -16,3 +16,4 @@ web/static/export/*
 **/docs.go
 **/swagger.json
 **/swagger.yaml
+darkmap/utfextract/script/

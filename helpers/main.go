@@ -11,6 +11,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/exe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/darkcore/envers"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/cantil"
@@ -165,7 +166,7 @@ DLL = DsyAddition.dll	; matches number 7
 		},
 		cantil.ParserOpts{
 			ParentArgs: []string{"helpers"},
-			Enverants:  settings.Enverants,
+			Enverants:  envers.Enverants,
 		},
 	)
 	err := parser.Run(Args)

@@ -2,10 +2,16 @@ package front
 
 import (
 	"fmt"
-	"github.com/darklab8/fl-darkstat/darkmap/front/export_front"
+	"github.com/darklab8/fl-darkstat/darkcore/core_front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
+	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	"github.com/darklab8/fl-darkstat/darkmap/types"
+	"github.com/darklab8/go-utils/utils/ptr"
+	"strings"
 )
 
-func GalayPosToPerc(position *float64) float64 {
+func GalaxyPosToPerc(position *float64) float64 {
 	// positions are from 0 to 15. then center is 7.5
 
 	if position == nil {
@@ -15,94 +21,293 @@ func GalayPosToPerc(position *float64) float64 {
 	return 100 * (3 + *position) / (15 + 6)
 }
 
-templ System(sys export_front.System, attrs templ.Attributes) {
-	<system-
+templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
+	<system-wrapper
+		hx-boost="true"
+		class={ templ.KV("hidden_system", !sys.VisibleByDefault), }
 		nickname={ sys.Nickname }
-		{ attrs... }
 	>
-		<system-label-wrap>
-			{ sys.Name }
-			<system-label>
-				{ sys.Name }
-			</system-label>
-		</system-label-wrap>
-	</system->
-}
-
-templ GalalaxyMap(data *export_front.Export) {
-	<style>
-        centeralizer- {
-            height: calc(100vh - 2.4em);
-            width: calc(100vh - 2.4em);
-            position: absolute;
-        }
-        system- {
-            position: absolute;
-
-            height: 0.65em;
-            width: 0.65em;
-            background-color: rgb(36, 36, 36);
-            border: 0.15em solid;
-            border-radius: 100%;
-            margin-top: -0.325em;
-            margin-left: -0.325em;
-
-            border-color: white;
-        }
-        system-label-wrap {
-            color: transparent; /* make the text invisible */
-            user-select: none; /* prevent selection of the text */
-            position:absolute;
-            left:50%;
-
-            font-family: "Agency FB", "Oswald", sans-serif;
-            font-size: 0.8em;
-            position: absolute;
-            display: inline-block;
-            top: 1em;
-            white-space: nowrap;
-        }
-        system-label {
-            margin-left: 0px;
-            left: -50%;
-            position: absolute;
-
-            display: inline-block;
-            top: 0.3em;
-            white-space: nowrap;
-            text-shadow: 0em 0em 0.3em black !important;
-            color: white;
-        }
-        system-title {
-            position: absolute;
-            bottom: 0.1em;
-            color: white;
-            text-align: center;
-            width: 100%;
-            font-family: "Agency FB", "Oswald", sans-serif;
-            font-size: 3em;
-            padding: 0;
-            margin: 0;
-            color: rgb(135, 195, 224);
-
-            display: block;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-    </style>
-	<centeralizer->
-		for _, sys := range data.Systems {
-			@System(sys, templ.Attributes{
+		<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + SystemDetailedUrl(sys)) }>
+			<system-
+				id={ fmt.Sprintf("system-%s", sys.Nickname) }
+				nickname={ sys.Nickname }
+				{ templ.Attributes{
 				"style": fmt.Sprintf(
-					"top: %.1f%%; left: %.1f%%; border-color: %s;",
-					GalayPosToPerc(sys.Pos.Y),
-					GalayPosToPerc(sys.Pos.X),
-					sys.Region.ToHexColor(),
+					"top: %.5f%%; left: %.5f%%;",
+					GalaxyPosToPerc(sys.Pos.Y),
+					GalaxyPosToPerc(sys.Pos.X),
 				),
 				"region-name": sys.Region.Name,
 				"system-name": sys.Name,
-			})
+			}... }
+			>
+				<system-label-wrap>
+					{ sys.Name }
+					<system-label class="unhidden_label">
+						{ sys.Name }
+					</system-label>
+				</system-label-wrap>
+				<cycle-
+					{ templ.Attributes{
+				"style": fmt.Sprintf(
+					"border-color: %s; border-width: %dpx;",
+					SystemFacToHexColor(sys_fac),
+                    SystemFacToBorderWidth(sys_fac),
+				),
+				"region-name": sys.Region.Name,
+				"system-name": sys.Name,
+			}... }
+				></cycle->
+			</system->
+		</a>
+	</system-wrapper>
+}
+
+templ GalalaxyMap(data *export_map.Export) {
+	<centeralizer->
+		for _, sys := range data.Systems {
+			@GalaxySystem(sys, GetSystemFac(sys))
 		}
 		<system-title>Sirius</system-title>
+		for key, edge := range data.Graph.ConnectionEdges {
+			<connection-
+				data-key={ key }
+				data-system1-nickname={ edge.FirstSystem.Nickname }
+				data-system2-nickname={ edge.SecondSystem.Nickname }
+				{ templ.Attributes{
+				"style": fmt.Sprintf(
+					"top: %.5f%%; left: %.5f%%;",
+					GalaxyPosToPerc(ptr.Ptr(edge.GetPosY())),
+					GalaxyPosToPerc(ptr.Ptr(edge.GetPosX())),
+				),
+			}... }
+				class={ templ.KV("hidden_system", !(edge.FirstSystem.VisibleByDefault && edge.SecondSystem.VisibleByDefault)), "connection" }
+			>
+				<line-
+					data-key={ key }
+					data-system1-nickname={ edge.FirstSystem.Nickname }
+					data-system2-nickname={ edge.SecondSystem.Nickname }
+					class={
+						templ.KV("conn_alien", edge.Kind == export_map.JumpKindAlien),
+						templ.KV("conn_jumpgate", edge.Kind == export_map.JumpKindJumpgate),
+						templ.KV("conn_jumphole", edge.Kind == export_map.JumpKindJumphole),
+						templ.KV("conn_unstable", edge.Kind == export_map.JumpKindUnstable),
+						templ.KV("conn_unknown", edge.Kind == export_map.JumpKindUnknown),
+					}
+				></line->
+			</connection->
+		}
+		// <svg width="100" height="100">
+		// 	<circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle>
+		// </svg>
 	</centeralizer->
+}
+
+type MenuKind int8
+
+const (
+	MenuKindGalaxy MenuKind = iota
+	MenuKindSystem
+)
+
+func (m MenuKind) ToNickname() string {
+	if m == MenuKindGalaxy {
+		return "galaxy"
+	}
+	if m == MenuKindSystem {
+		return "system"
+	}
+	return "unknown"
+}
+
+templ GalaxyGrid(menu_kind MenuKind) {
+	// font-family: "Agency FB", "Oswald", sans-serif;
+	<background->
+		<map-with-interface->
+			<menu->
+				<div class="top">
+					@MultiLineOption([]string{"All systems"})
+				</div>
+				<div class="top">
+					@MultiLineOption([]string{"Hide labels"})
+				</div>
+				<div class="top disabled">
+					@MultiLineOption([]string{"Wrecks on"})
+				</div>
+				<div class="top disabled">
+					@MultiLineOption([]string{"All objects"})
+				</div>
+				<div class="top disabled">
+					@MultiLineOption([]string{"Zones"})
+				</div>
+				<div class="top">
+					@MultiLineOption([]string{"To Galaxy"})
+				</div>
+				// <input type="checkbox" id="checkbox_systems" name="systems" value="systems"/>
+				// <input type="checkbox" id="checkbox_swrecks" name="wrecks" value="wrecks" disabled/>
+				<div class="bottom">
+					@ToggleSwitch("checkbox_systems")
+				</div>
+				<div class="bottom">
+					@ToggleSwitch("checkbox_map_labels")
+				</div>
+				<div class="bottom">
+					@ToggleSwitch("checkbox_wrecks")
+				</div>
+				<div class="bottom">
+					@ToggleSwitch("checkbox_all_objects")
+				</div>
+				<div class="bottom">
+					@ToggleSwitch("checkbox_zones")
+				</div>
+				<div>
+					if menu_kind == MenuKindGalaxy {
+						<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
+					} else {
+						<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>
+							<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
+						</a>
+					}
+				</div>
+			</menu->
+			<div class={ fmt.Sprintf("panzoom-parent-%s", menu_kind.ToNickname()) }>
+				<div class="panzoom">
+					<map->
+						<content->
+							{ children... }
+						</content->
+					</map->
+				</div>
+			</div>
+		</map-with-interface->
+	</background->
+	@core_front.StaticFile(static_front.CustomJS)
+	if menu_kind == MenuKindGalaxy {
+		@core_front.StaticFile(static_front.MapGalaxyJS)
+	} else {
+		@core_front.StaticFile(static_front.MapSystemJS)
+	}
+}
+
+templ GalaxyButton() {
+}
+
+templ ToggleSwitch(id string) {
+	<div class="toggle-container">
+		<input type="checkbox" class="toggle-input" id={ id }/>
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 292 142" class="toggle">
+			<path d="M71 142C31.7878 142 0 110.212 0 71C0 31.7878 31.7878 0 71 0C110.212 0 119 30 146 30C173 30 182 0 221 0C260 0 292 31.7878 292 71C292 110.212 260.212 142 221 142C181.788 142 173 112 146 112C119 112 110.212 142 71 142Z" class="toggle-background"></path>
+			<rect rx="6" height="64" width="12" y="39" x="64" class="toggle-icon on"></rect>
+			<path d="M221 91C232.046 91 241 82.0457 241 71C241 59.9543 232.046 51 221 51C209.954 51 201 59.9543 201 71C201 82.0457 209.954 91 221 91ZM221 103C238.673 103 253 88.6731 253 71C253 53.3269 238.673 39 221 39C203.327 39 189 53.3269 189 71C189 88.6731 203.327 103 221 103Z" fill-rule="evenodd" class="toggle-icon off"></path>
+			<g filter="url('#goo')">
+				<rect fill="#fff" rx="29" height="58" width="116" y="42" x="13" class="toggle-circle-center"></rect>
+				<rect fill="#fff" rx="58" height="114" width="114" y="14" x="14" class="toggle-circle left"></rect>
+				<rect fill="#fff" rx="58" height="114" width="114" y="14" x="164" class="toggle-circle right"></rect>
+			</g>
+			<filter id="goo">
+				<feGaussianBlur stdDeviation="10" result="blur" in="SourceGraphic"></feGaussianBlur>
+				<feColorMatrix result="goo" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" mode="matrix" in="blur"></feColorMatrix>
+			</filter>
+		</svg>
+	</div>
+}
+
+templ MultiLineOption(lines []string) {
+	<div class="vertical_options">
+		for _, line := range lines {
+			<div>{ line }</div>
+		}
+	</div>
+}
+
+type SystemFaction int8
+
+const (
+	FacIndependent SystemFaction = iota
+	FacLiberty
+	FacGalica
+	FacNomad
+	FacKusari
+	FacBretonia
+	FacRheinland
+	FacTau
+	FacSigma
+	FacOmega
+	FacDeepOmega
+)
+
+func GetSystemFac(sys *export_map.System) SystemFaction {
+
+	sys_name := strings.ToLower(sys.Name)
+
+	region_name := strings.ToLower(sys.Region.Name)
+
+	if strings.Contains(region_name, "deep") && strings.Contains(region_name, "omega") {
+		return FacDeepOmega
+	} else if strings.Contains(region_name, "liberty") {
+		return FacLiberty
+	} else if strings.Contains(region_name, "gallia") {
+		return FacGalica
+	} else if strings.Contains(region_name, "nomad") {
+		return FacNomad
+	} else if strings.Contains(region_name, "kusari") {
+		return FacKusari
+	} else if strings.Contains(region_name, "bretonia") {
+		return FacBretonia
+	} else if strings.Contains(region_name, "rheinland") {
+		return FacRheinland
+	} else if strings.Contains(region_name, "tau") {
+		return FacTau
+	} else if strings.Contains(region_name, "omega") {
+		return FacOmega
+	} else if strings.Contains(sys_name, "sigma") {
+		return FacSigma
+	} else if strings.Contains(sys_name, "omega") {
+		return FacOmega
+	} else if strings.Contains(sys_name, "tau") {
+		return FacTau
+	} else if strings.Contains(sys_name, "omicron") {
+		return FacNomad
+	}
+
+	return FacIndependent
+}
+
+func SystemFacToBorderWidth(sysfac SystemFaction) int {
+	switch sysfac {
+	case FacTau:
+		return 4
+	case FacDeepOmega:
+		return 4
+	}
+
+	return 3
+}
+
+func SystemFacToHexColor(sysfac SystemFaction) string {
+
+	switch sysfac {
+	case FacLiberty:
+		return "#2299F5"
+	case FacGalica:
+		return "#5961ff"
+	case FacNomad:
+		return "#368674"
+	case FacKusari:
+		return "#FED433"
+	case FacBretonia:
+		return "#d7363c"
+	case FacRheinland:
+		return "#00AD1D"
+	case FacIndependent:
+		return "#DDD"
+	case FacSigma:
+		return "#14e7f2"
+	case FacOmega:
+		return "#C35B2B"
+	case FacDeepOmega:
+		return "#A14C22"
+	}
+
+	return "#959597" // FacUnknown
 }

@@ -105,7 +105,7 @@ func (e *Exporter) GetBases(ctx context.Context) []*Base {
 
 		var nickname cfg.BaseUniNick = cfg.BaseUniNick(base.Nickname.Get())
 
-		e.exportInfocards(infocarder.InfocardKey(nickname), infocard_ids...)
+		e.ExportInfocards(infocarder.InfocardKey(nickname), infocard_ids...)
 		e.WriteConfigToInfocard(&base.Model, string(nickname))
 
 		if system, ok := e.Mapped.Systems.SystemsMap[base.System.Get()]; ok {

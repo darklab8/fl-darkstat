@@ -125,7 +125,7 @@ func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 			}
 		}
 
-		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
+		e.ExportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
 		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
 		ammos = append(ammos, item)
 
@@ -171,7 +171,7 @@ func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 			}
 		}
 
-		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
+		e.ExportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
 		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
 		ammos = append(ammos, item)
 
@@ -215,7 +215,7 @@ func (e *Exporter) GetAmmo(ids []*Tractor) []Ammo {
 			}
 		}
 
-		e.exportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
+		e.ExportInfocards(infocarder.InfocardKey(item.Nickname), item.InfoID)
 		item.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, item.Nickname)
 		ammos = append(ammos, item)
 
