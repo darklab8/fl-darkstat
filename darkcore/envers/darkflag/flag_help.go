@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 var (
@@ -32,10 +33,18 @@ func init() {
 		fmt.Fprintf(os.Stderr, "Run `darkstat help` or `go run . help` for all env var and cli args possible to use\n")
 	}
 
-	if flag.Lookup("test.v") == nil {
-		flag.Parse()
-	} else {
+	is_test := false
+
+	for _, arg := range os.Args {
+		if strings.Contains(arg, "-test.") {
+			is_test = true
+		}
+	}
+
+	if flag.Lookup("test.v") != nil || flag.Lookup("test.testlogfile") != nil || is_test {
 		fmt.Println("run under go test")
+	} else {
+		flag.Parse()
 	}
 
 }
