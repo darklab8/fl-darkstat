@@ -1,4 +1,4 @@
-package tga_ftrvxmtrx
+package tga
 
 import (
 	"encoding/binary"

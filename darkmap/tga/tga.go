@@ -1,4 +1,4 @@
-package tga_ftrvxmtrx
+package tga
 
 type rawHeader struct {
 	IdLength      uint8
