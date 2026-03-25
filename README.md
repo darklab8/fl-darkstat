@@ -62,6 +62,7 @@ General instruction:
   - run `task swag: build`
   - run some command, for example `templ generate && go run . -stat-deals=false web` directly at this point
     - check if there are any performance heavy workloads u can disable for faster dev env. `go run . help` to check available cli args and other options
+  - alternatively run `templ generate && go run . map web` to work in dev env with darkmap only
 - if u wish access to `task dev:watch` that reloads running web server on file changes, then install `pip install watchdog[watchmedo]` and ensure `watchmedo` binary is available to `task dev:watch` command written [in Taskfile](Taskfile.yml)
 
 If u have problems with configuring development environment, then seek my contacts below to help you through it ^_^
