@@ -17,15 +17,5 @@ module "dns" {
       value = var.ipv4_address
       name  = var.pprof_prefix
     }] : [],
-    var.relay_prefix != null ? [{
-      type  = "A"
-      value = var.ipv4_address
-      name  = var.relay_prefix
-    }] : [],
-    var.apigateway_prefix != null ? [{
-      type  = "A"
-      value = var.ipv4_address
-      name  = var.apigateway_prefix
-    }] : [],
   )
 }

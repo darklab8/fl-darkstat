@@ -316,6 +316,10 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	var result BestTradeDealsOutput
 	var trade_deals []*TradeDeal
 
+	if !settings.Env.TradeDealsEnabled {
+		return result
+	}
+
 	time_start_best_trades := time.Now()
 	len_bases := len(bases)
 	for index, base := range bases {

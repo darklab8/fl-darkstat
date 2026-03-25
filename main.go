@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -19,8 +20,9 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
-	"github.com/darklab8/fl-darkstat/darkapis/darkrpc_deprecated"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/envers"
+	"github.com/darklab8/fl-darkstat/darkcore/envers/darkflag"
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
@@ -76,7 +78,7 @@ func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 
 // @BasePath /
 func main() {
-	fmt.Println("args=", os.Args[1:])
+	fmt.Println("starting app with args=", os.Args[1:])
 
 	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteHost, "https://", "")
 	docs.SwaggerInfo.Host = strings.ReplaceAll(docs.SwaggerInfo.Host, "http://", "")
@@ -84,7 +86,6 @@ func main() {
 		docs.SwaggerInfo.Schemes = []string{"https"}
 	}
 
-	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	defer func() {
 		if r := recover(); r != nil {
 			logus.Log.Error("Program crashed in main process",
@@ -228,37 +229,19 @@ func main() {
 			}()
 		}
 
-		relay_server := web.NewWeb(
-			[]*builder.Filesystem{relay_fs},
-			web.WithMutexableData(app_data),
-			web.WithSiteRoot(settings.Env.SiteRoot),
-			web.WithAppData(app_data),
-			web.WithCtx(ctx_close),
-		)
-
-		if settings.Env.IsDevEnv {
-			pprof.StopCPUProfile()
-		}
 		log.Printf("Elapsed web launch time %s", time.Since(start_time_total))
-
-		relay_closer := relay_server.Serve(web.WebServeOpts{Port: ptr.Ptr(settings.Env.RelayPort)})
-
-		var rpc_opts []darkrpc_deprecated.ServerOpt
-		if settings.Env.EnableUnixSockets {
-			rpc_opts = append(rpc_opts, darkrpc_deprecated.WithSockSrv(darkrpc_deprecated.DarkstatRpcSock))
-		}
-		rpc_server := darkrpc_deprecated.NewRpcServer(rpc_opts...)
-		rpc_server.Serve(app_data)
 
 		metronom := metrics.NewMetronom(web_server.GetMux())
 		go metronom.Run()
 
 		return func() {
-			relay_closer.Close()
 			web_closer.Close()
-			rpc_server.Close()
 			fmt.Println("graceful shutdown is certainly acomplished")
 		}
+	}
+
+	for _, enver := range envers.Enverants {
+		enver.ValidetNoUnused()
 	}
 
 	parser := cantil.NewConsoleParser(
@@ -278,7 +261,6 @@ func main() {
 				Nickname:    "web",
 				Description: "run as standalone application that serves darkstat from memory",
 				Func: func(info cantil.ActionInfo) error {
-
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 
 					otelShutdown, err := otlp.SetupOTelSDK(ctx) // Set up OpenTelemetry.
@@ -302,6 +284,14 @@ func main() {
 				Description: "get darkstat version",
 				Func: func(info cantil.ActionInfo) error {
 					fmt.Println("version=", settings.Env.AppVersion)
+					return nil
+				},
+			},
+			{
+				Nickname:    "config",
+				Description: "get all configs",
+				Func: func(info cantil.ActionInfo) error {
+					envers.PrintSettings()
 					return nil
 				},
 			},
@@ -352,9 +342,11 @@ func main() {
 		},
 		cantil.ParserOpts{
 			DefaultAction: ptr.Ptr("web"),
-			Enverants:     settings.Enverants,
+			Enverants:     envers.Enverants,
 		},
 	)
-	err := parser.Run(os.Args[1:])
+
+	darkflag.Parse()
+	err := parser.Run(flag.Args())
 	logus.Log.CheckError(err, "failed to run parser")
 }

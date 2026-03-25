@@ -1,8 +1,10 @@
 package settings
 
 import (
+	"flag"
 	"time"
 
+	"github.com/darklab8/fl-darkstat/darkcore/envers/darkflag"
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
 )
@@ -17,29 +19,32 @@ type DarkcoreEnvVars struct {
 	EnableUnixSockets   bool
 	Enver               *enverant.Enverant
 	WebPort             int
-	RelayPort           int
-	RPCPort             int
 	AppStart            time.Time
 }
 
 var Env DarkcoreEnvVars
 
+var (
+	ArgWebPort           = flag.Int("web-port", 8000, "Main web port")
+	ArgEnableUnixSockets = flag.Bool("unix-sockets", false, "Enable unix sockets for connections")
+	ArgPassword          = flag.String("password", "", "protect access to web interface of darkstat with ?password=query_param")
+)
+
 func GetEnvs() DarkcoreEnvVars {
+	darkflag.Parse()
+
 	envs := enverant.NewEnverant(enverant.WithPrefix("DARKCORE_"), enverant.WithDescription("DARKCORE set of envs for a web framework based on templ to implement static site generator with backend fallback"))
 
 	Env = DarkcoreEnvVars{
 		UtilsEnvs:           utils_settings.GetEnvs(),
-		Password:            envs.GetStrOr("PASSWORD", "", enverant.WithDesc("protect access to web interface of darkstat with ?password=query_param")),
-		Secret:              envs.GetStrOr("SECRET", "passphrasewhichneedstobe32bytes!", enverant.WithDesc("secret to persist authentifications with query param password or oauth, required if using auths")),
+		Password:            envs.GetStrOr("PASSWORD", *ArgPassword, enverant.WithDesc("protect access to web interface of darkstat with ?password=query_param")),
 		CacheControl:        envs.GetStrOr("CACHE_CONTROL", ""), // refactor to boolean and set as true
 		IsDiscoOauthEnabled: envs.GetBool("DISCO_OAUTH", enverant.WithDesc("an option to turn auth of darkstat for Discovery freelancer a protected dev instance of darkstat")),
-		EnableUnixSockets:   envs.GetBool("ENABLE_UNIX_SOCKETS", enverant.WithDesc("creating unix sockets, requires /tmp/darkstat or /tmp/darkstat-{environment} folder defined")),
-		WebPort:             envs.GetIntOr("WEB_PORT", 8000, enverant.WithDesc("specify web port")),
-		RelayPort:           envs.GetIntOr("RELAY_PORT", 8080, enverant.WithDesc("specify relay port")),
-		RPCPort:             envs.GetIntOr("RPC_PORT", 8100, enverant.WithDesc("specify rpc port")),
+		Secret:              envs.GetStrOr("SECRET", "passphrasewhichneedstobe32bytes!", enverant.WithDesc("secret to persist authentifications with query param password or oauth, required if using auths")),
+		EnableUnixSockets:   envs.GetBoolOr("ENABLE_UNIX_SOCKETS", *ArgEnableUnixSockets, enverant.WithDesc("creating unix sockets, requires /tmp/darkstat or /tmp/darkstat-{environment} folder defined")),
+		WebPort:             envs.GetIntOr("WEB_PORT", *ArgWebPort, enverant.WithDesc("specify web port")),
 		AppStart:            time.Now(),
-
-		Enver: envs,
+		Enver:               envs,
 	}
 	return Env
 }

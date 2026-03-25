@@ -34,9 +34,6 @@ locals {
     var.secret != null ? {
       DARKCORE_SECRET = var.secret
     } : {},
-    var.apigateway_prefix != null ? {
-      DARKSTAT_GRPCGATEWAY_URL = "https://${var.apigateway_prefix}.${var.zone}/"
-    } : {},
     var.disco_oauth == true ? {
       DARKCORE_DISCO_OAUTH = "true"
     } : {},

@@ -31,19 +31,11 @@ variable "FLDARKSTAT_HEADING" {
 variable "stat_prefix" {
   type = string
 }
-variable "relay_prefix" {
-  type    = string
-  default = null
-}
 variable "rpc_prefix" {
   type    = string
   default = null
 }
 variable "pprof_prefix" {
-  type    = string
-  default = null
-}
-variable "apigateway_prefix" {
   type    = string
   default = null
 }
@@ -78,4 +70,9 @@ variable "is_discovery" {
 variable "extra_vars" {
   type    = map(string)
   default = {}
+}
+
+variable "args" {
+  type    = list(string)
+  default = ["web"]
 }

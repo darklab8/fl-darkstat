@@ -16,13 +16,12 @@ module "darkstat" {
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Disco</a>
   EOT
 
-  stat_prefix       = "darkstat"
-  apigateway_prefix = "apigateway"
-  pprof_prefix      = "darkstat-pprof"
-  zone              = "dd84ai.com"
-  is_discovery      = true
-  replicas_count    = 2
-  extra_vars        = local.disco_extra_vars
+  stat_prefix    = "darkstat"
+  pprof_prefix   = "darkstat-pprof"
+  zone           = "dd84ai.com"
+  is_discovery   = true
+  replicas_count = 2
+  extra_vars     = local.disco_extra_vars
 }
 
 locals {
@@ -85,9 +84,8 @@ module "darkstat_vanilla" {
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for Freelancer Vanilla
   EOT
 
-  stat_prefix       = "darkstat-vanilla"
-  apigateway_prefix = "apigateway-vanilla"
-  zone              = "dd84ai.com"
-  enable_restarts   = false
-  is_discovery      = false
+  stat_prefix     = "darkstat-vanilla"
+  zone            = "dd84ai.com"
+  enable_restarts = false
+  is_discovery    = false
 }
