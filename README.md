@@ -22,6 +22,10 @@ See demos:
 - [darkcore Readme](./darkcore/README.md) - reusable web part for freelancer related web tools. We can say it is filling same niche as "Framework" in normal projects.
 - darkrelay - subproject to make darkstat having dynamic backend, which helps to break limitations of a static site generator which darkstat originally started as.
 - configs - ORM library to access configs data.
+- [darkmap](./darkmap/README.md) - navigational space map, remake of old navmap by Space Error.
+- [darkapis](https://darkstat.dd84ai.com/swagger/index.html) makes for raised live instances of darkstat having API querable with Swagger documentation
+- helpers - some util cli actions requested
+- darkstat - for main export and frontend part of `flstat` functionality of application
 
 # Support
 
