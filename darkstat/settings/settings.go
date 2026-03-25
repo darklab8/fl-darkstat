@@ -1,7 +1,6 @@
 package settings
 
 import (
-	"flag"
 	"fmt"
 	"strings"
 
@@ -61,19 +60,11 @@ var Env DarkstatEnvVars
 
 // var Enverants []*enverant.Enverant
 
-var (
-	TradeDealsEnabled       = flag.Bool("stat-deals", true, "flag to show or not best trade deals in stat service. PERFORMANCE HEAVY. disable if not needed")
-	StatSiteRoot            = flag.String("stat-site-root", "/", "useful if wishing serving darkstat from github pages sub urls. Makes sure correct link addresses")
-	TradeDealsDetailedLanes = flag.Bool("stat-trade-detailed-lanes", false, "experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")
-)
-
 func init() {
-	darkflag.Parse()
-
 	env := enverant.NewEnverant(enverant.WithPrefix("DARKSTAT_"), enverant.WithDescription("DARKSTAT set of envs for web interface for Freelancer game data navigation"))
 
 	site_host := env.GetStr("SITE_HOST", enverant.OrStr(""), enverant.WithDesc("to show correct Swagger url/some buttons/links. Expects values with https part"))
-	site_root := env.GetStr("SITE_ROOT", enverant.OrStr(*StatSiteRoot), enverant.WithDesc("useful if wishing serving darkstat from github pages sub urls. Makes sure correct link addresses"))
+	site_root := env.GetStr("SITE_ROOT", enverant.OrStr(*darkflag.StatSiteRoot), enverant.WithDesc("useful if wishing serving darkstat from github pages sub urls. Makes sure correct link addresses"))
 	Env = DarkstatEnvVars{
 		Enver:           env,
 		UtilsEnvs:       utils_settings.GetEnvs(),
@@ -92,9 +83,9 @@ func init() {
 		RelayRoot:     env.GetStr("RELAY_ROOT", enverant.OrStr("/"), enverant.WithDesc("if u ever will need to serve relay from non root path, u could use it to make sure requests go correct path.")),
 		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 30, enverant.WithDesc("How often to update backend info during active app. Used for discovery to update PoB related info on a run")),
 
-		TradeDealsEnabled: env.GetBoolOr("TRADE_DEALS_ENABLED", *TradeDealsEnabled, enverant.WithDesc("enable calculating one way and two way best trades? PERFORMANCE HEAVY. by default off. cli args must be put before command like `web`")),
+		TradeDealsEnabled: env.GetBoolOr("TRADE_DEALS_ENABLED", *darkflag.TradeDealsEnabled, enverant.WithDesc("enable calculating one way and two way best trades? PERFORMANCE HEAVY. by default off. cli args must be put before command like `web`")),
 
-		TradeRoutesDetailedTradeLane:    env.GetBoolOr("TRADE_ROUTES_DETAILED_TRADE_LANE", *TradeDealsDetailedLanes, enverant.WithDesc("experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")),
+		TradeRoutesDetailedTradeLane:    env.GetBoolOr("TRADE_ROUTES_DETAILED_TRADE_LANE", *darkflag.TradeDealsDetailedLanes, enverant.WithDesc("experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")),
 		TradeRoutesBestDisablePobs:      env.GetBoolOr("DISABLE_POBS_FOR_BEST_TRADES", false, enverant.WithDesc("if u use discovery mod, an option to turn off pobs from best trades")),
 		TradeRoutesBestTwoWaysLimitPobs: env.GetIntOr("TRADE_ROUTES_BEST_TWO_WAY_LIMIT_POBS", 99, enverant.WithDesc("Limit amount of pobs participating in 2 way routes")),
 		TradeRoutesBestDisableLiners:    env.GetBoolOr("TRADE_ROUTES_DISABLE_LINERS", false, enverant.WithDesc("")),

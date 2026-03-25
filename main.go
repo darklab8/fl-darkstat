@@ -22,7 +22,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/envers"
-	"github.com/darklab8/fl-darkstat/darkcore/envers/darkflag"
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
@@ -346,7 +345,6 @@ func main() {
 		},
 	)
 
-	darkflag.Parse()
 	err := parser.Run(flag.Args())
 	logus.Log.CheckError(err, "failed to run parser")
 }

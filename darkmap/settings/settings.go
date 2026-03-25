@@ -2,7 +2,6 @@ package settings
 
 import (
 	_ "embed"
-	"flag"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/fl-darkstat/darkcore/envers/darkflag"
@@ -19,17 +18,12 @@ type DarkmapEnvVars struct {
 
 var Env DarkmapEnvVars
 
-var (
-	ArgMapRoot = flag.String("map-site-root", "/", "map site root")
-)
-
 func init() {
-	darkflag.Parse()
 	env := enverant.NewEnverant(enverant.WithPrefix("DARKMAP_"))
 	Env = DarkmapEnvVars{
 		Enver:       env,
 		UtilsEnvs:   utils_settings.GetEnvs(),
 		ConfEnvVars: configs_settings.GetEnvs(),
-		SiteRoot:    env.GetStr("SITE_ROOT", enverant.OrStr(*ArgMapRoot)),
+		SiteRoot:    env.GetStr("SITE_ROOT", enverant.OrStr(*darkflag.ArgMapRoot)),
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/darklab8/fl-darkstat/darkcore/envers/darkflag"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	map_settings "github.com/darklab8/fl-darkstat/darkmap/settings"
 	stat_settings "github.com/darklab8/fl-darkstat/darkstat/settings"
@@ -26,10 +25,6 @@ var Envs = []any{
 	stat_settings.Env.ConfEnvVars,
 	stat_settings.Env.UtilsEnvs,
 	map_settings.Env,
-}
-
-func init() {
-	darkflag.Parse()
 }
 
 func PrintSettings() {
