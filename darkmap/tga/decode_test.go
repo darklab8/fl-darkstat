@@ -52,14 +52,6 @@ func decode(filename string) (image.Image, string, error) {
 	return image.Decode(bufio.NewReader(f))
 }
 
-func delta(a, b uint32) int {
-	if a < b {
-		return int(b) - int(a)
-	}
-
-	return int(a) - int(b)
-}
-
 func equal(c0, c1 color.Color) bool {
 	r0, g0, b0, a0 := c0.RGBA()
 	r1, g1, b1, a1 := c1.RGBA()
