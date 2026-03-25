@@ -60,8 +60,8 @@ General instruction:
   - full list of variable possible to set available in help command `go run . help`
 - install [Taskfile](https://taskfile.dev/usage/) and check [commands to run](Taskfile.yml)
   - run `task swag: build`
-  - run `templ generate`
-  - run some command, for example `task web` or u could run `go run . web` directly at this point
+  - run some command, for example `templ generate && go run . -stat-deals=false web` directly at this point
+    - check if there are any performance heavy workloads u can disable for faster dev env. `go run . help` to check available cli args and other options
 - if u wish access to `task dev:watch` that reloads running web server on file changes, then install `pip install watchdog[watchmedo]` and ensure `watchmedo` binary is available to `task dev:watch` command written [in Taskfile](Taskfile.yml)
 
 If u have problems with configuring development environment, then seek my contacts below to help you through it ^_^

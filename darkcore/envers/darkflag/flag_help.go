@@ -31,5 +31,11 @@ func init() {
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Run `darkstat help` or `go run . help` for all env var and cli args possible to use\n")
 	}
-	flag.Parse()
+
+	if flag.Lookup("test.v") == nil {
+		flag.Parse()
+	} else {
+		fmt.Println("run under go test")
+	}
+
 }
