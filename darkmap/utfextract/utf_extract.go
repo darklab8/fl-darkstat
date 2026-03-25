@@ -320,13 +320,20 @@ func ExtractFromFile(inputPath, outputDir string, shapes *Shapes) error {
 	return extractFromFileWithSubdir(inputPath, outputDir, "", shapes)
 }
 
-func NewShapes() *Shapes {
-	return &Shapes{
+type ShapeOption func(s *Shapes)
+
+func NewShapes(opts ...ShapeOption) *Shapes {
+	s := &Shapes{
 		ShapesByNick: make(map[string]*Shape),
 		ShapesConfig: ShapesConfig{
 			PermittedShapes: make(map[string]bool),
 		},
 	}
+
+	for _, opt := range opts {
+		opt(s)
+	}
+	return s
 }
 
 // extractFromFileWithSubdir is the internal implementation that also accepts

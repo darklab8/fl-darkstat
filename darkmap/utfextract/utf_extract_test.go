@@ -261,7 +261,9 @@ func TestExtractFromDirPreservePaths(t *testing.T) {
 
 	t.Run("preserve=true", func(t *testing.T) {
 		tmpOut := t.TempDir()
-		shapes := NewShapes()
+		shapes := NewShapes(func(s *Shapes) {
+			s.WriteToFile = true
+		})
 		err := ExtractFromDir(tmpIn, tmpOut, true, true, shapes)
 		if err != nil {
 			t.Fatalf("ExtractFromDir: %v", err)
@@ -277,7 +279,9 @@ func TestExtractFromDirPreservePaths(t *testing.T) {
 
 	t.Run("preserve=false", func(t *testing.T) {
 		tmpOut := t.TempDir()
-		shapes := NewShapes()
+		shapes := NewShapes(func(s *Shapes) {
+			s.WriteToFile = true
+		})
 		err := ExtractFromDir(tmpIn, tmpOut, true, false, shapes)
 		if err != nil {
 			t.Fatalf("ExtractFromDir: %v", err)
