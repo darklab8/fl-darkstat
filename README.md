@@ -172,7 +172,7 @@ So don't have folder "DATA2" duplicating all files in same Freelancer folder
   - IrateRedKite (from starport Discord)
   - Bolte (from starport Discord)
 - [Space icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/space) for darkmap Galaxy button
-- Darkmap part made is basically rewrite of abandoned project [Navmap](https://github.com/AudunVN/Navmap) made by AudunVN also known as Error.
+- Darkmap is rewrite of project [Navmap](https://github.com/AudunVN/Navmap) made by AudunVN also known as Space or Error.
 
 <!--- 
 - In case it will be ever needed, [just in case linking flcompanion](<https://github.com/Corran-Raisu/FLCompanion>)
