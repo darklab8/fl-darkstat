@@ -3,7 +3,7 @@ package front
 import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
-	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
+	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
@@ -121,7 +121,7 @@ func (m MenuKind) ToNickname() string {
 }
 
 templ GalaxyGrid(menu_kind MenuKind) {
-	// font-family: "Agency FB", "Oswald", sans-serif;
+	// font-family: var(--font-family);
 	<background->
 		<map-with-interface->
 			<menu->

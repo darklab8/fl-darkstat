@@ -14,6 +14,6 @@ var StaticFilesystem core_front.StaticFilesystem = core_front.GetFiles(
 	currentdir,
 	utils_types.GetFilesParams{
 		RootFolder:        utils_types.FilePath("files"),
-		AllowedExtensions: []string{"js", "css", "png", "jpeg", "jpg"},
+		AllowedExtensions: []string{"js", "css", "png", "jpeg", "jpg", "TTF"},
 	},
 )

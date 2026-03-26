@@ -16,7 +16,13 @@ hr {
     border-color: var(--color_border);
 }
 
-hr, div, table {
+hr,
+div,
+table {
     margin: 0px;
     padding: 0px;
+}
+
+:root {
+    --font-family: "Agency FB", " Oswald", Verdana, Geneva, Arial, sans-serif;
 }

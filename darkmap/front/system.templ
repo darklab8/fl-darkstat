@@ -2,7 +2,7 @@ package front
 
 import (
 	"fmt"
-	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
+	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"strconv"
 	"strings"
@@ -52,7 +52,7 @@ templ System(system *export_map.System) {
                 }
                 .hzGridLine h3, .vertGridLine h3, #nullGridCell {
                     color: white;
-                    font-family: "Agency FB", "Oswald", sans-serif;
+                    font-family: var(--font-family);
                     z-index: 1;
                 }
                 h3 {
@@ -112,7 +112,7 @@ templ System(system *export_map.System) {
                 }
                 .grid .mapScale h2 {
                     color: white;
-                    font-family: "Agency FB", "Oswald", sans-serif;
+                    font-family: var(--font-family);
                     position: relative;
                     top: -2em;
                 }
@@ -132,7 +132,7 @@ templ System(system *export_map.System) {
                     color: white;
                     text-align: center;
                     width: 100%;
-                    font-family: "Agency FB", "Oswald", sans-serif;
+                    font-family: var(--font-family);
                     font-size: 3em;
                     padding: 0;
                     margin: 0;

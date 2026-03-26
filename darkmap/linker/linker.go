@@ -11,8 +11,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 
+	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front"
-	"github.com/darklab8/fl-darkstat/darkmap/front/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
