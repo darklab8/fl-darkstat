@@ -12,14 +12,6 @@ var panzoom = Panzoom(map, {
 });
 map.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
 
-map.addEventListener('panzoomchange', function (event) {
-    if (event.detail.scale == 1.0 && event.detail.x != 0 && event.detail.y != 0) {
-        console.log("event", event)
-        panzoom.reset({ scale: event.detail.scale })
-    }
-});
-
-
 var systems = document.querySelectorAll("system-");
 for (let row = 0; row < systems.length; row++) {
     systems[row].addEventListener('mouseover', function () {
