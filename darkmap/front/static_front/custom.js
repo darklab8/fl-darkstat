@@ -25,28 +25,45 @@ function toggle_option(checked, checkbox_name, hidden_class, unhidden_class) {
     }
 }
 
+function InstallMenu() {
+    var checkbox_systems = document.querySelector("#checkbox_systems");
+    checkbox_systems.addEventListener('change', function () {
+        toggle_option(this.checked, "checkbox_systems", "hidden_system", "unhidden_system");
+    });
 
-var checkbox_systems = document.querySelector("#checkbox_systems");
-checkbox_systems.addEventListener('change', function () {
-    toggle_option(this.checked, "checkbox_systems", "hidden_system", "unhidden_system");
-});
+    let checkbox_systems_state = sessionStorage.getItem("checkbox_systems");
+    if (checkbox_systems_state !== null) {
+        let checked = checkbox_systems_state === "true";
+        toggle_option(checked, "checkbox_systems", "hidden_system", "unhidden_system");
+        checkbox_systems.checked = checked;
+    }
 
-let checkbox_systems_state = sessionStorage.getItem("checkbox_systems");
-if (checkbox_systems_state !== null) {
-    let checked = checkbox_systems_state === "true";
-    toggle_option(checked, "checkbox_systems", "hidden_system", "unhidden_system");
-    checkbox_systems.checked = checked;
+
+    var checkbox_labels = document.querySelector("#checkbox_map_labels");
+    checkbox_labels.addEventListener('change', function () {
+        toggle_option(this.checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
+    });
+
+    let checkbox_label_state = sessionStorage.getItem("checkbox_map_labels");
+    if (checkbox_label_state !== null) {
+        let checked = checkbox_label_state === "true";
+        toggle_option(checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
+        checkbox_labels.checked = checked;
+    }
 }
 
-
-var checkbox_labels = document.querySelector("#checkbox_map_labels");
-checkbox_labels.addEventListener('change', function () {
-    toggle_option(this.checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
-});
-
-let checkbox_label_state = sessionStorage.getItem("checkbox_map_labels");
-if (checkbox_label_state !== null) {
-    let checked = checkbox_label_state === "true";
-    toggle_option(checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
-    checkbox_labels.checked = checked;
+function InstallPanzoom() {
+    var map = document.querySelector('.panzoom');
+    var panzoom = Panzoom(map, {
+        maxScale: 5,
+        minScale: 1,
+        // panOnlyWhenZoomed: false,
+        // canvas: true,
+        // contain: "outside",
+        handleStartEvent: function (event) {
+            event.preventDefault()
+        },
+        noBind: false,
+    });
+    map.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
 }
