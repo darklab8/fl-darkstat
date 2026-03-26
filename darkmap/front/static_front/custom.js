@@ -53,6 +53,8 @@ function InstallMenu() {
     }
 }
 
+var zoomInTreshold = 1.25;
+
 function InstallPanzoom() {
     var map = document.querySelector('.panzoom');
     var panzoom = Panzoom(map, {
@@ -71,6 +73,8 @@ function InstallPanzoom() {
     document.body.classList.add("zoomedOut");
 
     map.addEventListener('panzoomchange', function (event) {
+
+        console.log("event.detail.scale=", event.detail.scale);
         if (event.detail.scale > zoomInTreshold) {
             document.body.classList.add("zoomedIn");
             document.body.classList.remove("zoomedOut");

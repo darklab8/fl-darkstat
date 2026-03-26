@@ -188,7 +188,7 @@ templ SystemContents(system *export_map.System) {
 			<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + SystemDetailedUrlNick(obj.GotoSystem)) }>
 				<obj-
 					data-nickname={ obj.Nickname }
-					class="jumphole tooltip"
+					class={ fmt.Sprintf("jumphole tooltip %s", obj.Kind.ToStr()) }
 					style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
                     SystemPosToPerc(obj.Pos.Z, system),
                     SystemPosToPerc(obj.Pos.X, system),

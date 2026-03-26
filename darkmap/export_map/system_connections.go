@@ -125,15 +125,15 @@ const (
 func (j JumpConnectionKind) ToStr() string {
 	switch j {
 	case JumpKindAlien:
-		return "alien"
+		return "jh_alien"
 	case JumpKindJumpgate:
-		return "jumpgate"
+		return "jh_jumpgate"
 	case JumpKindJumphole:
-		return "jumphole"
+		return "jh_jumphole"
 	case JumpKindUnstable:
-		return "unstable"
+		return "jh_unstable"
 	}
-	return "unknown"
+	return "jh_unknown"
 }
 
 type JumpConnection struct {
