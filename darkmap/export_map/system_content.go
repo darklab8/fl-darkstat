@@ -1,7 +1,6 @@
 package export_map
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
@@ -68,6 +67,7 @@ const (
 	ObjStar
 	ObjBase
 	ObjPlanet
+	ObjWreck
 )
 
 func (o ObjKind) ToNick() string {
@@ -82,6 +82,8 @@ func (o ObjKind) ToNick() string {
 		return "base"
 	case ObjPlanet:
 		return "planet"
+	case ObjWreck:
+		return "wreck"
 	case ObjUnknown:
 		return "unknown"
 	}
@@ -178,14 +180,36 @@ func (e *Export) EnrichSystemWithObjects(
 	}
 
 	all_bases := make(map[string]*systems_mapped.Base)
-	for _, bases := range system_info.AllBasesByBases {
-		for _, base := range bases {
-			all_bases[base.Nickname.Get()] = base
+	if true {
+		// technically this one is not interesting
+		for _, bases := range system_info.AllBasesByBases {
+			for _, base := range bases {
+				all_bases[base.Nickname.Get()] = base
+			}
 		}
 	}
 	for _, bases := range system_info.AllBasesByDockWith {
 		for _, base := range bases {
 			all_bases[base.Nickname.Get()] = base
+		}
+	}
+
+	for _, base_obj := range system_info.Objects {
+		base := systems_mapped.NewBase(base_obj.RenderModel(), nil)
+		archetype := base.Archetype.Get()
+		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		shape_name, _ := solararch.ShapeName.GetValue()
+		if _, ok := e.Shapes.ShapesByNick[shape_name]; !ok {
+			if shape_name == "nnm_sm_medium_rocky_moon" {
+				all_bases[base.Nickname.Get()] = base
+			} else if shape_name == "nnm_sm_medium_forest_moon" {
+				all_bases[base.Nickname.Get()] = base
+			} else if shape_name == "nnm_sm_small_ice_moon" {
+				all_bases[base.Nickname.Get()] = base
+			}
+			//  else if shape_name == "nnm_sm_rock_asteroid" {
+			// 	all_bases[base.Nickname.Get()] = base
+			// }
 		}
 	}
 
@@ -338,11 +362,6 @@ func (e *Export) EnrichSystemWithObjects(
 
 		archetype := base_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
-
-		if base.Nickname == "li01_01" {
-			fmt.Print()
-		}
-
 		shape_name, found_shape := solararch.ShapeName.GetValue()
 		if _, ok := e.Shapes.ShapesByNick[shape_name]; !ok {
 			if shape_name == "nnm_sm_depot" {
@@ -388,10 +407,11 @@ func (e *Export) EnrichSystemWithObjects(
 			e.Shapes.PermittedShapes[shape_name] = true
 		} else {
 			stats.solars_without_shapes[shape_name] = true
-			logus.Log.Panic("can't find shape for base",
+			logus.Log.Error("can't find shape for base",
 				typelog.Any("shape", shape_name),
 				typelog.Any("obj_nick", base.Nickname),
 			)
+			shape_name = "nav_depot"
 		}
 
 		if !found_shape {
@@ -426,5 +446,18 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		system_to_add.Objs = append(system_to_add.Objs, base)
+	}
+
+	for _, star_info := range system_info.Stars {
+		star := &Obj{
+			Nickname: star_info.Nickname.Get(),
+			Pos:      star_info.Pos.Get(),
+			Kind:     ObjWreck,
+		}
+
+		star.Name = configs.GetInfocardName(star_info.IdsName.Get(), star.Nickname)
+
+		star.VisibleByDefault = true
+		system_to_add.Objs = append(system_to_add.Objs, star)
 	}
 }

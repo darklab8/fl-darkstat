@@ -185,6 +185,7 @@ templ GalaxyGrid(menu_kind MenuKind) {
 	if menu_kind == MenuKindGalaxy {
 		@core_front.StaticFile(static_front.MapGalaxyJS)
 		<script>
+		RefreshEdgePositions();
 		document.addEventListener("DOMContentLoaded", (event) => {
 			InstallGalaxy();
 		});

@@ -64,8 +64,6 @@ function InstallGalaxy() {
     InstallMenu();
     InstallEdgeHighlight();
     InstallLabelOverlapper();
-
-    RefreshEdgePositions();
     window.addEventListener('resize', function (event) {
         RefreshEdgePositions();
     });

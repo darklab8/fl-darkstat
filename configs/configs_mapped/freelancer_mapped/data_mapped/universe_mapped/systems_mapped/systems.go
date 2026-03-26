@@ -445,20 +445,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					_, has_dock_with := obj.ParamMap[cfg.Key("dock_with")]
 					_ = has_dock_with
 					if has_base || has_dock_with { // || has_dock_with
-						base_to_add := &Base{
-							Archetype:   semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Parent:      semantic.NewString(obj, cfg.Key("parent"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Nickname:    semantic.NewString(obj, KEY_NICKNAME, semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Base:        semantic.NewString(obj, KEY_BASE, semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							DockWith:    semantic.NewString(obj, cfg.Key("dock_with"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							RepNickname: semantic.NewString(obj, cfg.Key("reputation"), semantic.OptsS(semantic.Optional()), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							IDsInfo:     semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
-							IdsName:     semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
-							Pos:         semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
-
-							System: system_to_add,
-						}
-						base_to_add.Map(obj)
+						base_to_add := NewBase(obj, system_to_add)
 
 						system_to_add.BasesByNick[base_to_add.Nickname.Get()] = base_to_add
 
@@ -729,6 +716,24 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 	}
 
 	return frelconfig
+}
+
+func NewBase(obj *inireader.Section, system_to_add *System) *Base {
+	base_to_add := &Base{
+		Archetype:   semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+		Parent:      semantic.NewString(obj, cfg.Key("parent"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+		Nickname:    semantic.NewString(obj, KEY_NICKNAME, semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+		Base:        semantic.NewString(obj, KEY_BASE, semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+		DockWith:    semantic.NewString(obj, cfg.Key("dock_with"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+		RepNickname: semantic.NewString(obj, cfg.Key("reputation"), semantic.OptsS(semantic.Optional()), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+		IDsInfo:     semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
+		IdsName:     semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
+		Pos:         semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+
+		System: system_to_add,
+	}
+	base_to_add.Map(obj)
+	return base_to_add
 }
 
 func (frelconfig *Config) Write() []*file.File {
