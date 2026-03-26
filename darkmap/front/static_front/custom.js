@@ -23,6 +23,7 @@ function toggle_option(checked, checkbox_name, hidden_class, unhidden_class) {
             sessionStorage.setItem(checkbox_name, "false");
             break;
     }
+    InstallLabelOverlapper();
 }
 
 function InstallMenu() {
@@ -65,7 +66,19 @@ function InstallPanzoom() {
         },
         noBind: false,
     });
-    map.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
+    map.parentElement.addEventListener('wheel', panzoom.zoomWithWheel);
+
+    document.body.classList.add("zoomedOut");
+
+    map.addEventListener('panzoomchange', function (event) {
+        if (event.detail.scale > zoomInTreshold) {
+            document.body.classList.add("zoomedIn");
+            document.body.classList.remove("zoomedOut");
+        } else {
+            document.body.classList.remove("zoomedIn");
+            document.body.classList.add("zoomedOut");
+        }
+    });
 }
 
 /* anti-overlap code start */
@@ -146,7 +159,7 @@ function overlaps(objectA, objectB) {
 }
 
 function InstallLabelOverlapper() {
-    let labels = document.querySelectorAll("system-label-wrap")
+    let labels = document.querySelectorAll("system-label")
     objectTerritorialConflictResolver(labels);
 }
 /* anti-overlap code end */
