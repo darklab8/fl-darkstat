@@ -8,7 +8,7 @@ var panzoom = Panzoom(map, {
     handleStartEvent: function (event) {
         event.preventDefault()
     },
-    noBind: true,
+    noBind: false,
 });
 map.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
 
