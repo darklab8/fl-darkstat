@@ -42,6 +42,8 @@ type Obj struct {
 
 	Star              Star
 	PlanetSolarRadius float64
+
+	Rotation cfg.Vector
 }
 
 type Star struct {
@@ -242,6 +244,7 @@ func (e *Export) EnrichSystemWithObjects(
 			Nickname: obj_info.Nickname.Get(),
 			Pos:      obj_info.Pos.Get(),
 			Kind:     ObjTradelane,
+			Rotation: obj_info.Rotate.Get(),
 		}
 		obj.Name = configs.GetInfocardName(obj_info.IdsName.Get(), obj.Nickname)
 

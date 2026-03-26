@@ -188,24 +188,24 @@ templ SystemContents(system *export_map.System) {
 			<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + SystemDetailedUrlNick(obj.GotoSystem)) }>
 				<obj-
 					data-nickname={ obj.Nickname }
-					class={ fmt.Sprintf("jumphole tooltip %s", obj.Kind.ToStr()) }
+					class={ fmt.Sprintf("jumphole %s", obj.Kind.ToStr()) }
 					style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
                     SystemPosToPerc(obj.Pos.Z, system),
                     SystemPosToPerc(obj.Pos.X, system),
                 ) }
 				>
 					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
-					<span class="tooltiptext">
-						{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
-						<br/>
-						{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
-						<br/>
-						{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
-						<br/>
-						{ fmt.Sprintf("jh_kind:%s", obj.Kind.ToStr()) }
-						<br/>
-						{ fmt.Sprintf("target:%s", obj.GotoSystemName) }
-					</span>
+					// <span class="tooltiptext">
+					// 	{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
+					// 	<br/>
+					// 	{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
+					// 	<br/>
+					// 	{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
+					// 	<br/>
+					// 	{ fmt.Sprintf("jh_kind:%s", obj.Kind.ToStr()) }
+					// 	<br/>
+					// 	{ fmt.Sprintf("target:%s", obj.GotoSystemName) }
+					// </span>
 					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
 				</obj->
 			</a>
@@ -216,7 +216,7 @@ templ SystemContents(system *export_map.System) {
 			<obj-
 				data-nickname={ obj.Nickname }
 				class={
-					"tooltip",
+					"",
 					obj.Kind.ToNick(),
 					templ.KV("hidden_obj", !obj.VisibleByDefault),
 				}
@@ -225,6 +225,7 @@ templ SystemContents(system *export_map.System) {
 						SystemPosToPerc(obj.Pos.Z, system),
 						SystemPosToPerc(obj.Pos.X, system),
 					),
+					templ.KV(fmt.Sprintf("transform: rotate(-%1.fdeg)", obj.Rotation.Y), obj.Kind == export_map.ObjTradelane),
 					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
 					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
 					templ.KV(fmt.Sprintf("margin-top: -%.5f%%", SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
@@ -282,13 +283,13 @@ templ SystemContents(system *export_map.System) {
 						}
 					></div>
 				}
-				<span class="tooltiptext">
-					{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
-					<br/>
-					{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
-					<br/>
-					{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
-				</span>
+				// <span class="tooltiptext">
+				// 	{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
+				// 	<br/>
+				// 	{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
+				// 	<br/>
+				// 	{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
+				// </span>
 				if obj.Kind != export_map.ObjTradelane {
 					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
 				}

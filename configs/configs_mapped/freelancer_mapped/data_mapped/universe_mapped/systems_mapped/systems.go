@@ -126,6 +126,7 @@ type TradeLaneRing struct {
 	semantic.Model
 	Nickname *semantic.String
 	Pos      *semantic.Vect
+	Rotate   *semantic.Vect
 	NextRing *semantic.String
 	PrevRing *semantic.String
 
@@ -541,6 +542,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						tradelane := &TradeLaneRing{
 							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+							Rotate:    semantic.NewVector(obj, cfg.Key("rotate"), semantic.Precision(2)),
 							NextRing:  semantic.NewString(obj, cfg.Key("next_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							PrevRing:  semantic.NewString(obj, cfg.Key("prev_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
