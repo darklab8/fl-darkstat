@@ -67,3 +67,86 @@ function InstallPanzoom() {
     });
     map.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
 }
+
+/* anti-overlap code start */
+function objectTerritorialConflictResolver(objects) {
+    var currentDiffSum = "nope";
+    var prevDiffSum = "nope";
+    var prevPrevDiffSum;
+    var iterationCount = 1;
+    while (prevPrevDiffSum != 0 && iterationCount < 8) {
+        prevPrevDiffSum = prevDiffSum;
+        prevDiffSum = currentDiffSum;
+        currentDiffSum = 0;
+        for (i = 0; i < objects.length; i++) {
+            var objectArray = objects;
+            var currentObject = objectArray[i];
+            currentDiffSum += moveIfOverlapsAndReturnDiff(currentObject, objectArray);
+        }
+        iterationCount++;
+    }
+    console.log("Labels settled after " + iterationCount + " iterations");
+}
+
+function moveIfOverlapsAndReturnDiff(currentObject, objectArray) {
+    var diffSum = 0;
+    var reducedObjectArray = objectArray; //objectArray.splice(i, 1);
+    for (o = 0; o < reducedObjectArray.length; o++) {
+        if (overlaps(currentObject, reducedObjectArray[o]) && currentObject != reducedObjectArray[o]) {
+            if ((currentObject.getBoundingClientRect().top) <= (reducedObjectArray[o].getBoundingClientRect().top)) {
+                var currentTransform;
+                if (reducedObjectArray[o].style.marginTop.match(/([\d\.]+)/g) && reducedObjectArray[o].style.marginTop.match(/([\d\.]+)/g) != null) {
+                    currentTransform = parseFloat(reducedObjectArray[o].style.marginTop.match(/([\d\.]+)/g));
+                } else {
+                    currentTransform = 0;
+                }
+                reducedObjectArray[o].style.marginTop = Math.abs(currentTransform + currentObject.getBoundingClientRect().bottom - reducedObjectArray[o].getBoundingClientRect().top) + "px";
+                diffSum += Math.abs(currentObject.getBoundingClientRect().bottom - reducedObjectArray[o].getBoundingClientRect().top);
+                /*moveIfOverlaps(reducedObjectArray[o], reducedObjectArray);*/
+            } else {
+                var currentTransform;
+                if (currentObject.style.marginTop.match(/([\d\.]+)/g) && currentObject.style.marginTop.match(/([\d\.]+)/g) != null) {
+                    currentTransform = parseFloat(currentObject.style.marginTop.match(/([\d\.]+)/g));
+                } else {
+                    currentTransform = 0;
+                }
+                currentObject.style.marginTop = Math.abs(currentTransform + reducedObjectArray[o].getBoundingClientRect().bottom - currentObject.getBoundingClientRect().top) + "px";
+                diffSum += Math.abs(reducedObjectArray[o].getBoundingClientRect().bottom - currentObject.getBoundingClientRect().top);
+                /*moveIfOverlaps(currentObject, reducedObjectArray);*/
+            }
+        }
+    }
+    return diffSum;
+}
+
+function overlaps(objectA, objectB) {
+    var a = objectA.getBoundingClientRect();
+    var b = objectB.getBoundingClientRect();
+
+    var al = a.left;
+    var ar = a.left + a.width;
+    var bl = b.left;
+    var br = b.left + b.width;
+
+    var at = a.top;
+    var ab = a.top + a.height;
+    var bt = b.top;
+    var bb = b.top + b.height;
+
+    if (bl > ar || br < al) { return false; } /*overlap not possible*/
+    if (bt > ab || bb < at) { return false; } /*overlap not possible*/
+
+    if (bl > al && bl < ar) { return true; }
+    if (br > al && br < ar) { return true; }
+
+    if (bt > at && bt < ab) { return true; }
+    if (bb > at && bb < ab) { return true; }
+
+    return false;
+}
+
+function InstallLabelOverlapper() {
+    let labels = document.querySelectorAll("system-label-wrap")
+    objectTerritorialConflictResolver(labels);
+}
+/* anti-overlap code end */
