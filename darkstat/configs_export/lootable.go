@@ -194,7 +194,7 @@ func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*
 	}
 
 	if len(results) == 0 {
-		errors.New("not found loot")
+		return nil, errors.New("not found loot")
 	}
 
 	return results, nil

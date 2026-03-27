@@ -269,8 +269,12 @@ func (e *Export) EnrichSystemWithObjects(
 			Nickname: obj_info.Nickname.Get(),
 			Pos:      obj_info.Pos.Get(),
 			Kind:     ObjTradelane,
-			Rotation: obj_info.Rotate.Get(),
 		}
+
+		if value, ok := obj_info.Rotate.GetValue(); ok {
+			obj.Rotation = value
+		}
+
 		obj.Name = configs.GetInfocardName(obj_info.IdsName.Get(), obj.Nickname)
 
 		archetype := obj_info.Archetype.Get()
