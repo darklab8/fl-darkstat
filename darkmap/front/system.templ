@@ -218,7 +218,8 @@ templ SystemContents(system *export_map.System) {
 				class={
 					"",
 					obj.Kind.ToNick(),
-					templ.KV("hidden_obj", !obj.VisibleByDefault),
+					templ.KV("hidden_obj", !obj.VisibleByDefault && obj.Kind != export_map.ObjWreck),
+					templ.KV("hidden_wreck", obj.Kind == export_map.ObjWreck),
 				}
 				style={
 					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",

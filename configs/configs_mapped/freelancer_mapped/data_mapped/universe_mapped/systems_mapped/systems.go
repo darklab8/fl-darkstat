@@ -195,6 +195,7 @@ type Wreck struct {
 	Loadout   *semantic.String
 	Archetype *semantic.String
 	Pos       *semantic.Vect
+	IdsName   *semantic.Int
 }
 
 type Asteroids struct {
@@ -518,6 +519,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Loadout:   semantic.NewString(obj, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
 						}
 
 						system_to_add.Wrecks = append(system_to_add.Wrecks, wreck)

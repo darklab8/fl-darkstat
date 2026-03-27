@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -448,16 +449,44 @@ func (e *Export) EnrichSystemWithObjects(
 		system_to_add.Objs = append(system_to_add.Objs, base)
 	}
 
-	for _, star_info := range system_info.Stars {
-		star := &Obj{
-			Nickname: star_info.Nickname.Get(),
-			Pos:      star_info.Pos.Get(),
+	for _, wreck := range system_info.Wrecks {
+
+		obj := &Obj{
+			Nickname: wreck.Nickname.Get(),
+			Pos:      wreck.Pos.Get(),
 			Kind:     ObjWreck,
 		}
 
-		star.Name = configs.GetInfocardName(star_info.IdsName.Get(), star.Nickname)
+		loots, _ := e.Exp.ProcessWreck(configs_export.Wreck{ // check code logic there
+			LoadoutNickname: wreck.Loadout.Get(),
+			Archetype:       wreck.Archetype.Get(),
+			Nickname:        wreck.Nickname.Get(),
+			Pos:             wreck.Pos.Get(),
+			Kind:            configs_export.LootWreck,
+		}, system_info)
 
-		star.VisibleByDefault = true
-		system_to_add.Objs = append(system_to_add.Objs, star)
+		if len(loots) == 0 {
+			continue
+		}
+
+		archetype := wreck.Archetype.Get()
+		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		shape_name, found_shape := solararch.ShapeName.GetValue()
+		if !found_shape {
+			continue
+		}
+		if _, ok := e.Shapes.ShapesByNick[shape_name]; ok {
+			e.Shapes.PermittedShapes[shape_name] = true
+		}
+		obj.ShapeName = shape_name
+
+		if _, ok := e.Shapes.ShapesByNick[obj.ShapeName]; !ok && obj.ShapeName != "" {
+			stats.shape_without_images[obj.ShapeName] = true
+		}
+
+		obj.Name = configs.GetInfocardName(wreck.IdsName.Get(), obj.Nickname)
+
+		obj.VisibleByDefault = true
+		system_to_add.Objs = append(system_to_add.Objs, obj)
 	}
 }

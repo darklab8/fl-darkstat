@@ -65,7 +65,8 @@
 
 .hidden_system,
 .hidden_label,
-.hidden_obj {
+.hidden_obj,
+.hidden_wreck {
     visibility: hidden;
 }
 

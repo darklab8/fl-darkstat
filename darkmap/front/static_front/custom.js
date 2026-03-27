@@ -44,13 +44,24 @@ function InstallMenu() {
     checkbox_labels.addEventListener('change', function () {
         toggle_option(this.checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
     });
-
     let checkbox_label_state = sessionStorage.getItem("checkbox_map_labels");
     if (checkbox_label_state !== null) {
         let checked = checkbox_label_state === "true";
         toggle_option(checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
         checkbox_labels.checked = checked;
     }
+
+    var checkbox_wrecks = document.querySelector("#checkbox_wrecks");
+    checkbox_wrecks.addEventListener('change', function () {
+        toggle_option(this.checked, "checkbox_wrecks", "hidden_wreck", "unhidden_wreck");
+    });
+    let checkbox_wreck_state = sessionStorage.getItem("checkbox_wrecks");
+    if (checkbox_wreck_state !== null) {
+        let checked = checkbox_wreck_state === "true";
+        toggle_option(checked, "checkbox_wrecks", "hidden_wreck", "unhidden_wreck");
+        checkbox_wrecks.checked = checked;
+    }
+
 }
 
 var zoomInTreshold = 1.25;

@@ -1,6 +1,7 @@
 package configs_export
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -90,6 +91,115 @@ func (e *Exporter) IsLootable(item_nickname string) bool {
 	return is_lootable
 }
 
+type Wreck struct {
+	LoadoutNickname string
+	Archetype       string
+	Nickname        string
+	Pos             cfg.Vector
+	Kind            LootKind
+	Event           string
+}
+
+func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*LootInfo, error) {
+	var results []*LootInfo
+	loadout_nickname := wreck.LoadoutNickname
+
+	if loadout, ok := e.Mapped.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
+		type Item struct {
+			nickname    string
+			loot_source LootSource
+		}
+
+		// query here archetype of wreck ? by archetype of wreck, get Solar
+
+		solar := e.Mapped.Solararch.SolarsByNick[wreck.Archetype]
+		if is_destructible, _ := solar.Destructible.GetValue(); !is_destructible {
+			return nil, errors.New("not destructable")
+		}
+
+		allowed_cargo := false
+		allowed_hardpoints := make(map[string]bool)
+		for _, fuse := range solar.Fuses {
+			if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
+				if fuse.DoesDropCargo {
+					allowed_cargo = true
+				}
+				for key, _ := range fuse.LootableHardpoints {
+					allowed_hardpoints[key] = true
+				}
+			}
+		}
+		for _, fuse := range solar.Fuses {
+			if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
+				for key, _ := range fuse.NotLootableHardpoints {
+					delete(allowed_hardpoints, key)
+				}
+			}
+		}
+
+		var item_nicknames []Item
+		if allowed_cargo {
+			for _, cargo := range loadout.Cargos {
+				item_nicknames = append(item_nicknames, Item{
+					nickname:    cargo.Nickname.Get(),
+					loot_source: LootSourceCargo,
+				})
+			}
+		}
+
+		for _, equip := range loadout.Equips {
+
+			item_nickname := equip.Nickname.Get()
+
+			hardpoint, found_hardpoint := equip.Hardpoint.GetValue()
+			if !found_hardpoint {
+				continue
+			}
+
+			_, permitted_hardpoint := allowed_hardpoints[hardpoint]
+			if !permitted_hardpoint {
+				continue
+			}
+
+			item_nicknames = append(item_nicknames, Item{
+				nickname:    item_nickname,
+				loot_source: LootSourceEquip,
+			})
+		}
+
+		for _, item := range item_nicknames {
+			if !e.IsLootable(item.nickname) {
+				continue
+			}
+			loot_info := &LootInfo{
+				Nickname:   item.nickname,
+				Kind:       wreck.Kind,
+				LootSource: LootSourceEquip,
+				PlaceNick:  wreck.Nickname,
+			}
+
+			system_uni := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system.Nickname)]
+			loot_info.Pos = wreck.Pos
+			loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
+			loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
+
+			// TODO [ ] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
+			is_fuse_allowed := true
+			if !is_fuse_allowed {
+				continue
+			}
+
+			results = append(results, loot_info)
+		}
+	}
+
+	if len(results) == 0 {
+		errors.New("not found loot")
+	}
+
+	return results, nil
+}
+
 func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 
 	var permitted_wrecks map[string]bool
@@ -131,126 +241,36 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 
 		unique_wreck_loot := make(map[string]bool)
 
-		type Wreck struct {
-			LoadoutNickname string
-			Archetype       string
-			Nickname        string
-			Pos             cfg.Vector
-			Kind            LootKind
-			Event           string
-		}
-
 		process_wreck := func(wreck Wreck, system *systems_mapped.System) {
-			loadout_nickname := wreck.LoadoutNickname
 
-			if loadout, ok := e.Mapped.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
-				type Item struct {
-					nickname    string
-					loot_source LootSource
+			wrecks, err := e.ProcessWreck(wreck, system)
+			if err != nil {
+				return
+			}
+
+			for _, loot_info := range wrecks {
+
+				key_uniqueness := loot_info.Nickname + loot_info.SystemName + loot_info.SectorCoord
+				if _, ok := unique_wreck_loot[key_uniqueness]; ok {
+					continue
 				}
+				unique_wreck_loot[key_uniqueness] = true
 
-				// query here archetype of wreck ? by archetype of wreck, get Solar
-
-				solar := e.Mapped.Solararch.SolarsByNick[wreck.Archetype]
-				if is_destructible, _ := solar.Destructible.GetValue(); !is_destructible {
-					return
-				}
-
-				allowed_cargo := false
-				allowed_hardpoints := make(map[string]bool)
-				for _, fuse := range solar.Fuses {
-					if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
-						if fuse.DoesDropCargo {
-							allowed_cargo = true
-						}
-						for key, _ := range fuse.LootableHardpoints {
-							allowed_hardpoints[key] = true
-						}
+				if loot_info.Kind == LootWreck {
+					e.findable_in_loot_cache[loot_info.Nickname] = true
+					findable_limit_wrecks[loot_info.Nickname] += 1
+					if findable_limit_wrecks[loot_info.Nickname] <= LootMaxWrecks {
+						e.SetPermitted(permitted_wrecks, permitted_encounters, loot_info)
+						loots = append(loots, loot_info)
 					}
-				}
-				for _, fuse := range solar.Fuses {
-					if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
-						for key, _ := range fuse.NotLootableHardpoints {
-							delete(allowed_hardpoints, key)
-						}
+				} else if loot_info.Kind == LootFLSRSolar {
+					flsr_loot = append(flsr_loot, loot_info)
+					if loot_event_sources_by_loot_nickname[loot_info.Nickname] == nil {
+						loot_event_sources_by_loot_nickname[loot_info.Nickname] = make(map[string]bool)
 					}
-				}
-
-				var item_nicknames []Item
-				if allowed_cargo {
-					for _, cargo := range loadout.Cargos {
-						item_nicknames = append(item_nicknames, Item{
-							nickname:    cargo.Nickname.Get(),
-							loot_source: LootSourceCargo,
-						})
-					}
-				}
-
-				for _, equip := range loadout.Equips {
-
-					item_nickname := equip.Nickname.Get()
-
-					hardpoint, found_hardpoint := equip.Hardpoint.GetValue()
-					if !found_hardpoint {
-						continue
-					}
-
-					_, permitted_hardpoint := allowed_hardpoints[hardpoint]
-					if !permitted_hardpoint {
-						continue
-					}
-
-					item_nicknames = append(item_nicknames, Item{
-						nickname:    item_nickname,
-						loot_source: LootSourceEquip,
-					})
-				}
-
-				for _, item := range item_nicknames {
-					if !e.IsLootable(item.nickname) {
-						continue
-					}
-					loot_info := &LootInfo{
-						Nickname:   item.nickname,
-						Kind:       wreck.Kind,
-						LootSource: LootSourceEquip,
-						PlaceNick:  wreck.Nickname,
-					}
-
-					system_uni := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system.Nickname)]
-					loot_info.Pos = wreck.Pos
-					loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
-					loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
-
-					key_uniqueness := loot_info.Nickname + loot_info.SystemName + loot_info.SectorCoord
-					if _, ok := unique_wreck_loot[key_uniqueness]; ok {
-						continue
-					}
-					unique_wreck_loot[key_uniqueness] = true
-
-					// TODO [ ] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
-					is_fuse_allowed := true
-					if !is_fuse_allowed {
-						continue
-					}
-
-					if loot_info.Kind == LootWreck {
-						e.findable_in_loot_cache[item.nickname] = true
-						findable_limit_wrecks[item.nickname] += 1
-						if findable_limit_wrecks[item.nickname] <= LootMaxWrecks {
-							e.SetPermitted(permitted_wrecks, permitted_encounters, loot_info)
-							loots = append(loots, loot_info)
-						}
-					} else if loot_info.Kind == LootFLSRSolar {
-						flsr_loot = append(flsr_loot, loot_info)
-						if loot_event_sources_by_loot_nickname[loot_info.Nickname] == nil {
-							loot_event_sources_by_loot_nickname[loot_info.Nickname] = make(map[string]bool)
-						}
-						loot_event_sources_by_loot_nickname[loot_info.Nickname][wreck.Event] = true
-					} else {
-						panic("not identified type of wreeck :)")
-					}
-
+					loot_event_sources_by_loot_nickname[loot_info.Nickname][wreck.Event] = true
+				} else {
+					panic("not identified type of wreeck :)")
 				}
 			}
 		}

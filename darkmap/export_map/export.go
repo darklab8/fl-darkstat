@@ -50,9 +50,9 @@ func (e *Export) Export(ctx context.Context) {
 	e.Shapes.FilesRead += more_shapes.FilesRead
 	e.Shapes.ImageWritten += more_shapes.ImageWritten
 
+	e.Exp = configs_export.NewExporter(e.Mapped)
+
 	e.Systems = e.ExportSystems(e.Mapped)
 	e.Graph = e.GetSystemConnections(e.Systems)
-
-	e.Exp = configs_export.NewExporter(e.Mapped)
 	e.Exp.Bases = e.Exp.GetBases(ctx)
 }
