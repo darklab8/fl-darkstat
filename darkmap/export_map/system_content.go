@@ -169,6 +169,22 @@ type MissingShapes struct {
 	shape_without_images  map[string]bool
 }
 
+func IsPlanetByShape(shape_name string) bool {
+	if shape_name == "nnm_sm_medium_rocky_moon" {
+		return true
+	} else if shape_name == "nnm_sm_medium_forest_moon" {
+		return true
+	} else if shape_name == "nnm_sm_small_ice_moon" {
+		return true
+	}
+
+	//  else if shape_name == "nnm_sm_rock_asteroid" {
+	// 	all_bases[base.Nickname.Get()] = base
+	// }
+
+	return false
+}
+
 func (e *Export) EnrichSystemWithObjects(
 	configs *configs_mapped.MappedConfigs,
 	system_to_add *System,
@@ -201,16 +217,9 @@ func (e *Export) EnrichSystemWithObjects(
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 		shape_name, _ := solararch.ShapeName.GetValue()
 		if _, ok := e.Shapes.ShapesByNick[shape_name]; !ok {
-			if shape_name == "nnm_sm_medium_rocky_moon" {
-				all_bases[base.Nickname.Get()] = base
-			} else if shape_name == "nnm_sm_medium_forest_moon" {
-				all_bases[base.Nickname.Get()] = base
-			} else if shape_name == "nnm_sm_small_ice_moon" {
+			if IsPlanetByShape(shape_name) {
 				all_bases[base.Nickname.Get()] = base
 			}
-			//  else if shape_name == "nnm_sm_rock_asteroid" {
-			// 	all_bases[base.Nickname.Get()] = base
-			// }
 		}
 	}
 
@@ -396,7 +405,7 @@ func (e *Export) EnrichSystemWithObjects(
 			}
 
 			if shape_name == "indust" { // disco hardcoded fix
-				shape_name = "nav_outpost"
+				shape_name = "earthlike"
 			}
 		}
 		if strings.Contains(archetype, "docking_fixture") {
