@@ -225,6 +225,7 @@ func (e *Export) EnrichSystemWithObjects(
 		jumphole.Name = configs.GetInfocardName(jh_info.IdsName.Get(), jumphole.Nickname)
 
 		archetype := jh_info.Archetype.Get()
+
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 
 		dockable := solararch.IsDockable(solararch_mapped.DockableOptions{

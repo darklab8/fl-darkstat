@@ -188,7 +188,10 @@ templ SystemContents(system *export_map.System) {
 			<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + SystemDetailedUrlNick(obj.GotoSystem)) }>
 				<obj-
 					data-nickname={ obj.Nickname }
-					class={ fmt.Sprintf("jumphole %s", obj.Kind.ToStr()) }
+					class={
+						fmt.Sprintf("jumphole %s", obj.Kind.ToStr()),
+						templ.KV("hidden_obj", !obj.VisibleByDefault),
+					}
 					style={ fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
                     SystemPosToPerc(obj.Pos.Z, system),
                     SystemPosToPerc(obj.Pos.X, system),

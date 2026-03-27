@@ -62,6 +62,17 @@ function InstallMenu() {
         checkbox_wrecks.checked = checked;
     }
 
+
+    var checkbox_objects = document.querySelector("#checkbox_objects");
+    checkbox_objects.addEventListener('change', function () {
+        toggle_option(this.checked, "checkbox_objects", "hidden_obj", "unhidden_obj");
+    });
+    let checkbox_obj_state = sessionStorage.getItem("checkbox_objects");
+    if (checkbox_obj_state !== null) {
+        let checked = checkbox_obj_state === "true";
+        toggle_option(checked, "checkbox_objects", "hidden_obj", "unhidden_obj");
+        checkbox_objects.checked = checked;
+    }
 }
 
 var zoomInTreshold = 1.25;

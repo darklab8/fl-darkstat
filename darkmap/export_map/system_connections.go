@@ -333,6 +333,10 @@ func (e *Export) GetJumpConnectionKind(jh *systems_mapped.Jumphole) JumpConnecti
 		if cargo_limit, ok := solar.CargoLimit.GetValue(); ok {
 			disco_cargo_limit = ptr.Ptr(cargo_limit)
 		}
+
+		if len(solar.DockingSpheres) == 0 {
+			return JumpKindUnknown
+		}
 	}
 	if disco_cargo_limit != nil {
 		if *disco_cargo_limit < trades.DiscoCargoLimitedThreshold {
