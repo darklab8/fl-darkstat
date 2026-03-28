@@ -26,10 +26,11 @@ type System struct {
 
 	Objs      []*Obj
 	Jumpholes []*Jumphole
+	Zones     []*Zone
 }
 
 func (s System) GetSquareScale() float64 {
-	return 30.0 / s.NavMapScale
+	return 35.0 / s.NavMapScale
 }
 
 type Obj struct {
@@ -44,6 +45,13 @@ type Obj struct {
 	PlanetSolarRadius float64
 
 	Rotation cfg.Vector
+}
+
+type Zone struct {
+	Obj
+	PropertyFlags int
+	ZoneShape     string
+	Size          cfg.Vector
 }
 
 type Star struct {
@@ -69,6 +77,7 @@ const (
 	ObjBase
 	ObjPlanet
 	ObjWreck
+	ObjZone
 )
 
 func (o ObjKind) ToNick() string {
@@ -85,6 +94,8 @@ func (o ObjKind) ToNick() string {
 		return "planet"
 	case ObjWreck:
 		return "wreck"
+	case ObjZone:
+		return "zone"
 	case ObjUnknown:
 		return "unknown"
 	}
@@ -502,5 +513,32 @@ func (e *Export) EnrichSystemWithObjects(
 
 		obj.VisibleByDefault = true
 		system_to_add.Objs = append(system_to_add.Objs, obj)
+	}
+	for _, zone_info := range system_info.Zones {
+		zone := &Zone{
+			Obj: Obj{Nickname: zone_info.Nickname.Get(),
+				Kind: ObjZone,
+			},
+		}
+
+		zone.ZoneShape, _ = zone_info.ZoneShape.GetValue()
+
+		zone.Rotation, _ = zone_info.Rotate.GetValue()
+
+		zone.Size.X, _ = zone_info.SizeX.GetValue()
+		zone.Size.Y, _ = zone_info.SizeY.GetValue()
+		zone.Size.Z, _ = zone_info.SizeZ.GetValue()
+
+		zone.Pos, _ = zone_info.Pos.GetValue()
+
+		property_flag, found_property_flag := zone_info.PropertyFlags.GetValue()
+
+		if found_property_flag {
+			zone.PropertyFlags = property_flag
+		} else {
+			continue
+		}
+
+		system_to_add.Zones = append(system_to_add.Zones, zone)
 	}
 }

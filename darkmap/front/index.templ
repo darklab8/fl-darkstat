@@ -1,25 +1,11 @@
 package front
 
 import (
-	"context"
-	"fmt"
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
-	"github.com/darklab8/fl-darkstat/darkmap/types"
 )
-
-func Font(ctx context.Context) string {
-	return fmt.Sprintf(`
-	<style>
-		@font-face {
-			font-family: "Agency FB";
-			src: url(%s);
-		}
-	</style>
-	`, types.GetCtx(ctx).GetStaticRoot()+"AGENCYR.TTF")
-}
 
 templ Html5() {
 	<!DOCTYPE html>
@@ -35,9 +21,9 @@ templ Html5() {
 			@core_front.StaticFile(static_front.CustomCSS)
 			@core_front.StaticFile(static_front.GalaxyCSS)
 			@core_front.StaticFile(static_front.PanzoomJS)
+			@core_front.StaticFile(static_front.ZonesCSS)
 			<script>
 			</script>
-			@templ.Raw(Font(ctx))
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes"/>
 		</head>
 		<body class="zoomedOut">

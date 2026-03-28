@@ -77,3 +77,12 @@ var FaviconIco core_types.StaticFile = core_types.StaticFile{
 	Filename: "favicon.ico",
 	Kind:     core_types.StaticFileIco,
 }
+
+//go:embed template.css
+var ZonesCssContent string
+
+var ZonesCSS = core_types.StaticFile{
+	Content:  ZonesCssContent,
+	Filename: "template.css",
+	Kind:     core_types.StaticFileCSS,
+}

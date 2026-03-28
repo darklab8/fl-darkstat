@@ -1,0 +1,77 @@
+@font-face {
+    font-family: "Agency FB";
+    src: url("{{.StaticRoot}}AGENCYR.TTF");
+}
+
+.zone.zoneExclusion1,
+.zone.zoneExclusion2,
+.zone.zoneExclusion3 {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 0 0.1em 0.05em rgba(0, 0, 0, 0.3);
+}
+
+.zone.zoneMinefield2 {
+    background-image: url("{{.StaticRoot}}textures/worn-dots.png");
+    background-size: 10em 10em;
+}
+
+.zone.zoneDresdenFog,
+.zone.zoneLeedsSmog,
+.zone.zoneChugokuCloud,
+.zone.undefined {
+    background-image: url("{{.StaticRoot}}textures/snow.png");
+    background-size: 5em 5em;
+}
+
+.zone.zoneDresdenLavaRocks {
+    background-image: url("{{.StaticRoot}}textures/white-texture.png");
+    background-size: 5em 5em;
+}
+
+.zone.zoneAlphaBigDust {
+    background-image: url("{{.StaticRoot}}textures/vintage-speckles.png");
+    background-size: 10em 10em;
+}
+
+.zone.reusethissomewhere {
+    background-image: url("{{.StaticRoot}}textures/wall-4-light.png");
+}
+
+.zone.zoneRock,
+.zone.zoneLeedsUraniumAsteroids,
+.zone.zoneDublinGoldField,
+.zone.zoneGreenAsteroids {
+    background-image: url("{{.StaticRoot}}textures/rocky-wall.png");
+    background-size: 25em 25em;
+}
+
+.zone.zoneIceAsteroids1,
+.zone.zoneIceAsteroidsTau37,
+.zone.zoneIceAsteroidsSmall {
+    background-image: url("{{.StaticRoot}}textures/white-texture.png");
+}
+
+.zone.zoneDetroitDebrisHigh {
+    background-image: url("{{.StaticRoot}}textures/debrisTexture127.png");
+    background-size: 3em 3em;
+}
+
+.zone.zoneDetroitDebrisNormal {
+    background-image: url("{{.StaticRoot}}textures/debrisTexture127.png");
+    background-size: 5em 5em;
+}
+
+.zone {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0.1em 0.1em rgba(255, 255, 255, 0.15);
+}
+
+.zone.roundZone {
+    border-radius: 100%;
+}
+
+.zone.squareZone {
+    border-radius: 0;
+}
+
+/* cylinderZone, boxZone, nothing?*/

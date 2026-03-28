@@ -224,6 +224,12 @@ type Zone struct {
 	IdsName         *semantic.Int
 	Density         *semantic.Float
 	FactionNickname []*semantic.String
+	PropertyFlags   *semantic.Int
+	ZoneShape       *semantic.String
+	SizeX           *semantic.Float
+	SizeY           *semantic.Float
+	SizeZ           *semantic.Float
+	Rotate          *semantic.Vect
 
 	Encounters []*semantic.String
 }
@@ -254,6 +260,7 @@ type System struct {
 
 	Asteroids   []*Asteroids
 	ZonesByNick map[string]*Zone
+	Zones       []*Zone
 	Objects     []*Object
 	Stars       []*Star
 	Wrecks      []*Wreck
@@ -549,14 +556,21 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 				for _, zone_info := range zones {
 
 					zone_to_add := &Zone{
-						Nickname: semantic.NewString(zone_info, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-						Pos:      semantic.NewVector(zone_info, cfg.Key("pos"), semantic.Precision(0)),
-						IdsName:  semantic.NewInt(zone_info, cfg.Key("ids_name"), semantic.Optional()),
-						IDsInfo:  semantic.NewInt(zone_info, cfg.Key("ids_info"), semantic.Optional()),
-						Density:  semantic.NewFloat(zone_info, cfg.Key("density"), semantic.Precision(2)),
+						Nickname:      semantic.NewString(zone_info, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						Pos:           semantic.NewVector(zone_info, cfg.Key("pos"), semantic.Precision(0)),
+						IdsName:       semantic.NewInt(zone_info, cfg.Key("ids_name"), semantic.Optional()),
+						IDsInfo:       semantic.NewInt(zone_info, cfg.Key("ids_info"), semantic.Optional()),
+						Density:       semantic.NewFloat(zone_info, cfg.Key("density"), semantic.Precision(2)),
+						PropertyFlags: semantic.NewInt(zone_info, cfg.Key("property_flags")),
+						ZoneShape:     semantic.NewString(zone_info, cfg.Key("shape"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						SizeX:         semantic.NewFloat(zone_info, cfg.Key("size"), semantic.Precision(0), semantic.OptsF(semantic.Order(0))),
+						SizeY:         semantic.NewFloat(zone_info, cfg.Key("size"), semantic.Precision(0), semantic.OptsF(semantic.Order(1))),
+						SizeZ:         semantic.NewFloat(zone_info, cfg.Key("size"), semantic.Precision(0), semantic.OptsF(semantic.Order(2))),
+						Rotate:        semantic.NewVector(zone_info, cfg.Key("rotate"), semantic.Precision(2)),
 					}
 					zone_to_add.Map(zone_info)
 					system_to_add.ZonesByNick[zone_to_add.Nickname.Get()] = zone_to_add
+					system_to_add.Zones = append(system_to_add.Zones, zone_to_add)
 
 					if encounter_infos, ok := zone_info.ParamMap[cfg.Key("encounter")]; ok && len(encounter_infos) > 0 {
 						for index, _ := range encounter_infos {
