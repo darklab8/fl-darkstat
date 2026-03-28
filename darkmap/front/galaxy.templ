@@ -7,7 +7,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
-	"github.com/darklab8/go-utils/utils/ptr"
 	"strings"
 )
 
@@ -19,6 +18,14 @@ func GalaxyPosToPerc(position *float64) float64 {
 	}
 
 	return 100 * (3 + *position) / (15 + 6)
+}
+
+func ConnectionLineStyle(sys1, sys2 *export_map.System) string {
+	x1 := GalaxyPosToPerc(sys1.Pos.X)
+	y1 := GalaxyPosToPerc(sys1.Pos.Y)
+	x2 := GalaxyPosToPerc(sys2.Pos.X)
+	y2 := GalaxyPosToPerc(sys2.Pos.Y)
+	return fmt.Sprintf("x1='%.5f%%' y1='%.5f%%' x2='%.5f%%' y2='%.5f%%'", x1, y1, x2, y2)
 }
 
 templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
@@ -65,41 +72,37 @@ templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
 
 templ GalalaxyMap(data *export_map.Export) {
 	<centeralizer->
+		// Systems rendered as before
 		for _, sys := range data.Systems {
 			@GalaxySystem(sys, GetSystemFac(sys))
 		}
 		<system-title>Sirius</system-title>
-		for key, edge := range data.Graph.ConnectionEdges {
-			<connection-
-				data-key={ key }
-				data-system1-nickname={ edge.FirstSystem.Nickname }
-				data-system2-nickname={ edge.SecondSystem.Nickname }
-				{ templ.Attributes{
-				"style": fmt.Sprintf(
-					"top: %.5f%%; left: %.5f%%;",
-					GalaxyPosToPerc(ptr.Ptr(edge.GetPosY())),
-					GalaxyPosToPerc(ptr.Ptr(edge.GetPosX())),
-				),
-			}... }
-				class={ templ.KV("hidden_system", !(edge.FirstSystem.VisibleByDefault && edge.SecondSystem.VisibleByDefault)), "connection" }
-			>
-				<line-
+		// One SVG overlay covering the full map, lines use % coordinates
+		<svg
+			class="connection-svg-overlay"
+			xmlns="http://www.w3.org/2000/svg"
+			style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow:visible;"
+		>
+			for key, edge := range data.Graph.ConnectionEdges {
+				<line
 					data-key={ key }
 					data-system1-nickname={ edge.FirstSystem.Nickname }
 					data-system2-nickname={ edge.SecondSystem.Nickname }
+					x1={ fmt.Sprintf("%.5f%%", GalaxyPosToPerc(edge.FirstSystem.Pos.X)) }
+					y1={ fmt.Sprintf("%.5f%%", GalaxyPosToPerc(edge.FirstSystem.Pos.Y)) }
+					x2={ fmt.Sprintf("%.5f%%", GalaxyPosToPerc(edge.SecondSystem.Pos.X)) }
+					y2={ fmt.Sprintf("%.5f%%", GalaxyPosToPerc(edge.SecondSystem.Pos.Y)) }
 					class={
+						templ.KV("hidden_system", !(edge.FirstSystem.VisibleByDefault && edge.SecondSystem.VisibleByDefault)),
 						templ.KV("conn_alien", edge.Kind == export_map.JumpKindAlien),
 						templ.KV("conn_jumpgate", edge.Kind == export_map.JumpKindJumpgate),
 						templ.KV("conn_jumphole", edge.Kind == export_map.JumpKindJumphole),
 						templ.KV("conn_unstable", edge.Kind == export_map.JumpKindUnstable),
 						templ.KV("conn_unknown", edge.Kind == export_map.JumpKindUnknown),
 					}
-				></line->
-			</connection->
-		}
-		// <svg width="100" height="100">
-		// 	<circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle>
-		// </svg>
+				></line>
+			}
+		</svg>
 	</centeralizer->
 }
 
@@ -185,17 +188,18 @@ templ GalaxyGrid(menu_kind MenuKind) {
 	if menu_kind == MenuKindGalaxy {
 		@core_front.StaticFile(static_front.MapGalaxyJS)
 		<script>
-		RefreshEdgePositions();
+		InstallLabelOverlapper();
 		document.addEventListener("DOMContentLoaded", (event) => {
 			InstallGalaxy();
 		});
-		document.addEventListener('htmx:afterSettle',(event) => {
-			InstallGalaxy();
-		});
+		// document.addEventListener('htmx:afterSettle',(event) => {
+		// 	InstallGalaxy();
+		// });
 	</script>
 	} else {
 		@core_front.StaticFile(static_front.MapSystemJS)
 		<script>
+		InstallLabelOverlapper();
 		document.addEventListener("DOMContentLoaded", (event) => {
 			InstallSystem();
 		});

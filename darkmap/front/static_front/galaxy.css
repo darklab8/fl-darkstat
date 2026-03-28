@@ -52,6 +52,11 @@ map- {
     background-size: cover;
     border: 0.2em rgb(25, 47, 96) solid;
     height: 100%;
+
+    /*plugin adds on its own*/
+    overflow: hidden;
+    user-select: none;
+    touch-action: none;
 }
 
 .panzoom-parent-system {
@@ -71,6 +76,14 @@ map- {
     width: 100%;
     margin: 0 auto;
     box-sizing: border-box;
+
+    /*plugin adds on its own*/
+    cursor: move;
+    user-select: none;
+    touch-action: none;
+    transform-origin: 50% 50%;
+    transition: none;
+    transform: scale(1) translate(0px, 0px);
 }
 
 menu- {
