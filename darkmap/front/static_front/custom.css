@@ -196,39 +196,6 @@
 
 /* CSS TOGLE SWITCH END */
 
-/* SVG lines replace your old line- element styles */
-/* svg.connection-svg-overlay line {
-    stroke-width: 1px;
-    stroke: #888;
-}
-
-svg.connection-svg-overlay line.conn_jumpgate {
-    stroke: #2299F5;
-}
-
-svg.connection-svg-overlay line.conn_jumphole {
-    stroke: #22F5AA;
-    stroke-dasharray: 4 2;
-}
-
-svg.connection-svg-overlay line.conn_alien {
-    stroke: #F52222;
-}
-
-svg.connection-svg-overlay line.conn_unstable {
-    stroke: #F5A022;
-    stroke-dasharray: 2 2;
-}
-
-svg.connection-svg-overlay line.conn_unknown {
-    stroke: #888;
-    stroke-dasharray: 1 3;
-}
-
-svg.connection-svg-overlay line.hidden_system {
-    display: none;
-} */
-
 svg.connection-svg-overlay {
     position: absolute;
     top: 0;
