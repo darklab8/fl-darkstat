@@ -26,53 +26,33 @@ function toggle_option(checked, checkbox_name, hidden_class, unhidden_class) {
     InstallLabelOverlapper();
 }
 
-function InstallMenu() {
-    var checkbox_systems = document.querySelector("#checkbox_systems");
+/**
+ * 
+ * @param {string} button_id // id of a button without '#'
+ * @param {string} default_state // default class state
+ * @param {string} togglable_state // togglable class state
+ */
+function InstallButton(button_id, default_state, togglable_state) {
+    var checkbox_systems = document.querySelector("#" + button_id);
     checkbox_systems.addEventListener('change', function () {
-        toggle_option(this.checked, "checkbox_systems", "hidden_system", "unhidden_system");
+        toggle_option(this.checked, button_id, default_state, togglable_state);
     });
-
-    let checkbox_systems_state = sessionStorage.getItem("checkbox_systems");
+    let checkbox_systems_state = sessionStorage.getItem(button_id);
     if (checkbox_systems_state !== null) {
         let checked = checkbox_systems_state === "true";
-        toggle_option(checked, "checkbox_systems", "hidden_system", "unhidden_system");
+        toggle_option(checked, button_id, default_state, togglable_state);
         checkbox_systems.checked = checked;
     }
+}
 
+function InstallMenu() {
+    InstallButton("checkbox_systems", "hidden_system", "unhidden_system");
 
-    var checkbox_labels = document.querySelector("#checkbox_map_labels");
-    checkbox_labels.addEventListener('change', function () {
-        toggle_option(this.checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
-    });
-    let checkbox_label_state = sessionStorage.getItem("checkbox_map_labels");
-    if (checkbox_label_state !== null) {
-        let checked = checkbox_label_state === "true";
-        toggle_option(checked, "checkbox_map_labels", "unhidden_label", "hidden_label");
-        checkbox_labels.checked = checked;
-    }
+    InstallButton("checkbox_map_labels", "unhidden_label", "hidden_label");
 
-    var checkbox_wrecks = document.querySelector("#checkbox_wrecks");
-    checkbox_wrecks.addEventListener('change', function () {
-        toggle_option(this.checked, "checkbox_wrecks", "hidden_wreck", "unhidden_wreck");
-    });
-    let checkbox_wreck_state = sessionStorage.getItem("checkbox_wrecks");
-    if (checkbox_wreck_state !== null) {
-        let checked = checkbox_wreck_state === "true";
-        toggle_option(checked, "checkbox_wrecks", "hidden_wreck", "unhidden_wreck");
-        checkbox_wrecks.checked = checked;
-    }
+    InstallButton("checkbox_wrecks", "hidden_wreck", "unhidden_wreck");
 
-
-    var checkbox_objects = document.querySelector("#checkbox_objects");
-    checkbox_objects.addEventListener('change', function () {
-        toggle_option(this.checked, "checkbox_objects", "hidden_obj", "unhidden_obj");
-    });
-    let checkbox_obj_state = sessionStorage.getItem("checkbox_objects");
-    if (checkbox_obj_state !== null) {
-        let checked = checkbox_obj_state === "true";
-        toggle_option(checked, "checkbox_objects", "hidden_obj", "unhidden_obj");
-        checkbox_objects.checked = checked;
-    }
+    InstallButton("checkbox_objects", "hidden_obj", "unhidden_obj");
 }
 
 var zoomInTreshold = 1.25;

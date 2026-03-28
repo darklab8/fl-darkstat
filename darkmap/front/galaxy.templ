@@ -199,6 +199,7 @@ templ GalaxyGrid(menu_kind MenuKind) {
 	} else {
 		@core_front.StaticFile(static_front.MapSystemJS)
 		<script>
+		InstallLabelOverlapper();
 		document.addEventListener("DOMContentLoaded", (event) => {
 			InstallSystem();
 		});
