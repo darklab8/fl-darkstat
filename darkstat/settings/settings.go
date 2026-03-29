@@ -46,7 +46,9 @@ type DarkstatEnvVars struct {
 	IsMemProfilerEnabled bool
 
 	IsStaticSiteGenerator bool
-	Enver                 *enverant.Enverant
+
+	IsMapOn bool
+	Enver   *enverant.Enverant
 }
 
 func IsApiActive() bool {
@@ -89,6 +91,8 @@ func init() {
 		TradeRoutesBestDisablePobs:      env.GetBoolOr("DISABLE_POBS_FOR_BEST_TRADES", false, enverant.WithDesc("if u use discovery mod, an option to turn off pobs from best trades")),
 		TradeRoutesBestTwoWaysLimitPobs: env.GetIntOr("TRADE_ROUTES_BEST_TWO_WAY_LIMIT_POBS", 99, enverant.WithDesc("Limit amount of pobs participating in 2 way routes")),
 		TradeRoutesBestDisableLiners:    env.GetBoolOr("TRADE_ROUTES_DISABLE_LINERS", false, enverant.WithDesc("")),
+
+		IsMapOn: env.GetBoolOr("MAP_ON", *darkflag.IsMapEnabled, enverant.WithDesc("enabled map as part of darkstat. PERFORMANCE HEAVY. by default off. use `map web` if u wish to turn it on faster")),
 	}
 
 	if !Env.TradeDealsEnabled {

@@ -26,6 +26,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap"
+	map_urls "github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	"github.com/darklab8/fl-darkstat/darkmap/linker"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -153,8 +155,18 @@ func main() {
 		runtime.GC()
 		span.End()
 
+		filesystems := []*builder.Filesystem{stat_fs, relay_fs}
+
+		if settings.Env.IsMapOn {
+			map_urls.Index = "map.html"
+			var linked_build *builder.Builder
+			linked_build = linker.NewLinker(true).Link(context.Background())
+			map_fs := linked_build.BuildAll(true, nil)
+			filesystems = append(filesystems, map_fs)
+		}
+
 		web_server := darkhttp.RegisterApiRoutes(web.NewWeb(
-			[]*builder.Filesystem{stat_fs, relay_fs},
+			filesystems,
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
 			web.WithAppData(app_data),
@@ -253,6 +265,11 @@ func main() {
 					defer span_boot.End()
 					app_data := appdata.NewAppData(ctx_span)
 					router.NewRouter(app_data, router.WithStaticAssetsGen()).Link(ctx_span).BuildAll(false, nil)
+
+					if settings.Env.IsMapOn {
+						map_urls.Index = "map.html"
+						linker.NewLinker(true).Link(ctx_span).BuildAll(false, nil)
+					}
 					return nil
 				},
 			},

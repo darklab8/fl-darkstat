@@ -20,7 +20,7 @@ var CustomJSContent string
 
 var CustomJS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomJSContent,
-	Filename: "custom.js",
+	Filename: "map_custom.js",
 	Kind:     core_types.StaticFileJS,
 }
 
@@ -47,7 +47,7 @@ var CommonCSSContent string
 
 var CommonCSS core_types.StaticFile = core_types.StaticFile{
 	Content:  CommonCSSContent,
-	Filename: "common.css",
+	Filename: "map_common.css",
 	Kind:     core_types.StaticFileCSS,
 }
 
@@ -56,7 +56,7 @@ var CustomCSSContent string
 
 var CustomCSS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomCSSContent,
-	Filename: "custom.css",
+	Filename: "map_custom.css",
 	Kind:     core_types.StaticFileCSS,
 }
 
@@ -65,7 +65,7 @@ var GalaxyCSSContent string
 
 var GalaxyCSS core_types.StaticFile = core_types.StaticFile{
 	Content:  GalaxyCSSContent,
-	Filename: "galaxy.css",
+	Filename: "map_galaxy.css",
 	Kind:     core_types.StaticFileCSS,
 }
 
@@ -74,7 +74,7 @@ var FaviconIcoContent string
 
 var FaviconIco core_types.StaticFile = core_types.StaticFile{
 	Content:  FaviconIcoContent,
-	Filename: "favicon.ico",
+	Filename: "map_favicon.ico",
 	Kind:     core_types.StaticFileIco,
 }
 
@@ -83,6 +83,6 @@ var ZonesCssContent string
 
 var ZonesCSS = core_types.StaticFile{
 	Content:  ZonesCssContent,
-	Filename: "template.css",
+	Filename: "map_template.css",
 	Kind:     core_types.StaticFileCSS,
 }

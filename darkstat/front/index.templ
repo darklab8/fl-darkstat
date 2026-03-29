@@ -1,6 +1,8 @@
 package front
 
 import (
+	map_urls "github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	map_settings "github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
@@ -60,6 +62,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button(tab.NewButtn(ctx, []string{"PoB&thinsp;", "goods"}, urls.PoBGoods, url, tab.WithRelay()))
 				}
 				@tab.Button(tab.NewButtn(ctx, []string{"Extra"}, urls.ExtraItems, url))
+				@MapButton(url)
 				if settings.IsApiActive() {
 					@tab.Button(tab.NewButtn(ctx, []string{"API"}, urls.Swagger, url, tab.WithSiteUrl(settings.Env.SiteHost+"/"), tab.WithDrectUrl()))
 				}
@@ -102,6 +105,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button(tab.NewButtn(ctx, []string{"PoB&thinsp;", "goods"}, tab.AllItemsUrl(urls.PoBGoods), url, tab.WithRelay()))
 				}
 				@tab.Button(tab.NewButtn(ctx, []string{"Extra"}, tab.AllItemsUrl(urls.ExtraItems), url))
+				@MapButton(url)
 				if settings.IsApiActive() {
 					@tab.Button(tab.NewButtn(ctx, []string{"API"}, urls.Swagger, url, tab.WithSiteUrl(settings.Env.SiteHost+"/"), tab.WithDrectUrl()))
 				}
@@ -116,4 +120,10 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 		</div>
 	}
 	<hr/>
+}
+
+templ MapButton(url utils_types.FilePath) {
+	if settings.Env.IsMapOn {
+		@tab.Button(tab.NewButtn(ctx, []string{"Map"}, map_urls.Index, url, tab.WithSiteUrl(settings.Env.SiteHost+map_settings.Env.SiteRoot), tab.WithDrectUrl()))
+	}
 }

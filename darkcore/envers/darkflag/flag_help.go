@@ -14,7 +14,7 @@ var (
 
 var (
 	ArgWebPort           = flag.Int("web-port", 8000, "Main web port")
-	ArgEnableUnixSockets = flag.Bool("unix-sockets", false, "Enable unix sockets for connections")
+	ArgEnableUnixSockets = flag.Bool("unix-sockets-on", false, "Enable unix sockets for connections")
 	ArgPassword          = flag.String("password", "", "protect access to web interface of darkstat with ?password=query_param")
 )
 
@@ -23,9 +23,10 @@ var (
 )
 
 var (
-	TradeDealsEnabled       = flag.Bool("stat-deals", true, "flag to show or not best trade deals in stat service. PERFORMANCE HEAVY. disable if not needed")
+	TradeDealsEnabled       = flag.Bool("stat-deals-on", false, "flag to show or not best trade deals in stat service. PERFORMANCE HEAVY. by default off. disable if not needed")
 	StatSiteRoot            = flag.String("stat-site-root", "/", "useful if wishing serving darkstat from github pages sub urls. Makes sure correct link addresses")
-	TradeDealsDetailedLanes = flag.Bool("stat-trade-detailed-lanes", false, "experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")
+	TradeDealsDetailedLanes = flag.Bool("stat-trade-detailed-lanes-on", false, "experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")
+	IsMapEnabled            = flag.Bool("map-on", false, "flag to turn on map as part of darkstat. PERFORMANCE HEAVY. use standalone map through `map web` command if u wish it faster")
 )
 
 func init() {

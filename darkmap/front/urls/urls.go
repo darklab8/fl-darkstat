@@ -4,6 +4,6 @@ import (
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
-const (
+var (
 	Index utils_types.FilePath = "index.html"
 )
