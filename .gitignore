@@ -20,3 +20,4 @@ node_modules/
 .venv/
 .idea/
 build2/
+build_*/

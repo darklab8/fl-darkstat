@@ -276,10 +276,26 @@ func (e *Export) EnrichSystemWithObjects(
 		if _, ok := e.Shapes.ShapesByNick[strings.ToLower(shape_name)]; ok {
 			e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
 		} else {
-			logus.Log.Panic("can't find shape for jumphole",
-				typelog.Any("shape", strings.ToLower(shape_name)),
-				typelog.Any("obj_nick", strings.ToLower(jumphole.Nickname)),
-			)
+			if e.Exp.Mapped.FLSR != nil {
+				logus.Log.Error("FLSR can't find shape for jumphole. Using fallback",
+					typelog.Any("shape", strings.ToLower(shape_name)),
+					typelog.Any("obj_nick", strings.ToLower(jumphole.Nickname)),
+				)
+				shape_name = "nav_jumphole"
+				if _, ok := e.Shapes.ShapesByNick[strings.ToLower(shape_name)]; ok {
+					e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true
+				} else {
+					logus.Log.Panic("fallback for jumphole model is not found",
+						typelog.Any("shape", strings.ToLower(shape_name)),
+						typelog.Any("obj_nickname", strings.ToLower(jumphole.Nickname)),
+					)
+				}
+			} else {
+				logus.Log.Panic("can't find shape for jumphole",
+					typelog.Any("shape", strings.ToLower(shape_name)),
+					typelog.Any("obj_nick", strings.ToLower(jumphole.Nickname)),
+				)
+			}
 		}
 		if !found_shape {
 			stats.solars_without_shapes[archetype] = true
