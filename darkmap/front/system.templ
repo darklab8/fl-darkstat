@@ -2,6 +2,7 @@ package front
 
 import (
 	"fmt"
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"strconv"
@@ -190,6 +191,7 @@ templ SystemContents(system *export_map.System) {
 				<obj-
 					data-nickname={ obj.Nickname }
 					class={
+						TooltipCls,
 						fmt.Sprintf("jumphole %s", obj.Kind.ToStr()),
 						templ.KV("hidden_obj", !obj.VisibleByDefault),
 					}
@@ -211,6 +213,7 @@ templ SystemContents(system *export_map.System) {
 					// 	{ fmt.Sprintf("target:%s", obj.GotoSystemName) }
 					// </span>
 					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
+					@TooltipText(obj.Pos)
 				</obj->
 			</a>
 		}
@@ -223,7 +226,7 @@ templ SystemContents(system *export_map.System) {
 				data-rotate={ fmt.Sprintf("%.1f,%.1f,%.1f", obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) }
 				data-pos={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Pos.X, obj.Pos.Y, obj.Pos.Z) }
 				class={
-					"",
+					TooltipCls,
 					obj.Kind.ToNick(),
 					templ.KV("hidden_obj", !obj.VisibleByDefault && obj.Kind != export_map.ObjWreck),
 					templ.KV("hidden_wreck", obj.Kind == export_map.ObjWreck),
@@ -291,13 +294,7 @@ templ SystemContents(system *export_map.System) {
 						}
 					></div>
 				}
-				// <span class="tooltiptext">
-				// 	{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
-				// 	<br/>
-				// 	{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
-				// 	<br/>
-				// 	{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
-				// </span>
+				@TooltipText(obj.Pos)
 				if obj.Kind != export_map.ObjTradelane {
 					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
 				}
@@ -359,6 +356,18 @@ templ SystemContents(system *export_map.System) {
 			></obj->
 		}
 	</content->
+}
+
+const TooltipCls = "tooltip"
+
+templ TooltipText(Pos cfg.Vector) {
+	<span class="tooltiptext">
+		{ fmt.Sprintf("x:%.0f", Pos.X) }
+		<br/>
+		{ fmt.Sprintf("y:%.0f", Pos.Y) }
+		<br/>
+		{ fmt.Sprintf("z:%.0f", Pos.Z) }
+	</span>
 }
 
 func GetZoneClass(property_flag int) string {
