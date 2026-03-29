@@ -18,11 +18,15 @@ type Export struct {
 	Graph   SystemGraphs
 	Shapes  *utfextract.Shapes
 
+	PobsBySystemNick map[string][]*configs_export.PoB
+
 	Exp *configs_export.Exporter
 }
 
 func NewExport(ctx context.Context) *Export {
-	e := &Export{}
+	e := &Export{
+		PobsBySystemNick: make(map[string][]*configs_export.PoB),
+	}
 
 	defer timeit.NewTimer("MappedConfigs creation").Close()
 
@@ -52,7 +56,14 @@ func (e *Export) Export(ctx context.Context) {
 
 	e.Exp = configs_export.NewExporter(e.Mapped)
 
+	for _, pob := range e.Exp.GetPoBs() {
+		if pob.SystemNick == nil {
+			continue
+		}
+		e.PobsBySystemNick[*pob.SystemNick] = append(e.PobsBySystemNick[*pob.SystemNick], pob)
+	}
 	e.Systems = e.ExportSystems(e.Mapped)
 	e.Graph = e.GetSystemConnections(e.Systems)
 	e.Exp.Bases = e.Exp.GetBases(ctx)
+
 }

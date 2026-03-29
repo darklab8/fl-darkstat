@@ -5,6 +5,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
@@ -27,6 +28,7 @@ type System struct {
 	Objs      []*Obj
 	Jumpholes []*Jumphole
 	Zones     []*Zone
+	PoBs      []*Obj
 }
 
 func (s System) GetSquareScale() float64 {
@@ -77,6 +79,7 @@ const (
 	ObjTradelane
 	ObjStar
 	ObjBase
+	ObjPlayerBase
 	ObjPlanet
 	ObjWreck
 	ObjZone
@@ -90,6 +93,8 @@ func (o ObjKind) ToNick() string {
 		return "tradelane"
 	case ObjStar:
 		return "star"
+	case ObjPlayerBase:
+		return "playerbase"
 	case ObjBase:
 		return "base"
 	case ObjPlanet:
@@ -390,7 +395,6 @@ func (e *Export) EnrichSystemWithObjects(
 			Pos:      base_info.Pos.Get(),
 			Kind:     ObjBase,
 		}
-		base.Name = configs.GetInfocardName(base_info.IdsName.Get(), base.Nickname)
 
 		archetype := base_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
@@ -480,6 +484,28 @@ func (e *Export) EnrichSystemWithObjects(
 
 		if archetype == "invisible_base" {
 			base.VisibleByDefault = false
+		}
+		system_to_add.Objs = append(system_to_add.Objs, base)
+	}
+
+	for _, base_info := range e.PobsBySystemNick[system_info.Nickname] {
+
+		base := &Obj{
+			Nickname: string(base_info.Nickname),
+			Kind:     ObjPlayerBase,
+		}
+
+		if base_info.BasePos != nil {
+			base.Pos = *base_info.BasePos
+		}
+
+		base.ShapeName = "nav_depot"
+		base.Name = configs.GetInfocardName(int(flhash.HashNickname(base_info.Nickname)), base.Nickname)
+		base.Name += " 🛰️"
+		// base.Name += " ⬢╬⬢"
+
+		if base_info.BasePos != nil {
+			base.VisibleByDefault = true
 		}
 
 		system_to_add.Objs = append(system_to_add.Objs, base)
