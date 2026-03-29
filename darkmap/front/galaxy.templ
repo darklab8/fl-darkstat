@@ -30,7 +30,6 @@ func ConnectionLineStyle(sys1, sys2 *export_map.System) string {
 
 templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
 	<system-wrapper
-		hx-boost="true"
 		class={ templ.KV("hidden_system", !sys.VisibleByDefault), }
 		nickname={ sys.Nickname }
 	>

@@ -333,10 +333,15 @@ templ SystemContents(system *export_map.System) {
 					),
 					fmt.Sprintf("transform: rotate(%.1fdeg)", -obj.Rotation.Y),
 					"position: absolute",
-					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), HasThreeDimensionalSize(obj)),
-					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), HasThreeDimensionalSize(obj)),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Z), system)), HasThreeDimensionalSize(obj)),
-					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), HasThreeDimensionalSize(obj)),
+					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
+					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
+					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
+				
+					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)/2), obj.ZoneShape == "box"),
+					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)/2), obj.ZoneShape == "box"),
+					templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "box"),
+					templ.KV(fmt.Sprintf("width: %.5f%%", SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "box"),
 				
 					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
 					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
@@ -358,10 +363,6 @@ func GetZoneClass(property_flag int) string {
 		return value
 	}
 	return "noZoneType"
-}
-
-func HasThreeDimensionalSize(obj *export_map.Zone) bool {
-	return obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "box"
 }
 
 func SystemPosToPerc(position float64, system *export_map.System) float64 {
