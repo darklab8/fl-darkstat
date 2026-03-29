@@ -9,15 +9,19 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/envers"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
+
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 
 	"github.com/darklab8/go-utils/utils/cantil"
 	"github.com/darklab8/go-utils/utils/timeit"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 func DarkmapCliGroup(Args []string) {
+	urls.Index = utils_types.FilePath(settings.Env.IndexUrl)
 
 	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	parser := cantil.NewConsoleParser(

@@ -13,6 +13,7 @@ type DarkmapEnvVars struct {
 	utils_settings.UtilsEnvs
 	configs_settings.ConfEnvVars
 	SiteRoot string
+	IndexUrl string
 	Enver    *enverant.Enverant
 }
 
@@ -25,5 +26,6 @@ func init() {
 		UtilsEnvs:   utils_settings.GetEnvs(),
 		ConfEnvVars: configs_settings.GetEnvs(),
 		SiteRoot:    env.GetStr("SITE_ROOT", enverant.OrStr(*darkflag.ArgMapRoot)),
+		IndexUrl:    env.GetStr("INDEX_URL", enverant.OrStr("index.html"), enverant.WithDesc("change map index filename, but only for `map web` and `map build` commands")),
 	}
 }
