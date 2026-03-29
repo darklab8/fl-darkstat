@@ -260,7 +260,8 @@ system- {
 .base,
 .planet,
 .wreck,
-.zone {
+.zone,
+.playerbase {
     cursor: pointer;
 }
 
