@@ -1,0 +1,71 @@
+package front
+
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"html"
+	"strings"
+)
+
+func MapInfocardURL(infocard_key infocarder.InfocardKey) string {
+	return "cdn/map/infocards/info-" + strings.ToLower(string(infocard_key))
+}
+
+templ MapInfocard(info infocarder.Infocard) {
+	<div class="remodal-bg" id="remodal-bg" style="display: flex;">
+		<div
+			class="remodal infocardContainer"
+			data-remodal-id="modal"
+			data-remodal-options="hashTracking: false"
+			style="display: block;"
+		>
+			<div class="infocard">
+				for _, line := range info {
+					if strings.ReplaceAll(line.ToStr()," ", "") == "" {
+						<p><br/></p>
+					} else {
+						<p>
+							for _, phrase := range line.Phrases {
+								if phrase.Link != nil {
+									<a href={ templ.SafeURL(*phrase.Link) }>{ html.UnescapeString(phrase.Phrase) }</a>
+								} else {
+									<span class={ templ.KV("bold", phrase.Bold) }>{ html.UnescapeString(phrase.Phrase) }</span>
+								}
+							}
+						</p>
+					}
+				}
+				// originally infocards were written like this:
+				// <h2>Disabled Slave Liner</h2>
+				// <span class="infocardText">
+				// 	This liner was disabled after a long chase in
+				// 	Pennsylvania after being stopped by a local patrol. After further inspection the liner was found to be
+				// 	laden
+				// 	with illegal Rheinland black market firearms, including many biological weapons thought to be intended
+				// 	for
+				// 	use in terrorist activities.
+				// </span>
+				// <br class="infocardBreak"/>
+				// <br class="infocardBreak"/>
+				// <span
+				// 	class="infocardText"
+				// >
+				// 	The owners of the ship escaped in light ships mid pursuit and are currently on the
+				// 	run.
+				// 	In an unprecedented move, the Battleship Delaware relocated to the scene to secure the area, known to be
+				// 	frequented by various undesirables.
+				// </span>
+				// <br class="infocardBreak"/>
+				// <h3>Technical info</h3>
+				// <p class="technicalInfo">
+				// 	This object with internal nickname disrupted_pilgrim is located on the plane, and
+				// 	has
+				// 	name infocard number 532081 and infocard number 532082.
+				// </p>
+			</div>
+			<div class="scrollUpButton" onclick="CloseInfocard()">
+				<i class="fa fa-times"></i>
+				<p>Close</p>
+			</div>
+		</div>
+	</div>
+}

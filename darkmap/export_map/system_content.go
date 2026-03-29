@@ -1,6 +1,7 @@
 package export_map
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
@@ -9,8 +10,10 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -358,6 +361,7 @@ func (e *Export) EnrichSystemWithObjects(
 			stats.shape_without_images[obj.ShapeName] = true
 		}
 		obj.VisibleByDefault = true
+		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName)
 		system_to_add.Objs = append(system_to_add.Objs, obj)
 	}
 
@@ -402,6 +406,7 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		star.Name = configs.GetInfocardName(star_info.IdsName.Get(), star.Nickname)
+		e.ExportInfocard(star_info.IDsInfo, star.Nickname, star.Name, star.Pos, star_info.IdsName)
 
 		star.VisibleByDefault = true
 		system_to_add.Objs = append(system_to_add.Objs, star)
@@ -483,11 +488,9 @@ func (e *Export) EnrichSystemWithObjects(
 		if _, ok := e.Shapes.ShapesByNick[base.ShapeName]; !ok && base.ShapeName != "" {
 			stats.shape_without_images[base.ShapeName] = true
 		}
-		// TODO export infocards
-		// if ids_info, ok := base.IDsInfo.GetValue(); ok && ids_info != 0 {
-		// 	e.Exp.ExportInfocards(infocarder.InfocardKey(base_obj.Nickname), ids_info)
-		// }
+
 		base.Name = configs.GetInfocardName(base_info.IdsName.Get(), base.Nickname)
+		e.ExportInfocard(base_info.IDsInfo, base.Nickname, base.Name, base.Pos, base_info.IdsName)
 
 		// dockable := solararch.IsDockable(solararch_mapped.DockableOptions{
 		// 	IsDisco:                  e.Mapped.Discovery != nil,
@@ -584,6 +587,7 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		obj.Name = configs.GetInfocardName(wreck.IdsName.Get(), obj.Nickname)
+		e.ExportInfocard(wreck.IDsInfo, obj.Nickname, obj.Name, obj.Pos, wreck.IdsName)
 
 		obj.VisibleByDefault = true
 		system_to_add.Objs = append(system_to_add.Objs, obj)
@@ -619,7 +623,33 @@ func (e *Export) EnrichSystemWithObjects(
 		if strings.Contains(strings.ToLower(zone.Name), "object unknown") {
 			zone.Name = ""
 		}
-
+		e.ExportInfocard(zone_info.IDsInfo, zone.Nickname, zone.Name, zone.Pos, zone_info.IdsName)
 		system_to_add.Zones = append(system_to_add.Zones, zone)
 	}
+}
+
+func (e *Export) ExportInfocard(ids_info *semantic.Int, nickname string, name string, Pos cfg.Vector, ids_name *semantic.Int) {
+	var ids_info_num int
+	if ids_info, ok := ids_info.GetValue(); ok && ids_info != 0 {
+		e.Exp.ExportInfocards(infocarder.InfocardKey(nickname), e.GetFullInfocardIds(ids_info)...)
+		ids_info_num = ids_info
+	}
+
+	ids_name_num, _ := ids_name.GetValue()
+
+	var info infocarder.InfocardBuilder
+	if value, ok := e.Exp.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
+		info.Lines = value
+	}
+	var base_name_as_infocard infocarder.Infocard = []infocarder.InfocardLine{{Phrases: []infocarder.InfocardPhrase{{Bold: true, Phrase: strings.ToUpper(name)}}}}
+
+	info.WriteLineStrBold("Technical info")
+	// It belongs to Alaska Security Forces.
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("This object with internal nickname %s", nickname))
+	sb.WriteString(fmt.Sprintf(" is located on the coordinates (%.0f,%.0f,%.0f)", Pos.X, Pos.Y, Pos.Z))
+	sb.WriteString(fmt.Sprintf(" and has name infocard number %d and infocard number %d.", ids_name_num, ids_info_num))
+	info.WriteLineStr(sb.String())
+
+	e.Exp.PutInfocard(infocarder.InfocardKey(nickname), append(base_name_as_infocard, info.Lines...))
 }

@@ -26,7 +26,7 @@ func TestGetTrades(t *testing.T) {
 
 	e.Commodities = e.GetCommodities(ctx)
 
-	mining_bases := e.GetOres(ctx, e.Commodities)
+	mining_bases := e.GetOres(ctx, e.Commodities, true)
 	mining_bases_by_system := make(map[string][]trades.ExtraBase)
 	for _, base := range mining_bases {
 		mining_bases_by_system[base.SystemNickname] = append(mining_bases_by_system[base.SystemNickname], trades.ExtraBase{

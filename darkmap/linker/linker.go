@@ -12,6 +12,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front"
@@ -79,6 +80,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.MapGalaxyJS),
 		builder.NewStaticFileFromCore(static_front.MapSystemJS),
 		builder.NewStaticFileFromCore(static_front.PanzoomJS),
+		builder.NewStaticFileFromCore(static_front.RemodalCSS),
 		builder.NewStaticFileFromCore(static_front.ZonesCSS.GetTemplated(templated_zones.String())),
 	}
 
@@ -102,6 +104,19 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 			),
 		)
 	}
+
+	timeit.NewTimerMF("linking most of stuff", func() {
+		l.Export.Exp.GetInfocardsDict(func(infocards infocarder.Infocards) {
+			for nickname, infocard := range infocards {
+				build.RegComps(
+					builder.NewComponent(
+						utils_types.FilePath(front.MapInfocardURL(nickname)),
+						front.MapInfocard(infocard),
+					),
+				)
+			}
+		})
+	})
 
 	var extra_files []builder.StaticFile
 

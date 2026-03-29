@@ -86,3 +86,12 @@ var ZonesCSS = core_types.StaticFile{
 	Filename: "map_template.css",
 	Kind:     core_types.StaticFileCSS,
 }
+
+//go:embed remodal.css
+var RemodalCSSContent string
+
+var RemodalCSS = core_types.StaticFile{
+	Content:  RemodalCSSContent,
+	Filename: "remodal.css",
+	Kind:     core_types.StaticFileCSS,
+}

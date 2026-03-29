@@ -132,6 +132,7 @@ type TradeLaneRing struct {
 
 	Archetype *semantic.String
 	IdsName   *semantic.Int
+	IDsInfo   *semantic.Int
 
 	// has next_ring, then it is tradelane
 	// or if has Trade_Lane_Ring, then trade lane too.
@@ -184,6 +185,7 @@ type Star struct {
 	Archetype *semantic.String
 	Pos       *semantic.Vect
 	IdsName   *semantic.Int
+	IDsInfo   *semantic.Int
 
 	AtmosphereRange *semantic.Int
 	BurnColor       *semantic.Vect
@@ -196,6 +198,7 @@ type Wreck struct {
 	Archetype *semantic.String
 	Pos       *semantic.Vect
 	IdsName   *semantic.Int
+	IDsInfo   *semantic.Int
 }
 
 type Asteroids struct {
@@ -514,6 +517,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Star:      semantic.NewString(obj, cfg.Key("star"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
+							IDsInfo:   semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
 
 							BurnColor:       semantic.NewVector(obj, cfg.Key("burn_color"), semantic.Precision(0)),
 							AtmosphereRange: semantic.NewInt(obj, cfg.Key("atmosphere_range"), semantic.Optional()),
@@ -529,6 +533,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							Loadout:   semantic.NewString(obj, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
 							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
+							IDsInfo:   semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
 						}
 
 						system_to_add.Wrecks = append(system_to_add.Wrecks, wreck)
@@ -545,6 +550,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							PrevRing:  semantic.NewString(obj, cfg.Key("prev_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
+							IDsInfo:   semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
 						}
 
 						system_to_add.Tradelanes = append(system_to_add.Tradelanes, tradelane)

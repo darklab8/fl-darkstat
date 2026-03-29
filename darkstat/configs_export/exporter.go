@@ -173,7 +173,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 
 	e.Commodities = e.GetCommodities(ctx)
 	EnhanceBasesWithServerOverrides(e.Bases, e.Commodities)
-	e.MiningOperations = e.GetOres(ctx, e.Commodities)
+	e.MiningOperations = e.GetOres(ctx, e.Commodities, true)
 	if e.Mapped.Discovery != nil {
 		e.PoBs = e.GetPoBs()
 		e.PoBGoods = e.GetPoBGoods(e.PoBs)

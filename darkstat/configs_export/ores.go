@@ -28,7 +28,7 @@ type MiningInfo struct {
 	NuAsteroidsTotal      int
 }
 
-func (e *Exporter) GetOres(ctx context.Context, Commodities []*Commodity) []*Base {
+func (e *Exporter) GetOres(ctx context.Context, Commodities []*Commodity, enrich_infocards bool) []*Base {
 	ctx, span := traces.Tracer.Start(ctx, "Exporter.GetOres")
 	defer span.End()
 	var bases []*Base
@@ -75,7 +75,7 @@ func (e *Exporter) GetOres(ctx context.Context, Commodities []*Commodity) []*Bas
 					comm_by_nick:  comm_by_nick,
 					asteroids:     asteroids,
 					zone:          zone,
-				},
+				}, enrich_infocards,
 			))
 
 		}
@@ -139,7 +139,7 @@ func (e *Exporter) GetOres(ctx context.Context, Commodities []*Commodity) []*Bas
 										NuAsteroidsCount: nu_asteroids_count,
 										NuAsteroidsTotal: nu_asteroids_total,
 									},
-								},
+								}, enrich_infocards,
 							))
 						}
 					}
@@ -174,7 +174,7 @@ type NewOreBaseInput struct {
 	disco_mining_system *DiscoMiningSystem
 }
 
-func (e *Exporter) NewOreBase(input_data NewOreBaseInput) *Base {
+func (e *Exporter) NewOreBase(input_data NewOreBaseInput, enrich_infocard bool) *Base {
 	var added_goods map[string]bool = make(map[string]bool)
 	base := &Base{
 		MiningInfo:         &MiningInfo{},
@@ -309,55 +309,57 @@ func (e *Exporter) NewOreBase(input_data NewOreBaseInput) *Base {
 		}
 	}
 
-	var sb infocarder.InfocardBuilder
-	sb.WriteLineStr(base.Name)
-	sb.WriteLineStr((`This is is not a base.
+	if enrich_infocard {
+		var sb infocarder.InfocardBuilder
+		sb.WriteLineStr(base.Name)
+		sb.WriteLineStr((`This is is not a base.
 It is a mining field with droppable ores`))
-	sb.WriteLineStr((""))
-	sb.WriteLineStr(("Trade routes shown do not account for a time it takes to mine those ores."))
+		sb.WriteLineStr((""))
+		sb.WriteLineStr(("Trade routes shown do not account for a time it takes to mine those ores."))
 
-	if e.Mapped.Discovery != nil {
-		sb.WriteLineStr("")
-		sb.WriteLine(infocarder.InfocardPhrase{Link: ptr.Ptr("https://discoverygc.com/wiki2/Mining"), Phrase: "Check mining tutorial"}, infocarder.InfocardPhrase{Phrase: " to see how they can be mined"})
+		if e.Mapped.Discovery != nil {
+			sb.WriteLineStr("")
+			sb.WriteLine(infocarder.InfocardPhrase{Link: ptr.Ptr("https://discoverygc.com/wiki2/Mining"), Phrase: "Check mining tutorial"}, infocarder.InfocardPhrase{Phrase: " to see how they can be mined"})
 
-		sb.WriteLineStr("")
-		sb.WriteLineStr(`NOTE:
+			sb.WriteLineStr("")
+			sb.WriteLineStr(`NOTE:
 for Freelancer Discovery we also add possible sub products of refinery at player bases to possible trade routes from mining field.
 				`)
-	}
-
-	sb.WriteLineStr("")
-	sb.WriteLineStr("commodities:")
-	for _, good := range base.MarketGoodsPerNick {
-		if good.Nickname == base.MinedGood.Nickname {
-			sb.WriteLineStr(fmt.Sprintf("Minable: %s (%s)", good.Name, good.Nickname))
-		} else {
-			sb.WriteLineStr(fmt.Sprintf("Refined at POB: %s (%s)", good.Name, good.Nickname))
 		}
-	}
-	sb.WriteLineStr("")
 
-	var infocard_addition infocarder.InfocardBuilder
-	if e.Mapped.Discovery != nil {
-		if player_bonuses, ok := e.Mapped.Discovery.Minecontrol.PlayerBonusByOreNickname[base.MinedGood.Nickname]; ok {
-			infocard_addition.WriteLineStr(`MINING BONUSES (darkstat):`)
-			for _, player_bonus := range player_bonuses {
-				id_nickname := player_bonus.IDNickname.Get()
-				id_name := id_nickname
-				if tractor, ok := e.Mapped.Equip().TractorsMap[id_nickname]; ok {
-					if name_id, ok := tractor.IdsName.GetValue(); ok {
-						id_name = e.GetInfocardName(name_id, string(id_nickname))
-					}
-				}
-				infocard_addition.WriteLineStr(id_name, "= ", strconv.FormatFloat(player_bonus.Bonus.Get(), 'f', 2, 64))
+		sb.WriteLineStr("")
+		sb.WriteLineStr("commodities:")
+		for _, good := range base.MarketGoodsPerNick {
+			if good.Nickname == base.MinedGood.Nickname {
+				sb.WriteLineStr(fmt.Sprintf("Minable: %s (%s)", good.Name, good.Nickname))
+			} else {
+				sb.WriteLineStr(fmt.Sprintf("Refined at POB: %s (%s)", good.Name, good.Nickname))
 			}
-			infocard_addition.WriteLineStr("")
 		}
-	}
+		sb.WriteLineStr("")
 
-	e.PutInfocard(infocarder.InfocardKey(base.Nickname), append(sb.Lines, infocard_addition.Lines...))
-	if input_data.zone != nil {
-		e.WriteConfigToInfocard(&input_data.zone.Model, string(base.Nickname))
+		var infocard_addition infocarder.InfocardBuilder
+		if e.Mapped.Discovery != nil {
+			if player_bonuses, ok := e.Mapped.Discovery.Minecontrol.PlayerBonusByOreNickname[base.MinedGood.Nickname]; ok {
+				infocard_addition.WriteLineStr(`MINING BONUSES (darkstat):`)
+				for _, player_bonus := range player_bonuses {
+					id_nickname := player_bonus.IDNickname.Get()
+					id_name := id_nickname
+					if tractor, ok := e.Mapped.Equip().TractorsMap[id_nickname]; ok {
+						if name_id, ok := tractor.IdsName.GetValue(); ok {
+							id_name = e.GetInfocardName(name_id, string(id_nickname))
+						}
+					}
+					infocard_addition.WriteLineStr(id_name, "= ", strconv.FormatFloat(player_bonus.Bonus.Get(), 'f', 2, 64))
+				}
+				infocard_addition.WriteLineStr("")
+			}
+		}
+
+		e.PutInfocard(infocarder.InfocardKey(base.Nickname), append(sb.Lines, infocard_addition.Lines...))
+		if input_data.zone != nil {
+			e.WriteConfigToInfocard(&input_data.zone.Model, string(base.Nickname))
+		}
 	}
 
 	return base

@@ -84,9 +84,7 @@ func (e *Exporter) GetBases(ctx context.Context) []*Base {
 		}
 
 		var infocard_ids []int = make([]int, 0)
-
 		infocard_ids = append(infocard_ids, infocard_id)
-
 		if infocard_middle_id, exists := e.Mapped.InfocardmapINI.InfocardMapTable.Map[infocard_id]; exists {
 			infocard_ids = append(infocard_ids, infocard_middle_id)
 		}

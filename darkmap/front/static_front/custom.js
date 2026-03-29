@@ -173,3 +173,7 @@ function InstallLabelOverlapper() {
     objectTerritorialConflictResolver(labels);
 }
 /* anti-overlap code end */
+
+function CloseInfocard() {
+    document.querySelector("#remodal-bg").style.display = "none";
+}

@@ -76,3 +76,112 @@
 }
 
 /* cylinderZone, boxZone, nothing?*/
+
+/* INFOCARD STUFF START */
+
+.infocardContainer {
+    text-align: center;
+    color: white;
+    font-family: var(--font-family);
+    border: 0.2em solid rgb(30, 166, 197);
+    box-shadow: 0em 0em 0.5em 0em rgb(30, 166, 197);
+    z-index: 1;
+    /* was z-index 0 */
+    background: url("{{.StaticRoot}}nnwall.jpg") black;
+    border-radius: 0.5em;
+}
+
+.infocardContainer {
+    max-width: 45em;
+    width: auto !important;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 1.5em !important;
+    margin: 0 !important;
+    transform: none !important;
+    position: relative;
+}
+
+.infocardContainer * {
+    text-align: center;
+    margin: 0 auto;
+    width: auto;
+    padding: 0.25em;
+}
+
+.infocardContainer h2 {
+    width: auto;
+}
+
+
+@media (min-width: 65em) {
+    body.responsive .infocardContainer span.infocardText {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.scrollUpButton {
+    background: rgba(0, 0, 0, 0.4);
+    margin: 0.35em;
+    border-radius: 0.5em;
+    border: 0.15em solid rgb(30, 166, 197);
+}
+
+.scrollUpButton {
+    cursor: pointer;
+}
+
+.scrollUpButton:hover {
+    color: rgb(255, 167, 6);
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.remodal-bg {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+@media only screen and (min-width: 641px) {
+    .remodal {
+        max-width: 700px;
+    }
+}
+
+.remodal,
+.remodal-wrapper:after {
+    vertical-align: middle;
+}
+
+.remodal {
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 0.75em;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.remodal {
+    position: relative;
+    outline: none;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+.remodal,
+[data-remodal-id] {
+    display: none;
+}
+
+/* INFOCARD STUFF END */
