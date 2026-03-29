@@ -218,6 +218,9 @@ templ SystemContents(system *export_map.System) {
 			// to be fair inner shadow does not work according to expectations. at least the star_glow one i think
 			<obj-
 				data-nickname={ obj.Nickname }
+				data-shape={ obj.ShapeName }
+				data-rotate={ fmt.Sprintf("%.1f,%.1f,%.1f", obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) }
+				data-pos={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Pos.X, obj.Pos.Y, obj.Pos.Z) }
 				class={
 					"",
 					obj.Kind.ToNick(),
@@ -229,11 +232,11 @@ templ SystemContents(system *export_map.System) {
 						SystemPosToPerc(obj.Pos.Z, system),
 						SystemPosToPerc(obj.Pos.X, system),
 					),
-					templ.KV(fmt.Sprintf("transform: rotate(-%1.fdeg)", obj.Rotation.Y), obj.Kind == export_map.ObjTradelane),
+					templ.KV(fmt.Sprintf("transform: rotate(%1.fdeg)", -obj.Rotation.Y), obj.Kind == export_map.ObjTradelane),
 					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
 					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
-					templ.KV(fmt.Sprintf("margin-top: -%.5f%%", SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
-					templ.KV(fmt.Sprintf("margin-left: -%.5f%%", SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
+					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
+					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
 					templ.KV(fmt.Sprintf("background-color: rgb(%d %d %d)",
 						int(obj.Star.StarCenter.InnerColor.X*255),
 						int(obj.Star.StarCenter.InnerColor.Y*255),
@@ -241,8 +244,8 @@ templ SystemContents(system *export_map.System) {
 					), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("margin-top: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("margin-left: -%.5f%%", SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf(
 						"box-shadow: inset 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.9), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.8), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.4);",
 						obj.Star.StarCenter.Scale-1,
@@ -279,8 +282,8 @@ templ SystemContents(system *export_map.System) {
 						style={
 							"top: 50%",
 							"left: 50%",
-							fmt.Sprintf("margin-top: -%.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
-							fmt.Sprintf("margin-left: -%.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
+							fmt.Sprintf("margin-top: %.5f%%", -100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
+							fmt.Sprintf("margin-left: %.5f%%", -100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
 							"position: absolute",
 							fmt.Sprintf("width: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
 							fmt.Sprintf("height: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
@@ -299,16 +302,75 @@ templ SystemContents(system *export_map.System) {
 				}
 			</obj->
 		}
+		for _, obj := range system.Zones {
+			// can be sphere, ellipsoid, cylinder, box, ring
+			<obj-
+				data-nickname={ obj.Nickname }
+				data-shape={ obj.ZoneShape }
+				data-rotate={ fmt.Sprintf("%.1f,%.1f,%.1f", obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) }
+				data-size={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Size.X, obj.Size.Y, obj.Size.Z) }
+				data-pos={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Pos.X, obj.Pos.Y, obj.Pos.Z) }
+				class={
+					"zone",
+					GetZoneClass(obj.PropertyFlags),
+					templ.KV("roundZone", obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "sphere"),
+					templ.KV("cylinderZone", obj.ZoneShape == "cylinder"),
+					templ.KV("boxZone", obj.ZoneShape == "box"),
+				}
+				style={
+					templ.KV(fmt.Sprintf(
+						"background-color: rgba(%.0f,%.0f,%.0f,0.45)",
+						obj.PropertyFogColor.X,
+						obj.PropertyFogColor.Y,
+						obj.PropertyFogColor.Z),
+						obj.PropertyFogColorEnabled,
+					),
+					// fmt.Sprintf("z-index: %d", zone_index+10),
+					fmt.Sprintf("z-index: %d", -int(obj.Size.X/1000.0*obj.Size.Z/1000.0)),
+					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+						SystemPosToPerc(obj.Pos.Z, system),
+						SystemPosToPerc(obj.Pos.X, system),
+					),
+					fmt.Sprintf("transform: rotate(%.1fdeg)", -obj.Rotation.Y),
+					"position: absolute",
+					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), HasThreeDimensionalSize(obj)),
+					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), HasThreeDimensionalSize(obj)),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Z), system)), HasThreeDimensionalSize(obj)),
+					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), HasThreeDimensionalSize(obj)),
+				
+					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
+					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
+					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
+				
+					templ.KV(fmt.Sprintf("margin-top: %.5f%%", SizeInPerc(float64(obj.Size.Y), system)), obj.ZoneShape == "cylinder"),
+					templ.KV(fmt.Sprintf("margin-left: %.5f%%", SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Y), system)), obj.ZoneShape == "cylinder"),
+					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
+				}
+			></obj->
+		}
 	</content->
+}
+
+func GetZoneClass(property_flag int) string {
+	if value, ok := export_map.ZoneFlagMap[property_flag]; ok {
+		return value
+	}
+	return "noZoneType"
+}
+
+func HasThreeDimensionalSize(obj *export_map.Zone) bool {
+	return obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "box"
 }
 
 func SystemPosToPerc(position float64, system *export_map.System) float64 {
 	// divide by cell size
 	// shift to +4 cells forward because our coordinate center from corner and not from center
 	// divide by amount of cells total and move to percentage
-	return 100 * (position/(system.GetSquareScale()*1000) + 4) / 8
+	return 100 * (position/(system.GetSquareScale()*1000.0) + 4) / 8
 }
 
 func SizeInPerc(size float64, system *export_map.System) float64 {
-	return 100 * (size / (system.GetSquareScale() * 1000)) / 8
+	return 100 * (size / (system.GetSquareScale() * 1000.0)) / 8
 }

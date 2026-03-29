@@ -243,14 +243,14 @@ system- {
 
 .jumphole,
 .base {
-    z-index: 10;
+    z-index: 100;
 }
 
 .tradelane,
 .star,
 .planet,
 .wreck {
-    z-index: 9;
+    z-index: 99;
 }
 
 .jumphole img,

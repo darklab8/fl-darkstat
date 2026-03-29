@@ -1,9 +1,11 @@
 package linker
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
+	"html/template"
 	"strings"
 	"time"
 
@@ -58,6 +60,12 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		Timestamp:         time.Now().UTC(),
 	}
 
+	tmpl, err := template.New("zones").Parse(static_front.ZonesCSS.Content)
+	logus.Log.CheckPanic(err, "failed to parse zones css")
+	var templated_zones bytes.Buffer
+	err = tmpl.Execute(&templated_zones, params)
+	logus.Log.CheckPanic(err, "failed to template zones css")
+
 	files := []builder.StaticFile{
 		builder.NewStaticFileFromCore(core_static.HtmxJS),
 		builder.NewStaticFileFromCore(core_static.HtmxPreloadJS),
@@ -71,6 +79,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.MapGalaxyJS),
 		builder.NewStaticFileFromCore(static_front.MapSystemJS),
 		builder.NewStaticFileFromCore(static_front.PanzoomJS),
+		builder.NewStaticFileFromCore(static_front.ZonesCSS.GetTemplated(templated_zones.String())),
 	}
 
 	for _, file := range static.StaticFilesystem.Files {

@@ -29,6 +29,11 @@ type StaticFile struct {
 	Kind     StaticFileKind
 }
 
+func (s StaticFile) GetTemplated(templated string) StaticFile {
+	s.Content = templated
+	return s
+}
+
 type GlobalParamsI interface {
 	GetStaticRoot() string
 }
