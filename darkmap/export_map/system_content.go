@@ -80,6 +80,7 @@ const (
 	ObjStar
 	ObjBase
 	ObjPlayerBase
+	ObjMining
 	ObjPlanet
 	ObjWreck
 	ObjZone
@@ -95,6 +96,8 @@ func (o ObjKind) ToNick() string {
 		return "star"
 	case ObjPlayerBase:
 		return "playerbase"
+	case ObjMining:
+		return "mining"
 	case ObjBase:
 		return "base"
 	case ObjPlanet:
@@ -505,6 +508,24 @@ func (e *Export) EnrichSystemWithObjects(
 		// base.Name += " ⬢╬⬢"
 
 		if base_info.BasePos != nil {
+			base.VisibleByDefault = true
+		}
+
+		system_to_add.Objs = append(system_to_add.Objs, base)
+	}
+	for _, base_info := range e.MiningBySystemNick[system_info.Nickname] {
+
+		base := &Obj{
+			Nickname: string(base_info.Nickname),
+			Kind:     ObjMining,
+			Pos:      base_info.Pos,
+		}
+
+		base.ShapeName = "nav_minablezonefilter"
+		base.Name = base_info.Name
+		base.Name += " ⛏️"
+
+		if _, ok := e.MiningUsefulByNick[string(base.Nickname)]; ok {
 			base.VisibleByDefault = true
 		}
 

@@ -18,14 +18,18 @@ type Export struct {
 	Graph   SystemGraphs
 	Shapes  *utfextract.Shapes
 
-	PobsBySystemNick map[string][]*configs_export.PoB
+	PobsBySystemNick   map[string][]*configs_export.PoB
+	MiningBySystemNick map[string][]*configs_export.Base
+	MiningUsefulByNick map[string]bool
 
 	Exp *configs_export.Exporter
 }
 
 func NewExport(ctx context.Context) *Export {
 	e := &Export{
-		PobsBySystemNick: make(map[string][]*configs_export.PoB),
+		PobsBySystemNick:   make(map[string][]*configs_export.PoB),
+		MiningBySystemNick: make(map[string][]*configs_export.Base),
+		MiningUsefulByNick: make(map[string]bool),
 	}
 
 	defer timeit.NewTimer("MappedConfigs creation").Close()
@@ -62,6 +66,16 @@ func (e *Export) Export(ctx context.Context) {
 		}
 		e.PobsBySystemNick[*pob.SystemNick] = append(e.PobsBySystemNick[*pob.SystemNick], pob)
 	}
+
+	MiningOperations := e.Exp.GetOres(ctx, []*configs_export.Commodity{})
+	for _, mine := range MiningOperations {
+		e.MiningBySystemNick[mine.SystemNickname] = append(e.MiningBySystemNick[mine.SystemNickname], mine)
+	}
+	useful_mining_operations := configs_export.FitlerToUsefulOres(MiningOperations)
+	for _, mine := range useful_mining_operations {
+		e.MiningUsefulByNick[string(mine.Nickname)] = true
+	}
+
 	e.Systems = e.ExportSystems(e.Mapped)
 	e.Graph = e.GetSystemConnections(e.Systems)
 	e.Exp.Bases = e.Exp.GetBases(ctx)

@@ -12,6 +12,7 @@ html {
 
 :root {
     --playerbase_color: #f8f3bc;
+    --mining_color: #ac9483;
 }
 
 background- {
@@ -202,6 +203,14 @@ system- {
     background: var(--playerbase_color);
 }
 
+.zoomedOut .mining {
+    height: 0.25em;
+    width: 0.25em;
+    margin-top: -0.125em;
+    margin-left: -0.125em;
+    background: var(--mining_color);
+}
+
 .star {
     position: absolute;
     border-color: white;
@@ -219,6 +228,16 @@ system- {
 }
 
 .playerbase {
+    position: absolute;
+    border-color: white;
+
+    height: 0.75em;
+    width: 0.75em;
+    margin-top: -0.375em;
+    margin-left: -0.375em;
+}
+
+.mining {
     position: absolute;
     border-color: white;
 
@@ -261,13 +280,15 @@ system- {
 .planet,
 .wreck,
 .zone,
-.playerbase {
+.playerbase,
+.mining {
     cursor: pointer;
 }
 
 .jumphole,
 .base,
-.playerbase {
+.playerbase,
+.mining {
     z-index: 100;
 }
 
@@ -283,7 +304,8 @@ system- {
 .base img,
 .planet img,
 .wreck img,
-.playerbase img {
+.playerbase img,
+.mining img {
     width: 100%;
     height: 100%;
 }
@@ -299,7 +321,8 @@ system-:hover,
 .playerbase:hover,
 .planet:hover,
 .wreck:hover,
-.zone:hover {
+.zone:hover,
+.mining:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
     color: rgb(255, 167, 6);
 }
@@ -310,6 +333,7 @@ system-:hover system-label,
 .star:hover system-label,
 .base:hover system-label,
 .playerbase:hover system-label,
+.mining:hover system-label,
 .planet:hover system-label,
 .wreck:hover system-label,
 .zone:hover system-label {
@@ -319,6 +343,10 @@ system-:hover system-label,
 
 .playerbase system-label {
     color: var(--playerbase_color);
+}
+
+.mining system-label {
+    color: var(--mining_color);
 }
 
 .atmosphere {
