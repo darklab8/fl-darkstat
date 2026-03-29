@@ -143,6 +143,9 @@ templ GalaxyGrid(menu_kind MenuKind) {
 					@MultiLineOption([]string{"Hide Zones"})
 				</div>
 				<div class="top">
+					@MultiLineOption([]string{"Hover coords"})
+				</div>
+				<div class="top">
 					@MultiLineOption([]string{"To Galaxy"})
 				</div>
 				// <input type="checkbox" id="checkbox_systems" name="systems" value="systems"/>
@@ -161,6 +164,9 @@ templ GalaxyGrid(menu_kind MenuKind) {
 				</div>
 				<div class="bottom">
 					@ToggleSwitch("checkbox_zones")
+				</div>
+				<div class="bottom">
+					@ToggleSwitch("checkbox_coords")
 				</div>
 				<div>
 					if menu_kind == MenuKindGalaxy {

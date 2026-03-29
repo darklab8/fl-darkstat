@@ -56,6 +56,7 @@ function InstallMenu() {
 
     InstallButton("checkbox_zones", "unhidden_zone", "hidden_zone");
 
+    InstallButton("checkbox_coords", "hidden_coords", "unhidden_coords");
 }
 
 var zoomInTreshold = 1.25;

@@ -69,7 +69,8 @@
 .hidden_label,
 .hidden_obj,
 .hidden_wreck,
-.hidden_zone {
+.hidden_zone,
+.hidden_coords {
     display: none;
 }
 

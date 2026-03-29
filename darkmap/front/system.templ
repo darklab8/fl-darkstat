@@ -361,7 +361,7 @@ templ SystemContents(system *export_map.System) {
 const TooltipCls = "tooltip"
 
 templ TooltipText(Pos cfg.Vector) {
-	<span class="tooltiptext">
+	<span class="tooltiptext hidden_coords">
 		{ fmt.Sprintf("x:%.0f", Pos.X) }
 		<br/>
 		{ fmt.Sprintf("y:%.0f", Pos.Y) }
