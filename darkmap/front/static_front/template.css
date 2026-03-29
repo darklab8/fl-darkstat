@@ -18,7 +18,8 @@
 .zone.zoneDresdenFog,
 .zone.zoneLeedsSmog,
 .zone.zoneChugokuCloud,
-.zone.undefined {
+.zone.undefined,
+.zone.noZoneType {
     background-image: url("{{.StaticRoot}}textures/snow.png");
     background-size: 5em 5em;
 }

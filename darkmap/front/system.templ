@@ -302,7 +302,7 @@ templ SystemContents(system *export_map.System) {
 				}
 			</obj->
 		}
-		for zone_index, obj := range system.Zones {
+		for _, obj := range system.Zones {
 			// can be sphere, ellipsoid, cylinder, box, ring
 			<obj-
 				data-nickname={ obj.Nickname }
@@ -312,13 +312,21 @@ templ SystemContents(system *export_map.System) {
 				data-pos={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Pos.X, obj.Pos.Y, obj.Pos.Z) }
 				class={
 					"zone",
-					export_map.ZoneFlagMap[obj.PropertyFlags],
+					GetZoneClass(obj.PropertyFlags),
 					templ.KV("roundZone", obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "sphere"),
 					templ.KV("cylinderZone", obj.ZoneShape == "cylinder"),
 					templ.KV("boxZone", obj.ZoneShape == "box"),
 				}
 				style={
-					fmt.Sprintf("z-index: %d", zone_index+10),
+					templ.KV(fmt.Sprintf(
+						"background-color: rgba(%.0f,%.0f,%.0f,0.45)",
+						obj.PropertyFogColor.X,
+						obj.PropertyFogColor.Y,
+						obj.PropertyFogColor.Z),
+						obj.PropertyFogColorEnabled,
+					),
+					// fmt.Sprintf("z-index: %d", zone_index+10),
+					fmt.Sprintf("z-index: %d", -int(obj.Size.X/1000.0*obj.Size.Z/1000.0)),
 					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
 						SystemPosToPerc(obj.Pos.Z, system),
 						SystemPosToPerc(obj.Pos.X, system),
@@ -343,6 +351,13 @@ templ SystemContents(system *export_map.System) {
 			></obj->
 		}
 	</content->
+}
+
+func GetZoneClass(property_flag int) string {
+	if value, ok := export_map.ZoneFlagMap[property_flag]; ok {
+		return value
+	}
+	return "noZoneType"
 }
 
 func HasThreeDimensionalSize(obj *export_map.Zone) bool {

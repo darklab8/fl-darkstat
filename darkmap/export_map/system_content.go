@@ -49,9 +49,11 @@ type Obj struct {
 
 type Zone struct {
 	Obj
-	PropertyFlags int
-	ZoneShape     string
-	Size          cfg.Vector
+	PropertyFlags           int
+	ZoneShape               string
+	Size                    cfg.Vector
+	PropertyFogColor        cfg.Vector
+	PropertyFogColorEnabled bool
 }
 
 type Star struct {
@@ -528,6 +530,8 @@ func (e *Export) EnrichSystemWithObjects(
 		zone.Size.X, _ = zone_info.SizeX.GetValue()
 		zone.Size.Y, _ = zone_info.SizeY.GetValue()
 		zone.Size.Z, _ = zone_info.SizeZ.GetValue()
+
+		zone.PropertyFogColor, zone.PropertyFogColorEnabled = zone_info.PropertyFogColor.GetValue()
 
 		zone.Pos, _ = zone_info.Pos.GetValue()
 
