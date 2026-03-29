@@ -47,8 +47,9 @@ type DarkstatEnvVars struct {
 
 	IsStaticSiteGenerator bool
 
-	IsMapOn bool
-	Enver   *enverant.Enverant
+	IsMapOn  bool
+	MapByUrl string
+	Enver    *enverant.Enverant
 }
 
 func IsApiActive() bool {
@@ -92,7 +93,8 @@ func init() {
 		TradeRoutesBestTwoWaysLimitPobs: env.GetIntOr("TRADE_ROUTES_BEST_TWO_WAY_LIMIT_POBS", 99, enverant.WithDesc("Limit amount of pobs participating in 2 way routes")),
 		TradeRoutesBestDisableLiners:    env.GetBoolOr("TRADE_ROUTES_DISABLE_LINERS", false, enverant.WithDesc("")),
 
-		IsMapOn: env.GetBoolOr("MAP_ON", *darkflag.IsMapEnabled, enverant.WithDesc("enabled map as part of darkstat. PERFORMANCE HEAVY. by default off. use `map web` if u wish to turn it on faster")),
+		IsMapOn:  env.GetBoolOr("MAP_ON", *darkflag.IsMapEnabled, enverant.WithDesc("enabled map as part of darkstat. PERFORMANCE HEAVY. by default off. use `map web` if u wish to turn it on faster")),
+		MapByUrl: env.GetStrOr("MAP_BY_URL", "", enverant.WithDesc("If there is deployment of darkmap, or any other map, link here its url")),
 	}
 
 	if !Env.TradeDealsEnabled {
