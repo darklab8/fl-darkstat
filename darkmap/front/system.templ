@@ -26,6 +26,7 @@ templ System(system *export_map.System) {
                     width: 100%;
                     height: 100%;
                     color: #fff;
+					pointer-events: none;
                 }
                 .grid .hzGridLine {
                     height: 0.1em;
@@ -334,6 +335,7 @@ templ SystemContents(system *export_map.System) {
 					),
 					fmt.Sprintf("transform: rotate(%.1fdeg)", -obj.Rotation.Y),
 					"position: absolute",
+					templ.KV("pointer-events: none", obj.Name == ""),
 					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
 					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
 					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),

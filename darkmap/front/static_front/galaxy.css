@@ -237,7 +237,8 @@ system- {
 .star,
 .base,
 .planet,
-.wreck {
+.wreck,
+.zone {
     cursor: pointer;
 }
 
@@ -271,7 +272,8 @@ system-:hover,
 .star:hover,
 .base:hover,
 .planet:hover,
-.wreck:hover {
+.wreck:hover,
+.zone:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
     color: rgb(255, 167, 6);
 }
@@ -282,7 +284,8 @@ system-:hover system-label,
 .star:hover system-label,
 .base:hover system-label,
 .planet:hover system-label,
-.wreck:hover system-label {
+.wreck:hover system-label,
+.zone:hover system-label {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
     color: rgb(255, 167, 6);
 }

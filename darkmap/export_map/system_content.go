@@ -552,6 +552,11 @@ func (e *Export) EnrichSystemWithObjects(
 			continue
 		}
 
+		zone.Name = configs.GetInfocardName(zone_info.IdsName.Get(), zone.Nickname)
+		if strings.Contains(strings.ToLower(zone.Name), "object unknown") {
+			zone.Name = ""
+		}
+
 		system_to_add.Zones = append(system_to_add.Zones, zone)
 	}
 }
