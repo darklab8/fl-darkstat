@@ -233,6 +233,10 @@ func (e *Export) EnrichSystemWithObjects(
 			if IsPlanetByShape(shape_name) {
 				all_bases[base.Nickname.Get()] = base
 			}
+		} else { // if ok
+			if shape_name == "nav_blackholehazard" { // permit fisher blackhole
+				all_bases[base.Nickname.Get()] = base
+			}
 		}
 	}
 
@@ -419,6 +423,11 @@ func (e *Export) EnrichSystemWithObjects(
 
 			if shape_name == "indust" { // disco hardcoded fix
 				shape_name = "earthlike"
+			}
+		} else { // if shape found
+			if shape_name == "nav_blackholehazard" { // permit fisher blackhole
+				base.Kind = ObjPlanet
+				base.PlanetSolarRadius = solararch.SolarRadius.Get()
 			}
 		}
 		if strings.Contains(archetype, "docking_fixture") {
