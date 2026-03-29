@@ -53,6 +53,9 @@ function InstallMenu() {
     InstallButton("checkbox_wrecks", "hidden_wreck", "unhidden_wreck");
 
     InstallButton("checkbox_objects", "hidden_obj", "unhidden_obj");
+
+    InstallButton("checkbox_zones", "unhidden_zone", "hidden_zone");
+
 }
 
 var zoomInTreshold = 1.25;

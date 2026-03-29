@@ -66,8 +66,9 @@
 .hidden_system,
 .hidden_label,
 .hidden_obj,
-.hidden_wreck {
-    visibility: hidden;
+.hidden_wreck,
+.hidden_zone {
+    display: none;
 }
 
 

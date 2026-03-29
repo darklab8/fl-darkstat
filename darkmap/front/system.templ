@@ -312,6 +312,7 @@ templ SystemContents(system *export_map.System) {
 				data-pos={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Pos.X, obj.Pos.Y, obj.Pos.Z) }
 				class={
 					"zone",
+					"unhidden_zone",
 					GetZoneClass(obj.PropertyFlags),
 					templ.KV("roundZone", obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "sphere"),
 					templ.KV("cylinderZone", obj.ZoneShape == "cylinder"),
