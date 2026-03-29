@@ -203,7 +203,8 @@ system- {
     background: var(--playerbase_color);
 }
 
-.zoomedOut .mining {
+.zoomedOut .mining,
+.zoomedIn .mining {
     height: 0.25em;
     width: 0.25em;
     margin-top: -0.125em;

@@ -503,6 +503,7 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		base.ShapeName = "nav_depot"
+		e.Shapes.PermittedShapes[base.ShapeName] = true
 		base.Name = configs.GetInfocardName(int(flhash.HashNickname(base_info.Nickname)), base.Nickname)
 		base.Name += " 🛰️"
 		// base.Name += " ⬢╬⬢"
@@ -521,7 +522,6 @@ func (e *Export) EnrichSystemWithObjects(
 			Pos:      base_info.Pos,
 		}
 
-		base.ShapeName = "nav_minablezonefilter"
 		base.Name = base_info.Name
 		base.Name += " ⛏️"
 
