@@ -59,6 +59,7 @@ runs:
       env:
         DARKSTAT_SITE_HOST: ${{ inputs.site-host }}
         DARKSTAT_SITE_ROOT: ${{ inputs.site-root }}
+        DARKMAP_SITE_ROOT: ${{ inputs.site-root }}
         CONFIGS_FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
         DARKSTAT_FLDARKSTAT_HEADING: ${{ inputs.heading }}
         DARKSTAT_RELAY_HOST: ${{ inputs.relay-host }}
