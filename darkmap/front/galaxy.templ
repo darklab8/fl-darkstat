@@ -73,7 +73,7 @@ templ GalalaxyMap(data *export_map.Export) {
 	<centeralizer->
 		// Systems rendered as before
 		for _, sys := range data.Systems {
-			@GalaxySystem(sys, GetSystemFac(sys))
+			@GalaxySystem(sys, GetSystemFac(sys, data.Exp.IsDiscovery))
 		}
 		<system-title>Sirius</system-title>
 		// One SVG overlay covering the full map, lines use % coordinates
@@ -266,11 +266,27 @@ const (
 	FacDeepOmega
 )
 
-func GetSystemFac(sys *export_map.System) SystemFaction {
+var DiscoSystemOverrides = map[string]SystemFaction{
+	"br05": FacIndependent,
+	"rh05": FacOmega,
+	"li17": FacIndependent,
+	"br06": FacTau,
+	"ga08": FacIndependent,
+	"ku06": FacIndependent,
+	"ku07": FacKusari,
+}
+
+func GetSystemFac(sys *export_map.System, is_disco bool) SystemFaction {
 
 	sys_name := strings.ToLower(sys.Name)
 
 	region_name := strings.ToLower(sys.Region.Name)
+
+	if is_disco {
+		if value, ok := DiscoSystemOverrides[sys.Nickname]; ok {
+			return value
+		}
+	}
 
 	if strings.Contains(region_name, "deep") && strings.Contains(region_name, "omega") {
 		return FacDeepOmega
