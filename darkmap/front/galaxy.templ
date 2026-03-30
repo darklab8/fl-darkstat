@@ -96,7 +96,8 @@ templ GalalaxyMap(data *export_map.Export) {
 						templ.KV("conn_alien", edge.Kind == export_map.JumpKindAlien),
 						templ.KV("conn_jumpgate", edge.Kind == export_map.JumpKindJumpgate),
 						templ.KV("conn_jumphole", edge.Kind == export_map.JumpKindJumphole),
-						templ.KV("conn_unstable", edge.Kind == export_map.JumpKindUnstable),
+						templ.KV("conn_unstable", edge.Kind == export_map.JumpKindUnstableCargoLimited),
+						templ.KV("conn_fighter", edge.Kind == export_map.JumpKindFighterOnly),
 						templ.KV("conn_unknown", edge.Kind == export_map.JumpKindUnknown),
 					}
 				></line>

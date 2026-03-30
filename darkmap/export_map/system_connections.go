@@ -84,9 +84,16 @@ func (c *ConnectionEdge) SetKind(first map[JumpConnectionKind]bool, second map[J
 			return
 		}
 	}
-	if _, ok := first[JumpKindUnstable]; ok {
-		if _, ok := second[JumpKindUnstable]; ok {
-			c.Kind = JumpKindUnstable
+	if _, ok := first[JumpKindUnstableCargoLimited]; ok {
+		if _, ok := second[JumpKindUnstableCargoLimited]; ok {
+			c.Kind = JumpKindUnstableCargoLimited
+			return
+		}
+	}
+
+	if _, ok := first[JumpKindFighterOnly]; ok {
+		if _, ok := second[JumpKindFighterOnly]; ok {
+			c.Kind = JumpKindFighterOnly
 			return
 		}
 	}
@@ -116,7 +123,8 @@ type JumpConnectionKind int8
 
 const (
 	JumpKindUnknown JumpConnectionKind = iota
-	JumpKindUnstable
+	JumpKindUnstableCargoLimited
+	JumpKindFighterOnly
 	JumpKindJumphole
 	JumpKindJumpgate
 	JumpKindAlien
@@ -130,8 +138,10 @@ func (j JumpConnectionKind) ToStr() string {
 		return "jh_jumpgate"
 	case JumpKindJumphole:
 		return "jh_jumphole"
-	case JumpKindUnstable:
-		return "jh_unstable"
+	case JumpKindUnstableCargoLimited:
+		return "jh_unstable_cargo_limit"
+	case JumpKindFighterOnly:
+		return "jh_fighter_only"
 	}
 	return "jh_unknown"
 }
@@ -337,12 +347,32 @@ func (e *Export) GetJumpConnectionKind(jh *systems_mapped.Jumphole) JumpConnecti
 		if len(solar.DockingSpheres) == 0 {
 			return JumpKindUnknown
 		}
+
+		is_fighter_only := true
+		has_jump_sphere := false
+		for _, sphere := range solar.DockingSpheres {
+			if sphere.Get() != "berth" {
+				is_fighter_only = false
+			}
+
+			if sphere.Get() == "jump" {
+				has_jump_sphere = true
+			}
+		}
+		if is_fighter_only {
+			return JumpKindFighterOnly
+		}
+
+		if !has_jump_sphere {
+			return JumpKindUnknown
+		}
 	}
 	if disco_cargo_limit != nil {
 		if *disco_cargo_limit < trades.DiscoCargoLimitedThreshold {
-			return JumpKindUnstable
+			return JumpKindUnstableCargoLimited
 		}
 	}
+
 	if strings.Contains(jh_archetype, "nomad") {
 		return JumpKindAlien
 	} else if strings.Contains(jh_archetype, "jumpgate") {

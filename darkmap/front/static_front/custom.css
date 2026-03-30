@@ -102,6 +102,11 @@
     box-shadow: 0px 0px 0.3em 0.1em rgba(121, 80, 76, 0.5);
 }
 
+.conn_fighter {
+    background-color: rgba(1, 255, 13, 0.9);
+    box-shadow: 0px 0px 0.3em 0.1em rgba(1, 255, 13, 0.5);
+}
+
 .conn_alien {
     background-color: rgba(152, 69, 255, 0.9);
     box-shadow: 0px 0px 0.3em 0.1em rgba(152, 69, 255, 0.5);
@@ -234,6 +239,11 @@ svg.connection-svg-overlay line.conn_jumphole {
 svg.connection-svg-overlay line.conn_unstable {
     stroke: rgba(219, 72, 55, 0.9);
     filter: drop-shadow(0px 0px 0.3em rgba(121, 80, 76, 0.8)) drop-shadow(0px 0px 0.3em rgba(121, 80, 76, 0.8));
+}
+
+svg.connection-svg-overlay line.conn_fighter {
+    stroke: rgba(1, 255, 13, 0.9);
+    filter: drop-shadow(0px 0px 0.3em rgba(33, 243, 5, 0.8)) drop-shadow(0px 0px 0.3em rgba(121, 80, 76, 0.8));
 }
 
 svg.connection-svg-overlay line.conn_alien {
