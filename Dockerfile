@@ -44,7 +44,7 @@ ARG BUILD_VERSION
 ENV BUILD_VERSION="${BUILD_VERSION}"
 ENTRYPOINT /code/main
 EXPOSE 8000
-CMD web
+CMD --stat-deals-on web
 HEALTHCHECK --interval=28s CMD /code/main health
 
 # test command
