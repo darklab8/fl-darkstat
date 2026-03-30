@@ -46,26 +46,26 @@ func init() {
 		fmt.Println("run under go test")
 	} else {
 		flag.Parse()
-	}
 
-	args := os.Args[1:]
-	if len(args) > 0 {
-		index_of_last_non_flag := 0
-		index_of_last_flag := 0
+		args := os.Args[1:]
+		if len(args) > 0 {
+			index_of_last_non_flag := 0
+			index_of_last_flag := 0
 
-		for arg_index, arg := range args {
-			if strings.HasPrefix(arg, "-") {
-				// this is flag
-				index_of_last_flag = arg_index
-			} else {
-				// this is not flag
-				index_of_last_non_flag = arg_index
+			for arg_index, arg := range args {
+				if strings.HasPrefix(arg, "-") {
+					// this is flag
+					index_of_last_flag = arg_index
+				} else {
+					// this is not flag
+					index_of_last_non_flag = arg_index
+				}
 			}
-		}
 
-		if index_of_last_flag > index_of_last_non_flag {
-			fmt.Println("ERROR flags like --stat-deals-on must be inputed BEFORE commands like `web` or `build`")
-			os.Exit(1)
+			if index_of_last_flag > index_of_last_non_flag {
+				fmt.Println("ERROR flags like --stat-deals-on must be inputed BEFORE commands like `web` or `build`")
+				os.Exit(1)
+			}
 		}
 	}
 }
