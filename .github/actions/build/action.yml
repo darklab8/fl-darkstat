@@ -22,7 +22,7 @@ inputs:
     default: "http://localhost:8080"
   command:
     description: Command to run for darkstat
-    default: "build"
+    default: "--stat-deals-on build"
   map-index-url:
     description: Map index url
     default: "index.html"
