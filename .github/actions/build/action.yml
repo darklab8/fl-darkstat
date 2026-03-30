@@ -23,6 +23,12 @@ inputs:
   apigateway-host:
     description: optional feature to see apigateway
     default: "http://localhost:8081"
+  command:
+    description: Command to run for darkstat
+    default: "build"
+  map-index-url:
+    description: Map index url
+    default: "index.html"
 
 runs:
   using: "composite"
@@ -37,7 +43,8 @@ runs:
       shell: bash
       run: |
         set -ex
-        git clone --depth 1 --branch $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/https:\/\/github.com\/darklab8\/fl-darkstat\/releases\/tag\///") https://github.com/darklab8/fl-darkstat.git
+        # git clone --depth 1 --branch $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/https:\/\/github.com\/darklab8\/fl-darkstat\/releases\/tag\///") https://github.com/darklab8/fl-darkstat.git
+        git clone --depth 1 --bramch master https://github.com/darklab8/fl-darkstat.git
         cd fl-darkstat
         echo $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/fl-darkstat/releases/latest | sed "s/https:\/\/github.com\/darklab8\/fl-darkstat\/releases\/tag\///") > darkstat/settings/version.txt
         go mod download -x
@@ -46,15 +53,14 @@ runs:
         GOOS=linux go build -v -o main main.go
         install -m 777 main /usr/local/bin/darkstat
         cd ..
-
     - name: build
       shell: bash
-      run: darkstat build
+      run: darkstat ${{ inputs.command }}
       env:
         DARKSTAT_SITE_HOST: ${{ inputs.site-host }}
         DARKSTAT_SITE_ROOT: ${{ inputs.site-root }}
         CONFIGS_FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
         DARKSTAT_FLDARKSTAT_HEADING: ${{ inputs.heading }}
         DARKSTAT_RELAY_HOST: ${{ inputs.relay-host }}
-        DARKSTAT_GRPCGATEWAY_URL: ${{ inputs. apigateway-host }}
         UTILS_DEV_ENV: "true"
+        DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
