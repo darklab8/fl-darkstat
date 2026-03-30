@@ -42,9 +42,9 @@ COPY --from=build /code/main main
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ARG BUILD_VERSION
 ENV BUILD_VERSION="${BUILD_VERSION}"
-ENTRYPOINT /code/main
+ENTRYPOINT ["/code/main"]
 EXPOSE 8000
-CMD --stat-deals-on web
+CMD ["--stat-deals-on", "web"]
 HEALTHCHECK --interval=28s CMD /code/main health
 
 # test command
