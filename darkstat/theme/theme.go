@@ -69,10 +69,10 @@ func ThemeCycleNicks(priority Theme) []string {
 	return []string{order[0].ToNick(), order[1].ToNick(), order[2].ToNick()}
 }
 
-func ThemeStorageNickCSV() string {
-	return strings.Join([]string{ThemeLight.ToNick(), ThemeDark.ToNick(), ThemeVanilla.ToNick()}, ",")
+func ThemeStorageNicks() []string {
+	return []string{ThemeLight.ToNick(), ThemeDark.ToNick(), ThemeVanilla.ToNick()}
 }
 
-func ThemeStorageFileCSV() string {
-	return strings.Join([]string{ThemeIndexHTMLFile(ThemeLight), ThemeIndexHTMLFile(ThemeDark), ThemeIndexHTMLFile(ThemeVanilla)}, ",")
+func ThemeStorageIndexFiles() []string {
+	return []string{ThemeIndexHTMLFile(ThemeLight), ThemeIndexHTMLFile(ThemeDark), ThemeIndexHTMLFile(ThemeVanilla)}
 }

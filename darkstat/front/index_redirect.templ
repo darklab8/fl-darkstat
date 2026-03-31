@@ -2,6 +2,21 @@ package front
 
 import "github.com/darklab8/fl-darkstat/darkstat/theme"
 
+script RedirecterOnload(themeNicks []string, themeFiles []string, defaultThemeFile string) {
+	var nicknameToIndexFile = {};
+	for (var i = 0; i < themeNicks.length; i++) {
+		nicknameToIndexFile[themeNicks[i]] = themeFiles[i];
+	}
+	try {
+		var storedThemeNickname = localStorage.getItem("darkstat-theme");
+		if (storedThemeNickname && nicknameToIndexFile[storedThemeNickname]) {
+			location.replace(nicknameToIndexFile[storedThemeNickname]);
+			return;
+		}
+	} catch (storageErr) {}
+	location.replace(defaultThemeFile);
+}
+
 templ IndexRedirect(serverDefault theme.Theme) {
 	<!DOCTYPE html>
 	<html lang="en">
@@ -9,42 +24,6 @@ templ IndexRedirect(serverDefault theme.Theme) {
 			<meta charset="utf-8"/>
 			<title>redirect</title>
 		</head>
-		<body
-			data-darkstat-default={ theme.ThemeIndexHTMLFile(serverDefault) }
-			data-theme-nicks={ theme.ThemeStorageNickCSV() }
-			data-theme-files={ theme.ThemeStorageFileCSV() }
-		>
-			<script>
-			(function(){
-			var bodyEl = document.body;
-			var defaultThemeFile = bodyEl.getAttribute("data-darkstat-default");
-			if (!defaultThemeFile) {
-				throw new Error("missing data-darkstat-default");
-			}
-			var themeNicksCSV = bodyEl.getAttribute("data-theme-nicks");
-			var themeFilesCSV = bodyEl.getAttribute("data-theme-files");
-			if (!themeNicksCSV || !themeFilesCSV) {
-				throw new Error("missing theme storage attributes");
-			}
-			var themeNicks = themeNicksCSV.split(",");
-			var themeFiles = themeFilesCSV.split(",");
-			if (themeNicks.length !== themeFiles.length) {
-				throw new Error("theme nick and file list length mismatch");
-			}
-			var nicknameToIndexFile = {};
-			for (var i = 0; i < themeNicks.length; i++) {
-				nicknameToIndexFile[themeNicks[i]] = themeFiles[i];
-			}
-			try {
-				var storedThemeNickname = localStorage.getItem("darkstat-theme");
-				if (storedThemeNickname && nicknameToIndexFile[storedThemeNickname]) {
-					location.replace(nicknameToIndexFile[storedThemeNickname]);
-					return;
-				}
-			} catch (storageErr) {}
-			location.replace(defaultThemeFile);
-			})();
-			</script>
-		</body>
+		<body onload={ RedirecterOnload(theme.ThemeStorageNicks(), theme.ThemeStorageIndexFiles(), theme.ThemeIndexHTMLFile(serverDefault)) }></body>
 	</html>
 }
