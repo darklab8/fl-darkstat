@@ -22,6 +22,10 @@ func findDirs(root, target string) ([]string, error) {
 			return err
 		}
 
+		if strings.Contains(path, "flmmbak") {
+			return nil
+		}
+
 		if d.IsDir() && d.Name() == target {
 			matches = append(matches, path)
 		}
