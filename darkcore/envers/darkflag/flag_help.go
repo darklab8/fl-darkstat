@@ -27,6 +27,7 @@ var (
 	StatSiteRoot            = flag.String("stat-site-root", "/", "useful if wishing serving darkstat from github pages sub urls. Makes sure correct link addresses")
 	TradeDealsDetailedLanes = flag.Bool("stat-trade-detailed-lanes-on", false, "experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")
 	IsMapEnabled            = flag.Bool("map-on", false, "flag to turn on map as part of darkstat. PERFORMANCE HEAVY. use standalone map through `map web` command if u wish it faster")
+	StatDefaultDarkTheme = flag.Bool("stat-default-dark-theme", false, "default dark theme for darkstat: redirect index.html to dark.html instead of light.html")
 )
 
 func init() {

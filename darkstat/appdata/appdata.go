@@ -45,15 +45,15 @@ func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 	}
 	staticPrefix := "static/"
 	siteRoot := settings.Env.SiteRoot
+	landingTheme := types.ThemeLight
+	if settings.Env.DefaultDarkTheme {
+		landingTheme = types.ThemeDark
+	}
 	params := &types.GlobalParams{
 		AppStart:  settings.Env.AppStart,
 		Buildpath: "",
-		Theme:     types.ThemeLight,
-		Themes: []string{
-			siteRoot + urls.Index.ToString(),
-			siteRoot + urls.DarkIndex.ToString(),
-			siteRoot + urls.VanillaIndex.ToString(),
-		},
+		Theme:     landingTheme,
+		Themes:    urls.ThemeCycleURLs(siteRoot, settings.Env.DefaultDarkTheme),
 		TractorTabName: tractor_tab_name,
 		SiteHost:       settings.Env.SiteHost,
 		SiteRoot:       siteRoot,

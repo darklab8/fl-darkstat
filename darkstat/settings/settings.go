@@ -50,7 +50,10 @@ type DarkstatEnvVars struct {
 
 	IsMapOn  bool
 	MapByUrl string
-	Enver    *enverant.Enverant
+
+	DefaultDarkTheme bool
+
+	Enver *enverant.Enverant
 }
 
 func IsApiActive() bool {
@@ -96,6 +99,8 @@ func init() {
 
 		IsMapOn:  env.GetBoolOr("MAP_ON", *darkflag.IsMapEnabled, enverant.WithDesc("enabled map as part of darkstat. PERFORMANCE HEAVY. by default off. use `map web` if u wish to turn it on faster")),
 		MapByUrl: env.GetStrOr("MAP_BY_URL", "", enverant.WithDesc("If there is deployment of darkmap, or any other map, link here its url")),
+
+		DefaultDarkTheme: env.GetBoolOr("DEFAULT_DARK_THEME", *darkflag.StatDefaultDarkTheme, enverant.WithDesc("default dark theme for darkstat: redirect index.html to dark.html instead of light.html")),
 	}
 
 	if !Env.TradeDealsEnabled {

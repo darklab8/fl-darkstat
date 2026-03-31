@@ -1,0 +1,31 @@
+package front
+
+templ IndexRedirectToLight() {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<meta http-equiv="refresh" content="0;url=light.html"/>
+			<title>redirect</title>
+			<script>
+				location.replace("light.html");
+			</script>
+		</head>
+		<body></body>
+	</html>
+}
+
+templ IndexRedirectToDark() {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<meta http-equiv="refresh" content="0;url=dark.html"/>
+			<title>redirect</title>
+			<script>
+				location.replace("dark.html");
+			</script>
+		</head>
+		<body></body>
+	</html>
+}
