@@ -1,31 +1,27 @@
 package front
 
-templ IndexRedirectToLight() {
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="utf-8"/>
-			<meta http-equiv="refresh" content="0;url=light.html"/>
-			<title>redirect</title>
-			<script>
-				location.replace("light.html");
-			</script>
-		</head>
-		<body></body>
-	</html>
-}
+import "github.com/darklab8/fl-darkstat/darkstat/front/types"
 
-templ IndexRedirectToDark() {
+templ IndexRedirect(serverDefault types.Theme) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
 			<meta charset="utf-8"/>
-			<meta http-equiv="refresh" content="0;url=dark.html"/>
 			<title>redirect</title>
-			<script>
-				location.replace("dark.html");
-			</script>
 		</head>
-		<body></body>
+		<body data-darkstat-default={ types.ThemeIndexHTMLFile(serverDefault) }>
+			<script>
+			(function(){
+			var b=document.body;
+			var fb=b.getAttribute("data-darkstat-default")||"light.html";
+			var m={light:"light.html",dark:"dark.html",vanilla:"vanilla.html"};
+			try{
+			var k=localStorage.getItem("darkstat-theme");
+			if(k&&m[k]){location.replace(m[k]);return;}
+			}catch(e){}
+			location.replace(fb);
+			})();
+			</script>
+		</body>
 	</html>
 }

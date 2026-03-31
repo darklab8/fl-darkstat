@@ -25,6 +25,56 @@ const (
 	ThemeVanilla
 )
 
+func (t Theme) ToNick() string {
+	switch t {
+	case ThemeLight:
+		return "light"
+	case ThemeDark:
+		return "dark"
+	case ThemeVanilla:
+		return "vanilla"
+	default:
+		return ""
+	}
+}
+
+func ThemeIndexHTMLFile(t Theme) string {
+	if n := t.ToNick(); n != "" {
+		return n + ".html"
+	}
+	return "light.html"
+}
+
+func ParseDefaultThemeName(s string) Theme {
+	switch strings.ToLower(strings.TrimSpace(s)) {
+	case "white", "light":
+		return ThemeLight
+	case "dark":
+		return ThemeDark
+	case "vanilla":
+		return ThemeVanilla
+	default:
+		return ThemeLight
+	}
+}
+
+func ThemeCycleURLs(siteRoot string, priority Theme) []string {
+	var order [3]Theme
+	switch priority {
+	case ThemeDark:
+		order = [3]Theme{ThemeDark, ThemeVanilla, ThemeLight}
+	case ThemeVanilla:
+		order = [3]Theme{ThemeVanilla, ThemeLight, ThemeDark}
+	default:
+		order = [3]Theme{ThemeLight, ThemeDark, ThemeVanilla}
+	}
+	return []string{
+		siteRoot + ThemeIndexHTMLFile(order[0]),
+		siteRoot + ThemeIndexHTMLFile(order[1]),
+		siteRoot + ThemeIndexHTMLFile(order[2]),
+	}
+}
+
 type GlobalParams struct {
 	Buildpath      utils_types.FilePath
 	Theme          Theme

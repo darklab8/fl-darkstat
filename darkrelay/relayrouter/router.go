@@ -38,12 +38,8 @@ func (r *Router) Link() *builder.Builder {
 
 	r.LinkPobs(r.AppData, build)
 
-	if settings.Env.DefaultDarkTheme {
-		build.RegComps(builder.NewComponent(urls.Index, statfront.IndexRedirectToDark()))
-	} else {
-		build.RegComps(builder.NewComponent(urls.Index, statfront.IndexRedirectToLight()))
-	}
 	build.RegComps(
+		builder.NewComponent(urls.Index, statfront.IndexRedirect(types.ParseDefaultThemeName(settings.Env.DefaultTheme))),
 		builder.NewComponent(urls.LightIndex, relayfront.Index(types.ThemeLight, shared)),
 		builder.NewComponent(urls.DarkIndex, relayfront.Index(types.ThemeDark, shared)),
 		builder.NewComponent(urls.VanillaIndex, relayfront.Index(types.ThemeVanilla, shared)),

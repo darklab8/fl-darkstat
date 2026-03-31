@@ -5,8 +5,7 @@ import (
 )
 
 const (
-	Docs      utils_types.FilePath = "docs.html"
-	IndexDocs utils_types.FilePath = "index_docs.html"
+	Docs utils_types.FilePath = "docs.html"
 
 	Index            utils_types.FilePath = "index.html"
 	DarkIndex        utils_types.FilePath = "dark.html"
@@ -45,18 +44,3 @@ const (
 	Lootablelocked   utils_types.FilePath = "cdn/lootable_locked.html"
 	Craftable        utils_types.FilePath = "cdn/craftable.html"
 )
-
-func ThemeCycleURLs(siteRoot string, defaultDarkTheme bool) []string {
-	if defaultDarkTheme {
-		return []string{
-			siteRoot + DarkIndex.ToString(),
-			siteRoot + VanillaIndex.ToString(),
-			siteRoot + LightIndex.ToString(),
-		}
-	}
-	return []string{
-		siteRoot + LightIndex.ToString(),
-		siteRoot + DarkIndex.ToString(),
-		siteRoot + VanillaIndex.ToString(),
-	}
-}

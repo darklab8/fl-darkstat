@@ -116,7 +116,14 @@ script GoToUrl(current string, themes []string) {
 		index = 0;
 	}
 
-	location.href=themes[index];
+	var next = themes[index];
+	var seg = next.split("/").pop();
+	if (!seg) { seg = next.split("\\").pop(); }
+	var nick = seg.replace(/\.html$/i,"");
+	if (nick==="light"||nick==="dark"||nick==="vanilla") {
+		try { localStorage.setItem("darkstat-theme", nick); } catch (e) {}
+	}
+	location.href=next;
 
 	// if (location.pathname == current) {
 	// 	location.href=opposite;

@@ -17,12 +17,6 @@ templ Index(theme types.Theme, shared *types.SharedData) {
 	}
 }
 
-templ DocsEntry(theme types.Theme, shared *types.SharedData) {
-	@tab.Html5(theme, shared) {
-		<div id="tabs" hx-get={ types.GetCtx(ctx).SiteRoot + urls.Docs.ToString() } hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
-	}
-}
-
 templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.SharedData) {
 	@tab.TabStyle()
 	@tab.Heading(shared) {

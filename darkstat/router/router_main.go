@@ -74,15 +74,7 @@ func (l *Router) Link(ctx context.Context) *builder.Builder {
 		l.LinkScanners(ctx, build, configs, shared)
 		l.LinkExtraItems(ctx, build, configs, shared)
 
-		indexDocsTheme := types.ThemeLight
-		if settings.Env.DefaultDarkTheme {
-			indexDocsTheme = types.ThemeDark
-		}
 		mainComps := []*builder.Component{
-			builder.NewComponent(
-				"index_"+"docs.html",
-				front.DocsEntry(indexDocsTheme, shared),
-			),
 			builder.NewComponent(
 				tab.AllItemsUrl(urls.Docs),
 				front.DocsT(tab.ShowEmpty(true), shared),
@@ -91,11 +83,7 @@ func (l *Router) Link(ctx context.Context) *builder.Builder {
 				urls.Docs,
 				front.DocsT(tab.ShowEmpty(false), shared),
 			),
-		}
-		if settings.Env.DefaultDarkTheme {
-			mainComps = append(mainComps, builder.NewComponent(urls.Index, front.IndexRedirectToDark()))
-		} else {
-			mainComps = append(mainComps, builder.NewComponent(urls.Index, front.IndexRedirectToLight()))
+			builder.NewComponent(urls.Index, front.IndexRedirect(types.ParseDefaultThemeName(settings.Env.DefaultTheme))),
 		}
 		mainComps = append(mainComps,
 			builder.NewComponent(urls.LightIndex, front.Index(types.ThemeLight, shared)),

@@ -51,7 +51,7 @@ type DarkstatEnvVars struct {
 	IsMapOn  bool
 	MapByUrl string
 
-	DefaultDarkTheme bool
+	DefaultTheme string
 
 	Enver *enverant.Enverant
 }
@@ -100,7 +100,7 @@ func init() {
 		IsMapOn:  env.GetBoolOr("MAP_ON", *darkflag.IsMapEnabled, enverant.WithDesc("enabled map as part of darkstat. PERFORMANCE HEAVY. by default off. use `map web` if u wish to turn it on faster")),
 		MapByUrl: env.GetStrOr("MAP_BY_URL", "", enverant.WithDesc("If there is deployment of darkmap, or any other map, link here its url")),
 
-		DefaultDarkTheme: env.GetBoolOr("DEFAULT_DARK_THEME", *darkflag.StatDefaultDarkTheme, enverant.WithDesc("default dark theme for darkstat: redirect index.html to dark.html instead of light.html")),
+		DefaultTheme: normalizeShellTheme(env.GetStr("DEFAULT_THEME", enverant.OrStr(strings.TrimSpace(*darkflag.StatDefaultTheme)), enverant.WithDesc("default shell theme for index.html redirect: white, dark, or vanilla (same as -stat-default-theme). localStorage darkstat-theme overrides when set"))),
 	}
 
 	if !Env.TradeDealsEnabled {
@@ -110,6 +110,19 @@ func init() {
 	if Env.IsMapOn {
 		fmt.Println("ERROR: do not use this feature. apperently not ready yet. :] use `map web` instead for dedicated map view")
 		os.Exit(1)
+	}
+}
+
+func normalizeShellTheme(s string) string {
+	switch strings.ToLower(strings.TrimSpace(s)) {
+	case "white", "light":
+		return "light"
+	case "dark":
+		return "dark"
+	case "vanilla":
+		return "vanilla"
+	default:
+		return "light"
 	}
 }
 
