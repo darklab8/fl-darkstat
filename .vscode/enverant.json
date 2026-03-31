@@ -3,7 +3,7 @@
     "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/Discovery",
     # "CONFIGS_FREELANCER_FOLDER": "/home/naa/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/game-repository",
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_hde/drive_c/FreelancerHD",
-    # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_hde/drive_c/FreelancerHD2",
+    # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_hde/drive_c/FreelancerFLU",
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/windows10shared/game-repository",
     # "DARKSTAT_TRADE_ROUTES_DETAILED_TRADE_LANE": "true",
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
