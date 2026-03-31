@@ -43,3 +43,36 @@ func ParseDefaultThemeName(s string) Theme {
 		panic(fmt.Sprintf("unrecognized default theme name: %q", s))
 	}
 }
+
+func themeCycleOrder(priority Theme) [3]Theme {
+	switch priority {
+	case ThemeDark:
+		return [3]Theme{ThemeDark, ThemeVanilla, ThemeLight}
+	case ThemeVanilla:
+		return [3]Theme{ThemeVanilla, ThemeLight, ThemeDark}
+	default:
+		return [3]Theme{ThemeLight, ThemeDark, ThemeVanilla}
+	}
+}
+
+func ThemeCycleURLs(siteRoot string, priority Theme) []string {
+	order := themeCycleOrder(priority)
+	return []string{
+		siteRoot + ThemeIndexHTMLFile(order[0]),
+		siteRoot + ThemeIndexHTMLFile(order[1]),
+		siteRoot + ThemeIndexHTMLFile(order[2]),
+	}
+}
+
+func ThemeCycleNicks(priority Theme) []string {
+	order := themeCycleOrder(priority)
+	return []string{order[0].ToNick(), order[1].ToNick(), order[2].ToNick()}
+}
+
+func ThemeStorageNickCSV() string {
+	return strings.Join([]string{ThemeLight.ToNick(), ThemeDark.ToNick(), ThemeVanilla.ToNick()}, ",")
+}
+
+func ThemeStorageFileCSV() string {
+	return strings.Join([]string{ThemeIndexHTMLFile(ThemeLight), ThemeIndexHTMLFile(ThemeDark), ThemeIndexHTMLFile(ThemeVanilla)}, ",")
+}

@@ -18,6 +18,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -83,7 +84,7 @@ func (l *Router) Link(ctx context.Context) *builder.Builder {
 				urls.Docs,
 				front.DocsT(tab.ShowEmpty(false), shared),
 			),
-			builder.NewComponent(urls.Index, front.IndexRedirect(types.ParseDefaultThemeName(settings.Env.DefaultTheme))),
+			builder.NewComponent(urls.Index, front.IndexRedirect(theme.ParseDefaultThemeName(settings.Env.DefaultTheme))),
 		}
 		mainComps = append(mainComps,
 			builder.NewComponent(urls.LightIndex, front.Index(types.ThemeLight, shared)),

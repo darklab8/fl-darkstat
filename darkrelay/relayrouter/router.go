@@ -10,6 +10,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -39,7 +40,7 @@ func (r *Router) Link() *builder.Builder {
 	r.LinkPobs(r.AppData, build)
 
 	build.RegComps(
-		builder.NewComponent(urls.Index, statfront.IndexRedirect(types.ParseDefaultThemeName(settings.Env.DefaultTheme))),
+		builder.NewComponent(urls.Index, statfront.IndexRedirect(theme.ParseDefaultThemeName(settings.Env.DefaultTheme))),
 		builder.NewComponent(urls.LightIndex, relayfront.Index(types.ThemeLight, shared)),
 		builder.NewComponent(urls.DarkIndex, relayfront.Index(types.ThemeDark, shared)),
 		builder.NewComponent(urls.VanillaIndex, relayfront.Index(types.ThemeVanilla, shared)),

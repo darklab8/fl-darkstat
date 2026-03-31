@@ -1,8 +1,8 @@
 package front
 
-import "github.com/darklab8/fl-darkstat/darkstat/front/types"
+import "github.com/darklab8/fl-darkstat/darkstat/theme"
 
-templ IndexRedirect(serverDefault types.Theme) {
+templ IndexRedirect(serverDefault theme.Theme) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -10,9 +10,9 @@ templ IndexRedirect(serverDefault types.Theme) {
 			<title>redirect</title>
 		</head>
 		<body
-			data-darkstat-default={ types.ThemeIndexHTMLFile(serverDefault) }
-			data-theme-nicks={ types.ThemeStorageNickCSV() }
-			data-theme-files={ types.ThemeStorageFileCSV() }
+			data-darkstat-default={ theme.ThemeIndexHTMLFile(serverDefault) }
+			data-theme-nicks={ theme.ThemeStorageNickCSV() }
+			data-theme-files={ theme.ThemeStorageFileCSV() }
 		>
 			<script>
 			(function(){
