@@ -22,6 +22,7 @@ module "darkstat" {
   is_discovery   = true
   replicas_count = 2
   extra_vars     = local.disco_extra_vars
+  args           = ["--stat-deals-on", "web"]
 }
 
 locals {
@@ -65,6 +66,7 @@ module "darkstat_dev" {
   disco_oauth  = true
   is_discovery = true
   # extra_vars   = local.disco_extra_vars
+  args = ["--stat-deals-on", "web"]
 }
 
 module "vanilla" {
@@ -88,4 +90,6 @@ module "darkstat_vanilla" {
   zone            = "dd84ai.com"
   enable_restarts = false
   is_discovery    = false
+  args            = ["--stat-deals-on", "web"]
+
 }
