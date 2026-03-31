@@ -108,7 +108,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				</button>
 				@tab.Button(tab.NewButtn(ctx, []string{"Docs"}, tab.AllItemsUrl(urls.Docs), url))
 			}
-			<button style="width:60px; border-radius: 20px;" onClick={ tab.GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).Themes) } type="button">
+			<button style="width:60px; border-radius: 20px;" onClick={ tab.GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).Themes, types.GetCtx(ctx).ThemeNicks) } type="button">
 				@frmt.MultiLinestringWrap([]string{"Color", "Scheme"})
 			</button>
 		</div>

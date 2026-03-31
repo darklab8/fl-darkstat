@@ -76,10 +76,16 @@ func ThemeCycleURLs(siteRoot string, priority Theme) []string {
 	}
 }
 
+func ThemeCycleNicks(priority Theme) []string {
+	order := themeCycleOrder(priority)
+	return []string{order[0].ToNick(), order[1].ToNick(), order[2].ToNick()}
+}
+
 type GlobalParams struct {
 	Buildpath      utils_types.FilePath
 	Theme          Theme
 	Themes         []string
+	ThemeNicks     []string
 	SiteHost       string
 	SiteRoot       string
 	SiteUrl        string
