@@ -2,7 +2,6 @@ package settings
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	_ "embed"
@@ -49,8 +48,8 @@ type DarkstatEnvVars struct {
 
 	IsStaticSiteGenerator bool
 
-	IsMapOn  bool
-	MapByUrl string
+	IsExpermentalMapWithDarkstatOn bool
+	MapByUrl                       string
 
 	DefaultTheme string
 
@@ -98,19 +97,14 @@ func init() {
 		TradeRoutesBestTwoWaysLimitPobs: env.GetIntOr("TRADE_ROUTES_BEST_TWO_WAY_LIMIT_POBS", 99, enverant.WithDesc("Limit amount of pobs participating in 2 way routes")),
 		TradeRoutesBestDisableLiners:    env.GetBoolOr("TRADE_ROUTES_DISABLE_LINERS", false, enverant.WithDesc("")),
 
-		IsMapOn:  env.GetBoolOr("MAP_ON", *darkflag.IsMapEnabled, enverant.WithDesc("enabled map as part of darkstat. PERFORMANCE HEAVY. by default off. use `map web` if u wish to turn it on faster")),
-		MapByUrl: env.GetStrOr("MAP_BY_URL", "", enverant.WithDesc("If there is deployment of darkmap, or any other map, link here its url")),
+		IsExpermentalMapWithDarkstatOn: env.GetBoolOr("EXPERIMENTAL_MAP_ON", *darkflag.IsExperimentalMapRunWithDarkstatEnabled, enverant.WithDesc("enabled map as part of darkstat. VERY EXPERIMENTAL: may lead to drastic CPU and RAM performance issues, running `map web` separately is recommended. PERFORMANCE HEAVY. by default off. use `map web` if u wish to turn it on faster")),
+		MapByUrl:                       env.GetStrOr("MAP_BY_URL", "", enverant.WithDesc("If there is deployment of darkmap, or any other map, link here its url")),
 
 		DefaultTheme: theme.ParseDefaultThemeName(env.GetStr("DEFAULT_THEME", enverant.OrStr(strings.TrimSpace(*darkflag.StatDefaultTheme)), enverant.WithDesc("default shell theme for index.html redirect: white, dark, or vanilla (same as -stat-default-theme). localStorage darkstat-theme overrides when set"))).ToNick(),
 	}
 
 	if !Env.TradeDealsEnabled {
 		fmt.Println("WARN: TRADE_DEALS_ENABLED remained off. use env var set true, or cli arg `-deals` to turn on BEST TRADE DEALS")
-	}
-
-	if Env.IsMapOn {
-		fmt.Println("ERROR: do not use this feature. apperently not ready yet. :] use `map web` instead for dedicated map view")
-		os.Exit(1)
 	}
 }
 

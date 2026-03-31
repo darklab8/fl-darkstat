@@ -157,7 +157,7 @@ func main() {
 
 		filesystems := []*builder.Filesystem{stat_fs, relay_fs}
 
-		if settings.Env.IsMapOn {
+		if settings.Env.IsExpermentalMapWithDarkstatOn {
 			map_urls.Index = "map.html"
 			var linked_build *builder.Builder
 			linked_build = linker.NewLinker(true).Link(context.Background())
@@ -266,7 +266,7 @@ func main() {
 					app_data := appdata.NewAppData(ctx_span)
 					router.NewRouter(app_data, router.WithStaticAssetsGen()).Link(ctx_span).BuildAll(false, nil)
 
-					if settings.Env.IsMapOn {
+					if settings.Env.IsExpermentalMapWithDarkstatOn {
 						map_urls.Index = "map.html"
 						linker.NewLinker(true).Link(ctx_span).BuildAll(false, nil)
 					}

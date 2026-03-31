@@ -23,11 +23,11 @@ var (
 )
 
 var (
-	TradeDealsEnabled       = flag.Bool("stat-deals-on", false, "flag to show or not best trade deals in stat service. PERFORMANCE HEAVY. by default off. disable if not needed")
-	StatSiteRoot            = flag.String("stat-site-root", "/", "useful if wishing serving darkstat from github pages sub urls. Makes sure correct link addresses")
-	TradeDealsDetailedLanes = flag.Bool("stat-trade-detailed-lanes-on", false, "experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")
-	IsMapEnabled            = flag.Bool("map-on", false, "flag to turn on map as part of darkstat. PERFORMANCE HEAVY. use standalone map through `map web` command if u wish it faster")
-	StatDefaultTheme        = flag.String("stat-default-theme", "white", "default shell theme for index.html redirect: white, dark, or vanilla. localStorage darkstat-theme overrides when set. flags before web or build")
+	TradeDealsEnabled                       = flag.Bool("stat-deals-on", false, "flag to show or not best trade deals in stat service. PERFORMANCE HEAVY. by default off. disable if not needed")
+	StatSiteRoot                            = flag.String("stat-site-root", "/", "useful if wishing serving darkstat from github pages sub urls. Makes sure correct link addresses")
+	TradeDealsDetailedLanes                 = flag.Bool("stat-trade-detailed-lanes-on", false, "experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")
+	IsExperimentalMapRunWithDarkstatEnabled = flag.Bool("experimental-map-on", false, "flag to turn on map as part of darkstat. VERY EXPERIMENTAL: may lead to drastic CPU and RAM performance issues, running `map web` separately is recommended. PERFORMANCE HEAVY. use standalone map through `map web` command if u wish it faster")
+	StatDefaultTheme                        = flag.String("stat-default-theme", "white", "default shell theme for index.html redirect: white, dark, or vanilla. localStorage darkstat-theme overrides when set. flags before web or build")
 )
 
 func init() {
