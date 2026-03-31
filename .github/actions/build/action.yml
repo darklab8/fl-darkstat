@@ -29,6 +29,9 @@ inputs:
   map-on:
     description: turn on map by separate method
     default: "false"
+  map-by-url:
+    description: turn on map by separate method
+    default: "map.html"
 
 runs:
   using: "composite"
@@ -54,6 +57,7 @@ runs:
         install -m 777 main /usr/local/bin/darkstat
         cd ..
     - name: build
+      if: ${{ inputs.map-on != 'true' }}
       shell: bash
       run: darkstat ${{ inputs.command }}
       env:
@@ -65,6 +69,20 @@ runs:
         DARKSTAT_RELAY_HOST: ${{ inputs.relay-host }}
         UTILS_DEV_ENV: "true"
         DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
+    - name: build
+      if: ${{ inputs.map-on == 'true' }}
+      shell: bash
+      run: darkstat ${{ inputs.command }}
+      env:
+        DARKSTAT_SITE_HOST: ${{ inputs.site-host }}
+        DARKSTAT_SITE_ROOT: ${{ inputs.site-root }}
+        DARKMAP_SITE_ROOT: ${{ inputs.site-root }}
+        CONFIGS_FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
+        DARKSTAT_FLDARKSTAT_HEADING: ${{ inputs.heading }}
+        DARKSTAT_RELAY_HOST: ${{ inputs.relay-host }}
+        UTILS_DEV_ENV: "true"
+        DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
+        DARKSTAT_MAP_BY_URL: ${{ inputs.map-by-url }}
     - name: build
       shell: bash
       run: darkstat map build
