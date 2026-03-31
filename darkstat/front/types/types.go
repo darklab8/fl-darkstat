@@ -81,6 +81,14 @@ func ThemeCycleNicks(priority Theme) []string {
 	return []string{order[0].ToNick(), order[1].ToNick(), order[2].ToNick()}
 }
 
+func ThemeStorageNickCSV() string {
+	return strings.Join([]string{ThemeLight.ToNick(), ThemeDark.ToNick(), ThemeVanilla.ToNick()}, ",")
+}
+
+func ThemeStorageFileCSV() string {
+	return strings.Join([]string{ThemeIndexHTMLFile(ThemeLight), ThemeIndexHTMLFile(ThemeDark), ThemeIndexHTMLFile(ThemeVanilla)}, ",")
+}
+
 type GlobalParams struct {
 	Buildpath      utils_types.FilePath
 	Theme          Theme

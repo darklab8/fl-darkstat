@@ -9,17 +9,40 @@ templ IndexRedirect(serverDefault types.Theme) {
 			<meta charset="utf-8"/>
 			<title>redirect</title>
 		</head>
-		<body data-darkstat-default={ types.ThemeIndexHTMLFile(serverDefault) }>
+		<body
+			data-darkstat-default={ types.ThemeIndexHTMLFile(serverDefault) }
+			data-theme-nicks={ types.ThemeStorageNickCSV() }
+			data-theme-files={ types.ThemeStorageFileCSV() }
+		>
 			<script>
 			(function(){
-			var b=document.body;
-			var fb=b.getAttribute("data-darkstat-default")||"light.html";
-			var m={light:"light.html",dark:"dark.html",vanilla:"vanilla.html"};
-			try{
-			var k=localStorage.getItem("darkstat-theme");
-			if(k&&m[k]){location.replace(m[k]);return;}
-			}catch(e){}
-			location.replace(fb);
+			var bodyEl = document.body;
+			var defaultThemeFile = bodyEl.getAttribute("data-darkstat-default");
+			if (!defaultThemeFile) {
+				throw new Error("missing data-darkstat-default");
+			}
+			var themeNicksCSV = bodyEl.getAttribute("data-theme-nicks");
+			var themeFilesCSV = bodyEl.getAttribute("data-theme-files");
+			if (!themeNicksCSV || !themeFilesCSV) {
+				throw new Error("missing theme storage attributes");
+			}
+			var themeNicks = themeNicksCSV.split(",");
+			var themeFiles = themeFilesCSV.split(",");
+			if (themeNicks.length !== themeFiles.length) {
+				throw new Error("theme nick and file list length mismatch");
+			}
+			var nicknameToIndexFile = {};
+			for (var i = 0; i < themeNicks.length; i++) {
+				nicknameToIndexFile[themeNicks[i]] = themeFiles[i];
+			}
+			try {
+				var storedThemeNickname = localStorage.getItem("darkstat-theme");
+				if (storedThemeNickname && nicknameToIndexFile[storedThemeNickname]) {
+					location.replace(nicknameToIndexFile[storedThemeNickname]);
+					return;
+				}
+			} catch (storageErr) {}
+			location.replace(defaultThemeFile);
 			})();
 			</script>
 		</body>
