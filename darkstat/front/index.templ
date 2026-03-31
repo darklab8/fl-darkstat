@@ -117,7 +117,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 }
 
 templ MapButton(url utils_types.FilePath) {
-	if settings.Env.IsMapOn {
+	if settings.Env.IsExpermentalMapWithDarkstatOn {
 		@tab.Button(tab.NewButtn(ctx, []string{"Map"}, map_urls.Index, url, tab.WithSiteUrl(settings.Env.SiteHost+map_settings.Env.SiteRoot), tab.WithDrectUrl()))
 	} else if settings.Env.MapByUrl != "" {
 		@tab.Button(tab.NewButtn(ctx, []string{"Map"}, "", url, tab.WithSiteUrl(settings.Env.MapByUrl), tab.WithDrectUrl()))
