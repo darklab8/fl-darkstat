@@ -100,23 +100,25 @@ templ TabStyle() {
 	</style>
 }
 
-script GoToUrl(current string, themes []string) {
-	let index = 0; 
+script GoToUrl(current string, themeURLs []string, themeNicks []string) {
+	let index = 0;
 
-	for (let i=0, item; item = themes[i]; i++) {
-	// Look no need to do list[i] in the body of the loop
-		console.log("Looping: index ", i, "item" + item);
-		if (location.pathname == item) {
+	for (let i = 0, url; url = themeURLs[i]; i++) {
+		console.log("Looping: index ", i, "item" + url);
+		if (location.pathname == url) {
 			index = i;
 		}
 	}
 
 	index = index + 1;
-	if (index > themes.length -1) {
+	if (index > themeURLs.length - 1) {
 		index = 0;
 	}
 
-	location.href=themes[index];
+	let nextURL = themeURLs[index];
+	let themeToSave = themeNicks[index];
+	try { localStorage.setItem("darkstat-theme", themeToSave); } catch (e) {}
+	location.href = nextURL;
 
 	// if (location.pathname == current) {
 	// 	location.href=opposite;

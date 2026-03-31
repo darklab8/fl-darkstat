@@ -1,0 +1,29 @@
+package front
+
+import "github.com/darklab8/fl-darkstat/darkstat/theme"
+
+script RedirecterOnload(themeNicks []string, themeFiles []string, defaultThemeFile string) {
+	var nicknameToIndexFile = {};
+	for (var i = 0; i < themeNicks.length; i++) {
+		nicknameToIndexFile[themeNicks[i]] = themeFiles[i];
+	}
+	try {
+		var storedThemeNickname = localStorage.getItem("darkstat-theme");
+		if (storedThemeNickname && nicknameToIndexFile[storedThemeNickname]) {
+			location.replace(nicknameToIndexFile[storedThemeNickname]);
+			return;
+		}
+	} catch (storageErr) {}
+	location.replace(defaultThemeFile);
+}
+
+templ IndexRedirect(serverDefault theme.Theme) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<title>redirect</title>
+		</head>
+		<body onload={ RedirecterOnload(theme.ThemeStorageNicks(), theme.ThemeStorageIndexFiles(), theme.ThemeIndexHTMLFile(serverDefault)) }></body>
+	</html>
+}

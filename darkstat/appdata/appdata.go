@@ -14,8 +14,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/static"
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_logus"
@@ -45,15 +45,13 @@ func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 	}
 	staticPrefix := "static/"
 	siteRoot := settings.Env.SiteRoot
+	defT := theme.ParseDefaultThemeName(settings.Env.DefaultTheme)
 	params := &types.GlobalParams{
 		AppStart:  settings.Env.AppStart,
 		Buildpath: "",
-		Theme:     types.ThemeLight,
-		Themes: []string{
-			siteRoot + urls.Index.ToString(),
-			siteRoot + urls.DarkIndex.ToString(),
-			siteRoot + urls.VanillaIndex.ToString(),
-		},
+		Theme:     defT,
+		Themes:     theme.ThemeCycleURLs(siteRoot, defT),
+		ThemeNicks: theme.ThemeCycleNicks(defT),
 		TractorTabName: tractor_tab_name,
 		SiteHost:       settings.Env.SiteHost,
 		SiteRoot:       siteRoot,

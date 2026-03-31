@@ -10,6 +10,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_settings"
 	"github.com/darklab8/fl-darkstat/darkcore/envers/darkflag"
 	darkcore_settings "github.com/darklab8/fl-darkstat/darkcore/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/theme"
 
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
@@ -50,7 +51,10 @@ type DarkstatEnvVars struct {
 
 	IsMapOn  bool
 	MapByUrl string
-	Enver    *enverant.Enverant
+
+	DefaultTheme string
+
+	Enver *enverant.Enverant
 }
 
 func IsApiActive() bool {
@@ -96,6 +100,8 @@ func init() {
 
 		IsMapOn:  env.GetBoolOr("MAP_ON", *darkflag.IsMapEnabled, enverant.WithDesc("enabled map as part of darkstat. PERFORMANCE HEAVY. by default off. use `map web` if u wish to turn it on faster")),
 		MapByUrl: env.GetStrOr("MAP_BY_URL", "", enverant.WithDesc("If there is deployment of darkmap, or any other map, link here its url")),
+
+		DefaultTheme: theme.ParseDefaultThemeName(env.GetStr("DEFAULT_THEME", enverant.OrStr(strings.TrimSpace(*darkflag.StatDefaultTheme)), enverant.WithDesc("default shell theme for index.html redirect: white, dark, or vanilla (same as -stat-default-theme). localStorage darkstat-theme overrides when set"))).ToNick(),
 	}
 
 	if !Env.TradeDealsEnabled {

@@ -12,23 +12,25 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
-type Theme int64
+type Theme = theme.Theme
 
 const (
-	ThemeNotSet Theme = iota
-	ThemeLight
-	ThemeDark
-	ThemeVanilla
+	ThemeNotSet  = theme.ThemeNotSet
+	ThemeLight   = theme.ThemeLight
+	ThemeDark    = theme.ThemeDark
+	ThemeVanilla = theme.ThemeVanilla
 )
 
 type GlobalParams struct {
 	Buildpath      utils_types.FilePath
 	Theme          Theme
 	Themes         []string
+	ThemeNicks     []string
 	SiteHost       string
 	SiteRoot       string
 	SiteUrl        string

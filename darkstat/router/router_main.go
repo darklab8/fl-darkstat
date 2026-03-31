@@ -17,6 +17,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -73,11 +75,7 @@ func (l *Router) Link(ctx context.Context) *builder.Builder {
 		l.LinkScanners(ctx, build, configs, shared)
 		l.LinkExtraItems(ctx, build, configs, shared)
 
-		build.RegComps(
-			builder.NewComponent(
-				"index_"+"docs.html",
-				front.DocsEntry(types.ThemeLight, shared),
-			),
+		mainComps := []*builder.Component{
 			builder.NewComponent(
 				tab.AllItemsUrl(urls.Docs),
 				front.DocsT(tab.ShowEmpty(true), shared),
@@ -86,19 +84,14 @@ func (l *Router) Link(ctx context.Context) *builder.Builder {
 				urls.Docs,
 				front.DocsT(tab.ShowEmpty(false), shared),
 			),
-			builder.NewComponent(
-				urls.Index,
-				front.Index(types.ThemeLight, shared),
-			),
-			builder.NewComponent(
-				urls.DarkIndex,
-				front.Index(types.ThemeDark, shared),
-			),
-			builder.NewComponent(
-				urls.VanillaIndex,
-				front.Index(types.ThemeVanilla, shared),
-			),
+			builder.NewComponent(urls.Index, front.IndexRedirect(theme.ParseDefaultThemeName(settings.Env.DefaultTheme))),
+		}
+		mainComps = append(mainComps,
+			builder.NewComponent(urls.LightIndex, front.Index(types.ThemeLight, shared)),
+			builder.NewComponent(urls.DarkIndex, front.Index(types.ThemeDark, shared)),
+			builder.NewComponent(urls.VanillaIndex, front.Index(types.ThemeVanilla, shared)),
 		)
+		build.RegComps(mainComps...)
 	})
 
 	timeit.NewTimerMF("linking most of stuff", func() {
