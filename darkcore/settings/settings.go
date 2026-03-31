@@ -15,6 +15,7 @@ type DarkcoreEnvVars struct {
 	ExtraCookieHost     string
 	IsDiscoOauthEnabled bool
 	CacheControl        string
+	BuildFolder         string
 	EnableUnixSockets   bool
 	Enver               *enverant.Enverant
 	WebPort             int
@@ -34,6 +35,7 @@ func GetEnvs() DarkcoreEnvVars {
 		Secret:              envs.GetStrOr("SECRET", "passphrasewhichneedstobe32bytes!", enverant.WithDesc("secret to persist authentifications with query param password or oauth, required if using auths")),
 		EnableUnixSockets:   envs.GetBoolOr("ENABLE_UNIX_SOCKETS", *darkflag.ArgEnableUnixSockets, enverant.WithDesc("creating unix sockets, requires /tmp/darkstat or /tmp/darkstat-{environment} folder defined")),
 		WebPort:             envs.GetIntOr("WEB_PORT", *darkflag.ArgWebPort, enverant.WithDesc("specify web port")),
+		BuildFolder:         envs.GetStrOr("BUILD_FOLDER", "build", enverant.WithDesc("output to which build folder name")),
 		AppStart:            time.Now(),
 		Enver:               envs,
 	}

@@ -26,6 +26,9 @@ inputs:
   map-index-url:
     description: Map index url
     default: "index.html"
+  map-on:
+    description: turn on map by separate method
+    default: "false"
 
 runs:
   using: "composite"
@@ -62,3 +65,21 @@ runs:
         DARKSTAT_RELAY_HOST: ${{ inputs.relay-host }}
         UTILS_DEV_ENV: "true"
         DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
+    - name: build
+      shell: bash
+      run: darkstat map build
+      if: ${{ inputs.map-on == 'true' }}
+      env:
+        DARKSTAT_SITE_HOST: ${{ inputs.site-host }}
+        DARKSTAT_SITE_ROOT: ${{ inputs.site-root }}
+        DARKMAP_SITE_ROOT: ${{ inputs.site-root }}
+        CONFIGS_FREELANCER_FOLDER: ${{ inputs.freelancer-folder }}
+        DARKSTAT_FLDARKSTAT_HEADING: ${{ inputs.heading }}
+        DARKSTAT_RELAY_HOST: ${{ inputs.relay-host }}
+        UTILS_DEV_ENV: "true"
+        DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
+        DARKCORE_BUILD_FOLDER: build_map
+    - name: collect nap files
+      shell: bash
+      if: ${{ inputs.map-on == 'true' }}
+      run: copy -r build_map/* build/

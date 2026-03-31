@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
+	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	darkstat_settings "github.com/darklab8/fl-darkstat/darkstat/settings"
 
 	"github.com/darklab8/go-utils/utils/timeit"
@@ -88,7 +89,7 @@ func (b *Builder) BuildAll(to_mem bool, filesystem *Filesystem) *Filesystem {
 		darkstat_settings.Env.IsStaticSiteGenerator = true
 	}
 
-	build_root := utils_types.FilePath("build")
+	build_root := utils_types.FilePath(settings.Env.BuildFolder)
 	if filesystem == nil {
 		filesystem = NewFileystem(build_root)
 	}
