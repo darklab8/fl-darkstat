@@ -222,37 +222,38 @@ svg.connection-svg-overlay line {
 }
 
 svg.connection-svg-overlay line.conn_jumpgate {
-    stroke: rgba(69, 150, 255, 0.9);
-    filter: drop-shadow(0px 0px 0.3em rgba(69, 150, 255, 0.8)) drop-shadow(0px 0px 0.3em rgba(69, 150, 255, 0.8));
+    stroke: rgba(69, 150, 255, 0.8);
+    stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_unknown {
-    stroke: rgba(247, 4, 255, 0.849);
-    filter: drop-shadow(0px 0px 0.3em rgba(249, 69, 255, 0.8)) drop-shadow(0px 0px 0.3em rgba(249, 69, 255, 0.8));
+    stroke: rgba(247, 4, 255, 0.8);
+    stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_jumphole {
-    stroke: rgb(243 229 171 / 67%);
-    filter: drop-shadow(0px 0px 0.3em rgba(243, 229, 171, 0.8)) drop-shadow(0px 0px 0.3em rgba(243, 229, 171, 0.8));
+    stroke: rgba(243, 229, 171, 0.8);
+    stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_unstable {
-    stroke: rgba(219, 72, 55, 0.9);
-    filter: drop-shadow(0px 0px 0.3em rgba(121, 80, 76, 0.8)) drop-shadow(0px 0px 0.3em rgba(121, 80, 76, 0.8));
+    stroke: rgba(219, 72, 55, 0.8);
+    stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_fighter {
-    stroke: rgba(1, 255, 13, 0.9);
-    filter: drop-shadow(0px 0px 0.3em rgba(33, 243, 5, 0.8)) drop-shadow(0px 0px 0.3em rgba(121, 80, 76, 0.8));
+    stroke: rgba(1, 255, 13, 0.8);
+    stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_alien {
-    stroke: rgba(152, 69, 255, 0.9);
-    filter: drop-shadow(0px 0px 0.3em rgba(152, 69, 255, 0.8)) drop-shadow(0px 0px 0.3em rgba(152, 69, 255, 0.8));
+    stroke: rgba(152, 69, 255, 0.8);
+    stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_hover {
-    filter: drop-shadow(0px 0px 0.25em rgba(255, 255, 255, 0.95)) drop-shadow(0px 0px 0.25em rgba(255, 255, 255, 0.95));
+    stroke: rgba(255, 255, 255, 0.8);
+    stroke-width: 0.22em;
 }
 
 svg.connection-svg-overlay line.hidden_system {
