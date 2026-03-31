@@ -82,4 +82,4 @@ runs:
     - name: collect nap files
       shell: bash
       if: ${{ inputs.map-on == 'true' }}
-      run: copy -r build_map/* build/
+      run: cp -r build_map/* build/
