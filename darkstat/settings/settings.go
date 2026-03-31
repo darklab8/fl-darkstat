@@ -122,7 +122,7 @@ func normalizeShellTheme(s string) string {
 	case "vanilla":
 		return "vanilla"
 	default:
-		return "light"
+		panic(fmt.Sprintf("unrecognized default theme name: %q", s))
 	}
 }
 

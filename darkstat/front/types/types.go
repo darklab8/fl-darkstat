@@ -2,6 +2,7 @@ package types
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 	"unicode"
@@ -34,15 +35,12 @@ func (t Theme) ToNick() string {
 	case ThemeVanilla:
 		return "vanilla"
 	default:
-		return ""
+		panic(fmt.Sprintf("not a valid theme: %d", int64(t)))
 	}
 }
 
 func ThemeIndexHTMLFile(t Theme) string {
-	if n := t.ToNick(); n != "" {
-		return n + ".html"
-	}
-	return "light.html"
+	return t.ToNick() + ".html"
 }
 
 func ParseDefaultThemeName(s string) Theme {
@@ -54,20 +52,23 @@ func ParseDefaultThemeName(s string) Theme {
 	case "vanilla":
 		return ThemeVanilla
 	default:
-		return ThemeLight
+		panic(fmt.Sprintf("unrecognized default theme name: %q", s))
+	}
+}
+
+func themeCycleOrder(priority Theme) [3]Theme {
+	switch priority {
+	case ThemeDark:
+		return [3]Theme{ThemeDark, ThemeVanilla, ThemeLight}
+	case ThemeVanilla:
+		return [3]Theme{ThemeVanilla, ThemeLight, ThemeDark}
+	default:
+		return [3]Theme{ThemeLight, ThemeDark, ThemeVanilla}
 	}
 }
 
 func ThemeCycleURLs(siteRoot string, priority Theme) []string {
-	var order [3]Theme
-	switch priority {
-	case ThemeDark:
-		order = [3]Theme{ThemeDark, ThemeVanilla, ThemeLight}
-	case ThemeVanilla:
-		order = [3]Theme{ThemeVanilla, ThemeLight, ThemeDark}
-	default:
-		order = [3]Theme{ThemeLight, ThemeDark, ThemeVanilla}
-	}
+	order := themeCycleOrder(priority)
 	return []string{
 		siteRoot + ThemeIndexHTMLFile(order[0]),
 		siteRoot + ThemeIndexHTMLFile(order[1]),
