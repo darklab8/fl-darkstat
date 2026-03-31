@@ -76,3 +76,8 @@ variable "args" {
   type    = list(string)
   default = ["web"]
 }
+
+variable "DARKSTAT_MAP_BY_URL" {
+  type    = string
+  default = null
+}

@@ -11,10 +11,11 @@ module "darkstat" {
   ipv4_address    = module.data_cluster.node_darklab.ipv4_address
   enable_restarts = true
 
-  SITE_ROOT          = "/fl-data-discovery/"
-  FLDARKSTAT_HEADING = <<-EOT
+  SITE_ROOT           = "/fl-data-discovery/"
+  FLDARKSTAT_HEADING  = <<-EOT
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Disco</a>
   EOT
+  DARKSTAT_MAP_BY_URL = "https://darklab8.github.io/fl-data-discovery/map.html"
 
   stat_prefix    = "darkstat"
   pprof_prefix   = "darkstat-pprof"
@@ -81,15 +82,15 @@ module "darkstat_vanilla" {
   discovery_path = module.vanilla.freelancer_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
 
-  SITE_ROOT          = "/fl-data-vanilla/"
-  FLDARKSTAT_HEADING = <<-EOT
+  SITE_ROOT           = "/fl-data-vanilla/"
+  FLDARKSTAT_HEADING  = <<-EOT
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for Freelancer Vanilla
   EOT
+  DARKSTAT_MAP_BY_URL = "https://darklab8.github.io/fl-data-vanilla/map.html"
 
   stat_prefix     = "darkstat-vanilla"
   zone            = "dd84ai.com"
   enable_restarts = false
   is_discovery    = false
   args            = ["--stat-deals-on", "web"]
-
 }

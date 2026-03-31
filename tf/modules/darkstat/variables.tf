@@ -22,6 +22,9 @@ locals {
     GRPC_GO_LOG_SEVERITY_LEVEL  = "info"
     GRPC_GO_LOG_VERBOSITY_LEVEL = "6"
     },
+    var.DARKSTAT_MAP_BY_URL != null ? {
+      DARKSTAT_MAP_BY_URL = var.DARKSTAT_MAP_BY_URL
+    } : {},
     var.RELAY_HOST != null ? {
       DARKSTAT_RELAY_HOST = var.RELAY_HOST # Required only for Discover Freelancer which have frontend at Github Pages. Path to backend for PoBs data
     } : {},
