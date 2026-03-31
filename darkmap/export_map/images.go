@@ -37,8 +37,9 @@ func GetImages(folder_name string) *utfextract.Shapes {
 	folders, err := findDirs(string(settings.Env.FreelancerFolder), filepath.Base(folder_name))
 
 	var filtered_folders []string
+	normWant := filepath.ToSlash(folder_name)
 	for _, folder := range folders {
-		if strings.Contains(folder, folder_name) {
+		if strings.Contains(filepath.ToSlash(folder), normWant) {
 			filtered_folders = append(filtered_folders, folder)
 		}
 	}
