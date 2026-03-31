@@ -6,8 +6,13 @@
 .zone.zoneExclusion1,
 .zone.zoneExclusion2,
 .zone.zoneExclusion3 {
-    background-color: rgba(0, 0, 0, 0.3) !important;
-    box-shadow: 0 0 0.1em 0.05em rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 0 0.1em 0.05em rgba(0, 0, 0, 0.4);
+}
+
+.zone.zoneExclusionSuper {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    box-shadow: 0 0 0.1em 0.05em rgba(0, 0, 0, 0.7) !important;
 }
 
 .zone.zoneMinefield2 {

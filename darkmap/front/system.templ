@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -318,7 +319,7 @@ templ SystemContents(system *export_map.System) {
 				class={
 					"zone",
 					"unhidden_zone",
-					GetZoneClass(obj.PropertyFlags),
+					GetZoneClass(obj.PropertyFlags, system),
 					templ.KV("roundZone", obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "sphere"),
 					templ.KV("cylinderZone", obj.ZoneShape == "cylinder"),
 					templ.KV("boxZone", obj.ZoneShape == "box"),
@@ -332,12 +333,12 @@ templ SystemContents(system *export_map.System) {
 						obj.PropertyFogColorEnabled,
 					),
 					// fmt.Sprintf("z-index: %d", zone_index+10),
-					fmt.Sprintf("z-index: %d", -int(obj.Size.X/1000.0*obj.Size.Z/1000.0)),
+					fmt.Sprintf("z-index: %d", ZIndex(obj)),
 					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
 						SystemPosToPerc(obj.Pos.Z, system),
 						SystemPosToPerc(obj.Pos.X, system),
 					),
-					fmt.Sprintf("transform: rotate(%.1fdeg)", -obj.Rotation.Y),
+					fmt.Sprintf("transform: rotate(%.1fdeg)", rotateForward(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z)),
 					"position: absolute",
 					templ.KV("pointer-events: none", obj.Name == ""),
 					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
@@ -355,14 +356,18 @@ templ SystemContents(system *export_map.System) {
 					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
 					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
 				
-					templ.KV(fmt.Sprintf("margin-top: %.5f%%", SizeInPerc(float64(obj.Size.Y), system)), obj.ZoneShape == "cylinder"),
-					templ.KV(fmt.Sprintf("margin-left: %.5f%%", SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
+					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Y), system)), obj.ZoneShape == "cylinder"),
+					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
 					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Y), system)), obj.ZoneShape == "cylinder"),
 					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
 				}
 			></obj->
 		}
 	</content->
+}
+
+func toRad(deg float64) float64 {
+	return deg * math.Pi / 180
 }
 
 const TooltipCls = "tooltip"
@@ -377,8 +382,23 @@ templ TooltipText(Pos cfg.Vector) {
 	</span>
 }
 
-func GetZoneClass(property_flag int) string {
+func ZIndex(obj *export_map.Zone) int {
+	if obj.ZoneShape == "sphere" {
+		return -int(obj.Size.X / 1000.0 * obj.Size.X / 1000.0)
+	}
+
+	return -int(obj.Size.X / 1000.0 * obj.Size.Z / 1000.0)
+
+}
+
+func GetZoneClass(property_flag int, system *export_map.System) string {
 	if value, ok := export_map.ZoneFlagMap[property_flag]; ok {
+
+		// the system is too dark for normal exclusions
+		if system.Nickname == "ew97" && (property_flag == 65536 || property_flag == 131072 || property_flag == 196608) {
+			return "zoneExclusionSuper"
+		}
+
 		return value
 	}
 	return "noZoneType"
