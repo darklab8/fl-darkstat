@@ -2,6 +2,7 @@ package settings
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	_ "embed"
@@ -99,6 +100,11 @@ func init() {
 
 	if !Env.TradeDealsEnabled {
 		fmt.Println("WARN: TRADE_DEALS_ENABLED remained off. use env var set true, or cli arg `-deals` to turn on BEST TRADE DEALS")
+	}
+
+	if Env.IsMapOn {
+		fmt.Println("ERROR: do not use this feature. apperently not ready yet. :] use `map web` instead for dedicated map view")
+		os.Exit(1)
 	}
 }
 
