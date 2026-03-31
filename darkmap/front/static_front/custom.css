@@ -222,37 +222,37 @@ svg.connection-svg-overlay line {
 }
 
 svg.connection-svg-overlay line.conn_jumpgate {
-    stroke: rgba(69, 150, 255, 0.95);
+    stroke: rgba(69, 150, 255, 0.8);
     stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_unknown {
-    stroke: rgba(247, 4, 255, 0.9);
+    stroke: rgba(247, 4, 255, 0.8);
     stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_jumphole {
-    stroke: rgba(243, 229, 171, 0.85);
+    stroke: rgba(243, 229, 171, 0.8);
     stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_unstable {
-    stroke: rgba(219, 72, 55, 0.95);
+    stroke: rgba(219, 72, 55, 0.8);
     stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_fighter {
-    stroke: rgba(1, 255, 13, 0.95);
+    stroke: rgba(1, 255, 13, 0.8);
     stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_alien {
-    stroke: rgba(152, 69, 255, 0.95);
+    stroke: rgba(152, 69, 255, 0.8);
     stroke-width: 0.14em;
 }
 
 svg.connection-svg-overlay line.conn_hover {
-    stroke: rgba(255, 255, 255, 1);
+    stroke: rgba(255, 255, 255, 0.8);
     stroke-width: 0.22em;
 }
 
