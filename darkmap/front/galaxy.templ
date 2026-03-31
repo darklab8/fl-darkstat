@@ -73,7 +73,7 @@ templ GalalaxyMap(data *export_map.Export) {
 	<centeralizer->
 		// Systems rendered as before
 		for _, sys := range data.Systems {
-			@GalaxySystem(sys, GetSystemFac(sys, data.Exp.IsDiscovery))
+			@GalaxySystem(sys, GetSystemFac(sys, data.Exp.Mapped.Discovery != nil))
 		}
 		<system-title>Sirius</system-title>
 		// One SVG overlay covering the full map, lines use % coordinates
