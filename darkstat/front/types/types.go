@@ -2,7 +2,6 @@ package types
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 	"unicode"
@@ -13,47 +12,26 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
-type Theme int64
+type Theme = theme.Theme
 
 const (
-	ThemeNotSet Theme = iota
-	ThemeLight
-	ThemeDark
-	ThemeVanilla
+	ThemeNotSet  = theme.ThemeNotSet
+	ThemeLight   = theme.ThemeLight
+	ThemeDark    = theme.ThemeDark
+	ThemeVanilla = theme.ThemeVanilla
 )
 
-func (t Theme) ToNick() string {
-	switch t {
-	case ThemeLight:
-		return "light"
-	case ThemeDark:
-		return "dark"
-	case ThemeVanilla:
-		return "vanilla"
-	default:
-		panic(fmt.Sprintf("not a valid theme: %d", int64(t)))
-	}
+func ParseDefaultThemeName(s string) Theme {
+	return theme.ParseDefaultThemeName(s)
 }
 
 func ThemeIndexHTMLFile(t Theme) string {
-	return t.ToNick() + ".html"
-}
-
-func ParseDefaultThemeName(s string) Theme {
-	switch strings.ToLower(strings.TrimSpace(s)) {
-	case "white", "light":
-		return ThemeLight
-	case "dark":
-		return ThemeDark
-	case "vanilla":
-		return ThemeVanilla
-	default:
-		panic(fmt.Sprintf("unrecognized default theme name: %q", s))
-	}
+	return theme.ThemeIndexHTMLFile(t)
 }
 
 func themeCycleOrder(priority Theme) [3]Theme {
