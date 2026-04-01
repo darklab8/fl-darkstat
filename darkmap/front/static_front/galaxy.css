@@ -282,7 +282,8 @@ system- {
 .wreck,
 .zone,
 .playerbase,
-.mining {
+.mining,
+.zone {
     cursor: pointer;
 }
 
@@ -324,7 +325,7 @@ system-:hover,
 .wreck:hover,
 .zone:hover,
 .mining:hover {
-    box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
+    box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7) !important;
     color: rgb(255, 167, 6);
 }
 
@@ -435,6 +436,18 @@ map-.system system-label-wrap {
     font-size: 1.0rem;
 }
 
+.zoomed08 map-.system system-label-wrap {
+    font-size: 0.8rem;
+}
+
+.zoomed06 map-.system system-label-wrap {
+    font-size: 0.6rem;
+}
+
+.zoomed04 map-.system system-label-wrap {
+    font-size: 0.4rem;
+}
+
 system-label {
     margin-left: 0px;
     left: -50%;
@@ -445,6 +458,8 @@ system-label {
     text-shadow: 0em 0em 0.3em black !important;
     color: white;
 }
+
+
 
 system-title {
     position: absolute;

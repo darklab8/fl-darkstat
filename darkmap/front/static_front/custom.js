@@ -88,6 +88,22 @@ function InstallPanzoom() {
             document.body.classList.remove("zoomedIn");
             document.body.classList.add("zoomedOut");
         }
+
+        if (event.detail.scale > 1.2) {
+            document.body.classList.add("zoomed08");
+        } else {
+            document.body.classList.remove("zoomed08");
+        }
+        if (event.detail.scale > 1.5) {
+            document.body.classList.add("zoomed06");
+        } else {
+            document.body.classList.remove("zoomed06");
+        }
+        if (event.detail.scale > 2.0) {
+            document.body.classList.add("zoomed04");
+        } else {
+            document.body.classList.remove("zoomed04");
+        }
     });
 }
 

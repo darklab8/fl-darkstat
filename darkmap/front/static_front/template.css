@@ -12,7 +12,7 @@
 
 .zone.zoneExclusionSuper {
     background-color: rgba(0, 0, 0, 0.7) !important;
-    box-shadow: 0 0 0.1em 0.05em rgba(0, 0, 0, 0.7) !important;
+    box-shadow: 0 0 0.1em 0.05em rgba(0, 0, 0, 0.7);
 }
 
 .zone.zoneMinefield2 {

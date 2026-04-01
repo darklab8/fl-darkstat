@@ -351,7 +351,6 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 			),
 			fmt.Sprintf("transform: rotate(%.1fdeg)", ROT_ANGLE),
 			"position: absolute",
-			templ.KV("pointer-events: none", obj.Name == ""),
 		
 			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
 			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
