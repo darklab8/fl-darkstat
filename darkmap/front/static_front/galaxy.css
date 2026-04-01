@@ -430,7 +430,10 @@ system-label-wrap {
     display: inline-block;
     top: 1em;
     white-space: nowrap;
+
+    pointer-events: none;
 }
+
 
 map-.system system-label-wrap {
     font-size: 1.0rem;
@@ -457,6 +460,8 @@ system-label {
     white-space: nowrap;
     text-shadow: 0em 0em 0.3em black !important;
     color: white;
+
+    pointer-events: auto;
 }
 
 
