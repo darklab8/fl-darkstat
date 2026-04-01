@@ -459,7 +459,11 @@ func (e *Export) EnrichSystemWithObjects(
 			}
 		}
 		if strings.Contains(archetype, "docking_fixture") {
-			continue
+			if _, ok := e.Shapes.ShapesByNick[shape_name]; ok {
+				e.Shapes.PermittedShapes[shape_name] = true
+			} else {
+				continue
+			}
 		} else if shape_name == "" {
 			logus.Log.Error("can't find shape for base, going for fallbacks",
 				typelog.Any("shape", shape_name),
