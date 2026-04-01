@@ -306,71 +306,80 @@ templ SystemContents(system *export_map.System) {
 		}
 		for _, obj := range system.Zones {
 			// can be sphere, ellipsoid, cylinder, box, ring
-			<obj-
-				hx-get={ types.GetCtx(ctx).SiteRoot + MapInfocardURL(infocarder.InfocardKey(obj.Nickname)) }
-				hx-target="#remodal-bg"
-				hx-swap="outerHTML"
-				data-nickname={ obj.Nickname }
-				data-shape={ obj.ZoneShape }
-				data-rotate={ fmt.Sprintf("%.1f,%.1f,%.1f", obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) }
-				data-size={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Size.X, obj.Size.Y, obj.Size.Z) }
-				data-pos={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Pos.X, obj.Pos.Y, obj.Pos.Z) }
-				class={
-					"zone",
-					"unhidden_zone",
-					GetZoneClass(obj.PropertyFlags, system),
-					templ.KV("roundZone", obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "sphere"),
-					templ.KV("cylinderZone", obj.ZoneShape == "cylinder"),
-					templ.KV("boxZone", obj.ZoneShape == "box"),
-					templ.KV("vertical_obj", ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
-				}
-				style={
-					templ.KV(fmt.Sprintf(
-						"background-color: rgba(%.0f,%.0f,%.0f,0.45)",
-						obj.PropertyFogColor.X,
-						obj.PropertyFogColor.Y,
-						obj.PropertyFogColor.Z),
-						obj.PropertyFogColorEnabled,
-					),
-					// fmt.Sprintf("z-index: %d", zone_index+10),
-					fmt.Sprintf("z-index: %d", ZIndex(obj)),
-					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
-						SystemPosToPerc(obj.Pos.Z, system),
-						SystemPosToPerc(obj.Pos.X, system),
-					),
-					fmt.Sprintf("transform: rotate(%.1fdeg)", ObjRotAngle(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z)),
-					"position: absolute",
-					templ.KV("pointer-events: none", obj.Name == ""),
-				
-					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
-					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Z)*ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z), system)), obj.ZoneShape == "ellipsoid"),
-					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
-				
-					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)/2), obj.ZoneShape == "box"),
-					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)/2), obj.ZoneShape == "box"),
-					templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Size.Z)*ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z), system)), obj.ZoneShape == "box"),
-					templ.KV(fmt.Sprintf("width: %.5f%%", SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "box"),
-				
-					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
-					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X)*ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z), system)), obj.ZoneShape == "sphere"),
-					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
-				
-					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Y), system)), obj.ZoneShape == "cylinder"),
-					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Y)*ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z), system)), obj.ZoneShape == "cylinder"),
-					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
-				
-					// if it is vertical object, than its size is controled by its width :]
-					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
-					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
-					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
-				}
-			></obj->
+			@SystemObjZone(
+				obj,
+				system,
+				ObjRotAngle(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z),
+				ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z),
+			)
 		}
 	</content->
+}
+
+templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE float64, ROT_LENGTH float64) {
+	<obj-
+		hx-get={ types.GetCtx(ctx).SiteRoot + MapInfocardURL(infocarder.InfocardKey(obj.Nickname)) }
+		hx-target="#remodal-bg"
+		hx-swap="outerHTML"
+		data-nickname={ obj.Nickname }
+		data-shape={ obj.ZoneShape }
+		data-rotate={ fmt.Sprintf("%.1f,%.1f,%.1f", obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) }
+		data-size={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Size.X, obj.Size.Y, obj.Size.Z) }
+		data-pos={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Pos.X, obj.Pos.Y, obj.Pos.Z) }
+		class={
+			"zone",
+			"unhidden_zone",
+			GetZoneClass(obj.PropertyFlags, system),
+			templ.KV("roundZone", obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "sphere"),
+			templ.KV("cylinderZone", obj.ZoneShape == "cylinder"),
+			templ.KV("boxZone", obj.ZoneShape == "box"),
+			templ.KV("vertical_obj", ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
+		}
+		style={
+			templ.KV(fmt.Sprintf(
+				"background-color: rgba(%.0f,%.0f,%.0f,0.45)",
+				obj.PropertyFogColor.X,
+				obj.PropertyFogColor.Y,
+				obj.PropertyFogColor.Z),
+				obj.PropertyFogColorEnabled,
+			),
+			// fmt.Sprintf("z-index: %d", zone_index+10),
+			fmt.Sprintf("z-index: %d", ZIndex(obj)),
+			fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+				SystemPosToPerc(obj.Pos.Z, system),
+				SystemPosToPerc(obj.Pos.X, system),
+			),
+			fmt.Sprintf("transform: rotate(%.1fdeg)", ROT_ANGLE),
+			"position: absolute",
+			templ.KV("pointer-events: none", obj.Name == ""),
+		
+			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
+			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
+			templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Z)*ROT_LENGTH, system)), obj.ZoneShape == "ellipsoid"),
+			templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
+		
+			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)/2), obj.ZoneShape == "box"),
+			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)/2), obj.ZoneShape == "box"),
+			templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Size.Z)*ROT_LENGTH, system)), obj.ZoneShape == "box"),
+			templ.KV(fmt.Sprintf("width: %.5f%%", SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "box"),
+		
+			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
+			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
+			templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X)*ROT_LENGTH, system)), obj.ZoneShape == "sphere"),
+			templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
+		
+			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Y), system)), obj.ZoneShape == "cylinder"),
+			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
+			templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Y)*ROT_LENGTH, system)), obj.ZoneShape == "cylinder"),
+			templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
+		
+			// if it is vertical object, than its size is controled by its width :]
+			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), ROT_LENGTH == 0),
+			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), ROT_LENGTH == 0),
+			templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), ROT_LENGTH == 0),
+			templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), ROT_LENGTH == 0),
+		}
+	></obj->
 }
 
 const TooltipCls = "tooltip"
