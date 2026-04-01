@@ -6,7 +6,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
-	"math"
 	"strconv"
 	"strings"
 )
@@ -323,6 +322,7 @@ templ SystemContents(system *export_map.System) {
 					templ.KV("roundZone", obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "sphere"),
 					templ.KV("cylinderZone", obj.ZoneShape == "cylinder"),
 					templ.KV("boxZone", obj.ZoneShape == "box"),
+					templ.KV("vertical_obj", ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
 				}
 				style={
 					templ.KV(fmt.Sprintf(
@@ -338,36 +338,39 @@ templ SystemContents(system *export_map.System) {
 						SystemPosToPerc(obj.Pos.Z, system),
 						SystemPosToPerc(obj.Pos.X, system),
 					),
-					fmt.Sprintf("transform: rotate(%.1fdeg)", rotateForward(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z)),
+					fmt.Sprintf("transform: rotate(%.1fdeg)", ObjRotAngle(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z)),
 					"position: absolute",
 					templ.KV("pointer-events: none", obj.Name == ""),
+				
 					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
 					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Z)*ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z), system)), obj.ZoneShape == "ellipsoid"),
 					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
 				
 					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)/2), obj.ZoneShape == "box"),
 					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)/2), obj.ZoneShape == "box"),
-					templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "box"),
+					templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Size.Z)*ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z), system)), obj.ZoneShape == "box"),
 					templ.KV(fmt.Sprintf("width: %.5f%%", SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "box"),
 				
 					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
 					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X)*ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z), system)), obj.ZoneShape == "sphere"),
 					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
 				
 					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Y), system)), obj.ZoneShape == "cylinder"),
 					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Y), system)), obj.ZoneShape == "cylinder"),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Y)*ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z), system)), obj.ZoneShape == "cylinder"),
 					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
+				
+					// if it is vertical object, than its size is controled by its width :]
+					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
+					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
+					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
+					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
 				}
 			></obj->
 		}
 	</content->
-}
-
-func toRad(deg float64) float64 {
-	return deg * math.Pi / 180
 }
 
 const TooltipCls = "tooltip"
