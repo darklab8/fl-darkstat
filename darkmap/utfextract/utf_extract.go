@@ -378,12 +378,15 @@ func extractFromFileWithSubdir(inputPath, outputDir, subdir string, shapes *Shap
 		}
 
 		var shape_nickname, shape_extension string
-		if strings.Contains(basename, ".") {
-			shape_naming := strings.Split(strings.ToLower(basename), ".")
-			shape_nickname = shape_naming[0]
-			shape_extension = shape_naming[1]
-		} else {
-			shape_nickname = basename
+		shape_nickname = basename
+		names := strings.Split(dest, string(os.PathSeparator))
+		for _, name := range names {
+			if strings.Contains(name, ".") {
+				shape_naming := strings.Split(strings.ToLower(name), ".")
+				shape_nickname = shape_naming[0]
+				shape_extension = shape_naming[1]
+				break
+			}
 		}
 
 		shape, ok := shapes.ShapesByNick[shape_nickname]

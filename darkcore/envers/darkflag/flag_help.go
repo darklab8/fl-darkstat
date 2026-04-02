@@ -43,6 +43,12 @@ func init() {
 		}
 	}
 
+	for _, arg := range os.Args {
+		if strings.Contains(arg, "-preserve-paths") {
+			is_test = true
+		}
+	}
+
 	if flag.Lookup("test.v") != nil || flag.Lookup("test.testlogfile") != nil || is_test {
 		fmt.Println("run under go test")
 	} else {

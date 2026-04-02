@@ -275,6 +275,10 @@ func (e *Export) EnrichSystemWithObjects(
 			jumphole.VisibleByDefault = true
 		}
 
+		if strings.Contains(archetype, "invisible") {
+			jumphole.VisibleByDefault = false
+		}
+
 		shape_name, found_shape := solararch.ShapeName.GetValue()
 		if _, ok := e.Shapes.ShapesByNick[strings.ToLower(shape_name)]; ok {
 			e.Shapes.PermittedShapes[strings.ToLower(shape_name)] = true

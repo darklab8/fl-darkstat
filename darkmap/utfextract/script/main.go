@@ -46,6 +46,10 @@ nav_navmap_right.cmp => 30.tgaframetexture.tga backgroundpattern.dds edgecolor.t
 
 // go run . -in nav_addwaypoint.cmp -out ./images
 
+// go run . -preserve-paths -r -in /home/naa/apps/freelancer_related/wineprefix_flsr/drive_c/Freelancer/DATA/INTERFACE/NEURONET/NAVMAP/NEWNAVMAP -out ./received
+
+// /home/naa/apps/freelancer_related/winreprefix_freelancer_vanilla/drive_c/Freelancer/DATA/INTERFACE/NEURONET/NAVMAP/NEWNAVMAP/
+
 func main() {
 	inPath := flag.String("in", "", "Input file or directory (required)")
 	outPath := flag.String("out", ".", "Output directory (default: current directory)")
@@ -71,6 +75,7 @@ func main() {
 	}
 
 	shapes := utfextract.NewShapes()
+	shapes.WriteToFile = true
 
 	if info.IsDir() {
 		if *preservePaths && !*recursive {

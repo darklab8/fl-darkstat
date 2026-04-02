@@ -52,7 +52,7 @@ func GetImages(folder_name string) *utfextract.Shapes {
 		panic(err)
 	}
 	if len(folders) != 1 {
-		panic(fmt.Sprintln("expected to find ", folder_name, " in freelancer folder", settings.Env.FreelancerFolder))
+		panic(fmt.Sprintln("expected to find single folder=", folder_name, " in freelancer folder", settings.Env.FreelancerFolder, "found instead folders=", folders))
 	}
 
 	shapes := utfextract.NewShapes()
