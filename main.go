@@ -87,19 +87,20 @@ func main() {
 		docs.SwaggerInfo.Schemes = []string{"https"}
 	}
 
-	defer func() {
-		if r := recover(); r != nil {
-			logus.Log.Error("Program crashed in main process",
-				typelog.Any("recover", r),
-				typelog.Any("stack", string(debug.Stack())),
-			)
-			if !settings.Env.IsDevEnv {
-				fmt.Println("going to sleeping")
-				time.Sleep(10 * time.Second)
-			}
-			panic(r)
-		}
-	}()
+	// the most useless idea i came up with
+	// defer func() {
+	// 	if r := recover(); r != nil {
+	// 		logus.Log.Error("Program crashed in main process",
+	// 			typelog.Any("recover", r),
+	// 			typelog.Any("stack", string(debug.Stack())),
+	// 		)
+	// 		if !settings.Env.IsDevEnv {
+	// 			fmt.Println("going to sleeping")
+	// 			time.Sleep(10 * time.Second)
+	// 		}
+	// 		panic(r)
+	// 	}
+	// }()
 
 	web_darkstat := func(ctx_close context.Context) func() {
 		go func() {

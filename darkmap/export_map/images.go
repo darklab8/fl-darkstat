@@ -42,7 +42,7 @@ func GetImages(folder_name string) *utfextract.Shapes {
 
 	var filtered_folders []string
 	for _, folder := range folders {
-		if strings.Contains(folder, folder_name) {
+		if strings.Contains(filepath.ToSlash(folder), filepath.ToSlash(folder_name)) {
 			filtered_folders = append(filtered_folders, folder)
 		}
 	}

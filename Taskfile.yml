@@ -66,8 +66,8 @@ tasks:
     cmds:
       - task: build-version
       - mkdir -p dist
-      - rm dist/darkstat-linux-amd64 | true
-      - GOOS=windows GOARCH=amd64 go build -v -o ~/windows10shared/fl-files-discovery/darkstat.exe main.go
+      - rm ~/windows10shared/fl-files-vanilla/darkstat.exe | true
+      - GOOS=windows GOARCH=amd64 go build -v -o ~/windows10shared/fl-files-vanilla/darkstat.exe main.go
 
   build-version:
     cmds:
