@@ -30,7 +30,8 @@ func DarkmapCliGroup(Args []string) {
 				Nickname:    "build",
 				Description: "build darkmap to static assets: html, css, js files",
 				Func: func(info cantil.ActionInfo) error {
-					linker.NewLinker(false).Link(context.Background()).BuildAll(false, nil)
+					ctx := context.Background()
+					linker.NewLinker(false).Link(ctx).BuildAll(false, nil)
 					return nil
 				},
 			},

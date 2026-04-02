@@ -391,6 +391,7 @@ func extractFromFileWithSubdir(inputPath, outputDir, subdir string, shapes *Shap
 			shape = &Shape{
 				Nickname:  shape_nickname,
 				Extension: shape_extension,
+				Path:      dest,
 			}
 			shapes.ShapesByNick[shape_nickname] = shape
 		}
@@ -429,6 +430,7 @@ type Shape struct {
 	Nickname  string
 	Extension string
 	Images    []*Image
+	Path      string
 }
 type Image struct {
 	Nickname  string

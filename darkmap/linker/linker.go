@@ -130,10 +130,13 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 	fmt.Println("SHAPES STARTING SENDING JOBS")
 	created_jobs := 0
 	for _, shape := range l.Export.Shapes.ShapesByNick {
-		if l.ToMemory {
-			if _, permitted := l.Export.Shapes.PermittedShapes[strings.ToLower(shape.Nickname)]; !permitted {
-				continue
-			}
+		// if l.ToMemory {
+		// 	if _, permitted := l.Export.Shapes.PermittedShapes[strings.ToLower(shape.Nickname)]; !permitted {
+		// 		continue
+		// 	}
+		// }
+		if _, permitted := l.Export.Shapes.PermittedShapes[strings.ToLower(shape.Nickname)]; !permitted {
+			continue
 		}
 
 		created_jobs++
@@ -148,12 +151,16 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 			if err != nil {
 				image, err = SelectImage(shape, "dds")
 			}
+
 			if logus.Log.CheckWarn(err, "not found image for shape, skipping",
 				typelog.Any("shape", shape.Nickname+"."+shape.Extension),
 			) {
 				decoded_shape_files <- result
 				return
 			}
+
+			logus.Log.Info("image linking", typelog.Any("dest", image.Dest), typelog.Any("nick", image.Nickname))
+
 			jpeg_result, err := utfextract.TransformToJpeg(image)
 			if logus.Log.CheckWarn(err, fmt.Sprintln("unable decoding "+image.Extension+" image"),
 				typelog.Any("image_name", image.Nickname+"."+image.Extension),
