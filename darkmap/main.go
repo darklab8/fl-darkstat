@@ -52,6 +52,8 @@ func DarkmapCliGroup(Args []string) {
 					timer_buildall.Close()
 
 					timer_web.Close()
+
+					fmt.Println("darkmap is launched in=", timer_web.Duration())
 					graceful_closer := web.NewWeb(
 						[]*builder.Filesystem{fs},
 						web.WithSiteRoot(settings.Env.SiteRoot),
