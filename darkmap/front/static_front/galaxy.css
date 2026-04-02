@@ -312,6 +312,10 @@ system- {
     height: 100%;
 }
 
+obj- img {
+    position: absolute;
+}
+
 /* .contents div[data-ids-info]:hover,
 .contents div[data-jump-dest]:hover,
 .contents div.mineable:hover  */
