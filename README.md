@@ -10,7 +10,6 @@ It is able to work in two mods:
 
 See demos:
 
-- [Staging version](https://darklab8.github.io/fl-darkstat/)
 - [Freelancer Discovery version](https://darklab8.github.io/fl-data-discovery/) [(action)](https://github.com/darklab8/fl-data-discovery/actions/workflows/publish.yaml)
   - [Discovery As Backend version](https://darkstat.dd84ai.com/)
   - [Discovery Map](https://darklab8.github.io/fl-data-discovery/map.html)
@@ -23,6 +22,8 @@ See demos:
   - [Freelancer Sirius Revival Map](https://darklab8.github.io/fl-data-flsr/map.html)
 - [Freelancer Universe](https://flustat.kofakulno.com/) (the deployment is not maintain by darkstat's author)
   - [Freelancer Universe Map](https://flustat.kofakulno.com/map.html)
+
+- [Staging dev version](https://darklab8.github.io/fl-darkstat/)
 
 # Contains sub projects
 
