@@ -134,6 +134,8 @@ type TradeLaneRing struct {
 	IdsName   *semantic.Int
 	IDsInfo   *semantic.Int
 
+	RepNickname *semantic.String
+
 	// has next_ring, then it is tradelane
 	// or if has Trade_Lane_Ring, then trade lane too.
 }
@@ -543,14 +545,15 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 					_, is_trade_lane2 := obj.ParamMap[cfg.Key("prev_ring")]
 					if is_trade_lane1 || is_trade_lane2 {
 						tradelane := &TradeLaneRing{
-							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
-							Rotate:    semantic.NewVector(obj, cfg.Key("rotate"), semantic.Precision(2)),
-							NextRing:  semantic.NewString(obj, cfg.Key("next_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							PrevRing:  semantic.NewString(obj, cfg.Key("prev_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
-							IDsInfo:   semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
+							Nickname:    semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Pos:         semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
+							Rotate:      semantic.NewVector(obj, cfg.Key("rotate"), semantic.Precision(2)),
+							NextRing:    semantic.NewString(obj, cfg.Key("next_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							PrevRing:    semantic.NewString(obj, cfg.Key("prev_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Archetype:   semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							IdsName:     semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
+							IDsInfo:     semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
+							RepNickname: semantic.NewString(obj, cfg.Key("reputation"), semantic.OptsS(semantic.Optional()), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 						}
 
 						system_to_add.Tradelanes = append(system_to_add.Tradelanes, tradelane)

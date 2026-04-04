@@ -365,7 +365,14 @@ func (e *Export) EnrichSystemWithObjects(
 			stats.shape_without_images[obj.ShapeName] = true
 		}
 		obj.VisibleByDefault = true
-		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName)
+
+		reputation_nickname, _ := obj_info.RepNickname.GetValue()
+		var factionName string
+		if group, exists := e.Mapped.InitialWorld.GroupsMap[reputation_nickname]; exists {
+			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
+		}
+
+		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, factionName)
 		system_to_add.Objs = append(system_to_add.Objs, obj)
 	}
 
@@ -410,7 +417,7 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		star.Name = configs.GetInfocardName(star_info.IdsName.Get(), star.Nickname)
-		e.ExportInfocard(star_info.IDsInfo, star.Nickname, star.Name, star.Pos, star_info.IdsName)
+		e.ExportInfocard(star_info.IDsInfo, star.Nickname, star.Name, star.Pos, star_info.IdsName, "")
 
 		star.VisibleByDefault = true
 		system_to_add.Objs = append(system_to_add.Objs, star)
@@ -498,7 +505,13 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		base.Name = configs.GetInfocardName(base_info.IdsName.Get(), base.Nickname)
-		e.ExportInfocard(base_info.IDsInfo, base.Nickname, base.Name, base.Pos, base_info.IdsName)
+		reputation_nickname, _ := base_info.RepNickname.GetValue()
+		var factionName string
+		if group, exists := e.Mapped.InitialWorld.GroupsMap[reputation_nickname]; exists {
+			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
+		}
+
+		e.ExportInfocard(base_info.IDsInfo, base.Nickname, base.Name, base.Pos, base_info.IdsName, factionName)
 
 		// dockable := solararch.IsDockable(solararch_mapped.DockableOptions{
 		// 	IsDisco:                  e.Mapped.Discovery != nil,
@@ -538,6 +551,25 @@ func (e *Export) EnrichSystemWithObjects(
 		if base_info.BasePos != nil {
 			base.VisibleByDefault = true
 		}
+
+		var info infocarder.Infocard
+		var infocard_addition infocarder.InfocardBuilder
+		faction_name := ""
+		if base_info.FactionName != nil {
+			faction_name = *base_info.FactionName
+		}
+		infocard_addition = TechnicalInfoWrite(
+			infocard_addition,
+			base.Nickname,
+			base.Pos,
+			HiddenID,
+			HiddenID,
+			faction_name,
+		)
+		if value, ok := e.Exp.GetInfocard2(infocarder.InfocardKey(base.Nickname)); ok {
+			info = value
+		}
+		e.Exp.PutInfocard(infocarder.InfocardKey(base.Nickname), append(info, infocard_addition.Lines...))
 
 		system_to_add.Objs = append(system_to_add.Objs, base)
 	}
@@ -595,7 +627,7 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		obj.Name = configs.GetInfocardName(wreck.IdsName.Get(), obj.Nickname)
-		e.ExportInfocard(wreck.IDsInfo, obj.Nickname, obj.Name, obj.Pos, wreck.IdsName)
+		e.ExportInfocard(wreck.IDsInfo, obj.Nickname, obj.Name, obj.Pos, wreck.IdsName, "")
 
 		obj.VisibleByDefault = true
 		system_to_add.Objs = append(system_to_add.Objs, obj)
@@ -631,12 +663,19 @@ func (e *Export) EnrichSystemWithObjects(
 		if strings.Contains(strings.ToLower(zone.Name), "object unknown") {
 			zone.Name = ""
 		}
-		e.ExportInfocard(zone_info.IDsInfo, zone.Nickname, zone.Name, zone.Pos, zone_info.IdsName)
+		e.ExportInfocard(zone_info.IDsInfo, zone.Nickname, zone.Name, zone.Pos, zone_info.IdsName, "")
 		system_to_add.Zones = append(system_to_add.Zones, zone)
 	}
 }
 
-func (e *Export) ExportInfocard(ids_info *semantic.Int, nickname string, name string, Pos cfg.Vector, ids_name *semantic.Int) {
+func (e *Export) ExportInfocard(
+	ids_info *semantic.Int,
+	nickname string,
+	name string,
+	Pos cfg.Vector,
+	ids_name *semantic.Int,
+	faction_name string,
+) {
 	var ids_info_num int
 	if ids_info, ok := ids_info.GetValue(); ok && ids_info != 0 {
 		e.Exp.ExportInfocards(infocarder.InfocardKey(nickname), e.GetFullInfocardIds(ids_info)...)
@@ -651,13 +690,31 @@ func (e *Export) ExportInfocard(ids_info *semantic.Int, nickname string, name st
 	}
 	var base_name_as_infocard infocarder.Infocard = []infocarder.InfocardLine{{Phrases: []infocarder.InfocardPhrase{{Bold: true, Phrase: strings.ToUpper(name)}}}}
 
+	info = TechnicalInfoWrite(info, nickname, Pos, ids_name_num, ids_info_num, faction_name)
+	e.Exp.PutInfocard(infocarder.InfocardKey(nickname), append(base_name_as_infocard, info.Lines...))
+}
+
+const HiddenID = -1
+
+func TechnicalInfoWrite(
+	info infocarder.InfocardBuilder,
+	nickname string,
+	Pos cfg.Vector,
+	ids_name_num int,
+	ids_info_num int,
+	faction_name string,
+) infocarder.InfocardBuilder {
 	info.WriteLineStrBold("Technical info")
 	// It belongs to Alaska Security Forces.
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("This object with internal nickname %s", nickname))
-	sb.WriteString(fmt.Sprintf(" is located on the coordinates (%.0f,%.0f,%.0f)", Pos.X, Pos.Y, Pos.Z))
-	sb.WriteString(fmt.Sprintf(" and has name infocard number %d and infocard number %d.", ids_name_num, ids_info_num))
+	sb.WriteString(fmt.Sprintf(" is located on the coordinates (%.0f,%.0f,%.0f).", Pos.X, Pos.Y, Pos.Z))
+	if ids_info_num != HiddenID || ids_name_num != HiddenID {
+		sb.WriteString(fmt.Sprintf(" It has name infocard number %d and infocard number %d.", ids_name_num, ids_info_num))
+	}
+	if faction_name != "" {
+		sb.WriteString(fmt.Sprintf(" It belongs to %s.", faction_name))
+	}
 	info.WriteLineStr(sb.String())
-
-	e.Exp.PutInfocard(infocarder.InfocardKey(nickname), append(base_name_as_infocard, info.Lines...))
+	return info
 }
