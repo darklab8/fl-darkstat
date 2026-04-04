@@ -69,6 +69,7 @@ runs:
         DARKSTAT_RELAY_HOST: ${{ inputs.relay-host }}
         UTILS_DEV_ENV: "true"
         DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
+        DARKMAP_STAT_AT_ROOT_ON: "true"
     - name: build
       if: ${{ inputs.map-on == 'true' }}
       shell: bash
