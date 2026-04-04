@@ -97,6 +97,7 @@ runs:
         UTILS_DEV_ENV: "true"
         DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
         DARKCORE_BUILD_FOLDER: build_map
+        DARKMAP_STAT_AT_ROOT_ON: "true"
     - name: collect nap files
       shell: bash
       if: ${{ inputs.map-on == 'true' }}
