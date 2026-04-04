@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
@@ -97,6 +98,12 @@ func (c *ConnectionEdge) SetKind(first map[JumpConnectionKind]bool, second map[J
 			return
 		}
 	}
+	if _, ok := first[JumpKindCampaignLocked]; ok {
+		if _, ok := second[JumpKindCampaignLocked]; ok {
+			c.Kind = JumpKindCampaignLocked
+			return
+		}
+	}
 }
 
 func GetConnKey(from_system string, to_system string) string {
@@ -128,6 +135,7 @@ const (
 	JumpKindJumphole
 	JumpKindJumpgate
 	JumpKindAlien
+	JumpKindCampaignLocked
 )
 
 func (j JumpConnectionKind) ToStr() string {
@@ -142,6 +150,8 @@ func (j JumpConnectionKind) ToStr() string {
 		return "jh_unstable_cargo_limit"
 	case JumpKindFighterOnly:
 		return "jh_fighter_only"
+	case JumpKindCampaignLocked:
+		return "jh_campaign_locked"
 	}
 	return "jh_unknown"
 }
@@ -188,14 +198,6 @@ func (g *SystemGraphs) DFS(startVertex *System) {
 // We need to mark if the system is reachable from manhattan by any means? to define if it should be filtered
 */
 func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
-	var graph SystemGraphs = SystemGraphs{
-		Systems:         make(map[string]*System),
-		ConnectionEdges: make(map[string]*ConnectionEdge),
-	}
-
-	for _, system := range systems {
-		graph.Systems[system.Nickname] = system
-	}
 
 	everything_dockable := solararch_mapped.DockableOptions{
 		IsDisco:                  e.Mapped.Discovery != nil,
@@ -206,48 +208,13 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 	if e.Mapped.Discovery != nil {
 		everything_dockable.WithDiscoFreighterPaths = true
 	}
+	graph_reachable := e.BuildGraph(systems, everything_dockable)
 
-	for _, system := range systems {
-		system_info := e.Mapped.Systems.SystemsMap[system.Nickname]
-
-		if system_info == nil {
-			logus.Log.Error(" has no system file", typelog.Any("system_nick", system.Nickname))
-			continue
-		}
-
-		jumpholes := trades.GetDockableJumpholes(
-			system_info,
-			e.Mapped,
-			everything_dockable,
-		)
-
-		for _, jh := range jumpholes {
-			if _, ok := graph.Systems[system_info.Nickname]; !ok {
-				graph.Systems[system_info.Nickname] = system
-			}
-
-			target_system := graph.Systems[jh.GotoSystem.Get()]
-
-			if conn, ok := system.LeadsTo[jh.GotoSystem.Get()]; ok {
-				conn.Kind[e.GetJumpConnectionKind(jh)] = true
-			} else {
-				cn := &JumpConnection{
-					System: target_system,
-					Kind:   make(map[JumpConnectionKind]bool),
-				}
-				system.LeadsTo[jh.GotoSystem.Get()] = cn
-				cn.Kind[e.GetJumpConnectionKind(jh)] = true
-			}
-
-		}
-
-	}
-
-	graph.DFS(graph.Systems["li01"])
+	graph_reachable.DFS(graph_reachable.Systems["li01"])
 
 	if e.Mapped.Discovery != nil {
-		graph.DFS(graph.Systems["ew12"])
-		for _, system := range graph.Systems {
+		graph_reachable.DFS(graph_reachable.Systems["ew12"])
+		for _, system := range graph_reachable.Systems {
 			if strings.Contains(strings.ToLower(system.Name), "planet") {
 				system.VisibleByDefault = false
 			} else if strings.Contains(strings.ToLower(system.Name), "anomaly") {
@@ -257,6 +224,9 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 			}
 		}
 	}
+
+	everything_dockable.ShowInitialWorldBlocked = true
+	graph := e.BuildGraph(systems, everything_dockable)
 
 	// preparing final edges for front render
 	for origin_system_nick, origin_system := range graph.Systems {
@@ -326,6 +296,54 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 	return graph
 }
 
+func (e *Export) BuildGraph(systems []*System, everything_dockable solararch_mapped.DockableOptions) (graph SystemGraphs) {
+	graph = SystemGraphs{
+		Systems:         make(map[string]*System),
+		ConnectionEdges: make(map[string]*ConnectionEdge),
+	}
+
+	for _, system := range systems {
+		graph.Systems[system.Nickname] = system
+	}
+
+	for _, system := range systems {
+		system_info := e.Mapped.Systems.SystemsMap[system.Nickname]
+
+		if system_info == nil {
+			logus.Log.Error(" has no system file", typelog.Any("system_nick", system.Nickname))
+			continue
+		}
+
+		jumpholes := trades.GetDockableJumpholes(
+			system_info,
+			e.Mapped,
+			everything_dockable,
+		)
+
+		for _, jh := range jumpholes {
+			if _, ok := graph.Systems[system_info.Nickname]; !ok {
+				graph.Systems[system_info.Nickname] = system
+			}
+
+			target_system := graph.Systems[jh.GotoSystem.Get()]
+
+			if conn, ok := system.LeadsTo[jh.GotoSystem.Get()]; ok {
+				conn.Kind[e.GetJumpConnectionKind(jh)] = true
+			} else {
+				cn := &JumpConnection{
+					System: target_system,
+					Kind:   make(map[JumpConnectionKind]bool),
+				}
+				system.LeadsTo[jh.GotoSystem.Get()] = cn
+				cn.Kind[e.GetJumpConnectionKind(jh)] = true
+			}
+
+		}
+
+	}
+	return graph
+}
+
 func PrintFormatedConns(target_kinds map[JumpConnectionKind]bool) map[string]bool {
 	result := make(map[string]bool)
 
@@ -336,6 +354,13 @@ func PrintFormatedConns(target_kinds map[JumpConnectionKind]bool) map[string]boo
 }
 
 func (e *Export) GetJumpConnectionKind(jh *systems_mapped.Jumphole) JumpConnectionKind {
+
+	// Check locked_gate if it is enterable.
+	hash_id := flhash.HashNickname(jh.Nickname.Get())
+	if _, ok := e.Mapped.InitialWorld.LockedGates[hash_id]; ok {
+		return JumpKindCampaignLocked
+	}
+
 	jh_archetype := jh.Archetype.Get()
 
 	var disco_cargo_limit *int

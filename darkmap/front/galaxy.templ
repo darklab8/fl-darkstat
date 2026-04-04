@@ -92,12 +92,14 @@ templ GalalaxyMap(data *export_map.Export) {
 					x2={ fmt.Sprintf("%.5f%%", GalaxyPosToPerc(edge.SecondSystem.Pos.X)) }
 					y2={ fmt.Sprintf("%.5f%%", GalaxyPosToPerc(edge.SecondSystem.Pos.Y)) }
 					class={
-						templ.KV("hidden_system", !(edge.FirstSystem.VisibleByDefault && edge.SecondSystem.VisibleByDefault)),
+						templ.KV("hidden_system", (!(edge.FirstSystem.VisibleByDefault &&
+							edge.SecondSystem.VisibleByDefault)) || edge.Kind == export_map.JumpKindCampaignLocked),
 						templ.KV("conn_alien", edge.Kind == export_map.JumpKindAlien),
 						templ.KV("conn_jumpgate", edge.Kind == export_map.JumpKindJumpgate),
 						templ.KV("conn_jumphole", edge.Kind == export_map.JumpKindJumphole),
 						templ.KV("conn_unstable", edge.Kind == export_map.JumpKindUnstableCargoLimited),
 						templ.KV("conn_fighter", edge.Kind == export_map.JumpKindFighterOnly),
+						templ.KV("conn_campaign_locked", edge.Kind == export_map.JumpKindCampaignLocked),
 						templ.KV("conn_unknown", edge.Kind == export_map.JumpKindUnknown),
 					}
 				></line>

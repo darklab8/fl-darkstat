@@ -112,6 +112,11 @@
     box-shadow: 0px 0px 0.3em 0.1em rgba(152, 69, 255, 0.5);
 }
 
+.conn_campaign_locked {
+    background-color: rgba(255, 136, 1, 0.9);
+    box-shadow: 0px 0px 0.3em 0.1em rgba(255, 136, 1, 0.5);
+}
+
 .conn_hover {
     box-shadow: 0px 0px 0.3em 0.3em rgba(255, 255, 255, 0.45);
 }
@@ -217,7 +222,7 @@ svg.connection-svg-overlay {
 }
 
 svg.connection-svg-overlay line {
-    stroke: rgba(69, 150, 255, 0.9);
+    stroke: rgba(255, 1, 242, 0.9);
     stroke-width: 0.125em;
 }
 
@@ -248,6 +253,11 @@ svg.connection-svg-overlay line.conn_fighter {
 
 svg.connection-svg-overlay line.conn_alien {
     stroke: rgba(152, 69, 255, 0.8);
+    stroke-width: 0.14em;
+}
+
+svg.connection-svg-overlay line.conn_campaign_locked {
+    stroke: rgba(255, 136, 1, 0.8);
     stroke-width: 0.14em;
 }
 

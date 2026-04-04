@@ -391,6 +391,11 @@ system-:hover system-label,
     box-shadow: 0em 0em 0.6em 0.4em rgba(152, 69, 255, 0.5);
 }
 
+.zoomedOut .jumphole.jh_campaign_locked {
+    background: rgba(255, 136, 1, 0.9);
+    box-shadow: 0em 0em 0.6em 0.4em rgba(255, 136, 1, 0.5);
+}
+
 .zoomedOut .jumphole.jh_unknown {
     background: rgba(247, 4, 255, 0.849);
 }

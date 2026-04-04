@@ -367,10 +367,12 @@ func GetDockableJumpholes(
 			}
 		}
 
-		// Check locked_gate if it is enterable.
-		hash_id := flhash.HashNickname(object.nickname)
-		if _, ok := mapped.InitialWorld.LockedGates[hash_id]; ok {
-			continue
+		if !DockOpts.ShowInitialWorldBlocked {
+			// Check locked_gate if it is enterable.
+			hash_id := flhash.HashNickname(object.nickname)
+			if _, ok := mapped.InitialWorld.LockedGates[hash_id]; ok {
+				continue
+			}
 		}
 
 		if strings.Contains(jh_archetype, "invisible") {

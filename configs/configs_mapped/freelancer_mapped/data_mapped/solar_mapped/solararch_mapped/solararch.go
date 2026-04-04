@@ -46,6 +46,7 @@ type DockableOptions struct {
 	PlayersCanDockBerth      bool
 	PlayersCanDockMoorMedium bool
 	PlayersCanDockMoorLarge  bool
+	ShowInitialWorldBlocked  bool
 }
 
 type DockableResult struct {
