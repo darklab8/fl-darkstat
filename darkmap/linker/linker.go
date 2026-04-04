@@ -105,7 +105,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.SystemDetailedUrl(system)),
-				front.System(system),
+				front.System(system, l.Export),
 			),
 		)
 	}

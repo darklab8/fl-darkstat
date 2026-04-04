@@ -128,7 +128,7 @@ func (m MenuKind) ToNickname() string {
 	return "unknown"
 }
 
-templ GalaxyGrid(menu_kind MenuKind) {
+templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 	// font-family: var(--font-family);
 	<background->
 		<map-with-interface->
@@ -191,14 +191,16 @@ templ GalaxyGrid(menu_kind MenuKind) {
 						@ToggleSwitch("checkbox_zones")
 					</div>
 				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"Hide pobs"})
+				if data.Mapped.Discovery != nil {
+					<div class="menu-item">
+						<div class="top">
+							@MultiLineOption([]string{"Hide pobs"})
+						</div>
+						<div class="bottom">
+							@ToggleSwitch("checkbox_pobs")
+						</div>
 					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_pobs")
-					</div>
-				</div>
+				}
 				<div class="menu-item">
 					<div class="top">
 						@MultiLineOption([]string{"Hover coords"})
