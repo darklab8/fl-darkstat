@@ -28,11 +28,13 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap"
 	map_urls "github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
+	map_settings "github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/docs"
 	"github.com/darklab8/fl-darkstat/helpers"
@@ -160,6 +162,7 @@ func main() {
 
 		if settings.Env.IsExpermentalMapWithDarkstatOn {
 			map_urls.Index = "map.html"
+			map_settings.Env.EnableStatRoot = true
 			var linked_build *builder.Builder
 			linked_build = linker.NewLinker(true).Link(context.Background())
 			map_fs := linked_build.BuildAll(true, nil)

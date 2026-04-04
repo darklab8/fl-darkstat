@@ -1,6 +1,6 @@
 {
     # Define path to Freelancer Folder root
-    "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/Discovery",
+    # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/Discovery",
     # "CONFIGS_FREELANCER_FOLDER": "/home/naa/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/game-repository",
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_hde/drive_c/FreelancerHD",
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wine_prefix_freelancer_hde/drive_c/FreelancerFLU",
@@ -8,11 +8,12 @@
     # "DARKSTAT_TRADE_ROUTES_DETAILED_TRADE_LANE": "true",
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/windows10shared/fl-files-vanilla",
     # "CONFIGS_FREELANCER_FOLDER": "/home/naa/windows10shared/opensirius-main",
-    # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wineprefix_flsr/drive_c/Freelancer",
+    "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/apps/freelancer_related/wineprefix_flsr/drive_c/Freelancer",
     # "CONFIGS_DISCO_BASES_FULL_URL": "pass[SCRAPPY_BASE_URL] personal/terraform/hetzner/darkbot/production",
     "UTILS_DEV_ENV": "true",
     # "UTILS_BAD_VAR": "true",
     "DARKSTAT_LOG_LEVEL": "INFO",
+    # "DARKMAP_STAT_AT_ROOT_ON": "true",
     "DARKCORE_LOG_LEVEL": "WARN",
     "UTILS_LOG_LEVEL": "WARN",
     "CONFIGS_LOG_LEVEL": "WARN",

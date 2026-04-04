@@ -5,6 +5,8 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
+	"github.com/darklab8/fl-darkstat/darkmap/settings"
+
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
@@ -131,6 +133,16 @@ templ GalaxyGrid(menu_kind MenuKind) {
 	<background->
 		<map-with-interface->
 			<menu->
+				if settings.Env.EnableStatRoot {
+					<div class="menu-item">
+						<div class="top" style="min-height:20px">
+							@MultiLineOption([]string{"To Stats"})
+						</div>
+						<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot) }>
+							<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "stat_favicon.ico" }/>
+						</a>
+					</div>
+				}
 				<div class="menu-item">
 					<div class="top">
 						@MultiLineOption([]string{"All systems"})

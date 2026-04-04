@@ -82,6 +82,11 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.PanzoomJS),
 		builder.NewStaticFileFromCore(static_front.RemodalCSS),
 		builder.NewStaticFileFromCore(static_front.ZonesCSS.GetTemplated(templated_zones.String())),
+		builder.NewStaticFileFromCore(core_types.StaticFile{
+			Content:  core_static.FaviconIcoContent,
+			Filename: "stat_favicon.ico",
+			Kind:     core_types.StaticFileIco,
+		}),
 	}
 
 	for _, file := range static.StaticFilesystem.Files {
