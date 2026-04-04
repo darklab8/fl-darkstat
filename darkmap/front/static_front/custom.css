@@ -30,12 +30,18 @@
     transition: 0.0s;
 }
 
+.zoomedIn .tooltip .tooltiptext {
+    position: absolute;
+}
+
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
     z-index: 90;
 }
+
+
 
 
 .vertical_th {

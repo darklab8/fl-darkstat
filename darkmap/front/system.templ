@@ -214,7 +214,7 @@ templ SystemContents(system *export_map.System) {
 					// 	{ fmt.Sprintf("target:%s", obj.GotoSystemName) }
 					// </span>
 					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
-					@TooltipText(obj.Pos)
+					@TooltipText(obj.Pos, &obj.Obj)
 				</obj->
 			</a>
 		}
@@ -299,7 +299,7 @@ templ SystemContents(system *export_map.System) {
 						}
 					></div>
 				}
-				@TooltipText(obj.Pos)
+				@TooltipText(obj.Pos, obj)
 				if obj.Kind != export_map.ObjTradelane {
 					<system-label-wrap>
 						{ obj.Name }
@@ -393,8 +393,11 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 
 const TooltipCls = "tooltip"
 
-templ TooltipText(Pos cfg.Vector) {
-	<span class="tooltiptext hidden_coords">
+templ TooltipText(Pos cfg.Vector, obj *export_map.Obj) {
+	<span
+		class="tooltiptext hidden_coords"
+		style={ templ.KV(fmt.Sprintf("transform: rotate(%1.fdeg)", obj.Rotation.Y), obj.Kind == export_map.ObjTradelane), }
+	>
 		{ fmt.Sprintf("x:%.0f", Pos.X) }
 		<br/>
 		{ fmt.Sprintf("y:%.0f", Pos.Y) }
