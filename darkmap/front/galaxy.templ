@@ -140,10 +140,16 @@ templ GalaxyGrid(menu_kind MenuKind) {
 					@MultiLineOption([]string{"Wrecks on"})
 				</div>
 				<div class="top">
+					@MultiLineOption([]string{"Wreck labels"})
+				</div>
+				<div class="top">
 					@MultiLineOption([]string{"All objects"})
 				</div>
 				<div class="top">
 					@MultiLineOption([]string{"Hide Zones"})
+				</div>
+				<div class="top">
+					@MultiLineOption([]string{"Hide pobs"})
 				</div>
 				<div class="top">
 					@MultiLineOption([]string{"Hover coords"})
@@ -163,10 +169,16 @@ templ GalaxyGrid(menu_kind MenuKind) {
 					@ToggleSwitch("checkbox_wrecks")
 				</div>
 				<div class="bottom">
+					@ToggleSwitch("checkbox_wrecks_labels")
+				</div>
+				<div class="bottom">
 					@ToggleSwitch("checkbox_objects")
 				</div>
 				<div class="bottom">
 					@ToggleSwitch("checkbox_zones")
+				</div>
+				<div class="bottom">
+					@ToggleSwitch("checkbox_pobs")
 				</div>
 				<div class="bottom">
 					@ToggleSwitch("checkbox_coords")

@@ -52,11 +52,15 @@ function InstallMenu() {
 
     InstallButton("checkbox_wrecks", "hidden_wreck", "unhidden_wreck");
 
+    InstallButton("checkbox_wrecks_labels", "hidden_wreck_label", "unhidden_wreck_label");
+
     InstallButton("checkbox_objects", "hidden_obj", "unhidden_obj");
 
     InstallButton("checkbox_zones", "unhidden_zone", "hidden_zone");
 
     InstallButton("checkbox_coords", "hidden_coords", "unhidden_coords");
+
+    InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob");
 }
 
 var zoomInTreshold = 1.25;

@@ -234,6 +234,7 @@ templ SystemContents(system *export_map.System) {
 					obj.Kind.ToNick(),
 					templ.KV("hidden_obj", !obj.VisibleByDefault && obj.Kind != export_map.ObjWreck),
 					templ.KV("hidden_wreck", obj.Kind == export_map.ObjWreck),
+					templ.KV("unhidden_pob", obj.Kind == export_map.ObjPlayerBase),
 				}
 				style={
 					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
@@ -300,7 +301,16 @@ templ SystemContents(system *export_map.System) {
 				}
 				@TooltipText(obj.Pos)
 				if obj.Kind != export_map.ObjTradelane {
-					<system-label-wrap>{ obj.Name }<system-label class="unhidden_label" style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
+					<system-label-wrap>
+						{ obj.Name }
+						<system-label
+							class={
+								templ.KV("unhidden_label", obj.Kind != export_map.ObjWreck),
+								templ.KV("hidden_wreck_label", obj.Kind == export_map.ObjWreck),
+							}
+							style="top: 1.5em;"
+						>{ obj.Name }</system-label>
+					</system-label-wrap>
 				}
 			</obj->
 		}
