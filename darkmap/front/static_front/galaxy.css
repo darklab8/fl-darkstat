@@ -343,6 +343,10 @@ system-:hover system-label,
 .planet:hover system-label,
 .wreck:hover system-label,
 .zone:hover system-label {
+    box-shadow: 0 0 0.05em 0.1em rgba(0, 0, 0, 0.45);
+    background-color: rgba(0, 0, 0, 0.45);
+    border-radius: 0.2em;
+
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7);
     color: rgb(255, 167, 6);
 }
