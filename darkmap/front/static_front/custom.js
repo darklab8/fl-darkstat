@@ -23,6 +23,7 @@ function toggle_option(checked, checkbox_name, hidden_class, unhidden_class) {
             sessionStorage.setItem(checkbox_name, "false");
             break;
     }
+    LabelsReset();
     InstallLabelOverlapper();
 }
 
@@ -192,6 +193,13 @@ function InstallLabelOverlapper() {
     let labels = document.querySelectorAll("system-label")
     objectTerritorialConflictResolver(labels);
 }
+function LabelsReset() {
+    let labels = document.querySelectorAll("system-label")
+    for (let row = 0; row < labels.length; row++) {
+        labels[row].style.marginTop = "0px";
+    }
+}
+
 /* anti-overlap code end */
 
 function CloseInfocard() {
