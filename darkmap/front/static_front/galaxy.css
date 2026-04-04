@@ -92,15 +92,20 @@ map- {
 }
 
 menu- {
-    display: grid;
     row-gap: 2px;
-    grid-template-columns: 11.1% 11.1% 11.1% 11.1% 11.1% 11.1% 11.1% 11.1% 11.1%;
-    grid-template-rows: 30% 70%;
     background: #000 url(../static/nnwall.jpg) repeat scroll 0% 0%;
     box-shadow: 0em 0em 0.5em 0em #1EA6C5;
     border: 0.2em solid #1EA6C5;
     color: #FFF;
     min-height: 60px;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: column;
 }
 
 /* .button_galaxy {

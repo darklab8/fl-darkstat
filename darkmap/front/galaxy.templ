@@ -2,6 +2,7 @@ package front
 
 import (
 	"fmt"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
@@ -73,7 +74,7 @@ templ GalalaxyMap(data *export_map.Export) {
 	<centeralizer->
 		// Systems rendered as before
 		for _, sys := range data.Systems {
-			@GalaxySystem(sys, GetSystemFac(sys, data.Exp.Mapped.Discovery != nil))
+			@GalaxySystem(sys, GetSystemFac(sys, data.Exp.Mapped))
 		}
 		<system-title>Sirius</system-title>
 		// One SVG overlay covering the full map, lines use % coordinates
@@ -130,68 +131,86 @@ templ GalaxyGrid(menu_kind MenuKind) {
 	<background->
 		<map-with-interface->
 			<menu->
-				<div class="top">
-					@MultiLineOption([]string{"All systems"})
+				<div class="menu-item">
+					<div class="top">
+						@MultiLineOption([]string{"All systems"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_systems")
+					</div>
 				</div>
-				<div class="top">
-					@MultiLineOption([]string{"Hide labels"})
+				<div class="menu-item">
+					<div class="top">
+						@MultiLineOption([]string{"Hide labels"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_map_labels")
+					</div>
 				</div>
-				<div class="top">
-					@MultiLineOption([]string{"Wrecks on"})
+				<div class="menu-item">
+					<div class="top">
+						@MultiLineOption([]string{"Wrecks on"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_wrecks")
+					</div>
 				</div>
-				<div class="top">
-					@MultiLineOption([]string{"Wreck labels"})
+				<div class="menu-item">
+					<div class="top">
+						@MultiLineOption([]string{"Wreck labels"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_wrecks_labels")
+					</div>
 				</div>
-				<div class="top">
-					@MultiLineOption([]string{"All objects"})
+				<div class="menu-item">
+					<div class="top">
+						@MultiLineOption([]string{"All objects"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_objects")
+					</div>
 				</div>
-				<div class="top">
-					@MultiLineOption([]string{"Hide Zones"})
+				<div class="menu-item">
+					<div class="top">
+						@MultiLineOption([]string{"Hide Zones"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_zones")
+					</div>
 				</div>
-				<div class="top">
-					@MultiLineOption([]string{"Hide pobs"})
+				<div class="menu-item">
+					<div class="top">
+						@MultiLineOption([]string{"Hide pobs"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_pobs")
+					</div>
 				</div>
-				<div class="top">
-					@MultiLineOption([]string{"Hover coords"})
+				<div class="menu-item">
+					<div class="top">
+						@MultiLineOption([]string{"Hover coords"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_coords")
+					</div>
 				</div>
-				<div class="top">
-					@MultiLineOption([]string{"To Galaxy"})
+				<div class="menu-item">
+					<div class="top">
+						@MultiLineOption([]string{"To Galaxy"})
+					</div>
+					<div>
+						if menu_kind == MenuKindGalaxy {
+							<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
+						} else {
+							<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>
+								<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
+							</a>
+						}
+					</div>
 				</div>
 				// <input type="checkbox" id="checkbox_systems" name="systems" value="systems"/>
 				// <input type="checkbox" id="checkbox_swrecks" name="wrecks" value="wrecks" disabled/>
-				<div class="bottom">
-					@ToggleSwitch("checkbox_systems")
-				</div>
-				<div class="bottom">
-					@ToggleSwitch("checkbox_map_labels")
-				</div>
-				<div class="bottom">
-					@ToggleSwitch("checkbox_wrecks")
-				</div>
-				<div class="bottom">
-					@ToggleSwitch("checkbox_wrecks_labels")
-				</div>
-				<div class="bottom">
-					@ToggleSwitch("checkbox_objects")
-				</div>
-				<div class="bottom">
-					@ToggleSwitch("checkbox_zones")
-				</div>
-				<div class="bottom">
-					@ToggleSwitch("checkbox_pobs")
-				</div>
-				<div class="bottom">
-					@ToggleSwitch("checkbox_coords")
-				</div>
-				<div>
-					if menu_kind == MenuKindGalaxy {
-						<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
-					} else {
-						<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>
-							<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
-						</a>
-					}
-				</div>
 			</menu->
 			<div class={ fmt.Sprintf("panzoom-parent-%s", menu_kind.ToNickname()) }>
 				<div class="panzoom">
@@ -278,6 +297,10 @@ const (
 	FacSigma
 	FacOmega
 	FacDeepOmega
+
+	FacHispania
+	FacBorderWorld
+	FacEdgeWorld
 )
 
 var DiscoSystemOverrides = map[string]SystemFaction{
@@ -290,18 +313,44 @@ var DiscoSystemOverrides = map[string]SystemFaction{
 	"ku07": FacKusari,
 }
 
-func GetSystemFac(sys *export_map.System, is_disco bool) SystemFaction {
+func GetSystemFac(sys *export_map.System, Mapped *configs_mapped.MappedConfigs) SystemFaction {
 
 	sys_name := strings.ToLower(sys.Name)
 
 	region_name := strings.ToLower(sys.Region.Name)
 
-	if is_disco {
+	sys_nick := strings.ToLower(sys.Nickname)
+
+	if Mapped.FLSR != nil {
+		if strings.Contains(region_name, "deep") && strings.Contains(region_name, "omega") {
+			return FacDeepOmega
+		} else if strings.Contains(region_name, "liberty") {
+			return FacLiberty
+		} else if strings.Contains(region_name, "gallia") {
+			return FacGalica
+		} else if strings.Contains(region_name, "nomad") {
+			return FacNomad
+		} else if strings.Contains(region_name, "kusari") {
+			return FacKusari
+		} else if strings.Contains(region_name, "bretonia") {
+			return FacBretonia
+		} else if strings.Contains(region_name, "rheinland") {
+			return FacRheinland
+		} else if strings.Contains(sys_nick, "hi") {
+			return FacHispania
+		} else if strings.Contains(region_name, "independent") {
+			return FacIndependent
+		} else if strings.Contains(region_name, "edge") {
+			return FacEdgeWorld
+		}
+		return FacBorderWorld
+	}
+
+	if Mapped.Discovery != nil {
 		if value, ok := DiscoSystemOverrides[sys.Nickname]; ok {
 			return value
 		}
 	}
-
 	if strings.Contains(region_name, "deep") && strings.Contains(region_name, "omega") {
 		return FacDeepOmega
 	} else if strings.Contains(region_name, "liberty") {
@@ -329,7 +378,6 @@ func GetSystemFac(sys *export_map.System, is_disco bool) SystemFaction {
 	} else if strings.Contains(sys_name, "omicron") {
 		return FacNomad
 	}
-
 	return FacIndependent
 }
 
@@ -367,6 +415,13 @@ func SystemFacToHexColor(sysfac SystemFaction) string {
 		return "#C35B2B"
 	case FacDeepOmega:
 		return "#A14C22"
+
+	case FacHispania:
+		return "#A42AFA"
+	case FacBorderWorld:
+		return "#959597"
+	case FacEdgeWorld:
+		return "#C2FFFF"
 	}
 
 	return "#959597" // FacUnknown
