@@ -726,7 +726,6 @@ func (e *Export) EnrichSystemWithObjects(
 
 		if _, ok := e.Shapes.ShapesByNick[obj.ShapeName]; !ok && obj.ShapeName != "" {
 			stats.shape_without_images[obj.ShapeName] = true
-			continue
 		}
 
 		obj.Name = configs.GetInfocardName(obj_info.IdsName.Get(), obj.Nickname)
