@@ -7,6 +7,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/initialworld/flhash"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/loadouts_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
@@ -617,15 +618,22 @@ func (e *Export) EnrichSystemWithObjects(
 			Kind:            configs_export.LootWreck,
 		}, system_info)
 
-		if len(loots) == 0 {
+		loadout_nickname, _ := wreck.Loadout.GetValue()
+		var Cargos []*loadouts_mapped.Cargo
+		if loadout, ok := e.Mapped.Loadouts.LoadoutsByNick[loadout_nickname]; ok {
+			Cargos = loadout.Cargos
+		}
+
+		if len(loots) == 0 && len(Cargos) == 0 {
 			continue
 		}
 
 		archetype := wreck.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 		shape_name, found_shape := solararch.ShapeName.GetValue()
+
 		if !found_shape {
-			continue
+			shape_name = "nav_surprisex"
 		}
 		if _, ok := e.Shapes.ShapesByNick[shape_name]; ok {
 			e.Shapes.PermittedShapes[shape_name] = true
