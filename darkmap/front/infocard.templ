@@ -289,6 +289,34 @@ templ MapLegend(data *export_map.Export) {
 					</li>
 				</ul>
 			</div>
+			if data.Mapped.Discovery != nil {
+				<div>
+					<span class="bold">System discovery specific objects</span>
+					<ul class="legend_ul_icons">
+						<li>
+							<style>
+								encounter- {
+									height: 0.5em;
+									width: 0.5em;
+									max-width: 0.5em;
+									max-height: 0.5em;
+									min-height: 0.5em;
+									min-width: 0.5em;
+									margin-top: -0.5em;
+									margin-left: -0.5em;
+									background: rgba(255, 106, 6, 0.9);
+									box-shadow: 0em 0em 0.4em 0.2em rgba(255, 106, 6, 0.5);
+								}
+								.legend_ul_icons li encounter- {
+									margin: 5px 15px 0px 0px !important;
+								}
+							</style>
+							<encounter-></encounter->
+							Discovery Encounter
+						</li>
+					</ul>
+				</div>
+			}
 			<div class="scrollUpButton" onclick="CloseInfocard()">
 				<i class="fa fa-times"></i>
 				<p>Close</p>
