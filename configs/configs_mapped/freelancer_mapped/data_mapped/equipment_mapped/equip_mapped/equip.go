@@ -24,6 +24,9 @@ type Item struct {
 	Mass   *semantic.Float
 	HpType *semantic.String
 
+	DropChanceNpcUnmounted *semantic.Float
+	DropChanceNpcMounted   *semantic.Float
+
 	Lootable *semantic.Bool
 }
 
@@ -381,6 +384,10 @@ func Read(files []*iniload.IniLoader) *Config {
 				Volume:   semantic.NewFloat(section, cfg.Key("volume"), semantic.Precision(6)),
 				HpType:   semantic.NewString(section, cfg.Key("hp_type"), semantic.OptsS(semantic.Optional()), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 				Mass:     semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(4)),
+
+				DropChanceNpcUnmounted: semantic.NewFloat(section, cfg.Key("drop_chance_npc_unmounted"), semantic.Precision(4)),
+				DropChanceNpcMounted:   semantic.NewFloat(section, cfg.Key("drop_chance_npc_mounted"), semantic.Precision(4)),
+
 				Lootable: NewLootable(section),
 			}
 			item.Map(section)

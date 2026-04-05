@@ -747,7 +747,11 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 				if GetBaseKind(shared, name) == BaseLootableLocked {
 					if good.LootInfo != nil {
 						<td>
-							{ good.LootInfo.Kind.ToStr() }
+							if good.LootInfo.DiscoEncounter {
+								disco_enc
+							} else {
+								{ good.LootInfo.Kind.ToStr() }
+							}
 						</td>
 						if good.LootInfo.Permitted {
 							<td>
@@ -770,7 +774,11 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 				} else if GetBaseKind(shared, name) == BaseLootableUnlocked {
 					if good.LootInfo != nil {
 						<td>
-							{ good.LootInfo.Kind.ToStr() }
+							if good.LootInfo.DiscoEncounter {
+								disco_enc
+							} else {
+								{ good.LootInfo.Kind.ToStr() }
+							}
 						</td>
 						if good.LootInfo.Permitted {
 							<td>

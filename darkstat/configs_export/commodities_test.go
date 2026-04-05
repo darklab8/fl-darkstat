@@ -25,6 +25,9 @@ func TestExportCommodities(t *testing.T) {
 		}
 		assert.NotNil(t, scidata)
 		assert.NotContains(t, scidata.Name, "\r")
+
+		foundable, _ := exporter.findable_in_loot_cache["cr_heavy_battlerazor"]
+		assert.True(t, foundable, "expected cr_heavy_battlerazor to be findable in loot")
 	}
 
 }
