@@ -87,6 +87,8 @@ const (
 	ObjPlanet
 	ObjWreck
 	ObjZone
+	ObjOthers
+	ObjDiscoEncounter
 )
 
 func (o ObjKind) ToNick() string {
@@ -109,6 +111,10 @@ func (o ObjKind) ToNick() string {
 		return "wreck"
 	case ObjZone:
 		return "zone"
+	case ObjOthers:
+		return "obj_other"
+	case ObjDiscoEncounter:
+		return "obj_disco_encounter"
 	case ObjUnknown:
 		return "unknown"
 	}
@@ -215,6 +221,7 @@ func (e *Export) EnrichSystemWithObjects(
 	stats *MissingShapes,
 ) {
 	system_info := configs.Systems.SystemsMap[system_to_add.Nickname]
+	handled_objects := make(map[string]bool)
 
 	if system_info == nil {
 		return
@@ -319,6 +326,7 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		jumphole.Kind = e.GetJumpConnectionKind(jh_info)
+		handled_objects[jumphole.Nickname] = true
 		system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)
 	}
 
@@ -328,7 +336,7 @@ func (e *Export) EnrichSystemWithObjects(
 			Pos:      obj_info.Pos.Get(),
 			Kind:     ObjTradelane,
 		}
-
+		handled_objects[obj.Nickname] = true
 		if value, ok := obj_info.Rotate.GetValue(); ok {
 			obj.Rotation = value
 		}
@@ -420,6 +428,7 @@ func (e *Export) EnrichSystemWithObjects(
 		e.ExportInfocard(star_info.IDsInfo, star.Nickname, star.Name, star.Pos, star_info.IdsName, "")
 
 		star.VisibleByDefault = true
+		handled_objects[star.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, star)
 	}
 
@@ -528,6 +537,7 @@ func (e *Export) EnrichSystemWithObjects(
 		if archetype == "invisible_base" {
 			base.VisibleByDefault = false
 		}
+		handled_objects[base.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, base)
 	}
 
@@ -570,7 +580,7 @@ func (e *Export) EnrichSystemWithObjects(
 			info = value
 		}
 		e.Exp.PutInfocard(infocarder.InfocardKey(base.Nickname), append(info, infocard_addition.Lines...))
-
+		handled_objects[base.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, base)
 	}
 	for _, base_info := range e.MiningBySystemNick[system_info.Nickname] {
@@ -587,7 +597,7 @@ func (e *Export) EnrichSystemWithObjects(
 		if _, ok := e.MiningUsefulByNick[string(base.Nickname)]; ok {
 			base.VisibleByDefault = true
 		}
-
+		handled_objects[base.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, base)
 	}
 
@@ -630,6 +640,7 @@ func (e *Export) EnrichSystemWithObjects(
 		e.ExportInfocard(wreck.IDsInfo, obj.Nickname, obj.Name, obj.Pos, wreck.IdsName, "")
 
 		obj.VisibleByDefault = true
+		handled_objects[obj.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, obj)
 	}
 	for _, zone_info := range system_info.Zones {
@@ -664,7 +675,66 @@ func (e *Export) EnrichSystemWithObjects(
 			zone.Name = ""
 		}
 		e.ExportInfocard(zone_info.IDsInfo, zone.Nickname, zone.Name, zone.Pos, zone_info.IdsName, "")
+		handled_objects[zone.Nickname] = true
 		system_to_add.Zones = append(system_to_add.Zones, zone)
+	}
+
+	if system_info.Nickname == "br03" {
+		fmt.Print()
+	}
+
+	for _, obj_info := range system_info.Objects {
+		// all other objects that have navmap defined
+
+		if obj_info.Nickname.Get() == strings.ToLower("BAF_Encounter02_marker") {
+			fmt.Print()
+		}
+
+		if _, ok := obj_info.Pos.GetValue(); !ok {
+			continue
+		}
+
+		obj := &Obj{
+			Nickname: obj_info.Nickname.Get(),
+			Pos:      obj_info.Pos.Get(),
+			Kind:     ObjOthers,
+		}
+		if _, ok := handled_objects[obj.Nickname]; ok {
+			continue
+		} else {
+			handled_objects[obj.Nickname] = true
+		}
+
+		archetype := obj_info.Archetype.Get()
+		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		shape_name, found_shape := solararch.ShapeName.GetValue()
+		if !found_shape {
+			continue
+		}
+		if _, ok := e.Shapes.ShapesByNick[shape_name]; ok {
+			e.Shapes.PermittedShapes[shape_name] = true
+		}
+		obj.ShapeName = shape_name
+
+		if _, ok := e.Shapes.ShapesByNick[obj.ShapeName]; !ok && obj.ShapeName != "" {
+			stats.shape_without_images[obj.ShapeName] = true
+			continue
+		}
+
+		obj.Name = configs.GetInfocardName(obj_info.IdsName.Get(), obj.Nickname)
+		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, "")
+
+		if strings.Contains(strings.ToLower(obj.Name), "object unknown") {
+			continue
+		}
+
+		if strings.Contains(strings.ToLower(obj.Name), "encounter") {
+			obj.Kind = ObjDiscoEncounter
+			obj.VisibleByDefault = true
+		} else {
+			obj.VisibleByDefault = false
+		}
+		system_to_add.Objs = append(system_to_add.Objs, obj)
 	}
 }
 

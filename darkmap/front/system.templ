@@ -301,16 +301,22 @@ templ SystemContents(system *export_map.System) {
 				}
 				@TooltipText(obj.Pos, obj)
 				if obj.Kind != export_map.ObjTradelane {
-					<system-label-wrap>
-						{ obj.Name }
-						<system-label
-							class={
-								templ.KV("unhidden_label", obj.Kind != export_map.ObjWreck),
-								templ.KV("hidden_wreck_label", obj.Kind == export_map.ObjWreck),
-							}
-							style="top: 1.5em;"
-						>{ obj.Name }</system-label>
-					</system-label-wrap>
+					if strings.Contains(strings.ToLower(obj.Name), "object unknown") {
+					}
+					if obj.Name == "" {
+					} else {
+						<system-label-wrap>
+							{ obj.Name }
+							<system-label
+								class={
+									templ.KV("unhidden_label", obj.Kind != export_map.ObjWreck),
+									templ.KV("hidden_wreck_label", obj.Kind == export_map.ObjWreck),
+									templ.KV("hidden_obj_other_label", obj.Kind == export_map.ObjOthers && !obj.VisibleByDefault),
+								}
+								style="top: 1.5em;"
+							>{ obj.Name }</system-label>
+						</system-label-wrap>
+					}
 				}
 			</obj->
 		}

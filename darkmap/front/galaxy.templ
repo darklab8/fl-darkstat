@@ -186,22 +186,28 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 				</div>
 				<div class="menu-item">
 					<div class="top">
+						@MultiLineOption([]string{"all obj labels"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_obj_others")
+					</div>
+				</div>
+				<div class="menu-item">
+					<div class="top">
 						@MultiLineOption([]string{"Hide Zones"})
 					</div>
 					<div class="bottom">
 						@ToggleSwitch("checkbox_zones")
 					</div>
 				</div>
-				if data.Mapped.Discovery != nil {
-					<div class="menu-item">
-						<div class="top">
-							@MultiLineOption([]string{"Hide pobs"})
-						</div>
-						<div class="bottom">
-							@ToggleSwitch("checkbox_pobs")
-						</div>
+				<div class="menu-item" style={ templ.KV("display:none", data.Mapped.Discovery == nil) }>
+					<div class="top">
+						@MultiLineOption([]string{"Hide pobs"})
 					</div>
-				}
+					<div class="bottom">
+						@ToggleSwitch("checkbox_pobs")
+					</div>
+				</div>
 				<div class="menu-item">
 					<div class="top">
 						@MultiLineOption([]string{"Hover coords"})
@@ -273,16 +279,6 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 			document.addEventListener('htmx:afterSettle',(event) => {
 				InstallSystem();
 			});
-		</script>
-	}
-	if data.Mapped.Discovery != nil {
-		<script>
-		document.addEventListener("DOMContentLoaded", (event) => {
-			InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob");
-		});
-		document.addEventListener('htmx:afterSettle',(event) => {
-			InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob");
-		});
 		</script>
 	}
 	<div class="remodal-bg" id="remodal-bg">

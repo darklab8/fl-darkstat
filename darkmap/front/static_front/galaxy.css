@@ -13,6 +13,7 @@ html {
 :root {
     --playerbase_color: #f8f3bc;
     --mining_color: #ac9483;
+    --obj_other_color: #92f6fa;
 
     /*system jump hole colors*/
     --jh_color_jumphole: red;
@@ -280,9 +281,47 @@ system- {
     margin-left: -0.2em;
 }
 
+.obj_other,
+.obj_disco_encounter {
+    position: absolute;
+    width: 0.4em;
+    height: 0.4em;
+    margin-top: -0.2em;
+    margin-left: -0.2em;
+}
+
+.zoomedOut .obj_other {
+    height: 0.25em;
+    width: 0.25em;
+    margin-top: -0.125em;
+    margin-left: -0.125em;
+    background: var(--obj_other_color);
+}
+
+.zoomedOut .obj_disco_encounter {
+    height: 1em;
+    width: 1em;
+    margin-top: -0.5em;
+    margin-left: -0.5em;
+    background: rgba(255, 106, 6, 0.9);
+}
+
+.zoomedOut .obj_other img,
+.zoomedOut .obj_disco_encounter img {
+    visibility: hidden;
+}
+
 .wreck img {
     position: absolute;
 }
+
+.obj_other img,
+.obj_disco_encounter img {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+}
+
 
 .planet img {
     border-radius: 50%;
@@ -297,6 +336,8 @@ system- {
 .zone,
 .playerbase,
 .mining,
+.obj_other,
+.obj_disco_encounter,
 .zone {
     cursor: pointer;
 }
@@ -342,6 +383,8 @@ system-:hover,
 .planet:hover,
 .wreck:hover,
 .zone:hover,
+.obj_other:hover,
+.obj_disco_encounter:hover,
 .mining:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7) !important;
     color: rgb(255, 167, 6);
@@ -356,6 +399,8 @@ system-:hover system-label,
 .mining:hover system-label,
 .planet:hover system-label,
 .wreck:hover system-label,
+.obj_other:hover system-label,
+.obj_disco_encounter:hover system-label,
 .zone:hover system-label {
     box-shadow: 0 0 0.05em 0.1em rgba(0, 0, 0, 0.45);
     background-color: rgba(0, 0, 0, 0.45);
