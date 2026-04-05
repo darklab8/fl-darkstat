@@ -290,6 +290,7 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 					typelog.Any("origin_conns", PrintFormatedConns(target_kinds)))
 
 			}
+
 		}
 	}
 

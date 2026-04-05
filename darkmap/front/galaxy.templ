@@ -107,9 +107,58 @@ templ GalalaxyMap(data *export_map.Export) {
 						templ.KV("conn_unknown", edge.Kind == export_map.JumpKindUnknown),
 					}
 				></line>
+				if !edge.FromSecondToFirstJumpable {
+					@midArrow(
+						(GalaxyPosToPerc(edge.FirstSystem.Pos.X)+GalaxyPosToPerc(edge.SecondSystem.Pos.X))/2,
+						(GalaxyPosToPerc(edge.FirstSystem.Pos.Y)+GalaxyPosToPerc(edge.SecondSystem.Pos.Y))/2,
+						edge,
+						key,
+						1.0,
+					)
+				} else if !edge.FromFirstToSecondJumpable {
+					@midArrow(
+						(GalaxyPosToPerc(edge.FirstSystem.Pos.X)+GalaxyPosToPerc(edge.SecondSystem.Pos.X))/2,
+						(GalaxyPosToPerc(edge.FirstSystem.Pos.Y)+GalaxyPosToPerc(edge.SecondSystem.Pos.Y))/2,
+						edge,
+						key,
+						-1.0,
+					)
+				}
 			}
 		</svg>
 	</centeralizer->
+}
+
+templ midArrow(cx, cy float64, edge *export_map.ConnectionEdge, key string, forward float64) {
+	// "-6,-4 0,0 -6,4"
+	<line
+		data-arrow="left"
+		data-key={ key }
+		data-system1-nickname={ edge.FirstSystem.Nickname }
+		data-system2-nickname={ edge.SecondSystem.Nickname }
+		x1={ fmt.Sprintf("%.5f%%", cx) }
+		y1={ fmt.Sprintf("%.5f%%", cy) }
+		x2={ fmt.Sprintf("%.5f%%", cx-forward*Vector(edge, 45.0).x) }
+		y2={ fmt.Sprintf("%.5f%%", cy-forward*Vector(edge, 45.0).y) }
+		class={
+			templ.KV("hidden_system", (!(edge.FirstSystem.VisibleByDefault &&
+				edge.SecondSystem.VisibleByDefault)) || edge.Kind == export_map.JumpKindCampaignLocked),
+		}
+	></line>
+	<line
+		data-arrow="right"
+		data-key={ key }
+		data-system1-nickname={ edge.FirstSystem.Nickname }
+		data-system2-nickname={ edge.SecondSystem.Nickname }
+		x1={ fmt.Sprintf("%.5f%%", cx) }
+		y1={ fmt.Sprintf("%.5f%%", cy) }
+		x2={ fmt.Sprintf("%.5f%%", cx-forward*Vector(edge, -45.0).x) }
+		y2={ fmt.Sprintf("%.5f%%", cy-forward*Vector(edge, -45.0).y) }
+		class={
+			templ.KV("hidden_system", (!(edge.FirstSystem.VisibleByDefault &&
+				edge.SecondSystem.VisibleByDefault)) || edge.Kind == export_map.JumpKindCampaignLocked),
+		}
+	></line>
 }
 
 type MenuKind int8
