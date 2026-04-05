@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
@@ -211,6 +212,19 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 				</div>
 				<div class="menu-item">
 					<div class="top">
+						@MultiLineOption([]string{"Map Legend"})
+					</div>
+					<div
+						hx-get={ types.GetCtx(ctx).SiteRoot + MapInfocardURL(infocarder.InfocardKey("map_legend")) }
+						hx-target="#remodal-bg"
+						hx-swap="outerHTML"
+						style="cursor:pointer"
+					>
+						<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "map_legend.png" }/>
+					</div>
+				</div>
+				<div class="menu-item">
+					<div class="top">
 						@MultiLineOption([]string{"To Galaxy"})
 					</div>
 					<div>
@@ -260,13 +274,23 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 				InstallSystem();
 			});
 		</script>
-		<div class="remodal-bg" id="remodal-bg">
-			<div class="remodal infocardContainer" data-remodal-id="modal" data-remodal-options="hashTracking: false">
-				<button data-remodal-action="close" class="remodal-close"></button>
-				<h1>Loading...</h1>
-			</div>
-		</div>
 	}
+	if data.Mapped.Discovery != nil {
+		<script>
+		document.addEventListener("DOMContentLoaded", (event) => {
+			InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob");
+		});
+		document.addEventListener('htmx:afterSettle',(event) => {
+			InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob");
+		});
+		</script>
+	}
+	<div class="remodal-bg" id="remodal-bg">
+		<div class="remodal infocardContainer" data-remodal-id="modal" data-remodal-options="hashTracking: false">
+			<button data-remodal-action="close" class="remodal-close"></button>
+			<h1>Loading...</h1>
+		</div>
+	</div>
 }
 
 templ ToggleSwitch(id string) {
@@ -302,11 +326,12 @@ type SystemFaction int8
 const (
 	FacIndependent SystemFaction = iota
 	FacLiberty
-	FacGalica
 	FacNomad
 	FacKusari
 	FacBretonia
 	FacRheinland
+
+	FacGalica
 	FacTau
 	FacSigma
 	FacOmega

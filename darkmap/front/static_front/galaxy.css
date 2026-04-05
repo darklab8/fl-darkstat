@@ -13,6 +13,15 @@ html {
 :root {
     --playerbase_color: #f8f3bc;
     --mining_color: #ac9483;
+
+    /*system jump hole colors*/
+    --jh_color_jumphole: red;
+    --jh_color_jumpgate: gray;
+    --jh_color_unstable_cargo_limit: rgba(219, 72, 55, 0.9);
+    --jh_color_freighter_only: rgba(1, 255, 13, 0.9);
+    --jh_color_alien: rgba(152, 69, 255, 0.9);
+    --jh_color_campaign_locked: rgba(255, 136, 1, 0.9);
+    --jh_color_unknown: rgba(247, 4, 255, 0.849);
 }
 
 background- {
@@ -376,37 +385,37 @@ system-:hover system-label,
 }
 
 .zoomedOut .jumphole {
-    background: red;
-    box-shadow: 0em 0em 0.6em 0.4em rgba(256, 0, 0, 0.5);
+    background: var(--jh_color_jumphole);
+    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_jumphole);
 }
 
 .zoomedOut .jumphole.jh_jumpgate {
-    background: gray;
-    box-shadow: 0em 0em 0.6em 0.4em rgba(128, 128, 128, 0.5);
+    background: var(--jh_color_jumpgate);
+    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_jumpgate);
 }
 
 .zoomedOut .jumphole.jh_unstable_cargo_limit {
-    background: rgba(219, 72, 55, 0.9);
-    box-shadow: 0em 0em 0.6em 0.4em rgba(219, 72, 55, 0.5);
+    background: var(--jh_color_unstable_cargo_limit);
+    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_unstable_cargo_limit);
 }
 
 .zoomedOut .jumphole.jh_fighter_only {
-    background: rgba(1, 255, 13, 0.9);
-    box-shadow: 0em 0em 0.6em 0.4em rgba(1, 255, 13, 0.5);
+    background: var(--jh_color_freighter_only);
+    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_freighter_only);
 }
 
 .zoomedOut .jumphole.jh_alien {
-    background: rgba(152, 69, 255, 0.9);
-    box-shadow: 0em 0em 0.6em 0.4em rgba(152, 69, 255, 0.5);
+    background: var(--jh_color_alien);
+    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_alien);
 }
 
 .zoomedOut .jumphole.jh_campaign_locked {
-    background: rgba(255, 136, 1, 0.9);
-    box-shadow: 0em 0em 0.6em 0.4em rgba(255, 136, 1, 0.5);
+    background: var(--jh_color_campaign_locked);
+    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_campaign_locked);
 }
 
 .zoomedOut .jumphole.jh_unknown {
-    background: rgba(247, 4, 255, 0.849);
+    background: var(--jh_color_unknown);
 }
 
 .zoomedOut .jumphole {

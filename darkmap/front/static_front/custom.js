@@ -35,6 +35,7 @@ function toggle_option(checked, checkbox_name, hidden_class, unhidden_class) {
  */
 function InstallButton(button_id, default_state, togglable_state) {
     var checkbox_systems = document.querySelector("#" + button_id);
+    console.log("installing button=", button_id);
     checkbox_systems.addEventListener('change', function () {
         toggle_option(this.checked, button_id, default_state, togglable_state);
     });
@@ -60,8 +61,6 @@ function InstallMenu() {
     InstallButton("checkbox_zones", "unhidden_zone", "hidden_zone");
 
     InstallButton("checkbox_coords", "hidden_coords", "unhidden_coords");
-
-    InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob");
 }
 
 var zoomInTreshold = 1.25;

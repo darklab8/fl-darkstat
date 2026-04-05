@@ -1,6 +1,8 @@
 package front
 
 import (
+	"fmt"
+	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"html"
 	"strings"
@@ -68,4 +70,265 @@ templ MapInfocard(info infocarder.Infocard) {
 			</div>
 		</div>
 	</div>
+}
+
+templ MapLegend(data *export_map.Export) {
+	<div class="remodal-bg" id="remodal-bg" style="display: flex;">
+		<div
+			class="remodal infocardContainer"
+			data-remodal-id="modal"
+			data-remodal-options="hashTracking: false"
+			style="display: block;"
+		>
+			<div class="scrollUpButton" onclick="CloseInfocard()">
+				<i class="fa fa-times"></i>
+				<p>Close</p>
+			</div>
+			<style>
+				.infocard * {
+					text-align: left;
+				}
+				.infocard ul {
+					list-style-type: disc;
+					margin-block-start: 1em;
+    				margin-block-end: 1em;
+					padding-inline-start: 40px;
+				}
+				.infocard li {
+					display: list-item;
+				}
+				.legend_ul_icons li {
+					display: flex;
+					flex-direction: row;
+					align-content: flex-start;
+					align-items: center;
+				}
+				.legend_ul_icons cycle- {
+					position: unset;
+					height: 5px !important;
+					width: 5px !important;
+					display: block;
+					margin: 5px 15px 0px 0px;
+				}
+			</style>
+			<div class="infocard">
+				<p>
+					<span class="bold">Map Legend</span>
+				</p>
+				<br/>
+				<p>
+					<span class="bold">Features:</span>
+					<ul>
+						<li>On click to almost all you see infocard with technical info</li>
+						<li>On click to jump holes you get moved to a new system</li>
+						<li>grid of map can be zoomed and moved, including beyond grid</li>
+					</ul>
+				</p>
+				<span class="bold">Galaxy system icon belonging</span>
+				<ul class="legend_ul_icons">
+					<li>
+						@SystemIcon(FacLiberty)
+						Liberty
+					</li>
+					<li>
+						@SystemIcon(FacBretonia)
+						Bretonia
+					</li>
+					<li>
+						@SystemIcon(FacKusari)
+						Kusari
+					</li>
+					<li>
+						@SystemIcon(FacRheinland)
+						Rheinalnd
+					</li>
+					<li>
+						@SystemIcon(FacIndependent)
+						Independent
+					</li>
+					if data.Mapped.FLSR == nil {
+						<li>
+							@SystemIcon(FacNomad)
+							Omicron
+						</li>
+						<li>
+							@SystemIcon(FacTau)
+							Tau
+						</li>
+						<li>
+							@SystemIcon(FacSigma)
+							Sigma
+						</li>
+						<li>
+							@SystemIcon(FacOmega)
+							Omega
+						</li>
+						if data.Mapped.Discovery != nil {
+							<li>
+								@SystemIcon(FacGalica)
+								Gallia
+							</li>
+							<li>
+								@SystemIcon(FacDeepOmega)
+								Deep Imega
+							</li>
+						}
+					}
+					if data.Mapped.FLSR != nil {
+						<li>
+							@SystemIcon(FacNomad)
+							Nomad World
+						</li>
+						<li>
+							@SystemIcon(FacHispania)
+							Hispania
+						</li>
+						<li>
+							@SystemIcon(FacBorderWorld)
+							Border World
+						</li>
+						<li>
+							@SystemIcon(FacEdgeWorld)
+							Edge World
+						</li>
+					}
+				</ul>
+			</div>
+			<style>
+				.legend_ul_icons line {
+					position: unset;
+					height: 4px !important;
+					max-height: 4px !important;
+					width: 30px !important;
+					display: block;
+					margin: 0px 15px 0px 0px;
+					min-width: 30px;
+					padding: 0;
+				}
+			</style>
+			<div>
+				<span class="bold">Galaxy jump connections</span>
+				<ul class="legend_ul_icons">
+					<li>
+						@LegendJumpConnection(export_map.JumpKindJumpgate)
+						Jumpgate [double way connection]
+					</li>
+					<li>
+						@LegendJumpConnection(export_map.JumpKindJumphole)
+						Jumphole normal [double way connection]
+					</li>
+					<li>
+						@LegendJumpConnection(export_map.JumpKindFighterOnly)
+						Freighter only jh connection (dockable by berth only) [double way connection]
+					</li>
+					<li>
+						@LegendJumpConnection(export_map.JumpKindCampaignLocked)
+						Jumphole or gate campaign locked in initial workd, [double way connection]
+					</li>
+					if data.Mapped.Discovery != nil {
+						<li>
+							@LegendJumpConnection(export_map.JumpKindUnstableCargoLimited)
+							Jumphole unstable with cargo limit 650. Only if your cargo below 650 you can do it. (Discovery only) [double way connection]
+						</li>
+					}
+					<li>
+						@LegendJumpConnection(export_map.JumpKindAlien)
+						Jumpgate of alien type [double way connection]
+					</li>
+					<li>
+						@LegendJumpConnection(export_map.JumpKindUnknown)
+						Unidentified asymetric jumping connection. It can be One way. Or it is not in the same way forward and back jumpable (Could be jumphole one way and jumpgate back)
+					</li>
+				</ul>
+			</div>
+			<style>
+				.legend_ul_icons jh {
+					position: unset;
+					height: 8px !important;
+					max-height: 8px !important;
+					min-width: 8px;
+					width: 8px !important;
+					display: block;
+					margin: 12px 15px 0px 0px;
+					padding: 0;
+					border-radius: 100%;
+				}
+			</style>
+			<div>
+				<span class="bold">System jumphole types</span>
+				<ul class="legend_ul_icons">
+					<li>
+						@LegendJumphole("jh_color_jumphole")
+						Jumphole normal
+					</li>
+					<li>
+						@LegendJumphole("jh_color_jumpgate")
+						Jumpgate normal
+					</li>
+					if data.Mapped.Discovery != nil {
+						<li>
+							@LegendJumphole("jh_color_unstable_cargo_limit")
+							Jumphole limited to pass only ships with not more than 650 cargo.
+						</li>
+					}
+					<li>
+						@LegendJumphole("jh_color_freighter_only")
+						Freighter only jumphole
+					</li>
+					<li>
+						@LegendJumphole("jh_color_alien")
+						Alien gate
+					</li>
+					<li>
+						@LegendJumphole("jh_color_campaign_locked")
+						Campaign locked jumphole or gate
+					</li>
+					<li>
+						@LegendJumphole("jh_color_unknown")
+						Unidentified type of jh or gate, but probably jumpable by smth at least.
+					</li>
+				</ul>
+			</div>
+			<div class="scrollUpButton" onclick="CloseInfocard()">
+				<i class="fa fa-times"></i>
+				<p>Close</p>
+			</div>
+		</div>
+	</div>
+}
+
+templ LegendJumphole(jumphole_css string) {
+	<jh
+		style={
+			fmt.Sprintf("background-color:var(--%s)", jumphole_css),
+			fmt.Sprintf("box-shadow: 0em 0em 0.8em 0.3em var(--%s)", jumphole_css),
+		}
+	></jh>
+}
+
+// box-shadow: 0em 0em 0.6em 0.4em rgba(255, 136, 1, 0.5)
+templ LegendJumpConnection(edge_kind export_map.JumpConnectionKind) {
+	<line
+		class={
+			templ.KV("conn_alien", edge_kind == export_map.JumpKindAlien),
+			templ.KV("conn_jumpgate", edge_kind == export_map.JumpKindJumpgate),
+			templ.KV("conn_jumphole", edge_kind == export_map.JumpKindJumphole),
+			templ.KV("conn_unstable", edge_kind == export_map.JumpKindUnstableCargoLimited),
+			templ.KV("conn_fighter", edge_kind == export_map.JumpKindFighterOnly),
+			templ.KV("conn_campaign_locked", edge_kind == export_map.JumpKindCampaignLocked),
+			templ.KV("conn_unknown", edge_kind == export_map.JumpKindUnknown),
+		}
+	></line>
+}
+
+templ SystemIcon(sys SystemFaction) {
+	<cycle-
+		{ templ.Attributes{
+		"style": fmt.Sprintf(
+			"border-color: %s; border-width: %dpx;",
+			SystemFacToHexColor(sys),
+			SystemFacToBorderWidth(sys),
+		),
+	}... }
+	></cycle->
 }

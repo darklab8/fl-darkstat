@@ -123,6 +123,13 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		})
 	})
 
+	build.RegComps(
+		builder.NewComponent(
+			utils_types.FilePath(front.MapInfocardURL("map_legend")),
+			front.MapLegend(l.Export),
+		),
+	)
+
 	var extra_files []builder.StaticFile
 
 	type StaticFileInParallel struct {
