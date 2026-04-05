@@ -183,7 +183,9 @@ So don't have folder "DATA2" duplicating all files in same Freelancer folder
 - Honorary mentions for very active moral support and extra ideas by
   - IrateRedKite (from starport Discord)
   - Bolte (from starport Discord)
-- [Space icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/space) for darkmap Galaxy button
+- Image attributions:
+ - [Space icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/space)
+ - [Legend icons]https://www.flaticon.com/free-icons/legend created by Hexagon075 - Flaticon
 - Darkmap is rewrite of project [Navmap](https://github.com/AudunVN/Navmap) made by AudunVN also known as Space or Error.
 
 <!--- 
