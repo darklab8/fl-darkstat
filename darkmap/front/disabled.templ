@@ -1,0 +1,77 @@
+package front
+
+import (
+	"fmt"
+	"github.com/darklab8/fl-darkstat/darkmap/export_map"
+	"math"
+)
+
+/*ALTERNATIVE LINE DRAWER START*/
+/*Why disabled? not precisely enough and beautiful enough*/
+/*But regretful to delete for now*/
+
+templ DrawLines(data *export_map.Export) {
+	for key, edge := range data.Graph.ConnectionEdges {
+		if *edge.FirstSystem.Pos.X == *edge.SecondSystem.Pos.X && 
+				*edge.FirstSystem.Pos.Y == *edge.SecondSystem.Pos.Y {
+		} else {
+			if !edge.FromSecondToFirstJumpable {
+				@midArrowSimple(
+					(GalaxyPosToPerc(edge.FirstSystem.Pos.X)+GalaxyPosToPerc(edge.SecondSystem.Pos.X))/2,
+					(GalaxyPosToPerc(edge.FirstSystem.Pos.Y)+GalaxyPosToPerc(edge.SecondSystem.Pos.Y))/2,
+					math.Atan2(
+						GalaxyPosToPerc(edge.FirstSystem.Pos.Y)-GalaxyPosToPerc(edge.SecondSystem.Pos.Y),
+						GalaxyPosToPerc(edge.FirstSystem.Pos.X)-GalaxyPosToPerc(edge.SecondSystem.Pos.X),
+					)*180/math.Pi,
+					edge,
+					key,
+					1.0,
+				)
+			} else if !edge.FromFirstToSecondJumpable {
+				@midArrowSimple(
+					(GalaxyPosToPerc(edge.FirstSystem.Pos.X)+GalaxyPosToPerc(edge.SecondSystem.Pos.X))/2,
+					(GalaxyPosToPerc(edge.FirstSystem.Pos.Y)+GalaxyPosToPerc(edge.SecondSystem.Pos.Y))/2,
+					math.Atan2(
+						*edge.FirstSystem.Pos.Y-*edge.SecondSystem.Pos.Y,
+						*edge.FirstSystem.Pos.X-*edge.SecondSystem.Pos.X,
+					)*180/math.Pi,
+					edge,
+					key,
+					0.0,
+				)
+			}
+		}
+	}
+}
+
+templ midArrowSimple(cx, cy, angleDeg float64, edge *export_map.ConnectionEdge, key string, forward float64) {
+	<svg
+		data-forward={ fmt.Sprintf("%.5f%%", forward) }
+		data-angle={ fmt.Sprintf("%.5f%%", angleDeg) }
+		class={
+			"connection-svg-overlay",
+			templ.KV("hidden_system", (!(edge.FirstSystem.VisibleByDefault &&
+				edge.SecondSystem.VisibleByDefault)) || edge.Kind == export_map.JumpKindCampaignLocked),
+		}
+		xmlns="http://www.w3.org/2000/svg"
+		style={
+			"pointer-events:none",
+			"position:absolute",
+			"width:1px; height:1px;",
+			fmt.Sprintf("left:%.5f%%", cx),
+			fmt.Sprintf("top: %.5f%%", cy),
+			fmt.Sprintf("transform: rotate(%.5fdeg) translateY(%dpx) translateX(5px)", angleDeg+forward*180.0, 0),
+		}
+	>
+		// "-6,-4 0,0 -6,4"
+		<polygon
+			points="-6,-8 0,0 -6,8"
+			fill="rgba(152, 69, 255, 0.8)"
+			stroke="rgba(152, 69, 255, 0.8)"
+			stroke-width="1"
+			stroke-linejoin="round"
+		></polygon>
+	</svg>
+}
+
+/*ALTERNATIVE LINE DRAWER END*/
