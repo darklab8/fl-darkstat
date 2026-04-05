@@ -470,7 +470,7 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 
 		if pob_info.Pos == nil && len(pob_info.InfocardParagraphs) == 0 {
 			sb.WriteLine(infocarder.InfocardPhrase{Phrase: "infocard:", Bold: true})
-			sb.WriteLineStr("no access (toggle pos permission in pob account manager)")
+			sb.WriteLineStr("not visible pos (toggle pos permission in pob account manager)")
 			sb.WriteLineStr("")
 		}
 
@@ -485,7 +485,7 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 			sb.WriteLineStr("")
 		} else {
 			sb.WriteLine(infocarder.InfocardPhrase{Phrase: "docking permissions:", Bold: true})
-			sb.WriteLineStr("no access (toggle defense mode in pob account manager)")
+			sb.WriteLineStr("not visible docking rights (toggle defense mode in pob account manager)")
 			sb.WriteLineStr("")
 		}
 		if len(pob_info.SrpFactionHashList) > 0 || len(pob_info.SrpTagList) > 0 || len(pob_info.SrpNameList) > 0 {
