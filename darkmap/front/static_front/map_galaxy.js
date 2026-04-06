@@ -30,5 +30,5 @@ function InstallGalaxy() {
     InstallLabelOverlapper();
     InstallMenu();
     InstallEdgeHighlight();
-    InstallPanzoom();
+    InstallPanzoom(true);
 }

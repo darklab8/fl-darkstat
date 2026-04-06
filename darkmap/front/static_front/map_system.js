@@ -1,5 +1,5 @@
 function InstallSystem() {
-    InstallPanzoom();
+    InstallPanzoom(false);
     InstallMenu();
     InstallLabelOverlapper();
 }

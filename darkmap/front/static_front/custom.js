@@ -69,19 +69,34 @@ function InstallMenu() {
 
 var zoomInTreshold = 1.25;
 
-function InstallPanzoom() {
+/**
+ * 
+ * @param {boolean} is_galaxy 
+ */
+function InstallPanzoom(is_galaxy) {
     var map = document.querySelector('.panzoom');
-    var panzoom = Panzoom(map, {
-        maxScale: 5,
-        minScale: 1,
-        // panOnlyWhenZoomed: false,
-        // canvas: true,
-        // contain: "outside",
-        handleStartEvent: function (event) {
-            event.preventDefault()
-        },
-        noBind: false,
-    });
+    if (is_galaxy) {
+        var panzoom = Panzoom(map, {
+            maxScale: 5,
+            minScale: 1,
+            // panOnlyWhenZoomed: false,
+            contain: "outside",
+            handleStartEvent: function (event) {
+                event.preventDefault()
+            },
+            noBind: false,
+        });
+    } else {
+        var panzoom = Panzoom(map, {
+            maxScale: 5,
+            minScale: 1,
+            handleStartEvent: function (event) {
+                event.preventDefault()
+            },
+            noBind: false,
+        });
+    }
+
     map.parentElement.addEventListener('wheel', panzoom.zoomWithWheel);
 
     document.body.classList.add("zoomedOut");
