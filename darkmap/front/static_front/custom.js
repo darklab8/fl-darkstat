@@ -70,40 +70,38 @@ function InstallMenu() {
 var zoomInTreshold = 1.25;
 
 /**
- * 
  * @param {boolean} is_galaxy 
  */
 function InstallPanzoom(is_galaxy) {
     var map = document.querySelector('.panzoom');
+
+    var options = {
+        maxScale: 5,
+        minScale: 1,
+        handleStartEvent: function (event) {
+            event.preventDefault();
+        },
+        noBind: false,
+    };
+
     if (is_galaxy) {
-        var panzoom = Panzoom(map, {
-            maxScale: 5,
-            minScale: 1,
-            // panOnlyWhenZoomed: false,
-            contain: "outside",
-            handleStartEvent: function (event) {
-                event.preventDefault()
-            },
-            noBind: false,
-        });
-    } else {
-        var panzoom = Panzoom(map, {
-            maxScale: 5,
-            minScale: 1,
-            handleStartEvent: function (event) {
-                event.preventDefault()
-            },
-            noBind: false,
-        });
+        options.contain = "outside";
     }
 
-    map.parentElement.addEventListener('wheel', panzoom.zoomWithWheel);
+    var panzoom = Panzoom(map, options);
+
+    // overrides to make possible moving on mouse click even when no longer selecting original "image"
+    var parent = map.parentElement;
+    parent.addEventListener('wheel', panzoom.zoomWithWheel);
+    parent.addEventListener('pointerdown', panzoom.handleDown);
+    parent.addEventListener('pointermove', panzoom.handleMove);
+    parent.addEventListener('pointerup', panzoom.handleUp);
 
     document.body.classList.add("zoomedOut");
 
     map.addEventListener('panzoomchange', function (event) {
-
         console.log("event.detail.scale=", event.detail.scale);
+
         if (event.detail.scale > zoomInTreshold) {
             document.body.classList.add("zoomedIn");
             document.body.classList.remove("zoomedOut");
