@@ -193,7 +193,9 @@ function overlaps(objectA, objectB) {
 }
 
 function InstallLabelOverlapper() {
-    let labels = document.querySelectorAll("system-label")
+    let labels = [...document.querySelectorAll("system-label")]
+        .filter(el => getComputedStyle(el).display !== "none");
+
     objectTerritorialConflictResolver(labels);
 }
 function LabelsReset() {
