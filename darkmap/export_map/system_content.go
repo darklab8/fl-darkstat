@@ -12,6 +12,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
+	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
@@ -431,6 +432,18 @@ func (e *Export) EnrichSystemWithObjects(
 		star.VisibleByDefault = true
 		handled_objects[star.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, star)
+
+		if false {
+			// if u will wish adding to search
+			e.SearchEntries[star.Nickname] = search_bar.NewEntry(
+				fmt.Sprintf("STAR: %s", star.Name),
+				fmt.Sprintf("%s", system_to_add.Name),
+				"#FFFF33",
+				"S",
+				system_to_add.Nickname,
+				star.Nickname,
+			)
+		}
 	}
 
 	for _, base_info := range all_bases {
@@ -540,6 +553,15 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 		handled_objects[base.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, base)
+
+		e.SearchEntries[base.Nickname] = search_bar.NewEntry(
+			fmt.Sprintf("BASE: %s", base.Name),
+			fmt.Sprintf("%s", system_to_add.Name),
+			"#C0C0C0",
+			"B",
+			system_to_add.Nickname,
+			base.Nickname,
+		)
 	}
 
 	for _, base_info := range e.PobsBySystemNick[system_info.Nickname] {
@@ -583,6 +605,15 @@ func (e *Export) EnrichSystemWithObjects(
 		e.Exp.PutInfocard(infocarder.InfocardKey(base.Nickname), append(info, infocard_addition.Lines...))
 		handled_objects[base.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, base)
+
+		e.SearchEntries[base.Nickname] = search_bar.NewEntry(
+			fmt.Sprintf("POB: %s", base.Name),
+			fmt.Sprintf("%s", system_to_add.Name),
+			"#f8f3bc",
+			"P",
+			system_to_add.Nickname,
+			base.Nickname,
+		)
 	}
 	for _, base_info := range e.MiningBySystemNick[system_info.Nickname] {
 
@@ -600,6 +631,15 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 		handled_objects[base.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, base)
+
+		e.SearchEntries[base.Nickname] = search_bar.NewEntry(
+			fmt.Sprintf("MINE: %s", base.Name),
+			fmt.Sprintf("%s", system_to_add.Name),
+			"#ac9483",
+			"M",
+			system_to_add.Nickname,
+			base.Nickname,
+		)
 	}
 
 	for _, wreck := range system_info.Wrecks {
@@ -650,6 +690,15 @@ func (e *Export) EnrichSystemWithObjects(
 		obj.VisibleByDefault = true
 		handled_objects[obj.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, obj)
+
+		e.SearchEntries[obj.Nickname] = search_bar.NewEntry(
+			fmt.Sprintf("WRECK: %s", obj.Name),
+			fmt.Sprintf("%s", system_to_add.Name),
+			"#ffa9a9",
+			"W",
+			system_to_add.Nickname,
+			obj.Nickname,
+		)
 	}
 	for _, zone_info := range system_info.Zones {
 		zone := &Zone{
@@ -685,10 +734,6 @@ func (e *Export) EnrichSystemWithObjects(
 		e.ExportInfocard(zone_info.IDsInfo, zone.Nickname, zone.Name, zone.Pos, zone_info.IdsName, "")
 		handled_objects[zone.Nickname] = true
 		system_to_add.Zones = append(system_to_add.Zones, zone)
-	}
-
-	if system_info.Nickname == "br03" {
-		fmt.Print()
 	}
 
 	for _, obj_info := range system_info.Objects {
@@ -738,11 +783,30 @@ func (e *Export) EnrichSystemWithObjects(
 		if strings.Contains(strings.ToLower(obj.Name), "encounter") {
 			obj.Kind = ObjDiscoEncounter
 			obj.VisibleByDefault = true
+
+			e.SearchEntries[obj.Nickname] = search_bar.NewEntry(
+				fmt.Sprintf("ENC: %s", obj.Name),
+				fmt.Sprintf("%s", system_to_add.Name),
+				"#ad4500",
+				"E",
+				system_to_add.Nickname,
+				obj.Nickname,
+			)
 		} else {
 			obj.VisibleByDefault = false
 		}
 		system_to_add.Objs = append(system_to_add.Objs, obj)
+
 	}
+
+	e.SearchEntries[system_to_add.Nickname] = search_bar.NewEntry(
+		fmt.Sprintf("SYSTEM: %s", system_to_add.Name),
+		fmt.Sprintf("%s", system_to_add.Name),
+		"#7679fc",
+		"S",
+		system_to_add.Nickname,
+		system_to_add.Nickname,
+	)
 }
 
 func (e *Export) ExportInfocard(

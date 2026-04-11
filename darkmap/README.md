@@ -1,5 +1,9 @@
 > [!NOTE]  
-> **The project is still in early development stage and haven't reached MVP (Minimal Viable Product)**
+> **The project darkmap reached stable version**
+
+Communications are done through
+- forum thread there https://discoverygc.com/forums/showthread.php?tid=211565
+- and through github issues https://github.com/darklab8/fl-darkstat/issues
 
 # Description
 

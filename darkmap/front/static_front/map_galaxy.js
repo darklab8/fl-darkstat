@@ -30,5 +30,7 @@ function InstallGalaxy() {
     InstallLabelOverlapper();
     InstallMenu();
     InstallEdgeHighlight();
+
+    preventAnchorScroll();
     InstallPanzoom(true);
 }

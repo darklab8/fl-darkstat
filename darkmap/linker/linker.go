@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"sort"
 	"strings"
 	"time"
 
@@ -19,6 +20,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/front/static"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
@@ -81,6 +83,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.MapSystemJS),
 		builder.NewStaticFileFromCore(static_front.PanzoomJS),
 		builder.NewStaticFileFromCore(static_front.RemodalCSS),
+		builder.NewStaticFileFromCore(search_bar.SearchBarCss),
 		builder.NewStaticFileFromCore(static_front.ZonesCSS.GetTemplated(templated_zones.String())),
 		builder.NewStaticFileFromCore(core_types.StaticFile{
 			Content:  core_static.FaviconIcoContent,
@@ -94,10 +97,23 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 	}
 	build = builder.NewBuilder(params, files)
 
+	map_search_entries := l.Export.SearchEntries
+	var search_entries []search_bar.Entry
+
+	for _, value := range map_search_entries {
+		search_entries = append(search_entries, value)
+	}
+	sort.Slice(search_entries, func(i, j int) bool {
+		if search_entries[i].Tag != search_entries[j].Tag {
+			return search_entries[i].Name < search_entries[j].Name
+		}
+		return search_entries[i].Name < search_entries[j].Name
+	})
+
 	build.RegComps(
 		builder.NewComponent(
 			urls.Index,
-			front.Index(l.Export),
+			front.Index(l.Export, search_entries),
 		),
 	)
 
@@ -105,7 +121,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.SystemDetailedUrl(system)),
-				front.System(system, l.Export),
+				front.System(system, l.Export, search_entries),
 			),
 		)
 	}

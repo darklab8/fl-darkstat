@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
+	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 )
 
 templ Html5() {
@@ -23,6 +24,7 @@ templ Html5() {
 			@core_front.StaticFile(static_front.PanzoomJS)
 			@core_front.StaticFile(static_front.ZonesCSS)
 			@core_front.StaticFile(static_front.RemodalCSS)
+			@core_front.StaticFile(search_bar.SearchBarCss)
 			<script>
 			</script>
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes"/>
@@ -33,9 +35,9 @@ templ Html5() {
 	</html>
 }
 
-templ Index(data *export_map.Export) {
+templ Index(data *export_map.Export, search_entries []search_bar.Entry) {
 	@Html5() {
-		@GalaxyGrid(MenuKindGalaxy, data) {
+		@GalaxyGrid(MenuKindGalaxy, data, search_entries) {
 			@GalalaxyMap(data)
 		}
 	}

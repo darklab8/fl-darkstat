@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkmap/utfextract"
@@ -21,6 +22,7 @@ type Export struct {
 	PobsBySystemNick   map[string][]*configs_export.PoB
 	MiningBySystemNick map[string][]*configs_export.Base
 	MiningUsefulByNick map[string]bool
+	SearchEntries      map[string]search_bar.Entry
 
 	Exp *configs_export.Exporter
 }
@@ -30,6 +32,7 @@ func NewExport(ctx context.Context) *Export {
 		PobsBySystemNick:   make(map[string][]*configs_export.PoB),
 		MiningBySystemNick: make(map[string][]*configs_export.Base),
 		MiningUsefulByNick: make(map[string]bool),
+		SearchEntries:      make(map[string]search_bar.Entry),
 	}
 
 	defer timeit.NewTimer("MappedConfigs creation").Close()

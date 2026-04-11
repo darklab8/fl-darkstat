@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
+	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 
@@ -178,123 +179,22 @@ func (m MenuKind) ToNickname() string {
 	return "unknown"
 }
 
-templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
+templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export, search_entries []search_bar.Entry) {
 	// font-family: var(--font-family);
 	<background->
+		<top-bar->
+			<search-bar-counterweight->
+				<p>
+					<a href="https://github.com/darklab8/fl-darkstat/tree/master/darkmap">Darkmap</a>,
+					Space/Error's <a href="https://fifthbarrier.github.io/Navmap/">map</a> remade from scratch by the duck ^_^
+				</p>
+			</search-bar-counterweight->
+			@Menu(menu_kind, data)
+			<search-bar->
+				@search_bar.SearchBar(search_entries, data.Mapped.Discovery != nil)
+			</search-bar->
+		</top-bar->
 		<map-with-interface->
-			<menu->
-				if settings.Env.EnableStatRoot {
-					<div class="menu-item">
-						<div class="top" style="min-height:20px">
-							@MultiLineOption([]string{"To Stats"})
-						</div>
-						<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot) }>
-							<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "stat_favicon.ico" }/>
-						</a>
-					</div>
-				}
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"All systems"})
-					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_systems")
-					</div>
-				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"Hide labels"})
-					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_map_labels")
-					</div>
-				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"Wrecks on"})
-					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_wrecks")
-					</div>
-				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"Wreck labels"})
-					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_wrecks_labels")
-					</div>
-				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"All objects"})
-					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_objects")
-					</div>
-				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"all obj labels"})
-					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_obj_others")
-					</div>
-				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"Hide Zones"})
-					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_zones")
-					</div>
-				</div>
-				<div class="menu-item" style={ templ.KV("display:none", data.Mapped.Discovery == nil) }>
-					<div class="top">
-						@MultiLineOption([]string{"Hide pobs"})
-					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_pobs")
-					</div>
-				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"Hover coords"})
-					</div>
-					<div class="bottom">
-						@ToggleSwitch("checkbox_coords")
-					</div>
-				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"Map Legend"})
-					</div>
-					<div
-						hx-get={ types.GetCtx(ctx).SiteRoot + MapInfocardURL(infocarder.InfocardKey("map_legend")) }
-						hx-target="#remodal-bg"
-						hx-swap="outerHTML"
-						style="cursor:pointer"
-					>
-						<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "map_legend.png" }/>
-					</div>
-				</div>
-				<div class="menu-item">
-					<div class="top">
-						@MultiLineOption([]string{"To Galaxy"})
-					</div>
-					<div>
-						if menu_kind == MenuKindGalaxy {
-							<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
-						} else {
-							<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>
-								<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
-							</a>
-						}
-					</div>
-				</div>
-				// <input type="checkbox" id="checkbox_systems" name="systems" value="systems"/>
-				// <input type="checkbox" id="checkbox_swrecks" name="wrecks" value="wrecks" disabled/>
-			</menu->
 			<div class={ fmt.Sprintf("panzoom-parent-%s", menu_kind.ToNickname()) }>
 				<div class="panzoom">
 					<map- class={ menu_kind.ToNickname() }>
@@ -336,6 +236,120 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 			<h1>Loading...</h1>
 		</div>
 	</div>
+}
+
+templ Menu(menu_kind MenuKind, data *export_map.Export) {
+	<menu->
+		if settings.Env.EnableStatRoot {
+			<div class="menu-item">
+				<div class="top" style="min-height:20px">
+					@MultiLineOption([]string{"To Stats"})
+				</div>
+				<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot) }>
+					<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "stat_favicon.ico" }/>
+				</a>
+			</div>
+		}
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"All systems"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_systems")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"Hide labels"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_map_labels")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"Wrecks on"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_wrecks")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"Wreck labels"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_wrecks_labels")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"All objects"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_objects")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"all obj labels"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_obj_others")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"Hide Zones"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_zones")
+			</div>
+		</div>
+		<div class="menu-item" style={ templ.KV("display:none", data.Mapped.Discovery == nil) }>
+			<div class="top">
+				@MultiLineOption([]string{"Hide pobs"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_pobs")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"Hover coords"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_coords")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"Map Legend"})
+			</div>
+			<div
+				hx-get={ types.GetCtx(ctx).SiteRoot + MapInfocardURL(infocarder.InfocardKey("map_legend")) }
+				hx-target="#remodal-bg"
+				hx-swap="outerHTML"
+				style="cursor:pointer"
+			>
+				<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "map_legend.png" }/>
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"To Galaxy"})
+			</div>
+			<div>
+				if menu_kind == MenuKindGalaxy {
+					<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
+				} else {
+					<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>
+						<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
+					</a>
+				}
+			</div>
+		</div>
+	</menu->
 }
 
 templ ToggleSwitch(id string) {

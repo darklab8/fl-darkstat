@@ -27,7 +27,78 @@ html {
 
 background- {
     display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+}
+
+top-bar- {
+    display: flex;
+    flex-direction: row;
+}
+
+@media (min-aspect-ratio: 6/4) {
+    top-bar- {
+        width: 100%;
+    }
+}
+
+@media (max-aspect-ratio: 6/4) {
+    top-bar- {
+        flex-direction: column-reverse;
+    }
+
+    search-bar- {
+        width: 100% !important;
+    }
+
+    search-bar-counterweight- {
+        display: none;
+    }
+}
+
+search-bar- {
+    /*useful for debug*/
+    background-color: #00F;
+
+    box-shadow: 0em 0em 0.5em 0em #1EA6C5;
+    border: 0.2em solid #1EA6C5;
+    box-sizing: border-box;
+}
+
+top-bar- search-bar-counterweight-,
+top-bar- search-bar- {
+    flex-grow: 1;
+    width: 250px;
+}
+
+search-bar-counterweight- {
+    box-shadow: 0em 0em 0.5em 0em #1EA6C5;
+    border: 0.2em solid #1EA6C5;
+    box-sizing: border-box;
+    background: #000 url(../static/nnwall.jpg) repeat scroll 0% 0%;
+
+    display: flex;
     justify-content: center;
+    align-items: center;
+    padding: 10px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+search-bar-counterweight- a {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+search-bar-,
+search-bar- .search-input,
+search-bar- .search-wrap,
+search-bar- .search-box {
+    height: 100%;
+}
+
+
+menu- {
+    width: calc(100vh - 2.4em);
 }
 
 map-with-interface- {
@@ -394,6 +465,43 @@ system-:hover,
 .mining:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7) !important;
     color: rgb(255, 167, 6);
+}
+
+:target,
+.is-target {
+    display: block;
+    animation: pulse 1.5s infinite;
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0.8);
+    }
+
+    70% {
+        -webkit-box-shadow: 0 0 0 20px rgba(204, 169, 44, 0);
+    }
+
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0.8);
+        box-shadow: 0 0 0 0 rgba(204, 169, 44, 0.8);
+    }
+
+    70% {
+        -moz-box-shadow: 0 0 0 20px rgba(204, 169, 44, 0);
+        box-shadow: 0 0 0 20px rgba(204, 169, 44, 0);
+    }
+
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+        box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+    }
 }
 
 system-:hover system-label,

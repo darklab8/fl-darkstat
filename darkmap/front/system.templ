@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
+	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"strconv"
@@ -11,18 +13,15 @@ import (
 )
 
 func SystemDetailedUrl(system *export_map.System) string {
-	return SystemDetailedUrlNick(system.Nickname)
-}
-func SystemDetailedUrlNick(system_nick string) string {
-	return "cdn/map/system/system-" + strings.ToLower(system_nick) + ".html"
+	return urls.SystemDetailedUrlNick(system.Nickname)
 }
 
 var GridRows []int = []int{2, 3, 4, 5, 6, 7, 8}
 var GridColumns []rune = []rune{'B', 'C', 'D', 'E', 'F', 'G', 'H'}
 
-templ System(system *export_map.System, data *export_map.Export) {
+templ System(system *export_map.System, data *export_map.Export, search_entries []search_bar.Entry) {
 	@Html5() {
-		@GalaxyGrid(MenuKindSystem, data) {
+		@GalaxyGrid(MenuKindSystem, data, search_entries) {
 			<style>
                 .grid {
                     width: 100%;
@@ -188,7 +187,7 @@ templ SystemContents(system *export_map.System) {
             }
         </style>
 		for _, obj := range system.Jumpholes {
-			<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + SystemDetailedUrlNick(obj.GotoSystem)) }>
+			<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.SystemDetailedUrlNick(obj.GotoSystem)) }>
 				<obj-
 					data-nickname={ obj.Nickname }
 					class={
@@ -222,6 +221,7 @@ templ SystemContents(system *export_map.System) {
 			// templ.KV("tradelane_css_shape", obj.Kind == export_map.ObjTradelane && obj.UserCSSShape),
 			// to be fair inner shadow does not work according to expectations. at least the star_glow one i think
 			<obj-
+				id={ obj.Nickname }
 				hx-get={ types.GetCtx(ctx).SiteRoot + MapInfocardURL(infocarder.InfocardKey(obj.Nickname)) }
 				hx-target="#remodal-bg"
 				hx-swap="outerHTML"

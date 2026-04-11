@@ -1,0 +1,111 @@
+package search_bar
+
+import (
+	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	"github.com/darklab8/fl-darkstat/darkmap/types"
+	"strings"
+)
+
+templ TestPage(entries []Entry) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Destination search</title>
+			<link rel="stylesheet" href="search.css"/>
+		</head>
+		<body>
+			@SearchBar(entries, false)
+		</body>
+	</html>
+}
+
+templ SearchBar(entries []Entry, is_disco bool) {
+	<div class="search-wrap">
+		<div class="search-box">
+			<input
+				id="search-input"
+				type="search"
+				if is_disco {
+					placeholder="Search by typing a base, POB, system, wreck or encounter"
+				} else {
+					placeholder="Search by typing a base, system, wreck or encounter"
+				}
+				autocomplete="off"
+				spellcheck="false"
+				oninput="searchBarFilterItems(this.value)"
+			/>
+			<div class="search-bar-dropdown" role="listbox" aria-label="Search results">
+				<div class="search-bar-dd-header">All entries</div>
+				<div class="search-item-list" id="search-item-list">
+					for _, e := range entries {
+						@entryRow(e)
+					}
+					<div class="search-no-results" id="search-no-results">No results found</div>
+				</div>
+			</div>
+		</div>
+		<script>
+		// function searchBarHighlightText(element, query) { // regex version. more dirty.
+		// 	var originalText = element.textContent;
+		// 	if (!query) { element.innerHTML = originalText; return; }
+		// 	var safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		// 	var pattern = new RegExp('(' + safeQuery + ')', 'gi');
+		// 	element.innerHTML = originalText.replace(pattern, '<mark>$1</mark>');
+		// }
+
+		function searchBarHighlightText(element, query) {
+			var text = element.textContent;
+			if (!query) { element.innerHTML = text; return; }
+			var lowerText = text.toLowerCase();
+			var matchIndex = lowerText.indexOf(query);
+			if (matchIndex === -1) { element.innerHTML = text; return; }
+			var before = text.slice(0, matchIndex);
+			var matched = text.slice(matchIndex, matchIndex + query.length);
+			var after   = text.slice(matchIndex + query.length);
+			element.innerHTML = before + '<mark>' + matched + '</mark>' + after;
+		}
+
+		function searchBarFilterItems(query) {
+			query = query.trim().toLowerCase();
+			var allItems = document.querySelectorAll('#search-item-list .search-item');
+			var visibleCount = 0;
+			allItems.forEach(function(item) {
+				var matches = !query || item.dataset.search.includes(query);
+				item.hidden = !matches;
+				if (!matches) return;
+				visibleCount++;
+				searchBarHighlightText(item.querySelector('.search-item-name'), query);
+			});
+			var isEmpty = visibleCount === 0;
+			document.getElementById('search-no-results').className = 'search-no-results' + (isEmpty ? ' visible' : '');
+		}
+		</script>
+	</div>
+}
+
+templ entryRow(e Entry) {
+	// target="_blank" // add this if wishing to open at new page
+	<a
+		class="search-item"
+		href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.SystemDetailedUrlNick(e.SysNick) + "#" + e.Query) }
+		rel="noopener"
+		data-search={ strings.ToLower(e.SearchIndex()) }
+		tabindex="0"
+		role="option"
+	>
+		// search-item-icon
+		<span
+			class="search-item-icon"
+			style={ "background:" + e.Color + "22;color:" + e.Color }
+		>{ e.Letter }</span>
+		// search item body, minimized to search-item-body for disk saving purposes
+		<span class="search-item-body">
+			// search item name, minimized to search-item-name for disk saving purposes
+			<span class="search-item-name">{ e.Name }</span>
+		</span>
+		// search item tag
+		<span class="search-item-tag">{ e.Tag }</span>
+	</a>
+}
