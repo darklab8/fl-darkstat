@@ -1,6 +1,7 @@
 package search_bar
 
 import (
+	"fmt"
 	"strings"
 
 	_ "embed"
@@ -19,6 +20,7 @@ var SearchBarCss = core_types.StaticFile{
 
 type Entry struct {
 	Name   string
+	Kind   string
 	Tag    string
 	Color  string
 	Letter string
@@ -29,6 +31,7 @@ type Entry struct {
 
 func NewEntry(
 	Name string,
+	Kind string,
 	Tag string,
 	Color string,
 	Letter string,
@@ -39,6 +42,7 @@ func NewEntry(
 ) Entry {
 	return Entry{
 		Name:    Name,
+		Kind:    Kind,
 		Tag:     Tag,
 		Color:   Color,
 		Letter:  Letter,
@@ -48,5 +52,5 @@ func NewEntry(
 }
 
 func (e Entry) SearchIndex() string {
-	return strings.ToLower(e.Name)
+	return strings.ToLower(fmt.Sprintf("%s: %s", e.Kind, e.Name))
 }

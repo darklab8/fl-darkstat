@@ -104,7 +104,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		search_entries = append(search_entries, value)
 	}
 	sort.Slice(search_entries, func(i, j int) bool {
-		if search_entries[i].Tag != search_entries[j].Tag {
+		if search_entries[i].Kind != search_entries[j].Kind {
 			return search_entries[i].Name < search_entries[j].Name
 		}
 		return search_entries[i].Name < search_entries[j].Name

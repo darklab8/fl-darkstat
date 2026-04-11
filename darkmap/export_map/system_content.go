@@ -436,9 +436,10 @@ func (e *Export) EnrichSystemWithObjects(
 		if false {
 			// if u will wish adding to search
 			e.SearchEntries[star.Nickname] = search_bar.NewEntry(
-				fmt.Sprintf("STAR: %s", star.Name),
+				star.Name,
+				"STAR",
 				fmt.Sprintf("%s", system_to_add.Name),
-				"#FFFF33",
+				"star",
 				"S",
 				system_to_add.Nickname,
 				star.Nickname,
@@ -555,9 +556,10 @@ func (e *Export) EnrichSystemWithObjects(
 		system_to_add.Objs = append(system_to_add.Objs, base)
 
 		e.SearchEntries[base.Nickname] = search_bar.NewEntry(
-			fmt.Sprintf("BASE: %s", base.Name),
+			base.Name,
+			"BASE",
 			fmt.Sprintf("%s", system_to_add.Name),
-			"#C0C0C0",
+			"base",
 			"B",
 			system_to_add.Nickname,
 			base.Nickname,
@@ -607,9 +609,10 @@ func (e *Export) EnrichSystemWithObjects(
 		system_to_add.Objs = append(system_to_add.Objs, base)
 
 		e.SearchEntries[base.Nickname] = search_bar.NewEntry(
-			fmt.Sprintf("POB: %s", base.Name),
+			base.Name,
+			"POB",
 			fmt.Sprintf("%s", system_to_add.Name),
-			"#f8f3bc",
+			"pob",
 			"P",
 			system_to_add.Nickname,
 			base.Nickname,
@@ -633,9 +636,10 @@ func (e *Export) EnrichSystemWithObjects(
 		system_to_add.Objs = append(system_to_add.Objs, base)
 
 		e.SearchEntries[base.Nickname] = search_bar.NewEntry(
-			fmt.Sprintf("MINE: %s", base.Name),
+			base.Name,
+			"MINE",
 			fmt.Sprintf("%s", system_to_add.Name),
-			"#ac9483",
+			"mine",
 			"M",
 			system_to_add.Nickname,
 			base.Nickname,
@@ -692,9 +696,10 @@ func (e *Export) EnrichSystemWithObjects(
 		system_to_add.Objs = append(system_to_add.Objs, obj)
 
 		e.SearchEntries[obj.Nickname] = search_bar.NewEntry(
-			fmt.Sprintf("WRECK: %s", obj.Name),
+			obj.Name,
+			"WRECK",
 			fmt.Sprintf("%s", system_to_add.Name),
-			"#ffa9a9",
+			"wre",
 			"W",
 			system_to_add.Nickname,
 			obj.Nickname,
@@ -785,9 +790,10 @@ func (e *Export) EnrichSystemWithObjects(
 			obj.VisibleByDefault = true
 
 			e.SearchEntries[obj.Nickname] = search_bar.NewEntry(
-				fmt.Sprintf("ENC: %s", obj.Name),
+				obj.Name,
+				"ENC",
 				fmt.Sprintf("%s", system_to_add.Name),
-				"#ad4500",
+				"enc",
 				"E",
 				system_to_add.Nickname,
 				obj.Nickname,
@@ -800,9 +806,10 @@ func (e *Export) EnrichSystemWithObjects(
 	}
 
 	e.SearchEntries[system_to_add.Nickname] = search_bar.NewEntry(
-		fmt.Sprintf("SYSTEM: %s", system_to_add.Name),
+		system_to_add.Name,
+		"SYSTEM",
 		fmt.Sprintf("%s", system_to_add.Name),
-		"#7679fc",
+		"sys",
 		"S",
 		system_to_add.Nickname,
 		system_to_add.Nickname,

@@ -167,9 +167,10 @@ search_bar- {
 }
 
 /* ── icon badge ───────────────────────────────────────── */
-.search-item-icon {
-    width: 26px;
+.s-i-i {
+    /*width: 26px;*/
     height: 26px;
+    padding: 5px;
     border-radius: 0;
     display: flex;
     align-items: center;
@@ -183,15 +184,50 @@ search_bar- {
     background: #040d14;
 }
 
+.s-i-i.i-star {
+    /* background: #FFFF33; */
+    color: #FFFF33;
+}
+
+.s-i-i.i-sys {
+    /* background: #7679fc; */
+    color: #7679fc;
+}
+
+.s-i-i.i-enc {
+    /* background: #ad4500; */
+    color: #ad4500;
+}
+
+.s-i-i.i-wre {
+    /* background: #ffa9a9; */
+    color: #ffa9a9;
+}
+
+.s-i-i.i-mine {
+    /* background: #ac9483; */
+    color: #ac9483;
+}
+
+.s-i-i.i-pob {
+    /* background: #f8f3bc; */
+    color: #f8f3bc;
+}
+
+.s-i-i.i-base {
+    /* background: #C0C0C0; */
+    color: #C0C0C0;
+}
+
 /* ── text ─────────────────────────────────────────────── */
-.search-item-body {
+.s-i-b {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
 }
 
-.search-item-name {
+.s-i-n {
     font-size: 16px;
     font-weight: 400;
     color: #e8f4f8;
@@ -212,7 +248,7 @@ search_bar- {
 }
 
 /* ── highlight matching text ──────────────────────────── */
-.search-item-name mark,
+.s-i-n mark,
 .search-item-sub mark {
     background: none;
     color: #1EA6C5;
@@ -220,7 +256,7 @@ search_bar- {
 }
 
 /* ── tag pill ─────────────────────────────────────────── */
-.search-item-tag {
+.s-i-t {
     font-size: 10px;
     letter-spacing: .1em;
     text-transform: uppercase;
