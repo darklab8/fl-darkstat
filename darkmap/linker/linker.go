@@ -113,7 +113,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 	build.RegComps(
 		builder.NewComponent(
 			urls.Index,
-			front.Index(l.Export, search_entries),
+			front.Index(l.Export),
 		),
 		builder.NewComponent(
 			urls.SearchBar,
@@ -125,7 +125,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		build.RegComps(
 			builder.NewComponent(
 				utils_types.FilePath(front.SystemDetailedUrl(system)),
-				front.System(system, l.Export, search_entries),
+				front.System(system, l.Export),
 			),
 		)
 	}

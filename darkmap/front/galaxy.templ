@@ -5,7 +5,6 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/core_front"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
-	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 
@@ -179,7 +178,7 @@ func (m MenuKind) ToNickname() string {
 	return "unknown"
 }
 
-templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export, search_entries []search_bar.Entry) {
+templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 	// font-family: var(--font-family);
 	<background->
 		<top-bar->

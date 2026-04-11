@@ -35,9 +35,9 @@ templ Html5() {
 	</html>
 }
 
-templ Index(data *export_map.Export, search_entries []search_bar.Entry) {
+templ Index(data *export_map.Export) {
 	@Html5() {
-		@GalaxyGrid(MenuKindGalaxy, data, search_entries) {
+		@GalaxyGrid(MenuKindGalaxy, data) {
 			@GalalaxyMap(data)
 		}
 	}

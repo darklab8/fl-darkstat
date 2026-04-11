@@ -5,7 +5,6 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
-	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"strconv"
@@ -19,9 +18,9 @@ func SystemDetailedUrl(system *export_map.System) string {
 var GridRows []int = []int{2, 3, 4, 5, 6, 7, 8}
 var GridColumns []rune = []rune{'B', 'C', 'D', 'E', 'F', 'G', 'H'}
 
-templ System(system *export_map.System, data *export_map.Export, search_entries []search_bar.Entry) {
+templ System(system *export_map.System, data *export_map.Export) {
 	@Html5() {
-		@GalaxyGrid(MenuKindSystem, data, search_entries) {
+		@GalaxyGrid(MenuKindSystem, data) {
 			<style>
                 .grid {
                     width: 100%;
