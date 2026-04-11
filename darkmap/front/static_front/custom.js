@@ -69,33 +69,15 @@ function InstallMenu() {
 
 var zoomInTreshold = 1.25;
 
-function preventAnchorScroll() {
-    var hash = window.location.hash;
-    if (!hash) return;
+function highlightFromQuery() {
+    var params = new URLSearchParams(window.location.search);
+    var q = params.get('q');
+    if (!q) return;
 
-    var parent = document.querySelector('.panzoom').parentElement;
+    var targetEl = document.getElementById(q);
+    if (!targetEl) return;
 
-    var onScroll = function () {
-        parent.scrollTop = 0;
-        parent.scrollLeft = 0;
-    };
-    parent.addEventListener('scroll', onScroll);
-
-    var targetEl = document.querySelector(hash);
-    if (targetEl) {
-        targetEl.classList.add('is-target');
-    }
-
-    // Remove hash so browser won't scroll on load
-    history.replaceState(null, '', window.location.pathname + window.location.search);
-
-    requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-            // Restore hash — replaceState won't scroll
-            history.replaceState(null, '', hash);
-            parent.removeEventListener('scroll', onScroll);
-        });
-    });
+    targetEl.classList.add('is-target');
 }
 
 /**

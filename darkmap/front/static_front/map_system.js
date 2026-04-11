@@ -1,5 +1,5 @@
 function InstallSystem() {
-    preventAnchorScroll();
+    highlightFromQuery();
     InstallPanzoom(false);
     InstallMenu();
     InstallLabelOverlapper();
