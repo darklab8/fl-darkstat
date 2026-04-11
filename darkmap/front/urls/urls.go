@@ -7,7 +7,8 @@ import (
 )
 
 var (
-	Index utils_types.FilePath = "index.html"
+	Index     utils_types.FilePath = "index.html"
+	SearchBar utils_types.FilePath = "search-bar"
 )
 
 func SystemDetailedUrlNick(system_nick string) string {

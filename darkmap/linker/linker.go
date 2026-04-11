@@ -115,6 +115,10 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 			urls.Index,
 			front.Index(l.Export, search_entries),
 		),
+		builder.NewComponent(
+			urls.SearchBar,
+			search_bar.SearchBar(search_entries, l.Export.Mapped.Discovery != nil),
+		),
 	)
 
 	for _, system := range l.Export.Systems {

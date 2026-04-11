@@ -190,9 +190,11 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export, search_entries []s
 				</p>
 			</search-bar-counterweight->
 			@Menu(menu_kind, data)
-			<search-bar->
-				@search_bar.SearchBar(search_entries, data.Mapped.Discovery != nil)
-			</search-bar->
+			<search-bar-
+				hx-get={ types.GetCtx(ctx).SiteRoot + urls.SearchBar.ToString() }
+				hx-target="this"
+				hx-trigger="load"
+			></search-bar->
 		</top-bar->
 		<map-with-interface->
 			<div class={ fmt.Sprintf("panzoom-parent-%s", menu_kind.ToNickname()) }>
