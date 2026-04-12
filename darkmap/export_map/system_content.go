@@ -545,17 +545,19 @@ func (e *Export) EnrichSystemWithObjects(
 
 		e.ExportInfocard(base_info.IDsInfo, base.Nickname, base.Name, base.Pos, base_info.IdsName, factionName)
 
-		// dockable := solararch.IsDockable(solararch_mapped.DockableOptions{
-		// 	IsDisco:                  e.Mapped.Discovery != nil,
-		// 	PlayersCanDockBerth:      true,
-		// 	PlayersCanDockMoorMedium: true,
-		// 	PlayersCanDockMoorLarge:  true,
-		// })
-		// if dockable.IsDockable {
-		// 	base.VisibleByDefault = true
-		// }
-
 		base.VisibleByDefault = true
+
+		if base.Kind != ObjPlanet {
+			dockable := solararch.IsDockable(solararch_mapped.DockableOptions{
+				IsDisco:                  e.Mapped.Discovery != nil,
+				PlayersCanDockBerth:      true,
+				PlayersCanDockMoorMedium: true,
+				PlayersCanDockMoorLarge:  true,
+			})
+			if !dockable.IsDockable {
+				base.VisibleByDefault = false
+			}
+		}
 
 		if archetype == "invisible_base" {
 			base.VisibleByDefault = false

@@ -271,7 +271,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 
 					// // VANILLA START
 					case "nnm_sm_mining":
-						obj.ShapeName = "fallback/miningship"
+						obj.UseFallback = true
 					case "nnm_sm_depot":
 						obj.ShapeName = "fallback/nav_depot"
 					case "nnm_sm_navbuoy": // colored by css
