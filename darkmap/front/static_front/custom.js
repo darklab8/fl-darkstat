@@ -95,9 +95,9 @@ function InstallPanzoom(is_galaxy) {
         noBind: false,
     };
 
-    if (is_galaxy) {
-        options.contain = "outside";
-    }
+    // if (is_galaxy) { // everyone is allowed to move!
+    //     options.contain = "outside";
+    // }
 
     var panzoom = Panzoom(map, options);
 

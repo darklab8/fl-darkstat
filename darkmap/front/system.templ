@@ -311,9 +311,12 @@ templ SystemContents(system *export_map.System) {
 									templ.KV("unhidden_label", obj.Kind != export_map.ObjWreck),
 									templ.KV("hidden_wreck_label", obj.Kind == export_map.ObjWreck),
 									templ.KV("hidden_obj_other_label", obj.Kind == export_map.ObjOthers && !obj.VisibleByDefault),
+									templ.KV("pob_dockable", obj.IsPoBWithKnownDockingPerms),
 								}
 								style="top: 1.5em;"
-							>{ obj.Name }</system-label>
+							>
+								{ obj.Name }
+							</system-label>
 						</system-label-wrap>
 					}
 				}

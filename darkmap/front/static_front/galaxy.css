@@ -12,6 +12,7 @@ html {
 
 :root {
     --playerbase_color: #f8f3bc;
+    --playerbase_dockable_color: #9aff9f;
     --mining_color: #ac9483;
     --obj_other_color: #92f6fa;
 
@@ -495,6 +496,14 @@ system-:hover system-label,
 
 .playerbase system-label {
     color: var(--playerbase_color);
+}
+
+.playerbase system-label.pob_dockable {
+    color: var(--playerbase_dockable_color);
+}
+
+ul.text_align_left * {
+    text-align: left;
 }
 
 .mining system-label {
