@@ -37,26 +37,6 @@ top-bar- {
     flex-direction: row;
 }
 
-@media (min-aspect-ratio: 6/4) {
-    top-bar- {
-        width: 100%;
-    }
-}
-
-@media (max-aspect-ratio: 6/4) {
-    top-bar- {
-        flex-direction: column-reverse;
-    }
-
-    search-bar- {
-        width: 100% !important;
-    }
-
-    search-bar-counterweight- {
-        display: none;
-    }
-}
-
 search-bar- {
     /*useful for debug*/
     /* background-color: #00F; */
@@ -109,20 +89,6 @@ map-with-interface- {
     flex-direction: column;
     height: calc(100vh);
     width: calc(100vh - 2.4em);
-}
-
-@media (min-aspect-ratio: 1) {
-    background- {
-        height: 100vh;
-        width: 100vw;
-    }
-}
-
-@media (max-aspect-ratio: 1) {
-    background- {
-        height: 100vw;
-        width: 100vh;
-    }
 }
 
 map- {
@@ -682,4 +648,40 @@ line- {
     width: 0.125em;
     background-color: rgba(69, 150, 255, 0.9);
     display: block;
+}
+
+
+
+@media (min-aspect-ratio: 1) {
+    background- {
+        height: 100vh;
+        width: 100vw;
+    }
+}
+
+@media (max-aspect-ratio: 1) {
+    background- {
+        height: 100vh;
+        width: 100vh;
+    }
+}
+
+@media (min-aspect-ratio: 6/4) {
+    top-bar- {
+        width: 100%;
+    }
+}
+
+@media (max-aspect-ratio: 6/4) {
+    top-bar- {
+        flex-direction: column-reverse;
+    }
+
+    search-bar- {
+        width: 100% !important;
+    }
+
+    search-bar-counterweight- {
+        display: none;
+    }
 }
