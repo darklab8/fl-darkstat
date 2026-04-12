@@ -12,6 +12,7 @@ html {
 
 :root {
     --playerbase_color: #f8f3bc;
+    --playerbase_dockable_color: #9aff9f;
     --mining_color: #ac9483;
     --obj_other_color: #92f6fa;
 
@@ -94,8 +95,9 @@ map-with-interface- {
 map- {
     width: 100%;
     height: 100%;
-    user-select: none;
-    touch-action: none;
+
+    /* user-select: none; */
+    /* touch-action: none; */
 }
 
 .panzoom-parent-galaxy {
@@ -109,9 +111,9 @@ map- {
     height: 100%;
 
     /*plugin adds on its own*/
-    overflow: hidden;
+    /* overflow: hidden;
     user-select: none;
-    touch-action: none;
+    touch-action: none; */
 }
 
 .panzoom-parent-system {
@@ -123,9 +125,9 @@ map- {
     height: 100%;
 
     /*plugin adds on its own*/
-    overflow: hidden;
+    /* overflow: hidden;
     user-select: none;
-    touch-action: none;
+    touch-action: none; */
 }
 
 .panzoom {
@@ -138,12 +140,12 @@ map- {
     box-sizing: border-box;
 
     /*plugin adds on its own*/
-    cursor: move;
+    /* cursor: move;
     user-select: none;
     touch-action: none;
     transform-origin: 50% 50%;
     transition: none;
-    transform: scale(1) translate(0px, 0px);
+    transform: scale(1) translate(0px, 0px); */
 }
 
 menu- {
@@ -495,6 +497,14 @@ system-:hover system-label,
 
 .playerbase system-label {
     color: var(--playerbase_color);
+}
+
+.playerbase system-label.pob_dockable {
+    color: var(--playerbase_dockable_color);
+}
+
+ul.text_align_left * {
+    text-align: left;
 }
 
 .mining system-label {
