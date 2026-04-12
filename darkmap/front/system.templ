@@ -254,10 +254,12 @@ templ SystemContents(system *export_map.System) {
 						int(obj.Star.StarCenter.InnerColor.Y*255),
 						int(obj.Star.StarCenter.InnerColor.Z*255),
 					), obj.Kind == export_map.ObjStar),
+				
+					templ.KV("transform: translate(-50%, -50%)", obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf("width: %.5f%% !important", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf("height: %.5f%% !important", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					// templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					// templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf(
 						"box-shadow: inset 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.9), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.8), 0em 0em %.1fch %.1fch rgba(%d,%d,%d,0.4);",
 						obj.Star.StarCenter.Scale-1,
@@ -294,8 +296,9 @@ templ SystemContents(system *export_map.System) {
 						style={
 							"top: 50%",
 							"left: 50%",
-							fmt.Sprintf("margin-top: %.5f%%", -100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
-							fmt.Sprintf("margin-left: %.5f%%", -100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
+							"transform: translate(-50%, -50%)",
+							// fmt.Sprintf("margin-top: k%.5f%%", -100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
+							// fmt.Sprintf("margin-left: %.5f%%", -100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)/2),
 							"position: absolute",
 							fmt.Sprintf("width: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
 							fmt.Sprintf("height: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
