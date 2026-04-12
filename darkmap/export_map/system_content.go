@@ -52,8 +52,6 @@ type Obj struct {
 	PlanetSolarRadius float64
 
 	Rotation cfg.Vector
-
-	IsPoBWithKnownDockingPerms bool
 }
 
 type Zone struct {
@@ -577,10 +575,6 @@ func (e *Export) EnrichSystemWithObjects(
 
 		if base_info.BasePos != nil {
 			base.Pos = *base_info.BasePos
-		}
-
-		if base_info.PoBCore.DefenseMode != nil {
-			base.IsPoBWithKnownDockingPerms = true
 		}
 
 		base.ShapeName = "nav_depot"
