@@ -27,6 +27,8 @@ templ System(system *export_map.System, data *export_map.Export) {
                     height: 100%;
                     color: #fff;
 					pointer-events: none;
+					mix-blend-mode: screen;
+					opacity: 0.8;
                 }
                 .grid .hzGridLine {
                     height: 0.1em;
@@ -243,8 +245,8 @@ templ SystemContents(system *export_map.System) {
 						SystemPosToPerc(obj.Pos.X, system),
 					),
 					templ.KV(fmt.Sprintf("transform: rotate(%1.fdeg)", -obj.Rotation.Y), obj.Kind == export_map.ObjTradelane),
-					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
+					templ.KV(fmt.Sprintf("width: %.5f%% !important", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
+					templ.KV(fmt.Sprintf("height: %.5f%% !important", 2*SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
 					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
 					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.PlanetSolarRadius), system)), obj.Kind == export_map.ObjPlanet),
 					templ.KV(fmt.Sprintf("background-color: rgb(%d %d %d)",
@@ -252,8 +254,8 @@ templ SystemContents(system *export_map.System) {
 						int(obj.Star.StarCenter.InnerColor.Y*255),
 						int(obj.Star.StarCenter.InnerColor.Z*255),
 					), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
-					templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("width: %.5f%% !important", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
+					templ.KV(fmt.Sprintf("height: %.5f%% !important", 2*SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Star.StarRadius), system)), obj.Kind == export_map.ObjStar),
 					templ.KV(fmt.Sprintf(
