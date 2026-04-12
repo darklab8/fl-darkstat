@@ -140,7 +140,7 @@ templ MapLegend(data *export_map.Export) {
 					</li>
 					<li>
 						@SystemIcon(FacRheinland)
-						Rheinalnd
+						Rheinaland
 					</li>
 					<li>
 						@SystemIcon(FacIndependent)
@@ -211,29 +211,29 @@ templ MapLegend(data *export_map.Export) {
 				<ul class="legend_ul_icons">
 					<li>
 						@LegendJumpConnection(export_map.JumpKindJumpgate)
-						Jumpgate [double way connection]
+						Jumpgate [two way connection]
 					</li>
 					<li>
 						@LegendJumpConnection(export_map.JumpKindJumphole)
-						Jumphole normal [double way connection]
+						Jumphole normal [two way connection]
 					</li>
 					<li>
 						@LegendJumpConnection(export_map.JumpKindFighterOnly)
-						Freighter only jh connection (dockable by berth only) [double way connection]
+						Freighter only jh connection (dockable by berth only) [two way connection]
 					</li>
 					<li>
 						@LegendJumpConnection(export_map.JumpKindCampaignLocked)
-						Jumphole or gate campaign locked in initial workd, [double way connection]
+						Jumphole or gate campaign locked in initial workd, [two way connection]
 					</li>
 					if data.Mapped.Discovery != nil {
 						<li>
 							@LegendJumpConnection(export_map.JumpKindUnstableCargoLimited)
-							Jumphole unstable with cargo limit 650. Only if your cargo below 650 you can do it. (Discovery only) [double way connection]
+							Jumphole unstable with cargo limit 650. Only if your cargo below 650 you can do it. (Discovery only) [two way connection]
 						</li>
 					}
 					<li>
 						@LegendJumpConnection(export_map.JumpKindAlien)
-						Jumpgate of alien type [double way connection]
+						Jumpgate of alien type [two way connection]
 					</li>
 					<li>
 						@LegendJumpConnection(export_map.JumpKindUnknown)
