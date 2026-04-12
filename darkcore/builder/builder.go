@@ -19,6 +19,14 @@ type Builder struct {
 	static_files []StaticFile
 }
 
+func (b *Builder) GetStaticFileChecker() map[utils_types.FilePath]bool {
+	checker := make(map[utils_types.FilePath]bool)
+	for _, file := range b.static_files {
+		checker[file.path] = true
+	}
+	return checker
+}
+
 func (b *Builder) GetParams() Params { return b.params }
 
 type StaticFile struct {

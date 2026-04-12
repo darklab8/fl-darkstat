@@ -47,6 +47,7 @@ type Obj struct {
 	ShapeName        string
 	VisibleByDefault bool
 	Kind             ObjKind
+	UseFallback      bool
 
 	Star              Star
 	PlanetSolarRadius float64
@@ -209,6 +210,8 @@ func IsPlanetByShape(shape_name string) bool {
 	} else if shape_name == "nnm_sm_medium_forest_moon" {
 		return true
 	} else if shape_name == "nnm_sm_small_ice_moon" {
+		return true
+	} else if shape_name == "nnm_sm_small_desert_moon" {
 		return true
 	}
 
@@ -461,19 +464,22 @@ func (e *Export) EnrichSystemWithObjects(
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 		shape_name, found_shape := solararch.ShapeName.GetValue()
 		if _, ok := e.Shapes.ShapesByNick[shape_name]; !ok {
-			if shape_name == "nnm_sm_depot" {
-				shape_name = "nav_depot"
-			} else if shape_name == "nnm_sm_communications" {
-				shape_name = "nav_outpost"
-			} else if shape_name == "nnm_sm_mining" {
-				shape_name = "nav_outpost"
-			} else if shape_name == "nnm_sm_medium_rocky_moon" {
+			// if shape_name == "nnm_sm_depot" { // TODO deprecated? linker fallbacker takes care of it
+			// 	shape_name = "nav_depot"
+			// } else if shape_name == "nnm_sm_communications" {
+			// 	shape_name = "nav_outpost"
+			// } else if shape_name == "nnm_sm_mining" {
+			// 	shape_name = "nav_outpost"
+			// } else
+			if shape_name == "nnm_sm_medium_rocky_moon" {
 				base.Kind = ObjPlanet
 			} else if shape_name == "nnm_sm_medium_forest_moon" {
 				base.Kind = ObjPlanet
 			} else if shape_name == "nnm_sm_small_ice_moon" {
 				base.Kind = ObjPlanet
 			} else if shape_name == "nnm_sm_rock_asteroid" {
+				base.Kind = ObjPlanet
+			} else if shape_name == "nnm_sm_small_desert_moon" {
 				base.Kind = ObjPlanet
 			}
 
@@ -502,22 +508,22 @@ func (e *Export) EnrichSystemWithObjects(
 				continue
 			}
 		} else if shape_name == "" {
-			logus.Log.Error("can't find shape for base, going for fallbacks",
+			logus.Log.Error("can't find shape for base, letting linker fallbacker sorting it out",
 				typelog.Any("shape", shape_name),
 				typelog.Any("obj_nick", base.Nickname),
 			)
-			shape_name = "nav_depot"
+			// shape_name = "nav_depot" // TODO deprecated? linker fallbacker takes care of it
 		}
 
 		if _, ok := e.Shapes.ShapesByNick[shape_name]; ok {
 			e.Shapes.PermittedShapes[shape_name] = true
 		} else {
 			stats.solars_without_shapes[shape_name] = true
-			logus.Log.Error("can't find shape for base",
+			logus.Log.Error("can't find shape for base, letting linker fallbacker sorting it out",
 				typelog.Any("shape", shape_name),
 				typelog.Any("obj_nick", base.Nickname),
 			)
-			shape_name = "nav_depot"
+			// shape_name = "nav_depot" // TODO deprecated? linker fallbacker takes care of it
 		}
 
 		if !found_shape {

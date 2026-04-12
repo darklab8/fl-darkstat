@@ -199,6 +199,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 				typelog.Any("shape", shape.Nickname+"."+shape.Extension),
 				typelog.Any("image_dest", image.Dest),
 			) {
+
 				decoded_shape_files <- result
 				return
 			}
@@ -213,16 +214,97 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 	}
 	fmt.Println("SHAPES SENT ALL JOBS")
 
+	var failed_files []StaticFileInParallel
+
 	for i := 0; i < created_jobs; i++ {
 		result := <-decoded_shape_files
 		if !result.made {
+			failed_files = append(failed_files, result)
 			continue
 		}
 		extra_files = append(extra_files, builder.NewStaticFileFromCore(result.StaticFile))
 	}
+
 	fmt.Println("SHAPES FINISHED ACCEPTING ALL JOBS, took time seconds=", time.Since(time_start).Seconds(), " handled jobs=", created_jobs)
 
 	build.AddStaticFiles(extra_files)
+
+	type FallBackInfo struct {
+		Count int
+		Info  string
+	}
+
+	found_fallbacks := make(map[string]FallBackInfo)
+	not_found_fallbacks := make(map[string]FallBackInfo)
+	file_checker := build.GetStaticFileChecker()
+	for _, system := range l.Export.Systems {
+		for _, obj := range system.Objs {
+			if _, ok := file_checker[utils_types.FilePath(fmt.Sprintf("%s.png", utils_types.FilePath(obj.ShapeName)))]; !ok {
+				if obj.Kind == export_map.ObjPlanet {
+
+					switch obj.ShapeName {
+					// optionally use images as fallbacks
+					// // DISCO START
+					case "ast_lava_hd":
+						obj.ShapeName = "fallback/ast_lava"
+					case "ast_rock":
+						obj.ShapeName = "fallback/ast_rock"
+					case "solar_mat_dyson_city":
+						obj.UseFallback = true
+					case "detailmap_crater_mid":
+						obj.ShapeName = "fallback/detailmap_crater_mid"
+					// // DISCO END
+
+					default:
+						obj.UseFallback = true
+						var count int
+						if value, ok := not_found_fallbacks[obj.ShapeName]; ok {
+							count = value.Count
+						}
+						not_found_fallbacks[obj.ShapeName] = FallBackInfo{Count: count + 1, Info: fmt.Sprint(strings.Join([]string{"planet", system.Name, obj.Nickname}, ","))}
+					}
+
+				} else if obj.Kind != export_map.ObjPlanet {
+
+					switch obj.ShapeName {
+					// optionally use images as fallbacks
+
+					// // VANILLA START
+					case "nnm_sm_mining":
+						obj.ShapeName = "fallback/miningship"
+					case "nnm_sm_depot":
+						obj.ShapeName = "fallback/nav_depot"
+					case "nnm_sm_navbuoy": // colored by css
+						obj.UseFallback = true
+					case "nav_buoy": // colored by css
+						obj.UseFallback = true
+					case "nnm_sm_communications":
+						obj.ShapeName = "fallback/nav_lootabledepot"
+					case "nnm_sm_mplatform":
+						obj.ShapeName = "fallback/nav_lootabledepot"
+					// // VANILLA END
+
+					default:
+						obj.UseFallback = true
+						var count int
+						if value, ok := not_found_fallbacks[obj.ShapeName]; ok {
+							count = value.Count
+						}
+
+						not_found_fallbacks[obj.ShapeName] = FallBackInfo{Count: count + 1, Info: fmt.Sprint(strings.Join([]string{"obj", system.Name, system.Nickname, obj.Nickname}, ","))}
+					}
+
+				}
+			}
+		}
+	}
+
+	for key, value := range found_fallbacks {
+		logus.Log.Warn("found static file fallback for object", typelog.Any("key", key), typelog.Any("value", value))
+	}
+	for key, value := range not_found_fallbacks {
+		logus.Log.Warn("not found static file fallback for object", typelog.Any("key", key), typelog.Any("value", value))
+	}
 
 	return build
 }

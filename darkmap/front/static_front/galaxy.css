@@ -694,3 +694,35 @@ line- {
         display: none;
     }
 }
+
+.obj_fallback_unclassified {
+    width: 0.275em !important;
+    height: 0.275em !important;
+    margin-top: -0.1375em;
+    margin-left: -0.1375em;
+    background: #EC7F1F;
+}
+
+.obj_fallback_shape img {
+    display: none;
+}
+
+.obj_fallback_shape img {
+    display: none;
+
+    width: 0.275em !important;
+    height: 0.275em !important;
+    margin-top: -0.1375em;
+    margin-left: -0.1375em;
+    background: #EC7F1F;
+}
+
+.obj_fallback_nnm_sm_navbuoy {
+    background: #36c9c2 !important;
+    transform: rotate(45deg);
+    transform-origin: center center;
+}
+
+.obj_fallback_nnm_sm_mining {
+    background: #4d2200 !important;
+}
