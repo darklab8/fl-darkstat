@@ -893,6 +893,11 @@ func (e *Export) TechnicalInfoWrite(
 		sb.WriteString(fmt.Sprintf(" It belongs to %s.", faction_name))
 	}
 	sb.WriteString(fmt.Sprintf(" It is located on the coordinates (%.0f,%.0f,%.0f).", Pos.X, Pos.Y, Pos.Z))
-	info.WriteLine(infocarder.InfocardPhrase{Phrase: sb.String(), Raw: e.MakeCopyCoordsButton(Pos)})
+
+	var tooltip_button string
+	if e.Mapped.Discovery != nil {
+		tooltip_button = e.MakeCopyCoordsButton(Pos)
+	}
+	info.WriteLine(infocarder.InfocardPhrase{Phrase: sb.String(), Raw: tooltip_button})
 	return info
 }
