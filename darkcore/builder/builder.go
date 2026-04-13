@@ -91,7 +91,14 @@ func chunkSlice(slice []*Component, chunkSize int) [][]*Component {
 // func (b *Builder) ToWebServer() *Filesystem {
 // }
 
-func (b *Builder) BuildAll(to_mem bool, cleanup_build_folder bool, filesystem *Filesystem) *Filesystem {
+type CleanFolderKind int8
+
+const (
+	NotCleanFolder CleanFolderKind = iota
+	YesCleanFolder
+)
+
+func (b *Builder) BuildAll(to_mem bool, cleanup_build_folder CleanFolderKind, filesystem *Filesystem) *Filesystem {
 	var ctx context.Context = context.Background()
 
 	if !to_mem {

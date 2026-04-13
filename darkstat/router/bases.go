@@ -104,7 +104,7 @@ func (l *Router) LinkBases(
 			),
 		)
 
-		if l.LinkTravelRoutes {
+		if l.LinkTravelRoutesKind == YesLinkTravelRoutes {
 			// All travel route infocards
 			for _, combo_route := range data.GetTravelRoutes(base) {
 				build.RegComps(

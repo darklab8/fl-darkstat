@@ -62,7 +62,7 @@ const (
 func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 	relay_router := relayrouter.NewRouter(app_data)
 	relay_builder := relay_router.Link()
-	relay_fs := relay_builder.BuildAll(true, false, nil)
+	relay_fs := relay_builder.BuildAll(true, builder.NotCleanFolder, nil)
 	relay_router = nil
 	relay_builder = nil
 	return relay_fs
@@ -148,7 +148,7 @@ func main() {
 
 		start_time_stat_router_build := time.Now()
 		_, span = traces.Tracer.Start(ctx_span, "stat_builder.BuildAll")
-		stat_fs := stat_builder.BuildAll(true, false, nil)
+		stat_fs := stat_builder.BuildAll(true, builder.NotCleanFolder, nil)
 		span.End()
 		log.Printf("Elapsed start_time_stat_router_build time %s", time.Since(start_time_stat_router_build))
 
@@ -166,7 +166,7 @@ func main() {
 			map_settings.Env.EnableStatRoot = true
 			var linked_build *builder.Builder
 			linked_build = linker.NewLinker(true).Link(context.Background())
-			map_fs := linked_build.BuildAll(true, false, nil)
+			map_fs := linked_build.BuildAll(true, builder.NotCleanFolder, nil)
 			filesystems = append(filesystems, map_fs)
 		}
 
@@ -266,7 +266,7 @@ func main() {
 				Nickname:    "build",
 				Description: "build darkstat to static assets: html, css, js files",
 				Func: func(info cantil.ActionInfo) error {
-					return StatBuild(true, false, true)
+					return StatBuild(builder.YesCleanFolder, NotIncludePoBs, router.YesLinkTravelRoutes)
 				},
 			},
 			{
@@ -277,11 +277,11 @@ func main() {
 					go static_server.StaticServer()
 
 					for {
-						StatBuild(false, true, true)
+						StatBuild(builder.NotCleanFolder, YesIncludePobs, router.YesLinkTravelRoutes)
 						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 
 						for i := 0; i < 100; i++ {
-							StatBuild(false, true, false)
+							StatBuild(builder.NotCleanFolder, YesIncludePobs, router.NotLinkTravelRoutes)
 							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 						}
 					}
@@ -390,18 +390,29 @@ func main() {
 	logus.Log.CheckError(err, "failed to run parser")
 }
 
-func StatBuild(clean_folder_at_start bool, include_pobs bool, link_travel_routes bool) error {
+type IncludePobsKind int8
+
+const (
+	NotIncludePoBs IncludePobsKind = iota
+	YesIncludePobs
+)
+
+func StatBuild(
+	clean_folder_at_start builder.CleanFolderKind,
+	include_pobs IncludePobsKind,
+	link_travel_routes router.LinkTravelRoutesKind,
+) error {
 	ctx_span, span_boot := traces.Tracer.Start(context.Background(), "build")
 	defer span_boot.End()
 	app_data := appdata.NewAppData(ctx_span)
-	builder := router.NewRouter(app_data, router.WithStaticAssetsGen(), func(l *router.Router) {
-		l.LinkTravelRoutes = link_travel_routes
+	build := router.NewRouter(app_data, router.WithStaticAssetsGen(), func(l *router.Router) {
+		l.LinkTravelRoutesKind = link_travel_routes
 	}).Link(ctx_span)
 
-	if include_pobs {
+	if include_pobs == YesIncludePobs {
 		relay_data := appdata.NewRelayData(app_data)
 		relay_router := relayrouter.NewRouter(relay_data)
-		relay_router.LinkPobs(relay_data, builder)
+		relay_router.LinkPobs(relay_data, build)
 	}
 
 	if settings.Env.IsExpermentalMapWithDarkstatOn {
@@ -409,10 +420,10 @@ func StatBuild(clean_folder_at_start bool, include_pobs bool, link_travel_routes
 		map_settings.Env.EnableStatRoot = true
 	}
 
-	builder.BuildAll(false, clean_folder_at_start, nil)
+	build.BuildAll(false, clean_folder_at_start, nil)
 
 	if settings.Env.IsExpermentalMapWithDarkstatOn {
-		linker.NewLinker(false).Link(ctx_span).BuildAll(false, false, nil)
+		linker.NewLinker(false).Link(ctx_span).BuildAll(false, builder.NotCleanFolder, nil)
 	}
 	return nil
 }

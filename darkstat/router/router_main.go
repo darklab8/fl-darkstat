@@ -23,18 +23,25 @@ import (
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
+type LinkTravelRoutesKind int8
+
+const (
+	NotLinkTravelRoutes LinkTravelRoutesKind = iota
+	YesLinkTravelRoutes
+)
+
 type Router struct {
 	AppData              *appdata.AppData
 	is_static_assets_gen bool
-	LinkTravelRoutes     bool
+	LinkTravelRoutesKind LinkTravelRoutesKind
 }
 
 type RouterOpt func(l *Router)
 
 func NewRouter(AppData *appdata.AppData, opts ...RouterOpt) *Router {
 	l := &Router{
-		AppData:          AppData,
-		LinkTravelRoutes: true,
+		AppData:              AppData,
+		LinkTravelRoutesKind: YesLinkTravelRoutes,
 	}
 	for _, opt := range opts {
 		opt(l)
