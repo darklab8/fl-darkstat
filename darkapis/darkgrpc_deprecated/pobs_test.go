@@ -63,7 +63,7 @@ func TestDepregatedPoBGoods(t *testing.T) {
 	}
 	stat_router := router.NewRouter(app_data)
 	stat_builder := stat_router.Link(ctx)
-	stat_fs := stat_builder.BuildAll(true, false, nil)
+	stat_fs := stat_builder.BuildAll(true, builder.NotCleanFolder, nil)
 
 	var some_socket string
 	if settings.Env.EnableUnixSockets {
