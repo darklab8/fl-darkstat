@@ -104,14 +104,16 @@ func (l *Router) LinkBases(
 			),
 		)
 
-		// All travel route infocards
-		for _, combo_route := range data.GetTravelRoutes(base) {
-			build.RegComps(
-				builder.NewComponent( // probably move to back, at least for RAM reasons
-					utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
-					front.TradeRouteInfo2(combo_route.Transport.FromBase, combo_route.Freighter.ToBase, data, shared),
-				),
-			)
+		if l.LinkTravelRoutes {
+			// All travel route infocards
+			for _, combo_route := range data.GetTravelRoutes(base) {
+				build.RegComps(
+					builder.NewComponent( // probably move to back, at least for RAM reasons
+						utils_types.FilePath(front.RouteUrl(combo_route.Transport.Route)),
+						front.TradeRouteInfo2(combo_route.Transport.FromBase, combo_route.Freighter.ToBase, data, shared),
+					),
+				)
+			}
 		}
 	}
 

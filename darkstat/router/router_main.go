@@ -26,12 +26,16 @@ import (
 type Router struct {
 	AppData              *appdata.AppData
 	is_static_assets_gen bool
+	LinkTravelRoutes     bool
 }
 
 type RouterOpt func(l *Router)
 
 func NewRouter(AppData *appdata.AppData, opts ...RouterOpt) *Router {
-	l := &Router{AppData: AppData}
+	l := &Router{
+		AppData:          AppData,
+		LinkTravelRoutes: true,
+	}
 	for _, opt := range opts {
 		opt(l)
 	}

@@ -143,7 +143,7 @@ func TestApi(t *testing.T) {
 	app_data := router.GetAppDataFixture(ctx)
 	stat_router := router.NewRouter(app_data)
 	stat_builder := stat_router.Link(ctx)
-	stat_fs := stat_builder.BuildAll(true, nil)
+	stat_fs := stat_builder.BuildAll(true, false, nil)
 
 	var some_socket string
 	if settings.Env.EnableUnixSockets {

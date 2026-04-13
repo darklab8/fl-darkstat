@@ -3,6 +3,7 @@ package builder
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
@@ -106,6 +107,8 @@ func (b *Builder) BuildAll(to_mem bool, cleanup_build_folder bool, filesystem *F
 	fmt.Println("beginning build operation")
 	results := make(chan WriteResult)
 
+	time_start := time.Now()
+
 	timeit.NewTimerF(func() {
 		chunked_components := chunkSlice(b.components, 10000)
 		len_comps := len(chunked_components)
@@ -120,19 +123,65 @@ func (b *Builder) BuildAll(to_mem bool, cleanup_build_folder bool, filesystem *F
 					})
 				}
 			} else {
-				for _, comp := range components_chunk {
-					go func(comp *Component) {
-						results <- comp.Write(ctx, b.params)
-					}(comp)
+				type ModeToRun int8
+				const (
+					ModeNormal     ModeToRun = iota
+					ModeGoroutines           // same time as mode normal
+					ModeWorkerPool           // same time as mode normal.
+					// i guess filesystem is bottleneck
+					// leaving code for other modes here just for inspiration and history
+
+					// i'll leave mode normal then
+				)
+
+				mode_to_run := ModeNormal
+				switch mode_to_run {
+				case ModeWorkerPool:
+					worker := func(id int, jobs <-chan *Component, results chan<- WriteResult) {
+						// fmt.Println("worker", id, "started  processing jobs")
+						for comp := range jobs {
+							results <- comp.Write(ctx, b.params)
+						}
+						// fmt.Println("worker", id, "finished  processing jobs")
+					}
+					numJobs := len(components_chunk)
+					jobs := make(chan *Component, numJobs)
+					results := make(chan WriteResult, numJobs)
+
+					for w := 0; w <= 3; w++ {
+						go worker(w, jobs, results)
+					}
+					for _, comp := range components_chunk {
+						jobs <- comp
+					}
+					close(jobs)
+
+					for range components_chunk {
+						result := <-results
+						filesystem.WriteToFile(result.realpath, result.bytes)
+					}
+				case ModeGoroutines:
+					for _, comp := range components_chunk {
+						go func(comp *Component) {
+							results <- comp.Write(ctx, b.params)
+						}(comp)
+					}
+					for range components_chunk {
+						result := <-results
+						filesystem.WriteToFile(result.realpath, result.bytes)
+					}
+				default: // normal
+
+					for _, comp := range components_chunk {
+						result := comp.Write(ctx, b.params)
+						filesystem.WriteToFile(result.realpath, result.bytes)
+					}
 				}
-				for range components_chunk {
-					result := <-results
-					filesystem.WriteToFile(result.realpath, result.bytes)
-				}
+
 			}
 
 			if chunk_index%10 == 0 {
-				fmt.Println("finished chunk=", chunk_index, "/", len_comps)
+				fmt.Println("finished chunk=", chunk_index, "/", len_comps, " time=", time.Since(time_start))
 			}
 		}
 

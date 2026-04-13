@@ -266,7 +266,7 @@ func main() {
 				Nickname:    "build",
 				Description: "build darkstat to static assets: html, css, js files",
 				Func: func(info cantil.ActionInfo) error {
-					return StatBuild(true, false)
+					return StatBuild(true, false, true)
 				},
 			},
 			{
@@ -276,8 +276,13 @@ func main() {
 					go web_static.WebServer()
 
 					for {
-						StatBuild(false, true)
+						StatBuild(false, true, true)
 						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
+
+						for i := 0; i < 100; i++ {
+							StatBuild(false, true, false)
+							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
+						}
 					}
 
 					return nil
@@ -384,11 +389,13 @@ func main() {
 	logus.Log.CheckError(err, "failed to run parser")
 }
 
-func StatBuild(clean_folder_at_start bool, include_pobs bool) error {
+func StatBuild(clean_folder_at_start bool, include_pobs bool, link_travel_routes bool) error {
 	ctx_span, span_boot := traces.Tracer.Start(context.Background(), "build")
 	defer span_boot.End()
 	app_data := appdata.NewAppData(ctx_span)
-	builder := router.NewRouter(app_data, router.WithStaticAssetsGen()).Link(ctx_span)
+	builder := router.NewRouter(app_data, router.WithStaticAssetsGen(), func(l *router.Router) {
+		l.LinkTravelRoutes = link_travel_routes
+	}).Link(ctx_span)
 
 	if include_pobs {
 		relay_data := appdata.NewRelayData(app_data)
