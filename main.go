@@ -270,7 +270,7 @@ func main() {
 				},
 			},
 			{
-				Nickname:    "web_static",
+				Nickname:    "static_cron",
 				Description: "runs web static assets server that rebuilds automatically in a loop. Useful for Discovery with dynamic data",
 				Func: func(info cantil.ActionInfo) error {
 					go web_static.WebServer()
@@ -284,7 +284,7 @@ func main() {
 				},
 			},
 			{
-				Nickname:    "web_alone",
+				Nickname:    "static_alone",
 				Description: "run only static assets web server. to serve already existing data. For dev purposes",
 				Func: func(info cantil.ActionInfo) error {
 					web_static.WebServer()
