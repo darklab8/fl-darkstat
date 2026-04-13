@@ -24,8 +24,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/envers"
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
+	"github.com/darklab8/fl-darkstat/darkcore/static_server"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
-	"github.com/darklab8/fl-darkstat/darkcore/web_static"
 	"github.com/darklab8/fl-darkstat/darkmap"
 	map_urls "github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
@@ -271,9 +271,10 @@ func main() {
 			},
 			{
 				Nickname:    "static_cron",
-				Description: "runs web static assets server that rebuilds automatically in a loop. Useful for Discovery with dynamic data",
+				Description: "Failed experimental run of web static assets server that rebuilds automatically in a loop. Useful for Discovery with dynamic data",
+				// experiment failed, see darkcore/static_server/static_server.go file begnninf for conclusion thoughts
 				Func: func(info cantil.ActionInfo) error {
-					go web_static.WebServer()
+					go static_server.StaticServer()
 
 					for {
 						StatBuild(false, true, true)
@@ -292,7 +293,7 @@ func main() {
 				Nickname:    "static_alone",
 				Description: "run only static assets web server. to serve already existing data. For dev purposes",
 				Func: func(info cantil.ActionInfo) error {
-					web_static.WebServer()
+					static_server.StaticServer()
 					return nil
 				},
 			},
