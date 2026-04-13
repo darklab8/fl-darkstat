@@ -277,11 +277,13 @@ func main() {
 					go static_server.StaticServer()
 
 					for {
-						StatBuild(builder.NotCleanFolder, YesIncludePobs, router.YesLinkTravelRoutes)
+						err := StatBuild(builder.NotCleanFolder, YesIncludePobs, router.YesLinkTravelRoutes)
+						logus.Log.CheckError(err, "failed to run stat build")
 						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 
 						for i := 0; i < 100; i++ {
-							StatBuild(builder.NotCleanFolder, YesIncludePobs, router.NotLinkTravelRoutes)
+							err = StatBuild(builder.NotCleanFolder, YesIncludePobs, router.NotLinkTravelRoutes)
+							logus.Log.CheckError(err, "failed to run stat build")
 							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 						}
 					}
