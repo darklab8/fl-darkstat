@@ -72,8 +72,10 @@ func (f *Filesystem) WriteToFile(path utils_types.FilePath, content []byte) {
 	logus.Log.CheckFatal(err, "failed to export bases to file")
 }
 
-func (f *Filesystem) CreateBuildFolder() {
-	_ = os.RemoveAll(f.build_root.ToString())
+func (f *Filesystem) CreateBuildFolder(cleanup_build_folder bool) {
+	if cleanup_build_folder {
+		_ = os.RemoveAll(f.build_root.ToString())
+	}
 	_ = os.MkdirAll(f.build_root.ToString(), os.ModePerm)
 }
 

@@ -25,6 +25,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
+	"github.com/darklab8/fl-darkstat/darkcore/web_static"
 	"github.com/darklab8/fl-darkstat/darkmap"
 	map_urls "github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
@@ -61,7 +62,7 @@ const (
 func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 	relay_router := relayrouter.NewRouter(app_data)
 	relay_builder := relay_router.Link()
-	relay_fs := relay_builder.BuildAll(true, nil)
+	relay_fs := relay_builder.BuildAll(true, false, nil)
 	relay_router = nil
 	relay_builder = nil
 	return relay_fs
@@ -147,7 +148,7 @@ func main() {
 
 		start_time_stat_router_build := time.Now()
 		_, span = traces.Tracer.Start(ctx_span, "stat_builder.BuildAll")
-		stat_fs := stat_builder.BuildAll(true, nil)
+		stat_fs := stat_builder.BuildAll(true, false, nil)
 		span.End()
 		log.Printf("Elapsed start_time_stat_router_build time %s", time.Since(start_time_stat_router_build))
 
@@ -165,7 +166,7 @@ func main() {
 			map_settings.Env.EnableStatRoot = true
 			var linked_build *builder.Builder
 			linked_build = linker.NewLinker(true).Link(context.Background())
-			map_fs := linked_build.BuildAll(true, nil)
+			map_fs := linked_build.BuildAll(true, false, nil)
 			filesystems = append(filesystems, map_fs)
 		}
 
@@ -265,15 +266,28 @@ func main() {
 				Nickname:    "build",
 				Description: "build darkstat to static assets: html, css, js files",
 				Func: func(info cantil.ActionInfo) error {
-					ctx_span, span_boot := traces.Tracer.Start(context.Background(), "build")
-					defer span_boot.End()
-					app_data := appdata.NewAppData(ctx_span)
-					router.NewRouter(app_data, router.WithStaticAssetsGen()).Link(ctx_span).BuildAll(false, nil)
+					return StatBuild(true, false)
+				},
+			},
+			{
+				Nickname:    "web_static",
+				Description: "runs web static assets server that rebuilds automatically in a loop. Useful for Discovery with dynamic data",
+				Func: func(info cantil.ActionInfo) error {
+					go web_static.WebServer()
 
-					if settings.Env.IsExpermentalMapWithDarkstatOn {
-						map_urls.Index = "map.html"
-						linker.NewLinker(true).Link(ctx_span).BuildAll(false, nil)
+					for {
+						StatBuild(false, true)
+						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 					}
+
+					return nil
+				},
+			},
+			{
+				Nickname:    "web_alone",
+				Description: "run only static assets web server. to serve already existing data. For dev purposes",
+				Func: func(info cantil.ActionInfo) error {
+					web_static.WebServer()
 					return nil
 				},
 			},
@@ -368,4 +382,29 @@ func main() {
 
 	err := parser.Run(flag.Args())
 	logus.Log.CheckError(err, "failed to run parser")
+}
+
+func StatBuild(clean_folder_at_start bool, include_pobs bool) error {
+	ctx_span, span_boot := traces.Tracer.Start(context.Background(), "build")
+	defer span_boot.End()
+	app_data := appdata.NewAppData(ctx_span)
+	builder := router.NewRouter(app_data, router.WithStaticAssetsGen()).Link(ctx_span)
+
+	if include_pobs {
+		relay_data := appdata.NewRelayData(app_data)
+		relay_router := relayrouter.NewRouter(relay_data)
+		relay_router.LinkPobs(relay_data, builder)
+	}
+
+	if settings.Env.IsExpermentalMapWithDarkstatOn {
+		map_urls.Index = "map.html"
+		map_settings.Env.EnableStatRoot = true
+	}
+
+	builder.BuildAll(false, clean_folder_at_start, nil)
+
+	if settings.Env.IsExpermentalMapWithDarkstatOn {
+		linker.NewLinker(false).Link(ctx_span).BuildAll(false, false, nil)
+	}
+	return nil
 }

@@ -90,7 +90,7 @@ func chunkSlice(slice []*Component, chunkSize int) [][]*Component {
 // func (b *Builder) ToWebServer() *Filesystem {
 // }
 
-func (b *Builder) BuildAll(to_mem bool, filesystem *Filesystem) *Filesystem {
+func (b *Builder) BuildAll(to_mem bool, cleanup_build_folder bool, filesystem *Filesystem) *Filesystem {
 	var ctx context.Context = context.Background()
 
 	if !to_mem {
@@ -102,7 +102,7 @@ func (b *Builder) BuildAll(to_mem bool, filesystem *Filesystem) *Filesystem {
 		filesystem = NewFileystem(build_root)
 	}
 
-	filesystem.CreateBuildFolder()
+	filesystem.CreateBuildFolder(cleanup_build_folder)
 	fmt.Println("beginning build operation")
 	results := make(chan WriteResult)
 
