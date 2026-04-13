@@ -44,6 +44,7 @@ type InfocardPhrase struct {
 	Phrase string  `json:"phrase"  validate:"required"`
 	Link   *string `json:"link"`
 	Bold   bool    `json:"bold"  validate:"required"`
+	Raw    string  `json:"_"`
 }
 
 type InfocardLine struct {

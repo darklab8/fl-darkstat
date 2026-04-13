@@ -33,6 +33,15 @@ var CustomJSShared core_types.StaticFile = core_types.StaticFile{
 	Kind:     core_types.StaticFileJS,
 }
 
+//go:embed custom/cross_app_shared.js
+var CustomJSCCrossShared string
+
+var CustomJSSCrossShared core_types.StaticFile = core_types.StaticFile{
+	Content:  CustomJSCCrossShared,
+	Filename: "custom/cross_app_shared.js",
+	Kind:     core_types.StaticFileJS,
+}
+
 //go:embed custom/main.js
 var CustomJSContent string
 
@@ -84,5 +93,14 @@ var CustomCSSContent string
 var CustomCSS core_types.StaticFile = core_types.StaticFile{
 	Content:  CustomCSSContent,
 	Filename: "custom.css",
+	Kind:     core_types.StaticFileCSS,
+}
+
+//go:embed cross_shared.css
+var CustomCSSCrossContent string
+
+var CustomCrossCSS core_types.StaticFile = core_types.StaticFile{
+	Content:  CustomCSSCrossContent,
+	Filename: "custom_cross_shared.css",
 	Kind:     core_types.StaticFileCSS,
 }

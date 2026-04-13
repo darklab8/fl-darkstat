@@ -1,18 +1,18 @@
 /* Tooltip container */
-.tooltip {
+.map_tooltip {
     display: inline-block;
     user-select: none;
     touch-action: none;
 }
 
-.tooltiptext {
+.map_tooltiptext {
     user-select: none;
     touch-action: none;
     pointer-events: none;
 }
 
 /* Tooltip text */
-.tooltip .tooltiptext {
+.map_tooltip .map_tooltiptext {
     visibility: hidden;
     background-color: black;
     color: #fff;
@@ -30,12 +30,12 @@
     transition: 0.0s;
 }
 
-.zoomedIn .tooltip .tooltiptext {
+.zoomedIn .map_tooltip .map_tooltiptext {
     position: absolute;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
+.map_tooltip:hover .map_tooltiptext {
     visibility: visible;
     opacity: 1;
     z-index: 90;

@@ -1396,7 +1396,7 @@ templ RouteInfo(name string, route *configs_export.Route, shared *types.SharedDa
 		if path.NextName != "" {
 			if path.Dist != 0 {
 				<p>
-					@TooltipDestination(path.Pos, shared)
+					@TooltipDestination(path.Pos, shared.ShowDisco)
 					{ route.GetNameByIdsName(path.NextIdsName) } ({ path.NextName }) [ { path.SectorCoord }] - { strconv.Itoa(path.TimeMinutes) }m { strconv.Itoa(path.TimeSeconds) }s
 				</p>
 			}
@@ -1404,15 +1404,15 @@ templ RouteInfo(name string, route *configs_export.Route, shared *types.SharedDa
 	}
 }
 
-templ TooltipDestination(Pos cfg.Vector, shared *types.SharedData) {
+templ TooltipDestination(Pos cfg.Vector, ShowDisco bool) {
 	<span class="tooltip">
-		if shared.ShowDisco {
+		if ShowDisco {
 			@frmt.MagnifyingGlassClickable(Pos.X, Pos.Y, Pos.Z)
 		} else {
 			@frmt.MagnifyingGlass()
 		}
 		<span class="tooltiptext" style="left: 0px; top: 30px;">
-			if shared.ShowDisco {
+			if ShowDisco {
 				{ fmt.Sprintf("/wp %.0f %.0f %.0f",Pos.X,Pos.Y,Pos.Z) }
 				<br/>
 				command to create waypoint (click to copy)

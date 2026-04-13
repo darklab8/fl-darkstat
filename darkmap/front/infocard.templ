@@ -28,9 +28,15 @@ templ MapInfocard(info infocarder.Infocard) {
 						<p>
 							for _, phrase := range line.Phrases {
 								if phrase.Link != nil {
-									<a href={ templ.SafeURL(*phrase.Link) }>{ html.UnescapeString(phrase.Phrase) }</a>
+									<a href={ templ.SafeURL(*phrase.Link) }>
+										{ html.UnescapeString(phrase.Phrase) }
+										@templ.Raw(phrase.Raw)
+									</a>
 								} else {
-									<span class={ templ.KV("bold", phrase.Bold) }>{ html.UnescapeString(phrase.Phrase) }</span>
+									<span class={ templ.KV("bold", phrase.Bold) }>
+										{ html.UnescapeString(phrase.Phrase) }
+										@templ.Raw(phrase.Raw)
+									</span>
 								}
 							}
 						</p>

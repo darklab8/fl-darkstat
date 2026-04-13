@@ -1,6 +1,8 @@
 package export_map
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 	"strings"
 
@@ -16,6 +18,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -607,7 +610,7 @@ func (e *Export) EnrichSystemWithObjects(
 		if base_info.FactionName != nil {
 			faction_name = *base_info.FactionName
 		}
-		infocard_addition = TechnicalInfoWrite(
+		infocard_addition = e.TechnicalInfoWrite(
 			infocard_addition,
 			base.Nickname,
 			base.Pos,
@@ -618,6 +621,7 @@ func (e *Export) EnrichSystemWithObjects(
 		if value, ok := e.Exp.GetInfocard2(infocarder.InfocardKey(base.Nickname)); ok {
 			info = value
 		}
+
 		e.Exp.PutInfocard(infocarder.InfocardKey(base.Nickname), append(info, infocard_addition.Lines...))
 		handled_objects[base.Nickname] = true
 		system_to_add.Objs = append(system_to_add.Objs, base)
@@ -850,15 +854,27 @@ func (e *Export) ExportInfocard(
 	if value, ok := e.Exp.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
 		info.Lines = value
 	}
-	var base_name_as_infocard infocarder.Infocard = []infocarder.InfocardLine{{Phrases: []infocarder.InfocardPhrase{{Bold: true, Phrase: strings.ToUpper(name)}}}}
 
-	info = TechnicalInfoWrite(info, nickname, Pos, ids_name_num, ids_info_num, faction_name)
+	var base_name_as_infocard infocarder.Infocard = []infocarder.InfocardLine{{
+		Phrases: []infocarder.InfocardPhrase{
+			{Bold: true, Phrase: strings.ToUpper(name)},
+		},
+	}}
+
+	info = e.TechnicalInfoWrite(info, nickname, Pos, ids_name_num, ids_info_num, faction_name)
 	e.Exp.PutInfocard(infocarder.InfocardKey(nickname), append(base_name_as_infocard, info.Lines...))
 }
 
 const HiddenID = -1
 
-func TechnicalInfoWrite(
+func (e *Export) MakeCopyCoordsButton(Pos cfg.Vector) string {
+	buf := bytes.NewBuffer([]byte{})
+	err := front.TooltipDestination(Pos, e.Mapped.Discovery != nil).Render(context.Background(), buf)
+	logus.Log.CheckPanic(err, "failed to render tooltip")
+	return buf.String()
+}
+
+func (e *Export) TechnicalInfoWrite(
 	info infocarder.InfocardBuilder,
 	nickname string,
 	Pos cfg.Vector,
@@ -869,14 +885,14 @@ func TechnicalInfoWrite(
 	info.WriteLineStrBold("Technical info")
 	// It belongs to Alaska Security Forces.
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("This object with internal nickname %s", nickname))
-	sb.WriteString(fmt.Sprintf(" is located on the coordinates (%.0f,%.0f,%.0f).", Pos.X, Pos.Y, Pos.Z))
+	sb.WriteString(fmt.Sprintf("This object has internal nickname %s", nickname))
 	if ids_info_num != HiddenID || ids_name_num != HiddenID {
 		sb.WriteString(fmt.Sprintf(" It has name infocard number %d and infocard number %d.", ids_name_num, ids_info_num))
 	}
 	if faction_name != "" {
 		sb.WriteString(fmt.Sprintf(" It belongs to %s.", faction_name))
 	}
-	info.WriteLineStr(sb.String())
+	sb.WriteString(fmt.Sprintf(" It is located on the coordinates (%.0f,%.0f,%.0f).", Pos.X, Pos.Y, Pos.Z))
+	info.WriteLine(infocarder.InfocardPhrase{Phrase: sb.String(), Raw: e.MakeCopyCoordsButton(Pos)})
 	return info
 }

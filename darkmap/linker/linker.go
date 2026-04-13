@@ -25,6 +25,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"github.com/darklab8/fl-darkstat/darkmap/utfextract"
+	stat_front "github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_types"
@@ -77,6 +78,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.FaviconIco),
 		builder.NewStaticFileFromCore(static_front.CommonCSS),
 		builder.NewStaticFileFromCore(static_front.CustomCSS),
+		builder.NewStaticFileFromCore(stat_front.CustomCrossCSS),
 		builder.NewStaticFileFromCore(static_front.GalaxyCSS),
 		builder.NewStaticFileFromCore(static_front.CustomJS),
 		builder.NewStaticFileFromCore(static_front.MapGalaxyJS),
@@ -84,6 +86,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.PanzoomJS),
 		builder.NewStaticFileFromCore(static_front.RemodalCSS),
 		builder.NewStaticFileFromCore(search_bar.SearchBarCss),
+		builder.NewStaticFileFromCore(stat_front.CustomJSSCrossShared),
 		builder.NewStaticFileFromCore(static_front.ZonesCSS.GetTemplated(templated_zones.String())),
 		builder.NewStaticFileFromCore(core_types.StaticFile{
 			Content:  core_static.FaviconIcoContent,

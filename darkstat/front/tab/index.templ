@@ -131,12 +131,14 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 			@core_front.StaticFile(core_static.ResetCSS)
 			@core_front.StaticFile(static_front.CommonCSS)
 			@core_front.StaticFile(static_front.CustomCSS)
+			@core_front.StaticFile(static_front.CustomCrossCSS)
 			if shared.ShowDisco {
 				@core_front.StaticFile(static_front.CustomJSSharedDiscovery)
 			} else {
 				@core_front.StaticFile(static_front.CustomJSSharedVanilla)
 			}
 			@core_front.StaticFile(static_front.CustomJSShared)
+			@core_front.StaticFile(static_front.CustomJSSCrossShared)
 			@core_front.StaticFile(static_front.CustomJS)
 			@core_front.StaticFile(static_front.CustomJSResizer)
 			@core_front.StaticFile(static_front.CustomJSFiltering)

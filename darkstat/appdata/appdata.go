@@ -15,8 +15,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/static_front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
-	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
+	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_logus"
 )
@@ -47,11 +47,11 @@ func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 	siteRoot := settings.Env.SiteRoot
 	defT := theme.ParseDefaultThemeName(settings.Env.DefaultTheme)
 	params := &types.GlobalParams{
-		AppStart:  settings.Env.AppStart,
-		Buildpath: "",
-		Theme:     defT,
-		Themes:     theme.ThemeCycleURLs(siteRoot, defT),
-		ThemeNicks: theme.ThemeCycleNicks(defT),
+		AppStart:       settings.Env.AppStart,
+		Buildpath:      "",
+		Theme:          defT,
+		Themes:         theme.ThemeCycleURLs(siteRoot, defT),
+		ThemeNicks:     theme.ThemeCycleNicks(defT),
 		TractorTabName: tractor_tab_name,
 		SiteHost:       settings.Env.SiteHost,
 		SiteRoot:       siteRoot,
@@ -75,11 +75,13 @@ func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 
 		builder.NewStaticFileFromCore(static_front.CommonCSS),
 		builder.NewStaticFileFromCore(static_front.CustomCSS),
+		builder.NewStaticFileFromCore(static_front.CustomCrossCSS),
 		builder.NewStaticFileFromCore(static_front.CustomJS),
 		builder.NewStaticFileFromCore(static_front.CustomJSResizer),
 		builder.NewStaticFileFromCore(static_front.CustomJSFiltering),
 		builder.NewStaticFileFromCore(static_front.CustomJSFilteringRoutes),
 		builder.NewStaticFileFromCore(static_front.CustomJSShared),
+		builder.NewStaticFileFromCore(static_front.CustomJSSCrossShared),
 		builder.NewStaticFileFromCore(static_front.CustomJSSharedDiscovery),
 		builder.NewStaticFileFromCore(static_front.CustomJSSharedVanilla),
 	}

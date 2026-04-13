@@ -5,6 +5,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/core_static"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
+	stat_front "github.com/darklab8/fl-darkstat/darkstat/front/static_front"
+
 	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 )
 
@@ -20,11 +22,13 @@ templ Html5() {
 			@core_front.StaticFile(core_static.HtmxPreloadJS)
 			@core_front.StaticFile(static_front.CommonCSS)
 			@core_front.StaticFile(static_front.CustomCSS)
+			@core_front.StaticFile(stat_front.CustomCrossCSS)
 			@core_front.StaticFile(static_front.GalaxyCSS)
 			@core_front.StaticFile(static_front.PanzoomJS)
 			@core_front.StaticFile(static_front.ZonesCSS)
 			@core_front.StaticFile(static_front.RemodalCSS)
 			@core_front.StaticFile(search_bar.SearchBarCss)
+			@core_front.StaticFile(stat_front.CustomJSSCrossShared)
 			<script>
 			</script>
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes"/>

@@ -406,11 +406,11 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 	></obj->
 }
 
-const TooltipCls = "tooltip"
+const TooltipCls = "map_tooltip"
 
 templ TooltipText(Pos cfg.Vector, obj *export_map.Obj) {
 	<span
-		class="tooltiptext hidden_coords"
+		class="map_tooltiptext hidden_coords"
 		style={ templ.KV(fmt.Sprintf("transform: rotate(%1.fdeg)", obj.Rotation.Y), obj.Kind == export_map.ObjTradelane), }
 	>
 		{ fmt.Sprintf("x:%.0f", Pos.X) }
