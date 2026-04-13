@@ -1,4 +1,8 @@
-![how it looks](docs/v1.30_all_routes.png)
+it has flstat functionality + trading functionality
+![how it looks](docs/flstat_view.png)
+
+also it is a map too:
+![how map looks](docs/darkmap/system.png)
 
 # Description
 
