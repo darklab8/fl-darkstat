@@ -27,12 +27,18 @@ type Export struct {
 	Exp *configs_export.Exporter
 }
 
-func NewExport(ctx context.Context) *Export {
+type ExportOpt func(e *Export)
+
+func NewExport(ctx context.Context, opts ...ExportOpt) *Export {
 	e := &Export{
 		PobsBySystemNick:   make(map[string][]*configs_export.PoB),
 		MiningBySystemNick: make(map[string][]*configs_export.Base),
 		MiningUsefulByNick: make(map[string]bool),
 		SearchEntries:      make(map[string]search_bar.Entry),
+	}
+
+	for _, opt := range opts {
+		opt(e)
 	}
 
 	defer timeit.NewTimer("MappedConfigs creation").Close()

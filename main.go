@@ -27,6 +27,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/static_server"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap"
+	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	map_urls "github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
 	map_settings "github.com/darklab8/fl-darkstat/darkmap/settings"
@@ -165,7 +166,11 @@ func main() {
 			map_urls.Index = "map.html"
 			map_settings.Env.EnableStatRoot = true
 			var linked_build *builder.Builder
-			linked_build = linker.NewLinker(true).Link(context.Background())
+			linked_build = linker.NewLinker(true, func(l *linker.Linker) {
+				l.Export = export_map.NewExport(ctx_span, func(e *export_map.Export) {
+					e.Mapped = app_data.Configs.Mapped
+				})
+			}).Link(context.Background())
 			map_fs := linked_build.BuildAll(true, builder.NotCleanFolder, nil)
 			filesystems = append(filesystems, map_fs)
 		}
@@ -425,7 +430,11 @@ func StatBuild(
 	build.BuildAll(false, clean_folder_at_start, nil)
 
 	if settings.Env.IsExpermentalMapWithDarkstatOn {
-		linker.NewLinker(false).Link(ctx_span).BuildAll(false, builder.NotCleanFolder, nil)
+		linker.NewLinker(false, func(l *linker.Linker) {
+			l.Export = export_map.NewExport(ctx_span, func(e *export_map.Export) {
+				e.Mapped = app_data.Configs.Mapped
+			})
+		}).Link(ctx_span).BuildAll(false, builder.NotCleanFolder, nil)
 	}
 	return nil
 }

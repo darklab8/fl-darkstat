@@ -50,7 +50,9 @@ func NewLinker(to_memory bool, opts ...LinkOption) *Linker {
 }
 
 func (l *Linker) Link(ctx context.Context) *builder.Builder {
-	l.Export = export_map.NewExport(ctx)
+	if l.Export == nil {
+		l.Export = export_map.NewExport(ctx)
+	}
 
 	defer timeit.NewTimer("Link").Close()
 	var build *builder.Builder
