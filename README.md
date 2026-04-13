@@ -17,7 +17,6 @@ See demos:
 - [Freelancer Vanilla version](https://darklab8.github.io/fl-data-vanilla/) [(action)](https://github.com/darklab8/fl-data-vanilla/actions/workflows/publish.yaml)
   - [Vanilla as Backend version](https://darkstat-vanilla.dd84ai.com/)
   - [Vanilla Map](https://darklab8.github.io/fl-data-vanilla/map.html)
-  - [Discovery API](https://darkstat-vanilla.dd84ai.com/swagger/index.html)
 - [Freelancer Sirius Revival](https://darklab8.github.io/fl-data-flsr/) [(action)](https://github.com/darklab8/fl-data-flsr/actions/workflows/publish.yaml)
   - [Freelancer Sirius Revival Map](https://darklab8.github.io/fl-data-flsr/map.html)
 - [Freelancer Universe](https://flustat.kofakulno.com/) (the deployment is not maintain by darkstat's author)
