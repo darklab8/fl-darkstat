@@ -190,7 +190,7 @@ func main() {
 		}
 		web_closer := web_server.Serve(web_opts)
 
-		if app_data.Configs.IsDiscovery {
+		if app_data.Configs.IsDiscovery { // TODO clean up this mess, by wiping it away i guess?
 			go func() {
 				for {
 					func() {
@@ -348,7 +348,7 @@ func main() {
 			},
 			{
 				Nickname:    "web_cron",
-				Description: "EXPERIMENTAL: run as standalone application that serves darkstat from memory with full updates",
+				Description: "run as standalone application that serves darkstat from memory with full updates. Recommended for disco.",
 				Func: func(info cantil.ActionInfo) error {
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 					debug.SetGCPercent(10) // https://go.dev/doc/gc-guide#Memory_limit improve with GOGC
