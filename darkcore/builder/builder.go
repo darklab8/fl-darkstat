@@ -104,7 +104,6 @@ const (
 	BuildToUnknown BuildToWhere = iota
 	BuildToFilesystem
 	BuildToMemory
-	BuildToExternalStorage
 )
 
 func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFolderKind, filesystem *Filesystem) *Filesystem {
@@ -194,12 +193,6 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 					}
 				}
 
-			} else if to_where == BuildToExternalStorage {
-				// for _, comp := range components_chunk {
-				// 	result := comp.Write(ctx, b.params)
-				// 	// write code to insert here
-				// 	logus.Log.CheckPanic(err, "failed to write to badger")
-				// }
 			} else {
 				panic("not supported build to destination")
 			}
@@ -221,9 +214,6 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 				})
 			} else if to_where == BuildToFilesystem {
 				filesystem.WriteToFile(path, []byte(static_file.content))
-			} else if to_where == BuildToExternalStorage {
-				// write code to insert here
-				// logus.Log.CheckPanic(err, "failed to write to badger")
 			} else {
 				panic("not supported build destination")
 			}
