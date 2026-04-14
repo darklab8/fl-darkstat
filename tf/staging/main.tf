@@ -11,7 +11,7 @@ module "discovery" {
 module "darkstat" {
   source             = "../modules/darkstat"
   environment        = "staging"
-  discovery_path     = module.discovery.freelancer_path
+  discovery_path     = module.vanilla.freelancer_path
   ipv4_address       = module.data_cluster.node_darklab.ipv4_address
   RELAY_HOST         = "https://darkrelay-staging.dd84ai.com"
   SITE_ROOT          = "/fl-darkstat/"
