@@ -24,14 +24,18 @@
     position: fixed;
     bottom: 5px;
     right: 5px;
-    z-index: 89;
+    z-index: 200;
 
     opacity: 0;
     transition: 0.0s;
 }
 
-.zoomedIn .map_tooltip .map_tooltiptext {
+.map_tooltip .map_tooltiptext {
     position: absolute;
+}
+
+.map_tooltip * {
+    z-index: 200;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
@@ -277,5 +281,15 @@ svg.connection-svg-overlay line.conn_hover {
 }
 
 svg.connection-svg-overlay line.hidden_system {
+    display: none;
+}
+
+/* 
+.tippy-box {
+    background-color: rgb(29, 29, 29);
+    color: rgb(230, 230, 230);
+} */
+
+.tippy-box {
     display: none;
 }

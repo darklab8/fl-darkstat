@@ -69,8 +69,13 @@ templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
 			}... }
 				></cycle->
 			</system->
+			@TooltipTippy(fmt.Sprintf("system-%s", sys.Nickname), sys.Nickname, FmtSysPos(sys.Pos))
 		</a>
 	</system-wrapper>
+}
+
+func FmtSysPos(Pos export_map.Coords2D) string {
+	return fmt.Sprintf("(%.0f,%.0f)", *Pos.X, *Pos.Y)
 }
 
 templ GalalaxyMap(data *export_map.Export) {
@@ -317,7 +322,7 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 		</div>
 		<div class="menu-item">
 			<div class="top">
-				@MultiLineOption([]string{"Hover coords"})
+				@MultiLineOption([]string{"Hover coords", "and nicks"})
 			</div>
 			<div class="bottom">
 				@ToggleSwitch("checkbox_coords")

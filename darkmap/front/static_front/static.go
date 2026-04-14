@@ -24,6 +24,24 @@ var CustomJS core_types.StaticFile = core_types.StaticFile{
 	Kind:     core_types.StaticFileJS,
 }
 
+//go:embed map_tippy_popper.js
+var TippyJSContent1 string // https://unpkg.com/@popperjs/core@2
+
+var TippyJS1 core_types.StaticFile = core_types.StaticFile{
+	Content:  TippyJSContent1,
+	Filename: "map_tippy_popper.js",
+	Kind:     core_types.StaticFileJS,
+}
+
+//go:embed map_tippy.js
+var TippyJSContent2 string // https://unpkg.com/tippy.js@6
+
+var TippyJS2 core_types.StaticFile = core_types.StaticFile{
+	Content:  TippyJSContent2,
+	Filename: "map_tippy.js",
+	Kind:     core_types.StaticFileJS,
+}
+
 //go:embed map_galaxy.js
 var MapGalaxyJSContent string
 
