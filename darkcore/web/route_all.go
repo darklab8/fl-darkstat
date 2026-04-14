@@ -13,6 +13,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
+	"github.com/darklab8/fl-darkstat/darkcore/web/web_utils"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -69,13 +70,7 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 					}
 				}
 
-				if strings.Contains(requested, ".css") {
-					resp.Header().Set("Content-Type", "text/css; charset=utf-8")
-				} else if strings.Contains(requested, ".html") {
-					resp.Header().Set("Content-Type", "text/html; charset=utf-8")
-				} else if strings.Contains(requested, ".js") {
-					resp.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-				}
+				web_utils.MakeStaticFileResp(requested, resp)
 
 				if ok {
 					time_start := time.Now()

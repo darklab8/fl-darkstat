@@ -98,10 +98,19 @@ const (
 	YesCleanFolder
 )
 
-func (b *Builder) BuildAll(to_mem bool, cleanup_build_folder CleanFolderKind, filesystem *Filesystem) *Filesystem {
+type BuildToWhere int8
+
+const (
+	BuildToUnknown BuildToWhere = iota
+	BuildToFilesystem
+	BuildToMemory
+	BuildToExternalStorage
+)
+
+func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFolderKind, filesystem *Filesystem) *Filesystem {
 	var ctx context.Context = context.Background()
 
-	if !to_mem {
+	if to_where != BuildToMemory {
 		darkstat_settings.Env.IsStaticSiteGenerator = true
 	}
 
@@ -122,14 +131,14 @@ func (b *Builder) BuildAll(to_mem bool, cleanup_build_folder CleanFolderKind, fi
 		fmt.Println("components chunks", len_comps)
 		for chunk_index, components_chunk := range chunked_components {
 
-			if to_mem {
+			if to_where == BuildToMemory {
 				for _, comp := range components_chunk {
 					filesystem.WriteToMem(comp.GetPagePath(b.params), &MemComp{
 						comp: comp,
 						b:    b,
 					})
 				}
-			} else {
+			} else if to_where == BuildToFilesystem {
 				type ModeToRun int8
 				const (
 					ModeNormal     ModeToRun = iota
@@ -185,6 +194,14 @@ func (b *Builder) BuildAll(to_mem bool, cleanup_build_folder CleanFolderKind, fi
 					}
 				}
 
+			} else if to_where == BuildToExternalStorage {
+				// for _, comp := range components_chunk {
+				// 	result := comp.Write(ctx, b.params)
+				// 	// write code to insert here
+				// 	logus.Log.CheckPanic(err, "failed to write to badger")
+				// }
+			} else {
+				panic("not supported build to destination")
 			}
 
 			if chunk_index%10 == 0 {
@@ -198,12 +215,17 @@ func (b *Builder) BuildAll(to_mem bool, cleanup_build_folder CleanFolderKind, fi
 		target_folder := b.params.GetBuildPath().Join("static")
 		for _, static_file := range b.static_files {
 			path := utils_filepath.Join(target_folder, static_file.path)
-			if to_mem {
+			if to_where == BuildToMemory {
 				filesystem.WriteToMem(path, &MemStatic{
 					content: static_file.content,
 				})
-			} else {
+			} else if to_where == BuildToFilesystem {
 				filesystem.WriteToFile(path, []byte(static_file.content))
+			} else if to_where == BuildToExternalStorage {
+				// write code to insert here
+				// logus.Log.CheckPanic(err, "failed to write to badger")
+			} else {
+				panic("not supported build destination")
 			}
 		}
 	}, timeit.WithMsg("gathered static assets"))

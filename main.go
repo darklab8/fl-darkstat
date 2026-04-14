@@ -24,6 +24,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/envers"
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
+	"github.com/darklab8/fl-darkstat/darkcore/static_external"
 	"github.com/darklab8/fl-darkstat/darkcore/static_server"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap"
@@ -63,7 +64,7 @@ const (
 func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 	relay_router := relayrouter.NewRouter(app_data)
 	relay_builder := relay_router.Link()
-	relay_fs := relay_builder.BuildAll(true, builder.NotCleanFolder, nil)
+	relay_fs := relay_builder.BuildAll(builder.BuildToMemory, builder.NotCleanFolder, nil)
 	relay_router = nil
 	relay_builder = nil
 	return relay_fs
@@ -149,7 +150,7 @@ func main() {
 
 		start_time_stat_router_build := time.Now()
 		_, span = traces.Tracer.Start(ctx_span, "stat_builder.BuildAll")
-		stat_fs := stat_builder.BuildAll(true, builder.NotCleanFolder, nil)
+		stat_fs := stat_builder.BuildAll(builder.BuildToMemory, builder.NotCleanFolder, nil)
 		span.End()
 		log.Printf("Elapsed start_time_stat_router_build time %s", time.Since(start_time_stat_router_build))
 
@@ -171,7 +172,7 @@ func main() {
 					e.Mapped = app_data.Configs.Mapped
 				})
 			}).Link(context.Background())
-			map_fs := linked_build.BuildAll(true, builder.NotCleanFolder, nil)
+			map_fs := linked_build.BuildAll(builder.BuildToMemory, builder.NotCleanFolder, nil)
 			filesystems = append(filesystems, map_fs)
 		}
 
@@ -271,7 +272,7 @@ func main() {
 				Nickname:    "build",
 				Description: "build darkstat to static assets: html, css, js files",
 				Func: func(info cantil.ActionInfo) error {
-					return StatBuild(builder.YesCleanFolder, NotIncludePoBs, router.YesLinkTravelRoutes)
+					return StatBuild(builder.BuildToFilesystem, builder.YesCleanFolder, NotIncludePoBs, router.YesLinkTravelRoutes)
 				},
 			},
 			{
@@ -282,12 +283,22 @@ func main() {
 					go static_server.StaticServer()
 
 					for {
-						err := StatBuild(builder.NotCleanFolder, YesIncludePobs, router.YesLinkTravelRoutes)
+						err := StatBuild(
+							builder.BuildToFilesystem,
+							builder.NotCleanFolder,
+							YesIncludePobs,
+							router.YesLinkTravelRoutes,
+						)
 						logus.Log.CheckError(err, "failed to run stat build")
 						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 
 						for i := 0; i < 100; i++ {
-							err = StatBuild(builder.NotCleanFolder, YesIncludePobs, router.NotLinkTravelRoutes)
+							err = StatBuild(
+								builder.BuildToFilesystem,
+								builder.NotCleanFolder,
+								YesIncludePobs,
+								router.NotLinkTravelRoutes,
+							)
 							logus.Log.CheckError(err, "failed to run stat build")
 							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 						}
@@ -304,6 +315,62 @@ func main() {
 					return nil
 				},
 			},
+
+			// CODE EXAMPLE for how to storage in external storage starts
+			{
+				Nickname:    "external_cron",
+				Description: "experimental run of web static assets server that rebuilds automatically in a loop. Useful for Discovery with dynamic data",
+				Func: func(info cantil.ActionInfo) error {
+					go static_external.WebServer()
+
+					for {
+						err := StatBuild(
+							builder.BuildToExternalStorage,
+							builder.NotCleanFolder,
+							YesIncludePobs,
+							router.YesLinkTravelRoutes,
+						)
+						logus.Log.CheckError(err, "failed to run stat build")
+						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
+
+						for i := 0; i < 100; i++ {
+							err = StatBuild(
+								builder.BuildToExternalStorage,
+								builder.NotCleanFolder,
+								YesIncludePobs,
+								router.NotLinkTravelRoutes,
+							)
+							logus.Log.CheckError(err, "failed to run stat build")
+							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
+						}
+					}
+					return nil
+				},
+			},
+			{
+				Nickname:    "external_build",
+				Description: "experimental run of badger build",
+				Func: func(info cantil.ActionInfo) error {
+					err := StatBuild(
+						builder.BuildToExternalStorage,
+						builder.NotCleanFolder,
+						YesIncludePobs,
+						router.YesLinkTravelRoutes,
+					)
+					logus.Log.CheckError(err, "failed to run stat build")
+					return nil
+				},
+			},
+			{
+				Nickname:    "external_server",
+				Description: "experimental run of external build",
+				Func: func(info cantil.ActionInfo) error {
+					static_external.WebServer()
+					return nil
+				},
+			},
+			// CODE EXAMPLE how to store in external server ends
+
 			{
 				Nickname:    "web",
 				Description: "run as standalone application that serves darkstat from memory",
@@ -405,6 +472,7 @@ const (
 )
 
 func StatBuild(
+	to_where builder.BuildToWhere,
 	clean_folder_at_start builder.CleanFolderKind,
 	include_pobs IncludePobsKind,
 	link_travel_routes router.LinkTravelRoutesKind,
@@ -427,14 +495,14 @@ func StatBuild(
 		map_settings.Env.EnableStatRoot = true
 	}
 
-	build.BuildAll(false, clean_folder_at_start, nil)
+	build.BuildAll(to_where, clean_folder_at_start, nil)
 
 	if settings.Env.IsExpermentalMapWithDarkstatOn {
 		linker.NewLinker(false, func(l *linker.Linker) {
 			l.Export = export_map.NewExport(ctx_span, func(e *export_map.Export) {
 				e.Mapped = app_data.Configs.Mapped
 			})
-		}).Link(ctx_span).BuildAll(false, builder.NotCleanFolder, nil)
+		}).Link(ctx_span).BuildAll(to_where, builder.NotCleanFolder, nil)
 	}
 	return nil
 }
