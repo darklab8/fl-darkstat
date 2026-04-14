@@ -43,6 +43,16 @@ type Web struct {
 	site_root string
 }
 
+func (w *Web) SetFS(fs []*builder.Filesystem) {
+	w.filesystems = fs
+}
+func (w *Web) SetMutexableData(app_data_mutex Mutex) {
+	w.AppDataMutex = app_data_mutex
+}
+func (w *Web) SetAppData(data *appdata.AppData) {
+	w.data = data
+}
+
 func (w *Web) GetMux() *http.ServeMux { return w.mux }
 
 type WebOpt func(w *Web)
@@ -52,6 +62,7 @@ func WithAppData(data *appdata.AppData) WebOpt {
 		w.data = data
 	}
 }
+
 func WithCtx(ctx context.Context) WebOpt {
 	return func(w *Web) {
 		w.ctx = ctx

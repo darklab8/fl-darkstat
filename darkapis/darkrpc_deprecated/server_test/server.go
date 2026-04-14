@@ -12,7 +12,7 @@ import (
 
 func main() {
 	ctx := context.Background()
-	app_data := appdata.NewAppData(ctx)
+	app_data := appdata.NewAppData(ctx, nil)
 	srv := darkrpc_deprecated.NewRpcServer(darkrpc_deprecated.WithPortSrv(8111))
 	// srv := darkrpc.NewRpcServer(darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
 	srv.Serve(app_data)

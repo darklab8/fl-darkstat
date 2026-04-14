@@ -75,7 +75,7 @@ func TestApiHealth(t *testing.T) {
 	some_socket := "/tmp/darkstat/api_test2.sock"
 	server_port := 8454
 
-	web_server := RegisterApiRoutes(web.NewWeb(
+	_, web_server := RegisterApiRoutes(web.NewWeb(
 		[]*builder.Filesystem{
 			stat_fs,
 		},
@@ -150,7 +150,7 @@ func TestApi(t *testing.T) {
 		some_socket = "/tmp/darkstat/api_test.sock"
 	}
 
-	web_server := RegisterApiRoutes(web.NewWeb(
+	_, web_server := RegisterApiRoutes(web.NewWeb(
 		[]*builder.Filesystem{
 			stat_fs,
 		},

@@ -126,11 +126,16 @@ var VanillaShipNames = types.ShipNames{
 	Freighter: "freighter",
 }
 
-func NewAppData(ctx context.Context) *AppData {
+func NewAppData(ctx context.Context, mapped *configs_mapped.MappedConfigs) *AppData {
 	ctx, span := traces.Tracer.Start(ctx, "NewAppData")
 	defer span.End()
 
-	mapped := NewMapped(ctx)
+	var result *AppData = &AppData{}
+
+	if mapped == nil {
+		mapped = NewMapped(ctx)
+	}
+
 	configs := configs_export.NewExporter(mapped)
 
 	var data *configs_export.Exporter
@@ -167,10 +172,11 @@ func NewAppData(ctx context.Context) *AppData {
 
 	shared.CraftableBaseName = mapped.CraftableBaseName()
 
-	return &AppData{
-		Configs: data,
-		Shared:  shared,
+	if result.Configs == nil {
+		result.Configs = data
 	}
+	result.Shared = shared
+	return result
 }
 
 func NewRelayData(app_data *AppData) *AppDataRelay {

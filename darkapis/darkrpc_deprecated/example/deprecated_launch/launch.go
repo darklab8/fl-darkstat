@@ -18,7 +18,7 @@ func main() {
 			rpc_opts = append(rpc_opts, darkrpc_deprecated.WithSockSrv(darkrpc_deprecated.DarkstatRpcSock))
 		}
 		rpc_server := darkrpc_deprecated.NewRpcServer(rpc_opts...)
-		app_data := appdata.NewAppData(ctx_span)
+		app_data := appdata.NewAppData(ctx_span, nil)
 		rpc_server.Serve(app_data)
 		if false {
 			rpc_server.Close()

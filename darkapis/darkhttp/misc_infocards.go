@@ -9,7 +9,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
-	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -23,7 +22,7 @@ import (
 // @Param request body []string true "Array of nicknames as input, for example [fc_or_gun01_mark02]"
 // @Success      200  {array}  	InfocardResp
 // @Router       /api/infocards [post]
-func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registry.Endpoint {
+func GetInfocards(webapp *web.Web, api *Api) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "POST " + ApiRoute + "/infocards",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
@@ -40,6 +39,7 @@ func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registr
 				Log.CheckError(err, "fprintf print error in infocards 1")
 				return
 			}
+
 			err = json.Unmarshal(body, &nicknames)
 			Log.CheckWarn(err, "failed to unparmshal input in get infocards")
 			if len(nicknames) == 0 {
@@ -51,7 +51,7 @@ func GetInfocards(webapp *web.Web, app_data *appdata.AppData, api *Api) *registr
 
 			var outputs []InfocardResp
 			for _, nickname := range nicknames {
-				if info, ok := app_data.Configs.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
+				if info, ok := api.app_data.Configs.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
 					outputs = append(outputs, InfocardResp{Infocard: &info})
 				} else {
 					outputs = append(outputs, InfocardResp{Error: ptr.Ptr("infocard is not found")})

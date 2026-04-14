@@ -24,12 +24,15 @@ type Api struct {
 func (a *Api) GetAppData() *appdata.AppData {
 	return a.app_data
 }
+func (a *Api) SetAppData(app_data *appdata.AppData) {
+	a.app_data = app_data
+}
 
 func JsonResponseHeader(w *http.ResponseWriter) {
 	(*w).Header().Set("Content-Type", "application/json")
 }
 
-func RegisterApiRoutes(w *web.Web, app_data *appdata.AppData) *web.Web {
+func RegisterApiRoutes(w *web.Web, app_data *appdata.AppData) (*Api, *web.Web) {
 	api := &Api{
 		app_data: app_data,
 	}
@@ -78,7 +81,7 @@ func RegisterApiRoutes(w *web.Web, app_data *appdata.AppData) *web.Web {
 	api_routes.Register(PostThrustersMarketGoods(w, api))
 	api_routes.Register(PostThrustersTechcompatibilities(w, api))
 	api_routes.Register(GetPoBBases(w, api))
-	api_routes.Register(GetInfocards(w, api.app_data, api))
+	api_routes.Register(GetInfocards(w, api))
 	api_routes.Register(GetSystems(w, api))
 	api_routes.Register(GetInfo(w, api))
 
@@ -89,5 +92,5 @@ func RegisterApiRoutes(w *web.Web, app_data *appdata.AppData) *web.Web {
 	api_routes.Foreach(func(e *registry.Endpoint) {
 		w.GetMux().HandleFunc(string(e.Url), e.Handler)
 	})
-	return w
+	return api, w
 }

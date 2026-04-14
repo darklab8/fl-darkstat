@@ -19,12 +19,12 @@ import (
 	_ "net/http/pprof"
 
 	"github.com/darklab8/fl-darkstat/configs"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/envers"
 	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
-	"github.com/darklab8/fl-darkstat/darkcore/static_external"
 	"github.com/darklab8/fl-darkstat/darkcore/static_server"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap"
@@ -128,7 +128,7 @@ func main() {
 		}
 
 		start_time_app_data := time.Now()
-		app_data := appdata.NewAppData(ctx_span)
+		app_data := appdata.NewAppData(ctx_span, nil)
 		log.Printf("Elapsed start_time_app_data time %s", time.Since(start_time_app_data))
 
 		start_time_relay_data := time.Now()
@@ -176,7 +176,7 @@ func main() {
 			filesystems = append(filesystems, map_fs)
 		}
 
-		web_server := darkhttp.RegisterApiRoutes(web.NewWeb(
+		_, web_server := darkhttp.RegisterApiRoutes(web.NewWeb(
 			filesystems,
 			web.WithMutexableData(app_data),
 			web.WithSiteRoot(settings.Env.SiteRoot),
@@ -272,7 +272,14 @@ func main() {
 				Nickname:    "build",
 				Description: "build darkstat to static assets: html, css, js files",
 				Func: func(info cantil.ActionInfo) error {
-					return StatBuild(builder.BuildToFilesystem, builder.YesCleanFolder, NotIncludePoBs, router.YesLinkTravelRoutes)
+					_, err := StatBuild(
+						builder.BuildToFilesystem,
+						builder.YesCleanFolder,
+						NotIncludePoBs,
+						router.YesLinkTravelRoutes,
+						nil,
+					)
+					return err
 				},
 			},
 			{
@@ -283,21 +290,23 @@ func main() {
 					go static_server.StaticServer()
 
 					for {
-						err := StatBuild(
+						out, err := StatBuild(
 							builder.BuildToFilesystem,
 							builder.NotCleanFolder,
 							YesIncludePobs,
 							router.YesLinkTravelRoutes,
+							nil,
 						)
 						logus.Log.CheckError(err, "failed to run stat build")
 						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 
 						for i := 0; i < 100; i++ {
-							err = StatBuild(
+							_, err = StatBuild(
 								builder.BuildToFilesystem,
 								builder.NotCleanFolder,
 								YesIncludePobs,
 								router.NotLinkTravelRoutes,
+								out.app_data.Configs.Mapped,
 							)
 							logus.Log.CheckError(err, "failed to run stat build")
 							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
@@ -315,62 +324,6 @@ func main() {
 					return nil
 				},
 			},
-
-			// CODE EXAMPLE for how to storage in external storage starts
-			{
-				Nickname:    "example_external_cron",
-				Description: "experimental run of web static assets server that rebuilds automatically in a loop. Useful for Discovery with dynamic data",
-				Func: func(info cantil.ActionInfo) error {
-					go static_external.WebServer()
-
-					for {
-						err := StatBuild(
-							builder.BuildToExternalStorage,
-							builder.NotCleanFolder,
-							YesIncludePobs,
-							router.YesLinkTravelRoutes,
-						)
-						logus.Log.CheckError(err, "failed to run stat build")
-						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
-
-						for i := 0; i < 100; i++ {
-							err = StatBuild(
-								builder.BuildToExternalStorage,
-								builder.NotCleanFolder,
-								YesIncludePobs,
-								router.NotLinkTravelRoutes,
-							)
-							logus.Log.CheckError(err, "failed to run stat build")
-							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
-						}
-					}
-					return nil
-				},
-			},
-			{
-				Nickname:    "example_external_build",
-				Description: "experimental run of badger build",
-				Func: func(info cantil.ActionInfo) error {
-					err := StatBuild(
-						builder.BuildToExternalStorage,
-						builder.NotCleanFolder,
-						YesIncludePobs,
-						router.YesLinkTravelRoutes,
-					)
-					logus.Log.CheckError(err, "failed to run stat build")
-					return nil
-				},
-			},
-			{
-				Nickname:    "example_external_server",
-				Description: "experimental run of external build",
-				Func: func(info cantil.ActionInfo) error {
-					static_external.WebServer()
-					return nil
-				},
-			},
-			// CODE EXAMPLE how to store in external server ends
-
 			{
 				Nickname:    "web",
 				Description: "run as standalone application that serves darkstat from memory",
@@ -390,6 +343,90 @@ func main() {
 					defer stop()
 					<-ctx.Done()
 					closer()
+					return nil
+				},
+			},
+			{
+				Nickname:    "web_cron",
+				Description: "EXPERIMENTAL: run as standalone application that serves darkstat from memory with full updates",
+				Func: func(info cantil.ActionInfo) error {
+					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+					debug.SetGCPercent(10) // https://go.dev/doc/gc-guide#Memory_limit improve with GOGC
+					go func() {
+						log.Println(http.ListenAndServe("0.0.0.0:6060", nil)) // for pprof
+					}()
+					out, err := StatBuild(
+						builder.BuildToMemory,
+						builder.NotCleanFolder,
+						YesIncludePobs,
+						router.YesLinkTravelRoutes,
+						nil,
+					)
+					logus.Log.CheckError(err, "failed to run stat build")
+
+					var web_server *web.Web
+					var api *darkhttp.Api
+					web_server = web.NewWeb(
+						out.fs,
+						web.WithMutexableData(out.app_data),
+						web.WithSiteRoot(settings.Env.SiteRoot),
+						web.WithAppData(out.app_data),
+					)
+					api, web_server = darkhttp.RegisterApiRoutes(web_server, out.app_data)
+					web_opts := web.WebServeOpts{
+						Port: ptr.Ptr(settings.Env.WebPort),
+					}
+					if settings.Env.EnableUnixSockets {
+						web_opts.SockAddress = web.DarkstatHttpSock
+					}
+
+					go func() {
+						for {
+							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
+
+							// TODO, refactor some day to have it more elegant.
+							err := out.app_data.Configs.Mapped.Discovery.PlayerOwnedBases.Refresh()
+							if logus.Log.CheckError(err, "failed with refresh gracefully") {
+								return
+							}
+							if out.app_data.Configs.Mapped.Discovery.BasesFull != nil {
+								err = out.app_data.Configs.Mapped.Discovery.BasesFull.Refresh()
+								if logus.Log.CheckError(err, "failed with refresh gracefully bases full") {
+									return
+								}
+							}
+
+							out, err = StatBuild(
+								builder.BuildToMemory,
+								builder.NotCleanFolder,
+								YesIncludePobs,
+								router.YesLinkTravelRoutes,
+								out.app_data.Configs.Mapped,
+							)
+							logus.Log.CheckError(err, "failed to run stat build")
+
+							mutex := web_server.AppDataMutex
+							time_switch_start := time.Now()
+							mutex.Lock()
+							web_server.SetFS(out.fs)
+							web_server.SetMutexableData(out.app_data)
+							web_server.SetAppData(out.app_data)
+							api.SetAppData(out.app_data)
+							mutex.Unlock()
+							fmt.Println("switch of web data happened in", time.Since(time_switch_start))
+							runtime.GC()
+						}
+					}()
+
+					metronom := metrics.NewMetronom(web_server.GetMux())
+					go metronom.Run()
+
+					web_closer := web_server.Serve(web_opts)
+
+					defer stop()
+					<-ctx.Done()
+
+					web_closer.Close()
 					return nil
 				},
 			},
@@ -471,21 +508,30 @@ const (
 	YesIncludePobs
 )
 
+type StatBuildOutput struct {
+	fs       []*builder.Filesystem
+	app_data *appdata.AppData
+}
+
 func StatBuild(
 	to_where builder.BuildToWhere,
 	clean_folder_at_start builder.CleanFolderKind,
 	include_pobs IncludePobsKind,
 	link_travel_routes router.LinkTravelRoutesKind,
-) error {
+	mapped *configs_mapped.MappedConfigs,
+
+) (StatBuildOutput, error) {
+	var out StatBuildOutput
+
 	ctx_span, span_boot := traces.Tracer.Start(context.Background(), "build")
 	defer span_boot.End()
-	app_data := appdata.NewAppData(ctx_span)
-	build := router.NewRouter(app_data, router.WithStaticAssetsGen(), func(l *router.Router) {
+	out.app_data = appdata.NewAppData(ctx_span, mapped)
+	build := router.NewRouter(out.app_data, router.WithStaticAssetsGen(), func(l *router.Router) {
 		l.LinkTravelRoutesKind = link_travel_routes
 	}).Link(ctx_span)
 
 	if include_pobs == YesIncludePobs {
-		relay_data := appdata.NewRelayData(app_data)
+		relay_data := appdata.NewRelayData(out.app_data)
 		relay_router := relayrouter.NewRouter(relay_data)
 		relay_router.LinkPobs(relay_data, build)
 	}
@@ -495,14 +541,15 @@ func StatBuild(
 		map_settings.Env.EnableStatRoot = true
 	}
 
-	build.BuildAll(to_where, clean_folder_at_start, nil)
+	out.fs = append(out.fs, build.BuildAll(to_where, clean_folder_at_start, nil))
 
 	if settings.Env.IsExpermentalMapWithDarkstatOn {
-		linker.NewLinker(false, func(l *linker.Linker) {
+		linker := linker.NewLinker(false, func(l *linker.Linker) {
 			l.Export = export_map.NewExport(ctx_span, func(e *export_map.Export) {
-				e.Mapped = app_data.Configs.Mapped
+				e.Mapped = out.app_data.Configs.Mapped
 			})
-		}).Link(ctx_span).BuildAll(to_where, builder.NotCleanFolder, nil)
+		}).Link(ctx_span)
+		out.fs = append(out.fs, linker.BuildAll(to_where, builder.NotCleanFolder, nil))
 	}
-	return nil
+	return out, nil
 }
