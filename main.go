@@ -70,6 +70,10 @@ func GetRelayFs(app_data *appdata.AppDataRelay) *builder.Filesystem {
 	return relay_fs
 }
 
+func SetOptimalGcForWeb() {
+	debug.SetGCPercent(10) // https://go.dev/doc/gc-guide#Memory_limit improve with GOGC
+}
+
 // @title Darkstat API
 // @version 1.0
 // @description Darkstat API exposed info in json format.
@@ -111,6 +115,7 @@ func main() {
 		go func() {
 			log.Println(http.ListenAndServe("0.0.0.0:6060", nil)) // for pprof
 		}()
+		SetOptimalGcForWeb()
 
 		start_time_total := time.Now()
 		ctx_span, span_boot := traces.Tracer.Start(context.Background(), "bootstrap")
@@ -351,7 +356,7 @@ func main() {
 				Description: "run as standalone application that serves darkstat from memory with full updates. Recommended for disco.",
 				Func: func(info cantil.ActionInfo) error {
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-					debug.SetGCPercent(10) // https://go.dev/doc/gc-guide#Memory_limit improve with GOGC
+					SetOptimalGcForWeb()
 					go func() {
 						log.Println(http.ListenAndServe("0.0.0.0:6060", nil)) // for pprof
 					}()
