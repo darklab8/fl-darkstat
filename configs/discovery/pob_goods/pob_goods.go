@@ -101,7 +101,8 @@ func (c *Config) Refresh() error {
 func NameToNickname(name string) string {
 	name = strings.ToLower(name)
 	name = html.UnescapeString(name)
-	name = regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(name, "")
+	name = regexp.MustCompile(`[^a-zA-Z0-9. ]+`).ReplaceAllString(name, "")
+	name = strings.ReplaceAll(name, ".", "_")
 	name = strings.ReplaceAll(name, " ", "_")
 	return name
 }
