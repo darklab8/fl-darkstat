@@ -34,7 +34,6 @@ import (
 	map_settings "github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
-	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 
@@ -95,21 +94,6 @@ func main() {
 	if strings.Contains(settings.Env.SiteHost, "https") {
 		docs.SwaggerInfo.Schemes = []string{"https"}
 	}
-
-	// the most useless idea i came up with
-	// defer func() {
-	// 	if r := recover(); r != nil {
-	// 		logus.Log.Error("Program crashed in main process",
-	// 			typelog.Any("recover", r),
-	// 			typelog.Any("stack", string(debug.Stack())),
-	// 		)
-	// 		if !settings.Env.IsDevEnv {
-	// 			fmt.Println("going to sleeping")
-	// 			time.Sleep(10 * time.Second)
-	// 		}
-	// 		panic(r)
-	// 	}
-	// }()
 
 	web_darkstat := func(ctx_close context.Context) func() {
 		go func() {
@@ -194,68 +178,6 @@ func main() {
 			web_opts.SockAddress = web.DarkstatHttpSock
 		}
 		web_closer := web_server.Serve(web_opts)
-
-		if app_data.Configs.IsDiscovery { // TODO clean up this mess, by wiping it away i guess?
-			go func() {
-				for {
-					func() {
-						defer func() {
-							if r := recover(); r != nil {
-								fmt.Println("Recovered in f, trying to update app data", r, string(debug.Stack()))
-							}
-						}()
-						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
-						start_relay_refresh := time.Now()
-						app_data.Lock()
-						defer app_data.Unlock()
-
-						// TODO, refactor some day to have it more elegant.
-						err := relay_data.Configs.Mapped.Discovery.PlayerOwnedBases.Refresh()
-						if logus.Log.CheckError(err, "failed with refresh gracefully") {
-							return
-						}
-
-						if relay_data.Configs.Mapped.Discovery.BasesFull != nil {
-							err = relay_data.Configs.Mapped.Discovery.BasesFull.Refresh()
-							if logus.Log.CheckError(err, "failed with refresh gracefully bases full") {
-								return
-							}
-						}
-						relay_data.Configs.PoBs = relay_data.Configs.GetPoBs()
-						relay_data.Configs.PoBGoods = relay_data.Configs.GetPoBGoods(app_data.Configs.PoBs)
-
-						relay_fs2 := GetRelayFs(relay_data)
-						for key, _ := range relay_fs.Files {
-							delete(relay_fs.Files, key)
-						}
-						relay_fs.Files = relay_fs2.Files
-
-						BasesFromPobs := app_data.Configs.PoBsToBases(relay_data.Configs.PoBs)
-						var bases_by_nick map[string]*configs_export.Base = make(map[string]*configs_export.Base)
-						for _, base := range BasesFromPobs {
-							bases_by_nick[string(base.Nickname)] = base
-						}
-						for _, base := range app_data.Configs.TradeBases {
-							if updated_base, ok := bases_by_nick[string(base.Nickname)]; ok {
-								*base = *updated_base
-							}
-						}
-						app_data.Configs.TradePathExporter = configs_export.NewTradePathExporter(
-							app_data.Configs,
-							app_data.Configs.Bases,
-							app_data.Configs.MiningOperations,
-						)
-						app_data.Configs.EnhanceBasesWithIsTransportReachable(app_data.Configs.Bases, app_data.Configs.Transport, app_data.Configs.Freighter, app_data.Configs.Frigate)
-
-						logus.Log.Info("refreshed content")
-						runtime.GC()
-						log.Printf("Elapsed start_relay_refresh time %s", time.Since(start_relay_refresh))
-
-					}()
-				}
-			}()
-		}
-
 		log.Printf("Elapsed web launch time %s", time.Since(start_time_total))
 
 		metronom := metrics.NewMetronom(web_server.GetMux())
@@ -288,42 +210,8 @@ func main() {
 				},
 			},
 			{
-				Nickname:    "static_cron",
-				Description: "Failed experimental run of web static assets server that rebuilds automatically in a loop. Useful for Discovery with dynamic data",
-				// experiment failed, see darkcore/static_server/static_server.go file begnninf for conclusion thoughts
-				Func: func(info cantil.ActionInfo) error {
-					go static_server.StaticServer()
-
-					for {
-						out, err := StatBuild(
-							builder.BuildToFilesystem,
-							builder.NotCleanFolder,
-							YesIncludePobs,
-							router.YesLinkTravelRoutes,
-							nil,
-						)
-						logus.Log.CheckError(err, "failed to run stat build")
-						time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
-
-						for i := 0; i < 100; i++ {
-							_, err = StatBuild(
-								builder.BuildToFilesystem,
-								builder.NotCleanFolder,
-								YesIncludePobs,
-								router.NotLinkTravelRoutes,
-								out.app_data.Configs.Mapped,
-							)
-							logus.Log.CheckError(err, "failed to run stat build")
-							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
-						}
-					}
-
-					return nil
-				},
-			},
-			{
 				Nickname:    "static_alone",
-				Description: "run only static assets web server. to serve already existing data. For dev purposes",
+				Description: "run only static assets web server. to serve already existing data built. For dev purposes",
 				Func: func(info cantil.ActionInfo) error {
 					static_server.StaticServer()
 					return nil
@@ -331,7 +219,7 @@ func main() {
 			},
 			{
 				Nickname:    "web",
-				Description: "run as standalone application that serves darkstat from memory",
+				Description: "run as standalone application that serves darkstat from memory. DOES NOT AUTOUPDATE for disco, for that use web_cron",
 				Func: func(info cantil.ActionInfo) error {
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 
@@ -353,7 +241,7 @@ func main() {
 			},
 			{
 				Nickname:    "web_cron",
-				Description: "run as standalone application that serves darkstat from memory with full updates. Recommended for disco.",
+				Description: "run as standalone application that serves darkstat from memory with full updates periodically. Recommended for disco.",
 				Func: func(info cantil.ActionInfo) error {
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 					SetOptimalGcForWeb()
