@@ -318,7 +318,7 @@ func main() {
 
 			// CODE EXAMPLE for how to storage in external storage starts
 			{
-				Nickname:    "external_cron",
+				Nickname:    "example_external_cron",
 				Description: "experimental run of web static assets server that rebuilds automatically in a loop. Useful for Discovery with dynamic data",
 				Func: func(info cantil.ActionInfo) error {
 					go static_external.WebServer()
@@ -348,7 +348,7 @@ func main() {
 				},
 			},
 			{
-				Nickname:    "external_build",
+				Nickname:    "example_external_build",
 				Description: "experimental run of badger build",
 				Func: func(info cantil.ActionInfo) error {
 					err := StatBuild(
@@ -362,7 +362,7 @@ func main() {
 				},
 			},
 			{
-				Nickname:    "external_server",
+				Nickname:    "example_external_server",
 				Description: "experimental run of external build",
 				Func: func(info cantil.ActionInfo) error {
 					static_external.WebServer()
