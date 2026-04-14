@@ -21,9 +21,9 @@ module "darkstat" {
   pprof_prefix   = "darkstat-pprof"
   zone           = "dd84ai.com"
   is_discovery   = true
-  replicas_count = 2
+  replicas_count = 1
   extra_vars     = local.disco_extra_vars
-  args           = ["--stat-deals-on", "web"]
+  args           = ["--stat-deals-on", "web_cron"]
 }
 
 locals {
