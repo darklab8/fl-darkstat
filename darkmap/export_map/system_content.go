@@ -207,21 +207,10 @@ type MissingShapes struct {
 	shape_without_images  map[string]bool
 }
 
-func IsPlanetByShape(shape_name string) bool {
-	if shape_name == "nnm_sm_medium_rocky_moon" {
-		return true
-	} else if shape_name == "nnm_sm_medium_forest_moon" {
-		return true
-	} else if shape_name == "nnm_sm_small_ice_moon" {
-		return true
-	} else if shape_name == "nnm_sm_small_desert_moon" {
+func IsPlanet(solararch *solararch_mapped.Solar) bool {
+	if value, _ := solararch.Type.GetValue(); value == "planet" {
 		return true
 	}
-
-	//  else if shape_name == "nnm_sm_rock_asteroid" {
-	// 	all_bases[base.Nickname.Get()] = base
-	// }
-
 	return false
 }
 
@@ -238,29 +227,19 @@ func (e *Export) EnrichSystemWithObjects(
 	}
 
 	all_bases := make(map[string]*systems_mapped.Base)
-	if true {
-		// technically this one is not interesting
-		for _, bases := range system_info.AllBasesByBases {
-			for _, base := range bases {
-				all_bases[base.Nickname.Get()] = base
-			}
-		}
-	}
 	for _, bases := range system_info.AllBasesByDockWith {
 		for _, base := range bases {
 			all_bases[base.Nickname.Get()] = base
 		}
 	}
 
-	for _, base_obj := range system_info.Objects {
+	for _, base_obj := range system_info.Objects { // add all planets
 		base := systems_mapped.NewBase(base_obj.RenderModel(), nil)
 		archetype := base.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 		shape_name, _ := solararch.ShapeName.GetValue()
-		if _, ok := e.Shapes.ShapesByNick[shape_name]; !ok {
-			if IsPlanetByShape(shape_name) {
-				all_bases[base.Nickname.Get()] = base
-			}
+		if IsPlanet(solararch) {
+			all_bases[base.Nickname.Get()] = base
 		} else { // if ok
 			if shape_name == "nav_blackholehazard" { // permit fisher blackhole
 				all_bases[base.Nickname.Get()] = base
@@ -467,26 +446,9 @@ func (e *Export) EnrichSystemWithObjects(
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 		shape_name, found_shape := solararch.ShapeName.GetValue()
 		if _, ok := e.Shapes.ShapesByNick[shape_name]; !ok {
-			// if shape_name == "nnm_sm_depot" { // TODO deprecated? linker fallbacker takes care of it
-			// 	shape_name = "nav_depot"
-			// } else if shape_name == "nnm_sm_communications" {
-			// 	shape_name = "nav_outpost"
-			// } else if shape_name == "nnm_sm_mining" {
-			// 	shape_name = "nav_outpost"
-			// } else
-			if shape_name == "nnm_sm_medium_rocky_moon" {
+			if IsPlanet(solararch) {
 				base.Kind = ObjPlanet
-			} else if shape_name == "nnm_sm_medium_forest_moon" {
-				base.Kind = ObjPlanet
-			} else if shape_name == "nnm_sm_small_ice_moon" {
-				base.Kind = ObjPlanet
-			} else if shape_name == "nnm_sm_rock_asteroid" {
-				base.Kind = ObjPlanet
-			} else if shape_name == "nnm_sm_small_desert_moon" {
-				base.Kind = ObjPlanet
-			}
 
-			if base.Kind == ObjPlanet {
 				material := solararch.MaterialLibrary[0].Get()
 				shape_name = material.Base().ToString()
 				if strings.Contains(shape_name, ".") {

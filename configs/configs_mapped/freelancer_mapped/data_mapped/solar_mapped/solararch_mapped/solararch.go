@@ -23,6 +23,7 @@ type Solar struct {
 	ShapeName       *semantic.String
 	MaterialLibrary []*semantic.Path
 	SolarRadius     *semantic.Float
+	Type            *semantic.String
 }
 
 const (
@@ -109,6 +110,7 @@ func Read(input_file *iniload.IniLoader) *Config {
 			CargoLimit:   semantic.NewInt(section, cfg.ParamKey("cargo_limit")),
 			SolarRadius:  semantic.NewFloat(section, cfg.ParamKey("solar_radius"), semantic.Precision(2)),
 			ShapeName:    semantic.NewString(section, cfg.ParamKey("shape_name"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+			Type:         semantic.NewString(section, cfg.ParamKey("type"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 		}
 		solar.Map(section)
 

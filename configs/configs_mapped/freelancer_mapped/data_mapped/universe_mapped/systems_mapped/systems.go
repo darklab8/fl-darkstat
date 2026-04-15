@@ -514,7 +514,13 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						system_to_add.Jumpholes = append(system_to_add.Jumpholes, jumphole)
 						frelconfig.JumpholesByNick[jumphole.Nickname.Get()] = jumphole
 					}
-					if _, ok := obj.ParamMap[cfg.Key("star")]; ok {
+
+					var is_sun bool
+
+					if type_, ok := obj.ParamMap[cfg.Key("type")]; ok {
+						is_sun = strings.ToLower(type_[0].First.AsString()) == "sun"
+					}
+					if _, ok := obj.ParamMap[cfg.Key("star")]; ok || is_sun {
 						Star := &Star{
 							Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
