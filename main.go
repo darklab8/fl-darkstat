@@ -20,6 +20,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/envers"
@@ -277,17 +278,10 @@ func main() {
 						for {
 							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 
-							// TODO, refactor some day to have it more elegant.
-							err := out.app_data.Configs.Mapped.Discovery.PlayerOwnedBases.Refresh()
-							if logus.Log.CheckError(err, "failed with refresh gracefully") {
-								return
-							}
-							if out.app_data.Configs.Mapped.Discovery.BasesFull != nil {
-								err = out.app_data.Configs.Mapped.Discovery.BasesFull.Refresh()
-								if logus.Log.CheckError(err, "failed with refresh gracefully bases full") {
-									return
-								}
-							}
+							out.app_data.Configs.Mapped.ReadDiscovery(
+								context.Background(),
+								filefind.FindConfigs(settings.Env.FreelancerFolder),
+							)
 
 							out, err = StatBuild(
 								builder.BuildToMemory,

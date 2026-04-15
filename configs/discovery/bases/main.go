@@ -61,17 +61,3 @@ func Read(ctx context.Context, file *file.File) (*Config, error) {
 	conf.file = file
 	return conf, nil
 }
-
-func (c *Config) Refresh() error {
-	reread, err := Read(context.Background(), c.file)
-	if logus.Log.CheckError(err, "failed to refresh") {
-		return err
-	}
-	c.file = reread.file
-	c.BasesByHtmlUnescapeName = reread.BasesByHtmlUnescapeName
-	c.BasesByNick = reread.BasesByNick
-	c.Timestamp = reread.Timestamp
-	c.Bases = reread.Bases
-
-	return nil
-}

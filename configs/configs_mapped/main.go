@@ -233,6 +233,106 @@ const (
 	FlsrLauncherConfigName  = "flsr-launcher.ini"
 )
 
+func (m *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefind.Filesystem) {
+	var file_techcompat *iniload.IniLoader
+	var file_prices *iniload.IniLoader
+	var file_base_recipe_items *iniload.IniLoader
+	var file_base_recipe_modules *iniload.IniLoader
+	var file_playercntl_rephacks *iniload.IniLoader
+	var file_minecontrol *iniload.IniLoader
+	var file_minecontrol_nodes *iniload.IniLoader
+
+	var all_files []*iniload.IniLoader
+
+	if techcom := filesystem.GetFile(DiscoLauncherConfigName); techcom != nil {
+		m.Discovery = &DiscoveryConfig{}
+		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
+		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
+		file_base_recipe_items = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_items.cfg"))
+		file_base_recipe_modules = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_modules.cfg"))
+		file_playercntl_rephacks = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/playercntl_rephacks.cfg"))
+		file_minecontrol = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/minecontrol.cfg"))
+		file_minecontrol_nodes = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/minecontrol_nodes.cfg"))
+		all_files = append(
+			all_files,
+			file_techcompat,
+			file_prices,
+			file_base_recipe_items,
+			file_base_recipe_modules,
+			file_playercntl_rephacks,
+			file_minecontrol,
+			file_minecontrol_nodes,
+		)
+
+		if latest_patch_file := filesystem.GetFile(autopatcher.AutopatherFilename); latest_patch_file != nil {
+			fmt.Println("latest_patch_file=", latest_patch_file)
+			latest_patch_file_fp := latest_patch_file.GetFilepath()
+			patch_data, err := os.ReadFile(latest_patch_file_fp.ToString())
+			if !logus.Log.CheckError(err, "failed to unmarshal patch") {
+				err := json.Unmarshal(patch_data, &m.Discovery.LatestPatch)
+				logus.Log.CheckWarn(err, "failed to unmarshal latest patch")
+			}
+			fmt.Println("p.Discovery.LatestPatch=", m.Discovery.LatestPatch)
+		}
+	}
+
+	timeit.NewTimerF(func() {
+		var wg sync.WaitGroup
+		wg.Add(len(all_files))
+		for _, file := range all_files {
+			go func(file *iniload.IniLoader) {
+				file.Scan()
+				wg.Done()
+			}(file)
+		}
+		wg.Wait()
+	}, timeit.WithMsg("Scanned ini loaders"))
+
+	var wg sync.WaitGroup
+	if m.Discovery != nil {
+		wg.Add(7)
+		go func() {
+			m.Discovery.Techcompat = techcompat.Read(file_techcompat)
+			wg.Done()
+		}()
+		go func() {
+			m.Discovery.Prices = discoprices.Read(file_prices)
+			wg.Done()
+		}()
+		go func() {
+			m.Discovery.BaseRecipeItems = base_recipe_items.Read(file_base_recipe_items)
+			wg.Done()
+		}()
+		go func() {
+			m.Discovery.BaseRecipeModules = base_recipe_modules.Read(file_base_recipe_modules)
+			wg.Done()
+		}()
+		go func() {
+			m.Discovery.PlayercntlRephacks = playercntl_rephacks.Read(file_playercntl_rephacks)
+			wg.Done()
+		}()
+		go func() {
+			m.Discovery.Minecontrol = minecontrol.Read(file_minecontrol)
+			wg.Done()
+		}()
+		go func() {
+			m.Discovery.MinecontrolNodes = minecontrol_nodes.Read(file_minecontrol_nodes)
+			wg.Done()
+		}()
+		file_public_bases := file.NewWebFile(PobDataUrl)
+		var err error
+		m.Discovery.PlayerOwnedBases, err = pob_goods.Read(ctx, file_public_bases)
+		logus.Log.CheckPanic(err, "failed to read pobs data on darkstat start")
+
+		if configs_settings.Env.FullBasesAPIURL != nil {
+			file_private_bases := file.NewWebFile(*configs_settings.Env.FullBasesAPIURL)
+			m.Discovery.BasesFull, err = bases.Read(ctx, file_private_bases)
+			logus.Log.CheckPanic(err, "failed to read pobs full on darkstat start")
+		}
+
+	}
+}
+
 func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath) *MappedConfigs {
 	ctx, span := traces.Tracer.Start(ctx, "MappedConfigs.Read")
 	defer span.End()
@@ -289,14 +389,6 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 		file_shipclasses,
 	)
 
-	var file_techcompat *iniload.IniLoader
-	var file_prices *iniload.IniLoader
-	var file_base_recipe_items *iniload.IniLoader
-	var file_base_recipe_modules *iniload.IniLoader
-	var file_playercntl_rephacks *iniload.IniLoader
-	var file_minecontrol *iniload.IniLoader
-	var file_minecontrol_nodes *iniload.IniLoader
-
 	if filesystem.GetFile(FlsrLauncherConfigName) != nil ||
 		filesystem.GetFile("flsr-texts.dll") != nil ||
 		filesystem.GetFile("flsr-dialogs.dll") != nil {
@@ -306,37 +398,8 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			m.FLSR.FLSRRecipes = flsr_recipes.Read(iniload.NewLoader(flsr_recipes_file).Scan())
 		}
 	}
-	if techcom := filesystem.GetFile(DiscoLauncherConfigName); techcom != nil {
-		m.Discovery = &DiscoveryConfig{}
-		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
-		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
-		file_base_recipe_items = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_items.cfg"))
-		file_base_recipe_modules = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_modules.cfg"))
-		file_playercntl_rephacks = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/playercntl_rephacks.cfg"))
-		file_minecontrol = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/minecontrol.cfg"))
-		file_minecontrol_nodes = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/minecontrol_nodes.cfg"))
-		all_files = append(
-			all_files,
-			file_techcompat,
-			file_prices,
-			file_base_recipe_items,
-			file_base_recipe_modules,
-			file_playercntl_rephacks,
-			file_minecontrol,
-			file_minecontrol_nodes,
-		)
 
-		if latest_patch_file := filesystem.GetFile(autopatcher.AutopatherFilename); latest_patch_file != nil {
-			fmt.Println("latest_patch_file=", latest_patch_file)
-			latest_patch_file_fp := latest_patch_file.GetFilepath()
-			patch_data, err := os.ReadFile(latest_patch_file_fp.ToString())
-			if !logus.Log.CheckError(err, "failed to unmarshal patch") {
-				err := json.Unmarshal(patch_data, &m.Discovery.LatestPatch)
-				logus.Log.CheckWarn(err, "failed to unmarshal latest patch")
-			}
-			fmt.Println("p.Discovery.LatestPatch=", m.Discovery.LatestPatch)
-		}
-	}
+	m.ReadDiscovery(ctx, filesystem)
 
 	var infocards_override *file.File
 	if m.Discovery != nil {
@@ -488,48 +551,6 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			wg.Done()
 		}()
 
-		if m.Discovery != nil {
-			wg.Add(7)
-			go func() {
-				m.Discovery.Techcompat = techcompat.Read(file_techcompat)
-				wg.Done()
-			}()
-			go func() {
-				m.Discovery.Prices = discoprices.Read(file_prices)
-				wg.Done()
-			}()
-			go func() {
-				m.Discovery.BaseRecipeItems = base_recipe_items.Read(file_base_recipe_items)
-				wg.Done()
-			}()
-			go func() {
-				m.Discovery.BaseRecipeModules = base_recipe_modules.Read(file_base_recipe_modules)
-				wg.Done()
-			}()
-			go func() {
-				m.Discovery.PlayercntlRephacks = playercntl_rephacks.Read(file_playercntl_rephacks)
-				wg.Done()
-			}()
-			go func() {
-				m.Discovery.Minecontrol = minecontrol.Read(file_minecontrol)
-				wg.Done()
-			}()
-			go func() {
-				m.Discovery.MinecontrolNodes = minecontrol_nodes.Read(file_minecontrol_nodes)
-				wg.Done()
-			}()
-			file_public_bases := file.NewWebFile(PobDataUrl)
-			var err error
-			m.Discovery.PlayerOwnedBases, err = pob_goods.Read(ctx, file_public_bases)
-			logus.Log.CheckPanic(err, "failed to read pobs data on darkstat start")
-
-			if configs_settings.Env.FullBasesAPIURL != nil {
-				file_private_bases := file.NewWebFile(*configs_settings.Env.FullBasesAPIURL)
-				m.Discovery.BasesFull, err = bases.Read(ctx, file_private_bases)
-				logus.Log.CheckPanic(err, "failed to read pobs full on darkstat start")
-			}
-
-		}
 		wg.Wait()
 	}, timeit.WithMsg("Mapped stuff"))
 
