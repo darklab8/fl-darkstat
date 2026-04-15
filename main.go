@@ -276,32 +276,39 @@ func main() {
 
 					go func() {
 						for {
-							time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
+							func() {
+								defer func() {
+									if r := recover(); r != nil {
+										logus.Log.Error("discovery read update, failed to do", typelog.Any("r", r))
+									}
+								}()
+								time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 
-							out.app_data.Configs.Mapped.ReadDiscovery(
-								context.Background(),
-								filefind.FindConfigs(settings.Env.FreelancerFolder),
-							)
+								out.app_data.Configs.Mapped.ReadDiscovery(
+									context.Background(),
+									filefind.FindConfigs(settings.Env.FreelancerFolder),
+								)
 
-							out, err = StatBuild(
-								builder.BuildToMemory,
-								builder.NotCleanFolder,
-								YesIncludePobs,
-								router.YesLinkTravelRoutes,
-								out.app_data.Configs.Mapped,
-							)
-							logus.Log.CheckError(err, "failed to run stat build")
+								out, err = StatBuild(
+									builder.BuildToMemory,
+									builder.NotCleanFolder,
+									YesIncludePobs,
+									router.YesLinkTravelRoutes,
+									out.app_data.Configs.Mapped,
+								)
+								logus.Log.CheckError(err, "failed to run stat build")
 
-							mutex := web_server.AppDataMutex
-							time_switch_start := time.Now()
-							mutex.Lock()
-							web_server.SetFS(out.fs)
-							web_server.SetMutexableData(out.app_data)
-							web_server.SetAppData(out.app_data)
-							api.SetAppData(out.app_data)
-							mutex.Unlock()
-							fmt.Println("switch of web data happened in", time.Since(time_switch_start))
-							runtime.GC()
+								mutex := web_server.AppDataMutex
+								time_switch_start := time.Now()
+								mutex.Lock()
+								web_server.SetFS(out.fs)
+								web_server.SetMutexableData(out.app_data)
+								web_server.SetAppData(out.app_data)
+								mutex.Unlock()
+								api.SetAppData(out.app_data)
+								fmt.Println("switch of web data happened in", time.Since(time_switch_start))
+								runtime.GC()
+							}()
 						}
 					}()
 
