@@ -75,7 +75,15 @@ templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
 }
 
 func FmtSysPos(Pos export_map.Coords2D) string {
-	return fmt.Sprintf("(%.0f,%.0f)", *Pos.X, *Pos.Y)
+	var posx, posy float64
+	if Pos.X != nil {
+		posx = *Pos.X
+	}
+	if Pos.Y != nil {
+		posy = *Pos.Y
+	}
+
+	return fmt.Sprintf("(%.0f,%.0f)", posx, posy)
 }
 
 templ GalalaxyMap(data *export_map.Export) {
