@@ -42,14 +42,14 @@ function toggle_tippy(checked, checkbox_name, hidden_class, unhidden_class) {
                 document.head.appendChild(style);
             }
             style.textContent = '.tippy-box { display: block !important; }';
-
+            sessionStorage.setItem(checkbox_name, "true");
             break;
         case false:
             console.log(this.value, "turned off")
 
             const existing = document.getElementById(styleId);
             if (existing) existing.remove();
-
+            sessionStorage.setItem(checkbox_name, "false");
             break;
     }
 }
