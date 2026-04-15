@@ -88,7 +88,7 @@ func init() {
 
 		RelayHost:     env.GetStr("RELAY_HOST", enverant.OrStr(""), enverant.WithDesc("used to define relay url like with htps included. Makes sure that u deployed darkstat as static assets, they will still lead to relay backend to serve dynamic data. Useful for Discovery related deployment")),
 		RelayRoot:     env.GetStr("RELAY_ROOT", enverant.OrStr("/"), enverant.WithDesc("if u ever will need to serve relay from non root path, u could use it to make sure requests go correct path.")),
-		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 30, enverant.WithDesc("How often to update backend info during active app. Used for discovery to update PoB related info on a run")),
+		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 300, enverant.WithDesc("How often to update backend info during active app. Used for discovery to update PoB related info on a run")),
 
 		TradeDealsEnabled: env.GetBoolOr("TRADE_DEALS_ENABLED", *darkflag.TradeDealsEnabled, enverant.WithDesc("enable calculating one way and two way best trades? PERFORMANCE HEAVY. by default off. cli args must be put before command like `web`")),
 

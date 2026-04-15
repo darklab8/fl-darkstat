@@ -17,6 +17,7 @@
     "DARKCORE_LOG_LEVEL": "WARN",
     "UTILS_LOG_LEVEL": "WARN",
     "CONFIGS_LOG_LEVEL": "WARN",
+    "DARKSTAT_RELAY_LOOP_SECS": "30",
     # "OTLP_HTTP_ON": "true",
     # "OTEL_TRACES_SAMPLER": "parentbased_traceidratio",
     # "OTEL_TRACES_SAMPLER_ARG": "1.0",
