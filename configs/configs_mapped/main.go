@@ -289,8 +289,8 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 		wg.Wait()
 	}, timeit.WithMsg("Scanned ini loaders"))
 
-	var wg sync.WaitGroup
 	if Discovery != nil {
+		var wg sync.WaitGroup
 		wg.Add(7)
 		go func() {
 			Discovery.Techcompat = techcompat.Read(file_techcompat)
@@ -330,7 +330,7 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 			Discovery.BasesFull, err = bases.Read(ctx, file_private_bases)
 			logus.Log.CheckPanic(err, "failed to read pobs full on darkstat start")
 		}
-
+		wg.Wait()
 		cfg.Discovery = Discovery
 	}
 }
