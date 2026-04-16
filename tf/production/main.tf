@@ -3,6 +3,11 @@ module "discovery" {
   environment = "production"
 }
 
+module "disco_api" {
+  source       = "../modules/disco_api"
+  ipv4_address = module.data_cluster.node_darklab.ipv4_address
+}
+
 module "darkstat" {
   source          = "../modules/darkstat"
   environment     = "production"

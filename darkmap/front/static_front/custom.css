@@ -53,6 +53,10 @@
     flex-direction: column;
 }
 
+.menu {
+    font-size: 0.9em
+}
+
 .vertical_options {
     display: flex;
     flex-direction: column;

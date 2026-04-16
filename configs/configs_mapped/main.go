@@ -231,6 +231,11 @@ func getConfigs2(filesystem *filefind.Filesystem, paths []*semantic.Path) []*ini
 const (
 	DiscoLauncherConfigName = "launcherconfig.xml"
 	FlsrLauncherConfigName  = "flsr-launcher.ini"
+	DiscoAPI                = "https://disco-api.dd84ai.com" //"https://discoverygc.com"
+)
+
+const (
+	PobDataUrl = DiscoAPI + "/forums/base_admin.php?action=getjson"
 )
 
 func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefind.Filesystem) {
@@ -247,13 +252,13 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 	var Discovery *DiscoveryConfig
 	if techcom := filesystem.GetFile(DiscoLauncherConfigName); techcom != nil {
 		Discovery = &DiscoveryConfig{}
-		file_techcompat = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/techcompat.cfg"))
-		file_prices = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/prices.cfg"))
-		file_base_recipe_items = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_items.cfg"))
-		file_base_recipe_modules = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/base_recipe_modules.cfg"))
-		file_playercntl_rephacks = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/playercntl_rephacks.cfg"))
-		file_minecontrol = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/minecontrol.cfg"))
-		file_minecontrol_nodes = iniload.NewLoader(file.NewWebFile("https://discoverygc.com/gameconfigpublic/minecontrol_nodes.cfg"))
+		file_techcompat = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/techcompat.cfg"))
+		file_prices = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/prices.cfg"))
+		file_base_recipe_items = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/base_recipe_items.cfg"))
+		file_base_recipe_modules = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/base_recipe_modules.cfg"))
+		file_playercntl_rephacks = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/playercntl_rephacks.cfg"))
+		file_minecontrol = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/minecontrol.cfg"))
+		file_minecontrol_nodes = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/minecontrol_nodes.cfg"))
 		all_files = append(
 			all_files,
 			file_techcompat,
@@ -291,31 +296,37 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 
 	if Discovery != nil {
 		var wg sync.WaitGroup
-		wg.Add(7)
+		wg.Add(1)
 		go func() {
 			Discovery.Techcompat = techcompat.Read(file_techcompat)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			Discovery.Prices = discoprices.Read(file_prices)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			Discovery.BaseRecipeItems = base_recipe_items.Read(file_base_recipe_items)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			Discovery.BaseRecipeModules = base_recipe_modules.Read(file_base_recipe_modules)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			Discovery.PlayercntlRephacks = playercntl_rephacks.Read(file_playercntl_rephacks)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			Discovery.Minecontrol = minecontrol.Read(file_minecontrol)
 			wg.Done()
 		}()
+		wg.Add(1)
 		go func() {
 			Discovery.MinecontrolNodes = minecontrol_nodes.Read(file_minecontrol_nodes)
 			wg.Done()
@@ -405,7 +416,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 
 	var infocards_override *file.File
 	if m.Discovery != nil {
-		infocards_override = file.NewWebFile("https://discoverygc.com/gameconfigpublic/infocard_overrides.cfg")
+		infocards_override = file.NewWebFile(DiscoAPI + "/gameconfigpublic/infocard_overrides.cfg")
 	}
 
 	timeit.NewTimerF(func() {
@@ -560,10 +571,6 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 
 	return m
 }
-
-const (
-	PobDataUrl = "https://discoverygc.com/forums/base_admin.php?action=getjson"
-)
 
 type IsDruRun bool
 
