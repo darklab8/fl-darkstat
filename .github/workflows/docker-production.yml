@@ -12,6 +12,10 @@ jobs:
     env:
       DOCKER_HOST: ssh://root@darkbot
     steps:
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v5
+        with:
+          version: type=image,tag=27.5.1
       - name: Check out source repository
         uses: actions/checkout@v4
       - name: Get version from tag
