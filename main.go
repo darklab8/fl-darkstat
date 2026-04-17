@@ -279,7 +279,11 @@ func main() {
 							func() {
 								defer func() {
 									if r := recover(); r != nil {
-										logus.Log.Error("discovery read update, failed to do", typelog.Any("r", r))
+										fmt.Print(string(debug.Stack()))
+										logus.Log.Error("discovery read update, failed to do",
+											typelog.Any("r", r),
+											typelog.Any("stack", debug.Stack()),
+										)
 									}
 								}()
 								time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
