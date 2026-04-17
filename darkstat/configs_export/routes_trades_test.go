@@ -40,22 +40,17 @@ func TestGetTrades(t *testing.T) {
 
 	var DockOpts solararch_mapped.DockableOptions
 
-	wg.Add(1)
-	go func() {
+	wg.Go(func() {
 		e.Transport = NewGraphResults(e, e.ship_speeds.AvgTransportCruiseSpeed, trades.MapConfigOptions{
 			DockOpts: DockOpts,
 		}, mining_bases_by_system, graph_options)
-		wg.Done()
-	}()
-	wg.Add(1)
-	go func() {
+	})
+	wg.Go(func() {
 		e.Frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed, trades.MapConfigOptions{
 			DockOpts: DockOpts,
 		}, mining_bases_by_system, graph_options)
-		wg.Done()
-	}()
-	wg.Add(1)
-	go func() {
+	})
+	wg.Go(func() {
 		e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed,
 			trades.MapConfigOptions{
 				DockOpts: solararch_mapped.DockableOptions{
@@ -63,8 +58,7 @@ func TestGetTrades(t *testing.T) {
 				},
 			},
 			mining_bases_by_system, graph_options)
-		wg.Done()
-	}()
+	})
 
 	e.Bases = e.GetBases(ctx)
 	e.Bases = append(e.Bases, mining_bases...)

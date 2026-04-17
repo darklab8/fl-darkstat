@@ -273,8 +273,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 
 	{
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Transports")
 			defer span.End()
 			logus.Log.Info("graph launching for tranposrt")
@@ -286,22 +285,18 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 				extra_graph_bases, options.MappingOptions)
 			// e.Freighter = e.Transport
 			// e.Frigate = e.Transport
-			wg.Done()
 			logus.Log.Info("graph finished for tranposrt")
-		}()
+		})
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Frigate")
 			defer span.End()
 			e.Frigate = NewGraphResults(e, e.ship_speeds.AvgFrigateCruiseSpeed,
 				trades.MapConfigOptions{
 					DockOpts: FrigateDockOpts,
 				}, extra_graph_bases, options.MappingOptions)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			_, span := traces.Tracer.Start(ctx, "Exporter.NewGraphResults Freighters")
 			defer span.End()
 			e.Freighter = NewGraphResults(e, e.ship_speeds.AvgFreighterCruiseSpeed,
@@ -309,8 +304,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 					DockOpts: FreighterDockOpts,
 				},
 				extra_graph_bases, options.MappingOptions)
-			wg.Done()
-		}()
+		})
 		// _ = FreighterDockOpts
 		// _ = FrigateDockOpts
 	}

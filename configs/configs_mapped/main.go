@@ -296,41 +296,27 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 
 	if Discovery != nil {
 		var wg sync.WaitGroup
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			Discovery.Techcompat = techcompat.Read(file_techcompat)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			Discovery.Prices = discoprices.Read(file_prices)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			Discovery.BaseRecipeItems = base_recipe_items.Read(file_base_recipe_items)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			Discovery.BaseRecipeModules = base_recipe_modules.Read(file_base_recipe_modules)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			Discovery.PlayercntlRephacks = playercntl_rephacks.Read(file_playercntl_rephacks)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			Discovery.Minecontrol = minecontrol.Read(file_minecontrol)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			Discovery.MinecontrolNodes = minecontrol_nodes.Read(file_minecontrol_nodes)
-			wg.Done()
-		}()
+		})
 		file_public_bases := file.NewWebFile(PobDataUrl)
 		var err error
 		Discovery.PlayerOwnedBases, err = pob_goods.Read(ctx, file_public_bases)
@@ -440,14 +426,12 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	timeit.NewTimerF(func() {
 		var wg sync.WaitGroup
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			timeit.NewTimerF(func() {
 				m.Universe = universe_mapped.Read(file_universe, filesystem)
 				m.Systems = systems_mapped.Read(m.Universe, filesystem)
 			}, timeit.WithMsg("map systems"))
-			wg.Done()
-		}()
+		})
 
 		if m.FLSR != nil {
 			filesystem := filefind.FindConfigs(file1path.Join("EXE", "flhook_plugins", "missions"))
@@ -462,107 +446,69 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			m.FLSR.FLSRMissions = flsr_missions.Read(loaded_files)
 		}
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			m.market = market_mapped.Read(files_market)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.equip = equip_mapped.Read(files_equip)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.Fuses = fuse_mapped.Read(files_fuses)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.Stararch = stararch_mapped.Read(files_stararch)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.Goods = equipment_mapped.Read(files_goods)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.Shiparch = ship_mapped.Read(files_shiparch)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.InfocardmapINI = interface_mapped.Read(file_interface)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.Infocards, _ = infocard_mapped.Read(filesystem, m.FreelancerINI, infocards_override)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.InitialWorld = initialworld.Read(file_initialworld)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.Empathy = empathy_mapped.Read(file_empathy)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.MBases = mbases_mapped.Read(file_mbases)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.LookProps = lootprops_mapped.Read(file_lootprops)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.Consts = const_mapped.Read(file_consts)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.WeaponMods = weaponmoddb.Read(file_weaponmoddb)
-			wg.Done()
-		}()
-		wg.Add(1)
-		go func() {
+		})
+		wg.Go(func() {
 			m.NpcRankToDiff = npcranktodiff.Read(file_npcranktodiff)
 			m.DiffToMoney = diff2money.Read(file_diff2money)
-			wg.Done()
-		}()
+		})
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			m.FactionProps = faction_props_mapped.Read(file_faction_props)
 			m.NpcShips = npc_ships.Read(file_npc_ships)
-			wg.Done()
-		}()
+		})
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			m.Solararch = solararch_mapped.Read(file_solararch)
-			wg.Done()
-		}()
+		})
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			m.Loadouts = loadouts_mapped.Read(files_loadouts)
-			wg.Done()
-		}()
+		})
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			m.ShipClasses = shipclasses_mapped.Read(file_shipclasses)
-			wg.Done()
-		}()
+		})
 
 		wg.Wait()
 	}, timeit.WithMsg("Mapped stuff"))
