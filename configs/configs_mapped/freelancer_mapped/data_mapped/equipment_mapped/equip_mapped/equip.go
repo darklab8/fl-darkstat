@@ -125,9 +125,11 @@ type Gun struct {
 
 	FlashParticleName *semantic.String
 
-	BurstAmmo   *semantic.Int
-	BurstReload *semantic.Float
-	NumBarrels  *semantic.Int
+	BurstAmmo                 *semantic.Int
+	BurstReloadTime           *semantic.Float
+	BurstReloadAmount         *semantic.Int
+	BurstKeepReloadWhenFiring *semantic.Bool
+	NumBarrels                *semantic.Int
 }
 
 type Mine struct {
@@ -440,10 +442,12 @@ func Read(files []*iniload.IniLoader) *Config {
 					DispersionAngle:   semantic.NewFloat(section, cfg.Key("dispersion_angle"), semantic.Precision(2)),
 					Volume:            semantic.NewFloat(section, cfg.Key("volume"), semantic.Precision(2)),
 
-					BurstAmmo:   semantic.NewInt(section, cfg.Key("burst_fire")),
-					BurstReload: semantic.NewFloat(section, cfg.Key("burst_fire"), semantic.Precision(2), semantic.OptsF(semantic.Order(1))),
-					NumBarrels:  semantic.NewInt(section, cfg.Key("num_barrels")),
-					Mass:        semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
+					BurstAmmo:                 semantic.NewInt(section, cfg.Key("burst_fire")),
+					BurstReloadTime:           semantic.NewFloat(section, cfg.Key("burst_fire"), semantic.Precision(2), semantic.OptsF(semantic.Order(1))),
+					BurstReloadAmount:         semantic.NewInt(section, cfg.Key("burst_fire"), semantic.Order(2), semantic.Optional()),
+					BurstKeepReloadWhenFiring: semantic.NewBool(section, cfg.Key("burst_fire"), semantic.StrBool, semantic.OptsB(semantic.Order(3), semantic.Optional())),
+					NumBarrels:                semantic.NewInt(section, cfg.Key("num_barrels")),
+					Mass:                      semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 				}
 				gun.Map(section)
 

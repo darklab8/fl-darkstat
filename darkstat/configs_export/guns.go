@@ -149,11 +149,24 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		gun.BurstFire = &BurstFire{
 			Ammo: ammo,
 		}
-		gun.BurstFire.ReloadTime = gun_info.BurstReload.Get()
+		gun.BurstFire.ReloadTime = gun_info.BurstReloadTime.Get()
 
-		// (magCapacity * RefireDelay + Reload time) / Mag Capacity = This should be average refire delay
+		reloadAmount := float64(gun_info.BurstReloadAmount.Get())
+		if reloadAmount <= 0 {
+			reloadAmount = float64(gun.BurstFire.Ammo) // treat 0 as full mag
+		}
 
-		gun.BurstFire.SustainedRefire = 1 / ((gun_info.RefireDelay.Get()*float64(gun.BurstFire.Ammo) + gun.BurstFire.ReloadTime) / float64(gun.BurstFire.Ammo))
+		// Number of reload cycles needed to refill the full magazine
+		numReloadCycles := float64(gun.BurstFire.Ammo) / reloadAmount
+
+		// Total time to fire and reload one full magazine
+		fullCycleTime := gun.BurstFire.ReloadTime * numReloadCycles
+		if !gun_info.BurstKeepReloadWhenFiring.Get() {
+			// Reload resets on fire, so firing time also counts
+			fullCycleTime += gun_info.RefireDelay.Get() * float64(gun.BurstFire.Ammo)
+		}
+
+		gun.BurstFire.SustainedRefire = float64(gun.BurstFire.Ammo) / fullCycleTime
 	}
 
 	gun.IsAutoTurret, _ = gun_info.IsAutoTurret.GetValue()
