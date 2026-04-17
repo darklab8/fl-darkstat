@@ -90,6 +90,7 @@ func (e *Exporter) GetMissiles(ids []*Tractor, buyable_ship_tech map[string]bool
 		}
 
 		missile.MaxAngularVelocity, _ = munition.MaxAngularVelocity.GetValue()
+		missile.MaxAngularVelocity *= 180 / math.Pi // to degrees
 
 		missile.TopSpeedAtRest, _ = getMunitionTopSpeed(motor, munition, gun_info.MuzzleVelosity.Get())
 		missile.TopSpeedAt80 = missile.TopSpeedAtRest + 80

@@ -147,7 +147,7 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 				}
 				if mode == GunsMissiles {
 					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{"Max", "Angular", "Velocity"})
+						@frmt.MultiLinestring([]string{"Max", "Angular", "Velocity", "°degrees"})
 					</th>
 				}
 				if shared.ShowDisco {
