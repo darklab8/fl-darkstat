@@ -108,6 +108,10 @@ func (e *Exporter) GetMissiles(ids []*Tractor, buyable_ship_tech map[string]bool
 		missile.RangeAt80Speed = GetRangeAtSpeed(motor, munition, gun_info.MuzzleVelosity.Get(), 80, missile.TopSpeedAt80)
 		missile.RangeAt200Speed = GetRangeAtSpeed(motor, munition, gun_info.MuzzleVelosity.Get(), 200, missile.TopSpeedAt200)
 
+		missile.Range = math.Min(missile.Range, 99999)
+		missile.RangeAt80Speed = math.Min(missile.RangeAt80Speed, 99999)
+		missile.RangeAt200Speed = math.Min(missile.RangeAt200Speed, 99999)
+
 		missiles = append(missiles, missile)
 	}
 
