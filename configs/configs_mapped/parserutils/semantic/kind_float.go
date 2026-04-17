@@ -1,6 +1,8 @@
 package semantic
 
 import (
+	"strings"
+
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
@@ -56,7 +58,20 @@ func (s *Float) get() float64 {
 	if s.optional && len(section.ParamMap[s.key]) == 0 {
 		return 0
 	}
-	return section.ParamMap[s.key][s.index].Values[s.order].(inireader.ValueNumber).Value
+
+	switch v := section.ParamMap[s.key][s.index].Values[s.order].(type) {
+	case inireader.ValueNumber:
+		return v.Value
+	case inireader.ValueString:
+		if strings.ToLower(v.AsString()) == "infinity" {
+			return 2_000_000_000 // int32 max should be enough
+		} else {
+			panic("not recognized string instead of number")
+		}
+	default:
+		logus.Log.Panic("not supported uni value type")
+	}
+	panic("not possible")
 }
 
 func (s *Float) Get() float64 {

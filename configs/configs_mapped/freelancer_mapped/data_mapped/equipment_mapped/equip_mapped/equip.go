@@ -91,6 +91,7 @@ type Munition struct {
 	Mass         *semantic.Float
 
 	ArmorPen *semantic.Float // Disco only
+	TopSpeed *semantic.Float // Disco only
 }
 
 type Explosion struct {
@@ -297,7 +298,10 @@ type Scanner struct {
 
 type Motor struct {
 	semantic.Model
-	Nickname *semantic.String
+	Nickname     *semantic.String
+	Lifetime     *semantic.Float
+	Acceleration *semantic.Float
+	Delay        *semantic.Float
 }
 
 type Config struct {
@@ -476,6 +480,7 @@ func Read(files []*iniload.IniLoader) *Config {
 					SeekerFovDeg: semantic.NewInt(section, cfg.Key("seeker_fov_deg")),
 
 					ArmorPen: semantic.NewFloat(section, cfg.Key("armor_pen"), semantic.Precision(2), semantic.WithDefaultF(0)),
+					TopSpeed: semantic.NewFloat(section, cfg.Key("top_speed"), semantic.Precision(2)),
 					Mass:     semantic.NewFloat(section, cfg.Key("mass"), semantic.Precision(2)),
 
 					HitPts:   semantic.NewInt(section, cfg.Key("hit_pts")),
@@ -518,6 +523,10 @@ func Read(files []*iniload.IniLoader) *Config {
 			case "[motor]":
 				motor := &Motor{
 					Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+
+					Lifetime:     semantic.NewFloat(section, cfg.Key("lifetime"), semantic.Precision(2)),
+					Acceleration: semantic.NewFloat(section, cfg.Key("accel"), semantic.Precision(2)),
+					Delay:        semantic.NewFloat(section, cfg.Key("delay"), semantic.Precision(2)),
 				}
 				frelconfig.MotorMap[motor.Nickname.Get()] = motor
 				motor.Map(section)

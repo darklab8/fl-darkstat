@@ -177,7 +177,30 @@ templ GunTable(guns []configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shar
 						@frmt.MultiLinestring([]string{"Power/s"})
 					</th>
 				}
-				<th style="width:5px;">Range</th>
+				if mode != GunsMissiles {
+					<th style="width:5px;">Range</th>
+				} else {
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"range", "at", "rest"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"range", "at", "80"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"range", "at", "200"})
+					</th>
+				}
+				if mode == GunsMissiles {
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Top", "speed", "at", "rest"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Top", "speed", "at", "80"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"Top", "speed", "at", "200"})
+					</th>
+				}
 				<th style="width:5px;">Speed</th>
 				<th style="width:5px;">
 					@frmt.MultiLinestring([]string{"Avg", "Effic."})
@@ -259,7 +282,19 @@ templ GunRow(gun configs_export.Gun, mode GunTabMode, pinm tab.PinMod, shared *t
 		<td>
 			@frmt.MultiLinestring(GetPowerPerSec(gun))
 		</td>
-		<td>{ fmt.Sprintf("%.0f", gun.Range) }</td>
+		if mode != GunsMissiles {
+			<td>{ fmt.Sprintf("%.0f", gun.Range) }</td>
+		} else {
+			// range at rest
+			<td>{ fmt.Sprintf("%.0f", gun.Range) }</td>
+			<td>{ fmt.Sprintf("%.0f", gun.RangeAt80Speed) }</td>
+			<td>{ fmt.Sprintf("%.0f", gun.RangeAt200Speed) }</td>
+		}
+		if mode == GunsMissiles {
+			<td>{ fmt.Sprintf("%.0f", gun.TopSpeedAtRest) }</td>
+			<td>{ fmt.Sprintf("%.0f", gun.TopSpeedAt80) }</td>
+			<td>{ fmt.Sprintf("%.0f", gun.TopSpeedAt200) }</td>
+		}
 		<td>{ fmt.Sprintf("%.0f", gun.Speed) }</td>
 		<td>{ fmt.Sprintf("%.4f",gun.AvgEfficiency) }</td>
 		<td>{ fmt.Sprintf("%.4f",gun.HullEfficiency) }</td>
