@@ -456,10 +456,12 @@ func (e *Export) EnrichSystemWithObjects(
 			if IsPlanet(solararch) {
 				base.Kind = ObjPlanet
 
-				material := solararch.MaterialLibrary[0].Get()
-				shape_name = material.Base().ToString()
-				if strings.Contains(shape_name, ".") {
-					shape_name = strings.Split(shape_name, ".")[0]
+				if len(solararch.MaterialLibrary) > 0 {
+					material := solararch.MaterialLibrary[0].Get()
+					shape_name = material.Base().ToString()
+					if strings.Contains(shape_name, ".") {
+						shape_name = strings.Split(shape_name, ".")[0]
+					}
 				}
 				base.PlanetSolarRadius = solararch.SolarRadius.Get()
 			}
