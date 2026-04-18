@@ -30,7 +30,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkmap"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
-	map_urls "github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	map_urls "github.com/darklab8/fl-darkstat/darkmap/front/map_urls"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
 	map_settings "github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"

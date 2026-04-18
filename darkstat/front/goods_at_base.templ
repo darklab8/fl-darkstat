@@ -140,7 +140,9 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 						{ strconv.FormatBool(base_info.IsTransportReachable) }
 					</td>
 				}
-				<td>{ base_info.SectorCoord }</td>
+				<td>
+					@NavMapMarketGood(base_info)
+				</td>
 				if bool(is_commodity) && shared.ShowDisco {
 					<td>{ strconv.Itoa(base_info.GetPriceBaseBuysFor()) }</td>
 				}

@@ -86,7 +86,9 @@ templ RephackBottom(faction configs_export.Faction, rephacks []configs_export.Br
 				<td>
 					@frmt.WriteSystemName(rep.SystemName)
 				</td>
-				<td>{ rep.SectorCoord }</td>
+				<td>
+					@NavMapBribe(rep)
+				</td>
 				<td>{ rep.BaseNickname }</td>
 				<td>{ fmt.Sprintf("%.0f", rep.BasePos.X) }</td>
 				<td>{ fmt.Sprintf("%.0f", rep.BasePos.Y) }</td>

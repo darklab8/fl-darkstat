@@ -43,3 +43,10 @@ func FormatBoolAsYesNo(value bool) string {
 		return "no"
 	}
 }
+
+func FmtPtrStringOrQuestionMark(value *string) string {
+	if value == nil {
+		return "?"
+	}
+	return *value
+}

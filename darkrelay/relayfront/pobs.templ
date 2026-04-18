@@ -25,13 +25,6 @@ func FmtPtrString(value *string) string {
 	return *value
 }
 
-func FmtPtrStringOrQuestionMark(value *string) string {
-	if value == nil {
-		return "?"
-	}
-	return *value
-}
-
 func FmtPtrInt(value *int) string {
 	if value == nil {
 		return "noaccess"
@@ -48,19 +41,19 @@ func FmtPtrFloat(value *float64, precision int) string {
 
 templ PoBTableHeaders() {
 	<th style="width:25px;">
+		@frmt.MultiLinestring([]string{"Forum", "thread"})
+	</th>
+	<th style="width:25px;">
 		@frmt.MultiLinestring([]string{"Cargo", "space", "left"})
 	</th>
 	<th style="width:25px;">
-		@frmt.MultiLinestring([]string{"Forum", "thread"})
+		@frmt.MultiLinestring([]string{"Nav", "Map"})
 	</th>
 	<th style="width:25px;">Pos</th>
 	<th style="width:25px;">Level</th>
 	<th style="width:25px;">Money</th>
 	<th style="width:25px;">Health</th>
 	<th style="width:25px;">System</th>
-	<th style="width:25px;">
-		@frmt.MultiLinestring([]string{"Nav", "Map"})
-	</th>
 	<th style="width:100px;">Region</th>
 	<th style="width:25px;">
 		@frmt.MultiLinestring([]string{"System", "Nickname"})
@@ -82,7 +75,6 @@ templ PoBTableHeaders() {
 }
 
 templ PobTableRow(pob *configs_export.PoBCore) {
-	<td>{ FmtPtrInt(pob.CargoSpaceLeft) } </td>
 	<td>
 		if pob.ForumThreadUrl != nil {
 			<a href={ templ.SafeURL(*pob.ForumThreadUrl) }>link</a>
@@ -90,12 +82,15 @@ templ PobTableRow(pob *configs_export.PoBCore) {
 			notfound
 		}
 	</td>
+	<td>{ FmtPtrInt(pob.CargoSpaceLeft) } </td>
+	<td>
+		@front.NavMapPob(pob)
+	</td>
 	<td>{ FmtPtrString(pob.Pos) } </td>
 	<td>{ FmtPtrInt(pob.Level) }</td>
 	<td>{ FmtPtrInt(pob.Money) }</td>
 	<td>{ FmtPtrFloat(pob.Health, 2) }</td>
 	<td class="seo">{ FmtPtrString(pob.SystemName) }</td>
-	<td>{ FmtPtrStringOrQuestionMark(pob.SectorCoord) }</td>
 	<td>
 		@frmt.WriteLimit(100) {
 			{ FmtPtrString(pob.Region) }
@@ -236,7 +231,7 @@ templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpac
 			>
 				<td>
 					@frmt.WriteLimit(200) {
-						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass),            }
+						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass),                        }
 					}
 				</td>
 				<td>

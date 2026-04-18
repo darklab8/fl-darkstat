@@ -203,6 +203,8 @@ func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*
 			loot_info.Pos = wreck.Pos
 			loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
 			loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
+			loot_info.SystemNickname = system.Nickname
+			loot_info.ObjNickname = wreck.Nickname
 
 			// TODO [ ] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
 			is_fuse_allowed := true
@@ -221,7 +223,7 @@ func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*
 	return results, nil
 }
 
-func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
+func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 
 	var permitted_wrecks map[string]bool
 
@@ -619,7 +621,9 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 			system_uni := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(zone.System.Nickname)]
 			loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
 			loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), zone.System.Nickname)
+			loot_info.SystemNickname = zone.System.Nickname
 			loot_info.Kind = LootEncounter
+			loot_info.ObjNickname = loot_info.PlaceNick
 
 			key_uniqueness := loot_info.Nickname + zone.System.Nickname + loot_info.SectorCoord
 			if _, ok := unique_encounter_loot[key_uniqueness]; ok {
@@ -725,6 +729,8 @@ func (e *Exporter) findable_in_loot() (map[string]bool, []*LootInfo) {
 					system_uni := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system_nickname)]
 					loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
 					loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
+					loot_info.SystemNickname = system.Nickname
+					loot_info.ObjNickname = msn_npc.Nickname.Get()
 
 					flsr_loot = append(flsr_loot, loot_info)
 				}
@@ -810,21 +816,23 @@ func (l LootSource) ToStr() string {
 }
 
 type LootInfo struct {
-	Nickname    string
-	Kind        LootKind
-	Pos         cfg.Vector
-	SectorCoord string
-	SystemName  string
-	Permitted   bool
-	LootSource  LootSource
-	PlaceNick   string
+	Nickname       string
+	Kind           LootKind
+	Pos            cfg.Vector
+	SectorCoord    string
+	SystemName     string
+	SystemNickname string
+	ObjNickname    string
+	Permitted      bool
+	LootSource     LootSource
+	PlaceNick      string
 
 	DiscoEncounter bool
 }
 
 func (e *Exporter) EnhanceBasesWithLoot(bases []*Base) []*Base {
 
-	_, wrecks := e.findable_in_loot()
+	_, wrecks := e.FindableInLoot()
 
 	base := &Base{
 		Name:               "Lootable",

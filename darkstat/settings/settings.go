@@ -106,7 +106,13 @@ func init() {
 	if !Env.TradeDealsEnabled {
 		fmt.Println("WARN: TRADE_DEALS_ENABLED remained off. use env var set true, or cli arg `-stat-deals-on` to turn on BEST TRADE DEALS")
 	}
+
+	if Env.IsExpermentalMapWithDarkstatOn || Env.MapByUrl != "" {
+		StatHasLinkedMap = true
+	}
 }
+
+var StatHasLinkedMap bool
 
 func getAppVersion() string {
 	// cleaning up version from... debugging logs used during dev env

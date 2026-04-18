@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
-	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	"github.com/darklab8/fl-darkstat/darkmap/front/map_urls"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"strconv"
@@ -12,7 +12,7 @@ import (
 )
 
 func SystemDetailedUrl(system *export_map.System) string {
-	return urls.SystemDetailedUrlNick(system.Nickname)
+	return map_urls.SystemDetailedUrlNick(system.Nickname)
 }
 
 var GridRows []int = []int{2, 3, 4, 5, 6, 7, 8}
@@ -188,7 +188,7 @@ templ SystemContents(system *export_map.System) {
             }
         </style>
 		for _, obj := range system.Jumpholes {
-			<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.SystemDetailedUrlNick(obj.GotoSystem)) }>
+			<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + map_urls.SystemDetailedUrlNick(obj.GotoSystem)) }>
 				<obj-
 					id={ obj.Nickname }
 					data-nickname={ obj.Nickname }
@@ -438,6 +438,10 @@ func ZIndex(obj *export_map.Zone) int {
 }
 
 func GetZoneClass(property_flag int, system *export_map.System) string {
+	if property_flag == -1 {
+		return "zoneNoPropertyFlag"
+	}
+
 	if value, ok := export_map.ZoneFlagMap[property_flag]; ok {
 
 		// the system is too dark for normal exclusions

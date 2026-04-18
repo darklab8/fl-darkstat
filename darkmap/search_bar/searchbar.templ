@@ -2,7 +2,7 @@ package search_bar
 
 import (
 	"fmt"
-	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	"github.com/darklab8/fl-darkstat/darkmap/front/map_urls"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"strings"
 )
@@ -90,7 +90,7 @@ templ entryRow(e Entry) {
 	// target="_blank" // add this if wishing to open at new page
 	<a
 		class="search-item"
-		href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.SystemDetailedUrlNick(e.SysNick) + "?q=" + e.Query) }
+		href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + map_urls.SystemDetailedUrlNick(e.SysNick) + "?q=" + e.Query) }
 		data-search={ strings.ToLower(e.SearchIndex()) }
 		rel="noopener"
 		tabindex="0"

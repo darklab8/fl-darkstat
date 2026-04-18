@@ -1,4 +1,4 @@
-package urls
+package map_urls
 
 import (
 	"strings"
@@ -13,4 +13,8 @@ var (
 
 func SystemDetailedUrlNick(system_nick string) string {
 	return "cdn/map/system/system-" + strings.ToLower(system_nick) + ".html"
+}
+
+func ObjUrl(system_nick string, obj_nickname string) string {
+	return SystemDetailedUrlNick(system_nick) + "?q=" + obj_nickname
 }

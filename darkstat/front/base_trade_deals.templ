@@ -215,7 +215,9 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 				{ "fr."+trade_route.Transport.BuyingGood.SystemName }
 			}
 		</td>
-		<td>{ trade_route.Transport.BuyingGood.SectorCoord }</td>
+		<td>
+			@NavMapMarketGood(trade_route.Transport.BuyingGood)
+		</td>
 		<td>
 			@frmt.WriteBaseName("fr." + trade_route.Transport.BuyingGood.BaseName)
 		</td>
@@ -229,7 +231,9 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 				{ "to."+trade_route.Transport.SellingGood.SystemName }
 			}
 		</td>
-		<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
+		<td>
+			@NavMapMarketGood(trade_route.Transport.SellingGood)
+		</td>
 		<td>
 			@frmt.WriteBaseName("to." + trade_route.Transport.SellingGood.BaseName)
 		</td>

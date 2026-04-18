@@ -8,8 +8,8 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 
+	"github.com/darklab8/fl-darkstat/darkmap/front/map_urls"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
-	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"strings"
 )
@@ -203,7 +203,7 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 			</search-bar-counterweight->
 			@Menu(menu_kind, data)
 			<search-bar-
-				hx-get={ types.GetCtx(ctx).SiteRoot + urls.SearchBar.ToString() }
+				hx-get={ types.GetCtx(ctx).SiteRoot + map_urls.SearchBar.ToString() }
 				hx-target="this"
 				hx-trigger="load"
 			></search-bar->
@@ -357,7 +357,7 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 				if menu_kind == MenuKindGalaxy {
 					<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
 				} else {
-					<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>
+					<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + map_urls.Index.ToString()) }>
 						<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
 					</a>
 				}

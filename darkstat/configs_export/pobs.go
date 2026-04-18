@@ -135,6 +135,7 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 
 		base := &Base{
 			Nickname:           cfg.BaseUniNick(pob.Nickname),
+			ObjNickname:        pob.Nickname,
 			Name:               fmt.Sprintf("(PoB) %s", pob.Name),
 			MarketGoodsPerNick: map[CommodityKey]*MarketGood{},
 			IsPob:              true,
@@ -182,13 +183,15 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 					volumed_good.Volume = volume.Volume.Get()
 					volumed_good.ShipClass = volume.GetShipClass()
 					volumed_good.BaseInfo = BaseInfo{
-						BaseNickname: base.Nickname,
-						BaseName:     base.Name,
-						SystemName:   base.System,
-						FactionName:  base.FactionName,
-						Region:       base.Region,
-						BasePos:      base.Pos,
-						SectorCoord:  base.SectorCoord,
+						BaseNickname:   base.Nickname,
+						BaseName:       base.Name,
+						SystemName:     base.System,
+						SystemNickname: base.SystemNickname,
+						ObjNickname:    base.Nickname.ToStr(),
+						FactionName:    base.FactionName,
+						Region:         base.Region,
+						BasePos:        base.Pos,
+						SectorCoord:    base.SectorCoord,
 					}
 					base.MarketGoodsPerNick[GetCommodityKey(volumed_good.Nickname, volumed_good.ShipClass)] = volumed_good
 				}

@@ -1,7 +1,7 @@
 package front
 
 import (
-	map_urls "github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	"github.com/darklab8/fl-darkstat/darkmap/front/map_urls"
 	map_settings "github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/utils/utils_types"
+	"strings"
 )
 
 templ Index(theme types.Theme, shared *types.SharedData) {
@@ -122,4 +123,16 @@ templ MapButton(url utils_types.FilePath) {
 	} else if settings.Env.MapByUrl != "" {
 		@tab.Button(tab.NewButtn(ctx, []string{"To", "Map"}, "", url, tab.WithSiteUrl(settings.Env.MapByUrl), tab.WithDrectUrl()))
 	}
+}
+
+func MapSiteUrl() string {
+	if settings.Env.IsExpermentalMapWithDarkstatOn {
+		return settings.Env.SiteHost + map_settings.Env.SiteRoot
+	} else {
+		return strings.ReplaceAll(strings.ReplaceAll(settings.Env.MapByUrl, map_urls.Index.ToString(), ""), map_settings.Env.IndexUrl, "")
+	}
+}
+
+func ObjUrl(system_nick string, obj_nickname string) string {
+	return MapSiteUrl() + map_urls.ObjUrl(system_nick, obj_nickname)
 }

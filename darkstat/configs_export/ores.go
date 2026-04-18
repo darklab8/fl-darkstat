@@ -183,6 +183,7 @@ func (e *Exporter) NewOreBase(input_data NewOreBaseInput, enrich_infocard bool) 
 	}
 
 	base.Nickname = cfg.BaseUniNick(input_data.base_nickname)
+	base.ObjNickname = input_data.base_nickname
 	if input_data.asteroids != nil {
 		base.DynamicLootMin, _ = input_data.asteroids.LootableZone.DynamicLootMin.GetValue()
 		base.DynamicLootMax, _ = input_data.asteroids.LootableZone.DynamicLootMax.GetValue()
@@ -223,13 +224,15 @@ func (e *Exporter) NewOreBase(input_data NewOreBaseInput, enrich_infocard bool) 
 			Volume:            volume_info.Volume.Get(),
 			ShipClass:         volume_info.GetShipClass(),
 			BaseInfo: BaseInfo{
-				BaseNickname: base.Nickname,
-				BaseName:     base.Name,
-				SystemName:   base.System,
-				BasePos:      base.Pos,
-				Region:       base.Region,
-				FactionName:  "Mining Field",
-				SectorCoord:  base.SectorCoord,
+				BaseNickname:   base.Nickname,
+				BaseName:       base.Name,
+				SystemName:     base.System,
+				SystemNickname: base.SystemNickname,
+				ObjNickname:    base.ObjNickname,
+				BasePos:        base.Pos,
+				Region:         base.Region,
+				FactionName:    "Mining Field",
+				SectorCoord:    base.SectorCoord,
 			},
 		}
 		base.Name = market_good.Name
@@ -282,12 +285,14 @@ func (e *Exporter) NewOreBase(input_data NewOreBaseInput, enrich_infocard bool) 
 								Volume:            volume_info.Volume.Get(),
 								ShipClass:         volume_info.GetShipClass(),
 								BaseInfo: BaseInfo{
-									BaseNickname: base.Nickname,
-									BaseName:     base.Name,
-									SystemName:   base.System,
-									BasePos:      base.Pos,
-									Region:       base.Region,
-									FactionName:  "Mining Field",
+									BaseNickname:   base.Nickname,
+									BaseName:       base.Name,
+									SystemName:     base.System,
+									SystemNickname: base.SystemNickname,
+									ObjNickname:    base.Nickname.ToStr(),
+									BasePos:        base.Pos,
+									Region:         base.Region,
+									FactionName:    "Mining Field",
 								},
 							}
 							market_good.BaseName = market_good.Name

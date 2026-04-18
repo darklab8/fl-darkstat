@@ -709,7 +709,9 @@ func (e *Export) EnrichSystemWithObjects(
 		if found_property_flag {
 			zone.PropertyFlags = property_flag
 		} else {
-			continue
+			zone.PropertyFlags = -1
+			// continue
+			// all zones to show?
 		}
 
 		zone.Name = configs.GetInfocardName(zone_info.IdsName.Get(), zone.Nickname)
@@ -720,6 +722,31 @@ func (e *Export) EnrichSystemWithObjects(
 		handled_objects[zone.Nickname] = true
 		system_to_add.Zones = append(system_to_add.Zones, zone)
 	}
+	// if e.Mapped.FLSR != nil {
+	// 	_, flsr_loot := e.Exp.FindableInLoot()
+
+	// 	for _, obj_info := range flsr_loot {
+	// 		if obj_info.Kind != configs_export.LootFLSRSolar && obj_info.Kind != configs_export.LootFLSRNPC {
+	// 			continue
+	// 		}
+
+	// 		obj := &Obj{
+	// 			Nickname: obj_info.Nickname,
+	// 			Pos:      obj_info.Pos,
+	// 			Kind:     ObjOthers,
+	// 		}
+	// 		if _, ok := handled_objects[obj.Nickname]; ok {
+	// 			continue
+	// 		} else {
+	// 			handled_objects[obj.Nickname] = true
+	// 		}
+
+	// 		obj.Name = obj.Nickname
+
+	// 		obj.VisibleByDefault = false
+	// 		system_to_add.Objs = append(system_to_add.Objs, obj)
+	// 	}
+	// }
 
 	for _, obj_info := range system_info.Objects {
 		// all other objects that have navmap defined
@@ -812,6 +839,24 @@ func (e *Export) ExportInfocard(
 
 	ids_name_num, _ := ids_name.GetValue()
 
+	e.ExportInfocard2(
+		ids_info_num,
+		nickname,
+		name,
+		Pos,
+		ids_name_num,
+		faction_name,
+	)
+}
+
+func (e *Export) ExportInfocard2(
+	ids_info_num int,
+	nickname string,
+	name string,
+	Pos cfg.Vector,
+	ids_name_num int,
+	faction_name string,
+) {
 	var info infocarder.InfocardBuilder
 	if value, ok := e.Exp.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
 		info.Lines = value

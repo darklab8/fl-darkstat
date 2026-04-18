@@ -29,6 +29,11 @@
     background-size: 5em 5em;
 }
 
+/*Potentially it is same as hidden zone*/
+.zone.zoneNoPropertyFlag {
+    display: none;
+}
+
 .zone.zoneDresdenLavaRocks {
     background-image: url("{{.StaticRoot}}textures/white-texture.png");
     background-size: 5em 5em;

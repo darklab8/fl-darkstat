@@ -67,11 +67,13 @@ func (e *Exporter) GetBases(ctx context.Context) []*Base {
 		var pos cfg.Vector
 
 		var archetypes []string
+		var obj_nickname string
 
 		if system, ok := e.Mapped.Systems.SystemsMap[base.System.Get()]; ok {
 			if system_base, ok := system.BasesByBases[base.Nickname.Get()]; ok {
 				infocard_id = system_base.IDsInfo.Get()
 				reputation_nickname = system_base.RepNickname.Get()
+				obj_nickname = system_base.Nickname.Get()
 			}
 
 			if system_bases, ok := system.AllBasesByDockWith[base.Nickname.Get()]; ok {
@@ -124,6 +126,7 @@ func (e *Exporter) GetBases(ctx context.Context) []*Base {
 			Missions:           &BaseMissions{},
 			Name:               name,
 			Nickname:           nickname,
+			ObjNickname:        obj_nickname,
 			FactionName:        factionName,
 			System:             string(system_name),
 			SystemNickname:     base.System.Get(),
@@ -226,6 +229,7 @@ type Base struct {
 	Name               string               `json:"name"  validate:"required"`       // Infocard Name
 	Archetypes         []string             `json:"archetypes"  validate:"required"` // Base Archetypes
 	Nickname           cfg.BaseUniNick      `json:"nickname"  validate:"required"`
+	ObjNickname        string               `json:"obj_nickname"`
 	FactionName        string               `json:"faction_name"  validate:"required"`
 	System             string               `json:"system_name"  validate:"required"`
 	SystemNickname     string               `json:"system_nickname"  validate:"required"`

@@ -322,7 +322,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 		}
 	}
 
-	loot_findable, _ := e.findable_in_loot()
+	loot_findable, _ := e.FindableInLoot()
 	if _, ok := loot_findable[commodity.Nickname]; ok {
 		good_to_add := &MarketGood{
 			GoodInfo:             e.GetGoodInfo(commodity.Nickname),
@@ -356,10 +356,12 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 					Volume:               commodity.Volume,
 					ShipClass:            commodity.ShipClass,
 					BaseInfo: BaseInfo{
-						BaseNickname: cfg.BaseUniNick(good.PobNickname),
-						BaseName:     "(PoB) " + good.PoBName,
-						SystemName:   good.SystemName,
-						FactionName:  good.FactionName,
+						BaseNickname:   cfg.BaseUniNick(good.PobNickname),
+						BaseName:       "(PoB) " + good.PoBName,
+						SystemName:     good.SystemName,
+						SystemNickname: good.SystemNick,
+						ObjNickname:    good.PobNickname,
+						FactionName:    good.FactionName,
 					},
 				}
 
@@ -391,13 +393,15 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 }
 
 type BaseInfo struct {
-	BaseNickname cfg.BaseUniNick `json:"base_nickname" validate:"required"`
-	BaseName     string          `json:"base_name" validate:"required"`
-	SystemName   string          `json:"system_name" validate:"required"`
-	Region       string          `json:"region_name" validate:"required"`
-	FactionName  string          `json:"faction_name" validate:"required"`
-	BasePos      cfg.Vector      `json:"base_pos" validate:"required"`
-	SectorCoord  string          `json:"sector_coord" validate:"required"`
+	BaseNickname   cfg.BaseUniNick `json:"base_nickname" validate:"required"`
+	BaseName       string          `json:"base_name" validate:"required"`
+	SystemName     string          `json:"system_name" validate:"required"`
+	SystemNickname string          `json:"system_nick" validate:"required"`
+	ObjNickname    string          `json:"obj_nick" validate:"required"`
+	Region         string          `json:"region_name" validate:"required"`
+	FactionName    string          `json:"faction_name" validate:"required"`
+	BasePos        cfg.Vector      `json:"base_pos" validate:"required"`
+	SectorCoord    string          `json:"sector_coord" validate:"required"`
 }
 
 func (e *Exporter) GetRegionName(system *universe_mapped.System) string {
@@ -418,11 +422,11 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 	}
 
 	result.BaseName = e.GetInfocardName(universe_base.StridName.Get(), string(base_nickname))
-	system_nickname := universe_base.System.Get()
+	result.SystemNickname = universe_base.System.Get()
 
-	system, system_ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system_nickname)]
+	system, system_ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(result.SystemNickname)]
 	if system_ok {
-		result.SystemName = e.GetInfocardName(system.StridName.Get(), system_nickname)
+		result.SystemName = e.GetInfocardName(system.StridName.Get(), result.SystemNickname)
 		result.Region = e.GetRegionName(system)
 	}
 
@@ -435,6 +439,7 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 
 			reputation_nickname = system_base.RepNickname.Get()
 			result.BasePos = system_base.Pos.Get()
+			result.ObjNickname = system_base.Nickname.Get()
 		}
 
 	}

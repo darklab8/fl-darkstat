@@ -109,7 +109,9 @@ templ BaseRoutes(name string, base *configs_export.Base, data *configs_export.Ex
 				<td>
 					@frmt.WriteSystemName(route.Transport.ToBase.System)
 				</td>
-				<td>{ route.Transport.ToBase.SectorCoord }</td>
+				<td>
+					@NavMapBase(route.Transport.ToBase)
+				</td>
 				<td>
 					@frmt.WriteFactioName(route.Transport.ToBase.FactionName)
 				</td>

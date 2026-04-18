@@ -9,7 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/envers"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
-	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
+	"github.com/darklab8/fl-darkstat/darkmap/front/map_urls"
 	"github.com/darklab8/fl-darkstat/darkmap/linker"
 
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
@@ -21,7 +21,7 @@ import (
 )
 
 func DarkmapCliGroup(Args []string) {
-	urls.Index = utils_types.FilePath(settings.Env.IndexUrl)
+	map_urls.Index = utils_types.FilePath(settings.Env.IndexUrl)
 
 	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	parser := cantil.NewConsoleParser(

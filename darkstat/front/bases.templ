@@ -284,7 +284,9 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 				{ strconv.FormatBool(base.IsTransportReachable) }
 			</td>
 		}
-		<td>{ base.SectorCoord }</td>
+		<td>
+			@NavMapBase(base)
+		</td>
 		if tab_mode == BaseShowMissions {
 			if base.Missions != nil {
 				<td>{ strconv.Itoa(base.Missions.MinMoneyAward) }</td>
@@ -785,7 +787,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 								@frmt.WriteSystemName(good.LootInfo.SystemName)
 							</td>
 							<td>
-								{ good.LootInfo.SectorCoord }
+								@NavMapLootInfo(good.LootInfo)
 							</td>
 							<td>
 								{ fmt.Sprintf("%.0f", good.LootInfo.Pos.X) }
@@ -1283,7 +1285,9 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 			<td>
 				@frmt.WriteSystemName(trade_route.Transport.SellingGood.SystemName)
 			</td>
-			<td>{ trade_route.Transport.SellingGood.SectorCoord }</td>
+			<td>
+				@NavMapMarketGood(trade_route.Transport.SellingGood)
+			</td>
 			<td>
 				@frmt.WriteFactioName(trade_route.Transport.SellingGood.FactionName)
 			</td>
@@ -1309,7 +1313,9 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 			<td>
 				@frmt.WriteSystemName(trade_route.Transport.BuyingGood.SystemName)
 			</td>
-			<td>{ trade_route.Transport.BuyingGood.SectorCoord }</td>
+			<td>
+				@NavMapMarketGood(trade_route.Transport.BuyingGood)
+			</td>
 			<td>
 				@frmt.WriteFactioName(trade_route.Transport.BuyingGood.FactionName)
 			</td>

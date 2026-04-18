@@ -17,9 +17,9 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/front"
+	"github.com/darklab8/fl-darkstat/darkmap/front/map_urls"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static"
 	"github.com/darklab8/fl-darkstat/darkmap/front/static_front"
-	"github.com/darklab8/fl-darkstat/darkmap/front/urls"
 	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
@@ -119,11 +119,11 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 
 	build.RegComps(
 		builder.NewComponent(
-			urls.Index,
+			map_urls.Index,
 			front.Index(l.Export),
 		),
 		builder.NewComponent(
-			urls.SearchBar,
+			map_urls.SearchBar,
 			search_bar.SearchBar(search_entries, l.Export.Mapped.Discovery != nil),
 		),
 	)

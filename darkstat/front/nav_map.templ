@@ -1,0 +1,49 @@
+package front
+
+import (
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
+	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
+)
+
+templ NavMapPob(pob *configs_export.PoBCore) {
+	if settings.StatHasLinkedMap && pob.SystemNick != nil {
+		<a href={ templ.SafeURL(ObjUrl(*pob.SystemNick, pob.Nickname)) }>{ frmt.FmtPtrStringOrQuestionMark(pob.SectorCoord) }</a>
+	} else {
+		{ frmt.FmtPtrStringOrQuestionMark(pob.SectorCoord) }
+	}
+}
+
+templ NavMap(system_nick string, obj_nickname string, sector_coord string) {
+	if settings.StatHasLinkedMap {
+		<a href={ templ.SafeURL(ObjUrl(system_nick, obj_nickname)) }>{ sector_coord }</a>
+	} else {
+		{ sector_coord }
+	}
+}
+
+templ NavMapLootInfo(LootInfo *configs_export.LootInfo) {
+	if LootInfo.Kind == configs_export.LootFLSRNPC {
+		{ LootInfo.SectorCoord }
+	} else if LootInfo.Kind == configs_export.LootFLSRSolar {
+		{ LootInfo.SectorCoord }
+	} else {
+		@NavMap(LootInfo.SystemNickname, LootInfo.ObjNickname, LootInfo.SectorCoord)
+	}
+}
+
+templ NavMapBase(base *configs_export.Base) {
+	@NavMap(base.SystemNickname, base.ObjNickname, base.SectorCoord)
+}
+
+templ NavMapBaseInfo(base configs_export.BaseInfo) {
+	@NavMap(base.SystemNickname, base.ObjNickname, base.SectorCoord)
+}
+
+templ NavMapMarketGood(base *configs_export.MarketGood) {
+	@NavMapBaseInfo(base.BaseInfo)
+}
+
+templ NavMapBribe(rep configs_export.Bribe) {
+	@NavMapBaseInfo(rep.BaseInfo)
+}
