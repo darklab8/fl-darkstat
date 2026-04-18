@@ -359,6 +359,7 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 		class={
 			"zone",
 			"unhidden_zone",
+			"hidden_all_zone",
 			GetZoneClass(obj.PropertyFlags, system),
 			templ.KV("roundZone", obj.ZoneShape == "ellipsoid" || obj.ZoneShape == "sphere"),
 			templ.KV("cylinderZone", obj.ZoneShape == "cylinder"),

@@ -328,6 +328,14 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 				@ToggleSwitch("checkbox_zones")
 			</div>
 		</div>
+		<div class="menu-item">
+			<div class="top">
+				@MultiLineOption([]string{"All zones"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_all_zones")
+			</div>
+		</div>
 		<div class="menu-item" style={ templ.KV("display:none", data.Mapped.Discovery == nil) }>
 			<div class="top">
 				@MultiLineOption([]string{"Hide pobs"})

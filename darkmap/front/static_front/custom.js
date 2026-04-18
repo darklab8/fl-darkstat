@@ -87,6 +87,8 @@ function InstallMenu() {
 
     InstallButton("checkbox_zones", "unhidden_zone", "hidden_zone", toggle_option);
 
+    InstallButton("checkbox_all_zones", "hidden_all_zone", "unhidden_all_zone", toggle_option);
+
     InstallButton("checkbox_coords", "hidden_coords", "unhidden_coords", toggle_tippy);
 
     InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob", toggle_option);

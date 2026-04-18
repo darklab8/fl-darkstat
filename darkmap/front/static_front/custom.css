@@ -92,6 +92,10 @@
     display: none;
 }
 
+.unhidden_all_zone {
+    display: block !important;
+}
+
 .unhidden_infocard_label {
     display: block !important;
     color: rgba(232, 252, 121, 0.8);
