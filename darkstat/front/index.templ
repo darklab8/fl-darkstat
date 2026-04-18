@@ -129,7 +129,10 @@ func MapSiteUrl() string {
 	if settings.Env.IsExpermentalMapWithDarkstatOn {
 		return settings.Env.SiteHost + map_settings.Env.SiteRoot
 	} else {
-		return strings.ReplaceAll(strings.ReplaceAll(settings.Env.MapByUrl, map_urls.Index.ToString(), ""), map_settings.Env.IndexUrl, "")
+		link := strings.ReplaceAll(settings.Env.MapByUrl, map_urls.Index.ToString(), "")
+		link = strings.ReplaceAll(link, map_settings.Env.IndexUrl, "")
+		link = strings.ReplaceAll(link, "map.html", "")
+		return link
 	}
 }
 
