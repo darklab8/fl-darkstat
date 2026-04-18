@@ -57,6 +57,7 @@ type Obj struct {
 
 	Rotation cfg.Vector
 
+	HasInfocard                bool
 	IsPoBWithKnownDockingPerms bool
 }
 
@@ -369,6 +370,9 @@ func (e *Export) EnrichSystemWithObjects(
 			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
 		}
 
+		if obj_info.IDsInfo.Get() > 0 {
+			obj.HasInfocard = true
+		}
 		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, factionName)
 		system_to_add.Objs = append(system_to_add.Objs, obj)
 	}
@@ -413,6 +417,9 @@ func (e *Export) EnrichSystemWithObjects(
 			}
 		}
 
+		if star_info.IDsInfo.Get() > 0 {
+			star.HasInfocard = true
+		}
 		star.Name = configs.GetInfocardName(star_info.IdsName.Get(), star.Nickname)
 		e.ExportInfocard(star_info.IDsInfo, star.Nickname, star.Name, star.Pos, star_info.IdsName, "")
 
@@ -508,6 +515,9 @@ func (e *Export) EnrichSystemWithObjects(
 			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
 		}
 
+		if base_info.IDsInfo.Get() > 0 {
+			base.HasInfocard = true
+		}
 		e.ExportInfocard(base_info.IDsInfo, base.Nickname, base.Name, base.Pos, base_info.IdsName, factionName)
 
 		base.VisibleByDefault = true
@@ -581,6 +591,7 @@ func (e *Export) EnrichSystemWithObjects(
 			faction_name,
 		)
 		if value, ok := e.Exp.GetInfocard2(infocarder.InfocardKey(base.Nickname)); ok {
+			base.HasInfocard = true
 			info = value
 		}
 
@@ -669,6 +680,9 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		obj.Name = configs.GetInfocardName(wreck.IdsName.Get(), obj.Nickname)
+		if wreck.IDsInfo.Get() > 0 {
+			obj.HasInfocard = true
+		}
 		e.ExportInfocard(wreck.IDsInfo, obj.Nickname, obj.Name, obj.Pos, wreck.IdsName, "")
 
 		obj.VisibleByDefault = true
@@ -717,6 +731,9 @@ func (e *Export) EnrichSystemWithObjects(
 		zone.Name = configs.GetInfocardName(zone_info.IdsName.Get(), zone.Nickname)
 		if strings.Contains(strings.ToLower(zone.Name), "object unknown") {
 			zone.Name = ""
+		}
+		if zone_info.IDsInfo.Get() > 0 {
+			zone.HasInfocard = true
 		}
 		e.ExportInfocard(zone_info.IDsInfo, zone.Nickname, zone.Name, zone.Pos, zone_info.IdsName, "")
 		handled_objects[zone.Nickname] = true
@@ -783,6 +800,9 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		obj.Name = configs.GetInfocardName(obj_info.IdsName.Get(), obj.Nickname)
+		if obj_info.IDsInfo.Get() > 0 {
+			obj.HasInfocard = true
+		}
 		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, "")
 
 		if strings.Contains(strings.ToLower(obj.Name), "object unknown") {

@@ -13,8 +13,9 @@ html {
 :root {
     --playerbase_color: #f8f3bc;
     --playerbase_dockable_color: #9aff9f;
-    --mining_color: #ac9483;
+    --mining_color: #9e8676;
     --obj_other_color: #92f6fa;
+    --wreck_label_color: rgba(255, 179, 179, 0.8);
 
     /*system jump hole colors*/
     --jh_color_jumphole: red;
@@ -722,6 +723,10 @@ line- {
     background: #36c9c2 !important;
     transform: rotate(45deg);
     transform-origin: center center;
+}
+
+.obj_fallback_nnm_sm_navbuoy system-label-wrap {
+    transform: rotate(-45deg);
 }
 
 .obj_fallback_nnm_sm_mining {

@@ -238,6 +238,7 @@ templ SystemContents(system *export_map.System) {
 					templ.KV("unhidden_pob", obj.Kind == export_map.ObjPlayerBase),
 					templ.KV("obj_fallback_unclassified", obj.UseFallback),
 					templ.KV(fmt.Sprintf("obj_fallback_%s", obj.ShapeName), obj.UseFallback),
+					templ.KV("hidden_infocard_label", obj.HasInfocard),
 				}
 				style={
 					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
@@ -310,7 +311,9 @@ templ SystemContents(system *export_map.System) {
 					}
 					if obj.Name == "" {
 					} else {
-						<system-label-wrap>
+						<system-label-wrap
+							style={ templ.KV(fmt.Sprintf("transform: rotate(%1.fdeg)", obj.Rotation.Y), obj.Kind == export_map.ObjTradelane), }
+						>
 							{ obj.Name }
 							<system-label
 								class={
@@ -318,6 +321,7 @@ templ SystemContents(system *export_map.System) {
 									templ.KV("hidden_wreck_label", obj.Kind == export_map.ObjWreck),
 									templ.KV("hidden_obj_other_label", obj.Kind == export_map.ObjOthers && !obj.VisibleByDefault),
 									templ.KV("pob_dockable", obj.IsPoBWithKnownDockingPerms),
+									templ.KV("hidden_infocard_label", obj.HasInfocard),
 								}
 								style="top: 1.5em;"
 							>
@@ -360,6 +364,7 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 			templ.KV("cylinderZone", obj.ZoneShape == "cylinder"),
 			templ.KV("boxZone", obj.ZoneShape == "box"),
 			templ.KV("vertical_obj", ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
+			templ.KV("hidden_infocard_label", obj.HasInfocard),
 		}
 		style={
 			templ.KV(fmt.Sprintf(
@@ -404,7 +409,22 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 			templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), ROT_LENGTH == 0),
 			templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), ROT_LENGTH == 0),
 		}
-	></obj->
+	>
+		<system-label-wrap
+			style={ fmt.Sprintf("transform: rotate(%.1fdeg)", -ROT_ANGLE), }
+		>
+			{ obj.Name }
+			<system-label
+				class={
+					"hidden_obj_other_label",
+					templ.KV("hidden_infocard_label", obj.HasInfocard),
+				}
+				style="top: 1.5em;"
+			>
+				{ obj.Name }
+			</system-label>
+		</system-label-wrap>
+	</obj->
 	@TooltipTippy(obj.Nickname, obj.Nickname, FmtPos(obj.Pos))
 }
 

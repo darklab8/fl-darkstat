@@ -92,6 +92,8 @@ function InstallMenu() {
     InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob", toggle_option);
 
     InstallButton("checkbox_obj_others", "hidden_obj_other_label", "unhidden_obj_other_label", toggle_option);
+
+    InstallButton("checkbox_infocarded_labels", "hidden_infocard_label", "unhidden_infocard_label", toggle_option);
 }
 
 var zoomInTreshold = 1.25;

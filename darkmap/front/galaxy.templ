@@ -314,6 +314,14 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 		</div>
 		<div class="menu-item">
 			<div class="top">
+				@MultiLineOption([]string{"infocarded labels"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_infocarded_labels")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
 				@MultiLineOption([]string{"Hide Zones"})
 			</div>
 			<div class="bottom">

@@ -54,7 +54,7 @@
 }
 
 .menu {
-    font-size: 0.9em
+    font-size: 0.8em
 }
 
 .vertical_options {
@@ -62,7 +62,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .card {
@@ -92,6 +92,14 @@
     display: none;
 }
 
+.unhidden_infocard_label {
+    display: block !important;
+    color: rgba(232, 252, 121, 0.8);
+}
+
+.wreck system-label {
+    color: var(--wreck_label_color);
+}
 
 .conn_jumpgate {
     box-shadow: 0px 0px 0.3em 0.1em rgba(69, 150, 255, 0.5);
