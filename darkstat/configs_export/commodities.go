@@ -8,6 +8,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -431,34 +432,32 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 	}
 
 	var reputation_nickname string
-	found_system_base := false
+	var found_system_base *systems_mapped.Base
 	if system, ok := e.Mapped.Systems.SystemsMap[universe_base.System.Get()]; ok {
 		for _, system_base := range system.Bases {
-			if system_base.IdsName.Get() != universe_base.StridName.Get() {
-				continue
+			if system_base.IdsName.Get() == universe_base.StridName.Get() {
+				found_system_base = system_base
+				break
 			}
-			reputation_nickname = system_base.RepNickname.Get()
-			result.BasePos = system_base.Pos.Get()
-			result.ObjNickname = system_base.Nickname.Get()
-			found_system_base = true
 		}
 	}
-	if !found_system_base {
+	if found_system_base == nil {
 		if system, ok := e.Mapped.Systems.SystemsMap[universe_base.System.Get()]; ok {
 			for _, system_base := range system.Bases {
 				system_base_nick, _ := system_base.Base.GetValue()
 				system_base_dock, _ := system_base.DockWith.GetValue()
 				universe_base_nick, _ := universe_base.Nickname.GetValue()
-				if system_base_nick != universe_base_nick && system_base_dock != universe_base_nick {
-					continue
+				if system_base_nick == universe_base_nick || system_base_dock == universe_base_nick {
+					found_system_base = system_base
+					break
 				}
-
-				reputation_nickname = system_base.RepNickname.Get()
-				result.BasePos = system_base.Pos.Get()
-				result.ObjNickname = system_base.Nickname.Get()
 			}
-
 		}
+	}
+	if found_system_base != nil {
+		reputation_nickname = found_system_base.RepNickname.Get()
+		result.BasePos = found_system_base.Pos.Get()
+		result.ObjNickname = found_system_base.Nickname.Get()
 	}
 
 	result.SectorCoord = VectorToSectorCoord(system, result.BasePos)
