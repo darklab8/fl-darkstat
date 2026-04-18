@@ -431,17 +431,34 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 	}
 
 	var reputation_nickname string
+	found_system_base := false
 	if system, ok := e.Mapped.Systems.SystemsMap[universe_base.System.Get()]; ok {
 		for _, system_base := range system.Bases {
 			if system_base.IdsName.Get() != universe_base.StridName.Get() {
 				continue
 			}
-
 			reputation_nickname = system_base.RepNickname.Get()
 			result.BasePos = system_base.Pos.Get()
 			result.ObjNickname = system_base.Nickname.Get()
+			found_system_base = true
 		}
+	}
+	if !found_system_base {
+		if system, ok := e.Mapped.Systems.SystemsMap[universe_base.System.Get()]; ok {
+			for _, system_base := range system.Bases {
+				system_base_nick, _ := system_base.Base.GetValue()
+				system_base_dock, _ := system_base.DockWith.GetValue()
+				universe_base_nick, _ := universe_base.Nickname.GetValue()
+				if system_base_nick != universe_base_nick && system_base_dock != universe_base_nick {
+					continue
+				}
 
+				reputation_nickname = system_base.RepNickname.Get()
+				result.BasePos = system_base.Pos.Get()
+				result.ObjNickname = system_base.Nickname.Get()
+			}
+
+		}
 	}
 
 	result.SectorCoord = VectorToSectorCoord(system, result.BasePos)
