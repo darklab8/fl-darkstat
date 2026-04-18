@@ -173,8 +173,8 @@ type Jumphole struct {
 
 type Object struct {
 	semantic.Model
-	Nickname *semantic.String
-
+	Nickname  *semantic.String
+	Base      *semantic.String
 	Archetype *semantic.String
 	Pos       *semantic.Vect
 	IdsName   *semantic.Int
@@ -451,8 +451,10 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 						Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
 						Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-						IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
-						IDsInfo:   semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
+						Base:      semantic.NewString(obj, cfg.Key("base"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+
+						IdsName: semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
+						IDsInfo: semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
 					}
 					object_to_add.Map(obj)
 					system_to_add.Objects = append(system_to_add.Objects, object_to_add)

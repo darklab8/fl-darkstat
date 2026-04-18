@@ -751,10 +751,6 @@ func (e *Export) EnrichSystemWithObjects(
 	for _, obj_info := range system_info.Objects {
 		// all other objects that have navmap defined
 
-		if obj_info.Nickname.Get() == strings.ToLower("BAF_Encounter02_marker") {
-			fmt.Print()
-		}
-
 		if _, ok := obj_info.Pos.GetValue(); !ok {
 			continue
 		}
@@ -773,7 +769,8 @@ func (e *Export) EnrichSystemWithObjects(
 		archetype := obj_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 		shape_name, found_shape := solararch.ShapeName.GetValue()
-		if !found_shape {
+		_, has_base := obj_info.Base.GetValue()
+		if !found_shape && !has_base {
 			continue
 		}
 		if _, ok := e.Shapes.ShapesByNick[shape_name]; ok {
