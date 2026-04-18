@@ -224,24 +224,18 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 	if menu_kind == MenuKindGalaxy {
 		@core_front.StaticFile(static_front.MapGalaxyJS)
 		<script>
+			// this approach works better to show faster lines of galaxy
 			InstallLabelOverlapper();
 			document.addEventListener("DOMContentLoaded", (event) => {
 				InstallGalaxy();
 			});
-			// document.addEventListener('htmx:afterSettle',(event) => {
-			// 	InstallGalaxy();
-			// });
 	</script>
 	} else {
 		@core_front.StaticFile(static_front.MapSystemJS)
 		<script>
-			InstallLabelOverlapper();
-			document.addEventListener("DOMContentLoaded", (event) => {
-				InstallSystem();
-			});
-			document.addEventListener('htmx:afterSettle',(event) => {
-				InstallSystem();
-			});
+			// This way installed system works better to have zero htmx issues when selecting
+			// infocards for infocarded labels
+			InstallSystem();
 		</script>
 	}
 	<div class="remodal-bg" id="remodal-bg">
