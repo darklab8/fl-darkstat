@@ -35,6 +35,7 @@ import (
 	map_settings "github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkrelay/relayrouter"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/router"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 
@@ -88,6 +89,10 @@ func SetOptimalGcForWeb() {
 
 // @BasePath /
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe("0.0.0.0:6060", nil)) // for pprof
+	}()
+
 	fmt.Println("starting app with args=", os.Args[1:])
 
 	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteHost, "https://", "")
@@ -97,9 +102,6 @@ func main() {
 	}
 
 	web_darkstat := func(ctx_close context.Context) func() {
-		go func() {
-			log.Println(http.ListenAndServe("0.0.0.0:6060", nil)) // for pprof
-		}()
 		SetOptimalGcForWeb()
 
 		start_time_total := time.Now()
@@ -246,9 +248,6 @@ func main() {
 				Func: func(info cantil.ActionInfo) error {
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 					SetOptimalGcForWeb()
-					go func() {
-						log.Println(http.ListenAndServe("0.0.0.0:6060", nil)) // for pprof
-					}()
 					out, err := StatBuild(
 						builder.BuildToMemory,
 						builder.NotCleanFolder,
@@ -385,6 +384,14 @@ func main() {
 				Description: "helpers group of commands. See `helpers help` to discovery its commands",
 				Func: func(info cantil.ActionInfo) error {
 					helpers.HelpersCliGroup(info.CmdArgs[1:])
+					return nil
+				},
+			},
+			{
+				Nickname:    "check",
+				Description: "helpers group of commands. See `helpers help` to discovery its commands",
+				Func: func(info cantil.ActionInfo) error {
+					configs_export.FixtureGetTrades()
 					return nil
 				},
 			},

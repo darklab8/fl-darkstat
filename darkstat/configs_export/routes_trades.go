@@ -18,9 +18,10 @@ import (
 )
 
 type TradeRoute struct {
-	Route       *Route
-	BuyingGood  *MarketGood
-	SellingGood *MarketGood
+	Route          *Route
+	BuyingGood     *MarketGood
+	SellingGood    *MarketGood
+	ProffitPerTime float64
 }
 
 func NewTradeRoute(g *GraphResults, buying_good *MarketGood, selling_good *MarketGood) *TradeRoute {
@@ -29,16 +30,17 @@ func NewTradeRoute(g *GraphResults, buying_good *MarketGood, selling_good *Marke
 	}
 
 	route := &TradeRoute{
-		Route:       NewRoute(g, buying_good.BaseNickname.ToStr(), selling_good.BaseNickname.ToStr()),
-		BuyingGood:  buying_good,
-		SellingGood: selling_good,
+		Route:          NewRoute(g, buying_good.BaseNickname.ToStr(), selling_good.BaseNickname.ToStr()),
+		BuyingGood:     buying_good,
+		SellingGood:    selling_good,
+		ProffitPerTime: GetProffitPerTime(g, buying_good, selling_good),
 	}
 
 	return route
 }
 
 func (t *TradeRoute) GetProffitPerTime() float64 {
-	return GetProffitPerTime(t.Route.g, t.BuyingGood, t.SellingGood)
+	return t.ProffitPerTime
 }
 
 func GetTimeS(g *GraphResults, BuyingGood *MarketGood, SellingGood *MarketGood) float64 {

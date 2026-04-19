@@ -7,17 +7,17 @@ import (
 	"os"
 	"runtime/pprof"
 	"sync"
-	"testing"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
-func TestGetTrades(t *testing.T) {
+func FixtureGetTrades() {
 
 	ctx := context.Background()
 	configs := configs_mapped.TestFixtureConfigs()
@@ -79,32 +79,18 @@ func TestGetTrades(t *testing.T) {
 	// go test -run TestGetTrades ./...
 	// go tool pprof main.go darkstat/configs_export/best_trades.prof
 	// >>> web
-	f, err := os.Create("../../best_trades.pprof")
+	f, err := os.Create("best_trades2.pprof")
 	if err != nil {
 		log.Fatal(err)
 	}
 	err = pprof.StartCPUProfile(f)
 	logus.Log.CheckError(err, "failed to start pprof")
 
-	_ = trade_path_exporter.GetBestTradeDeals(ctx, e.Bases)
+	settings.Env.TradeDealsEnabled = true
+	data_results := trade_path_exporter.GetBestTradeDeals(ctx, e.Bases)
+	fmt.Println("len_one_way_deals=", len(data_results.OneWayDeals), "len_two_way_deals=", len(data_results.TwoWayDeals))
 
 	pprof.StopCPUProfile()
 
 	fmt.Println("best trade deals in ", time.Since(time_start).Seconds(), " seconds")
-
-	for _, base := range e.Bases {
-		// if base.Nickname != "zone_br05_gold_dummy_field" {
-		// 	continue
-		// }
-		for _, trade_route := range trade_path_exporter.GetBaseTradePathsFrom(ctx, base) {
-			trade_route.Transport.Route.GetPaths()
-			trade_route.Frigate.Route.GetTimeMs()
-			KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood)
-		}
-		break
-	}
-
-	e.EnhanceBasesWithIsTransportReachable(e.Bases, e.Transport, e.Freighter, e.Frigate)
-
-	fmt.Println()
 }
