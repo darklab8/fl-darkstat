@@ -195,7 +195,7 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 								name = e.GetInfocardName(equip.IdsName.Get(), name)
 								volume = equip.Volume.Get()
 							}
-							infocard_addition.WriteLineStr(string(fmt.Sprintf("] --- %s (%.0f vol)", name, volume*float64(amount))))
+							infocard_addition.WriteLineStr(string(fmt.Sprintf("] --- %s (%d amount, %.0f vol)", name, amount, volume*float64(amount))))
 						}
 					}
 					for _, item := range recipe.ProducedItem {
