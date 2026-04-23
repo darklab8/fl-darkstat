@@ -122,6 +122,19 @@ func main() {
 					log.Printf("Error downloading %s: %v\n", fileName, err)
 				}
 
+				data, err := os.ReadFile("/data/forums/base_admin.php")
+				if err != nil {
+					log.Println("Error reading base_admin.php file to validate it", time.Now())
+				} else {
+					if len(data) < 1000 {
+						log.Println("base_admin.php is too small. time=", time.Now(), " len=", len(data), " content=", string(data))
+					} else {
+						log.Println("base_admin.php is has size. ", time.Now(), " len=", len(data))
+
+					}
+
+				}
+
 			}
 			log.Println("All downloads complete.")
 			time.Sleep(time.Minute * 3)

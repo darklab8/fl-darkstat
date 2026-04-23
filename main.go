@@ -281,7 +281,7 @@ func main() {
 										fmt.Print(string(debug.Stack()))
 										logus.Log.Error("discovery read update, failed to do",
 											typelog.Any("r", r),
-											typelog.Any("stack", debug.Stack()),
+											typelog.Any("stack", string(debug.Stack())),
 										)
 									}
 								}()
