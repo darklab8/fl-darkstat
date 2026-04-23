@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -135,6 +136,11 @@ func main() {
 
 				}
 
+				unmarshaled := make(map[any]any)
+				err = json.Unmarshal(data, &unmarshaled)
+				if err != nil {
+					log.Println("base_admin.php failed to unmarshal its json ", time.Now(), " len=", len(data), " content=", string(data))
+				}
 			}
 			log.Println("All downloads complete.")
 			time.Sleep(time.Minute * 3)
