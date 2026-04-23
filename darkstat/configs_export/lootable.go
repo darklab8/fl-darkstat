@@ -615,7 +615,8 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 			}
 			unique_encounter_loot[key_uniqueness] = true
 
-			if max_encounter_by_nick[loot_info.Nickname] > LootMaxEncounters && loot_info.Nickname != "commodity_sciencedata" {
+			if max_encounter_by_nick[loot_info.Nickname] > LootMaxEncounters &&
+				loot_info.Nickname != "commodity_sciencedata" && loot_info.Nickname != "commodity_sealed_container" {
 				continue
 			}
 			max_encounter_by_nick[loot_info.Nickname] += 1
