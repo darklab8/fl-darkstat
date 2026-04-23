@@ -28,6 +28,15 @@ func TestExportCommodities(t *testing.T) {
 
 		foundable, _ := exporter.findable_in_loot_cache["cr_heavy_battlerazor"]
 		assert.True(t, foundable, "expected cr_heavy_battlerazor to be findable in loot")
+
+		foundable, _ = exporter.findable_in_loot_cache["commodity_sciencedata"]
+		assert.True(t, foundable, "expected commodity_sciencedata to be findable in loot")
+
+		foundable, _ = exporter.findable_in_loot_cache["bs_heavy_w03"]
+		assert.True(t, foundable, "expected bs_heavy_w03 to be findable in loot")
+
+		foundable, _ = exporter.findable_in_loot_cache["commodity_sealed_container"]
+		assert.True(t, foundable, "expected commodity_sealed_container to be findable in loot")
 	}
 
 }

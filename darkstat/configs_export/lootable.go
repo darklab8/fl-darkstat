@@ -406,6 +406,11 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 
 			for _, cargo := range loadout.Cargos {
 				item_nickname := cargo.Nickname.Get()
+
+				if item_nickname == "cr_heavy_battlerazor" {
+					fmt.Print()
+				}
+
 				is_lootable, is_disco_encounter := e.IsLootable(item_nickname, LootSourceAny)
 				if !is_lootable {
 					continue
@@ -426,7 +431,7 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 					loot_droppable = true
 				}
 
-				if !loot_droppable && !fuse_cargo_drop {
+				if !loot_droppable && !fuse_cargo_drop && !is_disco_encounter {
 					continue
 				}
 
