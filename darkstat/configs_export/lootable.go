@@ -389,15 +389,11 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 			shiparch := e.Mapped.Shiparch.ShipsMap[loadout_archetype]
 			forbidden_hardpoints := make(map[string]bool)
 			fuse_drops_equips := make(map[string]bool)
-			fuse_cargo_drop := false
 
 			for _, fuse := range shiparch.Fuses {
 				if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
 					for key, _ := range fuse.NotLootableHardpoints {
 						forbidden_hardpoints[key] = true
-					}
-					if fuse.DoesDropCargo {
-						fuse_cargo_drop = true
 					}
 
 					for key, _ := range fuse.LootableHardpoints {
@@ -409,15 +405,7 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 			for _, cargo := range loadout.Cargos {
 				item_nickname := cargo.Nickname.Get()
 
-				if item_nickname == "cr_heavy_battlerazor" {
-					fmt.Print()
-				}
-
-				is_lootable, is_plugin_lootable := e.IsLootable(item_nickname, LootSourceCargo)
-
-				if !is_lootable {
-					continue
-				}
+				_, is_plugin_lootable := e.IsLootable(item_nickname, LootSourceCargo)
 
 				loot_info := &LootInfo{
 					Kind:           LootNotFoundNpcArch,
@@ -430,14 +418,15 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 					LoadoutNickname: loadout_nickname,
 				}
 
-				loot_droppable := false
-				if _, ok := mlootprops_allowed[loot_info.Nickname]; ok {
-					loot_droppable = true
-				}
+				// loot_droppable := false
+				// if _, ok := mlootprops_allowed[loot_info.Nickname]; ok {
+				// 	loot_droppable = true
+				// }
+				// _ = loot_droppable
 
-				if !loot_droppable && !fuse_cargo_drop && !is_plugin_lootable {
-					continue
-				}
+				// if !is_lootable && !loot_droppable && !fuse_cargo_drop && !is_plugin_lootable {
+				// 	continue
+				// }
 
 				results = append(results, loot_npc_drop)
 			}
@@ -492,11 +481,6 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 	// May time to make it iterator :)
 	IteratorNpcShips := func(send_npc_loot func(npc_loot *NpcLoot)) {
 		for _, npc_arch := range e.Mapped.NpcShips.NpcShips {
-
-			if npc_arch.Nickname.Get() == "re_baf_outdatedbs" {
-				fmt.Print()
-			}
-
 			loadout_nickname := npc_arch.Loadout.Get()
 
 			loadout_archetype := npc_arch.ShipArchetype.Get()
@@ -601,11 +585,11 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 			}
 
 			item_nickname := npc_loot.LootInfo.Nickname
-			is_lootable, is_plugin_lootable := e.IsLootable(item_nickname, npc_loot.LootSource)
-			if !is_lootable {
-				continue
-			}
-			_ = is_plugin_lootable
+			_, is_plugin_lootable := e.IsLootable(item_nickname, npc_loot.LootSource)
+			// if !is_lootable {
+			// 	continue
+			// }
+			// _ = is_plugin_lootable
 			loot_info := &LootInfo{
 				Nickname:       item_nickname,
 				Kind:           LootEncounter,
