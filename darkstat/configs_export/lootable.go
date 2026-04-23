@@ -82,31 +82,28 @@ func (e *Exporter) SetPermitted(permitted_wrecks map[string]bool, permitted_enco
 }
 
 // if is_lootable_by_plugin is true, it means lootable by disco plugin MarketController
-func (e *Exporter) IsLootable(item_nickname string, loot_source LootSource) (is_lootable bool, is_lootable_by_plugin bool) {
+func (e *Exporter) IsLootable(item_nickname string, loot_source LootSource) (is_lootable bool, is_disco_encounter bool) {
 	item, found_item := e.Mapped.Equip().ItemsMap[item_nickname]
 	if !found_item {
 		return false, false
 	}
 
+	is_lootable, _ = item.Lootable.GetValue()
+
 	if loot_source == LootSourceCargo || loot_source == LootSourceAny {
 		if _, ok := item.DropChanceNpcUnmounted.GetValue(); ok {
 			is_lootable = true
-			is_lootable_by_plugin = true
+			is_disco_encounter = true
 		}
 	}
 	if loot_source == LootSourceEquip || loot_source == LootSourceAny {
 		if _, ok := item.DropChanceNpcMounted.GetValue(); ok {
 			is_lootable = true
-			is_lootable_by_plugin = true
+			is_disco_encounter = true
 		}
 	}
 
-	if is_lootable_value, ok := item.Lootable.GetValue(); ok {
-		if is_lootable_value {
-			is_lootable = true
-		}
-	}
-	return is_lootable, is_lootable_by_plugin
+	return is_lootable, is_disco_encounter
 }
 
 type Wreck struct {
@@ -193,10 +190,11 @@ func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*
 			}
 
 			loot_info := &LootInfo{
-				Nickname:   item.nickname,
-				Kind:       wreck.Kind,
-				LootSource: LootSourceEquip,
-				PlaceNick:  wreck.Nickname,
+				Nickname:       item.nickname,
+				Kind:           wreck.Kind,
+				LootSource:     LootSourceEquip,
+				PlaceNick:      wreck.Nickname,
+				DiscoEncounter: is_lootable_by_disco,
 			}
 
 			system_uni := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system.Nickname)]
@@ -208,7 +206,7 @@ func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*
 
 			// TODO [ ] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
 			is_fuse_allowed := true
-			if !is_fuse_allowed && !is_lootable_by_disco {
+			if !is_fuse_allowed {
 				continue
 			}
 
@@ -389,11 +387,15 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 			shiparch := e.Mapped.Shiparch.ShipsMap[loadout_archetype]
 			forbidden_hardpoints := make(map[string]bool)
 			fuse_drops_equips := make(map[string]bool)
+			fuse_cargo_drop := false
 
 			for _, fuse := range shiparch.Fuses {
 				if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
 					for key, _ := range fuse.NotLootableHardpoints {
 						forbidden_hardpoints[key] = true
+					}
+					if fuse.DoesDropCargo {
+						fuse_cargo_drop = true
 					}
 
 					for key, _ := range fuse.LootableHardpoints {
@@ -404,47 +406,46 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 
 			for _, cargo := range loadout.Cargos {
 				item_nickname := cargo.Nickname.Get()
-
-				_, is_plugin_lootable := e.IsLootable(item_nickname, LootSourceCargo)
-
+				is_lootable, is_disco_encounter := e.IsLootable(item_nickname, LootSourceAny)
+				if !is_lootable {
+					continue
+				}
 				loot_info := &LootInfo{
 					Kind:           LootNotFoundNpcArch,
 					Nickname:       item_nickname,
 					LootSource:     LootSourceCargo,
-					DiscoEncounter: is_plugin_lootable,
+					DiscoEncounter: is_disco_encounter,
 				}
 				loot_npc_drop := &NpcLoot{
 					LootInfo:        loot_info,
 					LoadoutNickname: loadout_nickname,
 				}
 
-				// loot_droppable := false
-				// if _, ok := mlootprops_allowed[loot_info.Nickname]; ok {
-				// 	loot_droppable = true
-				// }
-				// _ = loot_droppable
+				loot_droppable := false
+				if _, ok := mlootprops_allowed[loot_info.Nickname]; ok {
+					loot_droppable = true
+				}
 
-				// if !is_lootable && !loot_droppable && !fuse_cargo_drop && !is_plugin_lootable {
-				// 	continue
-				// }
+				if !loot_droppable && !fuse_cargo_drop {
+					continue
+				}
 
 				results = append(results, loot_npc_drop)
 			}
 			for _, equip := range loadout.Equips {
 				item_nickname := equip.Nickname.Get()
-				is_lootable, is_plugin_lootable := e.IsLootable(item_nickname, LootSourceEquip)
-
+				is_lootable, is_disco_encounter := e.IsLootable(item_nickname, LootSourceEquip)
 				if !is_lootable {
 					continue
 				}
 
 				// skipping dissapearing hardpoint equips
 				hardpoint, found_hardpoint := equip.Hardpoint.GetValue()
-				if !found_hardpoint && !is_plugin_lootable {
+				if !found_hardpoint {
 					continue
 				}
 				_, is_forbidden_hardpoint := forbidden_hardpoints[hardpoint]
-				if is_forbidden_hardpoint && !is_plugin_lootable {
+				if is_forbidden_hardpoint {
 					continue
 				}
 
@@ -457,7 +458,7 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 					fuse_droppable = true
 				}
 
-				if !loot_droppable && !fuse_droppable && !is_plugin_lootable {
+				if !loot_droppable && !fuse_droppable {
 					continue
 				}
 
@@ -465,7 +466,7 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 					Kind:           LootNotFoundNpcArch,
 					Nickname:       item_nickname,
 					LootSource:     LootSourceEquip,
-					DiscoEncounter: is_plugin_lootable,
+					DiscoEncounter: is_disco_encounter,
 				}
 				loot_npc_drop := &NpcLoot{
 					LootInfo:        loot_info,
@@ -585,17 +586,16 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 			}
 
 			item_nickname := npc_loot.LootInfo.Nickname
-			_, is_plugin_lootable := e.IsLootable(item_nickname, npc_loot.LootSource)
-			// if !is_lootable {
-			// 	continue
-			// }
-			// _ = is_plugin_lootable
+			is_lootable, is_disco_encounter := e.IsLootable(item_nickname, npc_loot.LootSource)
+			if !is_lootable {
+				continue
+			}
 			loot_info := &LootInfo{
 				Nickname:       item_nickname,
 				Kind:           LootEncounter,
 				LootSource:     npc_loot.LootSource,
 				PlaceNick:      zone.Zone.Nickname.Get(),
-				DiscoEncounter: is_plugin_lootable,
+				DiscoEncounter: is_disco_encounter,
 			}
 
 			if _, ok := zone.Zone.Pos.GetValue(); ok {
@@ -640,12 +640,10 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 	for _, npc_loot := range not_matched_loot {
 		// Fallback, add to not found then
 		if _, ok := found_npc_loot_in_encounters[npc_loot.Nickname]; !ok {
-			is_lootable, is_plugin_lootable := e.IsLootable(npc_loot.Nickname, npc_loot.LootSource)
+			is_lootable, _ := e.IsLootable(npc_loot.Nickname, npc_loot.LootSource)
 			if !is_lootable {
 				continue
 			}
-			_ = is_plugin_lootable
-
 			e.SetPermitted(permitted_wrecks, permitted_encounters, npc_loot.LootInfo)
 
 			if max_notfound_npc_drop[npc_loot.LootInfo.Nickname] > LootMaxNotFoundNPCDrops {
