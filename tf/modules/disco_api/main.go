@@ -65,7 +65,7 @@ func scrapeFileNames() ([]string, error) {
 	return files, nil
 }
 
-func downloadFile(destDir, fileName string, urlInput string) error {
+func downloadFile(destDir, fileName string, urlInput string, inmemory bool) (err error, resBody []byte) {
 
 	destPath := filepath.Join(destDir, fileName)
 
@@ -76,23 +76,29 @@ func downloadFile(destDir, fileName string, urlInput string) error {
 
 	resp, err := utils_http.Get(url)
 	if err != nil {
-		return err
+		return err, resBody
 	}
 	if resp.StatusCode >= 400 {
 		logus.Log.CheckError(err, "error http request with non positive status code, status_code>=400", typelog.Any("status_code", resp.StatusCode))
-		return err
+		return err, resBody
 	}
 
 	defer resp.Body.Close()
 
 	out, err := os.Create(destPath)
 	if err != nil {
-		return err
+		return err, resBody
 	}
 	defer out.Close()
 
-	_, err = io.Copy(out, resp.Body)
-	return err
+	if inmemory {
+		resBody, err = io.ReadAll(resp.Body)
+		out.Write(resBody)
+
+	} else {
+		_, err = io.Copy(out, resp.Body)
+	}
+	return err, resBody
 }
 
 var configs_path = "/data/gameconfigpublic"
@@ -103,7 +109,7 @@ func main() {
 
 	go func() {
 		for {
-			log.Println("Scraping file list from", baseURL)
+			log.Println("Scraping file list from", baseURL, " version5")
 			files, err := scrapeFileNames()
 			if err != nil {
 				log.Printf("Error scraping file names: %v\n", err)
@@ -115,34 +121,35 @@ func main() {
 			log.Printf("Found %d files, downloading...\n", len(files))
 			for _, fileName := range files {
 				log.Printf("Downloading: %s\n", fileName)
-				if err := downloadFile(configs_path, fileName, ""); err != nil {
+				if err, _ := downloadFile(configs_path, fileName, "", false); err != nil {
 					log.Printf("Error downloading %s: %v\n", fileName, err)
 				}
 			}
 
-			if err := downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson"); err != nil {
-				log.Printf("Error downloading %s: %v\n", "forums/base_admin.php", err)
+			err, data := downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson", true)
+			if err != nil {
+				log.Printf("ERROR base_admin.php5 Error downloading %s: %v\n", "forums/base_admin.php", err)
 			}
 
-			data, err := os.ReadFile("/data/forums/base_admin.php")
-			if err != nil {
-				log.Println("Error reading base_admin.php file to validate it", time.Now())
+			if len(data) < 1000 {
+				log.Println("ERROR base_admin.php5 is too small (showing content). time=", time.Now(), " len=", len(data), string(data))
+				// log.Println("base_admin.php4 is too small. (showing with content) time=", time.Now(), " len=", len(data), " content=", string(data))
 			} else {
-				if len(data) < 1000 {
-					log.Println("base_admin.php is too small (showing no content). time=", time.Now(), " len=", len(data))
-					log.Println("base_admin.php is too small. (showing with content) time=", time.Now(), " len=", len(data), " content=", string(data))
-				} else {
-					log.Println("base_admin.php is has size. time=", time.Now(), " len=", len(data))
+				log.Println("base_admin downloaded succesfully. time=", time.Now(), " len=", len(data))
+			}
+
+			unmarshaled := make(map[string]any)
+			err = json.Unmarshal(data, &unmarshaled)
+			if err != nil {
+				log.Println("ERROR base_admin.php5 failed to unmarshal its json (showing no content) ", time.Now(), " len=", len(data))
+				// log.Println("base_admin.php4 failed to unmarshal its json (showing with content)", time.Now(), " len=", len(data), " content=", string(data))
+				err = os.WriteFile("/data/errored_base_admin.json", data, os.FileMode(0644))
+				if err != nil {
+					log.Println("ERRPR base_admin.php5 failed to write errored data to file")
 				}
 			}
 
-			unmarshaled := make(map[any]any)
-			err = json.Unmarshal(data, &unmarshaled)
-			if err != nil {
-				log.Println("base_admin.php failed to unmarshal its json (showing no content) ", time.Now(), " len=", len(data))
-				log.Println("base_admin.php failed to unmarshal its json (showing with content)", time.Now(), " len=", len(data), " content=", string(data))
-			}
-			log.Println("All downloads complete.")
+			log.Println("All downloads complete5.")
 			time.Sleep(time.Minute * 3)
 		}
 	}()

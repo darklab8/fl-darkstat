@@ -1,6 +1,9 @@
 FROM golang:1.25-bookworm as build
 
-ENV CGO_ENABLED=0
+RUN apt update
+RUN apt install -y build-essential
+RUN apt-get install ca-certificates -y
+RUN gcc --version
 
 WORKDIR /code
 COPY main.go go.mod go.sum ./

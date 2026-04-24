@@ -47,6 +47,10 @@ resource "docker_container" "disco_api" {
     }
   }
 
+  env = [
+    "UTILS_USERAGENT=darkwind/1.0"
+  ]
+
   lifecycle {
     ignore_changes = [
       memory_swap,
