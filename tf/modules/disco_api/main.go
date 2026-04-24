@@ -118,29 +118,29 @@ func main() {
 				if err := downloadFile(configs_path, fileName, ""); err != nil {
 					log.Printf("Error downloading %s: %v\n", fileName, err)
 				}
+			}
 
-				if err := downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson"); err != nil {
-					log.Printf("Error downloading %s: %v\n", fileName, err)
-				}
+			if err := downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson"); err != nil {
+				log.Printf("Error downloading %s: %v\n", "forums/base_admin.php", err)
+			}
 
-				data, err := os.ReadFile("/data/forums/base_admin.php")
-				if err != nil {
-					log.Println("Error reading base_admin.php file to validate it", time.Now())
+			data, err := os.ReadFile("/data/forums/base_admin.php")
+			if err != nil {
+				log.Println("Error reading base_admin.php file to validate it", time.Now())
+			} else {
+				if len(data) < 1000 {
+					log.Println("base_admin.php is too small. time=", time.Now(), " len=", len(data), " content=", string(data))
 				} else {
-					if len(data) < 1000 {
-						log.Println("base_admin.php is too small. time=", time.Now(), " len=", len(data), " content=", string(data))
-					} else {
-						log.Println("base_admin.php is has size. ", time.Now(), " len=", len(data))
-
-					}
+					log.Println("base_admin.php is has size. ", time.Now(), " len=", len(data))
 
 				}
 
-				unmarshaled := make(map[any]any)
-				err = json.Unmarshal(data, &unmarshaled)
-				if err != nil {
-					log.Println("base_admin.php failed to unmarshal its json ", time.Now(), " len=", len(data), " content=", string(data))
-				}
+			}
+
+			unmarshaled := make(map[any]any)
+			err = json.Unmarshal(data, &unmarshaled)
+			if err != nil {
+				log.Println("base_admin.php failed to unmarshal its json ", time.Now(), " len=", len(data), " content=", string(data))
 			}
 			log.Println("All downloads complete.")
 			time.Sleep(time.Minute * 3)
