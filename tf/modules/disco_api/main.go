@@ -129,18 +129,18 @@ func main() {
 				log.Println("Error reading base_admin.php file to validate it", time.Now())
 			} else {
 				if len(data) < 1000 {
-					log.Println("base_admin.php is too small. time=", time.Now(), " len=", len(data), " content=", string(data))
+					log.Println("base_admin.php is too small (showing no content). time=", time.Now(), " len=", len(data))
+					log.Println("base_admin.php is too small. (showing with content) time=", time.Now(), " len=", len(data), " content=", string(data))
 				} else {
-					log.Println("base_admin.php is has size. ", time.Now(), " len=", len(data))
-
+					log.Println("base_admin.php is has size. time=", time.Now(), " len=", len(data))
 				}
-
 			}
 
 			unmarshaled := make(map[any]any)
 			err = json.Unmarshal(data, &unmarshaled)
 			if err != nil {
-				log.Println("base_admin.php failed to unmarshal its json ", time.Now(), " len=", len(data), " content=", string(data))
+				log.Println("base_admin.php failed to unmarshal its json (showing no content) ", time.Now(), " len=", len(data))
+				log.Println("base_admin.php failed to unmarshal its json (showing with content)", time.Now(), " len=", len(data), " content=", string(data))
 			}
 			log.Println("All downloads complete.")
 			time.Sleep(time.Minute * 3)
