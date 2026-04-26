@@ -622,13 +622,62 @@ system-label {
     left: -50%;
     position: absolute;
     display: inline-block;
-    top: 0.3em;
+    top: 0.2em;
     white-space: nowrap;
     text-shadow: 0em 0em 0.3em black !important;
     color: white;
 
     pointer-events: auto;
 }
+
+map-.galaxy system-label-wrap {
+    font-size: clamp(0.55rem, 1.2vh, 3rem);
+}
+
+map-.system system-label-wrap {
+    font-size: clamp(0.65rem, 1.5vh, 3.3rem);
+}
+
+/* 12 if normal. for 800/10 = 80 rem? 400/10 = 40 rem */
+/* @media (max-height: 700px) {
+    map-.galaxy system-label {
+        font-size: 0.75rem;
+    }
+
+    map-.system system-label {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-height: 400px) {
+    map-.galaxy system-label {
+        font-size: 0.65rem;
+    }
+
+    map-.system system-label {
+        font-size: 0.75rem;
+    }
+}
+
+@media (min-height: 1350px) {
+    map-.galaxy system-label {
+        font-size: 1rem;
+    }
+
+    map-.system system-label {
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-height: 1700px) {
+    map-.galaxy system-label {
+        font-size: 1.1rem;
+    }
+
+    map-.system system-label {
+        font-size: 1.2rem;
+    }
+} */
 
 
 
