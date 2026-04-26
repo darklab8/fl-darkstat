@@ -203,10 +203,10 @@ centeralizer- {
 
 system- {
     position: absolute;
-    height: 0.65em;
-    width: 0.65em;
-    margin-top: -0.325em;
-    margin-left: -0.325em;
+    height: 1vh;
+    width: 1vh;
+    margin-top: -0.5vh;
+    margin-left: -0.5vh;
     border-color: white;
 }
 
@@ -575,11 +575,11 @@ cycle- {
     border-radius: 100%;
     border-style: solid;
     background-color: rgb(36, 36, 36);
-    left: -25%;
-    top: -25%;
+    left: -3px;
+    top: -3px;
     position: absolute;
-    height: 0.65em;
-    width: 0.65em;
+    height: 1vh;
+    width: 1vh;
 }
 
 system-label-wrap {
