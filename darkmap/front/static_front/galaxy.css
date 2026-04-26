@@ -622,7 +622,7 @@ system-label {
     left: -50%;
     position: absolute;
     display: inline-block;
-    top: 0.2em;
+    top: clamp(0.1rem, 0.25vh, 1rem);
     white-space: nowrap;
     text-shadow: 0em 0em 0.3em black !important;
     color: white;
