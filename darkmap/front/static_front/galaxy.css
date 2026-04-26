@@ -591,7 +591,6 @@ system-label-wrap {
     left: 50%;
 
     font-family: var(--font-family);
-    font-size: 0.8rem;
     position: absolute;
     display: inline-block;
     top: 1em;
@@ -600,21 +599,8 @@ system-label-wrap {
     pointer-events: none;
 }
 
-
-map-.system system-label-wrap {
-    font-size: 1.0rem;
-}
-
-.zoomed08 map-.system system-label-wrap {
-    font-size: 0.8rem;
-}
-
-.zoomed06 map-.system system-label-wrap {
-    font-size: 0.6rem;
-}
-
-.zoomed04 map-.system system-label-wrap {
-    font-size: 0.4rem;
+map-.galaxy system-label-wrap {
+    z-index: 10;
 }
 
 system-label {
@@ -637,6 +623,18 @@ map-.galaxy system-label-wrap {
 map-.system system-label-wrap {
     font-size: clamp(0.65rem, 1.5vh, 3.3rem);
 }
+
+/* .zoomed08 map-.system system-label-wrap {
+    font-size: clamp(0.65rem, 1.2vh, 3.3rem);
+}
+
+.zoomed06 map-.system system-label-wrap {
+    font-size: clamp(0.35rem, 1.0vh, 3.3rem);
+}
+
+.zoomed04 map-.system system-label-wrap {
+    font-size: clamp(0.2rem, 0.8vh, 3.3rem);
+} */
 
 system-title {
     position: absolute;
