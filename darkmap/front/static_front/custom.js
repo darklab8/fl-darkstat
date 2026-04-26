@@ -111,6 +111,11 @@ function highlightFromQuery() {
     targetEl.classList.add('is-target');
 }
 
+var DRAG_THRESHOLD = 5;
+var _pointerDownX = 0;
+var _pointerDownY = 0;
+var _didDrag = false;
+
 /**
  * @param {boolean} is_galaxy 
  */
@@ -135,9 +140,31 @@ function InstallPanzoom(is_galaxy) {
     // overrides to make possible moving on mouse click even when no longer selecting original "image"
     var parent = map.parentElement;
     parent.addEventListener('wheel', panzoom.zoomWithWheel);
-    parent.addEventListener('pointerdown', panzoom.handleDown);
-    parent.addEventListener('pointermove', panzoom.handleMove);
+
+    // ANTI INFOCARD CLICKER if PANNING/MOVING START
+    parent.addEventListener('pointerdown', function (e) {
+        _pointerDownX = e.clientX;
+        _pointerDownY = e.clientY;
+        _didDrag = false;
+        panzoom.handleDown(e);
+    });
+    parent.addEventListener('pointermove', function (e) {
+        var dx = e.clientX - _pointerDownX;
+        var dy = e.clientY - _pointerDownY;
+        if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
+            _didDrag = true;
+        }
+        panzoom.handleMove(e);
+    });
     parent.addEventListener('pointerup', panzoom.handleUp);
+    // Block HTMX requests on obj- elements if the user was dragging
+    document.body.addEventListener('htmx:confirm', function (e) {
+        var target = e.detail.elt;
+        if (target.tagName.toLowerCase() === 'obj-' && _didDrag) {
+            e.preventDefault(); // cancels hx-get
+        }
+    });
+    // ANTI INFOCARD CLICKER if PANNING/MOVING END
 
     document.body.classList.add("zoomedOut");
 
