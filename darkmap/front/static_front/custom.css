@@ -81,24 +81,43 @@
 }
 
 .hidden_system,
+.hidden_system *,
 .hidden_label,
+.hidden_label *,
 .hidden_obj,
+.hidden_obj *,
 .hidden_wreck,
+.hidden_wreck *,
 .hidden_wreck_label,
+.hidden_wreck_label *,
 .hidden_obj_other_label,
+.hidden_obj_other_label *,
 .hidden_zone,
+.hidden_zone *,
 .hidden_pob,
-.hidden_coords {
+.hidden_pob *,
+.hidden_coords,
+.hidden_coords * {
     display: none;
+}
+
+obj-.unhidden_wreck_label,
+.unhidden_wreck_label * {
+    display: block !important;
 }
 
 .unhidden_all_zone {
     display: block !important;
 }
 
-.unhidden_infocard_label {
+.unhidden_infocard_label system-label,
+obj-.unhidden_infocard_label {
     display: block !important;
     color: rgba(232, 252, 121, 0.8) !important;
+}
+
+system-label-wrap.unhidden_infocard_label {
+    display: inline-block !important;
 }
 
 .wreck system-label {
