@@ -584,6 +584,7 @@ cycle- {
 
 system-label-wrap {
     color: transparent;
+    visibility: hidden;
     /* make the text invisible */
     user-select: none;
     /* prevent selection of the text */
@@ -597,6 +598,10 @@ system-label-wrap {
     white-space: nowrap;
 
     pointer-events: none;
+}
+
+system-label-wrap system-label {
+    visibility: visible;
 }
 
 map-.galaxy system-label-wrap {
