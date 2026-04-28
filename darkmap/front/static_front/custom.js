@@ -23,8 +23,29 @@ function toggle_option(checked, checkbox_name, hidden_class, unhidden_class) {
             sessionStorage.setItem(checkbox_name, "false");
             break;
     }
-    LabelsReset();
-    InstallLabelOverlapper();
+
+    if (checkbox_name === "checkbox_systems") {
+        LabelsReset();
+        InstallLabelOverlapper();
+    } else if (checkbox_name === "checkbox_map_labels") {
+        LabelsReset();
+        InstallLabelOverlapper();
+    } else if (checkbox_name === "checkbox_wrecks_labels") {
+        LabelsReset();
+        InstallLabelOverlapper();
+    } else if (checkbox_name === "checkbox_infocarded_labels") {
+        LabelsReset();
+        InstallLabelOverlapper();
+    } else if (checkbox_name === "checkbox_objects") {
+        LabelsReset();
+        InstallLabelOverlapper();
+    } else if (checkbox_name === "checkbox_obj_others") {
+        LabelsReset();
+        InstallLabelOverlapper();
+    } else if (checkbox_name === "checkbox_pobs") {
+        LabelsReset();
+        InstallLabelOverlapper();
+    }
 }
 
 function toggle_tippy(checked, checkbox_name, hidden_class, unhidden_class) {
