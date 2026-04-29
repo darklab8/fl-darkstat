@@ -242,16 +242,18 @@ function moveIfOverlapsAndReturnDiff(currentObject, objectArray) {
     var diffSum = 0;
     var reducedObjectArray = objectArray; //objectArray.splice(i, 1);
     for (o = 0; o < reducedObjectArray.length; o++) {
-        if (overlaps(currentObject, reducedObjectArray[o]) && currentObject != reducedObjectArray[o]) {
-            if ((currentObject.getBoundingClientRect().top) <= (reducedObjectArray[o].getBoundingClientRect().top)) {
+        let rect_curr = currentObject.getBoundingClientRect();
+        let rect_o = reducedObjectArray[o].getBoundingClientRect();
+        if (overlaps(rect_curr, rect_o) && currentObject != reducedObjectArray[o]) {
+            if ((rect_curr.top) <= (rect_o.top)) {
                 var currentTransform;
                 if (reducedObjectArray[o].style.marginTop.match(/([\d\.]+)/g) && reducedObjectArray[o].style.marginTop.match(/([\d\.]+)/g) != null) {
                     currentTransform = parseFloat(reducedObjectArray[o].style.marginTop.match(/([\d\.]+)/g));
                 } else {
                     currentTransform = 0;
                 }
-                reducedObjectArray[o].style.marginTop = Math.abs(currentTransform + currentObject.getBoundingClientRect().bottom - reducedObjectArray[o].getBoundingClientRect().top) + "px";
-                diffSum += Math.abs(currentObject.getBoundingClientRect().bottom - reducedObjectArray[o].getBoundingClientRect().top);
+                reducedObjectArray[o].style.marginTop = Math.abs(currentTransform + rect_curr.bottom - rect_o.top) + "px";
+                diffSum += Math.abs(rect_curr.bottom - rect_o.top);
                 /*moveIfOverlaps(reducedObjectArray[o], reducedObjectArray);*/
             } else {
                 var currentTransform;
@@ -260,8 +262,8 @@ function moveIfOverlapsAndReturnDiff(currentObject, objectArray) {
                 } else {
                     currentTransform = 0;
                 }
-                currentObject.style.marginTop = Math.abs(currentTransform + reducedObjectArray[o].getBoundingClientRect().bottom - currentObject.getBoundingClientRect().top) + "px";
-                diffSum += Math.abs(reducedObjectArray[o].getBoundingClientRect().bottom - currentObject.getBoundingClientRect().top);
+                currentObject.style.marginTop = Math.abs(currentTransform + rect_o.bottom - rect_curr.top) + "px";
+                diffSum += Math.abs(rect_o.bottom - rect_curr.top);
                 /*moveIfOverlaps(currentObject, reducedObjectArray);*/
             }
         }
@@ -270,8 +272,8 @@ function moveIfOverlapsAndReturnDiff(currentObject, objectArray) {
 }
 
 function overlaps(objectA, objectB) {
-    var a = objectA.getBoundingClientRect();
-    var b = objectB.getBoundingClientRect();
+    var a = objectA;
+    var b = objectB;
 
     var al = a.left;
     var ar = a.left + a.width;
