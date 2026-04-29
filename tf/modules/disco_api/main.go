@@ -126,7 +126,12 @@ func main() {
 				}
 			}
 
-			err, data := downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson", true)
+			err, data := downloadFile("/data", "patchlist.xml", "https://patch.discoverygc.com/patchlist.xml", false)
+			if err != nil {
+				log.Printf("ERROR https://patch.discoverygc.com/patchlist.xml Error downloading %s: %v\n", "patchlist.xml", err)
+			}
+
+			err, data = downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson", true)
 			if err != nil {
 				log.Printf("ERROR base_admin.php5 Error downloading %s: %v\n", "forums/base_admin.php", err)
 			}

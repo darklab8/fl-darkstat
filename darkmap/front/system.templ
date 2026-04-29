@@ -204,17 +204,6 @@ templ SystemContents(system *export_map.System) {
                 ) }
 				>
 					<img src={ types.GetCtx(ctx).StaticRoot + obj.ShapeName + ".png" }/>
-					// <span class="tooltiptext">
-					// 	{ fmt.Sprintf("x:%.0f", obj.Pos.X) }
-					// 	<br/>
-					// 	{ fmt.Sprintf("y:%.0f", obj.Pos.Y) }
-					// 	<br/>
-					// 	{ fmt.Sprintf("z:%.0f", obj.Pos.Z) }
-					// 	<br/>
-					// 	{ fmt.Sprintf("jh_kind:%s", obj.Kind.ToStr()) }
-					// 	<br/>
-					// 	{ fmt.Sprintf("target:%s", obj.GotoSystemName) }
-					// </span>
 					<system-label-wrap class="unhidden_label">{ obj.Name }<system-label style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
 				</obj->
 			</a>
