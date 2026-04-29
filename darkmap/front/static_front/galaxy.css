@@ -217,12 +217,9 @@ system- {
     margin-top: -0.75em;
     margin-left: -0.75em;
     border-color: white;
-    /* box-shadow: 0 0 0.7em 1em rgba(250, 0, 0, 0.1) inset; */
 }
 
-.jumphole img {
-    /* box-shadow: 0 0 0.7em 0.3em rgba(250, 0, 0, 0.1); */
-}
+.jumphole img {}
 
 .tradelane {
     position: absolute;
@@ -231,7 +228,6 @@ system- {
     margin-top: -0.375em;
     margin-left: -0.375em;
     border-color: white;
-    box-shadow: 0 0 0.7em 0.2em rgba(137, 136, 136, 0.15);
 }
 
 .zoomedOut .tradelane img {
@@ -488,7 +484,6 @@ system-:hover system-label,
 .obj_other:hover system-label,
 .obj_disco_encounter:hover system-label,
 .zone:hover system-label {
-    box-shadow: 0 0 0.05em 0.1em rgba(0, 0, 0, 0.45);
     background-color: rgba(0, 0, 0, 0.45);
     border-radius: 0.2em;
 
@@ -525,32 +520,26 @@ ul.text_align_left * {
 
 .zoomedOut .jumphole {
     background: var(--jh_color_jumphole);
-    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_jumphole);
 }
 
 .zoomedOut .jumphole.jh_jumpgate {
     background: var(--jh_color_jumpgate);
-    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_jumpgate);
 }
 
 .zoomedOut .jumphole.jh_unstable_cargo_limit {
     background: var(--jh_color_unstable_cargo_limit);
-    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_unstable_cargo_limit);
 }
 
 .zoomedOut .jumphole.jh_fighter_only {
     background: var(--jh_color_freighter_only);
-    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_freighter_only);
 }
 
 .zoomedOut .jumphole.jh_alien {
     background: var(--jh_color_alien);
-    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_alien);
 }
 
 .zoomedOut .jumphole.jh_campaign_locked {
     background: var(--jh_color_campaign_locked);
-    box-shadow: 0em 0em 0.8em 0.3em var(--jh_color_campaign_locked);
 }
 
 .zoomedOut .jumphole.jh_unknown {

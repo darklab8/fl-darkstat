@@ -125,21 +125,16 @@ system-label-wrap.unhidden_infocard_label {
 }
 
 .conn_jumpgate {
-    box-shadow: 0px 0px 0.3em 0.1em rgba(69, 150, 255, 0.5);
     background-color: rgba(69, 150, 255, 0.9);
 }
 
 .conn_unknown {
     /*background-color: rgba(143, 192, 255, 0.5);*/
-    box-shadow: 0px 0px 0.3em 0.1em rgba(249, 69, 255, 0.5);
     background-color: rgba(247, 4, 255, 0.849);
 }
 
 .conn_jumphole {
-    /*box-shadow: 0px 0px 0.3em 0.1em rgb(255 252 69 / 24%);
-    background-color: rgb(230 255 4 / 67%);*/
-
-    box-shadow: 0px 0px 0.3em 0.1em rgba(243, 229, 171, 0.5);
+    background-color: rgb(230 255 4 / 67%);
     background-color: rgb(243 229 171 / 67%);
 
     /*background-color: rgba(143, 192, 255, 0.5)*/
@@ -148,27 +143,21 @@ system-label-wrap.unhidden_infocard_label {
 
 .conn_unstable {
     background-color: rgba(219, 72, 55, 0.9);
-    box-shadow: 0px 0px 0.3em 0.1em rgba(121, 80, 76, 0.5);
 }
 
 .conn_fighter {
     background-color: rgba(1, 255, 13, 0.9);
-    box-shadow: 0px 0px 0.3em 0.1em rgba(1, 255, 13, 0.5);
 }
 
 .conn_alien {
     background-color: rgba(152, 69, 255, 0.9);
-    box-shadow: 0px 0px 0.3em 0.1em rgba(152, 69, 255, 0.5);
 }
 
 .conn_campaign_locked {
     background-color: rgba(255, 136, 1, 0.9);
-    box-shadow: 0px 0px 0.3em 0.1em rgba(255, 136, 1, 0.5);
 }
 
-.conn_hover {
-    box-shadow: 0px 0px 0.3em 0.3em rgba(255, 255, 255, 0.45);
-}
+.conn_hover {}
 
 /* CSS TOGLE SWITCH START */
 .toggle-container {
