@@ -101,6 +101,11 @@
     display: none;
 }
 
+.unhidden_wreck,
+.unhidden_wreck img {
+    display: block !important;
+}
+
 obj-.unhidden_wreck_label,
 .unhidden_wreck_label * {
     display: block !important;
