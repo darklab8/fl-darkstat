@@ -217,7 +217,6 @@ templ SystemContents(system *export_map.System) {
 					// </span>
 					<system-label-wrap class="unhidden_label">{ obj.Name }<system-label style="top: 1.5em;">{ obj.Name }</system-label></system-label-wrap>
 				</obj->
-				@TooltipTippy(obj.Nickname, obj.Nickname, FmtPos(obj.Pos))
 			</a>
 		}
 		for _, obj := range system.Objs {
@@ -333,7 +332,6 @@ templ SystemContents(system *export_map.System) {
 					}
 				}
 			</obj->
-			@TooltipTippy(obj.Nickname, obj.Nickname, FmtPos(obj.Pos))
 		}
 		for _, obj := range system.Zones {
 			// can be sphere, ellipsoid, cylinder, box, ring
@@ -344,7 +342,42 @@ templ SystemContents(system *export_map.System) {
 				ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z),
 			)
 		}
+		@TooltipTippy(ObjectsToTipppy(
+			system.Zones,
+			system.Objs,
+			system.Jumpholes,
+		))
 	</content->
+}
+
+func ObjectsToTipppy(Zones []*export_map.Zone, objs []*export_map.Obj, Jumpholes []*export_map.Jumphole) []TippyObj {
+	var result []TippyObj
+
+	for _, obj := range Zones {
+		result = append(result, TippyObj{
+			Id:       obj.Nickname,
+			Nickname: obj.Nickname,
+			Position: FmtPos(obj.Pos),
+		})
+	}
+
+	for _, obj := range objs {
+		result = append(result, TippyObj{
+			Id:       obj.Nickname,
+			Nickname: obj.Nickname,
+			Position: FmtPos(obj.Pos),
+		})
+	}
+
+	for _, obj := range Jumpholes {
+		result = append(result, TippyObj{
+			Id:       obj.Nickname,
+			Nickname: obj.Nickname,
+			Position: FmtPos(obj.Pos),
+		})
+	}
+
+	return result
 }
 
 templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE float64, ROT_LENGTH float64) {
@@ -429,7 +462,6 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 			</system-label>
 		</system-label-wrap>
 	</obj->
-	@TooltipTippy(obj.Nickname, obj.Nickname, FmtPos(obj.Pos))
 }
 
 const TooltipCls = "map_tooltip"
@@ -438,18 +470,27 @@ func FmtPos(Pos cfg.Vector) string {
 	return fmt.Sprintf("(%.0f,%.0f,%.0f)", Pos.X, Pos.Y, Pos.Z)
 }
 
-script TooltipTippy(id string, nickname string, position string) {
+type TippyObj struct {
+	Id       string
+	Nickname string
+	Position string
+}
+
+script TooltipTippy(objects []TippyObj) {
 	// With the above scripts loaded, you can call `tippy()` with a CSS
 	// selector and a `content` prop:
-	tippy('#'+id, {
-		content: nickname+'<br/>' + position,
-		allowHTML: true,
-		placement: 'bottom-start',
-		animation: null,
-		duration: [0,500],
-		theme: 'translucent',
-		followCursor: true,
-	});
+
+	for (const obj of objects) {
+    	tippy('#'+obj.Id, {
+			content: obj.Nickname+'<br/>' + obj.Position,
+			allowHTML: true,
+			placement: 'bottom-start',
+			animation: null,
+			duration: [0,500],
+			theme: 'translucent',
+			followCursor: true,
+		});
+	}	
 }
 
 func ZIndex(obj *export_map.Zone) int {

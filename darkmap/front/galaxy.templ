@@ -69,7 +69,6 @@ templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
 			}... }
 				></cycle->
 			</system->
-			@TooltipTippy(fmt.Sprintf("system-%s", sys.Nickname), sys.Nickname, FmtSysPos(sys.Pos))
 		</a>
 	</system-wrapper>
 }
@@ -86,12 +85,27 @@ func FmtSysPos(Pos export_map.Coords2D) string {
 	return fmt.Sprintf("(%.0f,%.0f)", posx, posy)
 }
 
+func SystemsToTippy(Systems []*export_map.System) []TippyObj {
+	var result []TippyObj
+
+	for _, sys := range Systems {
+		result = append(result, TippyObj{
+			Id:       fmt.Sprintf("system-%s", sys.Nickname),
+			Nickname: sys.Nickname,
+			Position: FmtSysPos(sys.Pos),
+		})
+	}
+	return result
+
+}
+
 templ GalalaxyMap(data *export_map.Export) {
 	<centeralizer->
 		// Systems rendered as before
 		for _, sys := range data.Systems {
 			@GalaxySystem(sys, GetSystemFac(sys, data.Exp.Mapped))
 		}
+		@TooltipTippy(SystemsToTippy(data.Systems))
 		<system-title>Sirius</system-title>
 		// One SVG overlay covering the full map, lines use % coordinates
 		<svg

@@ -85,9 +85,12 @@ search_bar- {
     opacity: 0;
     pointer-events: none;
     transition: max-height .18s ease, opacity .14s ease;
+
+    display: none;
 }
 
 .search-box:focus-within .search-bar-dropdown {
+    display: block;
     max-height: calc(var(--show-items) * var(--item-height) + 36px);
     opacity: 1;
     pointer-events: auto;
