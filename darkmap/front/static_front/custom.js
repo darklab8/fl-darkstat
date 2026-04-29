@@ -220,81 +220,54 @@ function InstallPanzoom(is_galaxy) {
 
 /* anti-overlap code start */
 function objectTerritorialConflictResolver(objects) {
-    var currentDiffSum = "nope";
-    var prevDiffSum = "nope";
-    var prevPrevDiffSum;
-    var iterationCount = 1;
-    while (prevPrevDiffSum != 0 && iterationCount < 8) {
-        prevPrevDiffSum = prevDiffSum;
-        prevDiffSum = currentDiffSum;
-        currentDiffSum = 0;
-        for (i = 0; i < objects.length; i++) {
-            var objectArray = objects;
-            var currentObject = objectArray[i];
-            currentDiffSum += moveIfOverlapsAndReturnDiff(currentObject, objectArray);
-        }
-        iterationCount++;
-    }
-    console.log("Labels settled after " + iterationCount + " iterations");
-}
+    let iterationCount = 0;
+    const MAX_ITERATIONS = 16;
 
-function moveIfOverlapsAndReturnDiff(currentObject, objectArray) {
-    var diffSum = 0;
-    var reducedObjectArray = objectArray; //objectArray.splice(i, 1);
-    for (o = 0; o < reducedObjectArray.length; o++) {
-        let rect_curr = currentObject.getBoundingClientRect();
-        let rect_o = reducedObjectArray[o].getBoundingClientRect();
-        if (overlaps(rect_curr, rect_o) && currentObject != reducedObjectArray[o]) {
-            if ((rect_curr.top) <= (rect_o.top)) {
-                var currentTransform;
-                if (reducedObjectArray[o].style.marginTop.match(/([\d\.]+)/g) && reducedObjectArray[o].style.marginTop.match(/([\d\.]+)/g) != null) {
-                    currentTransform = parseFloat(reducedObjectArray[o].style.marginTop.match(/([\d\.]+)/g));
+    while (iterationCount < MAX_ITERATIONS) {
+        const rects = objects.map(el => el.getBoundingClientRect());
+        const margins = objects.map(el => parseFloat(el.style.marginTop) || 0);
+
+        let totalDiff = 0;
+
+        for (let i = 0; i < objects.length; i++) {
+            // j = i+1 avoids duplicate pairs
+            for (let j = i + 1; j < objects.length; j++) {
+                if (!rectsOverlap(rects[i], rects[j])) continue;
+
+                const a = rects[i], b = rects[j];
+
+                if (a.top <= b.top) {
+                    const diff = a.bottom - b.top;
+                    if (diff > 0) {
+                        margins[j] += diff;
+                        totalDiff += diff;
+                    }
                 } else {
-                    currentTransform = 0;
+                    const diff = b.bottom - a.top;
+                    if (diff > 0) {
+                        margins[i] += diff;
+                        totalDiff += diff;
+                    }
                 }
-                reducedObjectArray[o].style.marginTop = Math.abs(currentTransform + rect_curr.bottom - rect_o.top) + "px";
-                diffSum += Math.abs(rect_curr.bottom - rect_o.top);
-                /*moveIfOverlaps(reducedObjectArray[o], reducedObjectArray);*/
-            } else {
-                var currentTransform;
-                if (currentObject.style.marginTop.match(/([\d\.]+)/g) && currentObject.style.marginTop.match(/([\d\.]+)/g) != null) {
-                    currentTransform = parseFloat(currentObject.style.marginTop.match(/([\d\.]+)/g));
-                } else {
-                    currentTransform = 0;
-                }
-                currentObject.style.marginTop = Math.abs(currentTransform + rect_o.bottom - rect_curr.top) + "px";
-                diffSum += Math.abs(rect_o.bottom - rect_curr.top);
-                /*moveIfOverlaps(currentObject, reducedObjectArray);*/
             }
         }
+
+        // Batch write
+        objects.forEach((el, i) => {
+            el.style.marginTop = margins[i] + "px";
+        });
+
+        iterationCount++;
+        if (totalDiff === 0) break;
     }
-    return diffSum;
+
+    console.log(`Labels settled after ${iterationCount} iterations`);
 }
 
-function overlaps(objectA, objectB) {
-    var a = objectA;
-    var b = objectB;
-
-    var al = a.left;
-    var ar = a.left + a.width;
-    var bl = b.left;
-    var br = b.left + b.width;
-
-    var at = a.top;
-    var ab = a.top + a.height;
-    var bt = b.top;
-    var bb = b.top + b.height;
-
-    if (bl > ar || br < al) { return false; } /*overlap not possible*/
-    if (bt > ab || bb < at) { return false; } /*overlap not possible*/
-
-    if (bl > al && bl < ar) { return true; }
-    if (br > al && br < ar) { return true; }
-
-    if (bt > at && bt < ab) { return true; }
-    if (bb > at && bb < ab) { return true; }
-
-    return false;
+function rectsOverlap(a, b) {
+    if (b.left > a.right || b.right < a.left) return false;
+    if (b.top > a.bottom || b.bottom < a.top) return false;
+    return true;
 }
 
 function InstallLabelOverlapper() {
