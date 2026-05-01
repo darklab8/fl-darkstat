@@ -51,12 +51,9 @@ templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
 				"system-name": sys.Name,
 			}... }
 			>
-				<system-label-wrap>
+				<system-label class="unhidden_label">
 					{ sys.Name }
-					<system-label class="unhidden_label">
-						{ sys.Name }
-					</system-label>
-				</system-label-wrap>
+				</system-label>
 				<cycle-
 					{ templ.Attributes{
 				"style": fmt.Sprintf(

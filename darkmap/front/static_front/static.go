@@ -113,3 +113,12 @@ var RemodalCSS = core_types.StaticFile{
 	Filename: "remodal.css",
 	Kind:     core_types.StaticFileCSS,
 }
+
+//go:embed only_systems.css
+var OnlySystemsCssContent string
+
+var OnlySystemsCss = core_types.StaticFile{
+	Content:  OnlySystemsCssContent,
+	Filename: "only_systems.css",
+	Kind:     core_types.StaticFileCSS,
+}

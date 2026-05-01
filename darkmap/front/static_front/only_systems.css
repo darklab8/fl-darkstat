@@ -1,0 +1,171 @@
+.grid {
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: 0.8;
+}
+
+.grid .hzGridLine {
+    height: 0.1em;
+    width: 100%;
+}
+
+.grid .vertGridLine {
+    width: 0.1em;
+    height: 100%;
+}
+
+.grid .hzGridLine,
+.grid .vertGridLine {
+    background: rgb(25, 47, 96);
+    position: absolute;
+}
+
+.hzGridLine h3 {
+    position: relative;
+    top: -0.5em;
+    left: 0.6em;
+}
+
+.vertGridLine h3 {
+    position: relative;
+    left: 0.6em;
+    top: -0.8em;
+}
+
+.hzGridLine h3,
+.vertGridLine h3,
+#nullGridCell {
+    color: white;
+    font-family: var(--font-family);
+    z-index: 1;
+}
+
+h3 {
+    display: block;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+
+#nullGridCell {
+    position: absolute;
+    top: -0.75em;
+    left: 0.55em;
+}
+
+.grid .mapScale.arrows {
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom-style: dashed !important;
+    bottom: 1% !important;
+}
+
+.grid .mapScale {
+    position: absolute;
+    right: 0.75%;
+    bottom: 0.75%;
+    width: 10.5%;
+    border: solid #F3F3F3 0.2em;
+    box-sizing: border-box;
+    border-top: none;
+    height: 1%;
+    text-align: center;
+}
+
+.grid .mapScale .arrowR.arrowHead {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    right: 0;
+}
+
+.grid .mapScale .arrowL.arrowHead {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    left: 0;
+}
+
+.grid .mapScale.arrows .arrowHead {
+    display: block !important;
+}
+
+.grid .mapScale .arrowHead {
+    position: absolute;
+    border-top: 0.2em solid white;
+    border-left: 0.2em solid white;
+    height: 0.3em;
+    width: 0.3em;
+    bottom: -0.3em;
+    display: none;
+}
+
+.grid .mapScale h2 {
+    color: white;
+    font-family: var(--font-family);
+    position: relative;
+    top: -2em;
+}
+
+h2 {
+    display: block;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+
+.systemTitle {
+    position: absolute;
+    bottom: 0.1em;
+    color: white;
+    text-align: center;
+    width: 100%;
+    font-family: var(--font-family);
+    font-size: 3em;
+    padding: 0;
+    margin: 0;
+    color: rgb(135, 195, 224);
+}
+
+
+
+
+/*legend*/
+
+.legend_ul_icons jh {
+    position: unset;
+    height: 8px !important;
+    max-height: 8px !important;
+    min-width: 8px;
+    width: 8px !important;
+    display: block;
+    margin: 12px 15px 0px 0px;
+    padding: 0;
+    border-radius: 100%;
+}
+
+encounter- {
+    height: 0.5em;
+    width: 0.5em;
+    max-width: 0.5em;
+    max-height: 0.5em;
+    min-height: 0.5em;
+    min-width: 0.5em;
+    margin-top: -0.5em;
+    margin-left: -0.5em;
+    background: rgba(255, 106, 6, 0.9);
+    box-shadow: 0em 0em 0.4em 0.2em rgba(255, 106, 6, 0.5);
+}
+
+.legend_ul_icons li encounter- {
+    margin: 5px 15px 0px 0px !important;
+}

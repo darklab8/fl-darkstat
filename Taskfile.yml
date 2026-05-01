@@ -38,6 +38,11 @@ tasks:
       # - task: swag:build
       - go run . web
 
+  run:
+    cmds:
+      - templ generate
+      - go run . {{.CLI_ARGS}}
+
   dev:templ:
     cmds:
       - task: build-version
@@ -49,11 +54,9 @@ tasks:
       - task: build-version
       # pip install watchdog[watchmedo]
       - >
-        ~/venv/bin/watchmedo auto-restart 
-        --patterns "*.templ;*.go;*.css;*.js;enverant.json" 
-        -i "*_templ.go"
-        --recursive
-        -- sh -c "task web; sleep infinity"
+        ~/venv/bin/watchmedo auto-restart  --patterns
+        "*.templ;*.go;*.css;*.js;enverant.json"  -i "*_templ.go" --recursive --
+        sh -c "task web; sleep infinity"
 
   build:test:
     cmds:
@@ -67,11 +70,13 @@ tasks:
       - task: build-version
       - mkdir -p dist
       - rm ~/windows10shared/fl-files-vanilla/darkstat.exe | true
-      - GOOS=windows GOARCH=amd64 go build -v -o ~/windows10shared/fl-files-vanilla/darkstat.exe main.go
+      - GOOS=windows GOARCH=amd64 go build -v -o
+        ~/windows10shared/fl-files-vanilla/darkstat.exe main.go
 
   build-version:
     cmds:
-      - autogit semver --publish > darkstat/settings/version.txt || echo 'v0.0.0' > darkstat/settings/version.txt
+      - autogit semver --publish > darkstat/settings/version.txt || echo
+        'v0.0.0' > darkstat/settings/version.txt
 
   build:bins_only:
     cmds:
@@ -80,11 +85,12 @@ tasks:
 
       - GOOS=linux GOARCH=amd64 go build -v -o dist/darkstat-linux-amd64 main.go
       - GOOS=linux GOARCH=arm64 go build -v -o dist/darkstat-linux-arm64 main.go
-      - GOOS=windows GOARCH=amd64 go build -v -o dist/darkstat-windows-amd64.exe main.go
-      - GOOS=windows GOARCH=arm64 go build -v -o dist/darkstat-windows-arm64.exe main.go
+      - GOOS=windows GOARCH=amd64 go build -v -o dist/darkstat-windows-amd64.exe
+        main.go
+      - GOOS=windows GOARCH=arm64 go build -v -o dist/darkstat-windows-arm64.exe
+        main.go
       - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkstat-macos-amd64 main.go
       - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkstat-macos-arm64 main.go
-
       # We can build for those too, but i don't think they are needed
       # - GOOS=linux GOARCH=386 go build -v -o dist/darkstat-linux-386 main.go
       # - GOOS=linux GOARCH=arm go build -v -o dist/darkstat-linux-arm main.go
@@ -103,14 +109,16 @@ tasks:
 
   docker:build:
     cmds:
-      - docker build --build-arg "BUILD_VERSION=$tag_version" --tag darkwind8/darkstat:$tag_version .
+      - docker build --build-arg "BUILD_VERSION=$tag_version" --tag
+        darkwind8/darkstat:$tag_version .
 
   docker:push:
     cmds:
       - docker push darkwind8/darkstat:$tag_version
       - docker tag darkwind8/darkstat:$tag_version darkwind8/darkstat:staging
       - docker push darkwind8/darkstat:staging
-      - docker pull darkwind8/darkstat:staging && docker service update --image darkwind8/darkstat:staging darkstat-staging
+      - docker pull darkwind8/darkstat:staging && docker service update --image
+        darkwind8/darkstat:staging darkstat-staging
 
   docker:run:
     cmds:
@@ -120,7 +128,8 @@ tasks:
     cmds:
       - docker tag darkwind8/darkstat:staging darkwind8/darkstat:production
       - docker push darkwind8/darkstat:production
-      - docker pull darkwind8/darkstat:production && docker service update --image darkwind8/darkstat:production darkstat-production
+      - docker pull darkwind8/darkstat:production && docker service update
+        --image darkwind8/darkstat:production darkstat-production
 
   kcl:build:
     dir: .github
@@ -136,7 +145,8 @@ tasks:
     cmds:
       - go tool pprof main.go prof.prof
 
-  profiler:mem: # https://www.codingexplorations.com/blog/memory-management-and-profiling-in-go
+  profiler:mem:
+    # https://www.codingexplorations.com/blog/memory-management-and-profiling-in-go
     cmds:
       - go tool pprof mem.pprof
 
@@ -147,7 +157,8 @@ tasks:
   profiler:web:
     cmds:
       # https://www.codereliant.io/memory-leaks-with-pprof/
-      - go tool pprof -inuse_space -http=":8001" http://localhost:6060/debug/pprof/heap
+      - go tool pprof -inuse_space -http=":8001"
+        http://localhost:6060/debug/pprof/heap
       # go tool pprof -inuse_space -http=":8001" https://darkstat-pprof.dd84ai.com/debug/pprof/heap
       # commands like `top`, `web`, `list FunctionName`
       # go tool pprof -raw -output=cpu.txt http://localhost:6060/debug/pprof/profile?seconds=5
@@ -159,7 +170,8 @@ tasks:
     cmds:
       - sdk use java 11.0.25-sem
       - task: swag:build
-      - java -jar openapi-generator-cli.jar generate -i docs/swagger.yaml -g go -o ../generated_go
+      - java -jar openapi-generator-cli.jar generate -i docs/swagger.yaml -g go
+        -o ../generated_go
       # - java -jar openapi-generator-cli.jar generate -i docs/swagger.yaml -g go -o ./darkapi/clientgo
       # - java -jar openapi-generator-cli.jar generate -i docs/swagger.yaml -g go-server -o ./darkapi/servergo
       #- java -jar openapi-generator-cli.jar list

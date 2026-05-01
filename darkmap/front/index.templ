@@ -10,7 +10,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 )
 
-templ Html5() {
+templ Html5(menu_kind MenuKind) {
 	<!DOCTYPE html>
 	<html>
 		<head>
@@ -31,6 +31,9 @@ templ Html5() {
 			@core_front.StaticFile(stat_front.CustomJSSCrossShared)
 			@core_front.StaticFile(static_front.TippyJS1)
 			@core_front.StaticFile(static_front.TippyJS2)
+			if menu_kind == MenuKindSystem {
+				@core_front.StaticFile(static_front.OnlySystemsCss)
+			}
 			<script>
 			</script>
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes"/>
@@ -42,7 +45,7 @@ templ Html5() {
 }
 
 templ Index(data *export_map.Export) {
-	@Html5() {
+	@Html5(MenuKindGalaxy) {
 		@GalaxyGrid(MenuKindGalaxy, data) {
 			@GalalaxyMap(data)
 		}

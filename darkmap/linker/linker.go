@@ -92,6 +92,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		builder.NewStaticFileFromCore(static_front.ZonesCSS.GetTemplated(templated_zones.String())),
 		builder.NewStaticFileFromCore(static_front.TippyJS1),
 		builder.NewStaticFileFromCore(static_front.TippyJS2),
+		builder.NewStaticFileFromCore(static_front.OnlySystemsCss),
 		builder.NewStaticFileFromCore(core_types.StaticFile{
 			Content:  core_static.FaviconIcoContent,
 			Filename: "stat_favicon.ico",
