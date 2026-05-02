@@ -12,7 +12,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 0.8rem;
+    font-size: 1.4vh;
 }
 
 .card {
@@ -31,23 +31,14 @@
 }
 
 .hidden_system,
-.hidden_system *,
 .hidden_label,
-.hidden_label *,
 .hidden_obj,
-.hidden_obj *,
 .hidden_wreck,
-.hidden_wreck *,
 .hidden_wreck_label,
-.hidden_wreck_label *,
 .hidden_obj_other_label,
-.hidden_obj_other_label *,
 .hidden_zone,
-.hidden_zone *,
 .hidden_pob,
-.hidden_pob *,
-.hidden_coords,
-.hidden_coords * {
+.hidden_coords {
     display: none;
 }
 
@@ -56,8 +47,7 @@
     display: block !important;
 }
 
-obj-.unhidden_wreck_label,
-.unhidden_wreck_label * {
+obj-.unhidden_wreck_label {
     display: block !important;
 }
 
@@ -65,9 +55,13 @@ obj-.unhidden_wreck_label,
     display: block !important;
 }
 
-.unhidden_infocard_label system-label,
+.unhidden_infocard_label system-label {
+    display: inline-block !important;
+    color: rgba(232, 252, 121, 0.8) !important;
+}
+
 obj-.unhidden_infocard_label {
-    display: block !important;
+    display: flex !important;
     color: rgba(232, 252, 121, 0.8) !important;
 }
 
@@ -112,7 +106,7 @@ system-label-wrap.unhidden_infocard_label {
     background-color: rgba(255, 136, 1, 0.9);
 }
 
-.conn_hover {}
+/* .conn_hover {} */
 
 /* CSS TOGLE SWITCH START */
 .toggle-container {
@@ -262,12 +256,6 @@ svg.connection-svg-overlay line.conn_hover {
 svg.connection-svg-overlay line.hidden_system {
     display: none;
 }
-
-/* 
-.tippy-box {
-    background-color: rgb(29, 29, 29);
-    color: rgb(230, 230, 230);
-} */
 
 .tippy-box {
     display: none;

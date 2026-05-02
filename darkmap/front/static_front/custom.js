@@ -90,8 +90,10 @@ function InstallButton(button_id, default_state, togglable_state, logic_func) {
     let checkbox_systems_state = sessionStorage.getItem(button_id);
     if (checkbox_systems_state !== null) {
         let checked = checkbox_systems_state === "true";
-        logic_func(checked, button_id, default_state, togglable_state);
-        checkbox_systems.checked = checked;
+        if (checked === true) {
+            logic_func(checked, button_id, default_state, togglable_state);
+            checkbox_systems.checked = checked;
+        }
     }
 }
 

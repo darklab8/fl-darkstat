@@ -27,10 +27,14 @@ function InstallEdgeHighlight() {
 }
 
 function InstallGalaxy() {
-    InstallLabelOverlapper();
     InstallMenu();
     InstallEdgeHighlight();
-
     highlightFromQuery();
     InstallPanzoom(true);
+    // LabelsReset()
+    // InstallLabelOverlapper();
 }
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    InstallGalaxy();
+});

@@ -1,3 +1,28 @@
+/*performance optimizers start
+P.S. so far i did not notice any different from using them
+So they remain disabled due to having no usage but in hopes that someday something will
+*/
+/* obj- {
+    will-change: transform;
+    transform: translateZ(0);
+    contain: layout style;
+}
+
+.panzoom-parent-galaxy,
+.panzoom-parent-system {
+    contain: strict;
+}
+
+.panzoom {
+    will-change: transform;
+    contain: layout style;
+}
+
+.search-bar-dropdown {
+    contain: layout style;
+} */
+
+/*performance optimizers end*/
 .grid {
     width: 100%;
     height: 100%;
@@ -7,18 +32,18 @@
     opacity: 0.8;
 }
 
-.grid .hzGridLine {
+.hzGridLine {
     height: 0.1em;
     width: 100%;
 }
 
-.grid .vertGridLine {
+.vertGridLine {
     width: 0.1em;
     height: 100%;
 }
 
-.grid .hzGridLine,
-.grid .vertGridLine {
+.hzGridLine,
+.vertGridLine {
     background: rgb(25, 47, 96);
     position: absolute;
 }
@@ -60,14 +85,14 @@ h3 {
     left: 0.55em;
 }
 
-.grid .mapScale.arrows {
+.mapScale.arrows {
     border-left: none !important;
     border-right: none !important;
     border-bottom-style: dashed !important;
     bottom: 1% !important;
 }
 
-.grid .mapScale {
+.mapScale {
     position: absolute;
     right: 0.75%;
     bottom: 0.75%;
@@ -79,33 +104,29 @@ h3 {
     text-align: center;
 }
 
-.grid .mapScale .arrowR.arrowHead {
+.arrowR.arrowHead {
     transform: rotate(135deg);
     -webkit-transform: rotate(135deg);
     right: 0;
 }
 
-.grid .mapScale .arrowL.arrowHead {
+.arrowL.arrowHead {
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
     left: 0;
 }
 
-.grid .mapScale.arrows .arrowHead {
-    display: block !important;
-}
-
-.grid .mapScale .arrowHead {
+.arrowHead {
     position: absolute;
     border-top: 0.2em solid white;
     border-left: 0.2em solid white;
     height: 0.3em;
     width: 0.3em;
     bottom: -0.3em;
-    display: none;
+    display: block;
 }
 
-.grid .mapScale h2 {
+.mapScale h2 {
     color: white;
     font-family: var(--font-family);
     position: relative;

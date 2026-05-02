@@ -4,3 +4,7 @@ function InstallSystem() {
     InstallMenu();
     InstallLabelOverlapper();
 }
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    InstallSystem();
+});

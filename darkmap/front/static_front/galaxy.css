@@ -49,8 +49,8 @@ search-bar- {
     box-sizing: border-box;
 }
 
-top-bar- search-bar-counterweight-,
-top-bar- search-bar- {
+search-bar-counterweight-,
+search-bar- {
     flex-grow: 1;
     width: 250px;
 }
@@ -75,9 +75,9 @@ search-bar-counterweight- a {
 }
 
 search-bar-,
-search-bar- .search-input,
-search-bar- .search-wrap,
-search-bar- .search-box {
+.search-input,
+.search-wrap,
+.search-box {
     height: 100%;
 }
 
@@ -98,6 +98,7 @@ map- {
     height: 100%;
     user-select: none;
     touch-action: none;
+    font-size: 1.45vh;
 }
 
 .panzoom-parent-galaxy {
@@ -165,17 +166,9 @@ menu- {
     flex-direction: column;
 }
 
-/* .button_galaxy {
-    grid-row: span 2 / span 2;
-    grid-column-start: 6;
-    grid-row-start: 1;
-} */
-
 .disabled {
     color: #AAA;
 }
-
-.toggle-input {}
 
 menu- div {
     display: flex;
@@ -218,8 +211,6 @@ system- {
     margin-left: -0.75em;
     border-color: white;
 }
-
-.jumphole img {}
 
 .tradelane {
     position: absolute;
@@ -272,15 +263,12 @@ system- {
 }
 
 .star {
-    position: absolute;
     border-color: white;
     border-radius: 50%;
 }
 
 .base {
-    position: absolute;
     border-color: white;
-
     height: 0.75em;
     width: 0.75em;
     margin-top: -0.375em;
@@ -288,9 +276,7 @@ system- {
 }
 
 .playerbase {
-    position: absolute;
     border-color: white;
-
     height: 0.75em;
     width: 0.75em;
     margin-top: -0.375em;
@@ -298,9 +284,7 @@ system- {
 }
 
 .mining {
-    position: absolute;
     border-color: white;
-
     height: 0.75em;
     width: 0.75em;
     margin-top: -0.375em;
@@ -308,7 +292,6 @@ system- {
 }
 
 .planet {
-    position: absolute;
     border-color: white;
     height: 0.75em;
     width: 0.75em;
@@ -318,7 +301,6 @@ system- {
 }
 
 .wreck {
-    position: absolute;
     width: 0.4em;
     height: 0.4em;
     margin-top: -0.2em;
@@ -327,7 +309,6 @@ system- {
 
 .obj_other,
 .obj_disco_encounter {
-    position: absolute;
     width: 0.4em;
     height: 0.4em;
     margin-top: -0.2em;
@@ -356,13 +337,8 @@ system- {
     visibility: hidden;
 }
 
-.wreck img {
-    position: absolute;
-}
-
 .obj_other img,
 .obj_disco_encounter img {
-    position: absolute;
     width: 10px;
     height: 10px;
 }
@@ -370,21 +346,6 @@ system- {
 
 .planet img {
     border-radius: 50%;
-}
-
-.jumphole,
-.tradelane,
-.star,
-.base,
-.planet,
-.wreck,
-.zone,
-.playerbase,
-.mining,
-.obj_other,
-.obj_disco_encounter,
-.zone {
-    cursor: pointer;
 }
 
 .jumphole,
@@ -401,41 +362,23 @@ system- {
     z-index: 99;
 }
 
-.jumphole img,
-.tradelane img,
-.base img,
-.planet img,
-.wreck img,
-.playerbase img,
-.mining img {
-    width: 100%;
-    height: 100%;
+obj- {
+    position: absolute;
+    cursor: pointer;
 }
 
 obj- img {
+    width: 100%;
+    height: 100%;
     position: absolute;
 }
 
-/* .contents div[data-ids-info]:hover,
-.contents div[data-jump-dest]:hover,
-.contents div.mineable:hover  */
 system-:hover,
-.jumphole:hover,
-.tradelane:hover,
-.star:hover,
-.base:hover,
-.playerbase:hover,
-.planet:hover,
-.wreck:hover,
-.zone:hover,
-.obj_other:hover,
-.obj_disco_encounter:hover,
-.mining:hover {
+obj-:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7) !important;
     color: rgb(255, 167, 6);
 }
 
-:target,
 .is-target {
     display: block !important;
     animation: pulse 1.5s infinite;
@@ -473,17 +416,7 @@ system-:hover,
 }
 
 system-:hover system-label,
-.jumphole:hover system-label,
-.tradelane:hover system-label,
-.star:hover system-label,
-.base:hover system-label,
-.playerbase:hover system-label,
-.mining:hover system-label,
-.planet:hover system-label,
-.wreck:hover system-label,
-.obj_other:hover system-label,
-.obj_disco_encounter:hover system-label,
-.zone:hover system-label {
+obj-:hover system-label {
     background-color: rgba(0, 0, 0, 0.45);
     border-radius: 0.2em;
 
@@ -571,7 +504,7 @@ cycle- {
     width: 1vh;
 }
 
-map-.galaxy system-label {
+.galaxy system-label {
     z-index: 10;
 }
 
@@ -593,11 +526,11 @@ system-label {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-map-.galaxy system-label {
-    font-size: clamp(0.55rem, 1.2vh, 3rem);
+.galaxy system-label {
+    font-size: clamp(0.55rem, 1.4vh, 3rem);
 }
 
-map-.system system-label {
+.system system-label {
     font-size: clamp(0.65rem, 1.5vh, 3.3rem);
 }
 

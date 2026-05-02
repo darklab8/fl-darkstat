@@ -31,7 +31,12 @@ templ Html5(menu_kind MenuKind) {
 			@core_front.StaticFile(stat_front.CustomJSSCrossShared)
 			@core_front.StaticFile(static_front.TippyJS1)
 			@core_front.StaticFile(static_front.TippyJS2)
+			@core_front.StaticFile(static_front.CustomJS)
+			if menu_kind == MenuKindGalaxy {
+				@core_front.StaticFile(static_front.MapGalaxyJS)
+			}
 			if menu_kind == MenuKindSystem {
+				@core_front.StaticFile(static_front.MapSystemJS)
 				@core_front.StaticFile(static_front.OnlySystemsCss)
 			}
 			<script>
