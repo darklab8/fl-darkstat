@@ -101,10 +101,12 @@ function FilteringFunction() { // eslint-disable-line no-unused-vars
 }
 
 let timeout_filter
-/**
- * @param {number} timeout_ms
- */
-function DebouncedFilteringFunction(timeout_ms) {
+function DebouncedFilteringFunction() {
+    let timeout_ms = 0;
+    let length = document.querySelector("#table-top table").rows.length;
+    if (length > 500) {
+        timeout_ms = Math.min(length / 2, 1000);
+    }
 
     const DelayedFilter = () => {
         FilteringFunction();
