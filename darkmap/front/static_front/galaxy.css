@@ -424,6 +424,18 @@ obj-:hover system-label {
     color: rgb(255, 167, 6);
 }
 
+@media (pointer: coarse) {
+
+    /*Disabling for touch screens*/
+    obj-:hover,
+    system-:hover,
+    system-:hover system-label,
+    obj-:hover system-label {
+        box-shadow: none !important;
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
 .playerbase system-label {
     color: var(--playerbase_color);
 }
