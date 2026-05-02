@@ -3,13 +3,14 @@
     --show-items: 10;
 }
 
-search_bar- * {
+/* search_bar- * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
+} */
 
-search_bar- {
+/*This thing is broken, wrong selector*/
+/* search_bar- {
     font-family: 'Courier New', Courier, monospace;
     background: #040d14;
     color: #e8f4f8;
@@ -18,6 +19,10 @@ search_bar- {
     align-items: flex-start;
     justify-content: center;
     padding: 3rem 1rem;
+} */
+
+search-bar- {
+    min-height: 36px;
 }
 
 /* ── wrapper ──────────────────────────────────────────── */
