@@ -100,6 +100,20 @@ function FilteringFunction() { // eslint-disable-line no-unused-vars
     }
 }
 
+let timeout_filter
+/**
+ * @param {number} timeout_ms
+ */
+function DebouncedFilteringFunction(timeout_ms) {
+
+    const DelayedFilter = () => {
+        FilteringFunction();
+    }
+
+    clearTimeout(timeout_filter);
+    timeout_filter = setTimeout(DelayedFilter, timeout_ms);
+}
+
 /**
  * Implements functionality for filtering search bar
  * @param {string} table_selector

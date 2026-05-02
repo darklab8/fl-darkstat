@@ -139,6 +139,8 @@ var _pointerDownX = 0;
 var _pointerDownY = 0;
 var _didDrag = false;
 
+
+
 /**
  * @param {boolean} is_galaxy 
  */
@@ -191,18 +193,18 @@ function InstallPanzoom(is_galaxy) {
 
     document.body.classList.add("zoomedOut");
 
-    let lastZoomScale = 1;
+    let timeout
+    let timeout_ms = 500;
+    const fullLabelsReset = () => {
+        LabelsReset();
+        InstallLabelOverlapper();
+    }
     map.addEventListener('panzoomchange', function (event) {
         console.log("event.detail.scale=", event.detail.scale);
         document.documentElement.style.setProperty('--panzoom-scale', `${event.detail.scale}`);
 
-        let currentZoomScale = event.detail.scale;
-        if (Math.abs(lastZoomScale - currentZoomScale) >= 1) {
-            LabelsReset();
-            InstallLabelOverlapper();
-            lastZoomScale = currentZoomScale;
-        }
-
+        clearTimeout(timeout);
+        timeout = setTimeout(fullLabelsReset, timeout_ms);
 
         if (event.detail.scale > zoomInTreshold) {
             document.body.classList.add("zoomedIn");

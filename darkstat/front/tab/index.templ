@@ -153,7 +153,7 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 						LoadTechCompat()
 						LoadSelectedTractorID()
 						highlightInfocardHook()
-						FilteringFunction()
+						DebouncedFilteringFunction(300)
 						
 						if (location.hash) location.href = location.hash;
 					});
