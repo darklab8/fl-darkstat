@@ -193,6 +193,9 @@ function InstallPanzoom(is_galaxy) {
 
     map.addEventListener('panzoomchange', function (event) {
         console.log("event.detail.scale=", event.detail.scale);
+        document.documentElement.style.setProperty('--panzoom-scale', `${event.detail.scale}`);
+        LabelsReset();
+        InstallLabelOverlapper();
 
         if (event.detail.scale > zoomInTreshold) {
             document.body.classList.add("zoomedIn");

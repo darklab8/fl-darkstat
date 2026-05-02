@@ -8,6 +8,8 @@ html {
     left: 0;
     right: 0;
     bottom: 0;
+
+    --panzoom-scale: 1;
 }
 
 :root {
@@ -539,11 +541,11 @@ system-label {
 }
 
 .galaxy system-label {
-    font-size: clamp(0.55rem, 1.4vh, 3rem);
+    font-size: calc(1.4vh / var(--panzoom-scale));
 }
 
 .system system-label {
-    font-size: clamp(0.65rem, 1.5vh, 3.3rem);
+    font-size: calc(1.5vh / var(--panzoom-scale));
 }
 
 /* .zoomed08 map-.system system-label {
