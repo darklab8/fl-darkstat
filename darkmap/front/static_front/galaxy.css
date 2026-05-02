@@ -433,7 +433,6 @@ obj-:hover system-label {
     system-:hover,
     system-:hover system-label,
     obj-:hover system-label {
-        box-shadow: none !important;
         -webkit-tap-highlight-color: transparent;
     }
 }
