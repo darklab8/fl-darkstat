@@ -156,37 +156,3 @@ h2 {
     margin: 0;
     color: rgb(135, 195, 224);
 }
-
-
-
-
-/*legend*/
-
-.legend_ul_icons jh {
-    position: unset;
-    height: 8px !important;
-    max-height: 8px !important;
-    min-width: 8px;
-    width: 8px !important;
-    display: block;
-    margin: 12px 15px 0px 0px;
-    padding: 0;
-    border-radius: 100%;
-}
-
-encounter- {
-    height: 0.5em;
-    width: 0.5em;
-    max-width: 0.5em;
-    max-height: 0.5em;
-    min-height: 0.5em;
-    min-width: 0.5em;
-    margin-top: -0.5em;
-    margin-left: -0.5em;
-    background: rgba(255, 106, 6, 0.9);
-    box-shadow: 0em 0em 0.4em 0.2em rgba(255, 106, 6, 0.5);
-}
-
-.legend_ul_icons li encounter- {
-    margin: 5px 15px 0px 0px !important;
-}

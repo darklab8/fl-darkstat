@@ -79,10 +79,17 @@ templ MapInfocard(info infocarder.Infocard) {
 			</div>
 		</div>
 	</div>
+	<script>
+		document.querySelector("#remodal-bg").addEventListener("click", function(e) {
+			if (e.target === this) {
+				CloseInfocard();
+			}
+		});
+	</script>
 }
 
 templ MapLegend(data *export_map.Export) {
-	<div class="remodal-bg" id="remodal-bg" style="display: flex;">
+	<div class="remodal-bg" id="remodal-bg" style="display: flex;" onclick="CloseInfocardInBackground(this)">
 		<div
 			class="remodal infocardContainer"
 			data-remodal-id="modal"
@@ -305,6 +312,13 @@ templ MapLegend(data *export_map.Export) {
 			</div>
 		</div>
 	</div>
+	<script>
+		document.querySelector("#remodal-bg").addEventListener("click", function(e) {
+			if (e.target === this) {
+				CloseInfocard();
+			}
+		});
+	</script>
 }
 
 templ LegendJumphole(jumphole_css string) {
