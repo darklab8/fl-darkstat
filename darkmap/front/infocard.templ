@@ -90,8 +90,7 @@ templ MapLegend(data *export_map.Export) {
 			style="display: block;"
 		>
 			<div class="scrollUpButton" onclick="CloseInfocard()">
-				<i class="fa fa-times"></i>
-				<p>Close</p>
+				<p>X</p>
 			</div>
 			<style>
 				.infocard * {
@@ -202,8 +201,7 @@ templ MapLegend(data *export_map.Export) {
 						</li>
 					}
 				</ul>
-			</div>
-			<style>
+				<style>
 				.legend_ul_icons line {
 					position: unset;
 					height: 4px !important;
@@ -215,98 +213,95 @@ templ MapLegend(data *export_map.Export) {
 					padding: 0;
 				}
 			</style>
-			<div>
-				<span class="bold">Galaxy jump connections</span>
-				<ul class="legend_ul_icons">
-					<li>
-						@LegendJumpConnection(export_map.JumpKindJumpgate)
-						Jumpgate [two way connection]
-					</li>
-					<li>
-						@LegendJumpConnection(export_map.JumpKindJumphole)
-						Jumphole normal [two way connection]
-					</li>
-					<li>
-						@LegendJumpConnection(export_map.JumpKindFighterOnly)
-						Freighter only jh connection (dockable by berth only) [two way connection]
-					</li>
-					<li>
-						@LegendJumpConnection(export_map.JumpKindCampaignLocked)
-						Jumphole or gate campaign locked in initial workd, [two way connection]
-					</li>
-					if data.Mapped.Discovery != nil {
-						<li>
-							@LegendJumpConnection(export_map.JumpKindUnstableCargoLimited)
-							Jumphole unstable with cargo limit 650. Only if your cargo below 650 you can do it. (Discovery only) [two way connection]
-						</li>
-					}
-					<li>
-						@LegendJumpConnection(export_map.JumpKindAlien)
-						Jumpgate of alien type [two way connection]
-					</li>
-					<li>
-						@LegendJumpConnection(export_map.JumpKindUnknown)
-						Unidentified asymetric jumping connection. It can be One way. Or it is not in the same way forward and back jumpable (Could be jumphole one way and jumpgate back)
-					</li>
-				</ul>
-			</div>
-			<div>
-				<span class="bold">System jumphole types</span>
-				<ul class="legend_ul_icons">
-					<li>
-						@LegendJumphole("jh_color_jumphole")
-						Jumphole normal
-					</li>
-					<li>
-						@LegendJumphole("jh_color_jumpgate")
-						Jumpgate normal
-					</li>
-					if data.Mapped.Discovery != nil {
-						<li>
-							@LegendJumphole("jh_color_unstable_cargo_limit")
-							Jumphole limited to pass only ships with not more than 650 cargo.
-						</li>
-					}
-					<li>
-						@LegendJumphole("jh_color_freighter_only")
-						Freighter only jumphole
-					</li>
-					<li>
-						@LegendJumphole("jh_color_alien")
-						Alien gate
-					</li>
-					<li>
-						@LegendJumphole("jh_color_campaign_locked")
-						Campaign locked jumphole or gate
-					</li>
-					<li>
-						@LegendJumphole("jh_color_unknown")
-						Unidentified type of jh or gate, but probably jumpable by smth at least.
-					</li>
-				</ul>
-			</div>
-			if data.Mapped.Discovery != nil {
 				<div>
-					<span class="bold">System discovery specific objects</span>
+					<span class="bold">Galaxy jump connections</span>
 					<ul class="legend_ul_icons">
 						<li>
-							<encounter-></encounter->
-							Discovery Encounter
-						</li>
-					</ul>
-					<ul class="text_align_left">
-						<li>
-							<span style="color:var(--playerbase_dockable_color)">Player Owned Bases</span> showing docking permissions are shown green
+							@LegendJumpConnection(export_map.JumpKindJumpgate)
+							Jumpgate [two way connection]
 						</li>
 						<li>
-							<span style="color:var(--playerbase_color)">Player Owned bases</span> not showing docking permissions are shown yellow
+							@LegendJumpConnection(export_map.JumpKindJumphole)
+							Jumphole normal [two way connection]
+						</li>
+						<li>
+							@LegendJumpConnection(export_map.JumpKindFighterOnly)
+							Freighter only jh connection (dockable by berth only) [two way connection]
+						</li>
+						<li>
+							@LegendJumpConnection(export_map.JumpKindCampaignLocked)
+							Jumphole or gate campaign locked in initial workd, [two way connection]
+						</li>
+						if data.Mapped.Discovery != nil {
+							<li>
+								@LegendJumpConnection(export_map.JumpKindUnstableCargoLimited)
+								Jumphole unstable with cargo limit 650. Only if your cargo below 650 you can do it. (Discovery only) [two way connection]
+							</li>
+						}
+						<li>
+							@LegendJumpConnection(export_map.JumpKindAlien)
+							Jumpgate of alien type [two way connection]
+						</li>
+						<li>
+							@LegendJumpConnection(export_map.JumpKindUnknown)
+							Unidentified asymetric jumping connection. It can be One way. Or it is not in the same way forward and back jumpable (Could be jumphole one way and jumpgate back)
 						</li>
 					</ul>
 				</div>
-			}
-			<div class="scrollUpButton" onclick="CloseInfocard()">
-				<i class="fa fa-times"></i>
-				<p>Close</p>
+				<div>
+					<span class="bold">System jumphole types</span>
+					<ul class="legend_ul_icons">
+						<li>
+							@LegendJumphole("jh_color_jumphole")
+							Jumphole normal
+						</li>
+						<li>
+							@LegendJumphole("jh_color_jumpgate")
+							Jumpgate normal
+						</li>
+						if data.Mapped.Discovery != nil {
+							<li>
+								@LegendJumphole("jh_color_unstable_cargo_limit")
+								Jumphole limited to pass only ships with not more than 650 cargo.
+							</li>
+						}
+						<li>
+							@LegendJumphole("jh_color_freighter_only")
+							Freighter only jumphole
+						</li>
+						<li>
+							@LegendJumphole("jh_color_alien")
+							Alien gate
+						</li>
+						<li>
+							@LegendJumphole("jh_color_campaign_locked")
+							Campaign locked jumphole or gate
+						</li>
+						<li>
+							@LegendJumphole("jh_color_unknown")
+							Unidentified type of jh or gate, but probably jumpable by smth at least.
+						</li>
+					</ul>
+				</div>
+				if data.Mapped.Discovery != nil {
+					<div>
+						<span class="bold">System discovery specific objects</span>
+						<ul class="legend_ul_icons">
+							<li>
+								<encounter-></encounter->
+								Discovery Encounter
+							</li>
+						</ul>
+						<ul class="text_align_left">
+							<li>
+								<span style="color:var(--playerbase_dockable_color)">Player Owned Bases</span> showing docking permissions are shown green
+							</li>
+							<li>
+								<span style="color:var(--playerbase_color)">Player Owned bases</span> not showing docking permissions are shown yellow
+							</li>
+						</ul>
+					</div>
+				}
 			</div>
 		</div>
 	</div>
