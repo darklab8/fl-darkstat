@@ -103,17 +103,20 @@
     width: auto !important;
     max-height: 80vh;
     overflow-y: auto;
-    padding: 1.5em !important;
     margin: 0 !important;
     transform: none !important;
     position: relative;
 }
 
 .infocardContainer * {
-    text-align: center;
+    text-align: left;
     margin: 0 auto;
     width: auto;
-    padding: 0.25em;
+}
+
+.infocard {
+    padding: 3.5vh;
+    position: relative;
 }
 
 .infocardContainer h2 {
@@ -133,10 +136,20 @@
     margin: 0.35em;
     border-radius: 0.5em;
     border: 0.15em solid rgb(30, 166, 197);
+    cursor: pointer;
 }
 
 .scrollUpButton {
-    cursor: pointer;
+
+    float: right;
+    position: sticky;
+    top: 0.5em;
+    margin: 0 0 0.5em 0.75em;
+
+    width: auto !important;
+    padding: 0.4em 0.6em !important;
+    z-index: 1;
+
 }
 
 .scrollUpButton:hover {
@@ -160,7 +173,7 @@
 
 @media only screen and (min-width: 641px) {
     .remodal {
-        max-width: 700px;
+        max-width: 850px;
     }
 }
 
@@ -173,7 +186,7 @@
     box-sizing: border-box;
     width: 100%;
     margin-bottom: 10px;
-    padding: 0.75em;
+    padding: 1vh;
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }

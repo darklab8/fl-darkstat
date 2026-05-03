@@ -20,12 +20,17 @@ templ MapInfocard(info infocarder.Infocard) {
 			data-remodal-options="hashTracking: false"
 			style="display: block;"
 		>
+			<div class="scrollUpButton" onclick="CloseInfocard()">
+				<p>X</p>
+			</div>
 			<div class="infocard">
 				for _, line := range info {
 					if strings.ReplaceAll(line.ToStr()," ", "") == "" {
 						<p><br/></p>
 					} else {
-						<p>
+						<p
+							style={ templ.KV("text-align: center", line.IsCentered) }
+						>
 							for _, phrase := range line.Phrases {
 								if phrase.Link != nil {
 									<a href={ templ.SafeURL(*phrase.Link) }>
@@ -33,7 +38,9 @@ templ MapInfocard(info infocarder.Infocard) {
 										@templ.Raw(phrase.Raw)
 									</a>
 								} else {
-									<span class={ templ.KV("bold", phrase.Bold) }>
+									<span
+										class={ templ.KV("bold", phrase.Bold) }
+									>
 										{ html.UnescapeString(phrase.Phrase) }
 										@templ.Raw(phrase.Raw)
 									</span>
@@ -69,10 +76,6 @@ templ MapInfocard(info infocarder.Infocard) {
 				// 	has
 				// 	name infocard number 532081 and infocard number 532082.
 				// </p>
-			</div>
-			<div class="scrollUpButton" onclick="CloseInfocard()">
-				<i class="fa fa-times"></i>
-				<p>Close</p>
 			</div>
 		</div>
 	</div>

@@ -468,7 +468,8 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		}
 
 		var sb infocarder.InfocardBuilder
-		sb.WriteLineStr(pob.Name)
+
+		sb.WriteLineCentered(infocarder.InfocardPhrase{Phrase: pob.Name, Bold: true})
 		sb.WriteLineStr("")
 
 		if pob_info.Pos == nil && len(pob_info.InfocardParagraphs) == 0 {

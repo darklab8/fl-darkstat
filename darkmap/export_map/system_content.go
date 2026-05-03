@@ -875,8 +875,8 @@ func (e *Export) ExportInfocard2(
 	var base_name_as_infocard infocarder.Infocard = []infocarder.InfocardLine{{
 		Phrases: []infocarder.InfocardPhrase{
 			{Bold: true, Phrase: strings.ToUpper(name)},
-		},
-	}}
+		}, IsCentered: true,
+	}, {}}
 
 	info = e.TechnicalInfoWrite(info, nickname, Pos, ids_name_num, ids_info_num, faction_name)
 	e.Exp.PutInfocard(infocarder.InfocardKey(nickname), append(base_name_as_infocard, info.Lines...))
@@ -899,7 +899,11 @@ func (e *Export) TechnicalInfoWrite(
 	ids_info_num int,
 	faction_name string,
 ) infocarder.InfocardBuilder {
-	info.WriteLineStrBold("Technical info")
+	info.WriteLineCentered(
+		infocarder.InfocardPhrase{Phrase: "Technical info", Bold: true},
+	)
+	info.WriteLineStr("")
+
 	// It belongs to Alaska Security Forces.
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("This object has internal nickname %s", nickname))
