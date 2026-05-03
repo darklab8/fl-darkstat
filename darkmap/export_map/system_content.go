@@ -13,6 +13,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
 	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
 	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
@@ -370,7 +371,26 @@ func (e *Export) EnrichSystemWithObjects(
 			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
 		}
 
-		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, factionName, obj)
+		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, factionName, obj, func(info *infocarder.InfocardBuilder) {
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Println("crashed in ", obj.Nickname)
+					panic(r)
+				}
+			}()
+
+			e.WriteIniConfig(info, &obj_info.Model)
+
+			if loadout_nick, ok := obj_info.Loadout.GetValue(); ok {
+				loadout := e.Mapped.Loadouts.LoadoutsByNick[loadout_nick]
+				e.WriteIniConfig(info, &loadout.Model)
+			}
+
+			if nickname, ok := obj_info.Archetype.GetValue(); ok {
+				solar := e.Mapped.Solararch.SolarsByNick[nickname]
+				e.WriteIniConfig(info, &solar.Model)
+			}
+		})
 		system_to_add.Objs = append(system_to_add.Objs, obj)
 	}
 
@@ -415,7 +435,24 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		star.Name = configs.GetInfocardName(star_info.IdsName.Get(), star.Nickname)
-		e.ExportInfocard(star_info.IDsInfo, star.Nickname, star.Name, star.Pos, star_info.IdsName, "", star)
+		e.ExportInfocard(star_info.IDsInfo, star.Nickname, star.Name, star.Pos, star_info.IdsName, "", star, func(info *infocarder.InfocardBuilder) {
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Println("crashed in ", star.Nickname)
+					panic(r)
+				}
+			}()
+
+			e.WriteIniConfig(info, &star_info.Model)
+
+			e.WriteIniConfig(info, &stararch.Model)
+
+			e.WriteIniConfig(info, &star_glow.Model)
+			if star_center_nick, ok := stararch.StarCenter.GetValue(); ok {
+				star_center := e.Mapped.Stararch.GlowsByNick[star_center_nick]
+				e.WriteIniConfig(info, &star_center.Model)
+			}
+		})
 
 		star.VisibleByDefault = true
 		handled_objects[star.Nickname] = true
@@ -511,7 +548,32 @@ func (e *Export) EnrichSystemWithObjects(
 			factionName = e.GetInfocardName(group.IdsName.Get(), reputation_nickname)
 		}
 
-		e.ExportInfocard(base_info.IDsInfo, base.Nickname, base.Name, base.Pos, base_info.IdsName, factionName, base)
+		e.ExportInfocard(
+			base_info.IDsInfo,
+			base.Nickname,
+			base.Name,
+			base.Pos,
+			base_info.IdsName,
+			factionName,
+			base,
+			func(info *infocarder.InfocardBuilder) {
+				defer func() {
+					if r := recover(); r != nil {
+						fmt.Println("crashed in ", base.Nickname)
+						panic(r)
+					}
+				}()
+
+				e.WriteIniConfig(info, &base_info.Model)
+
+				if loadout_nick, ok := base_info.Loadout.GetValue(); ok {
+					loadout := e.Mapped.Loadouts.LoadoutsByNick[loadout_nick]
+					e.WriteIniConfig(info, &loadout.Model)
+				}
+
+				e.WriteIniConfig(info, &solararch.Model)
+			},
+		)
 
 		base.VisibleByDefault = true
 
@@ -582,6 +644,9 @@ func (e *Export) EnrichSystemWithObjects(
 			HiddenID,
 			HiddenID,
 			faction_name,
+			func(info *infocarder.InfocardBuilder) {
+				// POB. nothing to write
+			},
 		)
 		if value, ok := e.Exp.GetInfocard2(infocarder.InfocardKey(base.Nickname)); ok {
 			base.HasInfocard = true
@@ -673,7 +738,27 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		obj.Name = configs.GetInfocardName(wreck.IdsName.Get(), obj.Nickname)
-		e.ExportInfocard(wreck.IDsInfo, obj.Nickname, obj.Name, obj.Pos, wreck.IdsName, "", obj)
+		e.ExportInfocard(wreck.IDsInfo, obj.Nickname, obj.Name, obj.Pos, wreck.IdsName, "", obj, func(info *infocarder.InfocardBuilder) {
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Println("crashed in ", obj.Nickname)
+					panic(r)
+				}
+			}()
+
+			e.WriteIniConfig(info, &wreck.Model)
+
+			if loadout_nick, ok := wreck.Loadout.GetValue(); ok {
+				loadout := e.Mapped.Loadouts.LoadoutsByNick[loadout_nick]
+				e.WriteIniConfig(info, &loadout.Model)
+			}
+
+			if nickname, ok := wreck.Archetype.GetValue(); ok {
+				solar := e.Mapped.Solararch.SolarsByNick[nickname]
+				e.WriteIniConfig(info, &solar.Model)
+			}
+
+		})
 
 		obj.VisibleByDefault = true
 		handled_objects[obj.Nickname] = true
@@ -722,7 +807,25 @@ func (e *Export) EnrichSystemWithObjects(
 		if strings.Contains(strings.ToLower(zone.Name), "object unknown") {
 			zone.Name = ""
 		}
-		e.ExportInfocard(zone_info.IDsInfo, zone.Nickname, zone.Name, zone.Pos, zone_info.IdsName, "", &zone.Obj)
+		e.ExportInfocard(
+			zone_info.IDsInfo,
+			zone.Nickname,
+			zone.Name,
+			zone.Pos,
+			zone_info.IdsName,
+			"",
+			&zone.Obj,
+			func(info *infocarder.InfocardBuilder) {
+				defer func() {
+					if r := recover(); r != nil {
+						fmt.Println("crashed in ", zone.Nickname)
+						panic(r)
+					}
+				}()
+				e.WriteIniConfig(info, &zone_info.Model)
+			},
+		)
+
 		handled_objects[zone.Nickname] = true
 		system_to_add.Zones = append(system_to_add.Zones, zone)
 	}
@@ -787,7 +890,26 @@ func (e *Export) EnrichSystemWithObjects(
 		}
 
 		obj.Name = configs.GetInfocardName(obj_info.IdsName.Get(), obj.Nickname)
-		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, "", obj)
+		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, "", obj, func(info *infocarder.InfocardBuilder) {
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Println("crashed in ", obj.Nickname)
+					panic(r)
+				}
+			}()
+
+			e.WriteIniConfig(info, &obj_info.Model)
+
+			if loadout_nick, ok := obj_info.Loadout.GetValue(); ok {
+				loadout := e.Mapped.Loadouts.LoadoutsByNick[loadout_nick]
+				e.WriteIniConfig(info, &loadout.Model)
+			}
+
+			if nickname, ok := obj_info.Archetype.GetValue(); ok {
+				solar := e.Mapped.Solararch.SolarsByNick[nickname]
+				e.WriteIniConfig(info, &solar.Model)
+			}
+		})
 
 		if strings.Contains(strings.ToLower(obj.Name), "object unknown") {
 			continue
@@ -832,6 +954,7 @@ func (e *Export) ExportInfocard(
 	ids_name *semantic.Int,
 	faction_name string,
 	obj *Obj,
+	info_end func(info *infocarder.InfocardBuilder),
 ) {
 	var ids_info_num int
 	if ids_info, ok := ids_info.GetValue(); ok && ids_info != 0 {
@@ -849,6 +972,7 @@ func (e *Export) ExportInfocard(
 		ids_name_num,
 		faction_name,
 		obj,
+		info_end,
 	)
 }
 
@@ -860,6 +984,7 @@ func (e *Export) ExportInfocard2(
 	ids_name_num int,
 	faction_name string,
 	obj *Obj,
+	info_end func(info *infocarder.InfocardBuilder),
 ) {
 	var info infocarder.InfocardBuilder
 	if value, ok := e.Exp.GetInfocard2(infocarder.InfocardKey(nickname)); ok {
@@ -878,7 +1003,7 @@ func (e *Export) ExportInfocard2(
 		}, IsCentered: true,
 	}, {}}
 
-	info = e.TechnicalInfoWrite(info, nickname, Pos, ids_name_num, ids_info_num, faction_name)
+	info = e.TechnicalInfoWrite(info, nickname, Pos, ids_name_num, ids_info_num, faction_name, info_end)
 	e.Exp.PutInfocard(infocarder.InfocardKey(nickname), append(base_name_as_infocard, info.Lines...))
 }
 
@@ -898,6 +1023,7 @@ func (e *Export) TechnicalInfoWrite(
 	ids_name_num int,
 	ids_info_num int,
 	faction_name string,
+	info_end func(info *infocarder.InfocardBuilder),
 ) infocarder.InfocardBuilder {
 	info.WriteLineCentered(
 		infocarder.InfocardPhrase{Phrase: "Technical info", Bold: true},
@@ -920,5 +1046,48 @@ func (e *Export) TechnicalInfoWrite(
 		tooltip_button = e.MakeCopyCoordsButton(Pos)
 	}
 	info.WriteLine(infocarder.InfocardPhrase{Phrase: sb.String(), Raw: tooltip_button})
+
+	info_end(&info)
+
 	return info
+}
+
+func (e *Export) WriteIniConfig(
+	info *infocarder.InfocardBuilder,
+	model *semantic.Model,
+) {
+	info.WriteLineDevStr("")
+	params := configs_export.GetModelWithoutLastComments(model)
+	section := model.RenderModel()
+
+	info.WriteLineDevStr(string(section.OriginalType))
+	for _, param := range params {
+
+		var sb strings.Builder
+		sb.WriteString(param.ToString(inireader.WithComments(false)))
+
+		if section.Type == "[zone]" && param.Key == "faction" {
+			faction_nickname := param.First.AsString()
+			group := e.Exp.Mapped.InitialWorld.GroupsMap[faction_nickname]
+			faction_name := e.GetInfocardName(group.IdsName.Get(), faction_nickname)
+			sb.WriteString(fmt.Sprintf(" \t# <(%s)>", faction_name))
+		}
+
+		if section.Type == "[loadout]" {
+			if param.Key == "cargo" {
+				good_nick := param.First.AsString()
+				good_info := e.Exp.GetGoodInfo(good_nick)
+				sb.WriteString(fmt.Sprintf(" \t# <(%s)>", good_info.Name))
+			} else if param.Key == "equip" {
+				good_nick := param.First.AsString()
+				good_info := e.Exp.GetGoodInfo(good_nick)
+				sb.WriteString(fmt.Sprintf(" \t# <(%s)>", good_info.Name))
+			}
+
+		}
+
+		info.WriteLineDevStr(sb.String())
+	}
+
+	info.WriteLineDevStr("")
 }

@@ -108,7 +108,7 @@
     position: relative;
 }
 
-.infocardContainer * {
+.infocardContainer p {
     text-align: left;
     margin: 3px;
     width: auto;
@@ -205,3 +205,17 @@
 }
 
 /* INFOCARD STUFF END */
+
+.dev-mode {
+    position: sticky;
+    float: right;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    min-height: 20px;
+    padding: 5px 5px !important;
+    right: 5px;
+    bottom: 5px;
+    align-items: center;
+    opacity: 0.5;
+}

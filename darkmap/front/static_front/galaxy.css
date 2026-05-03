@@ -690,3 +690,7 @@ encounter- {
 .legend_ul_icons li encounter- {
     margin: 5px 15px 0px 0px !important;
 }
+
+.hidden_dev_infoline {
+    display: none;
+}

@@ -50,6 +50,7 @@ type InfocardPhrase struct {
 type InfocardLine struct {
 	Phrases    []InfocardPhrase `json:"phrases"  validate:"required"`
 	IsCentered bool             `json:"_"`
+	IsDev      bool             `json:"_"`
 }
 
 func (i InfocardLine) ToStr() string {
@@ -79,6 +80,13 @@ func (i *InfocardBuilder) WriteLineStr(phrase_strs ...string) {
 		phrases = append(phrases, InfocardPhrase{Phrase: phrase})
 	}
 	i.Lines = append(i.Lines, InfocardLine{Phrases: phrases})
+}
+func (i *InfocardBuilder) WriteLineDevStr(phrase_strs ...string) {
+	var phrases []InfocardPhrase
+	for _, phrase := range phrase_strs {
+		phrases = append(phrases, InfocardPhrase{Phrase: phrase})
+	}
+	i.Lines = append(i.Lines, InfocardLine{Phrases: phrases, IsDev: true})
 }
 func (i *InfocardBuilder) WriteLineStrBold(phrase_strs ...string) {
 	var phrases []InfocardPhrase

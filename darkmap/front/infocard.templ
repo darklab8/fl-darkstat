@@ -26,10 +26,13 @@ templ MapInfocard(info infocarder.Infocard) {
 			<div class="infocard">
 				for _, line := range info {
 					if strings.ReplaceAll(line.ToStr()," ", "") == "" {
-						<p><br/></p>
+						<p
+							class={ templ.KV("hidden_dev_infoline", line.IsDev) }
+						><br/></p>
 					} else {
 						<p
 							style={ templ.KV("text-align: center", line.IsCentered) }
+							class={ templ.KV("hidden_dev_infoline", line.IsDev) }
 						>
 							for _, phrase := range line.Phrases {
 								if phrase.Link != nil {
@@ -40,6 +43,7 @@ templ MapInfocard(info infocarder.Infocard) {
 								} else {
 									<span
 										class={ templ.KV("bold", phrase.Bold) }
+										class={ templ.KV("has_raw_html", phrase.Raw != "") }
 									>
 										{ html.UnescapeString(phrase.Phrase) }
 										@templ.Raw(phrase.Raw)
@@ -77,6 +81,17 @@ templ MapInfocard(info infocarder.Infocard) {
 				// 	name infocard number 532081 and infocard number 532082.
 				// </p>
 			</div>
+			<div class="dev-mode">
+				<div class="top">
+					@MultiLineOption([]string{"Dev mode"})
+				</div>
+				<div class="bottom">
+					@ToggleSwitch("checkbox_dev_mode")
+				</div>
+			</div>
+			<script>
+				    InstallButton("checkbox_dev_mode", "hidden_dev_infoline", "unhidden_dev_infoline", toggle_option);
+			</script>
 		</div>
 	</div>
 	<script>
@@ -100,7 +115,7 @@ templ MapLegend(data *export_map.Export) {
 				<p>X</p>
 			</div>
 			<style>
-				.infocard * {
+				.infocard p {
 					text-align: left;
 				}
 				.infocard ul {

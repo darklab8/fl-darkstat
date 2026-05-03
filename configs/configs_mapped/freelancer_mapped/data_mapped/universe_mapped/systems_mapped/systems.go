@@ -134,6 +134,8 @@ type TradeLaneRing struct {
 	IdsName   *semantic.Int
 	IDsInfo   *semantic.Int
 
+	Loadout *semantic.String
+
 	RepNickname *semantic.String
 
 	// has next_ring, then it is tradelane
@@ -146,6 +148,7 @@ type Base struct {
 	Base      *semantic.String // base.nickname in universe.ini
 	DockWith  *semantic.String
 	Archetype *semantic.String
+	Loadout   *semantic.String
 
 	IDsInfo     *semantic.Int
 	IdsName     *semantic.Int
@@ -176,6 +179,7 @@ type Object struct {
 	Nickname  *semantic.String
 	Base      *semantic.String
 	Archetype *semantic.String
+	Loadout   *semantic.String
 	Pos       *semantic.Vect
 	IdsName   *semantic.Int
 	IDsInfo   *semantic.Int
@@ -451,6 +455,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 						Nickname:  semantic.NewString(obj, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 						Pos:       semantic.NewVector(obj, cfg.Key("pos"), semantic.Precision(0)),
 						Archetype: semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						Loadout:   semantic.NewString(obj, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 						Base:      semantic.NewString(obj, cfg.Key("base"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 
 						IdsName: semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
@@ -534,6 +539,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							BurnColor:       semantic.NewVector(obj, cfg.Key("burn_color"), semantic.Precision(0)),
 							AtmosphereRange: semantic.NewInt(obj, cfg.Key("atmosphere_range"), semantic.Optional()),
 						}
+						Star.Map(obj)
 
 						system_to_add.Stars = append(system_to_add.Stars, Star)
 					}
@@ -547,6 +553,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							IdsName:   semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
 							IDsInfo:   semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
 						}
+						wreck.Map(obj)
 
 						system_to_add.Wrecks = append(system_to_add.Wrecks, wreck)
 					}
@@ -561,10 +568,13 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							NextRing:    semantic.NewString(obj, cfg.Key("next_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							PrevRing:    semantic.NewString(obj, cfg.Key("prev_ring"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Archetype:   semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Loadout:     semantic.NewString(obj, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							IdsName:     semantic.NewInt(obj, cfg.Key("ids_name"), semantic.Optional()),
 							IDsInfo:     semantic.NewInt(obj, cfg.Key("ids_info"), semantic.Optional()),
 							RepNickname: semantic.NewString(obj, cfg.Key("reputation"), semantic.OptsS(semantic.Optional()), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 						}
+
+						tradelane.Map(obj)
 
 						system_to_add.Tradelanes = append(system_to_add.Tradelanes, tradelane)
 						system_to_add.TradelaneByNick[tradelane.Nickname.Get()] = tradelane
@@ -759,6 +769,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 func NewBase(obj *inireader.Section, system_to_add *System) *Base {
 	base_to_add := &Base{
 		Archetype:   semantic.NewString(obj, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+		Loadout:     semantic.NewString(obj, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 		Parent:      semantic.NewString(obj, cfg.Key("parent"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 		Nickname:    semantic.NewString(obj, KEY_NICKNAME, semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 		Base:        semantic.NewString(obj, KEY_BASE, semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
