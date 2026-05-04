@@ -2,8 +2,10 @@ package front
 
 import (
 	"fmt"
+	core_settings "github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+
 	"html"
 	"strings"
 )
@@ -28,69 +30,39 @@ templ MapInfocard(info infocarder.Infocard) {
 					if line.Raw != "" {
 						@templ.Raw(line.Raw)
 					} else if strings.ReplaceAll(line.ToStr()," ", "") == "" {
-						<p
-							class={ templ.KV("hidden_dev_infoline", line.IsDev) }
-						><br/></p>
-					} else {
-						<p
-							style={ templ.KV("text-align: center", line.IsCentered) }
-							class={ templ.KV("hidden_dev_infoline", line.IsDev) }
-						>
-							for _, phrase := range line.Phrases {
-								if phrase.Link != nil {
-									<a href={ templ.SafeURL(*phrase.Link) }>
-										{ html.UnescapeString(phrase.Phrase) }
-									</a>
-								} else {
-									<span
-										class={ templ.KV("bold", phrase.Bold) }
-									>
-										{ html.UnescapeString(phrase.Phrase) }
-									</span>
-								}
+						if core_settings.Env.AppDevMode {
+							<p
+								class={ templ.KV("hidden_dev_infoline", line.IsDev) }
+							><br/></p>
+						} else {
+							if !line.IsDev {
+								<p><br/></p>
 							}
-						</p>
+						}
+					} else {
+						if core_settings.Env.AppDevMode {
+							@InfoLine(line)
+						} else {
+							if !line.IsDev {
+								@InfoLine(line)
+							}
+						}
 					}
 				}
-				// originally infocards were written like this:
-				// <h2>Disabled Slave Liner</h2>
-				// <span class="infocardText">
-				// 	This liner was disabled after a long chase in
-				// 	Pennsylvania after being stopped by a local patrol. After further inspection the liner was found to be
-				// 	laden
-				// 	with illegal Rheinland black market firearms, including many biological weapons thought to be intended
-				// 	for
-				// 	use in terrorist activities.
-				// </span>
-				// <br class="infocardBreak"/>
-				// <br class="infocardBreak"/>
-				// <span
-				// 	class="infocardText"
-				// >
-				// 	The owners of the ship escaped in light ships mid pursuit and are currently on the
-				// 	run.
-				// 	In an unprecedented move, the Battleship Delaware relocated to the scene to secure the area, known to be
-				// 	frequented by various undesirables.
-				// </span>
-				// <br class="infocardBreak"/>
-				// <h3>Technical info</h3>
-				// <p class="technicalInfo">
-				// 	This object with internal nickname disrupted_pilgrim is located on the plane, and
-				// 	has
-				// 	name infocard number 532081 and infocard number 532082.
-				// </p>
 			</div>
-			<div class="dev-mode">
-				<div class="top">
-					@MultiLineOption([]string{"Dev mode"})
+			if core_settings.Env.AppDevMode {
+				<div class="dev-mode">
+					<div class="top">
+						@MultiLineOption([]string{"Dev mode"})
+					</div>
+					<div class="bottom">
+						@ToggleSwitch("checkbox_dev_mode")
+					</div>
 				</div>
-				<div class="bottom">
-					@ToggleSwitch("checkbox_dev_mode")
-				</div>
-			</div>
-			<script>
+				<script>
 				    InstallButton("checkbox_dev_mode", "hidden_dev_infoline", "unhidden_dev_infoline", toggle_option);
 			</script>
+			}
 		</div>
 	</div>
 	<script>
@@ -100,6 +72,27 @@ templ MapInfocard(info infocarder.Infocard) {
 			}
 		});
 	</script>
+}
+
+templ InfoLine(line infocarder.InfocardLine) {
+	<p
+		style={ templ.KV("text-align: center", line.IsCentered) }
+		class={ templ.KV("hidden_dev_infoline", line.IsDev) }
+	>
+		for _, phrase := range line.Phrases {
+			if phrase.Link != nil {
+				<a href={ templ.SafeURL(*phrase.Link) }>
+					{ html.UnescapeString(phrase.Phrase) }
+				</a>
+			} else {
+				<span
+					class={ templ.KV("bold", phrase.Bold) }
+				>
+					{ html.UnescapeString(phrase.Phrase) }
+				</span>
+			}
+		}
+	</p>
 }
 
 templ MapLegend(data *export_map.Export) {
