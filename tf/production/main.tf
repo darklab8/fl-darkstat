@@ -72,5 +72,5 @@ module "darkstat_dev" {
   disco_oauth  = true
   is_discovery = true
   # extra_vars   = local.disco_extra_vars
-  args = ["--stat-deals-on", "--dev-mode", "web"]
+  args = ["--stat-deals-on", "--dev-mode", "--map-on", "web"]
 }
