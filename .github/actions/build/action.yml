@@ -16,7 +16,8 @@ inputs:
   heading:
     description: Heading at the site rigit.
     # type: string
-    default: 'fl-darkstat powered by <a href="https://github.com/darklab8/fl-darkstat">Github</a>'
+    default: "fl-darkstat powered by <a
+      href=\"https://github.com/darklab8/fl-darkstat\">Github</a>"
   relay-host:
     description: turning of optional dark relay features. necessary only for Discovery
     default: "http://localhost:8080"
@@ -28,6 +29,9 @@ inputs:
     default: "index.html"
   map-on:
     description: turn on map by separate method
+    default: "false"
+  dev-mode:
+    description: dev mode of darkstat on
     default: "false"
   map-by-url:
     description: turn on map by separate method
@@ -70,6 +74,7 @@ runs:
         UTILS_DEV_ENV: "true"
         DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
         DARKMAP_STAT_AT_ROOT_ON: "true"
+        DARKCORE_DEV_MODE: "${{ inputs.dev-mode }}"
     - name: build
       if: ${{ inputs.map-on == 'true' }}
       shell: bash
@@ -84,6 +89,7 @@ runs:
         UTILS_DEV_ENV: "true"
         DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
         DARKSTAT_MAP_BY_URL: ${{ inputs.map-by-url }}
+        DARKCORE_DEV_MODE: "${{ inputs.dev-mode }}"
     - name: build
       shell: bash
       run: darkstat map build
@@ -99,6 +105,7 @@ runs:
         DARKMAP_INDEX_URL: "${{ inputs.map-index-url }}"
         DARKCORE_BUILD_FOLDER: build_map
         DARKMAP_STAT_AT_ROOT_ON: "true"
+        DARKCORE_DEV_MODE: "${{ inputs.dev-mode }}"
     - name: collect nap files
       shell: bash
       if: ${{ inputs.map-on == 'true' }}
