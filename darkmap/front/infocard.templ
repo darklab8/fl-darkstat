@@ -25,7 +25,9 @@ templ MapInfocard(info infocarder.Infocard) {
 			</div>
 			<div class="infocard">
 				for _, line := range info {
-					if strings.ReplaceAll(line.ToStr()," ", "") == "" {
+					if line.Raw != "" {
+						@templ.Raw(line.Raw)
+					} else if strings.ReplaceAll(line.ToStr()," ", "") == "" {
 						<p
 							class={ templ.KV("hidden_dev_infoline", line.IsDev) }
 						><br/></p>
@@ -38,15 +40,12 @@ templ MapInfocard(info infocarder.Infocard) {
 								if phrase.Link != nil {
 									<a href={ templ.SafeURL(*phrase.Link) }>
 										{ html.UnescapeString(phrase.Phrase) }
-										@templ.Raw(phrase.Raw)
 									</a>
 								} else {
 									<span
 										class={ templ.KV("bold", phrase.Bold) }
-										class={ templ.KV("has_raw_html", phrase.Raw != "") }
 									>
 										{ html.UnescapeString(phrase.Phrase) }
-										@templ.Raw(phrase.Raw)
 									</span>
 								}
 							}

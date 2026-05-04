@@ -694,3 +694,9 @@ encounter- {
 .hidden_dev_infoline {
     display: none;
 }
+
+.tooltip {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}

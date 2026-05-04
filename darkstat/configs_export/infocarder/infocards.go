@@ -44,13 +44,13 @@ type InfocardPhrase struct {
 	Phrase string  `json:"phrase"  validate:"required"`
 	Link   *string `json:"link"`
 	Bold   bool    `json:"bold"  validate:"required"`
-	Raw    string  `json:"_"`
 }
 
 type InfocardLine struct {
 	Phrases    []InfocardPhrase `json:"phrases"  validate:"required"`
 	IsCentered bool             `json:"_"`
 	IsDev      bool             `json:"_"`
+	Raw        string           `json:"_"`
 }
 
 func (i InfocardLine) ToStr() string {

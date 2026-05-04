@@ -1045,7 +1045,8 @@ func (e *Export) TechnicalInfoWrite(
 	if e.Mapped.Discovery != nil {
 		tooltip_button = e.MakeCopyCoordsButton(Pos)
 	}
-	info.WriteLine(infocarder.InfocardPhrase{Phrase: sb.String(), Raw: tooltip_button})
+	info.WriteLine(infocarder.InfocardPhrase{Phrase: sb.String()})
+	info.Lines = append(info.Lines, infocarder.InfocardLine{Raw: tooltip_button})
 
 	info_end(&info)
 
