@@ -20,7 +20,7 @@ type DarkcoreEnvVars struct {
 	Enver               *enverant.Enverant
 	WebPort             int
 	AppStart            time.Time
-	AppDevMode          bool
+	DisableAppDevMode   bool
 }
 
 var Env DarkcoreEnvVars
@@ -37,7 +37,7 @@ func GetEnvs() DarkcoreEnvVars {
 		EnableUnixSockets:   envs.GetBoolOr("ENABLE_UNIX_SOCKETS", *darkflag.ArgEnableUnixSockets, enverant.WithDesc("creating unix sockets, requires /tmp/darkstat or /tmp/darkstat-{environment} folder defined")),
 		WebPort:             envs.GetIntOr("WEB_PORT", *darkflag.ArgWebPort, enverant.WithDesc("specify web port")),
 		BuildFolder:         envs.GetStrOr("BUILD_FOLDER", "build", enverant.WithDesc("output to which build folder name")),
-		AppDevMode:          envs.GetBoolOr("DEV_MODE", *darkflag.EnabledDevMode, enverant.WithDesc("Add ability to show extra information. Map has dev mode in infocard at least")),
+		DisableAppDevMode:   envs.GetBoolOr("DISABLE_DEV_MODE", *darkflag.DisableDevMode, enverant.WithDesc("Add ability to show extra information. Map has dev mode in infocard at least")),
 
 		AppStart: time.Now(),
 		Enver:    envs,

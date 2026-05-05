@@ -30,27 +30,27 @@ templ MapInfocard(info infocarder.Infocard) {
 					if line.Raw != "" {
 						@templ.Raw(line.Raw)
 					} else if strings.ReplaceAll(line.ToStr()," ", "") == "" {
-						if core_settings.Env.AppDevMode {
-							<p
-								class={ templ.KV("hidden_dev_infoline", line.IsDev) }
-							><br/></p>
-						} else {
+						if core_settings.Env.DisableAppDevMode {
 							if !line.IsDev {
 								<p><br/></p>
 							}
+						} else {
+							<p
+								class={ templ.KV("hidden_dev_infoline", line.IsDev) }
+							><br/></p>
 						}
 					} else {
-						if core_settings.Env.AppDevMode {
-							@InfoLine(line)
-						} else {
+						if core_settings.Env.DisableAppDevMode {
 							if !line.IsDev {
 								@InfoLine(line)
 							}
+						} else {
+							@InfoLine(line)
 						}
 					}
 				}
 			</div>
-			if core_settings.Env.AppDevMode {
+			if !core_settings.Env.DisableAppDevMode {
 				<div class="dev-mode">
 					<div class="top">
 						@MultiLineOption([]string{"Dev mode"})

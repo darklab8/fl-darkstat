@@ -34,6 +34,7 @@ module "darkstat" {
 locals {
   disco_extra_vars = {
     CONFIGS_DISCO_BASES_FULL_URL = data.external.secrets_darkbot.result["SCRAPPY_BASE_URL"]
+    DISABLE_DEV_MODE             = "true"
   }
 }
 
@@ -72,5 +73,5 @@ module "darkstat_dev" {
   disco_oauth  = true
   is_discovery = true
   # extra_vars   = local.disco_extra_vars
-  args = ["--stat-deals-on", "--dev-mode", "--map-on", "web"]
+  args = ["--stat-deals-on", "--map-on", "web"]
 }

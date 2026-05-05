@@ -162,8 +162,8 @@ In the past we offered **grpc client** too, but it **was decommissioned** in htt
   - `darkstat.exe` # will just run darkstat (fastest way to run just darkstat)
   - `darkstat.exe web`, same as no commands.
   - `darkstat.exe --stat-deals-on` with best trades
-  - `darkstat.exe --dev-mode map web`, run very fastly map only. With ability toggle dev mode in infocards.
-  - `darkstat.exe --dev-mode --stat-deals-on --map-on web` # running everything completely together. darkstat and map. Time expensive for big mods.
+  - `darkstat.exe map web`, run very fastly map only.
+  - `darkstat.exe --stat-deals-on --map-on web` # running everything completely together. darkstat and map. Time expensive for big mods.
 
 P.S. The tool uses lazy filesystem approach by grabbing first file with matching name. I did not use full paths.
 So don't have folder "DATA2" duplicating all files in same Freelancer folder

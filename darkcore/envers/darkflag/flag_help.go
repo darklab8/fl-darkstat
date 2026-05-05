@@ -22,7 +22,7 @@ var (
 
 var (
 	ArgMapRoot     = flag.String("map-site-root", "/", "map site root")
-	EnabledDevMode = flag.Bool("dev-mode", false, "Add ability to show extra information. Map has dev mode in infocard at least")
+	DisableDevMode = flag.Bool("dev-mode-off", false, "Disabling dev mode")
 )
 
 var (
