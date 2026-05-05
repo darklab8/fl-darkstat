@@ -1,19 +1,20 @@
-FROM docker:27.3.1-cli
 
-ENV PYTHONUNBUFFERED=1
+FROM golang:1.25-bookworm AS build
+ENV CGO_ENABLED=0
 
-RUN apk add curl python3 py3-pip
-RUN pip3 install --break-system-packages requests
+WORKDIR /code
+COPY main.go go.mod go.sum ./
+RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
+FROM docker:27.3.1-cli AS runner
+
+WORKDIR /install
 RUN mkdir ~/.ssh
 RUN chmod 7000 ~/.ssh
 ENV change_vers=1
 COPY --chmod=600 id_rsa.git.discoverygc.com /root/.ssh/id_rsa
 RUN ssh-keyscan -t rsa git.discoverygc.com >> ~/.ssh/known_hosts
-
-WORKDIR /install
-COPY --chmod=777 entrypoint.py entrypoint.py
+COPY --from=build /code/main /install/main
 
 WORKDIR /code
-CMD ["python3","/install/entrypoint.py"]
-
+ENTRYPOINT ["/install/main"]

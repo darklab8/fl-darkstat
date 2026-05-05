@@ -5,7 +5,7 @@ resource "docker_image" "discovery_dev" {
   }
 
   triggers = {
-    dir_sha1 = sha1(join("", [for f in ["Dockerfile", "entrypoint.py"] : filesha1("${path.module}/${f}")]))
+    dir_sha1 = sha1(join("", [for f in ["Dockerfile", "main.go"] : filesha1("${path.module}/${f}")]))
   }
 }
 
