@@ -55,6 +55,10 @@ obj-.unhidden_wreck_label {
     display: block !important;
 }
 
+.unhiddenCylinderZone {
+    display: block !important;
+}
+
 .unhidden_infocard_label system-label {
     display: inline-block !important;
     color: rgba(232, 252, 121, 0.8) !important;

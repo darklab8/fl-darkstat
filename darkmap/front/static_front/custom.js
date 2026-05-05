@@ -112,6 +112,8 @@ function InstallMenu() {
 
     InstallButton("checkbox_all_zones", "hidden_all_zone", "unhidden_all_zone", toggle_option);
 
+    InstallButton("checkbox_zone_cylinders", "hiddenCylinderZone", "unhiddenCylinderZone", toggle_option);
+
     InstallButton("checkbox_coords", "hidden_coords", "unhidden_coords", toggle_tippy);
 
     InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob", toggle_option);
@@ -148,7 +150,7 @@ function InstallPanzoom(is_galaxy) {
     var map = document.querySelector('.panzoom');
 
     var options = {
-        maxScale: 5,
+        maxScale: 7.5,
         minScale: 1,
         handleStartEvent: function (event) {
             event.preventDefault();

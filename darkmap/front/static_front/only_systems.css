@@ -156,3 +156,7 @@ h2 {
     margin: 0;
     color: rgb(135, 195, 224);
 }
+
+.cylinderZone {
+    background-color: rgba(87, 255, 255, 0.15);
+}
