@@ -59,6 +59,7 @@ templ SystemContents(system *export_map.System) {
 			class={ templ.KV("hidden_obj", !obj.VisibleByDefault), }
 		>
 			<obj-
+				onclick="updateQuery(this)"
 				id={ obj.Nickname }
 				data-nickname={ obj.Nickname }
 				class={ fmt.Sprintf("jumphole %s", obj.Kind.ToStr()), }
@@ -79,6 +80,7 @@ templ SystemContents(system *export_map.System) {
 		// to be fair inner shadow does not work according to expectations. at least the star_glow one i think
 		<obj-
 			id={ obj.Nickname }
+			onclick="updateQuery(this)"
 			hx-get={ types.GetCtx(ctx).SiteRoot + MapInfocardURL(infocarder.InfocardKey(obj.Nickname)) }
 			hx-target="#remodal-bg"
 			hx-swap="outerHTML"
@@ -242,6 +244,7 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 	<obj-
 		id={ obj.Nickname }
 		hx-get={ types.GetCtx(ctx).SiteRoot + MapInfocardURL(infocarder.InfocardKey(obj.Nickname)) }
+		onclick="updateQuery(this)"
 		hx-target="#remodal-bg"
 		hx-swap="outerHTML"
 		data-nickname={ obj.Nickname }
