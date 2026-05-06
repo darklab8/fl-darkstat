@@ -134,6 +134,11 @@ function highlightFromQuery() {
     if (!targetEl) return;
 
     targetEl.classList.add('is-target');
+
+    targetEl.addEventListener('animationend', function onEntranceDone() {
+        targetEl.classList.add('pulse-normal');
+        targetEl.removeEventListener('animationend', onEntranceDone);
+    });
 }
 
 var DRAG_THRESHOLD = 5;
