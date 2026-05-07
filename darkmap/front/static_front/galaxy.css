@@ -382,7 +382,7 @@ obj-:hover {
 
 .is-target {
     display: block !important;
-    animation: pulse-entrance 2s ease-out forwards;
+    animation: pulse-entrance 4s ease-out forwards;
 }
 
 .is-target.pulse-normal {
