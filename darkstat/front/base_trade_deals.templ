@@ -2,7 +2,6 @@ package front
 
 import (
 	"fmt"
-	"github.com/darklab8/fl-darkstat/darkstat/cache"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
@@ -13,7 +12,7 @@ import (
 )
 
 templ TradeDeals(
-	trade_routes *cache.Cached[configs_export.BestTradeDealsOutput],
+	trade_routes configs_export.BestTradeDealsOutput,
 	shared *types.SharedData,
 	data *configs_export.Exporter,
 	mode tab.ShowEmpty,
@@ -185,12 +184,12 @@ templ OneWayShared(shared *types.SharedData) {
 }
 
 templ TradesTable(
-	trade_routes *cache.Cached[configs_export.BestTradeDealsOutput],
+	trade_routes configs_export.BestTradeDealsOutput,
 	shared *types.SharedData,
 	data *configs_export.Exporter,
 ) {
 	@OneWayShared(shared) {
-		for _, trade_route := range trade_routes.Get(ctx).OneWayDeals {
+		for _, trade_route := range trade_routes.OneWayDeals {
 			@OneWayRow(trade_route, shared)
 		}
 	}

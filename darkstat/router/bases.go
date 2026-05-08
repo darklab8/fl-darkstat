@@ -117,23 +117,16 @@ func (l *Router) LinkBases(
 		}
 	}
 
-	best_trades := cache.NewCached(func() configs_export.BestTradeDealsOutput {
-		best_deals := data.GetBestTradeDeals(ctx, data.TradeBases)
+	best_trades := data.GetBestTradeDeals(ctx, data.TradeBases)
 
-		for _, two_way_deal := range best_deals.TwoWayDeals {
-			build.RegComps(
-				builder.NewComponent( // probably move to back, at least for RAM reasons
-					utils_types.FilePath(front.TwoWayDealDetailedUrl(two_way_deal)),
-					front.TwoWayDealDetailed(two_way_deal, shared),
-				),
-			)
-		}
-		return best_deals
-	}, time.Minute*2+time.Second*5)
-
-	// Hackish work around to ensure bottom tables got registered.
-	// theoretically speaking they should have worked without awaiting calculations
-	best_trades.Get(ctx)
+	for _, two_way_deal := range best_trades.TwoWayDeals {
+		build.RegComps(
+			builder.NewComponent( // probably move to back, at least for RAM reasons
+				utils_types.FilePath(front.TwoWayDealDetailedUrl(two_way_deal)),
+				front.TwoWayDealDetailed(two_way_deal, shared),
+			),
+		)
+	}
 
 	build.RegComps(
 		builder.NewComponent( // move to back?
