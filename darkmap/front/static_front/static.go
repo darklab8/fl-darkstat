@@ -15,11 +15,20 @@ var PanzoomJS core_types.StaticFile = core_types.StaticFile{
 	Kind:     core_types.StaticFileJS,
 }
 
-//go:embed custom.js
+//go:embed custom_menu.js
+var CustomJSMenuContent string
+
+//go:embed custom_labelator.js
+var CustomJSLabelContent string
+
+//go:embed custom_other.js
+var CustomJSOtherContent string
+
+//go:embed custom_panzoom.js
 var CustomJSContent string
 
 var CustomJS core_types.StaticFile = core_types.StaticFile{
-	Content:  CustomJSContent,
+	Content:  CustomJSMenuContent + CustomJSContent + CustomJSLabelContent + CustomJSOtherContent,
 	Filename: "map_custom.js",
 	Kind:     core_types.StaticFileJS,
 }
