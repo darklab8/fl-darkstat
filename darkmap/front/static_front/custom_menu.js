@@ -96,6 +96,22 @@ function InstallButton(button_id, default_state, togglable_state, logic_func) {
     }
 }
 
+
+function toggle_grid_moving(checked, checkbox_name, hidden_class, unhidden_class) {
+    switch (checked) {
+        case true:
+            console.log(this.value, "turned on pan")
+            PanzoomToggleContain(true);
+            sessionStorage.setItem(checkbox_name, "true");
+            break;
+        case false:
+            console.log(this.value, "turned off pan")
+            PanzoomToggleContain(false);
+            sessionStorage.setItem(checkbox_name, "false");
+            break;
+    }
+}
+
 function InstallMenu() {
     InstallButton("checkbox_systems", "hidden_system", "unhidden_system", toggle_option);
 
@@ -120,4 +136,8 @@ function InstallMenu() {
     InstallButton("checkbox_obj_others", "hidden_obj_other_label", "unhidden_obj_other_label", toggle_option);
 
     InstallButton("checkbox_infocarded_labels", "hidden_infocard_label", "unhidden_infocard_label", toggle_option);
+
+    InstallButton("checkbox_move_out_of_grid", "none", "none", toggle_grid_moving);
+
+
 }

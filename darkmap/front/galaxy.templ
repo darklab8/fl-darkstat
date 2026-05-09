@@ -348,6 +348,14 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 		</div>
 		<div class="menu-item">
 			<div class="top">
+				@MultiLineOption([]string{"Move out", "of grid"})
+			</div>
+			<div class="bottom">
+				@ToggleSwitch("checkbox_move_out_of_grid")
+			</div>
+		</div>
+		<div class="menu-item">
+			<div class="top">
 				@MultiLineOption([]string{"Map legend"})
 			</div>
 			<div
