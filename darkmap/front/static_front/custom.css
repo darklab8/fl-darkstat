@@ -4,7 +4,7 @@
 }
 
 .menu {
-    font-size: 0.8em
+    font-size: 0.8em;
 }
 
 .vertical_options {
@@ -118,7 +118,7 @@ system-label-wrap.unhidden_infocard_label {
     --inactive-color: #98989c;
     position: relative;
     aspect-ratio: 292 / 142;
-    height: 1.275em;
+    height: 2.5vh;
 }
 
 .toggle-input {
