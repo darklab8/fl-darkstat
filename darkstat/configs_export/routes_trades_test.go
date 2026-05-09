@@ -86,7 +86,8 @@ func TestGetTrades(t *testing.T) {
 	err = pprof.StartCPUProfile(f)
 	logus.Log.CheckError(err, "failed to start pprof")
 
-	_ = trade_path_exporter.GetBestTradeDeals(ctx, e.Bases)
+	data := trade_path_exporter.GetBestTradeDeals(ctx, e.Bases)
+	_ = data
 
 	pprof.StopCPUProfile()
 

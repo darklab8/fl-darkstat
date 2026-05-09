@@ -3,8 +3,6 @@
  * For table that has also filtering by selected ID tech compatibility, which is needed for Freelancer Discovery
  */
 function FilteringFunction() { // eslint-disable-line no-unused-vars
-    // Declare variables
-    // console.log("triggered FilteringFunction")
     let input, filter, filter_infocard, table, tr, txtValue, txtValue_infocard;
     input = document.getElementById("filterinput");
     if (typeof (input) === 'undefined' || input === null) {
@@ -15,6 +13,9 @@ function FilteringFunction() { // eslint-disable-line no-unused-vars
     filter = input.value.toUpperCase();
     table = document.querySelector("#table-top table");
     tr = table.getElementsByTagName("tr");
+
+    // Get rows limit from data attribute
+    const rowsLimit = table ? parseInt(table.getAttribute("data-rows-limit"), 10) : NaN;
 
     // Select current ID tractor
     let tractor_id_elem, tractor_id_selected;
@@ -45,8 +46,8 @@ function FilteringFunction() { // eslint-disable-line no-unused-vars
     }
 
     // Loop through all table rows, and hide those who don't match the search query
+    let visibleCount = 0;
     for (let i = 1; i < tr.length; i++) {
-        // row = document.getElementById("bottominfo_dsy_councilhf")
         let row = tr[i];
 
         let txtValues = []
@@ -86,16 +87,18 @@ function FilteringFunction() { // eslint-disable-line no-unused-vars
             } else {
                 cell.style.display = "";
             }
-
-            // console.log("compatibility=", compatibility, "tractor_id_selected=", tractor_id_selected, "techcompat_visible=", techcompat_visible)
         }
 
-        if ((txtValue.toUpperCase().indexOf(filter) > -1 && txtValue_infocard.toUpperCase().indexOf(filter_infocard) > -1) && techcompat_visible === true) {
+        const matchesFilter = txtValue.toUpperCase().indexOf(filter) > -1
+            && txtValue_infocard.toUpperCase().indexOf(filter_infocard) > -1
+            && techcompat_visible === true;
+
+        // Hide if doesn't match filter, or if rows limit is reached
+        if (matchesFilter && (isNaN(rowsLimit) || visibleCount < rowsLimit)) {
             tr[i].style.display = "";
-            // console.log("row-i", i, "is made visible");
+            visibleCount++;
         } else {
             tr[i].style.display = "none";
-            // console.log("row-i", i, "is made invisible");
         }
     }
 }

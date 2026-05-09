@@ -17,6 +17,12 @@ import (
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
+const (
+	LimitBestPaths              = 3000
+	TwoWayLimitRoutes           = 4000
+	TwoWayLimitConnnectingTimeS = float64(300)
+)
+
 type TradeRoute struct {
 	Route          *Route
 	BuyingGood     *MarketGood
@@ -226,8 +232,6 @@ type TradeDeal struct {
 	TransportInfo OneWayRouteInfo
 	FrigateInfo   OneWayRouteInfo
 }
-
-const LimitBestPaths = 3000
 
 type BestTradeDealsOutput struct {
 	OneWayDeals []*TradeDeal
@@ -639,9 +643,6 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 	return result
 }
-
-var TwoWayLimitRoutes = 2500
-var TwoWayLimitConnnectingTimeS = float64(300)
 
 type RouteInfo struct {
 	ProfitPerTime     float64

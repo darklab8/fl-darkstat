@@ -40,8 +40,11 @@ templ TradeDeals(
 						@tab.PageTime()
 					}
 				}
-				<div id="table-top" style="height: calc(100% - 15px);">
-					@tab.FilterBar(&types.SharedData{})
+				<div
+					id="table-top"
+					style="height: calc(100% - 15px);"
+				>
+					@tab.FilterBar(shared)
 					<div id="table-top-main" style="height:100%;">
 						@TradesTable(trade_routes, shared, data)
 					</div>
@@ -97,10 +100,21 @@ templ FormatKiloVolumes(kilo_volume float64) {
 }
 
 templ OneWayShared(shared *types.SharedData) {
-	<table class="sortable">
+	<table class="sortable" data-rows-limit={ strconv.Itoa(TABLE_ROW_LIMIT) }>
 		<thead>
 			<tr class="flexed-tr">
 				<th style="width:100px;">Commodity</th>
+				<th style="width:50px;">
+					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "Profit/v/t", "¢ents/sec"})
+				</th>
+				if shared.ShowDisco || shared.ShowFLSR {
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "Profit/v/t", "¢ents/sec"})
+					</th>
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "Profit/v/t", "¢ents/sec"})
+					</th>
+				}
 				<th style="width:60px;">
 					@frmt.MultiLinestring([]string{"From", "System"})
 				</th>
@@ -141,17 +155,6 @@ templ OneWayShared(shared *types.SharedData) {
 						@frmt.MultiLinestring([]string{shared.ShipNames.Freighter, "profit", "sum"})
 					</th>
 				}
-				<th style="width:50px;">
-					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "Profit/v/t", "¢ents/sec"})
-				</th>
-				if shared.ShowDisco || shared.ShowFLSR {
-					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Frigate), "Profit/v/t", "¢ents/sec"})
-					</th>
-					<th style="width:50px;">
-						@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Freighter), "Profit/v/t", "¢ents/sec"})
-					</th>
-				}
 				<th style="width:5px;">Vol.</th>
 				if shared.ShowDisco {
 					<th style="width:5px;">
@@ -189,13 +192,13 @@ templ TradesTable(
 	data *configs_export.Exporter,
 ) {
 	@OneWayShared(shared) {
-		for _, trade_route := range trade_routes.OneWayDeals {
-			@OneWayRow(trade_route, shared)
+		for index, trade_route := range trade_routes.OneWayDeals {
+			@OneWayRow(trade_route, shared, index)
 		}
 	}
 }
 
-templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData) {
+templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData, index int) {
 	<tr
 		hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
 		hx-trigger="click"
@@ -203,12 +206,23 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 		hx-swap="innerHTML"
 		preload="mouseover"
 		onclick="RowHighlighter(this)"
+		style={ templ.KV("display: none", index > TABLE_ROW_LIMIT) }
 	>
 		<td>
 			@frmt.WriteLimit(150) {
 				{ trade_route.Transport.SellingGood.Name + frmt.FormattedShipClassOfCommodity(trade_route.Transport.SellingGood.ShipClass) }
 			}
 		</td>
+		<td class="route_transport">{ FormatProfitPerTime(trade_route.Transport.GetProffitPerTime()) }</td>
+		if shared.ShowDisco || shared.ShowFLSR {
+			<td class="route_frigate">{ FormatProfitPerTime(trade_route.Frigate.GetProffitPerTime()) }</td>
+			<td class="route_freighter">{ FormatProfitPerTime( trade_route.Freighter.GetProffitPerTime()) }</td>
+		}
+		@DiscoRephackCompat(
+			shared,
+			trade_route.Transport.BuyingGood.GetFactionNick(),
+			trade_route.Transport.SellingGood.GetFactionNick(),
+		)
 		<td>
 			@frmt.WriteLimit(85) {
 				{ "fr."+trade_route.Transport.BuyingGood.SystemName }
@@ -285,11 +299,6 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData)
 			<td>
 				{   fmt.Sprintf("%.1f",trade_route.TransportInfo.ProfitPerTimeForKiloVolumes) }
 			</td>
-		}
-		<td class="route_transport">{ FormatProfitPerTime(trade_route.Transport.GetProffitPerTime()) }</td>
-		if shared.ShowDisco || shared.ShowFLSR {
-			<td class="route_frigate">{ FormatProfitPerTime(trade_route.Frigate.GetProffitPerTime()) }</td>
-			<td class="route_freighter">{ FormatProfitPerTime( trade_route.Freighter.GetProffitPerTime()) }</td>
 		}
 		<td>{ fmt.Sprintf("%.2f", trade_route.Transport.SellingGood.Volume) }</td>
 		if shared.ShowDisco {

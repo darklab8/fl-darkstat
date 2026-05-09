@@ -156,6 +156,7 @@ type Tr struct {
 	is_tranport_reachable bool
 	from_relay            bool
 	is_stat_back_prefered bool
+	IsDisplayNone         bool
 }
 type TrOpt func(t *Tr)
 
@@ -192,8 +193,8 @@ templ TrFromMain(tr *Tr) {
 	}
 }
 
-templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod) {
-	@TrFromMainTb2(NewTr(nickname, detailed_url, pinm), false) {
+templ TrFromMainTb(nickname string, detailed_url string, pinm PinMod, opts ...TrOpt) {
+	@TrFromMainTb2(NewTr(nickname, detailed_url, pinm, opts...), false) {
 		{ children... }
 	}
 }
@@ -219,6 +220,7 @@ templ TrFromMainTb2(tr *Tr, prerender bool) {
 			templ.KV("line_underline", !tr.is_tranport_reachable && types.GetCtx(ctx).ShowDisco),
 		}
 		onclick="RowHighlighter(this)"
+		style={ templ.KV("display: none", tr.IsDisplayNone) }
 	>
 		{ children... }
 	</tr>

@@ -38,6 +38,15 @@ type MarketGood struct {
 	CraftableInfos []CraftableInfo
 }
 
+func (m *MarketGood) GetFactionNick() string {
+	if m.PoB != nil {
+		if m.PoB.FactionNick != nil {
+			return *m.PoB.FactionNick
+		}
+	}
+	return m.FactionNick
+}
+
 type Ingredient struct {
 	Name   string
 	Amount int
@@ -401,6 +410,7 @@ type BaseInfo struct {
 	ObjNickname    string          `json:"obj_nick" validate:"required"`
 	Region         string          `json:"region_name" validate:"required"`
 	FactionName    string          `json:"faction_name" validate:"required"`
+	FactionNick    string          `json:"faction_nick" validate:"required"`
 	BasePos        cfg.Vector      `json:"base_pos" validate:"required"`
 	SectorCoord    string          `json:"sector_coord" validate:"required"`
 }
@@ -458,6 +468,7 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 		reputation_nickname = found_system_base.RepNickname.Get()
 		result.BasePos = found_system_base.Pos.Get()
 		result.ObjNickname = found_system_base.Nickname.Get()
+		result.FactionNick = reputation_nickname
 	}
 
 	result.SectorCoord = VectorToSectorCoord(system, result.BasePos)

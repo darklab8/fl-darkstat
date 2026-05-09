@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
+	"github.com/darklab8/fl-darkstat/darkstat/front/disco"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
@@ -18,8 +19,8 @@ func TwoWayDealDetailedUrl(trade_route *configs_export.TwoWayDeal) string {
 
 templ TwoWayDealDetailed(trade_route *configs_export.TwoWayDeal, shared *types.SharedData) {
 	@OneWayShared(shared) {
-		@OneWayRow(trade_route.Route1, shared)
-		@OneWayRow(trade_route.Route2, shared)
+		@OneWayRow(trade_route.Route1, shared, 0)
+		@OneWayRow(trade_route.Route2, shared, 0)
 	}
 }
 
@@ -52,13 +53,22 @@ func FormatProfitPerTime(value float64) string {
 	return fmt.Sprintf("%.2f", value*100)
 }
 
+templ DiscoRephackCompat(shared *types.SharedData, faction_nicks ...string) {
+	if shared.ShowDisco {
+		<td
+			class="tech_compat hide"
+			techcompats={ disco.MarshalRephacksCompat(shared, faction_nicks) }
+		></td>
+	}
+}
+
 templ TwoWayTradesTable(
 	trade_routes configs_export.BestTradeDealsOutput,
 	shared *types.SharedData,
 	data *configs_export.Exporter,
 	mode tab.ShowEmpty,
 ) {
-	<table class="sortable">
+	<table class="sortable" data-rows-limit={ strconv.Itoa(TABLE_ROW_LIMIT) }>
 		<thead>
 			<tr>
 				<th style="width:100px;">Commoditities</th>
@@ -114,11 +124,16 @@ templ TwoWayTradesTable(
 			</tr>
 		</thead>
 		<tbody>
-			for _, two_way := range GetTwoRoutes(trade_routes.TwoWayDeals, mode) {
+			for index, two_way := range GetTwoRoutes(trade_routes.TwoWayDeals, mode) {
 				@tab.TrFromMainTb(
 					two_way.HashStr(),
 					TwoWayDealDetailedUrl(two_way),
 					"",
+					func(t *tab.Tr) {
+						if index > TABLE_ROW_LIMIT {
+							t.IsDisplayNone = true
+						}
+					},
 				) {
 					<td class="seo">
 						@frmt.WriteLimit(300) {
@@ -129,6 +144,13 @@ templ TwoWayTradesTable(
 					<td>
 						{ fmt.Sprintf("%.0f", two_way.TransportInfo.TotalProfit) }
 					</td>
+					@DiscoRephackCompat(
+						shared,
+						two_way.Route1.Transport.BuyingGood.GetFactionNick(),
+						two_way.Route1.Transport.SellingGood.GetFactionNick(),
+						two_way.Route2.Transport.BuyingGood.GetFactionNick(),
+						two_way.Route2.Transport.SellingGood.GetFactionNick(),
+					)
 					<td>
 						<span class="tooltip">
 							@TimeToHumanTime(two_way.TransportInfo.TwoWayTime)
@@ -256,6 +278,8 @@ func TwoWayUniquePoBs(trade_route *configs_export.TwoWayDeal) map[string]bool {
 	return result
 }
 
+const TABLE_ROW_LIMIT = 500
+
 templ TwoWayTradesTableT(
 	trade_routes configs_export.BestTradeDealsOutput,
 	shared *types.SharedData,
@@ -273,7 +297,7 @@ templ TwoWayTradesTableT(
 					}
 				}
 				@tab.TableTop() {
-					@tab.FilterBar(&types.SharedData{})
+					@tab.FilterBar(shared)
 					<div id="table-top-main">
 						@TwoWayTradesTable(trade_routes, shared, data, mode)
 					</div>
