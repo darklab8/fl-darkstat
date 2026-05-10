@@ -648,16 +648,16 @@ line- {
 
 
 
-@media (min-aspect-ratio: 1) {
+@media (min-aspect-ratio: 8/10) {
     background- {
         height: 100vh;
         width: 100vw;
     }
 }
 
-@media (max-aspect-ratio: 1) {
+@media (max-aspect-ratio: 8/10) {
     background- {
-        height: 100vw;
+        height: 120vw;
         width: 100vw;
     }
 }
@@ -758,4 +758,28 @@ encounter- {
     position: absolute;
     top: 10px;
     left: 10px;
+}
+
+@media (max-aspect-ratio: 8/10) {
+    menu- {
+        width: 100vw;
+        min-width: 100vw;
+        flex-wrap: wrap;
+    }
+
+    menu- .menu-item {
+        width: 20%;
+        box-sizing: border-box;
+        border-bottom: 0.1em solid rgba(30, 166, 197, 0.3);
+
+        max-height: min(8vh, 8vw);
+    }
+
+    menu- .menu-item:nth-child(odd) {
+        border-right: 0.1em solid rgba(30, 166, 197, 0.3);
+    }
+
+    menu- div {
+        height: inherit;
+    }
 }
