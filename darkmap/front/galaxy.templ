@@ -59,8 +59,9 @@ templ GalaxySystem(sys *export_map.System, sys_fac SystemFaction) {
 				<cycle-
 					{ templ.Attributes{
 				"style": fmt.Sprintf(
-					"border-color: %s",
+					"border-color: %s; border-width: %dpx;",
 					SystemFacToHexColor(sys_fac),
+                    SystemFacToBorderWidth(sys_fac),
 				),
 				"region-name": sys.Region.Name,
 				"system-name": sys.Name,
@@ -245,7 +246,7 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 					@MultiLineOption([]string{"To Stats"})
 				</div>
 				<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot) }>
-					<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "stat_favicon.ico" }/>
+					<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "stat_favicon.ico" }/>
 				</a>
 			</div>
 		}
@@ -363,7 +364,7 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 				hx-swap="outerHTML"
 				style="cursor:pointer"
 			>
-				<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "map_legend.png" }/>
+				<img style="max-height:6vh;" src={ types.GetCtx(ctx).StaticRoot + "map_legend.png" }/>
 			</div>
 		</div>
 		<div class="menu-item">
@@ -372,10 +373,10 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 			</div>
 			<div>
 				if menu_kind == MenuKindGalaxy {
-					<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
+					<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
 				} else {
 					<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + map_urls.Index.ToString()) }>
-						<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
+						<img style="max-height:6vh;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
 					</a>
 				}
 			</div>

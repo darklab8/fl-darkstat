@@ -115,7 +115,7 @@
 }
 
 .infocard {
-    padding: min(3.5vh, 3.5vw);
+    padding: 3.5vh;
     position: relative;
 }
 
@@ -186,7 +186,7 @@
     box-sizing: border-box;
     width: 100%;
     margin-bottom: 10px;
-    padding: min(1vh, 1vw);
+    padding: 1vh;
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }

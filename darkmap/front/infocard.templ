@@ -356,8 +356,9 @@ templ SystemIcon(sys SystemFaction) {
 	<cycle-
 		{ templ.Attributes{
 		"style": fmt.Sprintf(
-			"border-color: %s",
+			"border-color: %s; border-width: %dpx;",
 			SystemFacToHexColor(sys),
+			SystemFacToBorderWidth(sys),
 		),
 	}... }
 	></cycle->
