@@ -364,7 +364,7 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 				hx-swap="outerHTML"
 				style="cursor:pointer"
 			>
-				<img style="max-height:6vh;" src={ types.GetCtx(ctx).StaticRoot + "map_legend.png" }/>
+				<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "map_legend.png" }/>
 			</div>
 		</div>
 		<div class="menu-item">
@@ -376,7 +376,7 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 					<img style="max-height:50px;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
 				} else {
 					<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + map_urls.Index.ToString()) }>
-						<img style="max-height:6vh;" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
+						<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
 					</a>
 				}
 			</div>

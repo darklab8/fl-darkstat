@@ -12,7 +12,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: min(1.8vh, 2.2vw);
+    font-size: min(1.8vh, 2.0vw);
 }
 
 .card {
