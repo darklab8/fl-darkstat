@@ -533,12 +533,12 @@ ul.text_align_left * {
 
 cycle- {
     border-color: #2299F5;
-    border-width: 3px;
+    border-width: min(0.32vh, 0.32vw);
     border-radius: 100%;
     border-style: solid;
     background-color: rgb(36, 36, 36);
-    left: -3px;
-    top: -3px;
+    left: calc(-1*min(0.32vh, 0.32vw));
+    top: calc(-1*min(0.32vh, 0.32vw));
     position: absolute;
     height: min(1vh, 1vw);
     width: min(1vh, 1vw);
@@ -584,6 +584,26 @@ system-label {
     }
 }
 
+@media (max-aspect-ratio: 1) and (max-width: 800px) {
+    .galaxy system-label {
+        font-size: calc(1.6vw / var(--panzoom-scale));
+    }
+
+    .system system-label {
+        font-size: calc(1.7vw / var(--panzoom-scale));
+    }
+
+
+    @media (max-aspect-ratio: 1) and (max-width: 600px) {
+        .galaxy system-label {
+            font-size: calc(1.8vw / var(--panzoom-scale));
+        }
+
+        .system system-label {
+            font-size: calc(1.9vw / var(--panzoom-scale));
+        }
+    }
+}
 
 /* .zoomed08 map-.system system-label {
     font-size: clamp(0.65rem, 1.2vh, 3.3rem);
