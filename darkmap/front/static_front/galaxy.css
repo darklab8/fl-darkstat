@@ -773,6 +773,7 @@ encounter- {
         border-bottom: 0.1em solid rgba(30, 166, 197, 0.3);
 
         max-height: min(8vh, 8vw);
+        min-height: min(8vh, 8vw);
     }
 
     menu- .menu-item:nth-child(odd) {
@@ -781,5 +782,9 @@ encounter- {
 
     menu- div {
         height: inherit;
+    }
+
+    menu- .bottom {
+        min-height: min(2vh, 2.5vw);
     }
 }
