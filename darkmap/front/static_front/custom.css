@@ -118,7 +118,7 @@ system-label-wrap.unhidden_infocard_label {
     --inactive-color: #98989c;
     position: relative;
     aspect-ratio: 292 / 142;
-    height: 2.5vh;
+    height: min(2.5vh, 3vw);
 }
 
 .toggle-input {
