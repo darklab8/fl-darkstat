@@ -715,9 +715,12 @@ encounter- {
 
 @media (max-aspect-ratio: 5/4) {
     background- {
-        height: 100vh;
-        /* width: 100vh; */
+        height: 100%;
         width: 100%;
+    }
+
+    body {
+        height: 100%;
     }
 
     map-with-interface- {
