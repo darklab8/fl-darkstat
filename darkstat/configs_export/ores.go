@@ -370,40 +370,25 @@ for Freelancer Discovery we also add possible sub products of refinery at player
 	return base
 }
 
-var not_useful_ores []string = []string{
-	"commodity_water",              // sellable
-	"commodity_oxygen",             // sellable
-	"commodity_scrap_metal",        // sellable
-	"commodity_toxic_waste",        // a bit
-	"commodity_cerulite_crystals",  // not
-	"commodity_alien_organisms",    // sellable
-	"commodity_hydrocarbons",       // sellable
-	"commodity_inert_artifacts",    // not
-	"commodity_organic_capacitors", // not
-	"commodity_event_ore_01",       // not
-	"commodity_cryo_organisms",     // not
-	"commodity_chirodebris",        // not
-}
-
 func FitlerToUsefulOres(bases []*Base) []*Base {
+	mining_places_count := make(map[string]int)
+	for _, item := range bases {
+		mining_places_count[item.MinedGood.Nickname] += 1
+	}
+
+	useful_mining := make(map[string]int)
+
 	var useful_bases []*Base = make([]*Base, 0, len(bases))
 	for _, item := range bases {
 		if strings.Contains(item.System, "Bastille") {
 			continue
 		}
 
-		is_useful := true
-		for _, useless_commodity := range not_useful_ores {
-			if item.MinedGood.Nickname == useless_commodity {
-				is_useful = false
-				break
-			}
-
-		}
-		if !is_useful {
+		if mining_places_count[item.MinedGood.Nickname] > 8 {
 			continue
 		}
 
+		useful_mining[item.MinedGood.Nickname]++
 		useful_bases = append(useful_bases, item)
 	}
 	return useful_bases
