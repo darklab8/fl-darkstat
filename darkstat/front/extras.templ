@@ -14,7 +14,7 @@ import (
 )
 
 func ExtraDetailedUrl(cm configs_export.ExtraItem) string {
-	return "cdn/extra/extra_base-" + strings.ToLower(cm.Nickname)
+	return "stat/extra/extra_base-" + strings.ToLower(cm.Nickname)
 }
 
 templ ExtraTable(extras []configs_export.ExtraItem, pinm tab.PinMod, shared *types.SharedData) {
@@ -32,10 +32,12 @@ templ ExtraTable(extras []configs_export.ExtraItem, pinm tab.PinMod, shared *typ
 				<th style="width:25px;">Buyable</th>
 				<th style="width:5px;">Mass</th>
 				<th style="width:25px;">Lootable</th>
-				<th style="width:25px;">@frmt.MultiLinestring([]string{"Power", "Capacity"})
-</th>
-				<th style="width:25px;">@frmt.MultiLinestring([]string{"Power", "Charge"})
-</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Power", "Capacity"})
+				</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"Power", "Charge"})
+				</th>
 				<th style="width:25px;">HpType</th>
 				<th style="width:25px;">Nickname</th>
 				<th style="width:25px;">Name ID</th>

@@ -14,7 +14,7 @@ import (
 )
 
 func TwoWayDealDetailedUrl(trade_route *configs_export.TwoWayDeal) string {
-	return "cdn/two_ways/tw-" + trade_route.HashStr()
+	return "stat/two_ways/tw-" + trade_route.HashStr()
 }
 
 templ TwoWayDealDetailed(trade_route *configs_export.TwoWayDeal, shared *types.SharedData) {

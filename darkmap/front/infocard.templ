@@ -11,7 +11,7 @@ import (
 )
 
 func MapInfocardURL(infocard_key infocarder.InfocardKey) string {
-	return "cdn/map/infocards/info-" + strings.ToLower(string(infocard_key))
+	return "map/infocards/info-" + strings.ToLower(string(infocard_key))
 }
 
 templ MapInfocard(info infocarder.Infocard) {

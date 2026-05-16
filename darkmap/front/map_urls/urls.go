@@ -12,7 +12,7 @@ var (
 )
 
 func SystemDetailedUrlNick(system_nick string) string {
-	return "cdn/map/system/system-" + strings.ToLower(system_nick) + ".html"
+	return "map/s/s-" + strings.ToLower(system_nick) + ".html"
 }
 
 func ObjUrl(system_nick string, obj_nickname string) string {

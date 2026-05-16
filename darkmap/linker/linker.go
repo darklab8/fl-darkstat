@@ -135,6 +135,10 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 				utils_types.FilePath(front.SystemDetailedUrl(system)),
 				front.System(system, l.Export),
 			),
+			builder.NewComponent( // TODO delete later
+				utils_types.FilePath("cdn/map/system/system-"+strings.ToLower(system.Nickname)+".html"),
+				front.System(system, l.Export),
+			),
 		)
 	}
 
