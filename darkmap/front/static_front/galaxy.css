@@ -789,3 +789,81 @@ encounter- {
         min-height: min(2vh, 2.5vw);
     }
 }
+
+
+/*To stats button*/
+.orb-container * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.orb-container {
+    width: min(6vh, 6vw);
+    height: min(6vh, 6vw);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.orb {
+    position: absolute;
+    width: 45%;
+    height: 45%;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.orb:hover {
+    transform: scale(1.12);
+}
+
+.orb-white {
+    top: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle at 38% 32%, #cccbcb, #e7e5e1 55%, #d4d0c8);
+    box-shadow: 0 0 min(2vh, 2vw) min(0.5vh, 0.5vw) rgba(255, 250, 230, 0.25);
+    border: 0.5px solid rgba(200, 196, 188, 0.6);
+}
+
+.orb-white:hover {
+    transform: translateX(-50%) scale(1.12);
+    box-shadow:
+        0 0 min(1.8vh, 1.8vw) min(0.6vh, 0.6vw) rgba(255, 252, 240, 0.75),
+        0 0 min(3.5vh, 3.5vw) min(1.2vh, 1.2vw) rgba(245, 240, 225, 0.45),
+        inset 0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.orb-dark {
+    bottom: 2%;
+    left: 5%;
+    background: radial-gradient(circle at 38% 32%, #5a5a5a, #2a2a2a 55%, #111111);
+    box-shadow: 0 0 min(2vh, 2vw) min(0.5vh, 0.5vw) rgba(80, 80, 80, 0.3);
+
+    border: 0.5px solid rgba(60, 60, 60, 0.8);
+}
+
+.orb-dark:hover {
+    box-shadow:
+        0 0 min(1.8vh, 1.8vw) min(0.6vh, 0.6vw) rgba(100, 100, 100, 0.9),
+        0 0 min(3.5vh, 3.5vw) min(1.2vh, 1.2vw) rgba(60, 60, 60, 0.9),
+        inset 0 1px 2px rgba(255, 255, 255, 0.55);
+}
+
+.orb-vanilla {
+    bottom: 2%;
+    right: 5%;
+    background: radial-gradient(circle at 38% 32%, #fff8e7, #f0d990 55%, #c9a84c);
+    box-shadow: 0 0 min(2vh, 2vw) min(0.5vh, 0.5vw) rgba(230, 195, 70, 0.25);
+    border: 0.5px solid rgba(196, 160, 85, 0.6);
+}
+
+.orb-vanilla:hover {
+    box-shadow:
+        0 0 min(1.8vh, 1.8vw) min(0.6vh, 0.6vw) rgba(240, 210, 100, 0.75),
+        0 0 min(3.5vh, 3.5vw) min(1.2vh, 1.2vw) rgba(220, 180, 60, 0.45),
+        inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}

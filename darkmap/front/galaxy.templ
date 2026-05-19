@@ -245,9 +245,13 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 				<div class="top" style="min-height:20px">
 					@MultiLineOption([]string{"To Stats"})
 				</div>
-				<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot) }>
-					<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "stat_favicon.ico" }/>
-				</a>
+				<div class="bottom">
+					<div class="orb-container" role="group" aria-label="Theme selector">
+						<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot) + "light.html" }><button class="orb orb-white" aria-label="White theme" title="White"></button></a>
+						<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot) + "dark.html" }><button class="orb orb-dark" aria-label="Dark theme" title="Dark"></button></a>
+						<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot) + "vanilla.html" }><button class="orb orb-vanilla" aria-label="Vanilla theme" title="Vanilla"></button></a>
+					</div>
+				</div>
 			</div>
 		}
 		<div class="menu-item">
