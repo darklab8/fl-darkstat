@@ -824,9 +824,11 @@ encounter- {
     top: 2%;
     left: 50%;
     transform: translateX(-50%);
-    background: radial-gradient(circle at 38% 32%, #cccbcb, #e7e5e1 55%, #d4d0c8);
+    background: radial-gradient(circle at 38% 32%, #d4d4d4, #9a9998 55%, #d4d0c8);
+
+
     box-shadow: 0 0 min(2vh, 2vw) min(0.5vh, 0.5vw) rgba(255, 250, 230, 0.25);
-    border: 0.5px solid rgba(200, 196, 188, 0.6);
+    border: 0.5px solid rgba(165, 164, 163, 0.6);
 }
 
 .orb-white:hover {
@@ -834,13 +836,13 @@ encounter- {
     box-shadow:
         0 0 min(1.8vh, 1.8vw) min(0.6vh, 0.6vw) rgba(255, 252, 240, 0.75),
         0 0 min(3.5vh, 3.5vw) min(1.2vh, 1.2vw) rgba(245, 240, 225, 0.45),
-        inset 0 1px 2px rgba(255, 255, 255, 0.9);
+        inset 0 1px 2px rgba(161, 161, 161, 0.9);
 }
 
 .orb-dark {
     bottom: 2%;
     left: 5%;
-    background: radial-gradient(circle at 38% 32%, #5a5a5a, #2a2a2a 55%, #111111);
+    background: radial-gradient(circle at 38% 32%, #5a5a5a, #111111 55%, #111111);
     box-shadow: 0 0 min(2vh, 2vw) min(0.5vh, 0.5vw) rgba(80, 80, 80, 0.3);
 
     border: 0.5px solid rgba(60, 60, 60, 0.8);
@@ -850,7 +852,7 @@ encounter- {
     box-shadow:
         0 0 min(1.8vh, 1.8vw) min(0.6vh, 0.6vw) rgba(100, 100, 100, 0.9),
         0 0 min(3.5vh, 3.5vw) min(1.2vh, 1.2vw) rgba(60, 60, 60, 0.9),
-        inset 0 1px 2px rgba(255, 255, 255, 0.55);
+        inset 0 1px 2px rgba(87, 86, 86, 0.55);
 }
 
 .orb-vanilla {
