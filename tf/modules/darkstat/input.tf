@@ -67,6 +67,10 @@ variable "disco_oauth" {
 variable "is_discovery" {
   type = bool
 }
+variable "is_discovery_production" {
+  type    = bool
+  default = false
+}
 variable "extra_vars" {
   type    = map(string)
   default = {}

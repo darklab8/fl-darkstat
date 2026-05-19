@@ -66,6 +66,15 @@ resource "docker_service" "darkstat" {
           "caddy_0"               = "${var.stat_prefix}.${var.zone}"
           "caddy_0.reverse_proxy" = "{{upstreams 8000}}"
           },
+          var.is_discovery_production ? {
+            "caddy_0.rewrite"       = "/ /dark.html"
+            "caddy_6"               = "creamstat.${var.zone}",
+            "caddy_6.rewrite"       = "/ /vanilla.html"
+            "caddy_6.reverse_proxy" = "{{upstreams 8000}}",
+            "caddy_7"               = "lightstat.${var.zone}",
+            "caddy_7.rewrite"       = "/ /light.html"
+            "caddy_7.reverse_proxy" = "{{upstreams 8000}}",
+          } : {},
           var.rpc_prefix != null ? {
             "caddy_2"                                  = "${var.rpc_prefix}.${var.zone}:443",
             "caddy_2.reverse_proxy"                    = "{{upstreams h2c 50051}}"

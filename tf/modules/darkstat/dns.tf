@@ -17,5 +17,15 @@ module "dns" {
       value = var.ipv4_address
       name  = var.pprof_prefix
     }] : [],
+    var.is_discovery_production ? [{
+      type  = "A"
+      value = var.ipv4_address
+      name  = "creamstat"
+    }] : [],
+    var.is_discovery_production ? [{
+      type  = "A"
+      value = var.ipv4_address
+      name  = "lightstat"
+    }] : [],
   )
 }

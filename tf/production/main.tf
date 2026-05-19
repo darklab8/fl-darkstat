@@ -22,13 +22,14 @@ module "darkstat" {
   EOT
   DARKSTAT_MAP_BY_URL = "https://darklab8.github.io/fl-data-discovery/map.html"
 
-  stat_prefix    = "darkstat"
-  pprof_prefix   = "darkstat-pprof"
-  zone           = "dd84ai.com"
-  is_discovery   = true
-  replicas_count = 1
-  extra_vars     = local.disco_extra_vars
-  args           = ["--stat-deals-on", "web_cron"]
+  stat_prefix             = "darkstat"
+  pprof_prefix            = "darkstat-pprof"
+  zone                    = "dd84ai.com"
+  is_discovery            = true
+  is_discovery_production = true
+  replicas_count          = 1
+  extra_vars              = local.disco_extra_vars
+  args                    = ["--stat-deals-on", "web_cron"]
 }
 
 locals {
