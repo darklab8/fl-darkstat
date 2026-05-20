@@ -2,6 +2,7 @@ package theme
 
 import (
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -10,6 +11,7 @@ type Theme int64
 const (
 	ThemeNotSet Theme = iota
 	ThemeLight
+	ThemeDarkLight
 	ThemeDark
 	ThemeVanilla
 )
@@ -20,6 +22,8 @@ func (t Theme) ToNick() string {
 		return "light"
 	case ThemeDark:
 		return "dark"
+	case ThemeDarkLight:
+		return "darklight"
 	case ThemeVanilla:
 		return "vanilla"
 	default:
@@ -28,6 +32,9 @@ func (t Theme) ToNick() string {
 }
 
 func ThemeIndexHTMLFile(t Theme) string {
+	if value, ok := os.LookupEnv("theme_" + t.ToNick() + "_url"); ok {
+		return value
+	}
 	return t.ToNick() + ".html"
 }
 
@@ -37,6 +44,8 @@ func ParseDefaultThemeName(s string) Theme {
 		return ThemeLight
 	case "dark":
 		return ThemeDark
+	case "darklight":
+		return ThemeDarkLight
 	case "vanilla":
 		return ThemeVanilla
 	default:
@@ -44,35 +53,7 @@ func ParseDefaultThemeName(s string) Theme {
 	}
 }
 
-func themeCycleOrder(priority Theme) [3]Theme {
-	switch priority {
-	case ThemeDark:
-		return [3]Theme{ThemeDark, ThemeVanilla, ThemeLight}
-	case ThemeVanilla:
-		return [3]Theme{ThemeVanilla, ThemeLight, ThemeDark}
-	default:
-		return [3]Theme{ThemeLight, ThemeDark, ThemeVanilla}
-	}
-}
-
-func ThemeCycleURLs(siteRoot string, priority Theme) []string {
-	order := themeCycleOrder(priority)
-	return []string{
-		siteRoot + ThemeIndexHTMLFile(order[0]),
-		siteRoot + ThemeIndexHTMLFile(order[1]),
-		siteRoot + ThemeIndexHTMLFile(order[2]),
-	}
-}
-
-func ThemeCycleNicks(priority Theme) []string {
-	order := themeCycleOrder(priority)
-	return []string{order[0].ToNick(), order[1].ToNick(), order[2].ToNick()}
-}
-
-func ThemeStorageNicks() []string {
-	return []string{ThemeLight.ToNick(), ThemeDark.ToNick(), ThemeVanilla.ToNick()}
-}
-
-func ThemeStorageIndexFiles() []string {
-	return []string{ThemeIndexHTMLFile(ThemeLight), ThemeIndexHTMLFile(ThemeDark), ThemeIndexHTMLFile(ThemeVanilla)}
+func ThemeCycleOrder() (result []Theme) {
+	result = []Theme{ThemeLight, ThemeDark, ThemeDarkLight, ThemeVanilla}
+	return
 }

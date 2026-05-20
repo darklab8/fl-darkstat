@@ -50,8 +50,6 @@ func NewBuilder(is_discovery IsDiscovery) *builder.Builder {
 		AppStart:       settings.Env.AppStart,
 		Buildpath:      "",
 		Theme:          defT,
-		Themes:         theme.ThemeCycleURLs(siteRoot, defT),
-		ThemeNicks:     theme.ThemeCycleNicks(defT),
 		TractorTabName: tractor_tab_name,
 		SiteHost:       settings.Env.SiteHost,
 		SiteRoot:       siteRoot,

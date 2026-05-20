@@ -101,3 +101,12 @@ function LoadTechCompat() { // eslint-disable-line no-unused-vars
         target.removeAttribute("data-target-2")
     }
 }
+
+// fixes theme dropdown to be closable when clicking outside of it
+document.addEventListener('click', function (e) {
+    document.querySelectorAll('details').forEach(function (details) {
+        if (!details.contains(e.target)) {
+            details.removeAttribute('open');
+        }
+    });
+});

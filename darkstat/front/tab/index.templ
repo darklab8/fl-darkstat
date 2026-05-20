@@ -24,7 +24,7 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 			</style>
 			// For loading https://htmx.org/examples/tabs-hateoas/
 			switch theme {
-				case types.ThemeDark:
+				case types.ThemeDarkLight:
 					<style>
 						:root {
 							--color_background_filter_bars: #0e0e0e;
@@ -47,6 +47,32 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 							--color_fmt_sb_sells: rgba(0, 255, 0, 0.13);
 							--color_fmt_sb_buys: rgba(255, 255, 0, 0.13);
 							--color_fmt_sb_neither: rgba(255, 0, 0, 0.07);
+						}
+					</style>
+				case types.ThemeDark:
+					<style>
+						:root {
+
+								--color_background: #1e1e1e;         
+								--color_background_filter_bars: #252526; 
+								--color_th_background: #2d2d2d;   
+								--color_alternate_row: #181818;      
+								--color_border: #3c3c3c;           
+								--color_th_border: #555555;         
+								--color_td_border: #2d2d2d;          
+								--color_hover: #2a2d2e;            
+								--color_scrollbar_thing: #424242;
+								--color_scrollbar_background: #1e1e1e;
+								--color_text: #dddddd;              
+								--selected: #094771;             
+							--color_link: #4D8ED0;
+							--color_hover_link: #57A5F2;
+								--color_time: #6a6a6a;
+								--infocard_text_highlight: #264f78;
+
+								--color_fmt_sb_sells: rgba(78, 201, 176, 0.08);
+								--color_fmt_sb_buys: rgba(220, 220, 100, 0.08);
+								--color_fmt_sb_neither: rgba(244, 71, 71, 0.06);
 						}
 					</style>
 				case types.ThemeVanilla:

@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/go-utils/utils/utils_types"
 	"strings"
 )
@@ -57,6 +58,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button(tab.NewButtn(ctx, []string{"PoB&thinsp;", "goods"}, urls.PoBGoods, url, tab.WithRelay()))
 				}
 				@tab.Button(tab.NewButtn(ctx, []string{"Extra"}, urls.ExtraItems, url))
+				@ThemeDropdown()
 				@MapButton(url)
 				if settings.IsApiActive() {
 					@tab.Button(tab.NewButtn(ctx, []string{"API"}, urls.Swagger, url, tab.WithSiteUrl(settings.Env.SiteHost+"/"), tab.WithDrectUrl()))
@@ -100,6 +102,7 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 					@tab.Button(tab.NewButtn(ctx, []string{"PoB&thinsp;", "goods"}, tab.AllItemsUrl(urls.PoBGoods), url, tab.WithRelay()))
 				}
 				@tab.Button(tab.NewButtn(ctx, []string{"Extra"}, tab.AllItemsUrl(urls.ExtraItems), url))
+				@ThemeDropdown()
 				@MapButton(url)
 				if settings.IsApiActive() {
 					@tab.Button(tab.NewButtn(ctx, []string{"API"}, urls.Swagger, url, tab.WithSiteUrl(settings.Env.SiteHost+"/"), tab.WithDrectUrl()))
@@ -109,12 +112,67 @@ templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.Shared
 				</button>
 				@tab.Button(tab.NewButtn(ctx, []string{"Docs"}, tab.AllItemsUrl(urls.Docs), url))
 			}
-			<button style="width:60px; border-radius: 20px;" onClick={ tab.GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).Themes, types.GetCtx(ctx).ThemeNicks) } type="button">
-				@frmt.MultiLinestringWrap([]string{"Color", "Scheme"})
-			</button>
 		</div>
 	}
 	<hr/>
+}
+
+templ ThemeDropdown() {
+	<style>
+      .theme_dropdown {
+		position: relative;
+		display: inline-block;
+		align-self: stretch;
+		box-sizing: border-box;
+
+		border: 2px outset ButtonBorder;
+		border-color: var(--color_border);
+	  }
+	  .theme_dropdown details[open] {
+    		border-style: inset; 
+	  }
+	  .theme_dropdown:hover {
+		background-color: var(--color_hover);
+	  }
+	  .theme_dropdown details {
+		box-sizing: border-box;
+		height:100%;
+	  }
+      .theme_dropdown summary {
+		cursor: pointer;
+		padding: 4px 8px;
+
+		box-sizing: border-box;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+    	align-items: center;
+	  }
+      .theme_menu {
+		position: absolute;
+	  	background: var(--color_th_background);
+		min-width: 100%;
+	}
+      .theme_menu a {
+		display: block;
+		padding: 4px 8px;
+		text-decoration: none;
+		color: var(--color_text);
+	  }
+      .theme_menu a:hover {
+		background: var(--color_hover);
+	  }
+    </style>
+	<div class="theme_dropdown">
+		<details>
+			<summary>Theme</summary>
+			<div class="theme_menu">
+				for _, them := range theme.ThemeCycleOrder() {
+					<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + theme.ThemeIndexHTMLFile(them)) }>{ them.ToNick() }</a>
+				}
+			</div>
+		</details>
+	</div>
 }
 
 templ MapButton(url utils_types.FilePath) {

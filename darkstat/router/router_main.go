@@ -95,10 +95,11 @@ func (l *Router) Link(ctx context.Context) *builder.Builder {
 				urls.Docs,
 				front.DocsT(tab.ShowEmpty(false), shared),
 			),
-			builder.NewComponent(urls.Index, front.IndexRedirect(theme.ParseDefaultThemeName(settings.Env.DefaultTheme))),
+			builder.NewComponent(urls.Index, front.Index(theme.ParseDefaultThemeName(settings.Env.DefaultTheme), shared)),
 		}
 		mainComps = append(mainComps,
 			builder.NewComponent(urls.LightIndex, front.Index(types.ThemeLight, shared)),
+			builder.NewComponent(urls.DarkLightIndex, front.Index(types.ThemeDarkLight, shared)),
 			builder.NewComponent(urls.DarkIndex, front.Index(types.ThemeDark, shared)),
 			builder.NewComponent(urls.VanillaIndex, front.Index(types.ThemeVanilla, shared)),
 		)

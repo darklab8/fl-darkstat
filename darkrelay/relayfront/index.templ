@@ -1,10 +1,11 @@
 package relayfront
 
 import (
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
-	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
+	"github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/frmt"
+	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
+	"github.com/darklab8/fl-darkstat/darkstat/front/types"
+	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
@@ -14,28 +15,22 @@ templ Index(theme types.Theme, shared *types.SharedData) {
 	}
 }
 
-
 templ TabMenu(url utils_types.FilePath, mode tab.ShowEmpty, shared *types.SharedData) {
 	@tab.TabStyle()
 	@tab.Heading(shared) {
 		<div class="tab-list" role="tablist">
 			if mode == false {
-				
-				@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, urls.Ammo, url))
+				@tab.Button(tab.NewButtn(ctx, []string{"PoBs"}, urls.Ammo, url))
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.AllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestring([]string{"Show", "All"})
 				</button>
 			} else {
-				
-				@tab.Button(tab.NewButtn(ctx,[]string{"PoBs"}, tab.AllItemsUrl(urls.Ammo), url))
+				@tab.Button(tab.NewButtn(ctx, []string{"PoBs"}, tab.AllItemsUrl(urls.Ammo), url))
 				<button preload="mouseover" hx-trigger="mousedown" style="width:60px; border-radius: 20px;" hx-get={ types.GetCtx(ctx).SiteRoot + tab.NotAllItemsUrl(url).ToString() } role="tab" aria-selected="false" aria-controls="tab-content">
 					@frmt.MultiLinestring([]string{"Don't", "Show All"})
 				</button>
 			}
-			<button style="width:60px; border-radius: 20px;" onClick={ tab.GoToUrl(types.GetCtx(ctx).SiteRoot, types.GetCtx(ctx).Themes, types.GetCtx(ctx).ThemeNicks) } type="button">
-				@frmt.MultiLinestring([]string{"Color", "Scheme"})
-			</button>
-			
+			@front.ThemeDropdown()
 		</div>
 	}
 	<hr/>

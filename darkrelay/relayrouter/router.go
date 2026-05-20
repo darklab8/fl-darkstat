@@ -2,15 +2,9 @@ package relayrouter
 
 import (
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
-	"github.com/darklab8/fl-darkstat/darkrelay/relayfront"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
-	statfront "github.com/darklab8/fl-darkstat/darkstat/front"
 	"github.com/darklab8/fl-darkstat/darkstat/front/tab"
-	"github.com/darklab8/fl-darkstat/darkstat/front/types"
-	"github.com/darklab8/fl-darkstat/darkstat/front/urls"
-	"github.com/darklab8/fl-darkstat/darkstat/settings"
-	"github.com/darklab8/fl-darkstat/darkstat/theme"
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_types"
 )
@@ -34,17 +28,11 @@ func (r *Router) Link() *builder.Builder {
 	defer timeit.NewTimer("link, internal measure").Close()
 
 	shared := r.AppData.Shared
+	_ = shared
 	configs := r.AppData.Configs
 	build := appdata.NewBuilder(configs.Mapped.Discovery != nil)
 
 	r.LinkPobs(r.AppData, build)
-
-	build.RegComps(
-		builder.NewComponent(urls.Index, statfront.IndexRedirect(theme.ParseDefaultThemeName(settings.Env.DefaultTheme))),
-		builder.NewComponent(urls.LightIndex, relayfront.Index(types.ThemeLight, shared)),
-		builder.NewComponent(urls.DarkIndex, relayfront.Index(types.ThemeDark, shared)),
-		builder.NewComponent(urls.VanillaIndex, relayfront.Index(types.ThemeVanilla, shared)),
-	)
 
 	timeit.NewTimerMF("linking most of stuff", func() {
 		configs.GetInfocardsDict(func(infocards infocarder.Infocards) {

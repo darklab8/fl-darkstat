@@ -20,17 +20,16 @@ import (
 type Theme = theme.Theme
 
 const (
-	ThemeNotSet  = theme.ThemeNotSet
-	ThemeLight   = theme.ThemeLight
-	ThemeDark    = theme.ThemeDark
-	ThemeVanilla = theme.ThemeVanilla
+	ThemeNotSet    = theme.ThemeNotSet
+	ThemeLight     = theme.ThemeLight
+	ThemeDarkLight = theme.ThemeDarkLight
+	ThemeDark      = theme.ThemeDark
+	ThemeVanilla   = theme.ThemeVanilla
 )
 
 type GlobalParams struct {
 	Buildpath      utils_types.FilePath
 	Theme          Theme
-	Themes         []string
-	ThemeNicks     []string
 	SiteHost       string
 	SiteRoot       string
 	SiteUrl        string

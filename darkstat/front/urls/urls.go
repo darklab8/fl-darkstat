@@ -8,6 +8,7 @@ const (
 	Docs utils_types.FilePath = "docs.html"
 
 	Index            utils_types.FilePath = "index.html"
+	DarkLightIndex   utils_types.FilePath = "darklight.html"
 	DarkIndex        utils_types.FilePath = "dark.html"
 	VanillaIndex     utils_types.FilePath = "vanilla.html"
 	LightIndex       utils_types.FilePath = "light.html"
