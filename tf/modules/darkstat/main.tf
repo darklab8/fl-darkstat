@@ -74,6 +74,9 @@ resource "docker_service" "darkstat" {
             "caddy_7"               = "lightstat.${var.zone}",
             "caddy_7.rewrite"       = "/ /light.html"
             "caddy_7.reverse_proxy" = "{{upstreams 8000}}",
+            "caddy_8"               = "darklightstat.${var.zone}",
+            "caddy_8.rewrite"       = "/ /darklight.html"
+            "caddy_8.reverse_proxy" = "{{upstreams 8000}}",
           } : {},
           var.rpc_prefix != null ? {
             "caddy_2"                                  = "${var.rpc_prefix}.${var.zone}:443",

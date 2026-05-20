@@ -27,5 +27,10 @@ module "dns" {
       value = var.ipv4_address
       name  = "lightstat"
     }] : [],
+    var.is_discovery_production ? [{
+      type  = "A"
+      value = var.ipv4_address
+      name  = "darklightstat"
+    }] : [],
   )
 }
