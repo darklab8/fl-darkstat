@@ -332,6 +332,14 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 	}
 }
 
+func (m *MappedConfigs) ReadInfocardsWithDiscoOverrides(filesystem *filefind.Filesystem) {
+	var infocards_override *file.File
+	if m.Discovery != nil {
+		infocards_override = file.NewWebFile(DiscoAPI + "/gameconfigpublic/infocard_overrides.cfg")
+	}
+	m.Infocards, _ = infocard_mapped.Read(filesystem, m.FreelancerINI, infocards_override)
+}
+
 func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath) *MappedConfigs {
 	ctx, span := traces.Tracer.Start(ctx, "MappedConfigs.Read")
 	defer span.End()
@@ -400,11 +408,6 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 
 	m.ReadDiscovery(ctx, filesystem)
 
-	var infocards_override *file.File
-	if m.Discovery != nil {
-		infocards_override = file.NewWebFile(DiscoAPI + "/gameconfigpublic/infocard_overrides.cfg")
-	}
-
 	timeit.NewTimerF(func() {
 		var wg sync.WaitGroup
 		wg.Add(len(all_files))
@@ -468,7 +471,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			m.InfocardmapINI = interface_mapped.Read(file_interface)
 		})
 		wg.Go(func() {
-			m.Infocards, _ = infocard_mapped.Read(filesystem, m.FreelancerINI, infocards_override)
+			m.ReadInfocardsWithDiscoOverrides(filesystem)
 		})
 		wg.Go(func() {
 			m.InitialWorld = initialworld.Read(file_initialworld)

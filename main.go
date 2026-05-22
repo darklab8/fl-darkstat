@@ -287,10 +287,12 @@ func main() {
 								}()
 								time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
 
+								filesystem := filefind.FindConfigs(settings.Env.FreelancerFolder)
 								out.app_data.Configs.Mapped.ReadDiscovery(
 									context.Background(),
-									filefind.FindConfigs(settings.Env.FreelancerFolder),
+									filesystem,
 								)
+								out.app_data.Configs.Mapped.ReadInfocardsWithDiscoOverrides(filesystem)
 
 								out, err = StatBuild(
 									builder.BuildToMemory,
