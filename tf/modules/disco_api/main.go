@@ -58,6 +58,20 @@ func scrapeFileNames(logger *typelog.Logger) (error, []string) {
 	return nil, files
 }
 
+type ErrDownloadFile struct {
+	status_code  int
+	original_err error
+}
+
+func (e ErrDownloadFile) Error() string {
+	return fmt.Sprintln(
+		"error http request with non positive status code, status_code>=400, status_code=",
+		e.status_code,
+		" err=",
+		e.original_err,
+	)
+}
+
 func downloadFile(destDir, fileName string, urlInput string, inmemory bool) (err error, resBody []byte) {
 
 	destPath := filepath.Join(destDir, fileName)
@@ -69,7 +83,10 @@ func downloadFile(destDir, fileName string, urlInput string, inmemory bool) (err
 
 	resp, err := utils_http.Get(url)
 	if resp.StatusCode >= 400 {
-		return errors.New(fmt.Sprintln("error http request with non positive status code, status_code>=400, status_code=", resp.StatusCode, " err=", err)), resBody
+		return ErrDownloadFile{
+			status_code:  resp.StatusCode,
+			original_err: err,
+		}, resBody
 	}
 	if err != nil {
 		return err, resBody
@@ -103,6 +120,9 @@ func main() {
 	go func() {
 		for {
 			i++
+			var run_errors []error
+			downloaded_files := 0
+
 			logger := Log.WithFields(typelog.Int("loop", i))
 			logger.Info(fmt.Sprintln("Scraping file list from", baseURL, " version5"))
 			err, files := scrapeFileNames(logger)
@@ -118,21 +138,38 @@ func main() {
 				logger := logger.WithFields(typelog.Any("filename", fileName))
 				logger.Info("Downloading: %s\n")
 				err, _ := downloadFile(configs_path, fileName, "", false)
-				logger.CheckError(err, "downloading file failed")
+				if err != nil {
+					var myErr ErrDownloadFile
+					if errors.As(err, &myErr) {
+						if myErr.status_code == 404 {
+							logger.CheckWarn(err, "downloading file failed with not found error")
+						} else {
+							logger.CheckError(err, "downloading file failed")
+							run_errors = append(run_errors, err)
+						}
+					} else {
+						logger.CheckError(err, "downloading file failed")
+					}
+				} else {
+					downloaded_files++
+				}
 			}
 
 			err, data := downloadFile("/data", "patchlist.xml", "https://patch.discoverygc.com/patchlist.xml", false)
-			if err != nil {
-				logger.CheckError(err, "https://patch.discoverygc.com/patchlist.xml Error downloading patchlist.xml")
+			if logger.CheckError(err, "https://patch.discoverygc.com/patchlist.xml Error downloading patchlist.xml") {
+				run_errors = append(run_errors, err)
 			}
 
 			err, data = downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson", true)
-			if err != nil {
-				logger.CheckError(err, "base_admin.php5 Error downloading forums/base_admin.php")
+			if logger.CheckError(err, "base_admin.php5 Error downloading forums/base_admin.php") {
+				run_errors = append(run_errors, err)
 			}
 
 			if len(data) < 1000 {
-				logger.Error(fmt.Sprintln("base_admin.php5 is too small (showing content). time=", time.Now(), " len=", len(data), string(data)))
+				err := errors.New(fmt.Sprintln("base_admin.php5 is too small (showing content). time=", time.Now(), " len=", len(data), string(data)))
+				if logger.CheckError(err, "base_adminphp5 error") {
+					run_errors = append(run_errors, err)
+				}
 			} else {
 				logger.Info(fmt.Sprintln("base_admin downloaded succesfully. time=", time.Now(), " len=", len(data)))
 			}
@@ -141,10 +178,23 @@ func main() {
 			err = json.Unmarshal(data, &unmarshaled)
 			if logger.CheckError(err, fmt.Sprintln("base_admin.php5 failed to unmarshal its json (showing no content) ", time.Now(), " len=", len(data))) {
 				err = os.WriteFile("/data/errored_base_admin.json", data, os.FileMode(0644))
-				Log.CheckError(err, "base_admin.php5 failed to write errored data to file")
+				if Log.CheckError(err, "base_admin.php5 failed to write errored data to file") {
+					run_errors = append(run_errors, err)
+				}
+
 			}
 
 			logger.Info("All downloads complete5.")
+			logger = logger.WithFields(
+				typelog.Int("files_count", len(files)),
+				typelog.Int("run_errors_count", len(run_errors)),
+			)
+			if len(run_errors) == 0 && len(files) > 0 {
+				logger.Info("run was succesful")
+			} else {
+				logger.Info("run was failure")
+			}
+
 			time.Sleep(time.Minute * 3)
 		}
 	}()
