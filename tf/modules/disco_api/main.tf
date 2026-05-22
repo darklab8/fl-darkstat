@@ -48,7 +48,8 @@ resource "docker_container" "disco_api" {
   }
 
   env = [
-    "UTILS_USERAGENT=darkwind/1.0"
+    "UTILS_USERAGENT=darkwind/1.0",
+    "TYPELOG_LOG_JSON=true",
   ]
 
   lifecycle {

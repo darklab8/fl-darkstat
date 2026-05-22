@@ -14,42 +14,35 @@ import (
 	"time"
 
 	"github.com/anaskhan96/soup"
-	"github.com/darklab8/go-utils/examples/logus"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/utils_http"
 )
 
 const baseURL = "https://discoverygc.com/gameconfigpublic/"
 
-func scrapeFileNames() ([]string, error) {
+var Log *typelog.Logger = typelog.NewLogger("discoapi", typelog.WithLogLevel(typelog.LEVEL_INFO))
+
+func scrapeFileNames(logger *typelog.Logger) (error, []string) {
 	res, err := utils_http.Get(baseURL)
-	if err != nil {
-		return nil, err
-	}
 	if res.StatusCode >= 400 {
-		logus.Log.CheckError(err, "error http request with non positive status code, status_code>=400", typelog.Any("status_code", res.StatusCode))
-		return []string{}, errors.New(fmt.Sprintln("non positive status code in trying to parse file names, status=", res.StatusCode))
+		return errors.New(fmt.Sprintln("non positive status code in trying to parse file names, status=", res.StatusCode, " err=", err)), []string{}
+	}
+	if err != nil {
+		return err, nil
 	}
 	resBody, err := io.ReadAll(res.Body)
-	fmt.Println(string(resBody))
+	logger.Info(string(resBody))
 
 	// Save file
 	out, err := os.Create(filepath.Join(configs_path, "index.html"))
 	if err != nil {
-		return nil, err
+		return err, nil
 	}
 	defer out.Close()
 	out.Write(resBody)
 	// Save file end
 
-	soup.HTMLParse(string(resBody))
-
-	resp, err := soup.Get(baseURL)
-	if err != nil {
-		return nil, err
-	}
-
-	doc := soup.HTMLParse(resp)
+	doc := soup.HTMLParse(string(resBody))
 	links := doc.FindAll("a")
 
 	var files []string
@@ -62,7 +55,7 @@ func scrapeFileNames() ([]string, error) {
 		files = append(files, href)
 	}
 
-	return files, nil
+	return nil, files
 }
 
 func downloadFile(destDir, fileName string, urlInput string, inmemory bool) (err error, resBody []byte) {
@@ -75,11 +68,10 @@ func downloadFile(destDir, fileName string, urlInput string, inmemory bool) (err
 	}
 
 	resp, err := utils_http.Get(url)
-	if err != nil {
-		return err, resBody
-	}
 	if resp.StatusCode >= 400 {
-		logus.Log.CheckError(err, "error http request with non positive status code, status_code>=400", typelog.Any("status_code", resp.StatusCode))
+		return errors.New(fmt.Sprintln("error http request with non positive status code, status_code>=400, status_code=", resp.StatusCode, " err=", err)), resBody
+	}
+	if err != nil {
 		return err, resBody
 	}
 
@@ -107,54 +99,52 @@ func main() {
 	os.Mkdir(configs_path, 0777)
 	os.Mkdir("/data/forums", 0777)
 
+	i := 0
 	go func() {
 		for {
-			log.Println("Scraping file list from", baseURL, " version5")
-			files, err := scrapeFileNames()
-			if err != nil {
-				log.Printf("Error scraping file names: %v\n", err)
+			i++
+			logger := Log.WithFields(typelog.Int("loop", i))
+			logger.Info(fmt.Sprintln("Scraping file list from", baseURL, " version5"))
+			err, files := scrapeFileNames(logger)
+
+			if logger.CheckError(err, "Error scraping file names") {
 				time.Sleep(time.Minute * 3)
 				continue
 			}
-			fmt.Println("files=", files)
+			logger.Info(fmt.Sprintln("files=", files))
 
-			log.Printf("Found %d files, downloading...\n", len(files))
+			logger.Info(fmt.Sprintf("Found %d files, downloading...\n", len(files)))
 			for _, fileName := range files {
-				log.Printf("Downloading: %s\n", fileName)
-				if err, _ := downloadFile(configs_path, fileName, "", false); err != nil {
-					log.Printf("Error downloading %s: %v\n", fileName, err)
-				}
+				logger := logger.WithFields(typelog.Any("filename", fileName))
+				logger.Info("Downloading: %s\n")
+				err, _ := downloadFile(configs_path, fileName, "", false)
+				logger.CheckError(err, "downloading file failed")
 			}
 
 			err, data := downloadFile("/data", "patchlist.xml", "https://patch.discoverygc.com/patchlist.xml", false)
 			if err != nil {
-				log.Printf("ERROR https://patch.discoverygc.com/patchlist.xml Error downloading %s: %v\n", "patchlist.xml", err)
+				logger.CheckError(err, "https://patch.discoverygc.com/patchlist.xml Error downloading patchlist.xml")
 			}
 
 			err, data = downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson", true)
 			if err != nil {
-				log.Printf("ERROR base_admin.php5 Error downloading %s: %v\n", "forums/base_admin.php", err)
+				logger.CheckError(err, "base_admin.php5 Error downloading forums/base_admin.php")
 			}
 
 			if len(data) < 1000 {
-				log.Println("ERROR base_admin.php5 is too small (showing content). time=", time.Now(), " len=", len(data), string(data))
-				// log.Println("base_admin.php4 is too small. (showing with content) time=", time.Now(), " len=", len(data), " content=", string(data))
+				logger.Error(fmt.Sprintln("base_admin.php5 is too small (showing content). time=", time.Now(), " len=", len(data), string(data)))
 			} else {
-				log.Println("base_admin downloaded succesfully. time=", time.Now(), " len=", len(data))
+				logger.Info(fmt.Sprintln("base_admin downloaded succesfully. time=", time.Now(), " len=", len(data)))
 			}
 
 			unmarshaled := make(map[string]any)
 			err = json.Unmarshal(data, &unmarshaled)
-			if err != nil {
-				log.Println("ERROR base_admin.php5 failed to unmarshal its json (showing no content) ", time.Now(), " len=", len(data))
-				// log.Println("base_admin.php4 failed to unmarshal its json (showing with content)", time.Now(), " len=", len(data), " content=", string(data))
+			if logger.CheckError(err, fmt.Sprintln("base_admin.php5 failed to unmarshal its json (showing no content) ", time.Now(), " len=", len(data))) {
 				err = os.WriteFile("/data/errored_base_admin.json", data, os.FileMode(0644))
-				if err != nil {
-					log.Println("ERRPR base_admin.php5 failed to write errored data to file")
-				}
+				Log.CheckError(err, "base_admin.php5 failed to write errored data to file")
 			}
 
-			log.Println("All downloads complete5.")
+			logger.Info("All downloads complete5.")
 			time.Sleep(time.Minute * 3)
 		}
 	}()
@@ -165,6 +155,6 @@ func main() {
 
 	http.Handle("/", http.FileServer(http.Dir(directory)))
 
-	log.Printf("Serving %s on HTTP port: %s\n", directory, *port)
+	Log.Info(fmt.Sprintf("Serving %s on HTTP port: %s\n", directory, *port))
 	log.Fatal(http.ListenAndServe(":"+*port, nil))
 }
