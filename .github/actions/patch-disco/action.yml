@@ -17,4 +17,4 @@ runs:
         cd ..
     - name: Patch to latest
       shell: bash
-      run: patch_disco -wd ${{ inputs.freelancer-folder }}
+      run: patch_disco --cache -wd ${{ inputs.freelancer-folder }}

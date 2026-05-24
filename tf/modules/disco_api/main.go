@@ -16,6 +16,8 @@ import (
 	"github.com/anaskhan96/soup"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/utils_http"
+
+	"github.com/darklab8/fl-darkstat/helpers/patch_disco"
 )
 
 const baseURL = "https://discoverygc.com/gameconfigpublic/"
@@ -184,6 +186,33 @@ func main() {
 
 			}
 
+			err, patchlistdata := downloadFile("/data", "patchlist.xml", "https://patch.discoverygc.com/patchlist.xml", true)
+			if logger.CheckError(err, "Error downloading patchlist.xml") {
+				run_errors = append(run_errors, err)
+			} else {
+				Log.Info("downloaded patchlist.xml succesfully")
+			}
+
+			patches := patch_disco.ParseForPatches(patch_disco.DiscoveryUrl, patchlistdata)
+			if len(patches) == 0 {
+				logger.Error("Parsed zero patches from patchlist.xml")
+			} else {
+				for _, patch := range patches[len(patches)-5:] {
+
+					if FileExists(filepath.Join("/data", patch.Filename)) {
+						Log.Warnln("patch already exists, skipping downloading it, filename=", patch.Filename)
+						continue
+					} else {
+						Log.Infoln("patch does not exist, downloading, filename=", patch.Filename)
+					}
+					err, _ := downloadFile("/data", patch.Filename, patch.Url, false)
+					if logger.CheckErrorln(err, "Error downloading patch=", patch.Filename) {
+						run_errors = append(run_errors, err)
+					}
+
+				}
+			}
+
 			logger.Info("All downloads complete5.")
 			logger = logger.WithFields(
 				typelog.Int("files_count", len(files)),
@@ -207,4 +236,9 @@ func main() {
 
 	Log.Info(fmt.Sprintf("Serving %s on HTTP port: %s\n", directory, *port))
 	log.Fatal(http.ListenAndServe(":"+*port, nil))
+}
+
+func FileExists(filepath string) bool {
+	_, err := os.Stat(filepath)
+	return !errors.Is(err, os.ErrNotExist)
 }
