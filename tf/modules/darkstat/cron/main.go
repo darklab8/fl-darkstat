@@ -9,60 +9,103 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-data-discovery/autopatcher"
+	"github.com/darklab8/go-utils/typelog"
 )
 
 var LatestPatch autopatcher.Patch
 
-func GetLatestPatch() (autopatcher.Patch, error) {
+var Log *typelog.Logger = typelog.NewLogger("discoverycron", typelog.WithLogLevel(typelog.LEVEL_INFO))
+
+func GetLatestPatchWeb() (autopatcher.Patch, error) {
 	discovery_url := "https://patch.discoverygc.com/"
 	discovery_path_url := discovery_url + "patchlist.xml"
-	resp := autopatcher.Request(discovery_path_url)
+	resp, err := autopatcher.Request(discovery_path_url)
+	if Log.CheckError(err, "failed to get patchlist.xml") {
+		return autopatcher.Patch{}, err
+	}
 	patches := autopatcher.ParseForPatches(discovery_url, resp.Body)
 
-	if len(patches) > 0 {
-		return patches[len(patches)-1], nil
+	if len(patches) == 0 {
+		return autopatcher.Patch{}, errors.New("not found")
 	}
-	return autopatcher.Patch{}, errors.New("not found")
+
+	return patches[len(patches)-1], nil
+}
+
+func GetLatestPatchLocal() (autopatcher.Patch, error) {
+	os.Chdir(GameFolderPath)
+	patchhistory, _ := autopatcher.ReadLauncherConfig()
+
+	if len(patchhistory.Patches) == 0 {
+		return autopatcher.Patch{}, errors.New("not found")
+	}
+
+	latst_patch_hash := patchhistory.Patches[len(patchhistory.Patches)-1]
+
+	return autopatcher.Patch{
+		Hash: latst_patch_hash,
+	}, nil
+}
+
+func Autopatcher(workdir string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New(fmt.Sprintln("paniced autopatcher", r))
+		}
+	}()
+
+	err = autopatcher.RunAutopatcher("/data/freelancer_folder")
+	return err
 }
 
 func main() {
 
-	if value, err := GetLatestPatch(); err == nil {
+	if value, err := GetLatestPatchLocal(); err == nil {
 		LatestPatch = value
-		fmt.Println("found patch=", value.Name, value.Hash)
+		Log.Info(fmt.Sprintln("found local patch=", value.Name, value.Hash))
 	} else {
-		panic("can't grab patch on start")
+		Log.Panic("can't grab patch on start")
 	}
 
 	environment, ok := os.LookupEnv("ENVIRONMENT")
 	if !ok {
-		panic("ENVIRONMENT is not defined")
+		Log.Panic("ENVIRONMENT is not defined")
 	}
 
 	for {
 		var latest_patch autopatcher.Patch
 
-		if value, err := GetLatestPatch(); err == nil {
+		if value, err := GetLatestPatchWeb(); err == nil {
 			latest_patch = value
 		} else {
-			fmt.Println("can't grab patch, skipping")
+			Log.Error("can't grab patch, skipping")
 			continue
 		}
 
-		if latest_patch != LatestPatch {
-			fmt.Println("patch changed. new patch ", latest_patch.Name, latest_patch.Hash, " updating")
+		if latest_patch.Hash != LatestPatch.Hash {
+			Log.Info(fmt.Sprintln("patch changed. new patch ", latest_patch.Name, latest_patch.Hash, " updating. But first sleep for 10 minutes"))
+
+			err := Autopatcher(GameFolderPath)
+
+			if Log.CheckError(err, "failed to run autopatcher, sleeping 5 minutes") {
+				time.Sleep(time.Minute * 5)
+				continue
+			}
+
 			args := strings.Split(fmt.Sprintf("service update --force %s-darkstat-app", environment), " ")
 			cmd := exec.Command("docker", args...)
 			stdout, err := cmd.Output()
-			if err != nil {
-				fmt.Println(err.Error())
-				panic("can't launch service restart")
+			if Log.CheckError(err, "can't launch service restart") {
+				fmt.Println(string(stdout))
+				panic("can't launch server restart")
 			}
-			fmt.Println(string(stdout))
 			LatestPatch = latest_patch
+			Log.Info("new patch was applied", typelog.NestedStruct("patch", latest_patch))
 		} else {
-			fmt.Println("patch remained same ", latest_patch.Name, latest_patch.Hash, " skipping update")
+			Log.Info(fmt.Sprintln("patch remained same ", latest_patch.Name, latest_patch.Hash, " skipping update"))
 		}
 		time.Sleep(time.Minute * 30)
 	}
 }
+
+const GameFolderPath = "/data/freelancer_folder"

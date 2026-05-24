@@ -9,12 +9,11 @@ module "disco_api" {
 }
 
 module "darkstat" {
-  source          = "../modules/darkstat"
-  environment     = "production"
-  tag             = "production-arm64"
-  discovery_path  = module.discovery.freelancer_path
-  ipv4_address    = module.data_cluster.node_darklab.ipv4_address
-  enable_restarts = true
+  source         = "../modules/darkstat"
+  environment    = "production"
+  tag            = "production-arm64"
+  discovery_path = module.discovery.freelancer_path
+  ipv4_address   = module.data_cluster.node_darklab.ipv4_address
 
   SITE_ROOT           = "/fl-data-discovery/"
   FLDARKSTAT_HEADING  = <<-EOT
@@ -27,9 +26,11 @@ module "darkstat" {
   zone                    = "dd84ai.com"
   is_discovery            = true
   is_discovery_production = true
-  replicas_count          = 1
-  extra_vars              = local.disco_extra_vars
-  args                    = ["--stat-deals-on", "web_cron"]
+  enable_restarts         = true
+
+  replicas_count = 1
+  extra_vars     = local.disco_extra_vars
+  args           = ["--stat-deals-on", "web_cron"]
 }
 
 locals {
@@ -65,14 +66,15 @@ module "darkstat_dev" {
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for <a href="https://github.com/darklab8/fl-data-discovery">Disco</a>
   EOT
 
-  stat_prefix     = "darkstat-dev"
-  zone            = "dd84ai.com"
-  enable_restarts = true
+  stat_prefix = "darkstat-dev"
+  zone        = "dd84ai.com"
 
-  password     = random_string.random_password.result
-  secret       = random_string.random_secret.result
-  disco_oauth  = true
-  is_discovery = true
+  password        = random_string.random_password.result
+  secret          = random_string.random_secret.result
+  disco_oauth     = true
+  is_discovery    = true
+  enable_restarts = false
+
   # extra_vars   = local.disco_extra_vars
   args = ["--stat-deals-on", "--map-on", "web"]
 }

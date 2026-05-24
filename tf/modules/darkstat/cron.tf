@@ -26,8 +26,13 @@ resource "docker_container" "cron_restart" {
     host_path      = "/var/run/docker.sock"
     container_path = "/var/run/docker.sock"
   }
+  volumes {
+    host_path      = var.discovery_path
+    container_path = "/data"
+  }
   env = [
-    "ENVIRONMENT=${var.environment}"
+    "ENVIRONMENT=${var.environment}",
+    "UTILS_USERAGENT=darkwind/1.0",
   ]
   lifecycle {
     ignore_changes = [
