@@ -197,7 +197,7 @@ func main() {
 			if len(patches) == 0 {
 				logger.Error("Parsed zero patches from patchlist.xml")
 			} else {
-				for _, patch := range patches[len(patches)-5:] {
+				for _, patch := range patches[len(patches)-10:] {
 
 					if FileExists(filepath.Join("/data", patch.Filename)) {
 						Log.Warnln("patch already exists, skipping downloading it, filename=", patch.Filename)
