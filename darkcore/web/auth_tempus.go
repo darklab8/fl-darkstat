@@ -25,7 +25,7 @@ func NewTempusToken() string {
 
 func IsTempusValid(encrypted string) bool {
 	decrypted, err := decrypt(encrypted, settings.Env.Secret)
-	if logus.Log.CheckError(err, "failed decryption") {
+	if logus.Log.CheckWarn(err, "failed decryption") {
 		return false
 	}
 
