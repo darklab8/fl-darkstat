@@ -28,7 +28,7 @@ jobs:
       #   with:
       #     key: ${{ runner.os }}-${{ github.workspace }}/${{ matrix.freelancer-mod }}-freelancer-configs
       #     path: "${{ github.workspace }}/${{ matrix.freelancer-mod }}"
-      - uses: darklab8/infra/.github/actions/checkout-freelancer@master
+      - uses: darklab8/fl-darkstat/.github/actions/checkout-freelancer@master
         with:
           freelancer-mod: "${{ matrix.freelancer-mod }}"
           freelancer-folder: "${{ github.workspace }}/${{ matrix.freelancer-mod }}"
@@ -50,7 +50,7 @@ jobs:
         run: task build-version
       - name: Patch freelancer discovery to latest
         if: matrix.freelancer-mod == 'discovery'
-        uses: darklab8/infra/.github/actions/patch-disco@master
+        uses: darklab8/fl-darkstat/.github/actions/patch-disco@master
         with:
           freelancer-folder: ${{ github.workspace }}/discovery
       - name: Test

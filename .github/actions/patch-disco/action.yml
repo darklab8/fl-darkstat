@@ -1,0 +1,20 @@
+name: Patch freelancer discovery to latest
+description: ""
+inputs:
+  freelancer-folder:
+    description: Path to Discovery Freelancer u wish to patch
+runs:
+  using: composite
+  steps:
+    - name: Install Patch Disco
+      shell: bash
+      run: |
+        set -ex
+        git clone --depth 1 --branch master https://github.com/darklab8/fl-darkstat.git patch-disco
+        cd patch-disco
+        GOOS=linux go build -v -o main helpers/patch_disco/cmd/main.go
+        install -m 777 main /usr/local/bin/patch_disco
+        cd ..
+    - name: Patch to latest
+      shell: bash
+      run: patch_disco -wd ${{ inputs.freelancer-folder }}

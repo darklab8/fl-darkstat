@@ -13,6 +13,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/envers"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/helpers/patch_disco"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/cantil"
 	"github.com/darklab8/go-utils/utils/utils_types"
@@ -23,6 +24,20 @@ func HelpersCliGroup(Args []string) {
 	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	parser := cantil.NewConsoleParser(
 		[]cantil.Action{
+			{
+				Nickname:    "patch_disco",
+				Description: "Patch disco to latest",
+				Func: func(info cantil.ActionInfo) error {
+					fmt.Println("inputed args=", info.CmdArgs[1:])
+					f := flag.String("wd", ".", "...")
+					flag.Parse()
+					err := patch_disco.RunAutopatcher(*f)
+					if err != nil {
+						os.Exit(1)
+					}
+					return nil
+				},
+			},
 			{
 				Nickname:    "infocard_read",
 				Description: "Read some infocard and output to file",

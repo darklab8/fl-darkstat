@@ -20,7 +20,7 @@ jobs:
       #     key: ${{ runner.os }}-${{ github.workspace }}/discovery-freelancer-build
       #     path: "${{ github.workspace }}/fl-data"
       - name: Checkout Freelancer
-        uses: darklab8/infra/.github/actions/checkout-freelancer@master
+        uses: darklab8/fl-darkstat/.github/actions/checkout-freelancer@master
         with:
           freelancer-mod: discovery
           freelancer-folder: ${{ github.workspace }}/fl-data
@@ -41,7 +41,7 @@ jobs:
       - name: add versions
         run: task build-version
       - name: Patch freelancer discovery to latest
-        uses: darklab8/infra/.github/actions/patch-disco@master
+        uses: darklab8/fl-darkstat/.github/actions/patch-disco@master
         with:
           freelancer-folder: ${{ github.workspace }}/fl-data
       - name: Test things
