@@ -157,12 +157,7 @@ func main() {
 				}
 			}
 
-			err, data := downloadFile("/data", "patchlist.xml", "https://patch.discoverygc.com/patchlist.xml", false)
-			if logger.CheckError(err, "https://patch.discoverygc.com/patchlist.xml Error downloading patchlist.xml") {
-				run_errors = append(run_errors, err)
-			}
-
-			err, data = downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson", true)
+			err, data := downloadFile("/data", "forums/base_admin.php", "https://discoverygc.com/forums/base_admin.php?action=getjson", true)
 			if logger.CheckError(err, "base_admin.php5 Error downloading forums/base_admin.php") {
 				run_errors = append(run_errors, err)
 			}
