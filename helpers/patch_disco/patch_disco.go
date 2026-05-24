@@ -25,7 +25,10 @@ type RequestResp struct {
 	StatusCode int
 }
 
-var Log *typelog.Logger = typelog.NewLogger("autopatcher", typelog.WithLogLevel(typelog.LEVEL_INFO))
+var Log *typelog.Logger = typelog.NewLogger(
+	"disco_patch",
+	typelog.WithLogLevel(typelog.LEVEL_INFO),
+)
 
 func Request(url string) (RequestResp, error) {
 	res, err := utils_http.Get(url)
@@ -56,7 +59,10 @@ func DownloadFile(filepath string, url string) (err error) {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		err := resp.Body.Close()
+		Log.CheckError(err, "failed to close body")
+	}()
 
 	// Check server response
 	if resp.StatusCode != http.StatusOK {
@@ -68,7 +74,10 @@ func DownloadFile(filepath string, url string) (err error) {
 	if err != nil {
 		return err
 	}
-	defer out.Close()
+	defer func() {
+		err := out.Close()
+		Log.CheckError(err, "failed to close file to write")
+	}()
 
 	// Writer the body to file
 	_, err = io.Copy(out, resp.Body)
@@ -103,7 +112,7 @@ func Unzip(src, dest string) error {
 		}
 	}()
 
-	os.MkdirAll(dest, 0777)
+	_ = os.MkdirAll(dest, 0777)
 
 	// Closure to address file descriptors issue with all the deferred .Close() methods
 	extractAndWriteFile := func(f *zip.File) error {
@@ -125,9 +134,9 @@ func Unzip(src, dest string) error {
 		}
 
 		if f.FileInfo().IsDir() {
-			os.MkdirAll(path, 0777)
+			_ = os.MkdirAll(path, 0777)
 		} else {
-			os.MkdirAll(filepath.Dir(path), 0777)
+			_ = os.MkdirAll(filepath.Dir(path), 0777)
 			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0777)
 			if err != nil {
 				return err
@@ -187,7 +196,8 @@ func (patch Patch) GetFolderPath() string {
 func ParseForPatches(discovery_url string, body []byte) []Patch {
 	var patches []Patch
 	var Page PatcherData
-	xml.Unmarshal(body, &Page)
+	err := xml.Unmarshal(body, &Page)
+	Log.CheckError(err, "failed unmarshaling xml for parse for patches")
 
 	for _, patch := range Page.PatchList.Patch {
 		patches = append(patches, Patch{
@@ -201,7 +211,7 @@ func ParseForPatches(discovery_url string, body []byte) []Patch {
 }
 
 func downloadPatch(patch Patch) error {
-	os.MkdirAll("patches", 0777)
+	_ = os.MkdirAll("patches", 0777)
 	if fileExists(patch.GetFilepath()) {
 		return errors.New(fmt.Sprintln("fpath already eixsts, fpath=", patch.GetFilepath()))
 	}
@@ -250,7 +260,7 @@ func ScanCaseInsensitiveFS(fs_path string) Filesystem {
 		LowerMapFiles:   make(map[string]File),
 		LowerMapFolders: make(map[string]File),
 	}
-	filepath.WalkDir(fs_path, func(path string, d fs.DirEntry, err error) error {
+	err := filepath.WalkDir(fs_path, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -266,6 +276,7 @@ func ScanCaseInsensitiveFS(fs_path string) Filesystem {
 		return nil
 
 	})
+	Log.CheckError(err, "failed to walk dir")
 	return myfs
 }
 
@@ -274,7 +285,10 @@ func WriteToFile(path string, content []byte) {
 	if err != nil {
 		panic(fmt.Sprintln("os.Create:", err))
 	}
-	defer destination.Close()
+	defer func() {
+		err := destination.Close()
+		Log.CheckError(err, "failed to close destination")
+	}()
 
 	_, err = destination.Write(content)
 	if err != nil {
@@ -310,7 +324,8 @@ func ReadLauncherConfig() (LauncherConfigData, []string) {
 	}
 
 	var Page BadassRoot
-	xml.Unmarshal(body, &Page)
+	err = xml.Unmarshal(body, &Page)
+	Log.CheckError(err, "failed to unarmshal xml for launcherconfig.xml")
 
 	for _, patch := range Page.PatchHistory.Patch {
 		result.PatchMap[PatchHash(patch)] = ""
@@ -362,7 +377,8 @@ func init() {
 }
 
 func RunAutopatcher(workdir string) error {
-	os.Chdir(workdir)
+	err := os.Chdir(workdir)
+	Log.CheckError(err, "failed to change working directory")
 	println(os.Getwd())
 
 	discovery_url := "https://patch.discoverygc.com/"
@@ -383,7 +399,8 @@ func RunAutopatcher(workdir string) error {
 
 			if index == len(patches)-1 {
 				patch_marshaled, _ := json.Marshal(patch)
-				os.WriteFile(AutopatherFilename, patch_marshaled, 0666)
+				err = os.WriteFile(AutopatherFilename, patch_marshaled, 0666)
+				Log.CheckError(err, "failed to write patch_marshaled")
 			}
 			continue
 		}
@@ -402,7 +419,8 @@ func RunAutopatcher(workdir string) error {
 			return errors.New(fmt.Sprintln("md5 hash sum is not matching", "expected=", patch.Hash, " but bound=", md5_result))
 		}
 
-		Unzip(patch.GetFilepath(), patch.GetFolderPath())
+		err = Unzip(patch.GetFilepath(), patch.GetFolderPath())
+		Log.CheckError(err, "failed to unzip")
 
 		freelancer_folder := ScanCaseInsensitiveFS(".")
 		patch_folder := ScanCaseInsensitiveFS(patch.GetFolderPath())
@@ -421,7 +439,7 @@ func RunAutopatcher(workdir string) error {
 			}
 
 			if freelancer_path, file_exists := freelancer_folder.LowerMapFiles[strings.ToLower(relative_patch_filepath)]; file_exists {
-				os.Remove(freelancer_path.GetPath())
+				_ = os.Remove(freelancer_path.GetPath())
 			}
 
 			relative_patch_filepath = AdjustFoldersInPath(relative_patch_filepath, freelancer_folder)
@@ -430,11 +448,12 @@ func RunAutopatcher(workdir string) error {
 
 		}
 
-		os.RemoveAll(patch.GetFolderPath())
+		_ = os.RemoveAll(patch.GetFolderPath())
 
 		Log.Info("applied patch", typelog.Any("patch", patch))
 		patch_marshaled, _ := json.Marshal(patch)
-		os.WriteFile(AutopatherFilename, patch_marshaled, 0666)
+		err = os.WriteFile(AutopatherFilename, patch_marshaled, 0666)
+		Log.CheckError(err, "failed to write file")
 
 		applied_patches = append(applied_patches, patch)
 	}
@@ -451,13 +470,17 @@ func RunAutopatcher(workdir string) error {
 		err_msg := "not found patch line index, where to insert"
 		return errors.New(err_msg)
 	}
+
+	Log.Info("updating launcherconfig.yml")
 	var new_patch_file_lines []string
 	new_patch_file_lines = append(new_patch_file_lines, patch_file_start...)
 	for _, patch := range applied_patches {
 		new_patch_file_lines = append(new_patch_file_lines, fmt.Sprintf("    <Patch>%s</Patch>\r", patch.Hash))
 	}
 	new_patch_file_lines = append(new_patch_file_lines, patch_file_end...)
-	os.WriteFile("launcherconfig.xml", []byte(strings.Join(new_patch_file_lines, "\n")), 0666)
+	err = os.WriteFile("launcherconfig.xml", []byte(strings.Join(new_patch_file_lines, "\n")), 0666)
+	Log.CheckError(err, "failed updating launcherconfig.xml")
+	Log.Info("finished autopatched run")
 	return nil
 }
 

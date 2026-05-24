@@ -13,6 +13,7 @@ func main() {
 
 	err := patch_disco.RunAutopatcher(*f)
 	if err != nil {
+		patch_disco.Log.CheckError(err, "failed to run autopatcher")
 		os.Exit(1)
 	}
 }
