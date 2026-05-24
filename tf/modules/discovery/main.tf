@@ -3,6 +3,10 @@ resource "docker_image" "discovery" {
   build {
     context = path.module
   }
+
+  triggers = {
+    dir_sha1 = sha1(join("", [for f in ["Dockerfile", "entrypoint.sh"] : filesha1("${path.module}/${f}")]))
+  }
 }
 
 locals {
