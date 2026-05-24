@@ -376,12 +376,19 @@ func init() {
 	}
 }
 
-func RunAutopatcher(workdir string) error {
+const DiscoveryUrl = "https://patch.discoverygc.com/"
+const DiscoveryUrlCache = "https://disco-api.dd84ai.com/"
+
+func RunAutopatcher(workdir string, use_cache bool) error {
 	err := os.Chdir(workdir)
 	Log.CheckError(err, "failed to change working directory")
 	println(os.Getwd())
 
-	discovery_url := "https://patch.discoverygc.com/"
+	discovery_url := DiscoveryUrl
+	if use_cache {
+		discovery_url = DiscoveryUrlCache
+	}
+
 	discovery_path_url := discovery_url + "patchlist.xml"
 	resp, err := Request(discovery_path_url)
 	if err != nil {
@@ -480,7 +487,7 @@ func RunAutopatcher(workdir string) error {
 	new_patch_file_lines = append(new_patch_file_lines, patch_file_end...)
 	err = os.WriteFile("launcherconfig.xml", []byte(strings.Join(new_patch_file_lines, "\n")), 0666)
 	Log.CheckError(err, "failed updating launcherconfig.xml")
-	Log.Info("finished autopatched run")
+	Log.Info("finished patchdisco run")
 	return nil
 }
 

@@ -9,11 +9,12 @@ import (
 
 func main() {
 	f := flag.String("wd", ".", "...")
+	use_cache := flag.Bool("cache", false, "use cached version")
 	flag.Parse()
 
-	err := patch_disco.RunAutopatcher(*f)
+	err := patch_disco.RunAutopatcher(*f, *use_cache)
 	if err != nil {
-		patch_disco.Log.CheckError(err, "failed to run autopatcher")
+		patch_disco.Log.CheckError(err, "failed to run patch disco")
 		os.Exit(1)
 	}
 }
