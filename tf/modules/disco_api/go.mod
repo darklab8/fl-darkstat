@@ -4,7 +4,7 @@ go 1.25.1
 
 require (
 	github.com/anaskhan96/soup v1.2.5
-	github.com/darklab8/go-utils v0.31.7
+	github.com/darklab8/go-utils v0.31.9
 )
 
 require (

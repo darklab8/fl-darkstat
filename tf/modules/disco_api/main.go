@@ -124,14 +124,14 @@ func main() {
 			downloaded_files := 0
 
 			logger := Log.WithFields(typelog.Int("loop", i))
-			logger.Info(fmt.Sprintln("Scraping file list from", baseURL, " version5"))
+			logger.Infoln("Scraping file list from", baseURL, " version5")
 			err, files := scrapeFileNames(logger)
 
 			if logger.CheckError(err, "Error scraping file names") {
 				time.Sleep(time.Minute * 3)
 				continue
 			}
-			logger.Info(fmt.Sprintln("files=", files))
+			logger.Infoln("files=", files)
 
 			logger.Info(fmt.Sprintf("Found %d files, downloading...\n", len(files)))
 			for _, fileName := range files {
@@ -171,12 +171,12 @@ func main() {
 					run_errors = append(run_errors, err)
 				}
 			} else {
-				logger.Info(fmt.Sprintln("base_admin downloaded succesfully. time=", time.Now(), " len=", len(data)))
+				logger.Infoln("base_admin downloaded succesfully. time=", time.Now(), " len=", len(data))
 			}
 
 			unmarshaled := make(map[string]any)
 			err = json.Unmarshal(data, &unmarshaled)
-			if logger.CheckError(err, fmt.Sprintln("base_admin.php5 failed to unmarshal its json (showing no content) ", time.Now(), " len=", len(data))) {
+			if logger.CheckErrorln(err, "base_admin.php5 failed to unmarshal its json (showing no content) ", time.Now(), " len=", len(data)) {
 				err = os.WriteFile("/data/errored_base_admin.json", data, os.FileMode(0644))
 				if Log.CheckError(err, "base_admin.php5 failed to write errored data to file") {
 					run_errors = append(run_errors, err)

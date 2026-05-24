@@ -1,11 +1,7 @@
 github.com/anaskhan96/soup v1.2.5 h1:V/FHiusdTrPrdF4iA1YkVxsOpdNcgvqT1hG+YtcZ5hM=
 github.com/anaskhan96/soup v1.2.5/go.mod h1:6YnEp9A2yywlYdM4EgDz9NEHclocMepEtku7wg6Cq3s=
-github.com/darklab8/go-utils v0.31.5 h1:B47CsTMItgxPPPLZxOSQYKrp0V2OPJUyIPmS/QTcNh0=
-github.com/darklab8/go-utils v0.31.5/go.mod h1:PGseWy8mvz/clHH8fpq5Qi5gaBKX+tK2Fc3MV74cFgY=
-github.com/darklab8/go-utils v0.31.6 h1:nEO5Ag/B2NJFtJg1Yrpc6YDaf5/BXHShOuPIv4kDLWQ=
-github.com/darklab8/go-utils v0.31.6/go.mod h1:PGseWy8mvz/clHH8fpq5Qi5gaBKX+tK2Fc3MV74cFgY=
-github.com/darklab8/go-utils v0.31.7 h1:mWmUg/Ra3tuaNb7k1ujZmG6z0+xKZhp6+A5xhd8YpP0=
-github.com/darklab8/go-utils v0.31.7/go.mod h1:PGseWy8mvz/clHH8fpq5Qi5gaBKX+tK2Fc3MV74cFgY=
+github.com/darklab8/go-utils v0.31.9 h1:b7BOqK4kR3K8lN9bBobtsRl72Ugz4G698ka78CRUdwI=
+github.com/darklab8/go-utils v0.31.9/go.mod h1:PGseWy8mvz/clHH8fpq5Qi5gaBKX+tK2Fc3MV74cFgY=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
