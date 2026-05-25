@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -14,7 +13,13 @@ import (
 
 	_ "time/tzdata" // load fallback timezone data for use in docker images.
 
+	"github.com/darklab8/go-utils/typelog"
 	_ "golang.org/x/crypto/x509roots/fallback" // CA bundle for FROM Scratch
+)
+
+var Log *typelog.Logger = typelog.NewLogger(
+	"disco_patch",
+	typelog.WithLogLevel(typelog.LEVEL_INFO),
 )
 
 func runCommand(command string) (string, error) {
@@ -108,23 +113,21 @@ func main() {
 	oldPassword := "smth"
 
 	for {
-		log.Println("Finding out old password...")
+		Log.Info("Finding out old password...")
 		environ, err := getDockerEnv(serviceName)
-		if err != nil {
-			log.Printf("ERROR getting docker env: %v", err)
-		} else {
+		if !Log.CheckError(err, "error getting docker env:") {
 			oldPassword = environ["DARKCORE_PASSWORD"]
 		}
 
-		log.Println("Attempting to clone/update freelancer folder...")
+		Log.Info("Attempting to clone/update freelancer folder...")
 		if _, statErr := os.Stat(repoDir); os.IsNotExist(statErr) {
 			if out, err := runCommand("git clone git@git.discoverygc.com:dgcrepository/game-repository.git " + repoDir); err != nil {
-				log.Printf("ERROR cloning repo: %v, out=%v", err, out)
+				Log.CheckErrorln(err, "error cloning repo: out=", out)
 				time.Sleep(30 * time.Second)
 				continue
 			}
 		}
-		log.Println("Proceeding to git checkout pull reset...")
+		Log.Info("Proceeding to git checkout pull reset...")
 		cmds := []string{
 			fmt.Sprintf("cd %s && git checkout %s", repoDir, branch),
 			fmt.Sprintf("cd %s && git pull", repoDir),
@@ -132,33 +135,30 @@ func main() {
 		}
 		for _, c := range cmds {
 			if out, err := runCommand(c); err != nil {
-				log.Printf("ERROR running %q: %v, out=%v", c, err, out)
+				Log.CheckErrorln(err, "error running ", c, out)
 			}
 		}
 
-		log.Println("Getting last commit hash...")
+		Log.Info("Getting last commit hash...")
 
 		newPassword, err := runCommand(fmt.Sprintf("cd %s && git rev-parse HEAD", repoDir))
-		if err != nil {
-			log.Printf("ERROR getting git HEAD: %v", err)
-		}
+		Log.CheckError(err, "error getting git head")
 
 		if oldPassword != newPassword {
-			log.Println("Detected new password: ", newPassword, " running docker service update. it takes a minute to that, have patience...")
+			Log.Infoln("Detected new password: ", newPassword, " running docker service update. it takes a minute to that, have patience...")
 			updateCmd := fmt.Sprintf(
 				`docker service update --env-add DARKCORE_PASSWORD=%s --env-add "FLDARKSTAT_HEADING=commit:%s" %s`,
 				newPassword, newPassword, serviceName,
 			)
 			if out, err := runCommand(updateCmd); err != nil {
-				log.Printf("ERROR updating docker service: %v, out=%s", err, out)
+				Log.Errorln("error updating docker service: ", err, out)
 			}
-			log.Println("finished running docker service update")
+			Log.Info("finished running docker service update")
 			oldPassword = newPassword
 
 			for {
 				state, err := getDockerUpdateState(serviceName)
-				if err != nil {
-					log.Printf("ERROR polling update state: %v", err)
+				if Log.CheckError(err, "error polling update state") {
 					break
 				}
 				if !strings.Contains(state, "updating") {
@@ -172,9 +172,9 @@ func main() {
 
 					webhookURL := os.Getenv("DISCO_DEV_WEBHOOK")
 					if webhookURL == "" {
-						log.Println("WARNING: DISCO_DEV_WEBHOOK env var not set")
+						Log.Warn("DISCO_DEV_WEBHOOK env var not set")
 					} else if err := sendDiscordWebhook(webhookURL, "Darkstat", contentMsg); err != nil {
-						log.Printf("ERROR sending Discord webhook: %v", err)
+						Log.CheckError(err, "sending Discord webhook")
 					}
 					break
 				}
@@ -182,7 +182,7 @@ func main() {
 			}
 		}
 
-		log.Println("completed run. Sleeping")
+		Log.Info("completed run. Sleeping")
 		time.Sleep(30 * time.Second)
 	}
 }
