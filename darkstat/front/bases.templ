@@ -135,10 +135,10 @@ templ BasesTable(
 							@frmt.MultiLinestring([]string{"Best", types.ToCapital(shared.ShipNames.Freighter), "profit/v", "¢/sec"})
 						</th>
 					}
+					<th style="width:50px;">
+						@frmt.MultiLinestring([]string{"Best", fmt.Sprintf("%s.", types.ToCapital(shared.ShipNames.Transport)[:2]), "profit", "per v"})
+					</th>
 				}
-				<th style="width:50px;">
-					@frmt.MultiLinestring([]string{"Best", fmt.Sprintf("%s.", types.ToCapital(shared.ShipNames.Transport)[:2]), "profit", "per v"})
-				</th>
 				<th style="width:100px;">Region</th>
 				if shared.ShowFLSR {
 					<th style="width:5px;">
@@ -334,14 +334,14 @@ templ BaseRow(base *configs_export.Base, tab_mode BaseMode, pinm tab.PinMod, sha
 					}
 				</td>
 			}
+			<td>
+				if routes.ProfitPerV != nil {
+					{ strconv.Itoa(int(*routes.ProfitPerV)) }
+				} else {
+					0
+				}
+			</td>
 		}
-		<td>
-			if routes.ProfitPerV != nil {
-				{ strconv.Itoa(int(*routes.ProfitPerV)) }
-			} else {
-				0
-			}
-		</td>
 		<td>
 			@frmt.WriteRegionName(base.Region)
 		</td>
