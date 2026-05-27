@@ -57,6 +57,17 @@ func GetTimeS(g *GraphResults, BuyingGood *MarketGood, SellingGood *MarketGood) 
 
 // memory optimized version of GetProffitPerTime
 func GetProffitPerTime(g *GraphResults, BuyingGood *MarketGood, SellingGood *MarketGood) float64 {
+	time_s := GetTimeS(g, BuyingGood, SellingGood)
+	return GetProffitPerV(g, BuyingGood, SellingGood) / time_s
+}
+func (t *TradeRoute) GetProfit(g *GraphResults, BuyingGood *MarketGood, SellingGood *MarketGood) float64 {
+	return GetProffitPerV(g, t.BuyingGood, t.SellingGood) * KiloVolumesDeliverable(t.BuyingGood, t.SellingGood)
+}
+func (t *TradeRoute) DiscoBelowThresholdRoute(g *GraphResults) bool {
+	return GetProffitPerV(g, t.BuyingGood, t.SellingGood)*KiloVolumesDeliverable(t.BuyingGood, t.SellingGood)*1000 < DiscoMinimalTradeProfit
+}
+
+func GetProffitPerV(g *GraphResults, BuyingGood *MarketGood, SellingGood *MarketGood) float64 {
 	if g == nil {
 		return 0
 	}
@@ -64,8 +75,7 @@ func GetProffitPerTime(g *GraphResults, BuyingGood *MarketGood, SellingGood *Mar
 		return 0
 	}
 	ProffitPerV := float64(SellingGood.GetPriceBaseBuysFor()-BuyingGood.PriceBaseSellsFor) / float64(SellingGood.Volume)
-	time_s := GetTimeS(g, BuyingGood, SellingGood)
-	return ProffitPerV / time_s
+	return ProffitPerV
 }
 
 type ComboTradeRoute struct {
@@ -164,10 +174,11 @@ func (e *TradePathExporter) GetBaseTradePathsFrom(ctx context.Context, base *Bas
 				if trade_route.Transport.GetProffitPerTime() <= 0 {
 					return
 				}
-				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good_at_base)
-				if kilo_volumes < 5 {
+
+				if e.TradeBelowFilter(buying_good, selling_good_at_base) {
 					return
 				}
+
 				TradeRoutes = append(TradeRoutes, trade_route)
 			})
 
@@ -214,10 +225,10 @@ func (e *TradePathExporter) GetBaseTradePathsTo(ctx context.Context, base *Base)
 				if trade_route.Transport.GetProffitPerTime() <= 0 {
 					return
 				}
-				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
-				if kilo_volumes < 5 {
+				if e.TradeBelowFilter(buying_good, selling_good) {
 					return
 				}
+
 				TradeRoutes = append(TradeRoutes, trade_route)
 			})
 
@@ -272,10 +283,13 @@ type OneWayRouteInfo struct {
 	ProfitPerTimeForKiloVolumes float64
 	ProfitWeight                float64
 	TimeS                       float64
+	trade_route                 *TradeRoute
 }
 
 func OneWayRouteInfoF(trade_route *TradeRoute) OneWayRouteInfo {
-	var result OneWayRouteInfo
+	var result OneWayRouteInfo = OneWayRouteInfo{
+		trade_route: trade_route,
+	}
 	profit_per_time := trade_route.GetProffitPerTime()
 	max_importance_of_kilo_volumes := float64(50)
 	result.KiloVolumes = math.Min(max_importance_of_kilo_volumes, KiloVolumesDeliverable(trade_route.BuyingGood, trade_route.SellingGood))
@@ -698,6 +712,7 @@ type BaseBestPathTimes struct {
 	TransportProfitPerTime *float64
 	FrigateProfitPerTime   *float64
 	FreighterProfitPerTime *float64
+	ProfitPerV             *float64
 }
 
 func (e *TradePathExporter) GetBaseBestPathFrom(ctx context.Context, base *Base) *BaseBestPathTimes {
@@ -734,8 +749,7 @@ func (e *TradePathExporter) GetBaseBestPathFrom(ctx context.Context, base *Base)
 					return
 				}
 
-				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
-				if kilo_volumes < 5 {
+				if e.TradeBelowFilter(buying_good, selling_good) {
 					return
 				}
 
@@ -755,6 +769,13 @@ func (e *TradePathExporter) GetBaseBestPathFrom(ctx context.Context, base *Base)
 					result.FreighterProfitPerTime = ptr.Ptr(FreighterProfitPerTime)
 				} else if FreighterProfitPerTime > *result.FreighterProfitPerTime {
 					result.FreighterProfitPerTime = ptr.Ptr(FreighterProfitPerTime)
+				}
+
+				ProfitPerV := GetProffitPerV(e.Freighter, buying_good, selling_good)
+				if result.ProfitPerV == nil {
+					result.ProfitPerV = ptr.Ptr(ProfitPerV)
+				} else if ProfitPerV > *result.ProfitPerV {
+					result.ProfitPerV = ptr.Ptr(ProfitPerV)
 				}
 			})
 
@@ -800,8 +821,7 @@ func (e *TradePathExporter) GetBaseBestPathTo(ctx context.Context, base *Base) *
 					return
 				}
 
-				kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
-				if kilo_volumes < 5 {
+				if e.TradeBelowFilter(buying_good, selling_good) {
 					return
 				}
 
@@ -822,8 +842,32 @@ func (e *TradePathExporter) GetBaseBestPathTo(ctx context.Context, base *Base) *
 				} else if FreighterProfitPerTime > *result.FreighterProfitPerTime {
 					result.FreighterProfitPerTime = ptr.Ptr(FreighterProfitPerTime)
 				}
+
+				ProfitPerV := GetProffitPerV(e.Freighter, buying_good, selling_good)
+				if result.ProfitPerV == nil {
+					result.ProfitPerV = ptr.Ptr(ProfitPerV)
+				} else if ProfitPerV > *result.ProfitPerV {
+					result.ProfitPerV = ptr.Ptr(ProfitPerV)
+				}
 			})
 		}
 	}
 	return result
+}
+
+const DiscoMinimalTradeProfit = 200000
+
+func (e *TradePathExporter) TradeBelowFilter(buying_good *MarketGood, selling_good *MarketGood) bool {
+	kilo_volumes := KiloVolumesDeliverable(buying_good, selling_good)
+	profit_per_v := GetProffitPerV(e.Transport, buying_good, selling_good)
+	if e.Mapped.Discovery != nil {
+		if 1000*kilo_volumes*profit_per_v < DiscoMinimalTradeProfit && kilo_volumes < 5 {
+			return true
+		}
+	} else {
+		if kilo_volumes < 5 {
+			return true
+		}
+	}
+	return false
 }
