@@ -30,6 +30,11 @@ module "dns" {
     var.is_discovery_production ? [{
       type  = "A"
       value = var.ipv4_address
+      name  = "whitestat"
+    }] : [],
+    var.is_discovery_production ? [{
+      type  = "A"
+      value = var.ipv4_address
       name  = "darklightstat"
     }] : [],
   )
