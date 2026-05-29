@@ -68,7 +68,7 @@ resource "docker_service" "darkstat" {
           },
           var.is_discovery_production ? {
             "caddy_0.rewrite"       = "/ /dark.html"
-            "caddy_6"               = "white.${var.zone}",
+            "caddy_6"               = "whitestat.${var.zone}",
             "caddy_6.rewrite"       = "/ /light.html"
             "caddy_6.reverse_proxy" = "{{upstreams 8000}}",
             "caddy_7"               = "lightstat.${var.zone}",
