@@ -362,6 +362,10 @@ system- {
     z-index: 99;
 }
 
+.obj_disco_encounter {
+    z-index: 101;
+}
+
 obj- {
     position: absolute;
     cursor: pointer;
@@ -560,7 +564,7 @@ system-label {
 }
 
 .system system-label {
-    font-size: calc(1.5vh / var(--panzoom-scale));
+    font-size: calc(1.7vh / var(--panzoom-scale));
 }
 
 /* .zoomed08 map-.system system-label {
