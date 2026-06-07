@@ -185,7 +185,7 @@ func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*
 		for _, item := range item_nicknames {
 
 			is_lootable, is_lootable_by_disco := e.IsLootable(item.nickname, item.loot_source)
-			if !is_lootable {
+			if item.loot_source != LootSourceCargo && !is_lootable {
 				continue
 			}
 
@@ -206,7 +206,7 @@ func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*
 
 			// TODO [ ] missing to validate dump_cargo and destroy_hp_attachment at Solar archetype fuses
 			is_fuse_allowed := true
-			if !is_fuse_allowed {
+			if item.loot_source != LootSourceCargo && !is_fuse_allowed {
 				continue
 			}
 
@@ -298,6 +298,11 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 
 		for _, system := range e.Mapped.Systems.Systems {
 			for _, wreck := range system.Wrecks {
+
+				if wreck.Loadout.Get() == strings.ToLower("SECRET_c_co_elite2_ew63_a") {
+					fmt.Print()
+				}
+
 				process_wreck(Wreck{
 					LoadoutNickname: wreck.Loadout.Get(),
 					Archetype:       wreck.Archetype.Get(),
