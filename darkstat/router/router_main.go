@@ -10,6 +10,7 @@ import (
 	"context"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/core_static"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
@@ -105,6 +106,8 @@ func (l *Router) Link(ctx context.Context) *builder.Builder {
 		)
 		build.RegComps(mainComps...)
 	})
+
+	build.AddRootFiles(builder.NewStaticFileFromCore(core_static.RobotsFile))
 
 	timeit.NewTimerMF("linking most of stuff", func() {
 		configs.GetInfocardsDict(func(infocards infocarder.Infocards) {

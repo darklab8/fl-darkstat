@@ -18,6 +18,7 @@ type Builder struct {
 	components   []*Component
 	params       Params
 	static_files []StaticFile
+	root_files   []StaticFile
 }
 
 func (b *Builder) GetStaticFileChecker() map[utils_types.FilePath]bool {
@@ -65,6 +66,10 @@ func NewBuilder(params Params, static_files []StaticFile, opts ...BuilderOption)
 
 func (b *Builder) AddStaticFiles(static_files []StaticFile) {
 	b.static_files = append(b.static_files, static_files...)
+}
+
+func (b *Builder) AddRootFiles(static_files ...StaticFile) {
+	b.root_files = append(b.root_files, static_files...)
 }
 
 func (b *Builder) RegComps(components ...*Component) {
@@ -207,6 +212,22 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 	timeit.NewTimerF(func() {
 		target_folder := b.params.GetBuildPath().Join("static")
 		for _, static_file := range b.static_files {
+			path := utils_filepath.Join(target_folder, static_file.path)
+			if to_where == BuildToMemory {
+				filesystem.WriteToMem(path, &MemStatic{
+					content: static_file.content,
+				})
+			} else if to_where == BuildToFilesystem {
+				filesystem.WriteToFile(path, []byte(static_file.content))
+			} else {
+				panic("not supported build destination")
+			}
+		}
+	}, timeit.WithMsg("gathered static assets"))
+
+	timeit.NewTimerF(func() {
+		target_folder := b.params.GetBuildPath()
+		for _, static_file := range b.root_files {
 			path := utils_filepath.Join(target_folder, static_file.path)
 			if to_where == BuildToMemory {
 				filesystem.WriteToMem(path, &MemStatic{

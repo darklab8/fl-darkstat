@@ -62,3 +62,12 @@ var FaviconIco core_types.StaticFile = core_types.StaticFile{
 	Filename: "favicon.ico",
 	Kind:     core_types.StaticFileIco,
 }
+
+//go:embed robots.txt
+var RobotsContent string
+
+var RobotsFile core_types.StaticFile = core_types.StaticFile{
+	Content:  RobotsContent,
+	Filename: "robots.txt",
+	Kind:     core_types.StaticFileUnknown,
+}

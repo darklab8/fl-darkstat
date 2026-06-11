@@ -1,0 +1,7 @@
+User-Agent: *
+Disallow: /*
+Allow: /?okparam=
+Allow: /$
+
+# allow only / and index.html, everything else is forbidden for all kind of crawlers!
+# especially important, do not scrap any files available by any kind of links even at / and index.html paths!

@@ -240,6 +240,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 	fmt.Println("SHAPES FINISHED ACCEPTING ALL JOBS, took time seconds=", time.Since(time_start).Seconds(), " handled jobs=", created_jobs)
 
 	build.AddStaticFiles(extra_files)
+	build.AddRootFiles(builder.NewStaticFileFromCore(core_static.RobotsFile))
 
 	type FallBackInfo struct {
 		Count int
