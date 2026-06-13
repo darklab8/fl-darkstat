@@ -125,7 +125,7 @@ func (o ObjKind) ToNick() string {
 	case ObjOthers:
 		return "obj_other"
 	case ObjOtherNoname:
-		return "obj_nameless"
+		return "obj_noname"
 	case ObjDiscoEncounter:
 		return "obj_disco_encounter"
 	case ObjUnknown:

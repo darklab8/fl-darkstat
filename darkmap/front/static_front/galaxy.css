@@ -17,7 +17,7 @@ html {
     --playerbase_dockable_color: #9aff9f;
     --mining_color: #9e8676;
     --obj_other_color: #92f6fa;
-    --obj_nameless_color: #eafa92;
+    --obj_noname_color: #eafa92;
     --wreck_label_color: rgba(255, 179, 179, 0.8);
 
     /*system jump hole colors*/
@@ -309,7 +309,7 @@ system- {
 }
 
 .obj_other,
-.obj_nameless,
+.obj_noname,
 .obj_disco_encounter {
     width: 0.4em;
     height: 0.4em;
@@ -325,12 +325,12 @@ system- {
     background: var(--obj_other_color);
 }
 
-.zoomedOut .obj_nameless {
+.obj_noname {
     height: 0.25em;
     width: 0.25em;
     margin-top: -0.125em;
     margin-left: -0.125em;
-    background: var(--obj_nameless_color);
+    background: var(--obj_noname_color);
 }
 
 .zoomedOut .obj_disco_encounter {
@@ -347,7 +347,7 @@ system- {
     visibility: hidden;
 }
 
-.obj_nameless img {
+.obj_noname img {
     display: none;
 }
 
