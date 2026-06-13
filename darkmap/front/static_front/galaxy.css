@@ -370,18 +370,18 @@ system- {
 .base,
 .playerbase,
 .mining {
-    z-index: 100;
+    z-index: 300;
 }
 
 .tradelane,
 .star,
 .planet,
 .wreck {
-    z-index: 99;
+    z-index: 299;
 }
 
 .obj_disco_encounter {
-    z-index: 101;
+    z-index: 301;
 }
 
 obj- {
