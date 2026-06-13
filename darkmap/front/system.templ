@@ -97,6 +97,8 @@ templ SystemContents(system *export_map.System) {
 				templ.KV(fmt.Sprintf("obj_fallback_%s", obj.ShapeName), obj.UseFallback),
 				templ.KV("hidden_infocard_label", obj.HasInfocard),
 				templ.KV("hidden_wreck_label", obj.Kind == export_map.ObjWreck),
+				templ.KV("icon_img_always", 2*SizeInPerc(float64(obj.SolarRadius), system) > 1.5 && !obj.UseFallback),
+				templ.KV("icon_mixed", !(2*SizeInPerc(float64(obj.SolarRadius), system) > 1.5 && !obj.UseFallback)),
 			}
 			style={
 				fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
