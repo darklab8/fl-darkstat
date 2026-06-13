@@ -302,8 +302,8 @@ system- {
 }
 
 .wreck {
-    width: 0.4em;
-    height: 0.4em;
+    width: 0.8em;
+    height: 0.8em;
     margin-top: -0.2em;
     margin-left: -0.2em;
 }
@@ -317,7 +317,7 @@ system- {
     margin-left: -0.2em;
 }
 
-.obj_other {
+.zoomedOut .obj_other {
     height: 0.25em;
     width: 0.25em;
     margin-top: -0.125em;
@@ -325,7 +325,7 @@ system- {
     background: var(--obj_other_color);
 }
 
-.obj_noname {
+.zoomedOut .obj_noname {
     height: 0.25em;
     width: 0.25em;
     margin-top: -0.125em;
@@ -347,7 +347,11 @@ system- {
     visibility: hidden;
 }
 
-.obj_noname img {
+.zoomeIn .obj_noname img {
+    box-shadow: 0em 0em 0.4em 0.2em rgba(234, 250, 146, 0.5);
+}
+
+.zoomedOut .obj_noname img {
     display: none;
 }
 

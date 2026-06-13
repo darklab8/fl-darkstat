@@ -45,16 +45,18 @@ func (s System) GetSquareScale() float64 {
 }
 
 type Obj struct {
-	Nickname         string
-	Name             string
-	Pos              cfg.Vector
-	ShapeName        string
+	Nickname string
+	Name     string
+	Pos      cfg.Vector
+
+	ShapeName   string
+	SolarRadius float64
+
 	VisibleByDefault bool
 	Kind             ObjKind
 	UseFallback      bool
 
-	Star              Star
-	PlanetSolarRadius float64
+	Star Star
 
 	Rotation cfg.Vector
 
@@ -265,7 +267,9 @@ func (e *Export) EnrichSystemWithObjects(
 		archetype := jh_info.Archetype.Get()
 
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
-
+		if radius, ok := solararch.SolarRadius.GetValue(); ok {
+			jumphole.SolarRadius = radius
+		}
 		dockable := solararch.IsDockable(solararch_mapped.DockableOptions{
 			IsDisco:                  e.Mapped.Discovery != nil,
 			PlayersCanDockBerth:      true,
@@ -339,7 +343,9 @@ func (e *Export) EnrichSystemWithObjects(
 
 		archetype := obj_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
-
+		if radius, ok := solararch.SolarRadius.GetValue(); ok {
+			obj.SolarRadius = radius
+		}
 		fallback_shape_name, found_shape := solararch.ShapeName.GetValue()
 		if _, ok := e.Shapes.ShapesByNick[strings.ToLower(fallback_shape_name)]; ok {
 			e.Shapes.PermittedShapes[strings.ToLower(fallback_shape_name)] = true
@@ -485,6 +491,9 @@ func (e *Export) EnrichSystemWithObjects(
 
 		archetype := base_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		if radius, ok := solararch.SolarRadius.GetValue(); ok {
+			base.SolarRadius = radius
+		}
 		shape_name, found_shape := solararch.ShapeName.GetValue()
 		if _, ok := e.Shapes.ShapesByNick[shape_name]; !ok {
 			if IsPlanet(solararch) {
@@ -497,7 +506,7 @@ func (e *Export) EnrichSystemWithObjects(
 						shape_name = strings.Split(shape_name, ".")[0]
 					}
 				}
-				base.PlanetSolarRadius = solararch.SolarRadius.Get()
+				base.SolarRadius = solararch.SolarRadius.Get()
 			}
 
 			if shape_name == "indust" { // disco hardcoded fix
@@ -506,7 +515,7 @@ func (e *Export) EnrichSystemWithObjects(
 		} else { // if shape found
 			if shape_name == "nav_blackholehazard" { // permit fisher blackhole
 				base.Kind = ObjPlanet
-				base.PlanetSolarRadius = solararch.SolarRadius.Get()
+				base.SolarRadius = solararch.SolarRadius.Get()
 			}
 		}
 		if strings.Contains(archetype, "docking_fixture") {
@@ -726,6 +735,9 @@ func (e *Export) EnrichSystemWithObjects(
 
 		archetype := wreck.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		if radius, ok := solararch.SolarRadius.GetValue(); ok {
+			obj.SolarRadius = radius
+		}
 		shape_name, found_shape := solararch.ShapeName.GetValue()
 
 		if !found_shape {
@@ -879,6 +891,10 @@ func (e *Export) EnrichSystemWithObjects(
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
 		shape_name, _ := solararch.ShapeName.GetValue()
 
+		if radius, ok := solararch.SolarRadius.GetValue(); ok {
+			obj.SolarRadius = radius
+		}
+
 		// Lets Show them all and not hide anything
 		// _, has_base := obj_info.Base.GetValue()
 		// if !found_shape && !has_base {
@@ -922,7 +938,9 @@ func (e *Export) EnrichSystemWithObjects(
 			obj.VisibleByDefault = false
 		}
 
-		if strings.Contains(strings.ToLower(obj.Name), "encounter") {
+		if strings.Contains(strings.ToLower(obj.Name), "encounter") ||
+			strings.Contains(strings.ToLower(obj.Name), "battlezone") ||
+			strings.Contains(strings.ToLower(obj.ShapeName), "nav_waypointcircle") {
 			obj.Kind = ObjDiscoEncounter
 			obj.VisibleByDefault = true
 
