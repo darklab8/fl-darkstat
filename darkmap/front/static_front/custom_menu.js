@@ -41,6 +41,9 @@ function toggle_option(checked, checkbox_name, hidden_class, unhidden_class) {
     } else if (checkbox_name === "checkbox_obj_others") {
         LabelsReset();
         InstallLabelOverlapper();
+    } else if (checkbox_name === "checkbox_obj_nameless_labels") {
+        LabelsReset();
+        InstallLabelOverlapper();
     } else if (checkbox_name === "checkbox_pobs") {
         LabelsReset();
         InstallLabelOverlapper();
@@ -134,6 +137,8 @@ function InstallMenu() {
     InstallButton("checkbox_pobs", "unhidden_pob", "hidden_pob", toggle_option);
 
     InstallButton("checkbox_obj_others", "hidden_obj_other_label", "unhidden_obj_other_label", toggle_option);
+
+    InstallButton("checkbox_obj_nameless_labels", "hidden_obj_nameless_label", "unhidden_obj_nameless_label", toggle_option);
 
     InstallButton("checkbox_infocarded_labels", "hidden_infocard_label", "unhidden_infocard_label", toggle_option);
 

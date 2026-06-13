@@ -98,6 +98,7 @@ const (
 	ObjWreck
 	ObjZone
 	ObjOthers
+	ObjOtherNoname
 	ObjDiscoEncounter
 )
 
@@ -123,6 +124,8 @@ func (o ObjKind) ToNick() string {
 		return "zone"
 	case ObjOthers:
 		return "obj_other"
+	case ObjOtherNoname:
+		return "obj_nameless"
 	case ObjDiscoEncounter:
 		return "obj_disco_encounter"
 	case ObjUnknown:
@@ -857,7 +860,6 @@ func (e *Export) EnrichSystemWithObjects(
 
 	for _, obj_info := range system_info.Objects {
 		// all other objects that have navmap defined
-
 		if _, ok := obj_info.Pos.GetValue(); !ok {
 			continue
 		}
@@ -875,11 +877,14 @@ func (e *Export) EnrichSystemWithObjects(
 
 		archetype := obj_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
-		shape_name, found_shape := solararch.ShapeName.GetValue()
-		_, has_base := obj_info.Base.GetValue()
-		if !found_shape && !has_base {
-			continue
-		}
+		shape_name, _ := solararch.ShapeName.GetValue()
+
+		// Lets Show them all and not hide anything
+		// _, has_base := obj_info.Base.GetValue()
+		// if !found_shape && !has_base {
+		// 	continue
+		// }
+
 		if _, ok := e.Shapes.ShapesByNick[shape_name]; ok {
 			e.Shapes.PermittedShapes[shape_name] = true
 		}
@@ -912,7 +917,9 @@ func (e *Export) EnrichSystemWithObjects(
 		})
 
 		if strings.Contains(strings.ToLower(obj.Name), "object unknown") {
-			continue
+			obj.Name = obj.Nickname
+			obj.Kind = ObjOtherNoname
+			obj.VisibleByDefault = false
 		}
 
 		if strings.Contains(strings.ToLower(obj.Name), "encounter") {
