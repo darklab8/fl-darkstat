@@ -16,9 +16,9 @@ import (
 func FactionRepUrl(faction configs_export.Faction, mode FactionTabMode) string {
 
 	if mode == FactionShowBases {
-		return "stat/factions/rep-" + strings.ToLower(faction.Nickname)
+		return "st/factions/rep-" + strings.ToLower(faction.Nickname)
 	} else if mode == FactionShowBribes {
-		return "stat/rephacks/rep-" + strings.ToLower(faction.Nickname)
+		return "st/rephacks/rep-" + strings.ToLower(faction.Nickname)
 	} else {
 		return ""
 	}

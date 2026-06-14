@@ -16,11 +16,11 @@ import (
 
 func GunDetailedUrl(gun configs_export.Gun, mode GunTabMode) string {
 	if mode == GunsShowBases {
-		return "stat/guns/guns_base-" + strings.ToLower(gun.Nickname)
+		return "st/guns/guns_base-" + strings.ToLower(gun.Nickname)
 	} else if mode == GunsShowDamageBonuses {
-		return "stat/guns/guns_bonuses-" + strings.ToLower(gun.Nickname)
+		return "st/guns/guns_bonuses-" + strings.ToLower(gun.Nickname)
 	} else if mode == GunsMissiles {
-		return "stat/guns/missiles-" + strings.ToLower(gun.Nickname)
+		return "st/guns/missiles-" + strings.ToLower(gun.Nickname)
 	}
 
 	panic("unsupported choice in GunDetailedUrl")
