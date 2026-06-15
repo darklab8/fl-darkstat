@@ -418,6 +418,7 @@ func (e *Export) EnrichSystemWithObjects(
 		stararch := e.Mapped.Stararch.StarsByNick[stararch_nick]
 
 		star.Star.StarRadius = stararch.Radius.Get()
+		star.SolarRadius = star.Star.StarRadius
 		star_glow := e.Mapped.Stararch.GlowsByNick[stararch.StarGlow.Get()]
 
 		star.Star.StarGlow = Glow{
