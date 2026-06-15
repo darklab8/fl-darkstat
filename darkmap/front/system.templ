@@ -110,7 +110,8 @@ templ SystemContents(system *export_map.System) {
 					SystemPosToPerc(obj.Pos.X, system),
 				),
 				templ.KV(fmt.Sprintf("transform: rotate(%1.fdeg)", -obj.Rotation.Y), obj.Kind == export_map.ObjTradelane),
-				fmt.Sprintf("z-index: %.d !important", ObjZIndex(obj, system)),
+				templ.KV(fmt.Sprintf("z-index: %.d !important", ObjZIndex(obj, system)), obj.Kind != export_map.ObjStar),
+				templ.KV(fmt.Sprintf("z-index: %.d !important", ObjZIndexRaw(float64(obj.Star.AtmosphereRange), system)), obj.Kind == export_map.ObjStar),
 				templ.KV(fmt.Sprintf("width: %.5f%% !important", 2*SizeInPerc(float64(obj.SolarRadius), system)), obj.SolarRadius > 0 && !obj.UseFallback),
 				templ.KV(fmt.Sprintf("height: %.5f%% !important", 2*SizeInPerc(float64(obj.SolarRadius), system)), obj.SolarRadius > 0 && !obj.UseFallback),
 				templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.SolarRadius), system)), obj.SolarRadius > 0 && !obj.UseFallback),
@@ -168,6 +169,7 @@ templ SystemContents(system *export_map.System) {
 						"position: absolute",
 						fmt.Sprintf("width: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
 						fmt.Sprintf("height: %.5f%%", 100.0*float64(obj.Star.AtmosphereRange)/float64(obj.Star.StarRadius)),
+						fmt.Sprintf("z-index: %.d !important", ObjZIndexRaw(float64(obj.Star.AtmosphereRange), system)),
 					}
 				></div>
 			}
@@ -224,7 +226,11 @@ func ObjZIndex(obj *export_map.Obj, system *export_map.System) int {
 		return 300
 	}
 
-	return 300 - int(math.Min(2*SizeInPerc(float64(obj.SolarRadius), system)*10, 200.0))
+	return ObjZIndexRaw(obj.SolarRadius, system)
+}
+
+func ObjZIndexRaw(SolarRadius float64, system *export_map.System) int {
+	return 300 - int(math.Min(2*SizeInPerc(float64(SolarRadius), system)*10, 200.0))
 }
 
 func ObjectsToTipppy(Zones []*export_map.Zone, objs []*export_map.Obj, Jumpholes []*export_map.Jumphole) []TippyObj {
