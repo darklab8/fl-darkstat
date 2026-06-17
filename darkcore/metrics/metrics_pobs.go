@@ -14,6 +14,10 @@ var (
 		Name: "darkstat_pob_health",
 		Help: "PoB health",
 	}, []string{"pob_nick"})
+	PoBActive *prometheus.GaugeVec = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "darkstat_pob_active",
+		Help: "PoB active",
+	}, []string{"pob_nick"})
 	PoBCargoLeft *prometheus.GaugeVec = promauto.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "darkstat_pob_cargo_left",
 		Help: "PoB cargo left",
@@ -38,6 +42,7 @@ var (
 
 	pob_metrics = []prometheus.Collector{
 		PoBInfo,
+		PoBActive,
 		PoBHealth,
 		PoBCargoLeft,
 		PoBLevel,

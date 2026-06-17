@@ -194,6 +194,10 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 			}
 			metrics.PoBItemsAmount.WithLabelValues(pob.Nickname).Set(float64(len(pob.ShopItems)))
 
+			if len(pob.ShopItems) > 0 {
+				metrics.PoBActive.WithLabelValues(pob.Nickname).Set(1)
+			}
+
 			for _, item := range pob.ShopItems {
 
 				metrics.PoBGoodQuantity.WithLabelValues(
