@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
+	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/cache"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -22,6 +23,37 @@ func (l *Router) LinkBases(
 	data *configs_export.Exporter,
 	shared *types.SharedData,
 ) {
+	if data.Mapped.Discovery != nil {
+		for _, pob := range data.PoBs {
+			metrics.PoBInfo.WithLabelValues(pob.Nickname, pob.Name).Set(1)
+			if pob.Health != nil {
+				metrics.PoBHealth.WithLabelValues(pob.Nickname).Set(*pob.Health)
+			}
+			if pob.CargoSpaceLeft != nil {
+				metrics.PoBCargoLeft.WithLabelValues(pob.Nickname).Set(float64(*pob.CargoSpaceLeft))
+			}
+			if pob.Level != nil {
+				metrics.PoBLevel.WithLabelValues(pob.Nickname).Set(float64(*pob.Level))
+			}
+			if pob.Money != nil {
+				metrics.PoBMoney.WithLabelValues(pob.Nickname).Set(float64(*pob.Money))
+			}
+			metrics.PoBItemsAmount.WithLabelValues(pob.Nickname).Set(float64(len(pob.ShopItems)))
+
+			if len(pob.ShopItems) > 0 {
+				metrics.PoBActive.WithLabelValues(pob.Nickname).Set(1)
+			}
+
+			for _, item := range pob.ShopItems {
+
+				metrics.PoBGoodQuantity.WithLabelValues(
+					pob.Nickname,
+					item.Category, item.Nickname, item.Name,
+				).Set(float64(item.Quantity))
+			}
+		}
+	}
+
 	ctx, span := traces.Tracer.Start(ctx, "linker-bases")
 	defer span.End()
 
