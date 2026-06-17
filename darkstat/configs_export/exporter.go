@@ -8,6 +8,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/solar_mapped/solararch_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
+	"github.com/darklab8/fl-darkstat/darkcore/metrics"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
@@ -176,6 +177,32 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 	e.MiningOperations = e.GetOres(ctx, e.Commodities, true)
 	if e.Mapped.Discovery != nil {
 		e.PoBs = e.GetPoBs()
+
+		for _, pob := range e.PoBs {
+			metrics.PoBInfo.WithLabelValues(pob.Nickname, pob.Name).Set(1)
+			if pob.Health != nil {
+				metrics.PoBHealth.WithLabelValues(pob.Nickname).Set(*pob.Health)
+			}
+			if pob.CargoSpaceLeft != nil {
+				metrics.PoBCargoLeft.WithLabelValues(pob.Nickname).Set(float64(*pob.CargoSpaceLeft))
+			}
+			if pob.Level != nil {
+				metrics.PoBLevel.WithLabelValues(pob.Nickname).Set(float64(*pob.Level))
+			}
+			if pob.Money != nil {
+				metrics.PoBMoney.WithLabelValues(pob.Nickname).Set(float64(*pob.Money))
+			}
+			metrics.PoBItemsAmount.WithLabelValues(pob.Nickname).Set(float64(len(pob.ShopItems)))
+
+			for _, item := range pob.ShopItems {
+
+				metrics.PoBGoodQuantity.WithLabelValues(
+					pob.Nickname,
+					item.Category, item.Nickname, item.Name,
+				).Set(float64(item.Quantity))
+			}
+		}
+
 		e.PoBGoods = e.GetPoBGoods(e.PoBs)
 	}
 
