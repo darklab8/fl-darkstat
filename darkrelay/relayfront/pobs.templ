@@ -231,7 +231,7 @@ templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpac
 			>
 				<td>
 					@frmt.WriteLimit(200) {
-						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass),                        }
+						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
 					}
 				</td>
 				<td>
@@ -273,7 +273,7 @@ templ FormatPoBSells2(good ShopItemI) {
 	} else if good.BaseBuys() {
 		<td>{ "buys only" }</td>
 	} else {
-		<td>{ "unidentified" }</td>
+		<td>{ "nobuy/nosell" }</td>
 	}
 }
 
@@ -287,6 +287,6 @@ templ FormatPoBSells(good ShopItemI) {
 	} else if good.BaseBuys() {
 		<td style="background:var(--color_fmt_sb_buys)">{ "buys only" }</td>
 	} else {
-		<td style="background:var(--color_fmt_sb_neither)">{ "unidentified" }</td>
+		<td style="background:var(--color_fmt_sb_neither)">{ "nobuy/nosell" }</td>
 	}
 }
