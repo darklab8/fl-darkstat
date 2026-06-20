@@ -165,6 +165,7 @@ In the past we offered **grpc client** too, but it **was decommissioned** in htt
   - `darkstat.exe --stat-deals-on` with best trades
   - `darkstat.exe map web`, run very fastly map only.
   - `darkstat.exe --stat-deals-on --map-on web` # running everything completely together. darkstat and map. Time expensive for big mods.
+  - `darkstat.exe --stat-deals-on --stat-trade-zones-whale-on web` to see zoner whale only specific trade routes. systems are lazily hardcoded in `zoner_forbidden := map[string]int{`, check they are still relevant
 
 P.S. The tool uses lazy filesystem approach by grabbing first file with matching name. I did not use full paths.
 So don't have folder "DATA2" duplicating all files in same Freelancer folder
