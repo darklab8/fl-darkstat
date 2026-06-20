@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand/v2"
 	"net/http"
 	"os"
 	"os/signal"
@@ -285,7 +286,12 @@ func main() {
 										)
 									}
 								}()
-								time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs))
+
+								random_addition := 0
+								if settings.Env.RelayLoopRandom {
+									random_addition = rand.IntN(settings.Env.RelayLoopAddition)
+								}
+								time.Sleep(time.Second * time.Duration(settings.Env.RelayLoopSecs+random_addition))
 
 								filesystem := filefind.FindConfigs(settings.Env.FreelancerFolder)
 								out.app_data.Configs.Mapped.ReadDiscovery(

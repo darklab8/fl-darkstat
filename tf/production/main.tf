@@ -28,7 +28,7 @@ module "darkstat" {
   is_discovery_production = true
   enable_restarts         = true
 
-  replicas_count = 1
+  replicas_count = 2
   extra_vars     = local.disco_extra_vars
   args           = ["--stat-deals-on", "web_cron"]
 }

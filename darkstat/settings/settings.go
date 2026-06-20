@@ -32,9 +32,11 @@ type DarkstatEnvVars struct {
 	AppHeading string
 	AppVersion string
 
-	RelayHost     string
-	RelayRoot     string
-	RelayLoopSecs int
+	RelayHost         string
+	RelayRoot         string
+	RelayLoopSecs     int
+	RelayLoopRandom   bool
+	RelayLoopAddition int
 
 	TradeDealsEnabled bool
 
@@ -86,9 +88,12 @@ func init() {
 		AppHeading:    env.GetStr("FLDARKSTAT_HEADING", enverant.OrStr(""), enverant.WithDesc("What to show at the top of darkstat web UI. Possible to input any html")),
 		AppVersion:    getAppVersion(),
 
-		RelayHost:     env.GetStr("RELAY_HOST", enverant.OrStr(""), enverant.WithDesc("used to define relay url like with htps included. Makes sure that u deployed darkstat as static assets, they will still lead to relay backend to serve dynamic data. Useful for Discovery related deployment")),
-		RelayRoot:     env.GetStr("RELAY_ROOT", enverant.OrStr("/"), enverant.WithDesc("if u ever will need to serve relay from non root path, u could use it to make sure requests go correct path.")),
-		RelayLoopSecs: env.GetIntOr("RELAY_LOOP_SECS", 300, enverant.WithDesc("How often to update backend info during active app. Used for discovery to update PoB related info on a run")),
+		RelayHost: env.GetStr("RELAY_HOST", enverant.OrStr(""), enverant.WithDesc("used to define relay url like with htps included. Makes sure that u deployed darkstat as static assets, they will still lead to relay backend to serve dynamic data. Useful for Discovery related deployment")),
+		RelayRoot: env.GetStr("RELAY_ROOT", enverant.OrStr("/"), enverant.WithDesc("if u ever will need to serve relay from non root path, u could use it to make sure requests go correct path.")),
+
+		RelayLoopSecs:     env.GetIntOr("RELAY_LOOP_SECS", 300, enverant.WithDesc("How often to update backend info during active app. Used for discovery to update PoB related info on a run")),
+		RelayLoopRandom:   env.GetBoolOr("RELAY_LOOP_RANDOM_ENABLED", true),
+		RelayLoopAddition: env.GetIntOr("RELAY_LOOP_RANDOM_ADD", 300),
 
 		TradeDealsEnabled: env.GetBoolOr("TRADE_DEALS_ENABLED", *darkflag.TradeDealsEnabled, enverant.WithDesc("enable calculating one way and two way best trades? PERFORMANCE HEAVY. by default off. cli args must be put before command like `web`")),
 
