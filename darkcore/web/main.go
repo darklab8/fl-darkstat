@@ -47,7 +47,15 @@ func (w *Web) SetFS(fs []*builder.Filesystem) {
 	w.filesystems = fs
 }
 func (w *Web) SetMutexableData(app_data_mutex Mutex) {
+
+	old_mutex := w.AppDataMutex
+	old_mutex.Lock()
+	app_data_mutex.Lock()
+
 	w.AppDataMutex = app_data_mutex
+
+	app_data_mutex.Unlock()
+	old_mutex.Unlock()
 }
 func (w *Web) SetAppData(data *appdata.AppData) {
 	w.data = data
