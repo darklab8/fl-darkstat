@@ -309,13 +309,8 @@ func main() {
 								)
 								logus.Log.CheckError(err, "failed to run stat build")
 
-								mutex := web_server.AppDataMutex
 								time_switch_start := time.Now()
-								mutex.Lock()
-								web_server.SetFS(out.fs)
-								web_server.SetMutexableData(out.app_data)
-								web_server.SetAppData(out.app_data)
-								mutex.Unlock()
+								web_server.SetNewData(out.app_data, out.fs, out.app_data)
 								api.SetAppData(out.app_data)
 								fmt.Println("switch of web data happened in", time.Since(time_switch_start))
 								runtime.GC()

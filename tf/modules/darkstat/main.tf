@@ -112,7 +112,7 @@ resource "docker_service" "darkstat" {
     }
     restart_policy {
       condition = "any"
-      delay     = "5m"
+      delay     = "2m"
     }
     # placement {
     #   # constraints = [

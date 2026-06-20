@@ -43,22 +43,18 @@ type Web struct {
 	site_root string
 }
 
-func (w *Web) SetFS(fs []*builder.Filesystem) {
-	w.filesystems = fs
-}
-func (w *Web) SetMutexableData(app_data_mutex Mutex) {
+func (w *Web) SetNewData(app_data_mutex Mutex, fs []*builder.Filesystem, data *appdata.AppData) {
 
 	old_mutex := w.AppDataMutex
 	old_mutex.Lock()
 	app_data_mutex.Lock()
 
 	w.AppDataMutex = app_data_mutex
+	w.filesystems = fs
+	w.data = data
 
 	app_data_mutex.Unlock()
 	old_mutex.Unlock()
-}
-func (w *Web) SetAppData(data *appdata.AppData) {
-	w.data = data
 }
 
 func (w *Web) GetMux() *http.ServeMux { return w.mux }

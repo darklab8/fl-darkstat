@@ -25,7 +25,14 @@ func (a *Api) GetAppData() *appdata.AppData {
 	return a.app_data
 }
 func (a *Api) SetAppData(app_data *appdata.AppData) {
+	old_data := a.app_data
+
+	old_data.Lock()
+	app_data.Lock()
 	a.app_data = app_data
+
+	app_data.Unlock()
+	old_data.Unlock()
 }
 
 func JsonResponseHeader(w *http.ResponseWriter) {
