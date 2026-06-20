@@ -16,6 +16,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/configs/discovery/pob_goods"
+	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/ptr"
@@ -70,6 +71,7 @@ type PoBCore struct {
 	SectorCoord    *string     `json:"sector_coord"`
 	Region         *string     `json:"region_name"`
 	IsFallbackInfo bool        `json:"is_fallback_info"`
+	IsHardcodedPoB bool
 }
 
 // also known as Player Base Station
@@ -472,6 +474,20 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		sb.WriteLineCentered(infocarder.InfocardPhrase{Phrase: pob.Name, Bold: true})
 		sb.WriteLineStr("")
 
+		if pob.SystemNick == nil { // hardocded pob
+			if value, ok := settings.HardcodedPoBs.PobsByNick[pob.Nickname]; ok {
+				pob.IsHardcodedPoB = true
+				pob.SystemNick = &value.SystemNick
+				pob.BasePos = &value.Coords
+				pob_info.Pos = &value.CoordsStr
+				if system, ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(*pob.SystemNick)]; ok {
+					pob.SystemName = ptr.Ptr(e.GetInfocardName(system.StridName.Get(), system.Nickname.Get()))
+					pob.Region = ptr.Ptr(e.GetRegionName(system))
+					pob.SectorCoord = ptr.Ptr(VectorToSectorCoord(system, *pob.BasePos))
+				}
+			}
+		}
+
 		if pob_info.Pos == nil && len(pob_info.InfocardParagraphs) == 0 {
 			sb.WriteLine(infocarder.InfocardPhrase{Phrase: "infocard:", Bold: true})
 			sb.WriteLineStr("not visible pos (toggle pos permission in pob account manager)")
@@ -480,6 +496,22 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 
 		for _, paragraph := range pob_info.InfocardParagraphs {
 			sb.WriteLineStr(paragraph)
+			sb.WriteLineStr("")
+		}
+
+		if pob.IsHardcodedPoB { // hardocded pob
+			if value, ok := settings.HardcodedPoBs.PobsByNick[pob.Nickname]; ok {
+				sb.WriteLineStrBold(fmt.Sprintf("Hardcoded Snapshot Time: %s\n", value.SnapshotTime))
+				sb.WriteLineStr("")
+				for _, paragraph := range strings.Split(value.Infocard, "\n") {
+					sb.WriteLineStr(fmt.Sprintf("%s\n", paragraph))
+				}
+				sb.WriteLineStr("")
+			}
+		}
+
+		if pob.Health != nil {
+			sb.WriteLine(infocarder.InfocardPhrase{Phrase: fmt.Sprintf("Health: %.2f", *pob.Health), Bold: true})
 			sb.WriteLineStr("")
 		}
 

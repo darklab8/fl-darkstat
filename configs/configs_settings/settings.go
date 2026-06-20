@@ -13,7 +13,7 @@ type ConfEnvVars struct {
 	utils_settings.UtilsEnvs
 	FreelancerFolder         utils_types.FilePath
 	FreelancerFolderFailback utils_types.FilePath
-	FullBasesAPIURL          *string
+	FullBasesAPIURL          string
 	Enver                    *enverant.Enverant
 }
 
@@ -29,7 +29,7 @@ func GetEnvs() ConfEnvVars {
 		UtilsEnvs:                utils_settings.GetEnvs(),
 		FreelancerFolder:         getGameLocation(envs),
 		FreelancerFolderFailback: utils_types.FilePath(envs.GetStrOr("FREELANCER_FOLDER_FAILBACK", *darkflag.ArgFreelancerFallback, enverant.WithDesc("if some configs aren't defined in first freelancer folder, grab from this one. Useful for FLSR usage in CI"))),
-		FullBasesAPIURL:          envs.GetPtrStr("DISCO_BASES_FULL_URL", enverant.WithDesc("base url that has all pobs but no pob goods. useful to enchance data")),
+		FullBasesAPIURL:          envs.GetStrOr("DISCO_BASES_FULL_URL", "https://disco-api.dd84ai.com/forums/bases_api.php", enverant.WithDesc("base url that has all pobs but no pob goods. useful to enchance data")),
 		Enver:                    envs,
 	}
 

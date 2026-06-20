@@ -1,8 +1,15 @@
 package settings
 
 import (
+	_ "embed"
+	"log"
+	"strconv"
+	"strings"
 	"time"
 
+	"gopkg.in/yaml.v3"
+
+	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/envers/darkflag"
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
@@ -45,6 +52,49 @@ func GetEnvs() DarkcoreEnvVars {
 	return Env
 }
 
+//go:embed extra_disco_pob_coords.yml
+var ExtraPoBCoordsStr string
+
+type HardcodedPob struct {
+	Nick         string `yaml:"nick"`
+	CoordsStr    string `yaml:"coords_str"`
+	SystemNick   string `yaml:"sys_nick"`
+	Infocard     string `yaml:"infocard"`
+	SnapshotTime string `yaml:"snapshot_time"`
+	Coords       cfg.Vector
+}
+
+type HardcodedPoBConf struct {
+	Pobs       []HardcodedPob `yaml:"pobs"`
+	PobsByNick map[string]HardcodedPob
+}
+
+var HardcodedPoBs HardcodedPoBConf
+
 func init() {
+	err := yaml.Unmarshal([]byte(ExtraPoBCoordsStr), &HardcodedPoBs)
+	if err != nil {
+		log.Fatal("failed to unmarshal extra pobs")
+	}
+	HardcodedPoBs.PobsByNick = map[string]HardcodedPob{}
+	for _, pob := range HardcodedPoBs.Pobs {
+
+		coords := strings.Split(pob.CoordsStr, " ")
+		pob.Coords.X, err = strconv.ParseFloat(coords[0], 64)
+		if err != nil {
+			log.Fatal("failed to unmarshal extra pobs, X")
+		}
+		pob.Coords.Y, err = strconv.ParseFloat(coords[0], 64)
+		if err != nil {
+			log.Fatal("failed to unmarshal extra pobs, Y")
+		}
+		pob.Coords.Z, err = strconv.ParseFloat(coords[0], 64)
+		if err != nil {
+			log.Fatal("failed to unmarshal extra pobs, Z")
+		}
+
+		HardcodedPoBs.PobsByNick[pob.Nick] = pob
+	}
+
 	Env = GetEnvs()
 }

@@ -15,6 +15,7 @@ html {
 :root {
     --playerbase_color: #f8f3bc;
     --playerbase_dockable_color: #9aff9f;
+    --playerbase_hardcoded: rgb(253, 172, 97);
     --mining_color: #9e8676;
     --obj_other_color: #92f6fa;
     --obj_noname_color: #eafa92;
@@ -477,6 +478,10 @@ obj-:hover system-label {
 
 .playerbase system-label {
     color: var(--playerbase_color);
+}
+
+.playerbase system-label.pob_hardcoded {
+    color: var(--playerbase_hardcoded);
 }
 
 .playerbase system-label.pob_dockable {

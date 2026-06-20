@@ -322,8 +322,8 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 		Discovery.PlayerOwnedBases, err = pob_goods.Read(ctx, file_public_bases)
 		logus.Log.CheckPanic(err, "failed to read pobs data on darkstat start")
 
-		if configs_settings.Env.FullBasesAPIURL != nil {
-			file_private_bases := file.NewWebFile(*configs_settings.Env.FullBasesAPIURL)
+		if configs_settings.Env.FullBasesAPIURL != "" {
+			file_private_bases := file.NewWebFile(configs_settings.Env.FullBasesAPIURL)
 			Discovery.BasesFull, err = bases.Read(ctx, file_private_bases)
 			logus.Log.CheckPanic(err, "failed to read pobs full on darkstat start")
 		}

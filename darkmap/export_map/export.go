@@ -2,6 +2,7 @@ package export_map
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/search_bar"
@@ -71,6 +72,10 @@ func (e *Export) Export(ctx context.Context) {
 	e.Exp = configs_export.NewExporter(e.Mapped)
 
 	for _, pob := range e.Exp.GetPoBs() {
+		if pob.Nickname == "space_market_center" {
+			fmt.Print()
+		}
+
 		if pob.SystemNick == nil {
 			continue
 		}

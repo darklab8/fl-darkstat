@@ -162,6 +162,11 @@ func main() {
 				run_errors = append(run_errors, err)
 			}
 
+			err, data = downloadFile("/data", "forums/bases_api.php", "https://discoverygc.com/forums/bases_api.php", false)
+			if logger.CheckError(err, "base_admin.php5 Error downloading forums/bases_api.php") {
+				run_errors = append(run_errors, err)
+			}
+
 			if len(data) < 1000 {
 				err := errors.New(fmt.Sprintln("base_admin.php5 is too small (showing content). time=", time.Now(), " len=", len(data), string(data)))
 				if logger.CheckError(err, "base_adminphp5 error") {

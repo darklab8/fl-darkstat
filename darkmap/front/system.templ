@@ -181,6 +181,7 @@ templ SystemContents(system *export_map.System) {
 					<system-label
 						style={ templ.KV(fmt.Sprintf("transform: rotate(%1.fdeg)", obj.Rotation.Y), obj.Kind == export_map.ObjTradelane), }
 						class={
+							templ.KV("pob_hardcoded", obj.IsPoBWithHardcodedCords),
 							templ.KV("pob_dockable", obj.IsPoBWithKnownDockingPerms),
 							templ.KV("unhidden_label", obj.Kind != export_map.ObjWreck),
 							templ.KV("hidden_wreck_label", obj.Kind == export_map.ObjWreck),

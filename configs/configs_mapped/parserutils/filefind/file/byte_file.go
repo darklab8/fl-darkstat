@@ -1,6 +1,8 @@
 package file
 
 import (
+	"errors"
+	"fmt"
 	"io"
 	"os"
 
@@ -14,6 +16,10 @@ func (f *File) ReadBytes() ([]byte, error) {
 		res, err := utils_http.Get(f.webfile.url)
 		if logus.Log.CheckError(err, "error making http request: %s\n", typelog.OptError(err)) {
 			return []byte{}, err
+		}
+
+		if res.StatusCode >= 300 {
+			return []byte{}, errors.New(fmt.Sprintln("not positive status code=", res.StatusCode, " to read file=", f.webfile.url))
 		}
 
 		resBody, err := io.ReadAll(res.Body)

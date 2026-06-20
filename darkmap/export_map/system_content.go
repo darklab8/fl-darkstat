@@ -62,6 +62,8 @@ type Obj struct {
 
 	HasInfocard                bool
 	IsPoBWithKnownDockingPerms bool
+
+	IsPoBWithHardcodedCords bool
 }
 
 type Zone struct {
@@ -622,8 +624,9 @@ func (e *Export) EnrichSystemWithObjects(
 	for _, base_info := range e.PobsBySystemNick[system_info.Nickname] {
 
 		base := &Obj{
-			Nickname: string(base_info.Nickname),
-			Kind:     ObjPlayerBase,
+			Nickname:                string(base_info.Nickname),
+			Kind:                    ObjPlayerBase,
+			IsPoBWithHardcodedCords: base_info.IsHardcodedPoB,
 		}
 
 		if base_info.BasePos != nil {
