@@ -61,6 +61,7 @@ type HardcodedPob struct {
 	SystemNick   string `yaml:"sys_nick"`
 	Infocard     string `yaml:"infocard"`
 	SnapshotTime string `yaml:"snapshot_time"`
+	Level        int    `yaml:"level"`
 	Coords       cfg.Vector
 }
 

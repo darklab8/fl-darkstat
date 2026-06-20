@@ -3,7 +3,19 @@ pobs:
     sys_nick: iw04
     coords_str: -14606 -143 -17560
     snapshot_time: 2026-06-20
+    level: 2
     infocard: |
       Welcome to our base. This is a Space store that you can Buy a lot of equipment
       Also we have a bar that you can stay and drink anything you want
       More stuff we gonna add in the base. Have your eyes open. Thank you enjoy your stay.
+  - nick: canary_wharf_station
+    coords_str: -24471 133 44576
+    sys_nick: br01
+    snapshot_time: 2026-06-20
+    level: 4
+    infocard: |
+      Canary Wharf Station is owned by Borderworld Exports (Bowex), with a number of different groups maintaining office space abord. The whard provides a public sale point for a number of goods, including BMM Gold and Beryllium ores.
+
+      In recent days, Canary Wharf's purpose has begun to shift to respond to the growing crisis in New London's massively overcrowded Refugee camps. In response, several docking bays are being retrofitted as temporary housing as an interim measure before mo
+
+      NOTICE: Canary Wharf Station is freely accessible by the public and does not require docking permits. All that is required is a suitable reputation with both Bowex and the Kingdom of Bretonia

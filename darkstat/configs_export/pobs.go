@@ -476,14 +476,26 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 
 		if pob.SystemNick == nil { // hardocded pob
 			if value, ok := settings.HardcodedPoBs.PobsByNick[pob.Nickname]; ok {
-				pob.IsHardcodedPoB = true
-				pob.SystemNick = &value.SystemNick
-				pob.BasePos = &value.Coords
-				pob_info.Pos = &value.CoordsStr
-				if system, ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(*pob.SystemNick)]; ok {
-					pob.SystemName = ptr.Ptr(e.GetInfocardName(system.StridName.Get(), system.Nickname.Get()))
-					pob.Region = ptr.Ptr(e.GetRegionName(system))
-					pob.SectorCoord = ptr.Ptr(VectorToSectorCoord(system, *pob.BasePos))
+				if pob.SystemNick == nil {
+					pob.IsHardcodedPoB = true
+					pob.SystemNick = &value.SystemNick
+
+					if system, ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(*pob.SystemNick)]; ok {
+						pob.SystemName = ptr.Ptr(e.GetInfocardName(system.StridName.Get(), system.Nickname.Get()))
+						pob.Region = ptr.Ptr(e.GetRegionName(system))
+					}
+				}
+				if pob.BasePos == nil {
+					pob.BasePos = &value.Coords
+					if pob.SystemNick != nil {
+						if system, ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(*pob.SystemNick)]; ok {
+							pob.SectorCoord = ptr.Ptr(VectorToSectorCoord(system, *pob.BasePos))
+						}
+					}
+					pob_info.Pos = &value.CoordsStr
+				}
+				if pob.Level == nil {
+					pob.Level = &value.Level
 				}
 			}
 		}
@@ -507,11 +519,17 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 					sb.WriteLineStr(fmt.Sprintf("%s\n", paragraph))
 				}
 				sb.WriteLineStr("")
+
 			}
+
 		}
 
 		if pob.Health != nil {
 			sb.WriteLine(infocarder.InfocardPhrase{Phrase: fmt.Sprintf("Health: %.2f", *pob.Health), Bold: true})
+			sb.WriteLineStr("")
+		}
+		if pob.Level != nil {
+			sb.WriteLine(infocarder.InfocardPhrase{Phrase: fmt.Sprintf("Level: %d", *pob.Level), Bold: true})
 			sb.WriteLineStr("")
 		}
 
