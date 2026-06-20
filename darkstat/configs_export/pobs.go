@@ -521,13 +521,19 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 			}
 		}
 
-		if pob.Health != nil {
-			sb.WriteLine(infocarder.InfocardPhrase{Phrase: fmt.Sprintf("Health: %.2f", *pob.Health), Bold: true})
-			sb.WriteLineStr("")
-		}
-		if pob.Level != nil {
-			sb.WriteLine(infocarder.InfocardPhrase{Phrase: fmt.Sprintf("Level: %d", *pob.Level), Bold: true})
-			sb.WriteLineStr("")
+		if false {
+			if pob.Health != nil {
+				sb.WriteLine(infocarder.InfocardPhrase{Phrase: fmt.Sprintf("Health: %.2f", *pob.Health), Bold: true})
+				sb.WriteLineStr("")
+			}
+			if pob.Level != nil {
+				if pob.IsHardcodedPoB {
+					sb.WriteLine(infocarder.InfocardPhrase{Phrase: fmt.Sprintf("Level: %d or higher", *pob.Level), Bold: true})
+				} else {
+					sb.WriteLine(infocarder.InfocardPhrase{Phrase: fmt.Sprintf("Level: %d", *pob.Level), Bold: true})
+				}
+				sb.WriteLineStr("")
+			}
 		}
 
 		if pob_info.DefenseMode != nil {
