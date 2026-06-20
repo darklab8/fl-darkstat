@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
@@ -43,18 +44,13 @@ type Web struct {
 	site_root string
 }
 
-func (w *Web) SetNewData(app_data_mutex Mutex, fs []*builder.Filesystem, data *appdata.AppData) {
-
-	old_mutex := w.AppDataMutex
-	old_mutex.Lock()
-	app_data_mutex.Lock()
+func (w *Web) SetNewData(app_data_mutex Mutex, fs []*builder.Filesystem, data *appdata.AppData, mu *sync.RWMutex) {
+	mu.Lock()
 
 	w.AppDataMutex = app_data_mutex
 	w.filesystems = fs
 	w.data = data
-
-	app_data_mutex.Unlock()
-	old_mutex.Unlock()
+	mu.Unlock()
 }
 
 func (w *Web) GetMux() *http.ServeMux { return w.mux }

@@ -2,6 +2,7 @@ package darkhttp
 
 import (
 	"net/http"
+	"sync"
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
@@ -24,15 +25,11 @@ type Api struct {
 func (a *Api) GetAppData() *appdata.AppData {
 	return a.app_data
 }
-func (a *Api) SetAppData(app_data *appdata.AppData) {
-	old_data := a.app_data
-
-	old_data.Lock()
-	app_data.Lock()
+func (a *Api) SetAppData(app_data *appdata.AppData, mu *sync.RWMutex) {
+	mu.Lock()
 	a.app_data = app_data
 
-	app_data.Unlock()
-	old_data.Unlock()
+	mu.Unlock()
 }
 
 func JsonResponseHeader(w *http.ResponseWriter) {

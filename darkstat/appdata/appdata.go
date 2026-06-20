@@ -25,7 +25,7 @@ type AppData struct {
 	Configs *configs_export.Exporter
 	Shared  *types.SharedData
 
-	mu sync.RWMutex
+	mu *sync.RWMutex
 }
 
 func (a *AppData) Lock()    { a.mu.Lock() }
@@ -124,11 +124,11 @@ var VanillaShipNames = types.ShipNames{
 	Freighter: "freighter",
 }
 
-func NewAppData(ctx context.Context, mapped *configs_mapped.MappedConfigs) *AppData {
+func NewAppData(ctx context.Context, mapped *configs_mapped.MappedConfigs, mu *sync.RWMutex) *AppData {
 	ctx, span := traces.Tracer.Start(ctx, "NewAppData")
 	defer span.End()
 
-	var result *AppData = &AppData{}
+	var result *AppData = &AppData{mu: mu}
 
 	if mapped == nil {
 		mapped = NewMapped(ctx)
@@ -181,7 +181,7 @@ func NewRelayData(app_data *AppData) *AppDataRelay {
 	return &AppDataRelay{
 		Configs: app_data.Configs.ExporterRelay,
 		Shared:  app_data.Shared,
-		mu:      &app_data.mu,
+		mu:      app_data.mu,
 	}
 }
 

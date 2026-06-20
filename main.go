@@ -14,6 +14,7 @@ import (
 	"runtime/debug"
 	"runtime/pprof"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 
@@ -121,7 +122,8 @@ func main() {
 		}
 
 		start_time_app_data := time.Now()
-		app_data := appdata.NewAppData(ctx_span, nil)
+		webstat_mu := &sync.RWMutex{}
+		app_data := appdata.NewAppData(ctx_span, nil, webstat_mu)
 		log.Printf("Elapsed start_time_app_data time %s", time.Since(start_time_app_data))
 
 		start_time_relay_data := time.Now()
@@ -209,6 +211,7 @@ func main() {
 						NotIncludePoBs,
 						router.YesLinkTravelRoutes,
 						nil,
+						&sync.RWMutex{},
 					)
 					return err
 				},
@@ -249,12 +252,14 @@ func main() {
 				Func: func(info cantil.ActionInfo) error {
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 					SetOptimalGcForWeb()
+					web_cron_mu := &sync.RWMutex{}
 					out, err := StatBuild(
 						builder.BuildToMemory,
 						builder.NotCleanFolder,
 						YesIncludePobs,
 						router.YesLinkTravelRoutes,
 						nil,
+						web_cron_mu,
 					)
 					logus.Log.CheckError(err, "failed to run stat build")
 
@@ -306,12 +311,13 @@ func main() {
 									YesIncludePobs,
 									router.YesLinkTravelRoutes,
 									out.app_data.Configs.Mapped,
+									web_cron_mu,
 								)
 								logus.Log.CheckError(err, "failed to run stat build")
 
 								time_switch_start := time.Now()
-								web_server.SetNewData(out.app_data, out.fs, out.app_data)
-								api.SetAppData(out.app_data)
+								web_server.SetNewData(out.app_data, out.fs, out.app_data, web_cron_mu)
+								api.SetAppData(out.app_data, web_cron_mu)
 								fmt.Println("switch of web data happened in", time.Since(time_switch_start))
 								runtime.GC()
 							}()
@@ -427,13 +433,14 @@ func StatBuild(
 	include_pobs IncludePobsKind,
 	link_travel_routes router.LinkTravelRoutesKind,
 	mapped *configs_mapped.MappedConfigs,
+	mu *sync.RWMutex,
 
 ) (StatBuildOutput, error) {
 	var out StatBuildOutput
 
 	ctx_span, span_boot := traces.Tracer.Start(context.Background(), "build")
 	defer span_boot.End()
-	out.app_data = appdata.NewAppData(ctx_span, mapped)
+	out.app_data = appdata.NewAppData(ctx_span, mapped, mu)
 	build := router.NewRouter(out.app_data, router.WithStaticAssetsGen(), func(l *router.Router) {
 		l.LinkTravelRoutesKind = link_travel_routes
 	}).Link(ctx_span)

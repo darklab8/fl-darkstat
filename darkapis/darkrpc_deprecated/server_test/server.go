@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os/signal"
+	"sync"
 	"syscall"
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkrpc_deprecated"
@@ -12,7 +13,7 @@ import (
 
 func main() {
 	ctx := context.Background()
-	app_data := appdata.NewAppData(ctx, nil)
+	app_data := appdata.NewAppData(ctx, nil, &sync.RWMutex{})
 	srv := darkrpc_deprecated.NewRpcServer(darkrpc_deprecated.WithPortSrv(8111))
 	// srv := darkrpc.NewRpcServer(darkrpc.WithSockSrv(darkrpc.DarkstatRpcSock))
 	srv.Serve(app_data)

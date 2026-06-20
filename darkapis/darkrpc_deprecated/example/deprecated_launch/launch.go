@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"sync"
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkrpc_deprecated"
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
@@ -18,7 +19,7 @@ func main() {
 			rpc_opts = append(rpc_opts, darkrpc_deprecated.WithSockSrv(darkrpc_deprecated.DarkstatRpcSock))
 		}
 		rpc_server := darkrpc_deprecated.NewRpcServer(rpc_opts...)
-		app_data := appdata.NewAppData(ctx_span, nil)
+		app_data := appdata.NewAppData(ctx_span, nil, &sync.RWMutex{})
 		rpc_server.Serve(app_data)
 		if false {
 			rpc_server.Close()
