@@ -474,29 +474,27 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		sb.WriteLineCentered(infocarder.InfocardPhrase{Phrase: pob.Name, Bold: true})
 		sb.WriteLineStr("")
 
-		if pob.SystemNick == nil { // hardocded pob
-			if value, ok := settings.HardcodedPoBs.PobsByNick[pob.Nickname]; ok {
-				if pob.SystemNick == nil {
-					pob.IsHardcodedPoB = true
-					pob.SystemNick = &value.SystemNick
+		if value, ok := settings.HardcodedPoBs.PobsByNick[pob.Nickname]; ok {
+			if pob.SystemNick == nil {
+				pob.IsHardcodedPoB = true
+				pob.SystemNick = &value.SystemNick
 
+				if system, ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(*pob.SystemNick)]; ok {
+					pob.SystemName = ptr.Ptr(e.GetInfocardName(system.StridName.Get(), system.Nickname.Get()))
+					pob.Region = ptr.Ptr(e.GetRegionName(system))
+				}
+			}
+			if pob.BasePos == nil {
+				pob.BasePos = &value.Coords
+				if pob.SystemNick != nil {
 					if system, ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(*pob.SystemNick)]; ok {
-						pob.SystemName = ptr.Ptr(e.GetInfocardName(system.StridName.Get(), system.Nickname.Get()))
-						pob.Region = ptr.Ptr(e.GetRegionName(system))
+						pob.SectorCoord = ptr.Ptr(VectorToSectorCoord(system, *pob.BasePos))
 					}
 				}
-				if pob.BasePos == nil {
-					pob.BasePos = &value.Coords
-					if pob.SystemNick != nil {
-						if system, ok := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(*pob.SystemNick)]; ok {
-							pob.SectorCoord = ptr.Ptr(VectorToSectorCoord(system, *pob.BasePos))
-						}
-					}
-					pob_info.Pos = &value.CoordsStr
-				}
-				if pob.Level == nil {
-					pob.Level = &value.Level
-				}
+				pob_info.Pos = &value.CoordsStr
+			}
+			if pob.Level == nil {
+				pob.Level = &value.Level
 			}
 		}
 
@@ -511,7 +509,7 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 			sb.WriteLineStr("")
 		}
 
-		if pob.IsHardcodedPoB { // hardocded pob
+		if len(pob_info.InfocardParagraphs) == 0 { // hardocded pob
 			if value, ok := settings.HardcodedPoBs.PobsByNick[pob.Nickname]; ok {
 				sb.WriteLineStrBold(fmt.Sprintf("Hardcoded Snapshot Time: %s\n", value.SnapshotTime))
 				sb.WriteLineStr("")
@@ -521,7 +519,6 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 				sb.WriteLineStr("")
 
 			}
-
 		}
 
 		if pob.Health != nil {

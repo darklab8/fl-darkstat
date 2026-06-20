@@ -85,11 +85,11 @@ func init() {
 		if err != nil {
 			log.Fatal("failed to unmarshal extra pobs, X")
 		}
-		pob.Coords.Y, err = strconv.ParseFloat(coords[0], 64)
+		pob.Coords.Y, err = strconv.ParseFloat(coords[1], 64)
 		if err != nil {
 			log.Fatal("failed to unmarshal extra pobs, Y")
 		}
-		pob.Coords.Z, err = strconv.ParseFloat(coords[0], 64)
+		pob.Coords.Z, err = strconv.ParseFloat(coords[2], 64)
 		if err != nil {
 			log.Fatal("failed to unmarshal extra pobs, Z")
 		}

@@ -1,7 +1,7 @@
 pobs:
   - nick: space_market_center
     sys_nick: iw04
-    coords_str: -14606 -143 -17560
+    coords_str: -24606 -143 -17560
     snapshot_time: 2026-06-20
     level: 2
     infocard: |
@@ -19,3 +19,22 @@ pobs:
       In recent days, Canary Wharf's purpose has begun to shift to respond to the growing crisis in New London's massively overcrowded Refugee camps. In response, several docking bays are being retrofitted as temporary housing as an interim measure before mo
 
       NOTICE: Canary Wharf Station is freely accessible by the public and does not require docking permits. All that is required is a suitable reputation with both Bowex and the Kingdom of Bretonia
+  - nick: fortisec
+    level: 3
+    sys_nick: br01
+    snapshot_time: 2026-06-20
+    coords_str: -19041 138 46822
+    infocard: |
+      ViewShop: VERLOTE
+  - nick: andover_station
+    level: 4
+    snapshot_time: 2026-06-20
+    sys_nick: br03
+    coords_str: -13952 311 32747
+  - nick: eureka_station
+    level: 3
+    snapshot_time: 2026-06-20
+    sys_nick: br03
+    coords_str: 38992 -172 92
+    infocard: |
+      Eureka Station was originally established in 825 AS by Natio Octavarium to serve as that nation's Embassy to the Kingdom of Bretonia. With Natio Octavarium's disappearance, Eureka Station was left abandoned. The crew of the HMS Norfolk prevented squa
