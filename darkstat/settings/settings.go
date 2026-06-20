@@ -40,10 +40,11 @@ type DarkstatEnvVars struct {
 
 	TradeDealsEnabled bool
 
-	TradeRoutesDetailedTradeLane    bool
-	TradeRoutesBestDisablePobs      bool
-	TradeRoutesBestTwoWaysLimitPobs int
-	TradeRoutesBestDisableLiners    bool
+	TradeRoutesDetailedTradeLane        bool
+	TradeRoutesBestDisablePobs          bool
+	TradeRoutesBestZonerForbiddenRoutes bool
+	TradeRoutesBestTwoWaysLimitPobs     int
+	TradeRoutesBestDisableLiners        bool
 
 	IsCPUProfilerEnabled bool
 	IsMemProfilerEnabled bool
@@ -97,8 +98,10 @@ func init() {
 
 		TradeDealsEnabled: env.GetBoolOr("TRADE_DEALS_ENABLED", *darkflag.TradeDealsEnabled, enverant.WithDesc("enable calculating one way and two way best trades? PERFORMANCE HEAVY. by default off. cli args must be put before command like `web`")),
 
-		TradeRoutesDetailedTradeLane:    env.GetBoolOr("TRADE_ROUTES_DETAILED_TRADE_LANE", *darkflag.TradeDealsDetailedLanes, enverant.WithDesc("experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")),
-		TradeRoutesBestDisablePobs:      env.GetBoolOr("DISABLE_POBS_FOR_BEST_TRADES", false, enverant.WithDesc("if u use discovery mod, an option to turn off pobs from best trades")),
+		TradeRoutesDetailedTradeLane:        env.GetBoolOr("TRADE_ROUTES_DETAILED_TRADE_LANE", *darkflag.TradeDealsDetailedLanes, enverant.WithDesc("experimental option that allows to recieve more precise graph calculations by treating trade lane segments separately. Performance heavy.")),
+		TradeRoutesBestDisablePobs:          env.GetBoolOr("DISABLE_POBS_FOR_BEST_TRADES", false, enverant.WithDesc("if u use discovery mod, an option to turn off pobs from best trades")),
+		TradeRoutesBestZonerForbiddenRoutes: env.GetBoolOr("TRADE_ROUTES_ZONER_WHALE_ROUTES_ONLY", *darkflag.TradeRoutesBestZonerForbiddenRoutes, enverant.WithDesc("removes all zoner whale not compatible routes")),
+
 		TradeRoutesBestTwoWaysLimitPobs: env.GetIntOr("TRADE_ROUTES_BEST_TWO_WAY_LIMIT_POBS", 99, enverant.WithDesc("Limit amount of pobs participating in 2 way routes")),
 		TradeRoutesBestDisableLiners:    env.GetBoolOr("TRADE_ROUTES_DISABLE_LINERS", false, enverant.WithDesc("")),
 

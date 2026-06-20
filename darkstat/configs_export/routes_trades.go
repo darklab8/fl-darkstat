@@ -342,6 +342,41 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 
 	time_start_best_trades := time.Now()
 	len_bases := len(bases)
+
+	zoner_forbidden := map[string]int{
+		"li01": 1,
+		"li05": 1,
+		"li02": 1,
+		"li03": 1,
+		"li10": 1,
+		"li04": 1,
+		"li15": 1,
+		"br01": 1,
+		"br02": 1,
+		"br03": 1,
+		"br04": 1,
+		"br07": 1,
+		"br16": 1,
+		"rh01": 1,
+		"rh04": 1,
+		"rh02": 1,
+		"rh06": 1,
+		"rh08": 1,
+		"rh03": 1,
+		"ku01": 1,
+		"ku05": 1,
+		"ku04": 1,
+		"ku03": 1,
+		"ku02": 1,
+		"ku09": 1,
+		"ga01": 1,
+		"ga02": 1,
+		"ga03": 1,
+		"ga04": 1,
+		"ew13": 1,
+		"ew15": 1,
+	}
+
 	for index, base := range bases {
 
 		if settings.Env.TradeRoutesBestDisablePobs && base.IsPob {
@@ -360,6 +395,15 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 					continue
 				}
 				if trade_route.Transport.SellingGood.PoB != nil {
+					continue
+				}
+			}
+
+			if settings.Env.TradeRoutesBestZonerForbiddenRoutes {
+				if _, ok := zoner_forbidden[trade_route.Transport.BuyingGood.SystemNickname]; ok {
+					continue
+				}
+				if _, ok := zoner_forbidden[trade_route.Transport.SellingGood.SystemNickname]; ok {
 					continue
 				}
 			}
