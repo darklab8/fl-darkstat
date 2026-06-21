@@ -38,3 +38,47 @@ pobs:
     coords_str: 38992 -172 92
     infocard: |
       Eureka Station was originally established in 825 AS by Natio Octavarium to serve as that nation's Embassy to the Kingdom of Bretonia. With Natio Octavarium's disappearance, Eureka Station was left abandoned. The crew of the HMS Norfolk prevented squa
+  - nick: geneva_shipping_platform
+    snapshot_time: 2026-06-20
+    coords_str: -24612 9 -8364
+    level: 3
+    sys_nick: bw01
+    infocard: |
+      Geneva buy an sell Cobalt Ore, Raw Hidrocarbons and Uncut Diamonds to 3500 per unit.
+  - nick: appleton_laboratory
+    snapshot_time: 2026-06-20
+    coords_str: -12271 -192 -11525
+    level: 3
+    sys_nick: bw01
+  - nick: coopersgemdepot
+    coords_str: -5379 -35 -27154
+    snapshot_time: 2026-06-20
+    level: 3
+    sys_nick: bw01
+  - nick: freeport_kazzmull
+    sys_nick: bw01
+    snapshot_time: 2026-06-20
+    coords_str: -25592 5952 10553
+    level: 4
+    infocard: |
+      Steven.Hiller: "Welcome to Freeport KazzMull"
+  - nick: scrappy_goodfellas_imports__exports
+    sys_nick: bw01
+    snapshot_time: 2026-06-20
+    coords_str: -19521 -1308 8210
+    level: 3
+  - nick: fuzzyz_workshop
+    coords_str: -10303 18 6936
+    level: 3
+    sys_nick: bw01
+    snapshot_time: 2026-06-20
+  - nick: prison_liner_berwyn
+    coords_str: 17586 -203 -13137
+    level: 2
+    sys_nick: bw01
+    snapshot_time: 2026-06-20
+    infocard: >
+      The Prison Liner Berwyn was comissioned into service in early 836 AS to provide an emergency expansion
+      to Bretonian prison capacity. This became necessary after the origin BPA Parkhurst facility was condemned over
+      systemic construction defects and health and safety failings. Berwyn was purchased from the Bamburgh Company
+      by the Civil Defence Initiative, obtanining a cheap hull that was being divested from its historic passenger fleet.
