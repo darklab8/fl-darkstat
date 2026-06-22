@@ -58,6 +58,7 @@ const (
 	HeaderShowAll                 = "Show more items, not buyable and others"
 	HeaderLocalUsage              = "Local usage"
 	HeadersContributeToDocs       = "Contribution to documentation or the tool itself"
+	HeaderShipsHavingHardpoint    = "Finding ships having specific weapon or equipment slot"
 )
 
 templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
@@ -220,6 +221,9 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 					</li>
 					<li>
 						@SectionLink(HeadersContributeToDocs)
+					</li>
+					<li>
+						@SectionLink(HeaderShipsHavingHardpoint)
 					</li>
 				</ul>
 				if shared.ShowDisco {
@@ -567,6 +571,17 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 			<p>
 				Continued development happens with management of <a href="https://github.com/darklab8/fl-darkstat/issues">task tracking through Github Issues</a> and communications at <a href="https://discord.gg/zFzSs82y3W">Discord Server</a>, or inside Github itself, or at last resort even through emails
 			</p>
+			@SectionHeader(HeaderShipsHavingHardpoint)
+			<p>
+				Lets see on example of finding all ships having Mining Array equippable.
+				First we find that hptype of mining array is hp_torpedo_special_1, that is type of weapon slot hptype
+			</p>
+			<p><img src={ types.GetCtx(ctx).StaticRoot + "docs_compatible_hptype1.png" }/></p>
+			<p>
+				Then we input in infocard searcher (The right filter) in Ship tab, and it will find all ships that have it,
+				just because ship ini config is written in infocard, it will find all ships that have mentioned this weapon slot in their ini configs.
+			</p>
+			<p><img src={ types.GetCtx(ctx).StaticRoot + "docs_compatible_hptype2.png" }/></p>
 		</textbody>
 	}
 }
