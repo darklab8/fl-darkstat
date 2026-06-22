@@ -6,6 +6,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/discovery/playercntl_rephacks"
+	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 	"github.com/darklab8/fl-darkstat/darkstat/front/types"
 )
 
@@ -62,12 +63,25 @@ func GetRephackCompat(shared *types.SharedData, faction_nicks []string, Nickname
 	return (rep + 1) / 2
 }
 
-func MarshalRephacksCompat(shared *types.SharedData, faction_nicks []string) (result string) {
+func MarshalRephacksCompat(shared *types.SharedData, faction_nicks []string, system_nicks []string) (result string) {
 	var compat_by_id map[string]float64 = make(map[string]float64)
 
 	compat_by_id[""] = GetRephackCompat(shared, faction_nicks, "")
 
 	for _, id := range shared.Ids {
+
+		is_zoner_whale_forbidden_route := false
+		if id.Nickname == "dsy_license_gd_z_grp" {
+			for _, system_nick := range system_nicks {
+				if _, ok := configs_export.ZonerForbiddenSystems[system_nick]; ok {
+					is_zoner_whale_forbidden_route = true
+				}
+			}
+		}
+		if is_zoner_whale_forbidden_route {
+			continue
+		}
+
 		compat := GetRephackCompat(shared, faction_nicks, id.Nickname)
 
 		// data size saving

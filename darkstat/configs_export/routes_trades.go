@@ -332,18 +332,8 @@ func HasLinersAndetc(trade_route *TwoWayDeal) bool {
 	return false
 }
 
-func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) BestTradeDealsOutput {
-	var result BestTradeDealsOutput
-	var trade_deals []*TradeDeal
-
-	if !settings.Env.TradeDealsEnabled {
-		return result
-	}
-
-	time_start_best_trades := time.Now()
-	len_bases := len(bases)
-
-	zoner_forbidden := map[string]int{
+var (
+	ZonerForbiddenSystems = map[string]int{
 		"li01": 1,
 		"li05": 1,
 		"li02": 1,
@@ -376,6 +366,18 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		"ew13": 1,
 		"ew15": 1,
 	}
+)
+
+func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base) BestTradeDealsOutput {
+	var result BestTradeDealsOutput
+	var trade_deals []*TradeDeal
+
+	if !settings.Env.TradeDealsEnabled {
+		return result
+	}
+
+	time_start_best_trades := time.Now()
+	len_bases := len(bases)
 
 	for index, base := range bases {
 
@@ -400,10 +402,10 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 			}
 
 			if settings.Env.TradeRoutesBestZonerForbiddenRoutes {
-				if _, ok := zoner_forbidden[trade_route.Transport.BuyingGood.SystemNickname]; ok {
+				if _, ok := ZonerForbiddenSystems[trade_route.Transport.BuyingGood.SystemNickname]; ok {
 					continue
 				}
-				if _, ok := zoner_forbidden[trade_route.Transport.SellingGood.SystemNickname]; ok {
+				if _, ok := ZonerForbiddenSystems[trade_route.Transport.SellingGood.SystemNickname]; ok {
 					continue
 				}
 			}

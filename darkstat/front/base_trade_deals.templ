@@ -220,8 +220,14 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData,
 		}
 		@DiscoRephackCompat(
 			shared,
-			trade_route.Transport.BuyingGood.GetFactionNick(),
-			trade_route.Transport.SellingGood.GetFactionNick(),
+			[]string{
+				trade_route.Transport.BuyingGood.GetFactionNick(),
+				trade_route.Transport.SellingGood.GetFactionNick(),
+			},
+			[]string{
+				string(trade_route.Transport.BuyingGood.SystemNickname),
+				string(trade_route.Transport.SellingGood.SystemNickname),
+			},
 		)
 		<td>
 			@frmt.WriteLimit(85) {

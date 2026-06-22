@@ -53,11 +53,11 @@ func FormatProfitPerTime(value float64) string {
 	return fmt.Sprintf("%.2f", value*100)
 }
 
-templ DiscoRephackCompat(shared *types.SharedData, faction_nicks ...string) {
+templ DiscoRephackCompat(shared *types.SharedData, faction_nicks []string, system_nicks []string) {
 	if shared.ShowDisco {
 		<td
 			class="tech_compat hide"
-			techcompats={ disco.MarshalRephacksCompat(shared, faction_nicks) }
+			techcompats={ disco.MarshalRephacksCompat(shared, faction_nicks, system_nicks) }
 		></td>
 	}
 }
@@ -146,10 +146,18 @@ templ TwoWayTradesTable(
 					</td>
 					@DiscoRephackCompat(
 						shared,
-						two_way.Route1.Transport.BuyingGood.GetFactionNick(),
-						two_way.Route1.Transport.SellingGood.GetFactionNick(),
-						two_way.Route2.Transport.BuyingGood.GetFactionNick(),
-						two_way.Route2.Transport.SellingGood.GetFactionNick(),
+						[]string{
+							two_way.Route1.Transport.BuyingGood.GetFactionNick(),
+							two_way.Route1.Transport.SellingGood.GetFactionNick(),
+							two_way.Route2.Transport.BuyingGood.GetFactionNick(),
+							two_way.Route2.Transport.SellingGood.GetFactionNick(),
+						},
+						[]string{
+							string(two_way.Route1.Transport.BuyingGood.SystemNickname),
+							string(two_way.Route1.Transport.SellingGood.SystemNickname),
+							string(two_way.Route2.Transport.BuyingGood.SystemNickname),
+							string(two_way.Route2.Transport.SellingGood.SystemNickname),
+						},
 					)
 					<td>
 						<span class="tooltip">
