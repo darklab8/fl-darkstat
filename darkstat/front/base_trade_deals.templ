@@ -15,9 +15,13 @@ templ PobWarningText() {
 	WARNING: Be careful to extra check final docking permissions for (PoB) Bases in their infocards or on a map!
 }
 
-templ PobWarning() {
-	@tab.PageHint() {
-		@PobWarningText()
+templ PobWarning(shared *types.SharedData) {
+	if shared.ShowDisco {
+		@tab.PageHint() {
+			@PobWarningText()
+			{ children... }
+		}
+	} else {
 		{ children... }
 	}
 }
@@ -51,7 +55,7 @@ templ TradeDeals(
 						@tab.PageTime()
 					}
 				}
-				@PobWarning()
+				@PobWarning(shared)
 				<div
 					id="table-top"
 					style="height: calc(100% - 15px);"

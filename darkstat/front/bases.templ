@@ -428,7 +428,7 @@ templ BasesT(
 								@tab.PageTime()
 							}
 						}
-						@PobWarning()
+						@PobWarning(shared)
 					}
 					if tab_mode == BaseTabTradesTo {
 						@tab.PageHint() {
@@ -438,12 +438,14 @@ templ BasesT(
 								@tab.PageTime()
 							}
 						}
-						@PobWarning()
+						@PobWarning(shared)
 					}
 					if tab_mode == BaseAllRoutes {
 						@tab.PageHint() {
 							All routes from specific bases to any other base for navigation.
-							@PobWarningText()
+							if shared.ShowDisco {
+								@PobWarningText()
+							}
 						}
 					}
 					if tab_mode == BaseTabOres {
