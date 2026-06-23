@@ -48,7 +48,7 @@ func GetTwoRoutes(TwoWayDeals []*configs_export.TwoWayDeal, mode tab.ShowEmpty) 
 
 func FormatProfitPerTime(value float64) string {
 	if value*100 < 0.5 {
-		return "0.00"
+		return fmt.Sprintf("%.2f", 0.0)
 	}
 	return fmt.Sprintf("%.2f", value*100)
 }
@@ -144,21 +144,6 @@ templ TwoWayTradesTable(
 					<td>
 						{ fmt.Sprintf("%.0f", two_way.TransportInfo.TotalProfit) }
 					</td>
-					@DiscoRephackCompat(
-						shared,
-						[]string{
-							two_way.Route1.Transport.BuyingGood.GetFactionNick(),
-							two_way.Route1.Transport.SellingGood.GetFactionNick(),
-							two_way.Route2.Transport.BuyingGood.GetFactionNick(),
-							two_way.Route2.Transport.SellingGood.GetFactionNick(),
-						},
-						[]string{
-							string(two_way.Route1.Transport.BuyingGood.SystemNickname),
-							string(two_way.Route1.Transport.SellingGood.SystemNickname),
-							string(two_way.Route2.Transport.BuyingGood.SystemNickname),
-							string(two_way.Route2.Transport.SellingGood.SystemNickname),
-						},
-					)
 					<td>
 						<span class="tooltip">
 							@TimeToHumanTime(two_way.TransportInfo.TwoWayTime)
@@ -243,7 +228,21 @@ templ TwoWayTradesTable(
 							{ fmt.Sprintf("%.0f", math.Max(two_way.FreighterInfo.Route1ConnectTime, two_way.FreighterInfo.Route2ConnectTime)) }
 						</td>
 					}
-					<td></td>
+					@DiscoRephackCompat(
+						shared,
+						[]string{
+							two_way.Route1.Transport.BuyingGood.GetFactionNick(),
+							two_way.Route1.Transport.SellingGood.GetFactionNick(),
+							two_way.Route2.Transport.BuyingGood.GetFactionNick(),
+							two_way.Route2.Transport.SellingGood.GetFactionNick(),
+						},
+						[]string{
+							string(two_way.Route1.Transport.BuyingGood.SystemNickname),
+							string(two_way.Route1.Transport.SellingGood.SystemNickname),
+							string(two_way.Route2.Transport.BuyingGood.SystemNickname),
+							string(two_way.Route2.Transport.SellingGood.SystemNickname),
+						},
+					)
 				}
 			}
 		</tbody>
