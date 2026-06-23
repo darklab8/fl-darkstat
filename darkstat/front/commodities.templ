@@ -98,6 +98,7 @@ templ CommoditiesT(commodities []*configs_export.Commodity, mode tab.ShowEmpty, 
 	@tab.TabContent() {
 		<div class="splitter">
 			@tab.LeftTable() {
+				@PobWarning()
 				@tab.TableTop() {
 					@tab.FilterBar(&types.SharedData{})
 					<div id="table-top-main">

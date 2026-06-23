@@ -424,23 +424,26 @@ templ BasesT(
 						@tab.PageHint() {
 							All routes from specific bases.
 							if shared.ShowDisco {
-								Excluded with less than 5k cargo, and no money at pob.
+								Excluded with less than { strconv.Itoa(configs_export.DiscoMinimalTradeProfit) } profit.
 								@tab.PageTime()
 							}
 						}
+						@PobWarning()
 					}
 					if tab_mode == BaseTabTradesTo {
 						@tab.PageHint() {
 							All routes to specific bases.
 							if shared.ShowDisco {
-								Excluded with less than 5k cargo, and no money at pob.
+								Excluded with less than { strconv.Itoa(configs_export.DiscoMinimalTradeProfit) } profit.
 								@tab.PageTime()
 							}
 						}
+						@PobWarning()
 					}
 					if tab_mode == BaseAllRoutes {
 						@tab.PageHint() {
 							All routes from specific bases to any other base for navigation.
+							@PobWarningText()
 						}
 					}
 					if tab_mode == BaseTabOres {
