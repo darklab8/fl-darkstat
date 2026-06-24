@@ -754,8 +754,26 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 				onclick="RowHighlighter(this)"
 			>
 				<td>
-					@frmt.WriteLimit(200) {
-						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
+					if GetBaseKind(shared, name) == BasePOBCrafts && shared.ShowFLSR {
+						<div style="display:flex;flex-direction:column">
+							for _, recipe := range good.CraftableInfos {
+								if len(recipe.FLSR.Products) > 0 {
+									for _, product := range recipe.FLSR.Products {
+										<span>{ fmt.Sprintf("%s (%d)", product.Name, product.Amount) }</span>
+									}
+								} else {
+									<span>
+										@frmt.WriteLimit(200) {
+											{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
+										}
+									</span>
+								}
+							}
+						</div>
+					} else {
+						@frmt.WriteLimit(200) {
+							{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
+						}
 					}
 				</td>
 				<td>

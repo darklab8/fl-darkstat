@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/flsr/flsr_missions"
@@ -400,9 +401,24 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 		filesystem.GetFile("flsr-texts.dll") != nil ||
 		filesystem.GetFile("flsr-dialogs.dll") != nil {
 		m.FLSR = &SiriusRevivalConfig{}
-		flsr_recipes_file := filesystem.GetFile(flsr_recipes.FILENAME)
+		flsr_recipes_file := filesystem.GetFile(flsr_recipes.FILENAME0)
 		if flsr_recipes_file != nil {
-			m.FLSR.FLSRRecipes = flsr_recipes.Read(iniload.NewLoader(flsr_recipes_file).Scan())
+			file1 := iniload.NewLoader(flsr_recipes_file).Scan()
+			m.FLSR.FLSRRecipes = flsr_recipes.Read([]*iniload.IniLoader{
+				file1,
+			})
+		} else {
+			flsr_recipes_file1 := filesystem.GetFile(flsr_recipes.FILENAME1)
+			flsr_recipes_file2 := filesystem.GetFile(flsr_recipes.FILENAME2)
+			flsr_recipes_file3 := filesystem.GetFile(flsr_recipes.FILENAME3)
+			file1 := iniload.NewLoader(flsr_recipes_file1).Scan()
+			file2 := iniload.NewLoader(flsr_recipes_file2).Scan()
+			file3 := iniload.NewLoader(flsr_recipes_file3).Scan()
+			m.FLSR.FLSRRecipes = flsr_recipes.Read([]*iniload.IniLoader{
+				file1,
+				file2,
+				file3,
+			})
 		}
 	}
 
@@ -411,8 +427,15 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	timeit.NewTimerF(func() {
 		var wg sync.WaitGroup
 		wg.Add(len(all_files))
-		for _, file := range all_files {
+		for index, file := range all_files {
 			go func(file *iniload.IniLoader) {
+				defer func() {
+					if r := recover(); r != nil {
+						fmt.Println("Recovered in f", r)
+						fmt.Println("file that cause it=", file.File, index)
+						panic(r)
+					}
+				}()
 				file.Scan()
 				wg.Done()
 			}(file)
@@ -444,6 +467,9 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 
 			loaded_files := []*iniload.IniLoader{}
 			for _, file := range filesystem.Files {
+				if !strings.Contains(file.GetFilepath().ToString(), ".ini") {
+					continue
+				}
 				loaded_files = append(loaded_files, iniload.NewLoader(file).Scan())
 			}
 			m.FLSR.FLSRMissions = flsr_missions.Read(loaded_files)

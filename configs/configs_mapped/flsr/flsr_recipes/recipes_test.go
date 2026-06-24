@@ -9,12 +9,12 @@ import (
 )
 
 func TestReader(t *testing.T) {
-	fileref := tests.FixtureFileFind().GetFile(FILENAME)
+	fileref := tests.FixtureFileFind().GetFile(FILENAME1)
 
 	if fileref == nil {
 		return
 	}
 
-	config := Read(iniload.NewLoader(fileref).Scan())
+	config := Read([]*iniload.IniLoader{iniload.NewLoader(fileref).Scan()})
 	assert.Greater(t, len(config.Products), 0, "expected finding some elements")
 }

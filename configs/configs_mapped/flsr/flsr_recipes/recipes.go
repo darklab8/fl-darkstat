@@ -33,58 +33,62 @@ type Config struct {
 }
 
 const (
-	FILENAME utils_types.FilePath = "flsr-crafting.cfg"
+	FILENAME0 utils_types.FilePath = "flsr-crafting.cfg"
+	FILENAME1 utils_types.FilePath = "crafting.ini"
+	FILENAME2 utils_types.FilePath = "global.ini"
+	FILENAME3 utils_types.FilePath = "lootboxes.ini"
 )
 
-func Read(input_file *iniload.IniLoader) *Config {
+func Read(input_files []*iniload.IniLoader) *Config {
 	frelconfig := &Config{
-		IniLoader:      input_file,
 		ProductsByNick: make(map[string][]*Recipe),
 	}
 
-	for _, section := range input_file.Sections {
+	for _, input_file := range input_files {
+		for _, section := range input_file.Sections {
 
-		recipe := &Recipe{
-			Cost: semantic.NewInt(section, cfg.Key("cost")),
-		}
-		recipe.Map(section)
+			recipe := &Recipe{
+				Cost: semantic.NewInt(section, cfg.Key("cost")),
+			}
+			recipe.Map(section)
 
-		if ingredients, ok := section.ParamMap["ingredient"]; ok {
-			for index, _ := range ingredients {
-				ingredient := &Ingredient{
-					Nickname: semantic.NewString(section, cfg.Key("ingredient"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(index)), semantic.WithoutSpacesS()),
-					Quantity: semantic.NewInt(section, cfg.Key("ingredient"), semantic.Index(index), semantic.Order(1)),
+			if ingredients, ok := section.ParamMap["ingredient"]; ok {
+				for index, _ := range ingredients {
+					ingredient := &Ingredient{
+						Nickname: semantic.NewString(section, cfg.Key("ingredient"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(index)), semantic.WithoutSpacesS()),
+						Quantity: semantic.NewInt(section, cfg.Key("ingredient"), semantic.Index(index), semantic.Order(1)),
+					}
+					recipe.Ingridients = append(recipe.Ingridients, ingredient)
 				}
-				recipe.Ingridients = append(recipe.Ingridients, ingredient)
 			}
-		}
 
-		if products, ok := section.ParamMap["product"]; ok {
-			for index, _ := range products {
-				info := &Product{
-					Nickname: semantic.NewString(section, cfg.Key("product"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(index)), semantic.WithoutSpacesS()),
-					Quantity: semantic.NewInt(section, cfg.Key("product"), semantic.Index(index), semantic.Order(1)),
+			if products, ok := section.ParamMap["product"]; ok {
+				for index, _ := range products {
+					info := &Product{
+						Nickname: semantic.NewString(section, cfg.Key("product"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(index)), semantic.WithoutSpacesS()),
+						Quantity: semantic.NewInt(section, cfg.Key("product"), semantic.Index(index), semantic.Order(1)),
+					}
+					recipe.Product = append(recipe.Product, info)
 				}
-				recipe.Product = append(recipe.Product, info)
 			}
-		}
 
-		if base_nicknames, ok := section.ParamMap["base_nickname"]; ok {
-			for index, _ := range base_nicknames {
-				recipe.BaseNicknames = append(recipe.BaseNicknames,
-					semantic.NewString(section, cfg.Key("base_nickname"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(index)), semantic.WithoutSpacesS()))
+			if base_nicknames, ok := section.ParamMap["base_nickname"]; ok {
+				for index, _ := range base_nicknames {
+					recipe.BaseNicknames = append(recipe.BaseNicknames,
+						semantic.NewString(section, cfg.Key("base_nickname"), semantic.WithLowercaseS(), semantic.OptsS(semantic.Index(index)), semantic.WithoutSpacesS()))
+				}
 			}
-		}
 
-		if len(recipe.Product) == 0 {
-			continue
-		}
+			if len(recipe.Product) == 0 {
+				continue
+			}
 
-		frelconfig.Products = append(frelconfig.Products, recipe)
+			frelconfig.Products = append(frelconfig.Products, recipe)
 
-		for _, product := range recipe.Product {
-			frelconfig.ProductsByNick[product.Nickname.Get()] = append(frelconfig.ProductsByNick[product.Nickname.Get()], recipe)
+			for _, product := range recipe.Product {
+				frelconfig.ProductsByNick[product.Nickname.Get()] = append(frelconfig.ProductsByNick[product.Nickname.Get()], recipe)
 
+			}
 		}
 	}
 
@@ -93,7 +97,5 @@ func Read(input_file *iniload.IniLoader) *Config {
 }
 
 func (frelconfig *Config) Write() *file.File {
-	inifile := frelconfig.Render()
-	inifile.Write(inifile.File)
-	return inifile.File
+	return &file.File{}
 }

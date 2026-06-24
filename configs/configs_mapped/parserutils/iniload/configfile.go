@@ -1,6 +1,8 @@
 package iniload
 
 import (
+	"fmt"
+
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
@@ -20,6 +22,13 @@ func NewLoader(input_file *file.File) *IniLoader {
 
 // Scan is heavy operations for goroutine ^_^
 func (fileconfig *IniLoader) Scan() *IniLoader {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in f", r, " crashed for file=", fileconfig.input_file)
+			panic(r)
+		}
+	}()
+
 	if fileconfig.input_file == nil {
 		logus.Log.Error("input_file is empty")
 	}

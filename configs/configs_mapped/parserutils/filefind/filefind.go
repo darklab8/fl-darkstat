@@ -35,11 +35,15 @@ func FindConfigs(folderpath utils_types.FilePath) *Filesystem {
 	if configs_settings.Env.FreelancerFolderFailback != "" && folderpath != configs_settings.Env.FreelancerFolderFailback {
 		fs := FindConfigs(configs_settings.Env.FreelancerFolderFailback)
 		filesystem.Hashmap = fs.Hashmap
+		filesystem.HashmapDirPath = fs.HashmapDirPath
 		filesystem.Files = fs.Files
 		for _, file := range filesystem.Files {
 			file.IsFailback = true
 		}
 		for _, file := range filesystem.Hashmap {
+			file.IsFailback = true
+		}
+		for _, file := range filesystem.HashmapDirPath {
 			file.IsFailback = true
 		}
 	}
