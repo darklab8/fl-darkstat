@@ -180,6 +180,20 @@ templ DocsT(mode2 tab.ShowEmpty, shared *types.SharedData) {
 		</returntotop>
 		<textbody>
 			<h1>Documentation to <a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + urls.Index.ToString()) }>darkstat</a></h1>
+			if shared.ShowDisco {
+				<p>
+					Video tutorial to equipment functionality:
+				</p>
+				<video controls style="width:100%">
+					<source src="https://raw.githubusercontent.com/darklab8/fl-darkstat/master/docs/videos/equipment.mp4" type="video/mp4"/>
+				</video>
+				<p>
+					Video tutorial to trading functionality:
+				</p>
+				<video controls style="width:100%">
+					<source src="https://raw.githubusercontent.com/darklab8/fl-darkstat/master/docs/videos/trading.mp4" type="video/mp4"/>
+				</video>
+			}
 			<menu>
 				<span class="section">Vanilla features:</span>
 				<ul>
