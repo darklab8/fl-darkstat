@@ -8,6 +8,20 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
 )
 
+templ DarkThemeVideos() {
+	<style>
+		video {
+			filter: brightness(0.25);
+			transition: filter 0.3s ease;
+		}
+
+		video:hover,
+		video:focus {
+			filter: brightness(1);
+		}
+	</style>
+}
+
 templ Html5(theme types.Theme, shared *types.SharedData) {
 	<!DOCTYPE html>
 	<html lang="en">
@@ -48,7 +62,9 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 							--color_fmt_sb_buys: rgba(255, 255, 0, 0.13);
 							--color_fmt_sb_neither: rgba(255, 0, 0, 0.07);
 						}
+						
 					</style>
+					@DarkThemeVideos()
 				case types.ThemeDark:
 					<style>
 						:root {
@@ -74,7 +90,9 @@ templ Html5(theme types.Theme, shared *types.SharedData) {
 								--color_fmt_sb_buys: rgba(255, 255, 0, 0.15);
 								--color_fmt_sb_neither: rgba(255, 0, 0, 0.10);
 						}
+
 					</style>
+					@DarkThemeVideos()
 				case types.ThemeVanilla:
 					<style>
 						:root {
