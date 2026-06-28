@@ -249,7 +249,7 @@ func UniParse(input string) (UniValue, error) {
 
 	numberMatch := regexNumber.FindAllString(input, -1)
 	if len(numberMatch) > 0 {
-		parsed_number, err := strconv.ParseFloat(input, 64)
+		parsed_number, err := strconv.ParseFloat(input, 32)
 
 		if err != nil {
 			logus.Log.Warn("failed to read number. Converting to string", typelog.Any("input", input))

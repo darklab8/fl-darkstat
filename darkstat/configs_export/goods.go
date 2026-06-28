@@ -127,6 +127,10 @@ func (e *Exporter) getMarketGoods() map[cfg.BaseUniNick]map[CommodityKey]*Market
 				}
 				equipment := e.Mapped.Equip().CommoditiesMap[market_good_nickname]
 
+				if *good_to_add.PriceBaseBuysFor > good_to_add.PriceBaseSellsFor {
+					logus.Log.Errorln("detected base/sell bug.", good_to_add.BaseName, good_to_add.Name, *good_to_add.PriceBaseBuysFor, good_to_add.PriceBaseSellsFor)
+				}
+
 				for _, volume := range equipment.Volumes {
 					good_to_add2 := good_to_add
 					good_to_add2.Volume = volume.Volume.Get()
