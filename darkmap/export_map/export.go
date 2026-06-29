@@ -82,7 +82,7 @@ func (e *Export) Export(ctx context.Context) {
 		e.PobsBySystemNick[*pob.SystemNick] = append(e.PobsBySystemNick[*pob.SystemNick], pob)
 	}
 
-	MiningOperations := e.Exp.GetOres(ctx, []*configs_export.Commodity{}, false)
+	MiningOperations := e.Exp.GetOres(ctx, []*configs_export.Commodity{}, false, configs_export.WithCraftOreRoutes(false))
 	for _, mine := range MiningOperations {
 		e.MiningBySystemNick[mine.SystemNickname] = append(e.MiningBySystemNick[mine.SystemNickname], mine)
 	}

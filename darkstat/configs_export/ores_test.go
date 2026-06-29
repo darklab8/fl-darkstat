@@ -14,7 +14,7 @@ func TestGetOres(t *testing.T) {
 	configs := configs_mapped.TestFixtureConfigs()
 	exporter := NewExporter(configs)
 	commodities := exporter.GetCommodities(ctx)
-	mining_operations := exporter.GetOres(ctx, commodities, true)
+	mining_operations := exporter.GetOres(ctx, commodities, true, WithCraftOreRoutes(true))
 	assert.Greater(t, len(mining_operations), 0)
 	fmt.Println("len(mining_operations)=", len(mining_operations))
 }

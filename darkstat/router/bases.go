@@ -278,6 +278,33 @@ func (l *Router) LinkBases(
 		),
 
 		builder.NewComponent(
+			urls.AsteroidsWithCrafts,
+			front.BasesT(
+				configs_export.FitlerToUsefulOres(data.MiningOperationsWithCrafts),
+				front.BaseTabOresWithCrafts,
+				tab.ShowEmpty(false),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePathsFrom(ctx, configs_export.FitlerToUsefulOres(data.MiningOperationsWithCrafts), data)
+				}, time.Minute*2+time.Second*30)},
+			),
+		),
+		builder.NewComponent(
+			tab.AllItemsUrl(urls.AsteroidsWithCrafts),
+			front.BasesT(
+				data.MiningOperationsWithCrafts,
+				front.BaseTabOresWithCrafts,
+				tab.ShowEmpty(true),
+				shared,
+				data,
+				front.BaseOpts{BasesWithTradePaths: cache.NewCached(func() []front.BaseWithTradePaths {
+					return front.GetBasesWithTradePathsFrom(ctx, data.MiningOperationsWithCrafts, data)
+				}, time.Minute*2+time.Second*35)},
+			),
+		),
+
+		builder.NewComponent(
 			urls.TravelRoutes,
 			front.BasesT(data.FilterToUserfulBases(data.TravelBases, true), front.BaseAllRoutes, tab.ShowEmpty(false), shared, data, front.BaseOpts{}),
 		),
@@ -286,6 +313,15 @@ func (l *Router) LinkBases(
 			front.BasesT(data.TravelBases, front.BaseAllRoutes, tab.ShowEmpty(true), shared, data, front.BaseOpts{}),
 		),
 	)
+
+	for _, base := range data.MiningOperationsWithCrafts {
+		build.RegComps(
+			builder.NewComponent(
+				utils_types.FilePath(front.BaseDetailedUrl(base, front.BaseTabOresWithCrafts)),
+				front.BaseTradesFrom(base.Name, base, front.BaseTabOresWithCrafts, shared, data),
+			),
+		)
+	}
 
 	for _, base := range data.MiningOperations {
 		// Ore routes bottom table. Important.

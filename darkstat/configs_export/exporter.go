@@ -54,10 +54,11 @@ type Exporter struct {
 	TradeBases  []*Base
 	TravelBases []*Base
 
-	MiningOperations     []*Base
-	LootableBase         *Base
-	CraftableBase        *Base
-	useful_bases_by_nick map[cfg.BaseUniNick]bool
+	MiningOperations           []*Base
+	MiningOperationsWithCrafts []*Base
+	LootableBase               *Base
+	CraftableBase              *Base
+	useful_bases_by_nick       map[cfg.BaseUniNick]bool
 
 	ship_speeds trades.ShipSpeeds
 	Transport   *GraphResults
@@ -173,7 +174,8 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 
 	e.Commodities = e.GetCommodities(ctx)
 	EnhanceBasesWithServerOverrides(e.Bases, e.Commodities)
-	e.MiningOperations = e.GetOres(ctx, e.Commodities, true)
+	e.MiningOperations = e.GetOres(ctx, e.Commodities, true, WithCraftOreRoutes(false))
+	e.MiningOperationsWithCrafts = e.GetOres(ctx, e.Commodities, true, WithCraftOreRoutes(true))
 	if e.Mapped.Discovery != nil {
 		e.PoBs = e.GetPoBs()
 
@@ -429,7 +431,7 @@ func (e *Exporter) EnhanceBasesWithIsTransportReachable(
 		}
 	}
 
-	for _, base := range e.MiningOperations {
+	for _, base := range append(e.MiningOperations, e.MiningOperationsWithCrafts...) {
 		base_nickname := string(base.Nickname)
 		if trades.GetTimeMs2(tg.Graph, tg.Time, reachable_base_example, base_nickname) < trades.INFthreshold {
 			base.IsTransportReachable = true
@@ -440,7 +442,6 @@ func (e *Exporter) EnhanceBasesWithIsTransportReachable(
 		if trades.GetTimeMs2(frigate_graph.Graph, frigate_graph.Time, reachable_base_example, base_nickname) < trades.INFthreshold {
 			base.IsFrigateReachable = true
 		}
-
 	}
 
 	enhance_with_transport_unrechability := func(Bases map[cfg.BaseUniNick]*MarketGood) {

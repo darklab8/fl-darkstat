@@ -28,7 +28,14 @@ type MiningInfo struct {
 	NuAsteroidsTotal      int
 }
 
-func (e *Exporter) GetOres(ctx context.Context, Commodities []*Commodity, enrich_infocards bool) []*Base {
+type WithCraftOreRoutes bool
+
+func (e *Exporter) GetOres(
+	ctx context.Context,
+	Commodities []*Commodity,
+	enrich_infocards bool,
+	with_craft_ore_routes WithCraftOreRoutes,
+) []*Base {
 	ctx, span := traces.Tracer.Start(ctx, "Exporter.GetOres")
 	defer span.End()
 	var bases []*Base
@@ -75,7 +82,7 @@ func (e *Exporter) GetOres(ctx context.Context, Commodities []*Commodity, enrich
 					comm_by_nick:  comm_by_nick,
 					asteroids:     asteroids,
 					zone:          zone,
-				}, enrich_infocards,
+				}, enrich_infocards, with_craft_ore_routes,
 			))
 
 		}
@@ -139,7 +146,7 @@ func (e *Exporter) GetOres(ctx context.Context, Commodities []*Commodity, enrich
 										NuAsteroidsCount: nu_asteroids_count,
 										NuAsteroidsTotal: nu_asteroids_total,
 									},
-								}, enrich_infocards,
+								}, enrich_infocards, with_craft_ore_routes,
 							))
 						}
 					}
@@ -174,7 +181,11 @@ type NewOreBaseInput struct {
 	disco_mining_system *DiscoMiningSystem
 }
 
-func (e *Exporter) NewOreBase(input_data NewOreBaseInput, enrich_infocard bool) *Base {
+func (e *Exporter) NewOreBase(
+	input_data NewOreBaseInput,
+	enrich_infocard bool,
+	with_craft_ore_routes WithCraftOreRoutes,
+) *Base {
 	var added_goods map[string]bool = make(map[string]bool)
 	base := &Base{
 		MiningInfo:         &MiningInfo{},
@@ -253,7 +264,7 @@ func (e *Exporter) NewOreBase(input_data NewOreBaseInput, enrich_infocard bool) 
 
 	}
 
-	if e.Mapped.Discovery != nil {
+	if with_craft_ore_routes && e.Mapped.Discovery != nil {
 		if recipes, ok := e.Mapped.Discovery.BaseRecipeItems.RecipePerConsumed[input_data.commodity]; ok {
 			for _, recipe := range recipes {
 				recipe_produces_only_commodities := true
