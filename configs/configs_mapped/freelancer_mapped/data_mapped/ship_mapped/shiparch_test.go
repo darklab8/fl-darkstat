@@ -14,7 +14,7 @@ func TestReader(t *testing.T) {
 	fileref1 := files.GetFile("shiparch.ini")
 	fileref2 := files.GetFile("rtc_shiparch.ini")
 
-	config := Read([]*iniload.IniLoader{iniload.NewLoader(fileref1).Scan(), iniload.NewLoader(fileref2).Scan()})
+	config := Read([]*iniload.IniLoader{iniload.NewLoader32(fileref1).Scan(), iniload.NewLoader32(fileref2).Scan()})
 
 	assert.Greater(t, len(config.Ships), 0)
 

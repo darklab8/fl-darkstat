@@ -347,7 +347,7 @@ func (b BitsInFloat) ToInt() int {
 	return 64
 }
 
-func Read(fileref *file.File) *INIFile {
+func Read32(fileref *file.File) *INIFile {
 	return ReadF(fileref, Float32)
 }
 func Read64(fileref *file.File) *INIFile {

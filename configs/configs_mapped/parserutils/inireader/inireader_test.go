@@ -24,7 +24,7 @@ func TestErrors(t *testing.T) {
 
 func TestReader(t *testing.T) {
 	fileref := tests.FixtureFileFind().GetFile("market_ships.ini")
-	config := Read(fileref)
+	config := Read32(fileref)
 
 	assert.Greater(t, len(config.Sections), 0, "market ships sections were not scanned")
 }
@@ -46,7 +46,7 @@ func TestReaderWithBOMFails(t *testing.T) {
 				crashed = true
 			}
 		}()
-		Read(fileref)
+		Read32(fileref)
 	}()
 
 	assert.True(t, crashed, "with BOM we Crash.")
@@ -56,7 +56,7 @@ func TestReaderWithBOMPasses(t *testing.T) {
 
 	fs := filefind.FindConfigs(utils_os.GetCurrrentTestFolder())
 	fileref := fs.GetFile("li05_with_bom.ini")
-	config := Read(fileref)
+	config := Read32(fileref)
 
 	assert.Greater(t, len(config.Sections), 0, "market ships sections were not scanned")
 }
@@ -65,7 +65,7 @@ func TestReadScientificNotation(t *testing.T) {
 
 	fs := filefind.FindConfigs(utils_os.GetCurrrentTestFolder())
 	fileref := fs.GetFile("hud.ini")
-	config := Read(fileref)
+	config := Read32(fileref)
 
 	assert.Greater(t, len(config.Sections), 0, "expected not zero section")
 }
@@ -74,7 +74,7 @@ func TestCommentsHandling(t *testing.T) {
 
 	fs := filefind.FindConfigs(utils_os.GetCurrrentTestFolder())
 	fileref := fs.GetFile("comments.ini")
-	config := Read(fileref)
+	config := Read32(fileref)
 
 	assert.Greater(t, len(config.Sections), 0, "expected not zero section")
 
@@ -84,7 +84,7 @@ func TestCommentsHandling2(t *testing.T) {
 
 	fs := filefind.FindConfigs(utils_os.GetCurrrentTestFolder())
 	fileref := fs.GetFile("comments2.ini")
-	config := Read(fileref)
+	config := Read32(fileref)
 
 	assert.Greater(t, len(config.Sections), 0, "expected not zero section")
 
@@ -94,7 +94,7 @@ func TestCommentsHandling3(t *testing.T) {
 
 	fs := filefind.FindConfigs(utils_os.GetCurrrentTestFolder())
 	fileref := fs.GetFile("comments3.ini")
-	config := Read(fileref)
+	config := Read32(fileref)
 
 	assert.Greater(t, len(config.Sections), 0, "expected not zero section")
 
@@ -104,7 +104,7 @@ func TestCommentsHandling4(t *testing.T) {
 
 	fs := filefind.FindConfigs(utils_os.GetCurrrentTestFolder())
 	fileref := fs.GetFile("comments4.ini")
-	config := Read(fileref)
+	config := Read32(fileref)
 
 	assert.Greater(t, len(config.Sections), 0, "expected not zero section")
 
@@ -114,7 +114,7 @@ func TestCommentsHandling5(t *testing.T) {
 
 	fs := filefind.FindConfigs(utils_os.GetCurrrentTestFolder())
 	fileref := fs.GetFile("comments5.ini")
-	config := Read(fileref)
+	config := Read32(fileref)
 
 	write_file := file.NewFile(utils_os.GetCurrrentTestFolder().Join("comments5_rendered.ini"))
 	config.Write(write_file)
@@ -126,7 +126,7 @@ func TestCommentsHandling6(t *testing.T) {
 
 	fs := filefind.FindConfigs(utils_os.GetCurrrentTestFolder())
 	fileref := fs.GetFile("comments6.ini")
-	config := Read(fileref)
+	config := Read32(fileref)
 
 	write_file := file.NewFile(utils_os.GetCurrrentTestFolder().Join("comments6_rendered.ini"))
 	config.Write(write_file)

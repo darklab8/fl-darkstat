@@ -16,7 +16,7 @@ type IniLoader struct {
 	bits inireader.BitsInFloat
 }
 
-func NewLoader(input_file *file.File) *IniLoader {
+func NewLoader32(input_file *file.File) *IniLoader {
 	fileconfig := &IniLoader{input_file: input_file, bits: inireader.Float32}
 	return fileconfig
 }

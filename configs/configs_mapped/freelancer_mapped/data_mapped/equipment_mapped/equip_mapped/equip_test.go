@@ -11,7 +11,7 @@ import (
 func TestReadSelectEquip(t *testing.T) {
 	fileref := tests.FixtureFileFind().GetFile(FILENAME_SELECT_EQUIP)
 
-	config := Read([]*iniload.IniLoader{iniload.NewLoader(fileref).Scan()})
+	config := Read([]*iniload.IniLoader{iniload.NewLoader32(fileref).Scan()})
 
 	assert.Greater(t, len(config.Commodities), 0, "expected finding items")
 

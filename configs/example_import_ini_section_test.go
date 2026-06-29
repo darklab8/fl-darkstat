@@ -46,7 +46,7 @@ nickname = some_gun
 hp_gun_type = some_hp_type
 `
 	memory_file := file.NewMemoryFile(strings.Split(content, "\n"))
-	scanned_file := iniload.NewLoader(memory_file).Scan()
+	scanned_file := iniload.NewLoader32(memory_file).Scan()
 
 	mapped_equip := equip_mapped.Read([]*iniload.IniLoader{scanned_file})
 	fmt.Println(mapped_equip.Guns[0].Nickname.Get())

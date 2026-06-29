@@ -14,8 +14,8 @@ func TestReader(t *testing.T) {
 	fileref2 := tests.FixtureFileFind().GetFile2("fx/fuse_suprise_solar.ini")
 
 	config := Read([]*iniload.IniLoader{
-		iniload.NewLoader(fileref).Scan(),
-		iniload.NewLoader(fileref2).Scan(),
+		iniload.NewLoader32(fileref).Scan(),
+		iniload.NewLoader32(fileref2).Scan(),
 	})
 
 	assert.Greater(t, len(config.Fuses), 0, "expected finding fuses")

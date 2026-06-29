@@ -12,7 +12,7 @@ import (
 func TestReader(t *testing.T) {
 	fileref := tests.FixtureFileFind().GetFile(FILENAME)
 
-	config := Read(iniload.NewLoader(fileref).Scan())
+	config := Read(iniload.NewLoader32(fileref).Scan())
 
 	assert.Greater(t, len(config.LockedGates), 0, "expected finding some elements")
 	fmt.Println(config.LockedGates)

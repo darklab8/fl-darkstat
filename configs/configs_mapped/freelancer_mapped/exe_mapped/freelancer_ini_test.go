@@ -21,7 +21,7 @@ func TestReader(t *testing.T) {
 
 func TestReader2(t *testing.T) {
 	fileref := tests.FixtureFileFind().GetFile("freelancer.ini")
-	config := Read(iniload.NewLoader(fileref).Scan())
+	config := Read(iniload.NewLoader32(fileref).Scan())
 	assert.Greater(t, len(config.Dlls), 0)
 
 	equips := utils.CompL(config.Equips, func(x *semantic.Path) utils_types.FilePath {

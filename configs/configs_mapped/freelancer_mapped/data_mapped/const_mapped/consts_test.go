@@ -10,7 +10,7 @@ import (
 
 func TestReader(t *testing.T) {
 	fileref1 := tests.FixtureFileFind().GetFile("constants.ini")
-	config := Read(iniload.NewLoader(fileref1).Scan())
+	config := Read(iniload.NewLoader32(fileref1).Scan())
 	// fmt.Println(config.EngineEquipConsts.CRUISING_SPEED.Get()) // not defined in vanilla
 	fmt.Println(config.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get())
 }

@@ -26,7 +26,7 @@ func TestReader(t *testing.T) {
 
 	loaded_files := []*iniload.IniLoader{}
 	for _, file := range filesystem.Files {
-		loaded_files = append(loaded_files, iniload.NewLoader(file).Scan())
+		loaded_files = append(loaded_files, iniload.NewLoader64(file).Scan())
 	}
 
 	config := Read(loaded_files)

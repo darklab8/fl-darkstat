@@ -15,6 +15,6 @@ func TestReader(t *testing.T) {
 		return
 	}
 
-	config := Read([]*iniload.IniLoader{iniload.NewLoader(fileref).Scan()})
+	config := Read([]*iniload.IniLoader{iniload.NewLoader64(fileref).Scan()})
 	assert.Greater(t, len(config.Products), 0, "expected finding some elements")
 }

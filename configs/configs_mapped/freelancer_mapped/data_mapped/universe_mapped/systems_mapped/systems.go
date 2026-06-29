@@ -351,7 +351,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 			// Read system files with parallelism ^_^
 			iniconfigs_channel := make(chan *FileRead)
 			read_file := func(data *FileRead) {
-				data.ini = inireader.Read(data.file)
+				data.ini = inireader.Read32(data.file)
 				iniconfigs_channel <- data
 			}
 			for system_key, file := range system_files {
@@ -411,7 +411,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 							wg.Done()
 							return
 						}
-						config := inireader.Read(file_to_read)
+						config := inireader.Read32(file_to_read)
 
 						if lootable_zones, ok := config.SectionMap["[lootablezone]"]; ok {
 							obj := lootable_zones[0]
@@ -700,7 +700,7 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 				wg.Done()
 				return
 			}
-			config := inireader.Read(file_to_read)
+			config := inireader.Read32(file_to_read)
 
 			if objs, ok := config.SectionMap["[encounterformation]"]; ok {
 				for _, obj := range objs {

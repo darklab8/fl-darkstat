@@ -100,7 +100,7 @@ func TestServerOverrides(t *testing.T) {
 MarketGood = li01_01_base, commodity_basic_alloys, 1150, 1550, 1
 `
 	memory_file := file.NewMemoryFile(strings.Split(content, "\n"))
-	scanned_file := iniload.NewLoader(memory_file).Scan()
+	scanned_file := iniload.NewLoader32(memory_file).Scan()
 	discoPrices := discoprices.Read(scanned_file)
 	// Adding to main Freelancer instance..
 	configs.Discovery.Prices = discoPrices

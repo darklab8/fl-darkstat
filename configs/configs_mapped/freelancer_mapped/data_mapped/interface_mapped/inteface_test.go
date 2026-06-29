@@ -15,7 +15,7 @@ import (
 func TestReader(t *testing.T) {
 	fileref := tests.FixtureFileFind().GetFile(FILENAME_FL_INI)
 
-	config := Read(iniload.NewLoader(fileref).Scan())
+	config := Read(iniload.NewLoader32(fileref).Scan())
 
 	assert.Greater(t, len(config.InfocardMapTable.Map), 0)
 }
@@ -24,7 +24,7 @@ func TestReaderComments1(t *testing.T) {
 	test_directory := utils_os.GetCurrrentTestFolder()
 	fileref := file.NewFile(utils_types.FilePath(utils_filepath.Join(test_directory, "infocardmap.comments.ini")))
 
-	config := Read(iniload.NewLoader(fileref).Scan())
+	config := Read(iniload.NewLoader32(fileref).Scan())
 
 	assert.Greater(t, len(config.InfocardMapTable.Map), 0)
 }
@@ -33,7 +33,7 @@ func TestReaderComments2(t *testing.T) {
 	test_directory := utils_os.GetCurrrentTestFolder()
 	fileref := file.NewFile(utils_types.FilePath(utils_filepath.Join(test_directory, "infocardmap.comments2.ini")))
 
-	config := Read(iniload.NewLoader(fileref).Scan())
+	config := Read(iniload.NewLoader32(fileref).Scan())
 
 	assert.Greater(t, len(config.InfocardMapTable.Map), 0)
 }

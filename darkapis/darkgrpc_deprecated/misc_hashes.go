@@ -57,7 +57,7 @@ func GetHashesData(app_data *appdata.AppData) map[string]Hash {
 					}
 				}
 				wg.Done()
-			}(iniload.NewLoader(file))
+			}(iniload.NewLoader32(file))
 			i++
 			if i%500 == 0 {
 				runtime.GC()
@@ -69,7 +69,7 @@ func GetHashesData(app_data *appdata.AppData) map[string]Hash {
 
 	filesystem = filefind.FindConfigs(configs_settings.Env.FreelancerFolder)
 	fileref := filesystem.GetFile(initialworld.FILENAME)
-	InitialWorld := initialworld.Read(iniload.NewLoader(fileref).Scan())
+	InitialWorld := initialworld.Read(iniload.NewLoader32(fileref).Scan())
 
 	for _, group := range InitialWorld.Groups {
 		var nickname string = group.Nickname.Get()

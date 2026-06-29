@@ -7,6 +7,6 @@ import (
 
 func FixtureFLINIConfig() *Config {
 	fileref := tests.FixtureFileFind().GetFile(FILENAME_FL_INI)
-	config := Read(iniload.NewLoader(fileref).Scan())
+	config := Read(iniload.NewLoader32(fileref).Scan())
 	return config
 }

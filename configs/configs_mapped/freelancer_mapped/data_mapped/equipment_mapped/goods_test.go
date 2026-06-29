@@ -11,7 +11,7 @@ import (
 func TestReader(t *testing.T) {
 	fileref := tests.FixtureFileFind().GetFile(FILENAME)
 
-	config := Read([]*iniload.IniLoader{iniload.NewLoader(fileref).Scan()})
+	config := Read([]*iniload.IniLoader{iniload.NewLoader32(fileref).Scan()})
 
 	assert.Greater(t, len(config.Commodities), 0, "expected finding commodities")
 	assert.Greater(t, len(config.ShipHulls), 0)

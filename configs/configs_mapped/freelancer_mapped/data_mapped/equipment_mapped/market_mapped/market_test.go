@@ -15,7 +15,7 @@ import (
 func TestReader(t *testing.T) {
 	fileref := tests.FixtureFileFind().GetFile(FILENAME_SHIPS)
 
-	loaded_market_ships := Read([]*iniload.IniLoader{iniload.NewLoader(fileref).Scan()})
+	loaded_market_ships := Read([]*iniload.IniLoader{iniload.NewLoader32(fileref).Scan()})
 
 	assert.Greater(t, len(loaded_market_ships.BaseGoods), 0, "market ships sections were not scanned")
 }
@@ -25,7 +25,7 @@ func TestWriter(t *testing.T) {
 
 	temp_directory := utils_os.GetCurrrentTempFolder()
 
-	config := Read([]*iniload.IniLoader{iniload.NewLoader(input_file).Scan()})
+	config := Read([]*iniload.IniLoader{iniload.NewLoader32(input_file).Scan()})
 	config.Files[0].SetOutputPath(utils_filepath.Join(temp_directory, FILENAME_SHIPS))
 	config.Write()
 }

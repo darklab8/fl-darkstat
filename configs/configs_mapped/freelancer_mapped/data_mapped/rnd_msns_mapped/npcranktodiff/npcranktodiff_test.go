@@ -11,7 +11,7 @@ import (
 func TestReader(t *testing.T) {
 	fileref := tests.FixtureFileFind().GetFile(FILENAME)
 
-	loaded_market_ships := Read(iniload.NewLoader(fileref).Scan())
+	loaded_market_ships := Read(iniload.NewLoader32(fileref).Scan())
 
 	assert.Greater(t, len(loaded_market_ships.NPCRankToDifficulties), 0, "expected finding some elements")
 }

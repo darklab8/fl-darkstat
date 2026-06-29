@@ -219,13 +219,13 @@ func (configs *MappedConfigs) GetAvgTradeLaneSpeed() int {
 
 func getConfigs(filesystem *filefind.Filesystem, paths []*semantic.Path) []*iniload.IniLoader {
 	return utils.CompL(paths, func(x *semantic.Path) *iniload.IniLoader {
-		return iniload.NewLoader(filesystem.GetFile(utils_types.FilePath(x.FileName())))
+		return iniload.NewLoader32(filesystem.GetFile(utils_types.FilePath(x.FileName())))
 	})
 }
 
 func getConfigs2(filesystem *filefind.Filesystem, paths []*semantic.Path) []*iniload.IniLoader {
 	return utils.CompL(paths, func(x *semantic.Path) *iniload.IniLoader {
-		return iniload.NewLoader(filesystem.GetFile2(utils_types.FilePath(x.Get())))
+		return iniload.NewLoader32(filesystem.GetFile2(utils_types.FilePath(x.Get())))
 	})
 }
 
@@ -254,7 +254,7 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 	if techcom := filesystem.GetFile(DiscoLauncherConfigName); techcom != nil {
 		Discovery = &DiscoveryConfig{}
 		file_techcompat = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/techcompat.cfg"))
-		file_prices = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/prices.cfg"))
+		file_prices = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/prices.cfg"))
 		file_base_recipe_items = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/base_recipe_items.cfg"))
 		file_base_recipe_modules = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/base_recipe_modules.cfg"))
 		file_playercntl_rephacks = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/playercntl_rephacks.cfg"))
@@ -348,7 +348,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	logus.Log.Info("Parse START for FreelancerFolderLocation=", utils_logus.FilePath(file1path))
 	filesystem := filefind.FindConfigs(file1path)
 	m.filesystem = filesystem
-	m.FreelancerINI = exe_mapped.Read(iniload.NewLoader(filesystem.GetFile(exe_mapped.FILENAME_FL_INI)).Scan())
+	m.FreelancerINI = exe_mapped.Read(iniload.NewLoader32(filesystem.GetFile(exe_mapped.FILENAME_FL_INI)).Scan())
 
 	files_goods := getConfigs(filesystem, m.FreelancerINI.Goods)
 	files_fuses := getConfigs2(filesystem, m.FreelancerINI.Fuses)
@@ -356,24 +356,24 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	files_equip := getConfigs(filesystem, m.FreelancerINI.Equips)
 	files_shiparch := getConfigs(filesystem, m.FreelancerINI.Ships)
 	files_loadouts := getConfigs2(filesystem, m.FreelancerINI.Loadouts)
-	file_universe := iniload.NewLoader(filesystem.GetFile(universe_mapped.FILENAME))
-	file_interface := iniload.NewLoader(filesystem.GetFile(interface_mapped.FILENAME_FL_INI))
-	file_initialworld := iniload.NewLoader(filesystem.GetFile(initialworld.FILENAME))
-	file_empathy := iniload.NewLoader(filesystem.GetFile(empathy_mapped.FILENAME))
-	file_mbases := iniload.NewLoader(filesystem.GetFile(mbases_mapped.FILENAME))
-	file_lootprops := iniload.NewLoader(filesystem.GetFile(lootprops_mapped.FILENAME))
+	file_universe := iniload.NewLoader32(filesystem.GetFile(universe_mapped.FILENAME))
+	file_interface := iniload.NewLoader32(filesystem.GetFile(interface_mapped.FILENAME_FL_INI))
+	file_initialworld := iniload.NewLoader32(filesystem.GetFile(initialworld.FILENAME))
+	file_empathy := iniload.NewLoader32(filesystem.GetFile(empathy_mapped.FILENAME))
+	file_mbases := iniload.NewLoader32(filesystem.GetFile(mbases_mapped.FILENAME))
+	file_lootprops := iniload.NewLoader32(filesystem.GetFile(lootprops_mapped.FILENAME))
 
-	file_consts := iniload.NewLoader(filesystem.GetFile(const_mapped.FILENAME))
-	file_weaponmoddb := iniload.NewLoader(filesystem.GetFile(weaponmoddb.FILENAME))
+	file_consts := iniload.NewLoader32(filesystem.GetFile(const_mapped.FILENAME))
+	file_weaponmoddb := iniload.NewLoader32(filesystem.GetFile(weaponmoddb.FILENAME))
 
-	file_diff2money := iniload.NewLoader(filesystem.GetFile(diff2money.FILENAME))
-	file_npcranktodiff := iniload.NewLoader(filesystem.GetFile(npcranktodiff.FILENAME))
+	file_diff2money := iniload.NewLoader32(filesystem.GetFile(diff2money.FILENAME))
+	file_npcranktodiff := iniload.NewLoader32(filesystem.GetFile(npcranktodiff.FILENAME))
 
-	file_faction_props := iniload.NewLoader(filesystem.GetFile(faction_props_mapped.FILENAME))
-	file_npc_ships := iniload.NewLoader(filesystem.GetFile(npc_ships.FILENAME))
-	file_solararch := iniload.NewLoader(filesystem.GetFile(solararch_mapped.FILENAME))
+	file_faction_props := iniload.NewLoader32(filesystem.GetFile(faction_props_mapped.FILENAME))
+	file_npc_ships := iniload.NewLoader32(filesystem.GetFile(npc_ships.FILENAME))
+	file_solararch := iniload.NewLoader32(filesystem.GetFile(solararch_mapped.FILENAME))
 	files_stararch := getConfigs2(filesystem, m.FreelancerINI.Stars)
-	file_shipclasses := iniload.NewLoader(filesystem.GetFile(shipclasses_mapped.FILENAME))
+	file_shipclasses := iniload.NewLoader32(filesystem.GetFile(shipclasses_mapped.FILENAME))
 	all_files := append(files_goods, files_market...)
 	all_files = append(all_files, files_equip...)
 	all_files = append(all_files, files_shiparch...)
@@ -403,7 +403,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 		m.FLSR = &SiriusRevivalConfig{}
 		flsr_recipes_file := filesystem.GetFile(flsr_recipes.FILENAME0)
 		if flsr_recipes_file != nil {
-			file1 := iniload.NewLoader(flsr_recipes_file).Scan()
+			file1 := iniload.NewLoader64(flsr_recipes_file).Scan()
 			m.FLSR.FLSRRecipes = flsr_recipes.Read([]*iniload.IniLoader{
 				file1,
 			})
@@ -411,9 +411,9 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			flsr_recipes_file1 := filesystem.GetFile(flsr_recipes.FILENAME1)
 			flsr_recipes_file2 := filesystem.GetFile(flsr_recipes.FILENAME2)
 			flsr_recipes_file3 := filesystem.GetFile(flsr_recipes.FILENAME3)
-			file1 := iniload.NewLoader(flsr_recipes_file1).Scan()
-			file2 := iniload.NewLoader(flsr_recipes_file2).Scan()
-			file3 := iniload.NewLoader(flsr_recipes_file3).Scan()
+			file1 := iniload.NewLoader64(flsr_recipes_file1).Scan()
+			file2 := iniload.NewLoader64(flsr_recipes_file2).Scan()
+			file3 := iniload.NewLoader64(flsr_recipes_file3).Scan()
 			m.FLSR.FLSRRecipes = flsr_recipes.Read([]*iniload.IniLoader{
 				file1,
 				file2,
@@ -470,7 +470,7 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 				if !strings.Contains(file.GetFilepath().ToString(), ".ini") {
 					continue
 				}
-				loaded_files = append(loaded_files, iniload.NewLoader(file).Scan())
+				loaded_files = append(loaded_files, iniload.NewLoader32(file).Scan())
 			}
 			m.FLSR.FLSRMissions = flsr_missions.Read(loaded_files)
 		}

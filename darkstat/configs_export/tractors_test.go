@@ -31,7 +31,7 @@ func TestReadCommentsInPlayercntlRephacks(t *testing.T) {
 	test_directory := utils_os.GetCurrrentTestFolder()
 	fileref := file.NewFile(utils_types.FilePath(utils_filepath.Join(test_directory, "playercntl_rephacks.cfg")))
 
-	config_file := iniload.NewLoader(fileref).Scan()
+	config_file := iniload.NewLoader32(fileref).Scan()
 	config_read := playercntl_rephacks.Read(config_file)
 	configs.Discovery.PlayercntlRephacks = config_read
 	exporter := NewExporter(configs)

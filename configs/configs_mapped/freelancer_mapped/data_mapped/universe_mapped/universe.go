@@ -170,7 +170,7 @@ func Read(ini *iniload.IniLoader, filesystem *filefind.Filesystem) *Config {
 			// Read system files with parallelism ^_^
 			iniconfigs_channel := make(chan *FileRead)
 			read_file := func(data *FileRead) {
-				data.ini = inireader.Read(data.file)
+				data.ini = inireader.Read32(data.file)
 				iniconfigs_channel <- data
 			}
 			for base_nickname, file := range base_files {
@@ -210,7 +210,7 @@ func Read(ini *iniload.IniLoader, filesystem *filefind.Filesystem) *Config {
 	//Read Room Infos with parallelism
 	iniconfigs_channel := make(chan *RoomInfoRead)
 	readd_room_info := func(data *RoomInfoRead) {
-		data.ini = inireader.Read(data.file)
+		data.ini = inireader.Read32(data.file)
 		iniconfigs_channel <- data
 	}
 	for _, base := range frelconfig.Bases {
