@@ -253,13 +253,13 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 	var Discovery *DiscoveryConfig
 	if techcom := filesystem.GetFile(DiscoLauncherConfigName); techcom != nil {
 		Discovery = &DiscoveryConfig{}
-		file_techcompat = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/techcompat.cfg"))
+		file_techcompat = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/techcompat.cfg"))
 		file_prices = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/prices.cfg"))
-		file_base_recipe_items = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/base_recipe_items.cfg"))
-		file_base_recipe_modules = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/base_recipe_modules.cfg"))
-		file_playercntl_rephacks = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/playercntl_rephacks.cfg"))
-		file_minecontrol = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/minecontrol.cfg"))
-		file_minecontrol_nodes = iniload.NewLoader(file.NewWebFile(DiscoAPI + "/gameconfigpublic/minecontrol_nodes.cfg"))
+		file_base_recipe_items = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/base_recipe_items.cfg"))
+		file_base_recipe_modules = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/base_recipe_modules.cfg"))
+		file_playercntl_rephacks = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/playercntl_rephacks.cfg"))
+		file_minecontrol = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/minecontrol.cfg"))
+		file_minecontrol_nodes = iniload.NewLoader64(file.NewWebFile(DiscoAPI + "/gameconfigpublic/minecontrol_nodes.cfg"))
 		all_files = append(
 			all_files,
 			file_techcompat,

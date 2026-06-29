@@ -13,10 +13,15 @@ type IniLoader struct {
 	semantic.ConfigModel
 	input_file *file.File
 	*inireader.INIFile
+	bits inireader.BitsInFloat
 }
 
 func NewLoader(input_file *file.File) *IniLoader {
-	fileconfig := &IniLoader{input_file: input_file}
+	fileconfig := &IniLoader{input_file: input_file, bits: inireader.Float32}
+	return fileconfig
+}
+func NewLoader64(input_file *file.File) *IniLoader {
+	fileconfig := &IniLoader{input_file: input_file, bits: inireader.Float64}
 	return fileconfig
 }
 
@@ -33,7 +38,7 @@ func (fileconfig *IniLoader) Scan() *IniLoader {
 		logus.Log.Error("input_file is empty")
 	}
 
-	iniconfig := inireader.Read(fileconfig.input_file)
+	iniconfig := inireader.ReadF(fileconfig.input_file, fileconfig.bits)
 	fileconfig.Init(iniconfig.Sections, iniconfig.Comments, iniconfig.File.GetFilepath())
 	fileconfig.INIFile = iniconfig
 	return fileconfig

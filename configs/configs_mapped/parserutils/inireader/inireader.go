@@ -241,7 +241,7 @@ func NewFailedToReadNumber(input any) error {
 	return FailedToReadNumber{input: input}
 }
 
-func UniParse(input string) (UniValue, error) {
+func UniParse(input string, bits BitsInFloat) (UniValue, error) {
 	letterMatch := regexLetter.FindAllString(input, -1)
 	if len(letterMatch) == 0 {
 		input = strings.ReplaceAll(input, " ", "")
@@ -249,7 +249,8 @@ func UniParse(input string) (UniValue, error) {
 
 	numberMatch := regexNumber.FindAllString(input, -1)
 	if len(numberMatch) > 0 {
-		parsed_number, err := strconv.ParseFloat(input, 32)
+
+		parsed_number, err := strconv.ParseFloat(input, bits.ToInt())
 
 		if err != nil {
 			logus.Log.Warn("failed to read number. Converting to string", typelog.Any("input", input))
@@ -273,8 +274,8 @@ func UniParse(input string) (UniValue, error) {
 }
 
 /*Is it deprecated, eh?*/
-func UniParseF(input string) UniValue {
-	value, err := UniParse(input)
+func UniParseF(input string, bits BitsInFloat) UniValue {
+	value, err := UniParse(input, bits)
 	if err != nil {
 		logus.Log.Fatal("unable to parse UniParseF", typelog.Any("input", input))
 	}
@@ -332,7 +333,28 @@ func isKeyCaseSensetive(key string) bool {
 	return false
 }
 
+type BitsInFloat int8
+
+const (
+	Float32 BitsInFloat = iota
+	Float64
+)
+
+func (b BitsInFloat) ToInt() int {
+	if b == Float32 {
+		return 32
+	}
+	return 64
+}
+
 func Read(fileref *file.File) *INIFile {
+	return ReadF(fileref, Float32)
+}
+func Read64(fileref *file.File) *INIFile {
+	return ReadF(fileref, Float64)
+}
+
+func ReadF(fileref *file.File, bits BitsInFloat) *INIFile {
 	logus.Log.Debug("started reading INIFileRead for", utils_logus.FilePath(fileref.GetFilepath()))
 	config := &INIFile{}
 	config.File = fileref
@@ -373,7 +395,7 @@ func Read(fileref *file.File) *INIFile {
 				panic("expected some splitted values, as formerly accessed splitted_values[0] here")
 			}
 			for index, value := range splitted_values {
-				univalue, err := UniParse(value)
+				univalue, err := UniParse(value, bits)
 				if _, ok := err.(FailedToReadNumber); ok {
 					logus.Log.CheckWarn(err,
 						"failed to parse number at file.Read, line="+line,
