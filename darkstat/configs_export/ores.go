@@ -270,18 +270,30 @@ func (e *Exporter) NewOreBase(
 				recipe_produces_only_commodities := true
 
 				for _, produced := range recipe.ProducedItem {
-
 					_, is_commodity := e.Mapped.Equip().CommoditiesMap[produced.Nickname.Get()]
 					if !is_commodity {
 						recipe_produces_only_commodities = false
 						break
 					}
-
+					for _, produced := range produced.FactionProduced {
+						_, is_commodity := e.Mapped.Equip().CommoditiesMap[produced.Nickname.Get()]
+						if !is_commodity {
+							recipe_produces_only_commodities = false
+							break
+						}
+					}
 				}
 
 				if recipe_produces_only_commodities {
+					var commodity_produceds []string
 					for _, produced := range recipe.ProducedItem {
-						commodity_produced := produced.Nickname.Get()
+						commodity_produceds = append(commodity_produceds, produced.Nickname.Get())
+						for _, produced := range produced.FactionProduced {
+							commodity_produceds = append(commodity_produceds, produced.Nickname.Get())
+						}
+					}
+
+					for _, commodity_produced := range commodity_produceds {
 
 						if _, ok := added_goods[commodity_produced]; ok {
 							continue
