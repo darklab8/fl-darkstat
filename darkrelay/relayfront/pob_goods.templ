@@ -217,9 +217,13 @@ func BuysKiloVolumes(
 		cargo_space_left_f64 = float64(*cargo_space_left)
 	}
 
+	volume_multiplier := good_volume / original_volume
+	volume_left := cargo_space_left_f64 * volume_multiplier
+	volume_left_by_stock := (float64(ShopItem.MaxStock-ShopItem.Quantity) * good_volume)
+
 	kilo_volume := math.Min(
 		configs_export.MaxKilVolumes,
-		math.Min(cargo_space_left_f64*good_volume/original_volume, (good_volume*float64(ShopItem.MaxStock-ShopItem.Quantity)))/configs_export.KiloVolume,
+		math.Min(volume_left, volume_left_by_stock)/configs_export.KiloVolume,
 	)
 	if base_money != nil {
 		base_has_moner_for_vol := (ShopItem.Volume * float64(*base_money) / float64(ShopItem.PriceBaseBuysFor) / configs_export.KiloVolume)

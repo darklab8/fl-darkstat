@@ -25,6 +25,8 @@ func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) f
 	}
 
 	if selling_good.PoBGood != nil {
+		volume_multiplier := selling_good.Volume / selling_good.PoBGood.OriginalVolume
+
 		if selling_good.PoBGood.Quantity >= selling_good.PoBGood.MaxStock {
 			selling_kilo_volume = 0
 		} else {
@@ -37,7 +39,7 @@ func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) f
 		}
 
 		if selling_good.PoB.CargoSpaceLeft != nil {
-			selling_kilo_volume = math.Min(float64(*selling_good.PoB.CargoSpaceLeft)/KiloVolume, selling_kilo_volume)
+			selling_kilo_volume = math.Min((float64(*selling_good.PoB.CargoSpaceLeft)*volume_multiplier)/KiloVolume, selling_kilo_volume)
 		}
 	}
 
