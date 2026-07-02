@@ -44,11 +44,25 @@ function makeTopBottomTablesResizable() { // eslint-disable-line no-unused-vars
 
         element_top.height_perc = new_top_height
         element_bottom.height_perc = new_bottom_height
+        sessionStorage.setItem("top_bottom_table_top_height", new_top_height);
+        sessionStorage.setItem("top_bottom_table_bottom_height", new_bottom_height);
     }
 
     function stopResize1() {
         window.removeEventListener('mousemove', resize1)
     }
+    addEventListener("htmx:afterSettle", (event) => {
+        if (sessionStorage.getItem("top_bottom_table_top_height")) {
+            new_top_height = sessionStorage.getItem("top_bottom_table_top_height");
+            element_top.style.height = "calc(" + new_top_height + "% - 7px)";
+            element_top.height_perc = new_top_height
+        }
+        if (sessionStorage.getItem("top_bottom_table_bottom_height")) {
+            new_bottom_height = sessionStorage.getItem("top_bottom_table_bottom_height");
+            element_bottom.style.height = "calc(" + new_bottom_height + "% - 7px)";
+            element_bottom.height_perc = new_bottom_height
+        }
+    })
 }
 
 function makeLeftRightTablesResizable() { // eslint-disable-line no-unused-vars
@@ -86,9 +100,22 @@ function makeLeftRightTablesResizable() { // eslint-disable-line no-unused-vars
 
         element_left.style.width = new_left_width + "%";
         element_right.style.width = new_right_width + "%";
+        sessionStorage.setItem("left_right_resize_left_width", new_left_width);
+        sessionStorage.setItem("left_right_resize_right_width", new_right_width);
     }
 
     function stopResize() {
         window.removeEventListener('mousemove', resize)
     }
+
+    addEventListener("htmx:afterSettle", (event) => {
+        if (sessionStorage.getItem("left_right_resize_left_width")) {
+            new_left_width = sessionStorage.getItem("left_right_resize_left_width");
+            element_left.style.width = new_left_width + "%";
+        }
+        if (sessionStorage.getItem("left_right_resize_right_width")) {
+            new_right_width = sessionStorage.getItem("left_right_resize_right_width");
+            element_right.style.width = new_right_width + "%";
+        }
+    })
 }
