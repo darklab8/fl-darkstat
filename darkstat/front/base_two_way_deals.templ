@@ -202,8 +202,10 @@ templ TwoWayTradesTable(
 							configs_export.KiloVolumesDeliverable(two_way.Route2.Transport.BuyingGood, two_way.Route2.Transport.SellingGood),
 						))
 						@FormatDockPerms(configs_export.DockingPermissions(
-							two_way.Route1.Transport.BuyingGood, two_way.Route2.Transport.SellingGood,
-							two_way.Route2.Transport.BuyingGood, two_way.Route2.Transport.SellingGood,
+							two_way.Route1.Transport.BuyingGood,
+							two_way.Route1.Transport.SellingGood,
+							two_way.Route2.Transport.BuyingGood,
+							two_way.Route2.Transport.SellingGood,
 						))
 					}
 					<td class="seo">
