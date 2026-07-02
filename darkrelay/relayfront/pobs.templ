@@ -49,6 +49,9 @@ templ PoBTableHeaders() {
 	<th style="width:25px;">
 		@frmt.MultiLinestring([]string{"Nav", "Map"})
 	</th>
+	<th style="width:25px;">
+		@frmt.MultiLinestring([]string{"dock", "perm"})
+	</th>
 	<th style="width:25px;">Pos</th>
 	<th style="width:25px;">Level</th>
 	<th style="width:25px;">Money</th>
@@ -86,6 +89,7 @@ templ PobTableRow(pob *configs_export.PoBCore) {
 	<td>
 		@front.NavMapPob(pob)
 	</td>
+	@front.FormatDockPerms(configs_export.DockingPermissionsPoB(pob))
 	<td>{ FmtPtrString(pob.Pos) } </td>
 	<td>{ FmtPtrInt(pob.Level) }</td>
 	<td>{ FmtPtrInt(pob.Money) }</td>

@@ -37,10 +37,11 @@ func (e *Exporter) ExportInfocards(nickname infocarder.InfocardKey, infocard_ids
 }
 
 type ExporterRelay struct {
-	Mapped   *configs_mapped.MappedConfigs
-	hashes   HashesByCat
-	PoBs     []*PoB
-	PoBGoods []*PoBGood
+	Mapped     *configs_mapped.MappedConfigs
+	hashes     HashesByCat
+	PoBs       []*PoB
+	PoBGoods   []*PoBGood
+	PoBsByNick map[string]*PoB
 
 	*infocarder.Infocarder
 }
@@ -97,6 +98,7 @@ func NewExporter(mapped *configs_mapped.MappedConfigs, opts ...OptExport) *Expor
 		Mapped:      mapped,
 		ship_speeds: trades.VanillaSpeeds,
 		ExporterRelay: &ExporterRelay{
+			PoBsByNick: make(map[string]*PoB),
 			Infocarder: infocarder.NewInfocarder(),
 			Mapped:     mapped,
 			hashes:     NewHashesCategories(mapped),
@@ -172,15 +174,18 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 	e.useful_bases_by_nick[pob_crafts_nickname] = true
 	e.useful_bases_by_nick[BaseLootableNickname] = true
 
+	if e.Mapped.Discovery != nil {
+		e.PoBs = e.GetPoBs()
+		e.PoBGoods = e.GetPoBGoods(e.PoBs)
+		for _, pob := range e.PoBs {
+			e.PoBsByNick[pob.Nickname] = pob
+		}
+	}
+
 	e.Commodities = e.GetCommodities(ctx)
 	EnhanceBasesWithServerOverrides(e.Bases, e.Commodities)
 	e.MiningOperations = e.GetOres(ctx, e.Commodities, true, WithCraftOreRoutes(false))
 	e.MiningOperationsWithCrafts = e.GetOres(ctx, e.Commodities, true, WithCraftOreRoutes(true))
-	if e.Mapped.Discovery != nil {
-		e.PoBs = e.GetPoBs()
-
-		e.PoBGoods = e.GetPoBGoods(e.PoBs)
-	}
 
 	extra_graph_bases := make(map[string][]trades.ExtraBase)
 	for _, base := range e.MiningOperations {

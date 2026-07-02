@@ -145,6 +145,9 @@ templ PoBGoodPobsShared() {
 				<th style="width:75px;">
 					@frmt.MultiLinestring([]string{"Base buys", "your kilo", "volumes"})
 				</th>
+				<th style="width:25px;">
+					@frmt.MultiLinestring([]string{"dock", "perm"})
+				</th>
 				<th style="width:10px;">Min Stock</th>
 				<th style="width:10px;">Max Stock</th>
 				@PoBTableHeaders()
@@ -182,6 +185,7 @@ templ PoBGoodPobs(good *configs_export.PoBGood) {
 				@FormatPoBSells(pob.ShopItem)
 				<td>{ SellsKiloVolumes(pob.ShopItem, good.Volume, pob.Base.Money) }</td>
 				<td>{ BuysKiloVolumes(pob.ShopItem, good.Volume, good.OriginalVolume, pob.Base.CargoSpaceLeft, pob.Base.Money) } </td>
+				@front.FormatDockPerms(configs_export.DockingPermissionsPoB(pob.Base))
 				<td>{ strconv.Itoa(pob.ShopItem.MinStock) }</td>
 				<td>{ strconv.Itoa(pob.ShopItem.MaxStock) }</td>
 				@PobTableRow(pob.Base)

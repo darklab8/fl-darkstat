@@ -101,6 +101,9 @@ templ TwoWayTradesTable(
 					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"min kilo", "volumes", "to trade"})
 					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"dock", "perm"})
+					</th>
 				}
 				<th style="width:25px;">
 					Factions involved
@@ -197,6 +200,10 @@ templ TwoWayTradesTable(
 						@FormatKiloVolumes(math.Min(
 							configs_export.KiloVolumesDeliverable(two_way.Route1.Transport.BuyingGood, two_way.Route2.Transport.SellingGood),
 							configs_export.KiloVolumesDeliverable(two_way.Route2.Transport.BuyingGood, two_way.Route2.Transport.SellingGood),
+						))
+						@FormatDockPerms(configs_export.DockingPermissions(
+							two_way.Route1.Transport.BuyingGood, two_way.Route2.Transport.SellingGood,
+							two_way.Route2.Transport.BuyingGood, two_way.Route2.Transport.SellingGood,
 						))
 					}
 					<td class="seo">

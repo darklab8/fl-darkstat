@@ -72,6 +72,9 @@ type PoBCore struct {
 	Region         *string     `json:"region_name"`
 	IsFallbackInfo bool        `json:"is_fallback_info"`
 	IsHardcodedPoB bool
+
+	HasDockFriendlyFactions bool
+	HasDockEnemyFactions    bool
 }
 
 // also known as Player Base Station
@@ -365,15 +368,18 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		is_fallback := false
 		var pob *PoB
 		if ok {
+
 			pob = &PoB{
 				PoBCore: PoBCore{
-					Nickname:       pob_info.Nickname,
-					Name:           pob_info.HtmlEscapedName,
-					Pos:            pob_info.Pos,
-					Level:          pob_info.Level,
-					Money:          pob_info.Money,
-					Health:         pob_info.Health,
-					CargoSpaceLeft: pob_info.CargoSpaceLeft,
+					Nickname:                pob_info.Nickname,
+					Name:                    pob_info.HtmlEscapedName,
+					Pos:                     pob_info.Pos,
+					Level:                   pob_info.Level,
+					Money:                   pob_info.Money,
+					Health:                  pob_info.Health,
+					CargoSpaceLeft:          pob_info.CargoSpaceLeft,
+					HasDockFriendlyFactions: len(pob_info.AllyFactionHashList) > 0,
+					HasDockEnemyFactions:    len(pob_info.HostileFactionHashList) > 0,
 				},
 			}
 		} else {

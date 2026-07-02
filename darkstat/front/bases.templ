@@ -1173,6 +1173,9 @@ templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"kilo", "volumes", "to trade"})
 					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"dock", "perm"})
+					</th>
 				}
 				<th style="width:50px;">
 					@frmt.MultiLinestring([]string{types.ToCapital(shared.ShipNames.Transport), "Time(sec)"})
@@ -1281,6 +1284,14 @@ templ BaseTradesTo(name string, base *configs_export.Base, tab_mode BaseMode, sh
 	}
 }
 
+templ FormatDockPerms(dock_access configs_export.DockPerms) {
+	<td
+		style={ fmt.Sprintf("background: %s", dock_access.TypeToColor()) }
+	>
+		{ dock_access.ToStr() }
+	</td>
+}
+
 templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.SharedData, tab_mode BaseMode) {
 	<tr
 		hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
@@ -1302,6 +1313,7 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 		}
 		if shared.ShowDisco {
 			@FormatKiloVolumes(configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
+			@FormatDockPerms(configs_export.DockingPermissions(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
 		}
 		<td>
 			<span class="tooltip">

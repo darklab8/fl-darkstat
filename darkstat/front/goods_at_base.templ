@@ -23,6 +23,9 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"For", "tran", "sports"})
 					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"dock", "perm"})
+					</th>
 				}
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Nav", "Map"})
@@ -139,6 +142,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 					<td>
 						{ strconv.FormatBool(base_info.IsTransportReachable) }
 					</td>
+					@FormatDockPerms(configs_export.DockingPermissions(base_info))
 				}
 				<td>
 					@NavMapMarketGood(base_info)

@@ -389,6 +389,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 
 	for _, good := range goods_per_base {
 		good.GoodInfo = e.GetGoodInfo(commodity.Nickname)
+		good.PoB = e.PoBsByNick[string(good.BaseNickname)]
 	}
 
 	for base_nickname, good := range goods_per_base {
