@@ -160,6 +160,10 @@ func Read(input_file *iniload.IniLoader) *Config {
 		}
 		for _, produced := range recipe.ProducedItem {
 			conf.RecipePerProduced[produced.Nickname.Get()] = append(conf.RecipePerProduced[produced.Nickname.Get()], recipe)
+
+			for _, produced_aff := range produced.FactionProduced {
+				conf.RecipePerProduced[produced_aff.Nickname.Get()] = append(conf.RecipePerProduced[produced_aff.Nickname.Get()], recipe)
+			}
 		}
 	}
 
