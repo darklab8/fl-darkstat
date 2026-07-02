@@ -36,6 +36,9 @@ func KiloVolumesDeliverable(buying_good *MarketGood, selling_good *MarketGood) f
 			selling_kilo_volume = math.Min(base_has_moner_for_vol, selling_kilo_volume)
 		}
 
+		if selling_good.PoB.CargoSpaceLeft != nil {
+			selling_kilo_volume = math.Min(float64(*selling_good.PoB.CargoSpaceLeft)/KiloVolume, selling_kilo_volume)
+		}
 	}
 
 	return math.Min(MaxKilVolumes, math.Min(buying_kilo_volume, selling_kilo_volume))
