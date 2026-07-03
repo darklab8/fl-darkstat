@@ -54,6 +54,8 @@ type DarkstatEnvVars struct {
 	IsExpermentalMapWithDarkstatOn bool
 	MapByUrl                       string
 
+	DisableDiscoPriceOverrides bool
+
 	DefaultTheme string
 
 	Enver *enverant.Enverant
@@ -107,6 +109,8 @@ func init() {
 
 		IsExpermentalMapWithDarkstatOn: env.GetBoolOr("EXPERIMENTAL_MAP_ON", *darkflag.IsMapRunWithDarkstatEnabled, enverant.WithDesc("enabled map as part of darkstat. VERY EXPERIMENTAL: may lead to drastic CPU and RAM performance issues, running `map web` separately is recommended. PERFORMANCE HEAVY. by default off. use `map web` if u wish to turn it on faster")),
 		MapByUrl:                       env.GetStrOr("MAP_BY_URL", "", enverant.WithDesc("If there is deployment of darkmap, or any other map, link here its url")),
+
+		DisableDiscoPriceOverrides: env.GetBoolOr("DISABLE_DISCO_PRICE_OVERRIDES", *darkflag.DisableDiscoPriceOverrides, enverant.WithDesc("Disable disco price overrides")),
 
 		DefaultTheme: theme.ParseDefaultThemeName(env.GetStr("DEFAULT_THEME", enverant.OrStr(strings.TrimSpace(*darkflag.StatDefaultTheme)), enverant.WithDesc("default shell theme for index.html redirect: white, dark, or vanilla (same as -stat-default-theme). localStorage darkstat-theme overrides when set"))).ToNick(),
 	}

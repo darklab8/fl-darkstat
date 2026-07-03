@@ -11,6 +11,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/fl-darkstat/darkstat/settings"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -303,7 +304,7 @@ func (e *Exporter) GetAtBasesSold(commodity GetCommodityAtBasesInput) map[cfg.Ba
 		goods_per_base[base_info.BaseNickname] = base_info
 	}
 
-	if e.Mapped.Discovery != nil {
+	if e.Mapped.Discovery != nil && !settings.Env.DisableDiscoPriceOverrides {
 		serverside_overrides := e.ServerSideMarketGoodsOverrides(commodity)
 		for _, item := range serverside_overrides {
 			goods_per_base[item.BaseNickname] = item

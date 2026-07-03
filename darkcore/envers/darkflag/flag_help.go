@@ -34,6 +34,7 @@ var (
 	StatDefaultTheme = flag.String("stat-default-theme", "vanilla", "default shell theme for index.html redirect: white, dark, or vanilla. localStorage darkstat-theme overrides when set. flags before web or build")
 
 	IsMapRunWithDarkstatEnabled = flag.Bool("map-on", false, "flag to turn on map as part of darkstat. PERFORMANCE HEAVY. use standalone map through `map web` or `map build` command if u wish it faster and with less resources")
+	DisableDiscoPriceOverrides  = flag.Bool("stat-disable-disco-price-overrides", false, "flag to off disco price overrides")
 
 	// TODO some day to delete as DEPRECATED
 	DeprecatedIsMapRunWithDarkstatEnabled = flag.Bool("experimental-map-on", false, "DEPRECATED. use --map-on flag instead")
