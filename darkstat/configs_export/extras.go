@@ -112,3 +112,21 @@ func (e *Exporter) FilterToUsefulItems(cms []ExtraItem) []ExtraItem {
 	}
 	return useful_items
 }
+
+func MoneyColor(money_mils float64) string {
+
+	if money_mils < 1 {
+		return "rgba(255,0,0,0.3)"
+	}
+	if money_mils < 3 {
+		return "rgba(255, 145, 0, 0.3)"
+	}
+	if money_mils < 5 {
+		return "rgba(251, 255, 0, 0.3)"
+	}
+	if money_mils < 10 {
+		return "rgba(157, 255, 0, 0.3)"
+	}
+
+	return "rgba(0,255,0,0.3)"
+}

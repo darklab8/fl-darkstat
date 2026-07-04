@@ -1171,6 +1171,9 @@ templ BaseTradesShared(shared *types.SharedData, tab_mode BaseMode) {
 				}
 				if shared.ShowDisco {
 					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"fund", "sell", "$mils"})
+					</th>
+					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"kilo", "volumes", "to trade"})
 					</th>
 					<th style="width:25px;">
@@ -1292,6 +1295,58 @@ templ FormatDockPerms(dock_access configs_export.DockPerms) {
 	</td>
 }
 
+func FundsAvailablePickBase(a, b *configs_export.MarketGood) *configs_export.MarketGood {
+
+	// if both not pobs is good
+	if a.PoB == nil && b.PoB == nil {
+		return a
+	}
+
+	// if one of them unknown money it is worst
+	if a.PoB != nil {
+		if a.PoB.Money == nil {
+			return a
+		}
+	}
+	if b.PoB != nil {
+		if b.PoB.Money == nil {
+			return b
+		}
+	}
+
+	// one of them can be not pob, show only their money then
+	if b.PoB != nil && a.PoB == nil {
+		return b
+	}
+	if a.PoB != nil && b.PoB == nil {
+		return a
+	}
+
+	// otherwise show min money across both pobs
+	if *a.PoB.Money < *b.PoB.Money {
+		return a
+	}
+	return b
+}
+
+templ FormatFundsAvailable(selling_good *configs_export.MarketGood) {
+	if selling_good.PoB == nil {
+		<td style={ "background: rgba(0,255,0,0.3)" }>nil</td>
+	} else {
+		if selling_good.PoB.Money == nil {
+			<td
+				style={ "background: rgba(255,0,0,0.3)" }
+			>unk </td>
+		} else {
+			<td
+				style={ fmt.Sprintf("background: %s", configs_export.MoneyColor(float64(*selling_good.PoB.Money)/1_000_000)) }
+			>
+				{ fmt.Sprintf("%dm", *selling_good.PoB.Money/1_000_000) }
+			</td>
+		}
+	}
+}
+
 templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.SharedData, tab_mode BaseMode) {
 	<tr
 		hx-get={ types.GetCtx(ctx).SiteRoot + RouteUrl(trade_route.Transport.Route) }
@@ -1312,6 +1367,7 @@ templ TradeRouteRow(trade_route *configs_export.ComboTradeRoute, shared *types.S
 			<td class="route_freighter">{ FormatProfitPerTime(trade_route.Freighter.GetProffitPerTime()) }</td>
 		}
 		if shared.ShowDisco {
+			@FormatFundsAvailable(trade_route.Transport.SellingGood)
 			@FormatKiloVolumes(configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
 			@FormatDockPerms(configs_export.DockingPermissions(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
 		}

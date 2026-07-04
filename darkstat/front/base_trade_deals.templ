@@ -154,6 +154,9 @@ templ OneWayShared(shared *types.SharedData) {
 				<th style="width:50px;">Profit/v</th>
 				if shared.ShowDisco {
 					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"fund", "sell", "$mils"})
+					</th>
+					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"kilo", "volumes", "to trade"})
 					</th>
 					<th style="width:25px;">
@@ -282,6 +285,7 @@ templ OneWayRow(trade_route *configs_export.TradeDeal, shared *types.SharedData,
 		</td>
 		<td>{ fmt.Sprintf("%.2f", configs_export.GetPricePerVoume(trade_route.Transport.SellingGood.GetPriceBaseBuysFor() - trade_route.Transport.BuyingGood.PriceBaseSellsFor, trade_route.Transport.BuyingGood.Volume)) }</td>
 		if shared.ShowDisco {
+			@FormatFundsAvailable(trade_route.Transport.SellingGood)
 			@FormatKiloVolumes(configs_export.KiloVolumesDeliverable(trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood))
 			@FormatDockPerms(configs_export.DockingPermissions(
 				trade_route.Transport.BuyingGood, trade_route.Transport.SellingGood,

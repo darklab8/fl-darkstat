@@ -99,6 +99,9 @@ templ TwoWayTradesTable(
 				}
 				if shared.ShowDisco {
 					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"fund", "sell", "$mils"})
+					</th>
+					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"min kilo", "volumes", "to trade"})
 					</th>
 					<th style="width:25px;">
@@ -197,6 +200,7 @@ templ TwoWayTradesTable(
 						</td>
 					}
 					if shared.ShowDisco {
+						@FormatFundsAvailable(FundsAvailablePickBase(two_way.Route1.Transport.SellingGood, two_way.Route2.Transport.SellingGood))
 						@FormatKiloVolumes(math.Min(
 							configs_export.KiloVolumesDeliverable(
 								two_way.Route1.Transport.BuyingGood,
