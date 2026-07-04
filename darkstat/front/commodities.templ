@@ -63,7 +63,7 @@ templ CommodityTable(commodities []*configs_export.Commodity, pinm tab.PinMod, s
 		<tbody>
 			for _, commodity := range commodities {
 				@tab.TrFromMainTb(commodity.Nickname, GoodAtBaseInfoTUrl(commodity), pinm) {
-					@tab.PinTd(commodity.Nickname, commodity.Name+frmt.FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
+					@tab.PinTd(commodity.Nickname, NamePlusInfocardName(commodity.Name, commodity.Nickname, shared)+frmt.FormattedShipClassOfCommodity(commodity.ShipClass), pinm)
 					@tab.PinSelectLeftRight(pinm, GoodAtBaseInfoTUrl(commodity))
 					<td>{ strconv.Itoa(commodity.PriceBestBaseSellsFor) }</td>
 					<td>{ strconv.Itoa(commodity.PriceBestBaseBuysFor) }</td>

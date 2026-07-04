@@ -46,7 +46,7 @@ templ ScannerTable(scanners []configs_export.Scanner, pinm tab.PinMod, shared *t
 		<tbody>
 			for _, scanner := range scanners {
 				@tab.TrFromMainTb(scanner.Nickname, ScannerDetailedUrl(scanner), pinm) {
-					@tab.PinTd(scanner.Nickname, scanner.Name, pinm)
+					@tab.PinTd(scanner.Nickname, NamePlusInfocardName(scanner.Name, scanner.Nickname, shared), pinm)
 					@tab.PinSelectLeftRight(pinm, ScannerDetailedUrl(scanner))
 					@disco.TdDisco(shared, scanner.Nickname, scanner.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(scanner.Price) } </td>

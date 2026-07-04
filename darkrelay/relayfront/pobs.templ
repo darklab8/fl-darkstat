@@ -218,7 +218,7 @@ templ PoBShopItemsShared() {
 	</table>
 }
 
-templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpaceLeft *int, Money *int) {
+templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpaceLeft *int, Money *int, shared *types.SharedData) {
 	<div class="bottom_name">
 		{ name },
 		@tab.PageTime()
@@ -235,7 +235,7 @@ templ PoBShopItems(name string, shop_items []*configs_export.ShopItem, CargoSpac
 			>
 				<td>
 					@frmt.WriteLimit(200) {
-						{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
+						{ front.NamePlusInfocardName(good.Name, good.Nickname, shared) + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
 					}
 				</td>
 				<td>

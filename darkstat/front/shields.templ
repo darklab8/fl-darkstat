@@ -62,7 +62,7 @@ templ ShieldTable(shields []configs_export.Shield, pinm tab.PinMod, shared *type
 		<tbody>
 			for _, shield := range shields {
 				@tab.TrFromMainTb(shield.Nickname, ShieldDetailedUrl(shield), pinm) {
-					@tab.PinTd(shield.Nickname, shield.Name, pinm)
+					@tab.PinTd(shield.Nickname, NamePlusInfocardName(shield.Name, shield.Nickname, shared), pinm)
 					@tab.PinSelectLeftRight(pinm, ShieldDetailedUrl(shield))
 					@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, shield.Nickname))
 					<td>{ shield.Class }</td>

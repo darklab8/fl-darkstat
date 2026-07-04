@@ -49,7 +49,7 @@ templ ThrustersTable(thrusters []configs_export.Thruster, pinm tab.PinMod, share
 		<tbody>
 			for _, thruster := range thrusters {
 				@tab.TrFromMainTb(thruster.Nickname, ThrusterDetailedUrl(thruster), pinm) {
-					@tab.PinTd(thruster.Nickname, thruster.Name, pinm)
+					@tab.PinTd(thruster.Nickname, NamePlusInfocardName(thruster.Name, thruster.Nickname, shared), pinm)
 					@tab.PinSelectLeftRight(pinm, ThrusterDetailedUrl(thruster))
 					@disco.TdDisco(shared, thruster.Nickname, thruster.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(thruster.Price) } </td>

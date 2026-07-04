@@ -63,7 +63,7 @@ templ EnginesTable(engines []configs_export.Engine, pinm tab.PinMod, shared *typ
 		<tbody>
 			for _, engine := range engines {
 				@tab.TrFromMainTb(engine.Nickname, EngineDetailedUrl(engine), pinm) {
-					@tab.PinTd(engine.Nickname, engine.Name, pinm)
+					@tab.PinTd(engine.Nickname, NamePlusInfocardName(engine.Name, engine.Nickname, shared), pinm)
 					@tab.PinSelectLeftRight(pinm, EngineDetailedUrl(engine))
 					@disco.TdDiscoTarget(shared, disco.GetTdDiscoCacheKey(shared, engine.Nickname))
 					<td>{ strconv.Itoa(engine.Price) } </td>

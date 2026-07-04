@@ -56,7 +56,7 @@ templ CmTable(cms []configs_export.CounterMeasure, pinm tab.PinMod, shared *type
 		<tbody>
 			for _, cm := range cms {
 				@tab.TrFromMainTb(cm.Nickname, CounterMeasreDetailedUrl(cm), pinm) {
-					@tab.PinTd(cm.Nickname, cm.Name, pinm)
+					@tab.PinTd(cm.Nickname, NamePlusInfocardName(cm.Name, cm.Nickname, shared), pinm)
 					@tab.PinSelectLeftRight(pinm, CounterMeasreDetailedUrl(cm))
 					@disco.TdDisco(shared, cm.Nickname, cm.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(cm.Price) } </td>

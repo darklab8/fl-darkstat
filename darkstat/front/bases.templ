@@ -796,7 +796,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 								} else {
 									<span>
 										@frmt.WriteLimit(200) {
-											{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
+											{ NamePlusInfocardName(good.Name, good.Nickname, shared) + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
 										}
 									</span>
 								}
@@ -804,7 +804,7 @@ templ BaseMarketGoods(name string, goods map[configs_export.CommodityKey]*config
 						</div>
 					} else {
 						@frmt.WriteLimit(200) {
-							{ good.Name + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
+							{ NamePlusInfocardName(good.Name, good.Nickname, shared) + frmt.FormattedShipClassOfCommodity(good.ShipClass) }
 						}
 					}
 				</td>

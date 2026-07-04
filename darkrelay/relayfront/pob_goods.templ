@@ -62,7 +62,7 @@ templ PoBGoodsTable(pob_goods []*configs_export.PoBGood, pinm tab.PinMod, shared
 		<tbody>
 			for _, good := range pob_goods {
 				@tab.TrFromMainTb2(tab.NewTr(good.Nickname, PoBGoodDetailedUrl(good), pinm, tab.WithFromRelay()), false) {
-					@tab.PinTd(good.Nickname, good.Name+frmt.FormattedShipClassOfCommodity(good.ShipClass), pinm)
+					@tab.PinTd(good.Nickname, front.NamePlusInfocardName(good.Name, good.Nickname, shared)+frmt.FormattedShipClassOfCommodity(good.ShipClass), pinm)
 					@tab.PinSelectLeftRight(pinm, PoBGoodDetailedUrl(good))
 					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					<td>

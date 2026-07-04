@@ -61,7 +61,7 @@ templ AmmoTable(ammos []configs_export.Ammo, pinm tab.PinMod, shared *types.Shar
 		<tbody>
 			for _, ammo := range ammos {
 				@tab.TrFromMainTb(ammo.Nickname, AmmoDetailedUrl(ammo), pinm) {
-					@tab.PinTd(ammo.Nickname, ammo.Name, pinm)
+					@tab.PinTd(ammo.Nickname, NamePlusInfocardName(ammo.Name, ammo.Nickname, shared), pinm)
 					@tab.PinSelectLeftRight(pinm, AmmoDetailedUrl(ammo))
 					// @TdDisco(shared, ammo.Nickname, ammo.DiscoveryTechCompat) // techcompat is not active for ammo
 					<td>{ strconv.Itoa(ammo.Price) } </td>

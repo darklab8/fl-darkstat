@@ -87,7 +87,7 @@ templ MinesTable(mines []configs_export.Mine, pinm tab.PinMod, shared *types.Sha
 		<tbody>
 			for _, mine := range mines {
 				@tab.TrFromMainTb(mine.Nickname, MineDetailedUrl(mine), pinm) {
-					@tab.PinTd(mine.Nickname, mine.Name, pinm)
+					@tab.PinTd(mine.Nickname, NamePlusInfocardName(mine.Name, mine.Nickname, shared), pinm)
 					@tab.PinSelectLeftRight(pinm, MineDetailedUrl(mine))
 					@disco.TdDisco(shared, mine.Nickname, mine.DiscoveryTechCompat)
 					<td>{ strconv.Itoa(mine.Price) } </td>
