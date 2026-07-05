@@ -6,6 +6,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"strconv"
 
 	"github.com/darklab8/fl-darkstat/darkmap/front/map_urls"
 	"github.com/darklab8/fl-darkstat/darkmap/types"
@@ -227,6 +228,22 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 						{ children... }
 					</map->
 				</div>
+				<grid-labels- class="gridLabels">
+					<div class="hzGridLabels">
+						for index, i := range GridRows {
+							<h3 class="hzGridLabel" style={ fmt.Sprintf("top: %.1f%%", 100*float64(index+1)/8.0) }>
+								{ strconv.Itoa(i) }
+							</h3>
+						}
+					</div>
+					<div class="vertGridLabels">
+						for index, i := range GridColumns {
+							<h3 class="vertGridLabel" style={ fmt.Sprintf("left: %.1f%%", 100*float64(index+1)/8.0) }>
+								{ string(i) }
+							</h3>
+						}
+					</div>
+				</grid-labels->
 			</div>
 		</map-with-interface->
 	</background->

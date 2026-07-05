@@ -757,12 +757,12 @@ encounter- {
 
     .panzoom-parent-system {
         height: 100%;
-        width: 100%;
+        width: 100vh;
     }
 
     .panzoom {
         height: 100%;
-        width: 100vh;
+        width: 100%;
     }
 }
 

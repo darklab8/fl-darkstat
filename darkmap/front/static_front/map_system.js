@@ -1,6 +1,7 @@
 function InstallSystem() {
     highlightFromQuery();
     InstallPanzoom(false);
+    InstallGridLabelsPanzoom();
     InstallMenu();
     InstallLabelOverlapper();
 }
