@@ -8,7 +8,6 @@ import (
 	"github.com/darklab8/fl-darkstat/darkmap/types"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"math"
-	"strconv"
 	"strings"
 )
 
@@ -26,19 +25,11 @@ templ System(system *export_map.System, data *export_map.Export) {
 				{ system.Nickname }
 			</div>
 			<grid- class="grid">
-				for index, i := range GridRows {
-					<div class="hzGridLine" style={ fmt.Sprintf("display: block; top: %.1f%%", 100*float64(index+1)/8.0) }>
-						<h3 style="transform: translateX(0px);">
-							{ strconv.Itoa(i) }
-						</h3>
-					</div>
+				for index, _ := range GridRows {
+					<div class="hzGridLine" style={ fmt.Sprintf("display: block; top: %.1f%%", 100*float64(index+1)/8.0) }></div>
 				}
-				for index, i := range GridColumns {
-					<div class="vertGridLine" style={ fmt.Sprintf("display: block; left: %.1f%%", 100*float64(index+1)/8.0) }>
-						<h3 style="transform: translateX(0px);">
-							{ string(i) }
-						</h3>
-					</div>
+				for index, _ := range GridColumns {
+					<div class="vertGridLine" style={ fmt.Sprintf("display: block; left: %.1f%%", 100*float64(index+1)/8.0) }></div>
 				}
 				<h3 id="nullGridCell" style="display: block;">A1</h3>
 				<div class="mapScale arrows">
