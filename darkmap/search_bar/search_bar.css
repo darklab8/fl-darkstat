@@ -53,10 +53,10 @@ search-bar- {
     /* background: #071828; */
     background: #000 url(../static/nnwall.jpg) repeat scroll 0% 0%;
     color: #e8f4f8;
-    border: 1px solid #1EA6C5;
     border-radius: 0;
     outline: none;
     transition: border-color .12s, box-shadow .12s;
+    border: none;
 }
 
 #search-input:focus {
