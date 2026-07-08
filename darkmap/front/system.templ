@@ -54,6 +54,12 @@ templ SystemContents(system *export_map.System) {
 				onclick="updateQuery(this)"
 				id={ obj.Nickname }
 				data-nickname={ obj.Nickname }
+				data-pos-rel={
+					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+						SystemToOriginalPerc(obj.Pos.Z, system),
+						SystemToOriginalPerc(obj.Pos.X, system),
+					),
+				}
 				class={ fmt.Sprintf("jumphole %s", obj.Kind.ToStr()), }
 				style={
 					fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
@@ -83,6 +89,12 @@ templ SystemContents(system *export_map.System) {
 			data-shape={ obj.ShapeName }
 			data-rotate={ fmt.Sprintf("%.1f,%.1f,%.1f", obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) }
 			data-pos={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Pos.X, obj.Pos.Y, obj.Pos.Z) }
+			data-pos-rel={
+				fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+					SystemToOriginalPerc(obj.Pos.Z, system),
+					SystemToOriginalPerc(obj.Pos.X, system),
+				),
+			}
 			class={
 				obj.Kind.ToNick(),
 				templ.KV("hidden_obj", !obj.VisibleByDefault && obj.Kind != export_map.ObjWreck),
@@ -267,6 +279,12 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 		data-rotate={ fmt.Sprintf("%.1f,%.1f,%.1f", obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) }
 		data-size={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Size.X, obj.Size.Y, obj.Size.Z) }
 		data-pos={ fmt.Sprintf("%.0f,%.0f,%.0f", obj.Pos.X, obj.Pos.Y, obj.Pos.Z) }
+		data-pos-rel={
+			fmt.Sprintf("top: %.5f%%; left: %.5f%%;",
+				SystemToOriginalPerc(obj.Pos.Z, system),
+				SystemToOriginalPerc(obj.Pos.X, system),
+			),
+		}
 		class={
 			"zone",
 			"unhidden_zone",
@@ -294,26 +312,25 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 				SystemPosToPerc(obj.Pos.X, system),
 			),
 			fmt.Sprintf("transform: rotate(%.1fdeg)", ROT_ANGLE),
-			fmt.Sprintf("transform: rotate(%.1fdeg)", ROT_ANGLE),
 		
 			"position: absolute",
 		
-			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)), obj.ZoneShape == "ellipsoid"),
+			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z)*ROT_LENGTH, system)), obj.ZoneShape == "ellipsoid"),
 			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
 			templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.Z)*ROT_LENGTH, system)), obj.ZoneShape == "ellipsoid"),
 			templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "ellipsoid"),
 		
-			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z), system)/2), obj.ZoneShape == "box"),
+			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Z)*ROT_LENGTH, system)/2), obj.ZoneShape == "box"),
 			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)/2), obj.ZoneShape == "box"),
 			templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Size.Z)*ROT_LENGTH, system)), obj.ZoneShape == "box"),
 			templ.KV(fmt.Sprintf("width: %.5f%%", SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "box"),
 		
-			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
+			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.X)*ROT_LENGTH, system)), obj.ZoneShape == "sphere"),
 			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
 			templ.KV(fmt.Sprintf("height: %.5f%%", 2*SizeInPerc(float64(obj.Size.X)*ROT_LENGTH, system)), obj.ZoneShape == "sphere"),
 			templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "sphere"),
 		
-			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Y), system)/2), obj.ZoneShape == "cylinder"),
+			templ.KV(fmt.Sprintf("margin-top: %.5f%%", -SizeInPerc(float64(obj.Size.Y)*ROT_LENGTH, system)/2), obj.ZoneShape == "cylinder"),
 			templ.KV(fmt.Sprintf("margin-left: %.5f%%", -SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
 			templ.KV(fmt.Sprintf("height: %.5f%%", SizeInPerc(float64(obj.Size.Y)*ROT_LENGTH, system)), obj.ZoneShape == "cylinder"),
 			templ.KV(fmt.Sprintf("width: %.5f%%", 2*SizeInPerc(float64(obj.Size.X), system)), obj.ZoneShape == "cylinder"),
@@ -389,6 +406,13 @@ func GetZoneClass(property_flag int, system *export_map.System) string {
 	return "noZoneType"
 }
 
+func SystemToOriginalPerc(position float64, system *export_map.System) float64 {
+	// divide by cell size
+	// shift to +4 cells forward because our coordinate center from corner and not from center
+	// divide by amount of cells total and move to percentage
+	return 100 * (position/(system.GetSquareScale()*1000.0) + 4) / 8
+}
+
 func SystemPosToPerc(position float64, system *export_map.System) float64 {
 	// divide by cell size
 	// shift to +4 cells forward because our coordinate center from corner and not from center
@@ -399,3 +423,5 @@ func SystemPosToPerc(position float64, system *export_map.System) float64 {
 func SizeInPerc(size float64, system *export_map.System) float64 {
 	return 100 * (size / (system.GetSquareScale() * 1000.0)) / 8
 }
+
+// wipe data-pos-rel and and SystemToOriginalPerc later as they debug means
