@@ -160,3 +160,46 @@ h2 {
 .cylinderZone {
     background-color: rgba(87, 255, 255, 0.15);
 }
+
+/* GRID LABELS */
+
+.gridLabels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.hzGridLabels,
+.vertGridLabels {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hzGridLabel,
+.vertGridLabel,
+#nullGridCell {
+    position: absolute;
+    color: white;
+    font-family: var(--font-family);
+    z-index: 1;
+    font-size: calc(1.7vh / var(--panzoom-scale));
+}
+
+.hzGridLabel {
+    left: 0.6em;
+}
+
+.vertGridLabel {
+    top: -0.5em;
+    margin-inline-start: 1em;
+}
+
+@media (max-aspect-ratio: 5/4) {
+    .gridLabels {
+        height: 100%;
+        width: 100vh;
+    }
+}
