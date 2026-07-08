@@ -224,6 +224,7 @@ system- {
     height: 0.75em;
     width: 0.75em;
     border-color: white;
+    background: rgba(200, 200, 200, 0.2);
 }
 
 .zoomedOut .tradelane img {
