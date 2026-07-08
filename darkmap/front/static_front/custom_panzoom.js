@@ -153,50 +153,8 @@ function InstallPanzoom(allowed_moved) {
         } else {
             document.body.classList.remove("zoomed04");
         }
-
-        SyncGridLabelsPanzoom(event.detail.scale, event.detail.x, event.detail.y);
     };
     _panzoom_map = map;
     _panzoom_on_change = onPanzoomChange;
     map.addEventListener('panzoomchange', onPanzoomChange);
-}
-
-var _hzLabels_instance = null;
-var _vertLabels_instance = null;
-
-function InstallGridLabelsPanzoom() {
-    var hzEl = document.querySelector('.hzGridLabels');
-    var vertEl = document.querySelector('.vertGridLabels');
-
-    if (hzEl && !_hzLabels_instance) {
-        _hzLabels_instance = Panzoom(hzEl, {
-            noBind: true,
-            disableXAxis: true, // X never moves, stays pinned to the left edge
-            origin: '0% 50%',   // scaling anchored at x=0, so it can't drift left/right
-            startScale: 1,
-            minScale: 1,
-            maxScale: 7.5,
-        });
-    }
-    if (vertEl && !_vertLabels_instance) {
-        _vertLabels_instance = Panzoom(vertEl, {
-            noBind: true,
-            disableYAxis: true, // Y never moves, stays pinned to the top edge
-            origin: '50% 0%',   // scaling anchored at y=0, so it can't drift up/down
-            startScale: 1,
-            minScale: 1,
-            maxScale: 7.5,
-        });
-    }
-}
-
-function SyncGridLabelsPanzoom(scale, x, y) {
-    if (_hzLabels_instance) {
-        _hzLabels_instance.zoom(scale, { animate: false, force: true });
-        _hzLabels_instance.pan(0, y, { animate: false, force: true }); // x ignored anyway (disableXAxis)
-    }
-    if (_vertLabels_instance) {
-        _vertLabels_instance.zoom(scale, { animate: false, force: true });
-        _vertLabels_instance.pan(x, 0, { animate: false, force: true }); // y ignored anyway (disableYAxis)
-    }
 }
