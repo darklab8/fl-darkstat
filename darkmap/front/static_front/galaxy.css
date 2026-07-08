@@ -133,11 +133,6 @@ map- {
     user-select: none;
 
     aspect-ratio: 1 / 1;
-
-    /* flex: 1; */
-    /* min-height: 0; */
-    /* max-height: 100%; */
-
     margin: 0 auto;
 }
 
@@ -730,14 +725,14 @@ encounter- {
 
     .panzoom-parent-system {
         height: 100%;
-        width: 100vh;
+        width: 100%;
         margin: unset;
         aspect-ratio: unset;
     }
 
     .panzoom {
         height: 100%;
-        width: 100%;
+        width: 100vh;
     }
 }
 

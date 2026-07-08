@@ -196,3 +196,10 @@ h2 {
     top: -0.5em;
     margin-inline-start: 1em;
 }
+
+@media (max-aspect-ratio: 5/4) {
+    .gridLabels {
+        height: 100%;
+        width: 100vh;
+    }
+}
