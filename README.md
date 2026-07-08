@@ -83,7 +83,7 @@ General instruction:
 
 If u have problems with configuring development environment, then seek my contacts below to help you through it ^_^
 
-# Features
+# Features of darkstat
 
 - Long term maintance support for dozen of years. Minimum dependencies software with Golang and Htmx.
 - full GitOps. On commit push to redeploy it automatically
@@ -97,6 +97,32 @@ If u have problems with configuring development environment, then seek my contac
   - helped to make it working for Freelancer Universe
   - at some point debugged its working for Freelancer HD Edition
   - may be will working for any other mod, if not, then request support
+- Advanced trading search
+  - from bases, to bases routes, all one way routes
+  - with finding cyclic two way routes
+  - accounts for Discovery player owned bases trading
+  - Finding ore locations and where to sell things
+  - Player Owned Bases trading
+- Finding bases for missions of your level and reward
+- Dark, light(vanilla) and white themes
+- Finding loot
+- Navigating crafting recipes
+- Ability to find hardpoint compatible equipment
+- Ability to find tech compatible equipment
+
+# Features of darkmap in comparison to legacy map
+
+- zones are correctly positioned and lengthed
+- all zones/box zones, everything is selectable
+- showable encounters, battlezones
+- showable cylinder zones
+- optional moving out of grid
+- auto updates, so also able to show positions of public pobs in time
+- shows nu mining
+- realistic stars
+- comfy Not Showing infocard on every click on big zones if you moved in big zoned systems and just wished moving around
+- accounts for size of icons correctly / more icons shown (most noticable in earheart with All objects on)
+- fixed size of map cell shown in right bottom corner
 
 # Darkstat has API access
 
