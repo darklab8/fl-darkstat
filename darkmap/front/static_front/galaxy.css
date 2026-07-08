@@ -131,6 +131,9 @@ map- {
     /*plugin adds on its own*/
     overflow: hidden;
     user-select: none;
+
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
 }
 
 .panzoom {
@@ -723,6 +726,8 @@ encounter- {
     .panzoom-parent-system {
         height: 100%;
         width: 100%;
+        margin: unset;
+        aspect-ratio: unset;
     }
 
     .panzoom {
