@@ -132,13 +132,20 @@ map- {
     /*plugin adds on its own*/
     overflow: hidden;
     user-select: none;
+
+    aspect-ratio: 1 / 1;
+
+    /* flex: 1; */
+    /* min-height: 0; */
+    /* max-height: 100%; */
+    margin: 0 auto;
 }
 
 .panzoom {
     box-sizing: border-box;
 
     height: 100%;
-    top: 2.4em;
+    /* top: 2.4em; */
     width: 100%;
     margin: 0 auto;
     box-sizing: border-box;
@@ -209,8 +216,6 @@ system- {
     position: absolute;
     height: 1.5em;
     width: 1.5em;
-    margin-top: -0.75em;
-    margin-left: -0.75em;
     border-color: white;
 }
 
@@ -218,8 +223,6 @@ system- {
     position: absolute;
     height: 0.75em;
     width: 0.75em;
-    margin-top: -0.375em;
-    margin-left: -0.375em;
     border-color: white;
 }
 
@@ -231,8 +234,6 @@ system- {
     background: gray;
     height: 0.2em;
     width: 0.3em;
-    margin-top: -0.1em;
-    margin-left: -0.15em;
 }
 
 .zoomedOut .base img {
@@ -242,16 +243,12 @@ system- {
 .zoomedOut .base {
     height: 0.25em;
     width: 0.25em;
-    margin-top: -0.125em;
-    margin-left: -0.125em;
     background: white;
 }
 
 .zoomedOut .playerbase {
     height: 0.25em;
     width: 0.25em;
-    margin-top: -0.125em;
-    margin-left: -0.125em;
     background: var(--playerbase_color);
 }
 
@@ -259,8 +256,6 @@ system- {
 .zoomedIn .mining {
     height: 0.25em;
     width: 0.25em;
-    margin-top: -0.125em;
-    margin-left: -0.125em;
     background: var(--mining_color);
 }
 
@@ -273,40 +268,30 @@ system- {
     border-color: white;
     height: 0.75em;
     width: 0.75em;
-    margin-top: -0.375em;
-    margin-left: -0.375em;
 }
 
 .playerbase {
     border-color: white;
     height: 0.75em;
     width: 0.75em;
-    margin-top: -0.375em;
-    margin-left: -0.375em;
 }
 
 .mining {
     border-color: white;
     height: 0.75em;
     width: 0.75em;
-    margin-top: -0.375em;
-    margin-left: -0.375em;
 }
 
 .planet {
     border-color: white;
     height: 0.75em;
     width: 0.75em;
-    margin-top: -0.375em;
-    margin-left: -0.375em;
     border-radius: 50%;
 }
 
 .wreck {
     width: 0.8em;
     height: 0.8em;
-    margin-top: -0.2em;
-    margin-left: -0.2em;
 }
 
 .obj_other,
@@ -314,31 +299,23 @@ system- {
 .obj_disco_encounter {
     width: 0.4em;
     height: 0.4em;
-    margin-top: -0.2em;
-    margin-left: -0.2em;
 }
 
 .zoomedOut .obj_other.icon_mixed {
     height: 0.25em;
     width: 0.25em;
-    margin-top: -0.125em;
-    margin-left: -0.125em;
     background: var(--obj_other_color);
 }
 
 .zoomedOut .obj_noname.icon_mixed {
     height: 0.25em;
     width: 0.25em;
-    margin-top: -0.125em;
-    margin-left: -0.125em;
     background: var(--obj_noname_color);
 }
 
 .zoomedOut .obj_disco_encounter {
     height: 0.5em;
     width: 0.5em;
-    margin-top: -0.5em;
-    margin-left: -0.5em;
     background: rgba(255, 106, 6, 0.9);
     box-shadow: 0em 0em 0.4em 0.2em rgba(255, 106, 6, 0.5);
 }
@@ -388,6 +365,8 @@ system- {
 obj- {
     position: absolute;
     cursor: pointer;
+
+    transform: translate(-50%, -50%);
 }
 
 obj- img {
@@ -501,6 +480,8 @@ ul.text_align_left * {
     border: 1px solid rgba(255, 255, 0, 0.3);
     z-index: -1;
     box-sizing: border-box;
+
+    transform: translate(-50%, -50%);
 }
 
 .zoomedOut .jumphole img {
@@ -539,8 +520,6 @@ ul.text_align_left * {
     border-radius: 100%;
     width: 0.5em;
     height: 0.5em;
-    margin-top: -0.25em;
-    margin-left: -0.25em;
 }
 
 .zoomedIn .jumphole img {
@@ -638,8 +617,6 @@ line- {
 .obj_fallback_unclassified {
     width: 0.275em !important;
     height: 0.275em !important;
-    margin-top: -0.1375em;
-    margin-left: -0.1375em;
     background: #EC7F1F;
 }
 
@@ -652,8 +629,6 @@ line- {
 
     width: 0.275em !important;
     height: 0.275em !important;
-    margin-top: -0.1375em;
-    margin-left: -0.1375em;
     background: #EC7F1F;
 }
 
@@ -693,8 +668,6 @@ encounter- {
     max-height: 0.5em;
     min-height: 0.5em;
     min-width: 0.5em;
-    margin-top: -0.5em;
-    margin-left: -0.5em;
     background: rgba(255, 106, 6, 0.9);
     box-shadow: 0em 0em 0.4em 0.2em rgba(255, 106, 6, 0.5);
 }
