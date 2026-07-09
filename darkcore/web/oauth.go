@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -30,7 +31,7 @@ func NewOauthStart(w *Web) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET /oauth",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
-			redirect_url := fmt.Sprintf("%s/forums/oauth/?client_id=darkstat_dev&redirect_url=%s/oauth/redirect", DiscoOauthSiteUrl, statsettings.Env.SiteUrl)
+			redirect_url := fmt.Sprintf("%s/forums/oauth/?client_id=darkstat_dev&redirect_url=%soauth/redirect", DiscoOauthSiteUrl, statsettings.Env.SiteUrl)
 			logus.Log.Info("oauth started", typelog.String("redirect_url", redirect_url))
 			http.Redirect(w, r, redirect_url, http.StatusSeeOther)
 		},
@@ -43,22 +44,26 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 		Url: "GET /oauth/redirect",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 
+			logger := logus.Log.WithFields(typelog.String("url", "/oauth/redirect"))
+
 			r.URL.Query()
 			var oauth_code string
 			if code := r.URL.Query().Get("code"); code != "" {
 				oauth_code = code
-				logus.Log.Debug("Found code in query param. acquired.", typelog.Any("oath_code", code))
+				logger = logger.WithFields(typelog.String("code", code))
+				logger.Debug("Found code in query param. acquired.")
 			}
 
-			is_dev, err := validateCode(oauth_code)
+			is_dev, err := validateCode(oauth_code, logger)
 
 			if !is_dev {
 				_, err := fmt.Fprintln(w, "failed oauth procedure.", err)
-				Log.CheckError(err, "failed oauth procedure responce")
+				logger.CheckError(err, "failed oauth procedure responce")
+				logger.Warn("validateCode was failed, not dev")
 			}
 
 			tempus_value := NewTempusToken()
-			fmt.Println("setting tempus cookie for succesful oauth login", "host=", r.Host)
+			logger.Info("setting tempus cookie for succesful oauth login", typelog.String("host", r.Host))
 			http.SetCookie(w, &http.Cookie{Name: "tempus", Value: tempus_value, Expires: time.Now().Add(1 * time.Hour), Path: "/", HttpOnly: true})
 
 			// http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
@@ -67,9 +72,9 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 			err = RedirectPageRender(
 				"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
 				"/", buf)
-			logus.Log.CheckError(err, "failed to redirect oauth response")
+			logger.CheckError(err, "failed to redirect oauth response")
 			_, err = fmt.Fprint(w, buf.String())
-			logus.Log.CheckError(err, "failed to print into response")
+			logger.CheckError(err, "failed to print into response")
 		},
 	}
 }
@@ -82,7 +87,7 @@ type OauthAnswer struct {
 
 const AccesTokenIsDev = "yes they're a dev"
 
-func validateCode(code string) (bool, error) {
+func validateCode(code string, logger *typelog.Logger) (bool, error) {
 	var err error
 	var client = &http.Client{}
 	var answer OauthAnswer
@@ -105,11 +110,20 @@ func validateCode(code string) (bool, error) {
 		err = response.Body.Close()
 		Log.CheckError(err, "failed to close body")
 	}()
-	err = json.NewDecoder(response.Body).Decode(&answer)
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		logger.Error("Error reading response body:", typelog.OptError(err))
+		return false, err
+	}
+	logger = logger.WithFields(typelog.String("access_token_resp_body", string(body)))
+	logger.Info("received access_token response")
+	err = json.Unmarshal(body, &answer)
+
 	if err != nil {
 		return false, err
 	}
-	logus.Log.Info("got answer", typelog.Struct(answer))
+	logger.Info("got answer", typelog.Struct(answer))
 
 	if answer.AccessToken == nil {
 		return false, errors.New("access token is nil")
@@ -120,5 +134,6 @@ func validateCode(code string) (bool, error) {
 		return false, errors.New("access token is not equal 'yes they're a dev'")
 	}
 
+	logger.Info("validateCode succesful")
 	return true, nil
 }
