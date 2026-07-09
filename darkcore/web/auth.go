@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
@@ -70,26 +69,28 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			typelog.Any("tempus", tempus_token),
 		)
 		if query_password == settings.Env.Password || cookie_password == settings.Env.Password || IsTempusValid(tempus_token, logger) {
-			if query_password == settings.Env.Password || cookie_password == settings.Env.Password {
-				logger.Info("Valid password. Access Granted")
 
-			}
 			if IsTempusValid(tempus_token, logger) {
 				logger.Info("Valid tempus. Access Granted")
+				tempus_cookie := &http.Cookie{
+					Name:   "tempus",
+					Value:  NewTempusToken(),
+					MaxAge: 3600 * 24,
+				}
+				logger.Debug("setting tempus cookie")
+				http.SetCookie(w, tempus_cookie)
 			}
 
-			expiration := time.Now().Add(24 * time.Hour)
-			cookie := &http.Cookie{Name: settings.Env.Password, Value: "true", Expires: expiration}
-			logger.Debug("setting password cookie")
-			http.SetCookie(w, cookie)
-
-			tempus_cookie := &http.Cookie{
-				Name:   "tempus",
-				Value:  NewTempusToken(),
-				MaxAge: 3600 * 24,
+			if query_password == settings.Env.Password || cookie_password == settings.Env.Password {
+				logger.Info("Valid password. Access Granted")
+				cookie := &http.Cookie{
+					Name:   settings.Env.Password,
+					Value:  "true",
+					MaxAge: 3600 * 24,
+				}
+				logger.Debug("setting password cookie")
+				http.SetCookie(w, cookie)
 			}
-			logger.Debug("setting tempus cookie")
-			http.SetCookie(w, tempus_cookie)
 
 			next.ServeHTTP(w, r)
 			return
