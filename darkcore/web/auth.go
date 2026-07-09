@@ -54,6 +54,14 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		var tempus_token string
 		if tempus_cookie, err := r.Cookie("tempus"); err == nil {
 			tempus_token = tempus_cookie.Value
+			logger = logger.WithFields(typelog.String("tempus", tempus_token))
+			logger.Debug("Found tempus in cookies. acquired.")
+		}
+
+		if tempus_value := r.URL.Query().Get("tempus"); tempus_value != "" {
+			tempus_token = tempus_value
+			logger = logger.WithFields(typelog.String("tempus", tempus_token))
+			logger.Debug("Found tempus in query param. acquired.")
 		}
 
 		logger.Debug("check auth",

@@ -76,7 +76,7 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 			buf := bytes.NewBuffer([]byte{})
 			err = RedirectPageRender(
 				"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
-				"/", buf)
+				fmt.Sprintf("/?tempus=%s", tempus_value), buf)
 			logger.CheckError(err, "failed to redirect oauth response")
 			_, err = fmt.Fprint(w, buf.String())
 			logger.CheckError(err, "failed to print into response")
