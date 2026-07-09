@@ -69,17 +69,28 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 
 			tempus_value := NewTempusToken()
 			logger.Info("setting tempus cookie for succesful oauth login", typelog.String("host", r.Host))
-			http.SetCookie(w, &http.Cookie{Name: "tempus", Value: tempus_value, Expires: time.Now().Add(1 * time.Hour), Path: "/", HttpOnly: true})
+			http.SetCookie(w, &http.Cookie{
+				Name:     "tempus",
+				Value:    tempus_value,
+				Expires:  time.Now().Add(1 * time.Hour),
+				Path:     "/",
+				HttpOnly: true,
 
-			// http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
-			// redirect with delay instead
-			buf := bytes.NewBuffer([]byte{})
-			err = RedirectPageRender(
-				"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
-				fmt.Sprintf("/?tempus=%s", tempus_value), buf)
-			logger.CheckError(err, "failed to redirect oauth response")
-			_, err = fmt.Fprint(w, buf.String())
-			logger.CheckError(err, "failed to print into response")
+				Secure:   true,
+				SameSite: http.SameSiteLaxMode,
+			},
+			)
+
+			http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
+
+			// // redirect with delay instead // probably reason for not working
+			// buf := bytes.NewBuffer([]byte{})
+			// err = RedirectPageRender(
+			// 	"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
+			// 	fmt.Sprintf("/?tempus=%s", tempus_value), buf)
+			// logger.CheckError(err, "failed to redirect oauth response")
+			// _, err = fmt.Fprint(w, buf.String())
+			// logger.CheckError(err, "failed to print into response")
 		},
 	}
 }
