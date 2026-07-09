@@ -1,6 +1,7 @@
 package web
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
@@ -127,7 +128,7 @@ func TestOauth(t *testing.T) {
 		Jar: jar,
 	}
 
-	app_url := statsettings.Env.SiteUrl
+	app_url := statsettings.Env.GetSiteUrlWithoutLastSlash()
 	answer, err := Get(client, app_url+"/")
 	assert.Nil(t, err)
 
@@ -138,7 +139,7 @@ func TestOauth(t *testing.T) {
 	answer, err = Get(client, app_url+redirect_url)
 	assert.Nil(t, err)
 
-	assert.Equal(t, statsettings.Env.SiteUrl+"/oauth/redirect?code=1234", answer.Resp.Request.URL.String())
+	assert.Equal(t, statsettings.Env.GetSiteUrlWithoutLastSlash()+"/oauth/redirect?code=1234", answer.Resp.Request.URL.String())
 
 	fmt.Println("print cookies in answer")
 	cookies := answer.Resp.Cookies()
@@ -159,4 +160,32 @@ func TestOauth(t *testing.T) {
 	settings.Env.Password = password
 	settings.Env.Secret = secret
 	settings.Env.IsDiscoOauthEnabled = is_oauth
+}
+
+func TestOauthManual(t *testing.T) {
+	var oauth_code string = "1234"
+	settings.Env.Secret = "1234"
+
+	return
+
+	is_dev, err := validateCode(oauth_code, logus.Log)
+
+	if !is_dev {
+		Log.CheckError(err, "failed oauth procedure responce")
+	}
+
+	tempus_value := NewTempusToken()
+	fmt.Println("setting tempus cookie for succesful oauth login")
+	cookie := &http.Cookie{Name: "tempus", Value: tempus_value, Expires: time.Now().Add(1 * time.Hour), Path: "/", HttpOnly: true}
+	fmt.Println("cookie=", cookie)
+
+	// http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
+	// redirect with delay instead
+	buf := bytes.NewBuffer([]byte{})
+	err = RedirectPageRender(
+		"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
+		"/", buf)
+	logus.Log.CheckError(err, "failed to redirect oauth response")
+	_, err = fmt.Println(buf.String())
+	logus.Log.CheckError(err, "failed to print into response")
 }

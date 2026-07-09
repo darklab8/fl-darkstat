@@ -31,7 +31,7 @@ func NewOauthStart(w *Web) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET /oauth",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
-			redirect_url := fmt.Sprintf("%s/forums/oauth/?client_id=darkstat_dev&redirect_url=%soauth/redirect", DiscoOauthSiteUrl, statsettings.Env.SiteUrl)
+			redirect_url := fmt.Sprintf("%s/forums/oauth/?client_id=darkstat_dev&redirect_url=%s/oauth/redirect", DiscoOauthSiteUrl, statsettings.Env.GetSiteUrlWithoutLastSlash())
 			logus.Log.Info("oauth started", typelog.String("redirect_url", redirect_url))
 			http.Redirect(w, r, redirect_url, http.StatusSeeOther)
 		},

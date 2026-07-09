@@ -136,3 +136,15 @@ func getAppVersion() string {
 	}
 	return version
 }
+
+func (e DarkstatEnvVars) GetSiteUrlWithoutLastSlash() string {
+	if len(e.SiteUrl) == 0 {
+		return e.SiteUrl
+	}
+
+	if e.SiteUrl[len(e.SiteUrl)-1] == '/' {
+		return e.SiteUrl[:len(e.SiteUrl)-1]
+	}
+
+	return e.SiteUrl
+}
