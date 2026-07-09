@@ -38,13 +38,18 @@ func NewOauthStart(w *Web) *registry.Endpoint {
 	}
 }
 
+var (
+	attempt_oauth_redirect = 0
+)
+
 // for local testing, manually replace incoming incoming redirect to http://localhost:8000
 func NewOauthAccept(w *Web) *registry.Endpoint {
 	return &registry.Endpoint{
 		Url: "GET /oauth/redirect",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 
-			logger := logus.Log.WithFields(typelog.String("url", "/oauth/redirect"))
+			attempt_oauth_redirect++
+			logger := logus.Log.WithFields(typelog.String("url", "/oauth/redirect"), typelog.Int("attempt", attempt_oauth_redirect))
 
 			r.URL.Query()
 			var oauth_code string

@@ -6,6 +6,7 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
+	"github.com/darklab8/go-utils/typelog"
 )
 
 type AuthPermission struct {
@@ -23,15 +24,16 @@ func NewTempusToken() string {
 	return encrypted
 }
 
-func IsTempusValid(encrypted string) bool {
+func IsTempusValid(encrypted string, logger *typelog.Logger) bool {
+	logger = logger.WithFields(typelog.String("encrypted_str", encrypted))
 	decrypted, err := decrypt(encrypted, settings.Env.Secret)
-	if logus.Log.CheckWarn(err, "failed decryption") {
+	if logger.CheckWarn(err, "failed decryption") {
 		return false
 	}
 
 	var data2 AuthPermission
 	err = json.Unmarshal(decrypted, &data2)
-	if logus.Log.CheckError(err, "failed to unmarshal") {
+	if logger.CheckError(err, "failed to unmarshal") {
 		return false
 	}
 

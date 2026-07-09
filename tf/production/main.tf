@@ -76,5 +76,8 @@ module "darkstat_dev" {
   enable_restarts = false
 
   # extra_vars   = local.disco_extra_vars
+  extra_vars = {
+    "DARKCORE_LOG_LEVEL" = "DEBUG"
+  }
   args = ["--stat-deals-on", "--map-on", "web"]
 }
