@@ -77,16 +77,16 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 				HttpOnly: true,
 			})
 
-			http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
+			// http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
 
 			// redirect with delay instead
-			// buf := bytes.NewBuffer([]byte{})
-			// err = RedirectPageRender(
-			// 	"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
-			// 	fmt.Sprintf("/?tempus=%s", tempus_value), buf)
-			// logger.CheckError(err, "failed to redirect oauth response")
-			// _, err = fmt.Fprint(w, buf.String())
-			// logger.CheckError(err, "failed to print into response")
+			buf := bytes.NewBuffer([]byte{})
+			err = RedirectPageRender(
+				"Succesfully oauth authentificated, u will be redirected in 3 seconds to main darkstat page",
+				fmt.Sprintf("/?tempus=%s", tempus_value), buf)
+			logger.CheckError(err, "failed to redirect oauth response")
+			_, err = fmt.Fprint(w, buf.String())
+			logger.CheckError(err, "failed to print into response")
 		},
 	}
 }
