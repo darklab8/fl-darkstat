@@ -36,5 +36,5 @@ type RedirectArgs struct {
 }
 
 func RedirectPageRender(msg string, site_url string, wr io.Writer) error {
-	return redirect_template.Execute(wr, RedirectArgs{Msg: msg, SiteUrl: fmt.Sprintf("3; url=%s", site_url)})
+	return redirect_template.Execute(wr, RedirectArgs{Msg: msg, SiteUrl: fmt.Sprintf("1; url=%s", site_url)})
 }

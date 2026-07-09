@@ -99,7 +99,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		if settings.Env.IsDiscoOauthEnabled {
 			buf := bytes.NewBuffer([]byte{})
 			err := RedirectPageRender(
-				"Password is incorrect, sending to oauth in 3 seconds",
+				"Password is incorrect, sending to oauth in 1 seconds",
 				"/oauth", buf)
 			logger.CheckError(err, "failed to render redirect page")
 			_, err = fmt.Fprint(w, buf.String())
