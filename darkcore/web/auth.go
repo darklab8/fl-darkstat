@@ -83,7 +83,11 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			logger.Debug("setting password cookie")
 			http.SetCookie(w, cookie)
 
-			tempus_cookie := &http.Cookie{Name: "tempus", Value: NewTempusToken(), Expires: time.Now().Add(1 * time.Hour)}
+			tempus_cookie := &http.Cookie{
+				Name:   "tempus",
+				Value:  NewTempusToken(),
+				MaxAge: 3600 * 24,
+			}
 			logger.Debug("setting tempus cookie")
 			http.SetCookie(w, tempus_cookie)
 

@@ -8,7 +8,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
@@ -69,7 +68,14 @@ func NewOauthAccept(w *Web) *registry.Endpoint {
 
 			tempus_value := NewTempusToken()
 			logger.Info("setting tempus cookie for succesful oauth login", typelog.String("host", r.Host))
-			http.SetCookie(w, &http.Cookie{Name: "tempus", Value: tempus_value, Expires: time.Now().Add(1 * time.Hour), Path: "/", HttpOnly: true})
+
+			http.SetCookie(w, &http.Cookie{
+				Name:     "tempus",
+				Value:    tempus_value,
+				MaxAge:   3600 * 24,
+				Path:     "/",
+				HttpOnly: true,
+			})
 
 			// http.Redirect(w, r, statsettings.Env.SiteUrl, http.StatusSeeOther)
 			// redirect with delay instead
