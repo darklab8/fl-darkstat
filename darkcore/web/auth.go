@@ -42,13 +42,13 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		if password_cookie, err := r.Cookie(settings.Env.Password); err == nil {
 			if password_cookie.Value == "true" {
 				cookie_password = settings.Env.Password
-				logger.Debug("Found password in cookie. acquired.", typelog.Any("password", cookie_password))
+				logger.Info("Found password in cookie. acquired.", typelog.Any("password", cookie_password))
 			}
 		}
 		r.URL.Query()
 		if password_query := r.URL.Query().Get("password"); password_query != "" {
 			query_password = password_query
-			logger.Debug("Found password in query param. acquired.", typelog.Any("password", password_query))
+			logger.Info("Found password in query param. acquired.", typelog.Any("password", password_query))
 		}
 
 		var tempus_token string
@@ -63,11 +63,11 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		)
 		if query_password == settings.Env.Password || cookie_password == settings.Env.Password || IsTempusValid(tempus_token, logger) {
 			if query_password == settings.Env.Password || cookie_password == settings.Env.Password {
-				logger.Debug("Valid password. Access Granted")
+				logger.Info("Valid password. Access Granted")
 
 			}
 			if IsTempusValid(tempus_token, logger) {
-				logger.Debug("Valid tempus. Access Granted")
+				logger.Info("Valid tempus. Access Granted")
 			}
 
 			expiration := time.Now().Add(24 * time.Hour)
