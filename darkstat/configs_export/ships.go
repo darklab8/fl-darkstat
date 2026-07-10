@@ -42,7 +42,7 @@ type Ship struct {
 	ThrustCapacity    int     `json:"thrust_capacity" validate:"required"`
 	ThrustRecharge    int     `json:"thrust_recharge" validate:"required"`
 
-	DockType string `json:"dock_type" validate:"required"`
+	DockType DockType `json:"dock_type" validate:"required"`
 
 	MaxAngularSpeedDegS           float64 `json:"max_ansgular_speed" validate:"required"`
 	AngularDistanceFrom0ToHalfSec float64 `json:"angular_distance_from_0_to_halfsec" validate:"required"`
@@ -178,6 +178,27 @@ type DiscoShip struct {
 	ArmorMult float64 `json:"armor_mult" validate:"required"`
 }
 
+type DockType int8
+
+const (
+	DockUnk DockType = iota
+	DockRing
+	DockMid
+	DockLarge
+)
+
+func (d DockType) ToStr() string {
+	switch d {
+	case DockRing:
+		return "d_ring"
+	case DockMid:
+		return "d_mid"
+	case DockLarge:
+		return "d_big"
+	}
+	return ""
+}
+
 func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Tractor, Thrusters []Thruster) []Ship {
 	var ships []Ship
 
@@ -200,15 +221,15 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 		// }()
 
 		ship.Class, _ = ship_info.ShipClass.GetValue()
-		ship.DockType, _ = ship_info.MissionProperty.GetValue()
-		if ship.DockType == "can_use_large_moors" {
-			ship.DockType = "d_large"
+		dock_type, _ := ship_info.MissionProperty.GetValue()
+		if dock_type == "can_use_large_moors" {
+			ship.DockType = DockLarge
 		}
-		if ship.DockType == "can_use_med_moors" {
-			ship.DockType = "d_medium"
+		if dock_type == "can_use_med_moors" {
+			ship.DockType = DockMid
 		}
-		if ship.DockType == "can_use_berths" {
-			ship.DockType = "d_small"
+		if dock_type == "can_use_berths" {
+			ship.DockType = DockRing
 		}
 
 		ship.MissionProperty, _ = ship_info.MissionProperty.GetValue()
