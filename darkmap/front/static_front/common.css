@@ -4,9 +4,7 @@ h3 {
     font-weight: bold;
 }
 
-p {
-    font-size: 1.1em;
-}
+
 
 hr {
     display: block;
@@ -25,8 +23,68 @@ table {
 
 :root {
     --font-family: "Agency FB", " Oswald", Verdana, Geneva, Arial, sans-serif;
+    --font-arial-st: "Agency Standard", Verdana, Geneva, Arial, sans-serif;
+    --freelancer-color: #95DFFF;
+    --font-color: #e0dede;
 }
+
+
+p,
+span {
+    font-family: var(--font-arial-st);
+}
+
+menu- div {
+    font-family: var(--font-arial-st);
+    color: var(--font-color);
+}
+
+p {
+    font-size: 1.1em;
+}
+
+.infocard p {
+    color: var(--font-color);
+    font-size: calc(1.7vh / var(--panzoom-scale));
+}
+
 
 .bold {
     font-weight: bold;
 }
+
+
+/*Scroll bar start*/
+
+:root {
+    --sb-track: #0a0e17;
+    --sb-thumb: #145878;
+    --sb-thumb-hover: rgb(41, 78, 95);
+}
+
+.infocard * {
+    scrollbar-color: var(--sb-thumb) var(--sb-track);
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--sb-track);
+    border-left: 1px solid #1a2634;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb);
+    border-radius: 2px;
+    border: 1px solid #0a0e17;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--sb-thumb-hover);
+}
+
+/*Scroll bar end*/

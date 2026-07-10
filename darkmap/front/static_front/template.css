@@ -3,6 +3,12 @@
     src: url("{{.StaticRoot}}AGENCYR.TTF");
 }
 
+@font-face {
+    font-family: "Agency Standard";
+    src: url("{{.StaticRoot}}ARIALUNI.TTF");
+}
+
+
 .zone.zoneExclusion1,
 .zone.zoneExclusion2,
 .zone.zoneExclusion3 {
