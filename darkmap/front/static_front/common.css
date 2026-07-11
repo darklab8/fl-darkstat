@@ -45,7 +45,6 @@ p {
 
 .infocard p {
     color: var(--font-color);
-    /* font-size: calc(1.7vh / var(--panzoom-scale)); */
 }
 
 
