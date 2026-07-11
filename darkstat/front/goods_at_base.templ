@@ -26,6 +26,12 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 					<th style="width:5px;">
 						@frmt.MultiLinestring([]string{"dock", "perm"})
 					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"amount", "can buy", "from", "base"})
+					</th>
+					<th style="width:5px;">
+						@frmt.MultiLinestring([]string{"amount", "can sell", "to", "base"})
+					</th>
 				}
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Nav", "Map"})
@@ -107,6 +113,46 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 
 type ShowAsCommodity bool
 
+func MarketGoodBuyableCount(base_info *configs_export.MarketGood) int {
+	if base_info.PoB == nil {
+		return 0
+	}
+	value := configs_export.ShopItemCountBuyable(base_info.PoB.ShopItemsMapByNick[base_info.Nickname])
+
+	if value < 0 {
+		return 0
+	}
+
+	return value
+}
+
+func MarketGoodSellableCount(base_info *configs_export.MarketGood) int {
+	if base_info.PoB == nil {
+		return 0
+	}
+	value := configs_export.ShopItemCountSellable(
+		base_info.PoB.ShopItemsMapByNick[base_info.Nickname],
+		&base_info.PoB.PoBCore,
+	)
+	if value < 0 {
+		return 0
+	}
+	return value
+}
+
+// input to second var MarketGoodBuyableCount(base_info
+templ CountBuySellFormatted(base_info *configs_export.MarketGood, item_count int) {
+	if base_info.PoB == nil {
+		<td>inf.</td>
+	} else {
+		if item_count < 1 {
+			<td style={ "background: rgba(255,0,0,0.3)" }>{ strconv.Itoa(item_count) } </td>
+		} else {
+			<td>{ strconv.Itoa(item_count) } </td>
+		}
+	}
+}
+
 templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_export.MarketGood, is_commodity ShowAsCommodity, shared *types.SharedData) {
 	<div class="bottom_name">
 		{ name }
@@ -143,6 +189,8 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 						{ strconv.FormatBool(base_info.IsTransportReachable) }
 					</td>
 					@FormatDockPerms(configs_export.DockingPermissions(base_info))
+					@CountBuySellFormatted(base_info, MarketGoodBuyableCount(base_info))
+					@CountBuySellFormatted(base_info, MarketGoodSellableCount(base_info))
 				}
 				<td>
 					@NavMapMarketGood(base_info)

@@ -80,7 +80,8 @@ type PoBCore struct {
 // also known as Player Base Station
 type PoB struct {
 	PoBCore
-	ShopItems []*ShopItem `json:"shop_items" validate:"required"`
+	ShopItems          []*ShopItem          `json:"shop_items" validate:"required"`
+	ShopItemsMapByNick map[string]*ShopItem `json:"shop_items_map"`
 }
 
 // ShopItemsLength counts without accounting for volume dupicates
@@ -208,6 +209,22 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 	return bases
 }
 
+func ShopItemCountBuyable(ShopItem *ShopItem) int {
+	return ShopItem.Quantity - ShopItem.MinStock
+}
+
+func ShopItemCountSellable(ShopItem *ShopItem, Base *PoBCore) int {
+	sellable_to_current_base := ShopItem.MaxStock - ShopItem.Quantity
+
+	if Base.CargoSpaceLeft != nil {
+		if *Base.CargoSpaceLeft < sellable_to_current_base {
+			sellable_to_current_base = *Base.CargoSpaceLeft
+		}
+	}
+
+	return sellable_to_current_base
+}
+
 func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 	pobs_goods_by_nick := make(map[string]*PoBGood)
 	var pob_goods []*PoBGood
@@ -234,7 +251,7 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 		for _, pob := range item.Bases {
 			if pob.ShopItem.BaseSells() {
 				item.AnyBaseSells = true
-				item.TotalBuyableFromBases += pob.ShopItem.Quantity - pob.ShopItem.MinStock
+				item.TotalBuyableFromBases += ShopItemCountBuyable(pob.ShopItem)
 
 				if item.BestPriceToBuy == nil {
 					item.BestPriceToBuy = ptr.Ptr(pob.ShopItem.PriceBaseSellsFor)
@@ -245,15 +262,7 @@ func (e *ExporterRelay) GetPoBGoods(pobs []*PoB) []*PoBGood {
 			}
 			if pob.ShopItem.BaseBuys() {
 				item.AnyBaseBuys = true
-				sellable_to_current_base := pob.ShopItem.MaxStock - pob.ShopItem.Quantity
-
-				if pob.Base.CargoSpaceLeft != nil {
-					if *pob.Base.CargoSpaceLeft < sellable_to_current_base {
-						sellable_to_current_base = *pob.Base.CargoSpaceLeft
-					}
-				}
-
-				item.TotalSellableToBases += sellable_to_current_base
+				item.TotalSellableToBases += ShopItemCountSellable(pob.ShopItem, pob.Base)
 
 				if item.BestPriceToSell == nil {
 					item.BestPriceToSell = ptr.Ptr(pob.ShopItem.PriceBaseBuysFor)
@@ -579,6 +588,13 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		e.Mapped.Infocards.PutInfoname(int(flhash.HashNickname(pob.Nickname)), infocard.Infoname(pob.Name))
 
 		pobs = append(pobs, pob)
+	}
+
+	for _, pob := range pobs {
+		pob.ShopItemsMapByNick = make(map[string]*ShopItem)
+		for _, item := range pob.ShopItems {
+			pob.ShopItemsMapByNick[item.Nickname] = item
+		}
 	}
 	return pobs
 }
