@@ -75,7 +75,10 @@ jobs:
           export tag_version=${{ steps.version.outputs.BUILD_VERSION }}
           docker build --build-arg "BUILD_VERSION=${tag_version}" --tag darkwind8/darkstat:${tag_version}-amd64 .
 
-          docker push darkwind8/darkstat:${tag_version}-amd64
+          docker tag darkwind8/darkstat:${tag_version}-arm64 darkwind8/staging:production-arm64
+          docker push darkwind8/darkstat:${tag_version}-arm64
+          sleep 5
+          docker push darkwind8/darkstat:staging-arm64
           sleep 5
   deploy:
     name: Join And Deploy
