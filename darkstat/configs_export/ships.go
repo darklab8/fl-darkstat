@@ -369,6 +369,14 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 						Nickname: ship_package_good.Nickname.Get(),
 						Price:    ship.Price,
 					})
+					and_pobs := e.GetAtBasesSold(GetCommodityAtBasesInput{
+						Nickname: ship.Nickname,
+						Price:    ship.Price,
+					})
+					for key, pob := range and_pobs {
+						ships_at_bases[key] = pob
+					}
+
 					for key, value := range ships_at_bases {
 						ship.Bases[key] = value
 					}
