@@ -109,15 +109,18 @@ map- {
     position: relative;
     box-sizing: border-box;
 
-    background-color: black;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../static/Sirius_Map.png);
-    background-size: cover;
     border: 0.2em rgb(25, 47, 96) solid;
     height: 100%;
 
     /*plugin adds on its own*/
     overflow: hidden;
     user-select: none;
+}
+
+.panzoom-parent-galaxy .panzoom {
+    background-color: black;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../static/Sirius_Map.png);
+    background-size: cover;
 }
 
 .panzoom-parent-system {
@@ -564,6 +567,18 @@ system-label {
     font-size: calc(1.7vh / var(--panzoom-scale));
 }
 
+.zoomed08 .panzoom-parent-galaxy system-label {
+    font-size: calc(1.5vh / var(--panzoom-scale));
+}
+
+.zoomed06 .panzoom-parent-galaxy system-label {
+    font-size: calc(1.6vh / var(--panzoom-scale));
+}
+
+.zoomed04 .panzoom-parent-galaxy system-label {
+    font-size: calc(1.7vh / var(--panzoom-scale));
+}
+
 /* .zoomed08 map-.system system-label {
     font-size: clamp(0.65rem, 1.2vh, 3.3rem);
 }
@@ -682,9 +697,9 @@ encounter- {
 }
 
 @media (max-width: 800px) {
-    .galaxy system-label {
+    /* .galaxy system-label {
         font-size: calc(1.4vh / var(--panzoom-scale));
-    }
+    } */
 
     .system system-label {
         font-size: calc(1.6vh / var(--panzoom-scale));
@@ -692,9 +707,9 @@ encounter- {
 }
 
 @media (max-width: 600px) {
-    .galaxy system-label {
+    /* .galaxy system-label {
         font-size: calc(1.4vh / var(--panzoom-scale));
-    }
+    } */
 
     .system system-label {
         font-size: calc(1.7vh / var(--panzoom-scale));
