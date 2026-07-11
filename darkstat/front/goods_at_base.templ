@@ -36,12 +36,12 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 				<th style="width:25px;">
 					@frmt.MultiLinestring([]string{"Nav", "Map"})
 				</th>
-				if bool(is_commodity) && shared.ShowDisco {
-					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
-					</th>
+				if shared.ShowDisco {
 					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
 					</th>
 				} else {
 					<th style="width:50px;">Price</th>
@@ -195,10 +195,14 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 				<td>
 					@NavMapMarketGood(base_info)
 				</td>
-				if bool(is_commodity) && shared.ShowDisco {
-					<td>{ strconv.Itoa(base_info.GetPriceBaseBuysFor()) }</td>
-				}
 				<td>{ strconv.Itoa(base_info.PriceBaseSellsFor) }</td>
+				if shared.ShowDisco {
+					if base_info.GetPriceBaseBuysFor2() == nil {
+						<td>nil</td>
+					} else {
+						<td>{ strconv.Itoa(*base_info.GetPriceBaseBuysFor2()) }</td>
+					}
+				}
 				if is_commodity {
 					if shared.ShowDisco {
 						<td>{ fmt.Sprintf("%.0f", configs_export.GetPricePerVoume(base_info.GetPriceBaseBuysFor(), base_info.Volume)) }</td>

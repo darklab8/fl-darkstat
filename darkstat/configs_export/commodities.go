@@ -98,6 +98,21 @@ func (g MarketGood) GetPriceBaseBuysFor() int {
 	return *g.PriceBaseBuysFor
 }
 
+func (g MarketGood) GetPriceBaseBuysFor2() *int {
+	if g.PoB != nil {
+		return g.PriceBaseBuysFor
+	}
+
+	if g.Category == "commodity" {
+		if g.PriceBaseBuysFor == nil {
+			return ptr.Ptr(0)
+		}
+		return g.PriceBaseBuysFor
+	}
+
+	return nil
+}
+
 type Commodity struct {
 	Nickname              string                          `json:"nickname"  validate:"required"`
 	PriceBase             int                             `json:"price_base"  validate:"required"`
