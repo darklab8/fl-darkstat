@@ -38,10 +38,13 @@ templ GoodAtBaseSharedT(is_commodity ShowAsCommodity, shared *types.SharedData) 
 				</th>
 				if shared.ShowDisco {
 					<th style="width:25px;">
-						@frmt.MultiLinestring([]string{"Price", "to buy", "from base"})
+						@frmt.MultiLinestring([]string{"Price", "to buy", "from", "base"})
 					</th>
 					<th style="width:25px;">
 						@frmt.MultiLinestring([]string{"Price", "to sell", "to base"})
+					</th>
+					<th style="width:25px;">
+						@frmt.MultiLinestring([]string{"money", "at", "base"})
 					</th>
 				} else {
 					<th style="width:50px;">Price</th>
@@ -141,14 +144,30 @@ func MarketGoodSellableCount(base_info *configs_export.MarketGood) int {
 }
 
 // input to second var MarketGoodBuyableCount(base_info
-templ CountBuySellFormatted(base_info *configs_export.MarketGood, item_count int) {
+templ CountBuySellFormatted(base_info *configs_export.MarketGood, item_count int, is_buy bool) {
 	if base_info.PoB == nil {
 		<td>inf.</td>
 	} else {
 		if item_count < 1 {
-			<td style={ "background: rgba(255,0,0,0.3)" }>{ strconv.Itoa(item_count) } </td>
+			<td style={ "background: rgba(255,0,0,0.3)" }>
+				{ strconv.Itoa(item_count) }
+			</td>
 		} else {
-			<td>{ strconv.Itoa(item_count) } </td>
+			<td>
+				{ strconv.Itoa(item_count) }
+			</td>
+		}
+	}
+}
+
+templ MoneyFormat(base_info *configs_export.MarketGood) {
+	if base_info.PoB == nil {
+		<td>inf.</td>
+	} else {
+		if base_info.PoB.Money == nil {
+			<td style={ "background: rgba(255,0,0,0.3)" }>unk</td>
+		} else {
+			<td>{ strconv.Itoa(*base_info.PoB.Money/1000000) }mil</td>
 		}
 	}
 }
@@ -189,8 +208,8 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 						{ strconv.FormatBool(base_info.IsTransportReachable) }
 					</td>
 					@FormatDockPerms(configs_export.DockingPermissions(base_info))
-					@CountBuySellFormatted(base_info, MarketGoodBuyableCount(base_info))
-					@CountBuySellFormatted(base_info, MarketGoodSellableCount(base_info))
+					@CountBuySellFormatted(base_info, MarketGoodBuyableCount(base_info), true)
+					@CountBuySellFormatted(base_info, MarketGoodSellableCount(base_info), false)
 				}
 				<td>
 					@NavMapMarketGood(base_info)
@@ -202,6 +221,7 @@ templ GoodAtBaseInfoT(name string, base_infos map[cfg.BaseUniNick]*configs_expor
 					} else {
 						<td>{ strconv.Itoa(*base_info.GetPriceBaseBuysFor2()) }</td>
 					}
+					@MoneyFormat(base_info)
 				}
 				if is_commodity {
 					if shared.ShowDisco {

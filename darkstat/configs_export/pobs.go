@@ -222,6 +222,12 @@ func ShopItemCountSellable(ShopItem *ShopItem, Base *PoBCore) int {
 		}
 	}
 
+	if Base.Money != nil {
+		sellable_count := *Base.Money / ShopItem.PriceBaseBuysFor
+		if sellable_count < sellable_to_current_base {
+			sellable_to_current_base = sellable_count
+		}
+	}
 	return sellable_to_current_base
 }
 
