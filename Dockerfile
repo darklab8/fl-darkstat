@@ -36,8 +36,8 @@ ENV GOEXPERIMENT=greenteagc
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
 FROM debian:12.11-slim AS runner
+RUN mkdir /data
 WORKDIR /code
-RUN mkdir data
 COPY --from=build /code/main main
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ARG BUILD_VERSION
@@ -45,7 +45,14 @@ ENV BUILD_VERSION="${BUILD_VERSION}"
 ENTRYPOINT ["/code/main"]
 EXPOSE 8000
 CMD ["--stat-deals-on", "web"]
+
+ENV CONFIGS_FREELANCER_FOLDER="/data/freelancer_folder" \
+    TYPELOG_LOG_JSON="true"
+
+USER 1001:1001
+WORKDIR /tmp
+
 HEALTHCHECK --interval=28s CMD /code/main health
 
 # test command
-# docker run -v /home/naa/apps/freelancer_related/wine_prefix_freelancer_online/drive_c/Discovery:/discovery -it -e FREELANCER_FOLDER=/discovery -p 8000:8000 -e DARKSTAT_LOG_LEVEL=DEBUG -e UTILS_LOG_LEVEL=DEBUG -e DEV_ENV=true -p 8080:8080  test
+# docker run -v /home/naa/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/Discovery:/data/freelancer_folder -it -p 8000:8000 -e DARKSTAT_LOG_LEVEL=DEBUG -e UTILS_LOG_LEVEL=DEBUG -e DEV_ENV=true -p 8080:8080 test

@@ -1,8 +1,7 @@
 locals {
   envs = merge({
     CONFIGS_FREELANCER_FOLDER = "/data/freelancer_folder" # Required
-
-    TYPELOG_LOG_JSON = "true"
+    TYPELOG_LOG_JSON          = "true"
 
     DARKSTAT_SITE_ROOT          = var.SITE_ROOT # Optional for when needing Site served from /fl-data-discovery/ route instead of just / (it is used to make Relay backend usable for Github pages frontend)
     DARKSTAT_SITE_HOST          = "https://${var.stat_prefix}.${var.zone}"
@@ -15,12 +14,6 @@ locals {
     OTEL_EXPORTER_OTLP_ENDPOINT = "http://alloy-traces:4318"
     OTEL_SERVICE_NAME           = "${var.environment}-darkstat-app"
     OTEL_TRACES_SAMPLER         = "parentbased_always_on"
-
-    // grpc debugging
-    GRPC_TRACE                  = "all"
-    GRPC_VERBOSITY              = "DEBUG"
-    GRPC_GO_LOG_SEVERITY_LEVEL  = "info"
-    GRPC_GO_LOG_VERBOSITY_LEVEL = "6"
     },
     var.DARKSTAT_MAP_BY_URL != null ? {
       DARKSTAT_MAP_BY_URL = var.DARKSTAT_MAP_BY_URL
