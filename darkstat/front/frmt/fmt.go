@@ -11,6 +11,16 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
 )
 
+func CompareBool(a bool, b bool) int {
+	if !a && b {
+		return -1
+	}
+	if a && !b {
+		return 1
+	}
+	return 0
+}
+
 func SortedBases(bases_map map[cfg.BaseUniNick]*configs_export.MarketGood) []*configs_export.MarketGood {
 	var bases []*configs_export.MarketGood = make([]*configs_export.MarketGood, 0, 10)
 
@@ -19,10 +29,10 @@ func SortedBases(bases_map map[cfg.BaseUniNick]*configs_export.MarketGood) []*co
 	}
 
 	sort.Slice(bases, func(i, j int) bool {
-		if bases[i].BaseName != "" && bases[j].BaseName == "" {
-			return true
+		if bases[i].BaseSells != bases[j].BaseSells {
+			return bases[i].BaseSells // true sorts before false
 		}
-		return bases[i].BaseName < bases[j].BaseName
+		return bases[i].PriceBaseSellsFor < bases[j].PriceBaseSellsFor
 	})
 
 	return bases
