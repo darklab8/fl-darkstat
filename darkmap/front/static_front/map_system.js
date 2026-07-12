@@ -1,7 +1,7 @@
 function InstallSystem() {
+    InstallGridLabelsPanzoom();
     highlightFromQuery();
     InstallPanzoom(false);
-    InstallGridLabelsPanzoom();
     InstallMenu();
     InstallLabelOverlapper();
     SetCursorPosition();
