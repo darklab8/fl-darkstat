@@ -9,4 +9,6 @@ WORKDIR /install
 COPY --chmod=777 entrypoint.sh entrypoint.sh
 
 WORKDIR /code
+USER 1001:1001
+
 CMD /install/entrypoint.sh

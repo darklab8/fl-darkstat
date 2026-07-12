@@ -1,7 +1,8 @@
 locals {
   envs = merge({
     CONFIGS_FREELANCER_FOLDER = "/data/freelancer_folder" # Required
-    TYPELOG_LOG_JSON          = "true"
+
+    TYPELOG_LOG_JSON = "true"
 
     DARKSTAT_SITE_ROOT          = var.SITE_ROOT # Optional for when needing Site served from /fl-data-discovery/ route instead of just / (it is used to make Relay backend usable for Github pages frontend)
     DARKSTAT_SITE_HOST          = "https://${var.stat_prefix}.${var.zone}"

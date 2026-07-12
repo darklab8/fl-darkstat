@@ -129,9 +129,11 @@ func main() {
 		}
 		Log.Info("Proceeding to git checkout pull reset...")
 		cmds := []string{
+			fmt.Sprintf("cd %s && git config --global --add safe.directory %s", repoDir, repoDir),
 			fmt.Sprintf("cd %s && git checkout %s", repoDir, branch),
 			fmt.Sprintf("cd %s && git pull", repoDir),
 			fmt.Sprintf("cd %s && git reset --hard origin/%s", repoDir, branch),
+			fmt.Sprintf("chown -R 1001:1001 %s", repoDir),
 		}
 		for _, c := range cmds {
 			if out, err := runCommand(c); err != nil {

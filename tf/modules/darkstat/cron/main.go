@@ -58,6 +58,15 @@ func Autopatcher(workdir string) (err error) {
 	return err
 }
 
+func runCommand(command string) (string, error) {
+	cmd := exec.Command("sh", "-c", command)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return string(out), fmt.Errorf("command %q failed: %w", command, err)
+	}
+	return strings.TrimSpace(string(out)), nil
+}
+
 func main() {
 
 	if value, err := GetLatestPatchLocal(); err == nil {
@@ -90,6 +99,15 @@ func main() {
 			if Log.CheckError(err, "failed to run autopatcher, sleeping 5 minutes") {
 				time.Sleep(time.Minute * 5)
 				continue
+			}
+
+			cmds := []string{
+				fmt.Sprintf("chown -R 1001:1001 %s", GameFolderPath),
+			}
+			for _, c := range cmds {
+				if out, err := runCommand(c); err != nil {
+					Log.CheckErrorln(err, "error running ", c, out)
+				}
 			}
 
 			args := strings.Split(fmt.Sprintf("service update --force %s-darkstat-app", environment), " ")

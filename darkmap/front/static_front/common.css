@@ -23,7 +23,8 @@ table {
 
 :root {
     --font-family: "Agency FB", " Oswald", Verdana, Geneva, Arial, sans-serif;
-    --font-arial-st: "Agency Standard", Verdana, Geneva, Arial, sans-serif;
+    /* --font-arial-st: "Agency Standard", Verdana, Geneva, Arial, sans-serif;*/
+    --font-arial-st: Arial, Helvetica, sans-serif;
     --freelancer-color: #95DFFF;
     --font-color: #e0dede;
 }
@@ -45,6 +46,10 @@ p {
 
 .infocard p {
     color: var(--font-color);
+    line-height: 1.1;
+
+    letter-spacing: 0.03em;
+    word-spacing: 0.1em;
 }
 
 

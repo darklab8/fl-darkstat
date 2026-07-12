@@ -16,4 +16,6 @@ WORKDIR /code
 COPY --from=build /code/main main
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
+USER 1001:1001
+
 ENTRYPOINT ["/code/main"]

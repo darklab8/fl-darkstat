@@ -13,4 +13,6 @@ WORKDIR /code
 COPY --from=build /code/main main
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
+# can't set user here because using docker with default installation
+
 ENTRYPOINT ["/code/main"]

@@ -56,3 +56,4 @@ HEALTHCHECK --interval=28s CMD /code/main health
 
 # test command
 # docker run -v /home/naa/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/Discovery:/data/freelancer_folder -it -p 8000:8000 -e DARKSTAT_LOG_LEVEL=DEBUG -e UTILS_LOG_LEVEL=DEBUG -e DEV_ENV=true -p 8080:8080 test
+# docker run -v /var/lib/darklab/discovery-production/freelancer_folder:/data/freelancer_folder -it -e DARKSTAT_LOG_LEVEL=DEBUG -e UTILS_LOG_LEVEL=DEBUG -e DEV_ENV=true --name test --rm darkwind8/darkstat:v1.142.4-arm64 web
