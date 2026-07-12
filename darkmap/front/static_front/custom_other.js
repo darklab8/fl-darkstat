@@ -36,6 +36,14 @@ function SetCursorPosition() {
         return;
     }
 
+    let lastX = 0;
+    let lastZ = 0;
+
+    let lastClientX = 0;
+    let lastClientY = 0;
+
+    const FLASH_LEFT_OFFSET = 50;
+
     function getFlLength() {
         const val = parseFloat(outputEl.getAttribute('data-fl-length'));
         return isNaN(val) ? 0 : val;
@@ -59,6 +67,9 @@ function SetCursorPosition() {
     }
 
     function handleMouseMove(e) {
+        lastClientX = e.clientX;
+        lastClientY = e.clientY;
+
         const rect = panzoomEl.getBoundingClientRect();
         const flLength = getFlLength();
 
@@ -74,7 +85,69 @@ function SetCursorPosition() {
         const x = (fracX - 0.5) * flLength;
         const z = (fracY - 0.5) * flLength;
 
+        lastX = Math.round(x);
+        lastZ = Math.round(z);
+
         outputEl.textContent = `X: ${formatWithUnderscores(x)}, Z: ${formatWithUnderscores(z)}`;
     }
+
+    function showCopiedFlash(clientX, clientY, message) {
+        if (typeof tippy === 'undefined') {
+            console.warn('cursor-pos-view: tippy is not available');
+            return;
+        }
+
+        const anchorX = clientX - FLASH_LEFT_OFFSET;
+        const anchorY = clientY;
+
+        const virtualRef = {
+            getBoundingClientRect() {
+                return {
+                    width: 0,
+                    height: 0,
+                    top: anchorY,
+                    bottom: anchorY,
+                    left: anchorX,
+                    right: anchorX,
+                };
+            },
+        };
+
+        const instance = tippy(document.body, {
+            getReferenceClientRect: virtualRef.getBoundingClientRect,
+            content: message,
+            showOnCreate: true,
+            trigger: 'manual',
+            placement: 'left',
+            animation: 'fade',
+            theme: 'translucent',
+            arrow: true,
+            appendTo: () => document.body,
+        });
+
+        setTimeout(() => {
+            instance.hide();
+            setTimeout(() => instance.destroy(), 400);
+        }, 1000);
+    }
+
+    function handleContextMenu(e) {
+        const coordString = `${lastX} 0 ${lastZ}`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard
+                .writeText(coordString)
+                .then(() => {
+                    showCopiedFlash(lastClientX, lastClientY, 'Copied!');
+                })
+                .catch((err) => {
+                    console.warn('cursor-pos-view: failed to copy coordinates', err);
+                });
+        } else {
+            console.warn('cursor-pos-view: clipboard API not available');
+        }
+    }
+
     document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('contextmenu', handleContextMenu);
 }
