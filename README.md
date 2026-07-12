@@ -123,6 +123,8 @@ If u have problems with configuring development environment, then seek my contac
 - comfy Not Showing infocard on every click on big zones if you moved in big zoned systems and just wished moving around
 - accounts for size of icons correctly / more icons shown (most noticable in earheart with All objects on)
 - fixed size of map cell shown in right bottom corner
+- ability to see precise coordinates on cursor (during "hover coords" toggle on)
+- ability to copy coords on coords at right click
 
 # Darkstat has API access
 

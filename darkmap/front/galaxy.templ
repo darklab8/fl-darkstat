@@ -327,7 +327,7 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 		</div>
 		<div class="menu-item">
 			<div class="top">
-				@MultiLineOption([]string{"all obj noname labels"})
+				@MultiLineOption([]string{"noname labels"})
 			</div>
 			<div class="bottom">
 				@ToggleSwitch("checkbox_obj_noname_labels")
@@ -375,7 +375,7 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 		</div>
 		<div class="menu-item">
 			<div class="top">
-				@MultiLineOption([]string{"Hover coords", "and nicks"})
+				@MultiLineOption([]string{"Hover coords"})
 			</div>
 			<div class="bottom">
 				@ToggleSwitch("checkbox_coords")
@@ -399,7 +399,7 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 				hx-swap="outerHTML"
 				style="cursor:pointer"
 			>
-				<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "map_legend.png" }/>
+				<img style="max-height:min(4.5vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "map_legend.png" }/>
 			</div>
 		</div>
 		<div class="menu-item">
@@ -408,10 +408,10 @@ templ Menu(menu_kind MenuKind, data *export_map.Export) {
 			</div>
 			<div>
 				if menu_kind == MenuKindGalaxy {
-					<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
+					<img style="max-height:min(4.5vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "galaxy_disabled.png" }/>
 				} else {
 					<a href={ templ.SafeURL(types.GetCtx(ctx).SiteRoot + map_urls.Index.ToString()) }>
-						<img style="max-height:min(6vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
+						<img style="max-height:min(4.5vh,6vw);" src={ types.GetCtx(ctx).StaticRoot + "galaxy_enabled.png" }/>
 					</a>
 				}
 			</div>

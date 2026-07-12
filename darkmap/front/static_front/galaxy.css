@@ -812,8 +812,8 @@ encounter- {
 }
 
 .orb-container {
-    width: min(6vh, 6vw);
-    height: min(6vh, 6vw);
+    width: min(4.5vh, 6vw);
+    height: min(4.5vh, 6vw);
     position: relative;
     display: flex;
     align-items: center;

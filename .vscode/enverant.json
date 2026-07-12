@@ -12,6 +12,7 @@
     # "CONFIGS_DISCO_BASES_FULL_URL": "pass[SCRAPPY_BASE_URL] personal/terraform/hetzner/darkbot/production",
     # "CONFIGS_FREELANCER_FOLDER": "${env:HOME}/repos/pet_projects/FLSR/Freelancer",
     # "FREELANCER_FOLDER_FAILBACK": "${env:HOME}/windows10shared/fl-files-vanilla",
+    "STAT_AT_ROOT_ON": "true",
     "UTILS_DEV_ENV": "true",
     # "UTILS_BAD_VAR": "true",
     "DARKSTAT_LOG_LEVEL": "INFO",
