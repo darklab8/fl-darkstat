@@ -719,7 +719,8 @@ encounter- {
 @media (min-aspect-ratio: 1) {
     background- {
         height: 100vh;
-        width: 100vw;
+        /* when it was one, beyond border scrollbars appeared during galaxy mode at least */
+        /* width: 100vw;*/
     }
 }
 
