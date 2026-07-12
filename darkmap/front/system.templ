@@ -20,7 +20,7 @@ var GridColumns []rune = []rune{'B', 'C', 'D', 'E', 'F', 'G', 'H'}
 
 templ System(system *export_map.System, data *export_map.Export) {
 	@Html5(MenuKindSystem) {
-		@GalaxyGrid(MenuKindSystem, data) {
+		@GalaxyGrid(MenuKindSystem, data, system) {
 			<div style="position: absolute; top:0%">
 				{ system.Nickname }
 			</div>

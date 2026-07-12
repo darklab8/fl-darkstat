@@ -4,6 +4,7 @@ function InstallSystem() {
     InstallGridLabelsPanzoom();
     InstallMenu();
     InstallLabelOverlapper();
+    SetCursorPosition();
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {

@@ -265,3 +265,15 @@ svg.connection-svg-overlay line.hidden_system {
 .tippy-box {
     display: none;
 }
+
+cursor-pos-view- {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: black;
+    min-width: 1px;
+    min-height: 1px;
+    pointer-events: none;
+    color: white;
+    margin: 15px;
+}

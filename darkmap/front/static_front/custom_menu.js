@@ -75,6 +75,7 @@ function toggle_tippy(checked, checkbox_name, hidden_class, unhidden_class) {
             sessionStorage.setItem(checkbox_name, "false");
             break;
     }
+    toggle_option(checked, checkbox_name, hidden_class, unhidden_class);
 }
 
 /**

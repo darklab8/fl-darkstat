@@ -51,7 +51,7 @@ templ Html5(menu_kind MenuKind) {
 
 templ Index(data *export_map.Export) {
 	@Html5(MenuKindGalaxy) {
-		@GalaxyGrid(MenuKindGalaxy, data) {
+		@GalaxyGrid(MenuKindGalaxy, data, nil) {
 			@GalalaxyMap(data)
 		}
 	}

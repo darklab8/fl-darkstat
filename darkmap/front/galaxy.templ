@@ -205,7 +205,7 @@ func (m MenuKind) ToNickname() string {
 	return "unknown"
 }
 
-templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
+templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export, system *export_map.System) {
 	<background->
 		<top-bar->
 			<search-bar-counterweight->
@@ -244,6 +244,12 @@ templ GalaxyGrid(menu_kind MenuKind, data *export_map.Export) {
 						}
 					</div>
 				</grid-labels->
+				if system != nil {
+					<cursor-pos-view-
+						class="hidden_coords"
+						data-fl-length={ fmt.Sprintf("%0.f", system.GetSquareScale()*8*1000) }
+					></cursor-pos-view->
+				}
 			</div>
 		</map-with-interface->
 	</background->
