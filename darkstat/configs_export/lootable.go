@@ -9,6 +9,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/lootable_shown"
 	"github.com/google/uuid"
@@ -397,6 +398,10 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 			forbidden_hardpoints := make(map[string]bool)
 			fuse_drops_equips := make(map[string]bool)
 			fuse_cargo_drop := false
+
+			if shiparch == nil {
+				logus.Log.Errorln("loadout_archetype=", loadout_archetype, " loadout_nickname=", loadout_nickname)
+			}
 
 			for _, fuse := range shiparch.Fuses {
 				if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
