@@ -358,7 +358,10 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 	files_loadouts := getConfigs2(filesystem, m.FreelancerINI.Loadouts)
 	file_universe := iniload.NewLoader32(filesystem.GetFile(universe_mapped.FILENAME))
 	file_interface := iniload.NewLoader32(filesystem.GetFile(interface_mapped.FILENAME_FL_INI))
-	file_initialworld := iniload.NewLoader32(filesystem.GetFile(initialworld.FILENAME))
+
+	// float32 can't parse precisely enough required numbers. it reads precisely only until 16_777_126
+	// so you have to use float64 here
+	file_initialworld := iniload.NewLoader64(filesystem.GetFile(initialworld.FILENAME))
 	file_empathy := iniload.NewLoader32(filesystem.GetFile(empathy_mapped.FILENAME))
 	file_mbases := iniload.NewLoader32(filesystem.GetFile(mbases_mapped.FILENAME))
 	file_lootprops := iniload.NewLoader32(filesystem.GetFile(lootprops_mapped.FILENAME))
