@@ -19,9 +19,10 @@ module "darkstat" {
   <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
   EOT
 
-  stat_prefix     = "darkstat-staging"
-  zone            = "dd84ai.com"
-  enable_restarts = false
-  is_discovery    = false
-  args            = ["map", "web"]
+  stat_prefix                 = "darkstat-staging"
+  zone                        = "dd84ai.com"
+  enable_restarts             = false
+  trigger_darkmap_refresh_key = ""
+  is_discovery                = false
+  args                        = ["map", "web"]
 }

@@ -1,4 +1,4 @@
-module example
+module cron
 
 go 1.25.1
 

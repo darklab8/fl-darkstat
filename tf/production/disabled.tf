@@ -19,9 +19,10 @@ module "darkstat_vanilla" {
   EOT
   DARKSTAT_MAP_BY_URL = "https://darklab8.github.io/fl-data-vanilla/map.html"
 
-  stat_prefix     = "darkstat-vanilla"
-  zone            = "dd84ai.com"
-  enable_restarts = false
-  is_discovery    = false
-  args            = ["--stat-deals-on", "web"]
+  stat_prefix                 = "darkstat-vanilla"
+  zone                        = "dd84ai.com"
+  enable_restarts             = false
+  trigger_darkmap_refresh_key = ""
+  is_discovery                = false
+  args                        = ["--stat-deals-on", "web"]
 }

@@ -33,6 +33,7 @@ resource "docker_container" "cron_restart" {
   env = [
     "ENVIRONMENT=${var.environment}",
     "UTILS_USERAGENT=darkwind/1.0",
+    "DARKMAP_REFRESH_GH_TOKEN=${var.trigger_darkmap_refresh_key}",
   ]
   lifecycle {
     ignore_changes = [

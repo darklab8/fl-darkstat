@@ -85,3 +85,7 @@ variable "DARKSTAT_MAP_BY_URL" {
   type    = string
   default = null
 }
+
+variable "trigger_darkmap_refresh_key" {
+  type = string
+}

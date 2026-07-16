@@ -21,12 +21,13 @@ module "darkstat" {
   EOT
   DARKSTAT_MAP_BY_URL = "https://darklab8.github.io/fl-data-discovery/map.html"
 
-  stat_prefix             = "darkstat"
-  pprof_prefix            = "darkstat-pprof"
-  zone                    = "dd84ai.com"
-  is_discovery            = true
-  is_discovery_production = true
-  enable_restarts         = true
+  stat_prefix                 = "darkstat"
+  pprof_prefix                = "darkstat-pprof"
+  zone                        = "dd84ai.com"
+  is_discovery                = true
+  is_discovery_production     = true
+  enable_restarts             = true
+  trigger_darkmap_refresh_key = local.trigger_darkmap_refresh_key
 
   replicas_count = 2
   extra_vars     = local.disco_extra_vars
@@ -69,11 +70,12 @@ module "darkstat_dev" {
   stat_prefix = "darkstat-dev"
   zone        = "dd84ai.com"
 
-  password        = random_string.random_password.result
-  secret          = random_string.random_secret.result
-  disco_oauth     = true
-  is_discovery    = true
-  enable_restarts = false
+  password                    = random_string.random_password.result
+  secret                      = random_string.random_secret.result
+  disco_oauth                 = true
+  is_discovery                = true
+  enable_restarts             = false
+  trigger_darkmap_refresh_key = ""
 
   # extra_vars   = local.disco_extra_vars
   extra_vars = {

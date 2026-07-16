@@ -16,6 +16,13 @@ data "external" "secrets_cloudflare" {
   program = ["pass", "personal/terraform/cloudflare/dd84ai"]
 }
 
+data "external" "trigger_darkmap_refresh_key" {
+  program = ["pass", "personal/terraform/github/fl_data_key"]
+}
+locals {
+  trigger_darkmap_refresh_key = data.external.trigger_darkmap_refresh_key.result["token"]
+}
+
 data "external" "secrets_darkbot" {
   program = ["pass", "personal/terraform/hetzner/darkbot/production"]
 }
