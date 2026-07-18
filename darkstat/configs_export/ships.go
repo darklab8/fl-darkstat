@@ -394,7 +394,7 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 
 		}
 
-		ship.HoldSize = ship_info.HoldSize.Get()
+		ship.HoldSize, _ = ship_info.HoldSize.GetValue()
 		ship.Armor = ship_info.HitPts.Get()
 
 		var hardpoints map[string][]string = make(map[string][]string)
