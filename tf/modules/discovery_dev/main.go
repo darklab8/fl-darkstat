@@ -105,6 +105,8 @@ func sendDiscordWebhook(webhookURL, username, content string) error {
 	return nil
 }
 
+var IsAlerting = false
+
 func main() {
 	const serviceName = "dev-darkstat-app"
 	const repoDir = "freelancer_folder"
@@ -169,7 +171,14 @@ func main() {
 						newPassword, state,
 					)
 					if !strings.Contains(contentMsg, "state=completed") {
-						contentMsg += " <@370435997974134785>"
+
+						if !IsAlerting {
+							contentMsg += " <@370435997974134785>"
+						}
+						IsAlerting = true
+
+					} else {
+						IsAlerting = false
 					}
 
 					webhookURL := os.Getenv("DISCO_DEV_WEBHOOK")
