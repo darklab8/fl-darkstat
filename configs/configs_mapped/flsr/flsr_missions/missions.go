@@ -35,7 +35,7 @@ type Npc struct {
 type MsnNpc struct {
 	semantic.Model
 	Nickname  *semantic.String
-	NpcLegacy *semantic.String
+	NpcLegacy *semantic.String // TODO legacy, delete later. now it is  [npcshiparch]
 	NpcShip   *semantic.String
 	System    *semantic.String
 	Pos       *semantic.Vect
@@ -81,6 +81,15 @@ func Read(configs []*iniload.IniLoader) *Config {
 						solar.Map(section)
 
 						msn.Solars = append(msn.Solars, solar)
+					case "[npc]": // TODO legacy, delete later. now it is  [npcshiparch]
+						obj := &Npc{
+							Nickname:  semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Archetype: semantic.NewString(section, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Loadout:   semantic.NewString(section, cfg.Key("loadout"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+						}
+						obj.Map(section)
+
+						msn.NpcByNick[obj.Nickname.Get()] = obj
 					case "[npcshiparch]":
 						obj := &Npc{
 							Nickname:  semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
