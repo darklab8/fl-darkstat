@@ -81,7 +81,7 @@ func Read(configs []*iniload.IniLoader) *Config {
 						solar.Map(section)
 
 						msn.Solars = append(msn.Solars, solar)
-					case "[npc]":
+					case "[npcshiparch]":
 						obj := &Npc{
 							Nickname:  semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 							Archetype: semantic.NewString(section, cfg.Key("archetype"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
