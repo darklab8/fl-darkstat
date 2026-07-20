@@ -34,10 +34,11 @@ type Npc struct {
 }
 type MsnNpc struct {
 	semantic.Model
-	Nickname *semantic.String
-	Npc      *semantic.String
-	System   *semantic.String
-	Pos      *semantic.Vect
+	Nickname  *semantic.String
+	NpcLegacy *semantic.String
+	NpcShip   *semantic.String
+	System    *semantic.String
+	Pos       *semantic.Vect
 }
 
 type Config struct {
@@ -91,11 +92,13 @@ func Read(configs []*iniload.IniLoader) *Config {
 						msn.NpcByNick[obj.Nickname.Get()] = obj
 					case "[msnnpc]":
 						obj := &MsnNpc{
-							Nickname: semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							System:   semantic.NewString(section, cfg.Key("system"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
-							Pos:      semantic.NewVector(section, cfg.Key("position"), semantic.Precision(0)),
-							Npc:      semantic.NewString(section, cfg.Key("npc"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Nickname:  semantic.NewString(section, cfg.Key("nickname"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							System:    semantic.NewString(section, cfg.Key("system"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							Pos:       semantic.NewVector(section, cfg.Key("position"), semantic.Precision(0)),
+							NpcLegacy: semantic.NewString(section, cfg.Key("npc"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
+							NpcShip:   semantic.NewString(section, cfg.Key("npc_ship"), semantic.WithLowercaseS(), semantic.WithoutSpacesS()),
 						}
+
 						obj.Map(section)
 
 						msn.MsnNpc = append(msn.MsnNpc, obj)

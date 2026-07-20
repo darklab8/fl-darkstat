@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/flsr/flsr_missions"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
@@ -707,8 +708,15 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 					continue
 				}
 
-				npc, found_npc := mission.NpcByNick[msn_npc.Npc.Get()]
-				if !found_npc {
+				var npc *flsr_missions.Npc
+
+				if npc_nickname, ok := msn_npc.NpcLegacy.GetValue(); ok {
+					npc, _ = mission.NpcByNick[npc_nickname]
+				}
+				if npc_nickname, ok := msn_npc.NpcShip.GetValue(); ok && npc == nil {
+					npc, _ = mission.NpcByNick[npc_nickname]
+				}
+				if npc == nil {
 					continue
 				}
 
