@@ -876,13 +876,11 @@ func (e *Export) EnrichSystemWithObjects(
 
 	for _, obj_info := range system_info.Objects {
 		// all other objects that have navmap defined
-		if _, ok := obj_info.Pos.GetValue(); !ok {
-			continue
-		}
+		pos, _ := obj_info.Pos.GetValue()
 
 		obj := &Obj{
 			Nickname: obj_info.Nickname.Get(),
-			Pos:      obj_info.Pos.Get(),
+			Pos:      pos,
 			Kind:     ObjOthers,
 		}
 		if _, ok := handled_objects[obj.Nickname]; ok {
