@@ -188,7 +188,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 	if hull_damage, ok := munition.HullDamage.GetValue(); ok {
 		// regular gun or turret
 		gun.HullDamage = hull_damage
-		gun.EnergyDamage = munition.EnergyDamage.Get()
+		gun.EnergyDamage, _ = munition.EnergyDamage.GetValue()
 		if weapon_type, ok := munition.WeaponType.GetValue(); ok {
 			gun.DamageType = weapon_type
 		}
