@@ -11,6 +11,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/go-utils/typelog"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 
 	"github.com/a-h/templ"
 	"github.com/darklab8/go-utils/utils/utils_filepath"
@@ -55,6 +56,7 @@ func (h *Component) Write(ctx context.Context, gp Params) WriteResult {
 	defer func() {
 		if r := recover(); r != nil {
 			logus.Log.Error("Component.Write crashed", typelog.Any("pagepath", h.pagepath), typelog.Any("error", r))
+			span.SetStatus(codes.Error, "Component.Write crashed")
 			panic(r)
 		}
 	}()
