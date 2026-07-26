@@ -23,4 +23,6 @@ WORKDIR /code
 # USER 1001:1001
 # can't set user here because using docker
 
+EXPOSE 8000
+
 ENTRYPOINT ["/install/main", "main"]
