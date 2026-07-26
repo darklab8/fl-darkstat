@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/collectors/version"
@@ -42,6 +43,7 @@ func NewMetronom(mux *http.ServeMux) *Metronom {
 		collectors.NewGoCollector(),
 		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
 		version.NewCollector("darkstat"),
+		typelog.MetricMsgsTotal,
 	)
 	metrics = append(metrics, pob_metrics...)
 
