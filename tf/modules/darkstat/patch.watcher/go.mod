@@ -4,7 +4,7 @@ go 1.25.1
 
 require (
 	github.com/darklab8/fl-data-discovery v0.6.2
-	github.com/darklab8/go-utils v0.32.1
+	github.com/darklab8/go-utils v0.32.2
 	github.com/prometheus/client_golang v1.24.1
 )
 

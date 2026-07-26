@@ -5,7 +5,7 @@ go 1.25.1
 require (
 	github.com/anaskhan96/soup v1.2.5
 	github.com/darklab8/fl-darkstat v1.129.4
-	github.com/darklab8/go-utils v0.32.1
+	github.com/darklab8/go-utils v0.32.2
 )
 
 require (

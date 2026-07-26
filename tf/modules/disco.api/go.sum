@@ -9,6 +9,8 @@ github.com/darklab8/fl-darkstat v1.129.4 h1:I6KtuGGEoxOOM4CWJue6K6aNfrZoNvYzjhZR
 github.com/darklab8/fl-darkstat v1.129.4/go.mod h1:6Js7GfHXMlOxo9nI9Eu1/tnFAjTRdYEqZT9l8/LNLCU=
 github.com/darklab8/go-utils v0.32.1 h1:0MxS545/n+S1ru1QA5CCOG1e2uyKZq4xscyPW3tuL/k=
 github.com/darklab8/go-utils v0.32.1/go.mod h1:Wr2+a1K/7wEe1aN4kQez36dlG7RGOoMiZyw21gE7/fY=
+github.com/darklab8/go-utils v0.32.2 h1:fR2YL8qT6NFAude5fE1AhDOyEwMXu/WZZ9Zt8kW4rOA=
+github.com/darklab8/go-utils v0.32.2/go.mod h1:Wr2+a1K/7wEe1aN4kQez36dlG7RGOoMiZyw21gE7/fY=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
