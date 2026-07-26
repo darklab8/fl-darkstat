@@ -277,7 +277,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 		// unless we intend to show 4th choice
 	}
 
-	logus.Log.Warn("DockOpts=", typelog.Struct(TransportDockOpts))
+	logus.Log.Info("DockOpts=", typelog.Struct(TransportDockOpts))
 
 	{
 
