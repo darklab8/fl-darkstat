@@ -252,6 +252,15 @@ func main() {
 				Func: func(info cantil.ActionInfo) error {
 					ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 					SetOptimalGcForWeb()
+
+					otelShutdown, err := otlp.SetupOTelSDK(ctx) // Set up OpenTelemetry.
+					if err != nil {
+						return err
+					}
+					defer func() { // Handle shutdown properly so nothing leaks.
+						err = errors.Join(err, otelShutdown(context.Background()))
+					}()
+
 					web_cron_mu := &sync.RWMutex{}
 					out, err := StatBuild(
 						builder.BuildToMemory,
