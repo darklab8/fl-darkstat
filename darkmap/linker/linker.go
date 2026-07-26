@@ -171,7 +171,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 	decoded_shape_files := make(chan StaticFileInParallel)
 
 	time_start := time.Now()
-	fmt.Println("SHAPES STARTING SENDING JOBS")
+	logus.LogCli.Infoln("SHAPES STARTING SENDING JOBS")
 	created_jobs := 0
 	for _, shape := range l.Export.Shapes.ShapesByNick {
 		// if l.ToMemory {
@@ -187,9 +187,6 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		go func() {
 
 			var result StaticFileInParallel
-			if shape.Nickname == "dsy_planet_earthgrncld" {
-				fmt.Print()
-			}
 
 			image, err := SelectImage(shape, "tga")
 			if err != nil {
@@ -224,7 +221,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 			decoded_shape_files <- result
 		}()
 	}
-	fmt.Println("SHAPES SENT ALL JOBS")
+	logus.LogCli.Infoln("SHAPES SENT ALL JOBS")
 
 	var failed_files []StaticFileInParallel
 
@@ -237,7 +234,7 @@ func (l *Linker) Link(ctx context.Context) *builder.Builder {
 		extra_files = append(extra_files, builder.NewStaticFileFromCore(result.StaticFile))
 	}
 
-	fmt.Println("SHAPES FINISHED ACCEPTING ALL JOBS, took time seconds=", time.Since(time_start).Seconds(), " handled jobs=", created_jobs)
+	logus.LogCli.Infoln("SHAPES FINISHED ACCEPTING ALL JOBS, took time seconds=", time.Since(time_start).Seconds(), " handled jobs=", created_jobs)
 
 	build.AddStaticFiles(extra_files)
 	build.AddRootFiles(builder.NewStaticFileFromCore(core_static.RobotsFile))

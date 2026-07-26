@@ -9,3 +9,9 @@ import (
 var Log *typelog.Logger = typelog.NewLogger("darkcore",
 	typelog.WithLogLevel(typelog.LEVEL_INFO),
 )
+
+var LogCli *typelog.Logger = typelog.NewLogger(
+	"darkcore",
+	typelog.WithLogLevel(typelog.LEVEL_INFO),
+	typelog.WithFileShowing(false),
+)

@@ -160,7 +160,7 @@ func MapConfigsToFGraph(
 			}
 
 			// if system.Nickname == "li01" {
-			// 	fmt.Println()
+			// 	logus.LogCli.Infoln()
 			// }
 
 			object := SystemObject{

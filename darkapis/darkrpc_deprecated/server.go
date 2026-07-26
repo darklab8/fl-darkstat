@@ -57,7 +57,7 @@ func (r *RpcServer) Serve(app_data *appdata.AppData) {
 
 	rpcServer.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath) // NOTE: Handle path
 	tcp_address := fmt.Sprintf(":%d", r.port)
-	fmt.Println("starting rpc server at ", tcp_address)
+	logus.LogCli.Infoln("starting rpc server at ", tcp_address)
 	tcp_listener, err := net.Listen("tcp", tcp_address) // NOTE: listen stuff
 	if err != nil {
 		log.Fatal("listen error:", err)
@@ -72,7 +72,7 @@ func (r *RpcServer) Serve(app_data *appdata.AppData) {
 		if err != nil {
 			log.Fatal("listen error:", err)
 		}
-		fmt.Println("turning on server")
+		logus.LogCli.Infoln("turning on server")
 		if cfg.IsLinux {
 			go rpcServer.Accept(sock_listener) // if serving over Unix
 
@@ -80,17 +80,17 @@ func (r *RpcServer) Serve(app_data *appdata.AppData) {
 	}
 
 	go func() {
-		fmt.Println("http rpc server is launching")
+		logus.LogCli.Infoln("http rpc server is launching")
 		err := http.Serve(tcp_listener, nil) // NOTE: Server
 		if err != nil {
 			log.Fatal("http error:", err)
 		}
 	}()
 
-	fmt.Println("rpc server is launched")
+	logus.LogCli.Infoln("rpc server is launched")
 }
 
 func (r *RpcServer) Close() {
-	fmt.Println("gracefully existing rpc server")
+	logus.LogCli.Infoln("gracefully existing rpc server")
 	logus.Log.CheckError(os.Remove(r.sock_address), "unable removing sock")
 }

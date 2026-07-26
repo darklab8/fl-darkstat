@@ -241,7 +241,7 @@ func Read(ini *iniload.IniLoader, filesystem *filefind.Filesystem) *Config {
 					if room_switch, ok := hot_spot.RoomSwitch.GetValue(); ok {
 						if strings.ToLower(room_switch) == "trader" {
 							room_info.Base.TraderExists = true
-							// fmt.Println("found, trader exists for base_nickname=", base.Nickname.Get())
+							// logus.LogCli.Infoln("found, trader exists for base_nickname=", base.Nickname.Get())
 						}
 					}
 				}

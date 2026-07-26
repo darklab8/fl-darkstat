@@ -14,6 +14,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkstat/cache"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
 
@@ -187,8 +188,8 @@ func (e *TradePathExporter) GetBaseTradePathsFrom(ctx context.Context, base *Bas
 			// 	continue
 			// }
 
-			// fmt.Println("path for", trade_route.Transport.BuyingGood.BaseNickname, trade_route.Transport.SellingGood.BaseNickname)
-			// fmt.Println("trade_route.Transport.GetPaths().length", len(trade_route.Transport.GetPaths()))
+			// logus.LogCli.Infoln("path for", trade_route.Transport.BuyingGood.BaseNickname, trade_route.Transport.SellingGood.BaseNickname)
+			// logus.LogCli.Infoln("trade_route.Transport.GetPaths().length", len(trade_route.Transport.GetPaths()))
 		}
 	}
 
@@ -386,7 +387,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		}
 
 		if index%100 == 0 {
-			fmt.Println("base_", index, "/", len_bases, " is processed for trade detals")
+			logus.LogCli.Infoln("base_", index, "/", len_bases, " is processed for trade detals")
 		}
 		trade_routes := e.GetBaseTradePathsFrom(ctx, base)
 		for _, trade_route := range trade_routes {
@@ -501,12 +502,12 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 	}
 	runtime.GC()
 	result.OneWayDeals = trade_deals
-	fmt.Println("ONE WAY: finished gathering, elapsed=", time.Since(time_start_best_trades))
+	logus.LogCli.Infoln("ONE WAY: finished gathering, elapsed=", time.Since(time_start_best_trades))
 
 	var found_two_way_hashes map[string]bool = make(map[string]bool)
 	var found_two_way_hashes_my sync.Mutex
 	start_time_two_ways := time.Now()
-	fmt.Println("TWO WAYS: starting calculating two way best trade routes")
+	logus.LogCli.Infoln("TWO WAYS: starting calculating two way best trade routes")
 	chunk_size := 10
 	two_ways_deals_chan := make(chan []*TwoWayDeal)
 	chunks_amount := 0
@@ -621,7 +622,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		i++
 
 		if i%10 == 0 {
-			fmt.Printf("TWO WAYS: processed %d out of %d\n", i, chunks_amount)
+			logus.LogCli.Infoln("TWO WAYS: processed %d out of %d\n", i, chunks_amount)
 		}
 	}
 
@@ -697,7 +698,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		}
 	}
 
-	fmt.Println("TWO WAYS: finished calculating two way best trade routes, found=", len(result.TwoWayDeals), " elapsed=", time.Since(start_time_two_ways))
+	logus.LogCli.Infoln("TWO WAYS: finished calculating two way best trade routes, found=", len(result.TwoWayDeals), " elapsed=", time.Since(start_time_two_ways))
 
 	runtime.GC()
 
@@ -720,7 +721,7 @@ func trade_route_info(trade_route1 *TradeRoute, trade_route2 *TradeRoute) RouteI
 	// 		if trade_route1.SellingGood.BaseNickname == "li01_01_base" {
 	// 			if trade_route2.SellingGood.BaseNickname == "ku05_02_base" {
 	// 				if ship == ShipCategoryFrigate {
-	// 					fmt.Print()
+	// 					logus.LogCli.Infoln()
 	// 				}
 	// 			}
 	// 		}

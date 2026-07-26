@@ -72,7 +72,7 @@ func (r *ClientRpc) getClient() (*rpc.Client, error) {
 		logus.Log.Panic("both sock and port are defined for rpc client")
 	}
 	if r.sock != nil {
-		fmt.Println("initialized unix client")
+		logus.LogCli.Infoln("initialized unix client")
 		client, err = rpc.Dial("unix", *r.sock) // if connecting over cli over sock
 	}
 	if r.port != nil {
@@ -82,9 +82,9 @@ func (r *ClientRpc) getClient() (*rpc.Client, error) {
 			address = *r.address
 		}
 		info := fmt.Sprintf("%s:%d", address, *r.port)
-		fmt.Println("initializing tcp client at ", info)
+		logus.LogCli.Infoln("initializing tcp client at ", info)
 		client, err = rpc.DialHTTP("tcp", info) // if serving over http
-		fmt.Println("initialized tcp client")
+		logus.LogCli.Infoln("initialized tcp client")
 	}
 
 	if logus.Log.CheckWarn(err, "dialing:") {
@@ -122,7 +122,7 @@ func (r *ClientRpc) GetBases(args Args, reply *Reply) error {
 }
 
 func (t *ServerRpc) GetHealth(args Args, reply *bool) error {
-	fmt.Println("received get health request")
+	logus.LogCli.Infoln("received get health request")
 	*reply = true
 	logus.Log.Info("rpc server got health checked")
 	return nil
@@ -134,9 +134,9 @@ func (r *ClientRpc) GetHealth(args Args, reply *bool) error {
 		return err
 	}
 
-	fmt.Println("querying server rpc for get health")
+	logus.LogCli.Infoln("querying server rpc for get health")
 	divCall := client.Go("ServerRpc.GetHealth", args, &reply, nil)
-	fmt.Println("stuck awaiting server")
+	logus.LogCli.Infoln("stuck awaiting server")
 	replyCall := <-divCall.Done // will be equal to divCall
 	return replyCall.Error
 }

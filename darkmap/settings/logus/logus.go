@@ -8,3 +8,9 @@ import (
 var Log *typelog.Logger = typelog.NewLogger("darkmap",
 	typelog.WithLogLevel(typelog.LEVEL_INFO),
 )
+
+var LogCli *typelog.Logger = typelog.NewLogger(
+	"darkmap",
+	typelog.WithLogLevel(typelog.LEVEL_INFO),
+	typelog.WithFileShowing(false),
+)

@@ -1,12 +1,12 @@
 package configs_export
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/missions_mapped/mbases_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 )
 
@@ -99,8 +99,8 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 			target_faction := e.Mapped.InitialWorld.GroupsMap[rep_to_add.Nickname]
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Println("Recovered in f", r)
-					fmt.Println("recovered rep_to_add.Nickname", rep_to_add.Nickname)
+					logus.Log.Errorln("Recovered in f", r)
+					logus.Log.Errorln("recovered rep_to_add.Nickname", rep_to_add.Nickname)
 					panic(r)
 				}
 			}()

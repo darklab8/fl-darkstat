@@ -2,7 +2,6 @@ package darkmap
 
 import (
 	"context"
-	"fmt"
 	"os/signal"
 	"syscall"
 
@@ -23,7 +22,7 @@ import (
 func DarkmapCliGroup(Args []string) {
 	map_urls.Index = utils_types.FilePath(settings.Env.IndexUrl)
 
-	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
+	logus.LogCli.Infoln("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	parser := cantil.NewConsoleParser(
 		[]cantil.Action{
 			{
@@ -53,7 +52,7 @@ func DarkmapCliGroup(Args []string) {
 
 					timer_web.Close()
 
-					fmt.Println("darkmap is launched in=", timer_web.Duration())
+					logus.LogCli.Infoln("darkmap is launched in=", timer_web.Duration())
 					graceful_closer := web.NewWeb(
 						[]*builder.Filesystem{fs},
 						web.WithSiteRoot(settings.Env.SiteRoot),

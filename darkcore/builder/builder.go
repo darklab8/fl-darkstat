@@ -2,12 +2,12 @@ package builder
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/darklab8/fl-darkstat/darkcore/core_types"
 	"github.com/darklab8/fl-darkstat/darkcore/settings"
 	darkstat_settings "github.com/darklab8/fl-darkstat/darkstat/settings"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 
 	"github.com/darklab8/go-utils/utils/timeit"
 	"github.com/darklab8/go-utils/utils/utils_filepath"
@@ -124,7 +124,7 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 	}
 
 	filesystem.CreateBuildFolder(cleanup_build_folder)
-	fmt.Println("beginning build operation")
+	logus.LogCli.Infoln("beginning build operation")
 	results := make(chan WriteResult)
 
 	time_start := time.Now()
@@ -132,7 +132,7 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 	timeit.NewTimerF(func() {
 		chunked_components := chunkSlice(b.components, 10000)
 		len_comps := len(chunked_components)
-		fmt.Println("components chunks", len_comps)
+		logus.LogCli.Infoln("components chunks", len_comps)
 		for chunk_index, components_chunk := range chunked_components {
 
 			if to_where == BuildToMemory {
@@ -158,11 +158,11 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 				switch mode_to_run {
 				case ModeWorkerPool:
 					worker := func(id int, jobs <-chan *Component, results chan<- WriteResult) {
-						// fmt.Println("worker", id, "started  processing jobs")
+						// logus.Log.Infoln("worker", id, "started  processing jobs")
 						for comp := range jobs {
 							results <- comp.Write(ctx, b.params)
 						}
-						// fmt.Println("worker", id, "finished  processing jobs")
+						// logus.Log.Infoln("worker", id, "finished  processing jobs")
 					}
 					numJobs := len(components_chunk)
 					jobs := make(chan *Component, numJobs)
@@ -203,7 +203,7 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 			}
 
 			if chunk_index%10 == 0 {
-				fmt.Println("finished chunk=", chunk_index, "/", len_comps, " time=", time.Since(time_start))
+				logus.LogCli.Infoln("finished chunk=", chunk_index, "/", len_comps, " time=", time.Since(time_start))
 			}
 		}
 

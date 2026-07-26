@@ -2,7 +2,6 @@ package configs_export
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 	"strings"
 
@@ -10,8 +9,8 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/flsr/flsr_missions"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
-	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
+	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/lootable_shown"
 	"github.com/google/uuid"
 )
@@ -301,10 +300,6 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 		for _, system := range e.Mapped.Systems.Systems {
 			for _, wreck := range system.Wrecks {
 
-				if wreck.Loadout.Get() == strings.ToLower("SECRET_c_co_elite2_ew63_a") {
-					fmt.Print()
-				}
-
 				process_wreck(Wreck{
 					LoadoutNickname: wreck.Loadout.Get(),
 					Archetype:       wreck.Archetype.Get(),
@@ -315,16 +310,16 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 			}
 		}
 
-		fmt.Println("mission parsing started zero")
+		logus.LogCli.Infoln("mission parsing started zero")
 		if e.Mapped.FLSR != nil {
-			fmt.Println("mission parsing started")
+			logus.LogCli.Infoln("mission parsing started")
 			missions := e.Mapped.FLSR.FLSRMissions.Missions
 			for _, mission := range missions {
 				// is_active, _ := mission.InitState.GetValue()
 				// if !is_active {
 				// 	continue
 				// }
-				// fmt.Println("mission=", mission.Nickname.Get())
+				// logus.LogCli.Infoln("mission=", mission.Nickname.Get())
 				for _, wreck := range mission.Solars {
 
 					loadout, found_loadout := wreck.Loadout.GetValue()
@@ -356,7 +351,7 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 					}, system)
 				}
 			}
-			fmt.Println("mission parsing finished")
+			logus.LogCli.Infoln("mission parsing finished")
 
 		}
 	}
@@ -421,10 +416,6 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 
 			for _, cargo := range loadout.Cargos {
 				item_nickname := cargo.Nickname.Get()
-
-				if item_nickname == "cr_heavy_battlerazor" {
-					fmt.Print()
-				}
 
 				is_lootable, is_disco_encounter := e.IsLootable(item_nickname, LootSourceAny)
 				if !is_lootable {

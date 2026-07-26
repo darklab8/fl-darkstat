@@ -21,14 +21,14 @@ import (
 
 func HelpersCliGroup(Args []string) {
 
-	fmt.Println("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
+	logus.LogCli.Infoln("freelancer folder=", settings.Env.FreelancerFolder, settings.Env)
 	parser := cantil.NewConsoleParser(
 		[]cantil.Action{
 			{
 				Nickname:    "patch_disco",
 				Description: "Patch disco to latest",
 				Func: func(info cantil.ActionInfo) error {
-					fmt.Println("inputed args=", info.CmdArgs[1:])
+					logus.LogCli.Infoln("inputed args=", info.CmdArgs[1:])
 					f := flag.String("wd", ".", "...")
 					use_cache := flag.Bool("cache", false, "use cached version")
 					flag.Parse()
@@ -43,7 +43,7 @@ func HelpersCliGroup(Args []string) {
 				Nickname:    "infocard_read",
 				Description: "Read some infocard and output to file",
 				Func: func(info cantil.ActionInfo) error {
-					fmt.Println("inputed args=", info.CmdArgs[1:])
+					logus.LogCli.Infoln("inputed args=", info.CmdArgs[1:])
 					workdir, _ := os.Getwd()
 
 					os.Args = info.CmdArgs

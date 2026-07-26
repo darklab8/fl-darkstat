@@ -95,7 +95,7 @@ func main() {
 		log.Println(http.ListenAndServe("0.0.0.0:6060", nil)) // for pprof
 	}()
 
-	fmt.Println("starting app with args=", os.Args[1:])
+	logus.LogCli.Infoln("starting app with args=", os.Args[1:])
 
 	docs.SwaggerInfo.Host = strings.ReplaceAll(settings.Env.SiteHost, "https://", "")
 	docs.SwaggerInfo.Host = strings.ReplaceAll(docs.SwaggerInfo.Host, "http://", "")
@@ -113,7 +113,7 @@ func main() {
 		if settings.Env.IsDevEnv {
 			f, err := os.Create("web.pprof")
 			if err != nil {
-				fmt.Println(err)
+				logus.LogCli.Error("web pprof started not succesfully", typelog.OptError(err))
 				return nil
 
 			}
@@ -124,30 +124,30 @@ func main() {
 		start_time_app_data := time.Now()
 		webstat_mu := &sync.RWMutex{}
 		app_data := appdata.NewAppData(ctx_span, nil, webstat_mu)
-		log.Printf("Elapsed start_time_app_data time %s", time.Since(start_time_app_data))
+		logus.LogCli.Infoln("Elapsed start_time_app_data time ", time.Since(start_time_app_data))
 
 		start_time_relay_data := time.Now()
 		_, span := traces.Tracer.Start(ctx_span, "NewRelayData")
 		relay_data := appdata.NewRelayData(app_data)
 		app_data.Configs.Mapped.Clean()
 		span.End()
-		log.Printf("Elapsed start_time_relay_data time %s", time.Since(start_time_relay_data))
+		logus.LogCli.Infoln("Elapsed start_time_relay_data time ", time.Since(start_time_relay_data))
 
 		start_time_stat_router := time.Now()
 		_, span = traces.Tracer.Start(ctx_span, "NewRouter")
 		stat_router := router.NewRouter(app_data)
 		span.End()
-		log.Printf("Elapsed start_time_stat_router time %s", time.Since(start_time_stat_router))
+		logus.LogCli.Infoln("Elapsed start_time_stat_router time ", time.Since(start_time_stat_router))
 		start_time_stat_router_link := time.Now()
 		stat_builder := stat_router.Link(ctx_span)
 
-		log.Printf("Elapsed start_time_stat_router_link time %s", time.Since(start_time_stat_router_link))
+		logus.LogCli.Infoln("Elapsed start_time_stat_router_link time ", time.Since(start_time_stat_router_link))
 
 		start_time_stat_router_build := time.Now()
 		_, span = traces.Tracer.Start(ctx_span, "stat_builder.BuildAll")
 		stat_fs := stat_builder.BuildAll(builder.BuildToMemory, builder.NotCleanFolder, nil)
 		span.End()
-		log.Printf("Elapsed start_time_stat_router_build time %s", time.Since(start_time_stat_router_build))
+		logus.LogCli.Infoln("Elapsed start_time_stat_router_build time ", time.Since(start_time_stat_router_build))
 
 		_, span = traces.Tracer.Start(ctx_span, "GetRelayFs")
 		app_data.Lock()
@@ -184,14 +184,14 @@ func main() {
 			web_opts.SockAddress = web.DarkstatHttpSock
 		}
 		web_closer := web_server.Serve(web_opts)
-		log.Printf("Elapsed web launch time %s", time.Since(start_time_total))
+		logus.LogCli.Infoln("Elapsed web launch time ", time.Since(start_time_total))
 
 		metronom := metrics.NewMetronom(web_server.GetMux())
 		go metronom.Run()
 
 		return func() {
 			web_closer.Close()
-			fmt.Println("graceful shutdown is certainly acomplished")
+			logus.LogCli.Infoln("graceful shutdown is certainly acomplished")
 		}
 	}
 
@@ -284,7 +284,7 @@ func main() {
 							func() {
 								defer func() {
 									if r := recover(); r != nil {
-										fmt.Print(string(debug.Stack()))
+										logus.LogCli.Errorln(string(debug.Stack()))
 										logus.Log.Error("discovery read update, failed to do",
 											typelog.Any("r", r),
 											typelog.Any("stack", string(debug.Stack())),
@@ -318,7 +318,7 @@ func main() {
 								time_switch_start := time.Now()
 								web_server.SetNewData(out.app_data, out.fs, out.app_data, web_cron_mu)
 								api.SetAppData(out.app_data, web_cron_mu)
-								fmt.Println("switch of web data happened in", time.Since(time_switch_start))
+								logus.LogCli.Infoln("switch of web data happened in", time.Since(time_switch_start))
 								runtime.GC()
 							}()
 						}
@@ -340,7 +340,7 @@ func main() {
 				Nickname:    "version",
 				Description: "get darkstat version",
 				Func: func(info cantil.ActionInfo) error {
-					fmt.Println("version=", settings.Env.AppVersion)
+					logus.LogCli.Infoln("version=", settings.Env.AppVersion)
 					return nil
 				},
 			},
@@ -368,7 +368,7 @@ func main() {
 					if resp.StatusCode != 200 {
 						logus.Log.Panic("status code is not 200", typelog.Any("code", resp.StatusCode))
 					}
-					fmt.Println("service is healthy")
+					logus.Log.Infoln("service is healthy")
 					return nil
 				},
 			},

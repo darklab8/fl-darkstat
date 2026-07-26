@@ -77,7 +77,7 @@ func (m *Metronom) Run() {
 // counter++
 // metric := &dto.Metric{}
 // httpRequestDurationSum.WithLabelValues("123", "123", "123").Write(metric)
-// fmt.Println("described metrics value = ", metric.GetGauge().GetValue())
+// logus.LogCli.Infoln("described metrics value = ", metric.GetGauge().GetValue())
 // metric = &dto.Metric{}
 // httpRequestDurationSum.WithLabelValues("123", "123", "444").Write(metric)
-// fmt.Println("described metrics value = ", metric.GetGauge().GetValue())
+// logus.LogCli.Infoln("described metrics value = ", metric.GetGauge().GetValue())

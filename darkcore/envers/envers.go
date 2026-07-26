@@ -2,7 +2,6 @@ package envers
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	map_settings "github.com/darklab8/fl-darkstat/darkmap/settings"
@@ -30,5 +29,5 @@ var Envs = []any{
 func PrintSettings() {
 	env_data, err := json.Marshal(Envs)
 	logus.Log.CheckPanic(err, "failed encoding settings")
-	fmt.Println("freelancer_folder=", stat_settings.Env.FreelancerFolder, " configuration=", string(env_data))
+	logus.LogCli.Infoln("freelancer_folder=", stat_settings.Env.FreelancerFolder, " configuration=", string(env_data))
 }

@@ -118,5 +118,4 @@ func TestTradeRoutes(t *testing.T) {
 			)
 		}
 	}, timeit.WithMsg("trade routes calculated"))
-	fmt.Println()
 }

@@ -6,3 +6,9 @@ import (
 )
 
 var Log *typelog.Logger = typelog.NewLogger("configs")
+
+var LogCli *typelog.Logger = typelog.NewLogger(
+	"configs",
+	typelog.WithLogLevel(typelog.LEVEL_INFO),
+	typelog.WithFileShowing(false),
+)

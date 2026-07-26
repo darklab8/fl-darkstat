@@ -96,7 +96,7 @@ func NewEndpointStatic(w *Web) *registry.Endpoint {
 // 	return &registry.Endpoint{
 // 		Url: "GET /" + front.UrlBaseTravelRoutesPrfx + "{base_nickname}",
 // 		Handler: func(resp http.ResponseWriter, req *http.Request) {
-// 			fmt.Println("Getting Requested Base Travel Routes")
+// 			logus.LogCli.Infoln("Getting Requested Base Travel Routes")
 // 			if w.AppDataMutex != nil {
 // 				w.AppDataMutex.Lock()
 // 				defer w.AppDataMutex.Unlock()

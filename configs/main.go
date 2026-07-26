@@ -2,8 +2,6 @@ package configs
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"os"
 	"runtime"
 	"runtime/pprof"
@@ -23,7 +21,7 @@ func GetConfigsExport() *configs_export.Exporter {
 	// Start profiling
 	f, err := os.Create("configs.pprof")
 	if err != nil {
-		fmt.Println(err)
+		logus.Log.CheckError(err, "configs.pprof failed to be created")
 		return nil
 
 	}
@@ -46,7 +44,7 @@ func GetConfigsExport() *configs_export.Exporter {
 
 	pprof.StopCPUProfile()
 	elapsed := time.Since(start)
-	log.Printf("Elapsed Pprof time %s", elapsed)
+	logus.LogCli.Infoln("Elapsed Pprof time ", elapsed)
 
 	return configs
 }
@@ -68,12 +66,12 @@ func CliConfigs() {
 		runtime.GC()
 		_ = configs
 
-		fmt.Println("configs are prepared")
+		logus.Log.Infoln("configs are prepared")
 
 		timer_total.Close()
 
 		// for {
-		// 	fmt.Println(configs.Bases[0])
+		// 	logus.LogCli.Infoln(configs.Bases[0])
 		// 	time.Sleep(time.Hour)
 		// }
 	}

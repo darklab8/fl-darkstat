@@ -366,10 +366,6 @@ func extractFromFileWithSubdir(inputPath, outputDir, subdir string, shapes *Shap
 		img.Filename = filepath.Base(img.Filename)
 		name := strings.Split(strings.ToLower(img.Filename), ".")
 
-		// if strings.Contains(strings.ToLower(dest), "navmaptextures.txm") {
-		// 	fmt.Print()
-		// }
-
 		image := &Image{
 			Nickname:  name[0],
 			Extension: name[1],

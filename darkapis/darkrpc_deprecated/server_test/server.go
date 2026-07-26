@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os/signal"
 	"sync"
 	"syscall"
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkrpc_deprecated"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
 )
 
@@ -22,5 +22,5 @@ func main() {
 	defer stop()
 	<-ctx.Done()
 	srv.Close()
-	fmt.Println("did graceful shutdown")
+	logus.LogCli.Infoln("did graceful shutdown")
 }

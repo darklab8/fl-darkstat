@@ -2,13 +2,13 @@ package configs_export
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/fl-darkstat/darkstat/settings"
@@ -250,9 +250,9 @@ func (e *Exporter) ServerSideMarketGoodsOverrides(commodity GetCommodityAtBasesI
 
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Println("Recovered in f", r)
-				fmt.Println("recovered base_nickname", base_nickname)
-				fmt.Println("recovered commodity nickname", commodity.Nickname)
+				logus.Log.Errorln("Recovered in f", r)
+				logus.Log.Errorln("recovered base_nickname", base_nickname)
+				logus.Log.Errorln("recovered commodity nickname", commodity.Nickname)
 				panic(r)
 			}
 		}()

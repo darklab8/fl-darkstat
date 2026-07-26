@@ -175,7 +175,7 @@ func main() {
 				cmd := exec.Command("docker", args...)
 				stdout, err := cmd.Output()
 				if Log.CheckError(err, "can't launch service restart") {
-					fmt.Println(string(stdout))
+					Log.Errorln(string(stdout))
 					panic("can't launch server restart")
 				}
 				LatestPatch = latest_patch

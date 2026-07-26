@@ -6,7 +6,6 @@ package configs_mapped
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 	"sync"
@@ -272,14 +271,14 @@ func (cfg *MappedConfigs) ReadDiscovery(ctx context.Context, filesystem *filefin
 		)
 
 		if latest_patch_file := filesystem.GetFile(autopatcher.AutopatherFilename); latest_patch_file != nil {
-			fmt.Println("latest_patch_file=", latest_patch_file)
+			logus.LogCli.Infoln("latest_patch_file=", latest_patch_file)
 			latest_patch_file_fp := latest_patch_file.GetFilepath()
 			patch_data, err := os.ReadFile(latest_patch_file_fp.ToString())
 			if !logus.Log.CheckError(err, "failed to unmarshal patch") {
 				err := json.Unmarshal(patch_data, &Discovery.LatestPatch)
 				logus.Log.CheckWarn(err, "failed to unmarshal latest patch")
 			}
-			fmt.Println("p.Discovery.LatestPatch=", Discovery.LatestPatch)
+			logus.LogCli.Infoln("p.Discovery.LatestPatch=", Discovery.LatestPatch)
 		}
 	}
 
@@ -434,8 +433,8 @@ func (m *MappedConfigs) Read(ctx context.Context, file1path utils_types.FilePath
 			go func(file *iniload.IniLoader) {
 				defer func() {
 					if r := recover(); r != nil {
-						fmt.Println("Recovered in f", r)
-						fmt.Println("file that cause it=", file.File, index)
+						logus.LogCli.Errorln("Recovered in f", r)
+						logus.LogCli.Errorln("file that cause it=", file.File, index)
 						panic(r)
 					}
 				}()

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkrpc_deprecated"
+	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 )
 
 func GetBases(args darkrpc_deprecated.Args, reply *darkrpc_deprecated.Reply) error {
@@ -23,17 +23,17 @@ func main() {
 	// client := darkrpc.NewClient(darkrpc.WithSockCli(darkrpc.DarkstatRpcSock))
 
 	var health_reply bool
-	fmt.Println("attempted to get health")
+	logus.LogCli.Infoln("attempted to get health")
 	err := client.GetHealth(args, &health_reply)
 	if err != nil {
 		log.Fatal("getHealth error:", err)
 	} else {
-		fmt.Println("server health reply =", health_reply)
+		logus.LogCli.Infoln("server health reply =", health_reply)
 	}
 
 	err = client.GetBases(args, &reply)
 	if err != nil {
 		log.Fatal("getBases error:", err)
 	}
-	fmt.Println("Bases[0]=", reply.Bases[0])
+	logus.LogCli.Infoln("Bases[0]=", reply.Bases[0])
 }

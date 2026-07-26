@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"html"
 	"regexp"
 	"strings"
@@ -99,7 +98,7 @@ func Read(ctx context.Context, file *file.File) (*Config, error) {
 	var conf *Config
 	err = json.Unmarshal(byteValue, &conf)
 	if logus.Log.CheckError(err, "failed to unmarshal content of pob goods") {
-		fmt.Println("content=", string(byteValue))
+		logus.LogCli.Errorln("content=", string(byteValue))
 		return nil, errors.New("failed to unmarshal content of pob goods")
 	}
 	if conf.BasesByNick == nil {

@@ -6,3 +6,9 @@ import (
 )
 
 var Log *typelog.Logger = typelog.NewLogger("darkstat")
+
+var LogCli *typelog.Logger = typelog.NewLogger(
+	"darkstat",
+	typelog.WithLogLevel(typelog.LEVEL_INFO),
+	typelog.WithFileShowing(false),
+)

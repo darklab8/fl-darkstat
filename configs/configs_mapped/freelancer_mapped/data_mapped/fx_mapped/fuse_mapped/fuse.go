@@ -1,8 +1,6 @@
 package fuse_mapped
 
 import (
-	"fmt"
-
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/iniload"
@@ -46,9 +44,6 @@ func Read(configs []*iniload.IniLoader) *Config {
 					NotLootableHardpoints: make(map[string]bool),
 				}
 
-				if fuse.Nickname.Get() == "fuse_suprise_drop_loot" {
-					fmt.Println()
-				}
 				fuse.Map(fuse_section)
 
 				for j := i + 1; j < len(input_file.Sections) && input_file.Sections[j].Type != "[fuse]"; j++ {

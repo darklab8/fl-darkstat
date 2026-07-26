@@ -113,7 +113,7 @@ type Path struct {
 }
 
 func GetPath(graph *GameGraph, parents [][]Parent, dist [][]Intg, source_key string, target_key string) []Path {
-	// fmt.Println("get_path", source_key, target_key)
+	// logus.LogCli.Infoln("get_path", source_key, target_key)
 	S := []Path{}
 	u, found_u := graph.IndexByNick[VertexName(target_key)] // target
 	if !found_u {

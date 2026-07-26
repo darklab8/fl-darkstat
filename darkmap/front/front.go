@@ -1,10 +1,10 @@
 package front
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
+	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 )
 
 type VectorCoords struct {
@@ -28,7 +28,7 @@ func Vector(edge *export_map.ConnectionEdge, rotate float64) VectorCoords {
 	y_new := x1*math.Sin(rotate*math.Pi/180) + y1*math.Cos(rotate*math.Pi/180)
 
 	if math.IsNaN(x_new) || math.IsNaN(y_new) {
-		fmt.Println(x1, y1, x_new, y_new, rotate)
+		logus.LogCli.Errorln(x1, y1, x_new, y_new, rotate)
 		panic("NAN in vector calculations")
 	}
 

@@ -97,7 +97,7 @@ func NewWebBasic(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
 
 func NewWeb(filesystems []*builder.Filesystem, opts ...WebOpt) *Web {
 	w := NewWebBasic(filesystems, opts...)
-	fmt.Println("site_root", w.site_root)
+	logus.LogCli.Infoln("site_root", w.site_root)
 
 	// w.registry.Register(NewBaseTravelRoutes(w)) // example how to write route for appdata
 	w.registry.Register(NewEndpointStatic(w))
@@ -171,7 +171,7 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 		port = *opts.Port
 	}
 
-	fmt.Printf("launching web server, visit http://localhost:%d to check it!\n", port)
+	logus.LogCli.Infoln("launching web server, visit http://localhost:", port, " to check it!")
 
 	hander := prometheusMidleware(CorsMiddleware(AuthMiddleware(w.mux)))
 	if !settings.Env.IsDevEnv {
@@ -190,7 +190,7 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 		err = os.Remove(opts.SockAddress)
 		logus.Log.CheckWarn(err, "attempting to remove socket")
 
-		fmt.Println("starting to listen to sock ", opts.SockAddress)
+		logus.LogCli.Infoln("starting to listen to sock ", opts.SockAddress)
 		sock_listener, err = net.Listen("unix", opts.SockAddress)
 		if err != nil {
 			panic(err)

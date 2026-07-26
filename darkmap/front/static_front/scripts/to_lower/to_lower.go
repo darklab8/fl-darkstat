@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 )
 
 func main() {
@@ -28,7 +30,7 @@ func main() {
 	})
 
 	if err != nil {
-		fmt.Println("Walk error:", err)
+		logus.LogCli.Errorln("Walk error:", err)
 		return
 	}
 

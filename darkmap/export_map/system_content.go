@@ -385,7 +385,7 @@ func (e *Export) EnrichSystemWithObjects(
 		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, factionName, obj, func(info *infocarder.InfocardBuilder) {
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Println("crashed in ", obj.Nickname)
+					logus.LogCli.Errorln("crashed in ", obj.Nickname)
 					panic(r)
 				}
 			}()
@@ -450,7 +450,7 @@ func (e *Export) EnrichSystemWithObjects(
 		e.ExportInfocard(star_info.IDsInfo, star.Nickname, star.Name, star.Pos, star_info.IdsName, "", star, func(info *infocarder.InfocardBuilder) {
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Println("crashed in ", star.Nickname)
+					logus.LogCli.Errorln("crashed in ", star.Nickname)
 					panic(r)
 				}
 			}()
@@ -574,7 +574,7 @@ func (e *Export) EnrichSystemWithObjects(
 			func(info *infocarder.InfocardBuilder) {
 				defer func() {
 					if r := recover(); r != nil {
-						fmt.Println("crashed in ", base.Nickname)
+						logus.LogCli.Errorln("crashed in ", base.Nickname)
 						panic(r)
 					}
 				}()
@@ -760,7 +760,7 @@ func (e *Export) EnrichSystemWithObjects(
 		e.ExportInfocard(wreck.IDsInfo, obj.Nickname, obj.Name, obj.Pos, wreck.IdsName, "", obj, func(info *infocarder.InfocardBuilder) {
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Println("crashed in ", obj.Nickname)
+					logus.LogCli.Errorln("crashed in ", obj.Nickname)
 					panic(r)
 				}
 			}()
@@ -837,7 +837,7 @@ func (e *Export) EnrichSystemWithObjects(
 			func(info *infocarder.InfocardBuilder) {
 				defer func() {
 					if r := recover(); r != nil {
-						fmt.Println("crashed in ", zone.Nickname)
+						logus.LogCli.Errorln("crashed in ", zone.Nickname)
 						panic(r)
 					}
 				}()
@@ -916,7 +916,7 @@ func (e *Export) EnrichSystemWithObjects(
 		e.ExportInfocard(obj_info.IDsInfo, obj.Nickname, obj.Name, obj.Pos, obj_info.IdsName, "", obj, func(info *infocarder.InfocardBuilder) {
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Println("crashed in ", obj.Nickname)
+					logus.LogCli.Errorln("crashed in ", obj.Nickname)
 					panic(r)
 				}
 			}()

@@ -214,8 +214,8 @@ func (e *Exporter) GetShips(ids []*Tractor, TractorsByID map[cfg.TractorID]*Trac
 		}
 		// defer func() {
 		// 	if r := recover(); r != nil {
-		// 		fmt.Println("Recovered in f", r)
-		// 		fmt.Println("ship.Nickname", ship.Nickname)
+		// 		logus.LogCli.Errorln("Recovered in f", r)
+		// 		logus.LogCli.Errorln("ship.Nickname", ship.Nickname)
 		// 		panic(r)
 		// 	}
 		// }()

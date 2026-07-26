@@ -2,7 +2,6 @@ package configs_export
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"runtime/pprof"
@@ -88,9 +87,9 @@ func FixtureGetTrades() {
 
 	settings.Env.TradeDealsEnabled = true
 	data_results := trade_path_exporter.GetBestTradeDeals(ctx, e.Bases)
-	fmt.Println("len_one_way_deals=", len(data_results.OneWayDeals), "len_two_way_deals=", len(data_results.TwoWayDeals))
+	logus.Log.Infoln("len_one_way_deals=", len(data_results.OneWayDeals), "len_two_way_deals=", len(data_results.TwoWayDeals))
 
 	pprof.StopCPUProfile()
 
-	fmt.Println("best trade deals in ", time.Since(time_start).Seconds(), " seconds")
+	logus.Log.Infoln("best trade deals in ", time.Since(time_start).Seconds(), " seconds")
 }

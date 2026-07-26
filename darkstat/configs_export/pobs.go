@@ -338,7 +338,7 @@ func NewHashesCategories(Mapped *configs_mapped.MappedConfigs) HashesByCat {
 		hash := flhash.HashNickname(nickname)
 
 		if _, ok := goods_by_hash[hash]; ok {
-			fmt.Println("DETECETED GOOD COLLUSION FOR nickanme", item.Category, nickname, *item)
+			logus.Log.Warnln("DETECETED GOOD COLLUSION FOR nickanme", item.Category, nickname, *item)
 		}
 
 		goods_by_hash[hash] = item

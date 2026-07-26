@@ -1,8 +1,6 @@
 package iniload
 
 import (
-	"fmt"
-
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/filefind/file"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/inireader"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/semantic"
@@ -29,7 +27,7 @@ func NewLoader64(input_file *file.File) *IniLoader {
 func (fileconfig *IniLoader) Scan() *IniLoader {
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("Recovered in f", r, " crashed for file=", fileconfig.input_file)
+			logus.LogCli.Errorln("Recovered in f", r, " crashed for file=", fileconfig.input_file)
 			panic(r)
 		}
 	}()

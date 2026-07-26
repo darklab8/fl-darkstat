@@ -1,7 +1,6 @@
 package settings
 
 import (
-	"fmt"
 	"strings"
 
 	_ "embed"
@@ -11,8 +10,17 @@ import (
 	darkcore_settings "github.com/darklab8/fl-darkstat/darkcore/settings"
 	"github.com/darklab8/fl-darkstat/darkstat/theme"
 
+	"github.com/darklab8/go-utils/typelog"
 	"github.com/darklab8/go-utils/utils/enverant"
 	"github.com/darklab8/go-utils/utils/utils_settings"
+)
+
+var Log *typelog.Logger = typelog.NewLogger("darkstat")
+
+var LogCli *typelog.Logger = typelog.NewLogger(
+	"darkstat",
+	typelog.WithLogLevel(typelog.LEVEL_INFO),
+	typelog.WithFileShowing(false),
 )
 
 //go:embed version.txt
@@ -116,7 +124,7 @@ func init() {
 	}
 
 	if !Env.TradeDealsEnabled {
-		fmt.Println("WARN: TRADE_DEALS_ENABLED remained off. use env var set true, or cli arg `-stat-deals-on` to turn on BEST TRADE DEALS")
+		LogCli.Warn("WARN: TRADE_DEALS_ENABLED remained off. use env var set true, or cli arg `-stat-deals-on` to turn on BEST TRADE DEALS")
 	}
 
 	if Env.IsExpermentalMapWithDarkstatOn || Env.MapByUrl != "" {

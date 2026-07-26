@@ -2,7 +2,6 @@ package appdata
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 
@@ -164,7 +163,7 @@ func NewAppData(ctx context.Context, mapped *configs_mapped.MappedConfigs, mu *s
 			}
 			shared.ShipNames = DiscoShipNames
 		}
-		fmt.Println("attempting to access l.configs.Infocards")
+		logus.Log.Info("attempting to access l.configs.Infocards")
 		shared.Infocarder = configs.Infocarder
 	})
 

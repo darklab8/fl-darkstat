@@ -2,7 +2,6 @@ package configs_export
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -117,8 +116,8 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 	gun_nickname := gun_info.Nickname.Get()
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("Recovered in f", r)
-			fmt.Println("recovered gun_nickname", gun_nickname)
+			logus.Log.Errorln("Recovered in f", r)
+			logus.Log.Errorln("recovered gun_nickname", gun_nickname)
 			panic(r)
 		}
 	}()
@@ -329,7 +328,7 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		gun.Type = "torpedo"
 	}
 
-	// fmt.Println("CalculateTEchCompat", e.mapped.Discovery != nil, gun.Nickname)
+	// logus.LogCli.Infoln("CalculateTEchCompat", e.mapped.Discovery != nil, gun.Nickname)
 	gun.DiscoveryTechCompat = CalculateTechCompat(e.Mapped.Discovery, ids, gun.Nickname)
 
 	if e.Mapped.Discovery != nil {
