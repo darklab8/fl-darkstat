@@ -483,9 +483,10 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 					good.Volume, _ = equip.Volume.GetValue()
 					good.OriginalVolume, _ = equip.Volume.GetValue()
 				} else {
-					logus.Log.Warn("haven't found item info for good.nickname", typelog.Any("nickname", good.Nickname))
+					if good.Category != "ship" {
+						logus.Log.Warn("haven't found item info for good.nickname", typelog.Any("nickname", good.Nickname))
+					}
 				}
-
 				pob.ShopItems = append(pob.ShopItems, good)
 			}
 		}
@@ -713,7 +714,8 @@ func (e *ExporterRelay) fmt_factions_to_str(factions_by_hash map[flhash.HashCode
 				sb.WriteString(", ")
 			}
 		} else {
-			logus.Log.Warn("faction hash is invalid", typelog.Any("hash", *faction_hash))
+			// disco devs do not delete deprecated faction hashes.
+			logus.Log.Info("faction hash is invalid", typelog.Any("hash", *faction_hash))
 		}
 	}
 	sb.WriteString("]")
