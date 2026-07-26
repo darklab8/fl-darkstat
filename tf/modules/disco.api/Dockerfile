@@ -1,19 +1,23 @@
-FROM golang:1.25-alpine as build
+FROM golang:1.25-bookworm as build
 
-ENV CGO_ENABLED=0
+RUN apt update
+RUN apt install -y build-essential
+RUN apt-get install ca-certificates -y
+RUN gcc --version
 
 WORKDIR /code
 COPY main.go go.mod go.sum ./
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
 # docker uses alpine too
-FROM docker:27.3.1-cli as runner
+FROM debian:12.11-slim AS runner
 
 WORKDIR /code
 COPY --from=build /code/main main
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-# can't set user here because using docker with default installation
+USER 1001:1001
 
-ENTRYPOINT ["/code/main"]
-CMD [ "main" ]
+EXPOSE 8000
+
+ENTRYPOINT ["/code/main", "web"]

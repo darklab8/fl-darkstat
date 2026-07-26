@@ -1,7 +1,7 @@
 
 module "vanilla" {
   count       = 0
-  source      = "../modules/vanilla"
+  source      = "../modules/vanilla.data"
   environment = "production"
 }
 

@@ -19,6 +19,10 @@ data "docker_network" "caddy" {
   name = "caddy"
 }
 
+data "docker_network" "grafana" {
+  name = "grafana"
+}
+
 resource "docker_container" "disco_api" {
   name    = "${var.environment}-darkstat-disco.api"
   image   = docker_image.disco_api.image_id
@@ -28,6 +32,22 @@ resource "docker_container" "disco_api" {
   networks_advanced {
     name    = data.docker_network.caddy.id
     aliases = ["disco-api"]
+  }
+
+  labels {
+    label = "prometheus"
+    value = "true"
+  }
+  networks_advanced {
+    name    = data.docker_network.grafana.id
+    aliases = ["${var.environment}-darkstat-disco.api"]
+  }
+  healthcheck {
+    test         = ["CMD", "/code/main", "health"]
+    interval     = "14s"
+    timeout      = "20s"
+    retries      = 6
+    start_period = "2m"
   }
 
   log_opts = {

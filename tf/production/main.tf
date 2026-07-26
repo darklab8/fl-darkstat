@@ -1,10 +1,10 @@
 module "discovery" {
-  source      = "../modules/discovery"
+  source      = "../modules/disco.prod.data"
   environment = "production"
 }
 
 module "disco_api" {
-  source       = "../modules/disco_api"
+  source       = "../modules/disco.api"
   ipv4_address = module.data_cluster.node_darklab.ipv4_address
   environment  = "production"
 }
@@ -52,7 +52,7 @@ resource "random_string" "random_secret" {
 }
 
 module "discovery_dev" {
-  source      = "../modules/discovery_dev"
+  source      = "../modules/disco.dev.data"
   environment = "dev"
 }
 

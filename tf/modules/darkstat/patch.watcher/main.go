@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -14,6 +15,11 @@ import (
 
 	"github.com/darklab8/fl-data-discovery/autopatcher"
 	"github.com/darklab8/go-utils/typelog"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
+	"github.com/prometheus/client_golang/prometheus/collectors/version"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var LatestPatch autopatcher.Patch
@@ -81,9 +87,35 @@ func main() {
 	command := args[0]
 
 	switch command {
+	case "health":
+		tr := &http.Transport{
+			MaxIdleConns:       10,
+			IdleConnTimeout:    10 * time.Second,
+			DisableCompression: true,
+		}
+
+		client := &http.Client{Transport: tr}
+		resp, err := client.Get("http://localhost:8000/metrics")
+		Log.CheckPanic(err, "failed to health check")
+		if resp.StatusCode != 200 {
+			Log.Panic("status code is not 200", typelog.Any("code", resp.StatusCode))
+		}
+		Log.Debug("service is healthy")
 	case "force_map_patch":
 		PatchMap(darkmap_token)
 	case "main":
+		mux := http.NewServeMux()
+		tcp_server := http.Server{Handler: mux}
+		var err error
+		tcp_listener, err := net.Listen("tcp", "0.0.0.0:8000")
+		Log.CheckPanic(err, "http error")
+		go func() {
+			err := tcp_server.Serve(tcp_listener) // if serving over Http
+			Log.CheckFatal(err, "http error")
+		}()
+		metronom := NewMetronom(mux)
+		go metronom.Run()
+
 		if value, err := GetLatestPatchLocal(); err == nil {
 			LatestPatch = value
 			Log.Info(fmt.Sprintln("found local patch=", value.Name, value.Hash))
@@ -217,4 +249,60 @@ func triggerWorkflow(token, repository, workflowFile, callerRepository, ref stri
 	}
 
 	return nil
+}
+
+//////////////// METRICS STUFF
+
+type Metronom struct {
+	Reg *prometheus.Registry
+}
+
+func NewMetronom(mux *http.ServeMux) *Metronom {
+
+	newreg := prometheus.NewRegistry()
+	reg := prometheus.WrapRegistererWith(
+		prometheus.Labels{
+			"environment": os.Getenv("ENVIRONMENT"),
+			"project":     "darkstat",
+			"component":   "patch.watcher",
+		}, newreg)
+
+	metrics := []prometheus.Collector{
+		collectors.NewGoCollector(),
+		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
+		version.NewCollector("darkstat"),
+		typelog.MetricMsgsTotal,
+		upTime,
+	}
+
+	reg.MustRegister(
+		metrics...,
+	)
+
+	mux.Handle(
+		"/metrics", promhttp.HandlerFor(
+			newreg,
+			promhttp.HandlerOpts{
+				EnableOpenMetrics: true,
+			}),
+	)
+
+	return &Metronom{
+		Reg: newreg,
+	}
+}
+
+var (
+	upTime prometheus.Counter = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "darkstat_uptime_seconds",
+		Help: "Up time in seconds",
+	})
+)
+
+func (m *Metronom) Run() {
+	for {
+		seconds := 60
+		upTime.Add(float64(seconds))
+		time.Sleep(time.Second * time.Duration(seconds))
+	}
 }

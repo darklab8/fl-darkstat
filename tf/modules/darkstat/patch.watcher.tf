@@ -1,12 +1,12 @@
 resource "docker_image" "cron_restart" {
-  name = "${var.environment}-darkstat-patch-watcher"
+  name = "${var.environment}-darkstat-patch.watcher"
   build {
-    context = "${path.module}/cron"
+    context = "${path.module}/patch.watcher"
   }
 
   triggers = {
     dir_sha1 = sha1(join("",
-      [for f in ["Dockerfile", "main.go", "go.mod", "go.sum"] : filesha1("${path.module}/cron/${f}")]
+      [for f in ["Dockerfile", "main.go", "go.mod", "go.sum"] : filesha1("${path.module}/patch.watcher/${f}")]
     ))
   }
 }
@@ -29,6 +29,21 @@ resource "docker_container" "cron_restart" {
   volumes {
     host_path      = var.discovery_path
     container_path = "/data"
+  }
+  labels {
+    label = "prometheus"
+    value = "true"
+  }
+  networks_advanced {
+    name    = data.docker_network.grafana.id
+    aliases = ["${var.environment}-darkstat-patch.watcher"]
+  }
+  healthcheck {
+    test         = ["CMD", "/code/main", "health"]
+    interval     = "14s"
+    timeout      = "20s"
+    retries      = 6
+    start_period = "2m"
   }
   env = [
     "ENVIRONMENT=${var.environment}",

@@ -1,10 +1,10 @@
 module "vanilla" {
-  source      = "../modules/vanilla"
+  source      = "../modules/vanilla.data"
   environment = "staging"
 }
 
 module "discovery" {
-  source      = "../modules/discovery"
+  source      = "../modules/disco.prod.data"
   environment = "staging"
 }
 
