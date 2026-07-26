@@ -6,6 +6,7 @@ module "discovery" {
 module "disco_api" {
   source       = "../modules/disco_api"
   ipv4_address = module.data_cluster.node_darklab.ipv4_address
+  environment  = "production"
 }
 
 module "darkstat" {

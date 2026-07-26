@@ -14,7 +14,7 @@ locals {
 }
 
 resource "docker_container" "vanilla" {
-  name  = "${var.environment}-vanilla-data"
+  name  = "${var.environment}-darkstat-vanilla.data"
   image = docker_image.vanilla.image_id
 
   volumes {

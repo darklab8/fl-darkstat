@@ -19,7 +19,7 @@ data "external" "disco_dev_webhook" {
 }
 
 resource "docker_container" "discovery" {
-  name  = "${var.environment}-discovery-data"
+  name  = "${var.environment}-darkstat-disco.dev.data"
   image = docker_image.discovery_dev.image_id
 
   volumes {

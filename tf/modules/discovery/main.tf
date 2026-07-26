@@ -14,7 +14,7 @@ locals {
 }
 
 resource "docker_container" "discovery" {
-  name  = "${var.environment}-discovery-data"
+  name  = "${var.environment}-darkstat-disco.prod.data"
   image = docker_image.discovery.image_id
 
   volumes {

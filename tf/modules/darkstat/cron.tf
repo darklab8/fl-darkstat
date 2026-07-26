@@ -14,7 +14,7 @@ resource "docker_image" "cron_restart" {
 // ensures to catch new Discovery version
 resource "docker_container" "cron_restart" {
   count   = var.enable_restarts ? 1 : 0
-  name    = "${var.environment}-darkstat-patch-watcher"
+  name    = "${var.environment}-darkstat-patch.watcher"
   image   = docker_image.cron_restart.image_id
   restart = "always"
   tty     = true

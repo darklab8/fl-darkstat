@@ -1,3 +1,7 @@
+variable "environment" {
+  type = string
+}
+
 resource "docker_image" "disco_api" {
   name = "disco-api"
   build {
@@ -16,7 +20,7 @@ data "docker_network" "caddy" {
 }
 
 resource "docker_container" "disco_api" {
-  name    = "disco-api"
+  name    = "${var.environment}-darkstat-disco.api"
   image   = docker_image.disco_api.image_id
   restart = "always"
   tty     = true
