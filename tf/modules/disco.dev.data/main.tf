@@ -18,6 +18,9 @@ data "external" "disco_dev_webhook" {
   program = ["pass", "personal/terraform/darkstat/discovery_dev_branch_webhook"]
 }
 
+
+variable "docker_network_grafana_id" { type = string }
+
 resource "docker_container" "discovery" {
   name  = "${var.environment}-darkstat-disco.dev.data"
   image = docker_image.discovery_dev.image_id
@@ -35,6 +38,22 @@ resource "docker_container" "discovery" {
   ]
 
   restart = "always"
+
+  labels {
+    label = "prometheus"
+    value = "true"
+  }
+  networks_advanced {
+    name    = var.docker_network_grafana_id
+    aliases = ["${var.environment}-darkstat-dev.data"]
+  }
+  healthcheck {
+    test         = ["CMD", "/install/main", "health"]
+    interval     = "14s"
+    timeout      = "20s"
+    retries      = 6
+    start_period = "2m"
+  }
 
   volumes {
     host_path      = "/var/run/docker.sock"

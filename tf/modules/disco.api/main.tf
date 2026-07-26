@@ -15,13 +15,8 @@ resource "docker_image" "disco_api" {
   }
 }
 
-data "docker_network" "caddy" {
-  name = "caddy"
-}
-
-data "docker_network" "grafana" {
-  name = "grafana"
-}
+variable "docker_network_grafana_id" { type = string }
+variable "docker_network_caddy_id" { type = string }
 
 resource "docker_container" "disco_api" {
   name    = "${var.environment}-darkstat-disco.api"
@@ -30,7 +25,7 @@ resource "docker_container" "disco_api" {
   tty     = true
 
   networks_advanced {
-    name    = data.docker_network.caddy.id
+    name    = var.docker_network_caddy_id
     aliases = ["disco-api"]
   }
 
@@ -39,7 +34,7 @@ resource "docker_container" "disco_api" {
     value = "true"
   }
   networks_advanced {
-    name    = data.docker_network.grafana.id
+    name    = var.docker_network_grafana_id
     aliases = ["${var.environment}-darkstat-disco.api"]
   }
   healthcheck {

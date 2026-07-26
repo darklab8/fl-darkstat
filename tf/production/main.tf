@@ -1,12 +1,22 @@
+data "docker_network" "caddy" {
+  name = "caddy"
+}
+
+data "docker_network" "grafana" {
+  name = "grafana"
+}
+
 module "discovery" {
   source      = "../modules/disco.prod.data"
   environment = "production"
 }
 
 module "disco_api" {
-  source       = "../modules/disco.api"
-  ipv4_address = module.data_cluster.node_darklab.ipv4_address
-  environment  = "production"
+  source                    = "../modules/disco.api"
+  ipv4_address              = module.data_cluster.node_darklab.ipv4_address
+  environment               = "production"
+  docker_network_caddy_id   = data.docker_network.caddy.id
+  docker_network_grafana_id = data.docker_network.grafana.id
 }
 
 module "darkstat" {
@@ -15,6 +25,9 @@ module "darkstat" {
   tag            = "production-arm64"
   discovery_path = module.discovery.freelancer_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
+
+  docker_network_caddy_id   = data.docker_network.caddy.id
+  docker_network_grafana_id = data.docker_network.grafana.id
 
   SITE_ROOT           = "/fl-data-discovery/"
   FLDARKSTAT_HEADING  = <<-EOT
@@ -52,8 +65,9 @@ resource "random_string" "random_secret" {
 }
 
 module "discovery_dev" {
-  source      = "../modules/disco.dev.data"
-  environment = "dev"
+  source                    = "../modules/disco.dev.data"
+  environment               = "dev"
+  docker_network_grafana_id = data.docker_network.grafana.id
 }
 
 module "darkstat_dev" {
@@ -62,6 +76,9 @@ module "darkstat_dev" {
   tag            = "production-arm64"
   discovery_path = module.discovery_dev.freelancer_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
+
+  docker_network_caddy_id   = data.docker_network.caddy.id
+  docker_network_grafana_id = data.docker_network.grafana.id
 
   SITE_ROOT          = "/"
   FLDARKSTAT_HEADING = <<-EOT

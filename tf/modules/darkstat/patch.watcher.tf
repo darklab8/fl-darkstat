@@ -35,7 +35,7 @@ resource "docker_container" "cron_restart" {
     value = "true"
   }
   networks_advanced {
-    name    = data.docker_network.grafana.id
+    name    = var.docker_network_grafana_id
     aliases = ["${var.environment}-darkstat-patch.watcher"]
   }
   healthcheck {

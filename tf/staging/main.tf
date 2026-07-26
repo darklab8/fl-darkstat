@@ -1,3 +1,11 @@
+data "docker_network" "caddy" {
+  name = "caddy"
+}
+
+data "docker_network" "grafana" {
+  name = "grafana"
+}
+
 module "vanilla" {
   source      = "../modules/vanilla.data"
   environment = "staging"
@@ -18,6 +26,9 @@ module "darkstat" {
   FLDARKSTAT_HEADING = <<-EOT
   <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
   EOT
+
+  docker_network_caddy_id   = data.docker_network.caddy.id
+  docker_network_grafana_id = data.docker_network.grafana.id
 
   stat_prefix                 = "darkstat-staging"
   zone                        = "dd84ai.com"

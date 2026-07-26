@@ -25,7 +25,6 @@ resource "docker_container" "discovery" {
     "max-file" : "3"
     "max-size" : "10m"
   }
-  restart = "always"
 
   lifecycle {
     ignore_changes = [

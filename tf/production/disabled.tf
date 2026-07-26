@@ -13,6 +13,9 @@ module "darkstat_vanilla" {
   discovery_path = module.vanilla[0].freelancer_path
   ipv4_address   = module.data_cluster.node_darklab.ipv4_address
 
+  docker_network_caddy_id   = data.docker_network.caddy.id
+  docker_network_grafana_id = data.docker_network.grafana.id
+
   SITE_ROOT           = "/fl-data-vanilla/"
   FLDARKSTAT_HEADING  = <<-EOT
   <a href="https://github.com/darklab8/fl-darkstat">Darkstat</a> from <a href="https://darklab8.github.io/blog/pet_projects.html#Freelancercommunity">DarkTools</a> for Freelancer Vanilla

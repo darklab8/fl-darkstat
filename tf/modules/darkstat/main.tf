@@ -13,13 +13,8 @@ resource "docker_image" "darkstat" {
   keep_locally = true
 }
 
-data "docker_network" "caddy" {
-  name = "caddy"
-}
-
-data "docker_network" "grafana" {
-  name = "grafana"
-}
+variable "docker_network_grafana_id" { type = string }
+variable "docker_network_caddy_id" { type = string }
 
 resource "docker_service" "darkstat" {
   name = "${var.environment}-darkstat-app"
@@ -30,11 +25,11 @@ resource "docker_service" "darkstat" {
       aliases = ["darkstat"]
     }
     networks_advanced {
-      name    = data.docker_network.caddy.id
+      name    = var.docker_network_caddy_id
       aliases = ["${var.environment}-darkstat"]
     }
     networks_advanced {
-      name    = data.docker_network.grafana.id
+      name    = var.docker_network_grafana_id
       aliases = ["${var.environment}-darkstat"]
     }
     log_driver {

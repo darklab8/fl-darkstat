@@ -287,7 +287,7 @@ func NewMetronom(mux *http.ServeMux) *Metronom {
 		prometheus.Labels{
 			"environment": os.Getenv("ENVIRONMENT"),
 			"project":     "darkstat",
-			"component":   "disco-api",
+			"component":   "disco.api",
 		}, newreg)
 
 	metrics := []prometheus.Collector{
