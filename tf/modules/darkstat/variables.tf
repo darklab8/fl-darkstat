@@ -37,9 +37,9 @@ locals {
     var.disco_oauth == true ? {
       DARKCORE_DISCO_OAUTH = "true"
     } : {},
-    var.environment == "production" ? {
-      OTEL_TRACES_SAMPLER_ARG = "0.1"
-    } : {},
+    # var.environment == "production" ? {
+    #   OTEL_TRACES_SAMPLER_ARG = "0.1"
+    # } : {},
     var.extra_vars,
   )
 }
