@@ -36,6 +36,10 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
+		if strings.HasPrefix(r.URL.Path, "/metrics") {
+			next.ServeHTTP(w, r)
+			return
+		}
 
 		// Auth is Active.
 		if password_cookie, err := r.Cookie(settings.Env.Password); err == nil {
