@@ -10,6 +10,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/go-utils/typelog"
+	"go.opentelemetry.io/otel/attribute"
 
 	"github.com/a-h/templ"
 	"github.com/darklab8/go-utils/utils/utils_filepath"
@@ -47,6 +48,9 @@ func (h *Component) GetPagePath(gp Params) utils_types.FilePath {
 func (h *Component) Write(ctx context.Context, gp Params) WriteResult {
 	ctx, span := traces.Tracer.Start(ctx, "component-write")
 	defer span.End()
+	span.SetAttributes(attribute.String(
+		"pagepath", h.pagepath.ToString(),
+	))
 
 	defer func() {
 		if r := recover(); r != nil {
