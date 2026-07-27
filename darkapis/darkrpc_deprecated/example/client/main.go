@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/rpc"
 
@@ -22,5 +23,5 @@ func main() {
 	if err != nil {
 		log.Fatal("arith error:", err)
 	}
-	logus.LogCli.Infoln("Arith: %d*%d=%d", args.A, args.B, reply)
+	logus.LogCli.Infoln(fmt.Sprintf("Arith: %d*%d=%d", args.A, args.B, reply))
 }

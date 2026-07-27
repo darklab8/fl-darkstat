@@ -622,7 +622,7 @@ func (e *TradePathExporter) GetBestTradeDeals(ctx context.Context, bases []*Base
 		i++
 
 		if i%10 == 0 {
-			logus.LogCli.Infoln("TWO WAYS: processed %d out of %d\n", i, chunks_amount)
+			logus.LogCli.Infoln(fmt.Sprintf("TWO WAYS: processed %d out of %d\n", i, chunks_amount))
 		}
 	}
 

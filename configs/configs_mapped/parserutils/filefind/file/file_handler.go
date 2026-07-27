@@ -103,7 +103,7 @@ func (f *File) ReadLines() ([]string, error) {
 			logus.Log.Error("client: could not read response body: %s\n", typelog.OptError(err))
 			return []string{}, err
 		}
-		// logus.LogCli.Infoln("client: response body: %s\n", resBody)
+		// logus.LogCli.Infoln(fmt.Sprintf("client: response body: %s\n", resBody))
 
 		str := string(resBody)
 		return strings.Split(str, "\n"), nil
