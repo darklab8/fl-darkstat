@@ -10,8 +10,7 @@ resource "docker_image" "discovery_dev" {
 }
 
 locals {
-  host_path         = "/var/lib/darklab/discovery-${var.environment}"
-  disco_dev_webhook = data.external.disco_dev_webhook.result["webhook_url"]
+  host_path = "/var/lib/darklab/discovery-${var.environment}"
 }
 
 data "external" "disco_dev_webhook" {
@@ -34,7 +33,8 @@ resource "docker_container" "discovery" {
     "max-size" : "10m"
   }
   env = [
-    "DISCO_DEV_WEBHOOK=${local.disco_dev_webhook}"
+    "DISCO_DEV_WEBHOOK=${data.external.disco_dev_webhook.result["webhook_url"]}",
+    "MY_SERVER_WEBHOOK=${data.external.disco_dev_webhook.result["my_server_url"]}"
   ]
 
   restart = "always"

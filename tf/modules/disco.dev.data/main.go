@@ -219,11 +219,17 @@ func main() {
 							IsAlerting = false
 						}
 
-						webhookURL := os.Getenv("DISCO_DEV_WEBHOOK")
-						if webhookURL == "" {
-							Log.Warn("DISCO_DEV_WEBHOOK env var not set")
-						} else if err := sendDiscordWebhook(webhookURL, "Darkstat", contentMsg); err != nil {
-							Log.CheckError(err, "sending Discord webhook")
+						webhookURLs := []string{
+							os.Getenv("DISCO_DEV_WEBHOOK"),
+							os.Getenv("MY_SERVER_WEBHOOK"),
+						}
+
+						for index, webhookURL := range webhookURLs {
+							if webhookURL == "" {
+								Log.Warnln("webhook env var not set for hook #", index)
+							} else if err := sendDiscordWebhook(webhookURL, "Darkstat", contentMsg); err != nil {
+								Log.CheckError(err, "sending Discord webhook")
+							}
 						}
 						break
 					}
