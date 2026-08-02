@@ -130,6 +130,7 @@ MarketGood = li01_01_base, commodity_basic_alloys, 1150, 1550, 1
 		}
 	}
 	market_good := targetcom.Bases["li01_01_base"]
+	assert.NotNil(t, market_good)
 	assert.Equal(t, 1550, market_good.PriceBaseSellsFor)
 	assert.True(t, market_good.IsServerSideOverride)
 }

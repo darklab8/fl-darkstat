@@ -43,7 +43,7 @@ func make_request[IN any, OUT any](c *HttpClient, endpoint_url core_types.Url, i
 
 	res, err := c.httpc.Post(c.api_url+endpoint_url.ToStr(), ApplicationJson, bytes.NewBuffer(post_body))
 
-	if logus.Log.CheckError(err, "failed to request to get pobs") {
+	if logus.Log.CheckError(err, "failed to request to get pobs") || res == nil {
 		return output, err
 	}
 

@@ -33,6 +33,10 @@ var Log *typelog.Logger = typelog.NewLogger(
 func Request(url string) (RequestResp, error) {
 	res, err := utils_http.Get(url)
 
+	if res == nil {
+		return RequestResp{}, errors.New(fmt.Sprintln("result is nil", err))
+	}
+
 	if res.StatusCode >= 400 {
 		return RequestResp{}, errors.New(fmt.Sprintln("status code is bad, status=", res.StatusCode, err))
 	}

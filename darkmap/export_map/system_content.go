@@ -494,6 +494,12 @@ func (e *Export) EnrichSystemWithObjects(
 
 		archetype := base_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		if solararch == nil {
+			logus.Log.Error("base without solar found",
+				typelog.String("base_nickname", base.Nickname),
+				typelog.String("archetype", archetype))
+			continue
+		}
 		if radius, ok := solararch.SolarRadius.GetValue(); ok {
 			base.SolarRadius = radius
 		}
@@ -739,6 +745,10 @@ func (e *Export) EnrichSystemWithObjects(
 
 		archetype := wreck.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		if solararch == nil {
+			logus.Log.Error("wreck without solar found", typelog.String("archetype", archetype))
+			continue
+		}
 		if radius, ok := solararch.SolarRadius.GetValue(); ok {
 			obj.SolarRadius = radius
 		}
@@ -891,6 +901,12 @@ func (e *Export) EnrichSystemWithObjects(
 
 		archetype := obj_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		if solararch == nil {
+			logus.Log.Error("obj without solar found",
+				typelog.String("obj_nickname", obj.Nickname),
+				typelog.String("archetype", archetype))
+			continue
+		}
 		shape_name, _ := solararch.ShapeName.GetValue()
 
 		if radius, ok := solararch.SolarRadius.GetValue(); ok {
@@ -1096,9 +1112,14 @@ func (e *Export) WriteIniConfig(
 
 		if section.Type == "[zone]" && param.Key == "faction" {
 			faction_nickname := param.First.AsString()
-			group := e.Exp.Mapped.InitialWorld.GroupsMap[faction_nickname]
-			faction_name := e.GetInfocardName(group.IdsName.Get(), faction_nickname)
-			sb.WriteString(fmt.Sprintf(" \t# <(%s)>", faction_name))
+			group, group_found := e.Exp.Mapped.InitialWorld.GroupsMap[faction_nickname]
+			if group_found {
+				faction_name := e.GetInfocardName(group.IdsName.Get(), faction_nickname)
+				sb.WriteString(fmt.Sprintf(" \t# <(%s)>", faction_name))
+			} else {
+				logus.Log.Error("faction_nickname without initialworld definition is found",
+					typelog.String("faction_nickname", faction_nickname))
+			}
 		}
 
 		if section.Type == "[loadout]" {

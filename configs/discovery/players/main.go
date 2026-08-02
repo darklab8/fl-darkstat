@@ -35,12 +35,12 @@ func Read(ctx context.Context, file *file.File) (*Config, error) {
 
 	var conf *Config
 	err = json.Unmarshal(byteValue, &conf)
-	conf.TimestampReq = time.Now()
 
-	if logus.Log.CheckError(err, "failed to read players") {
+	if logus.Log.CheckError(err, "failed to read players") || conf == nil {
 		return nil, errors.New("failed to read file")
 	}
 
+	conf.TimestampReq = time.Now()
 	conf.file = file
 	return conf, nil
 }
