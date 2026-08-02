@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/equipment_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
@@ -45,9 +46,13 @@ func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 				e.ExportInfocards(infocarder.InfocardKey(good_nickname), equip.IdsInfo.Get())
 			}
 		case "ship":
-			ship := e.Mapped.Goods.ShipsMap[good.Nickname.Get()]
 
-			ship_hull := e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()]
+			var ship_hull *equipment_mapped.ShipHull
+			if ship := e.Mapped.Goods.ShipsMap[good.Nickname.Get()]; ship != nil {
+				ship_hull = e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()]
+			} else {
+				logus.Log.Errorln("e.Mapped.Goods.ShipsMap[good.Nickname.Get()] leads to nil for nil=", good.Nickname.Get())
+			}
 			if ship_hull != nil {
 				info.PriceBase = ship_hull.Price.Get()
 
@@ -55,24 +60,27 @@ func (e *Exporter) GetGoodInfo(good_nickname string) GoodInfo {
 				info.ShipNickname = ship_hull.Ship.Get()
 				shiparch := e.Mapped.Shiparch.ShipsMap[info.ShipNickname]
 
-				info.Name = e.GetInfocardName(shiparch.IdsName.Get(), info.ShipNickname)
+				if shiparch == nil {
+					logus.Log.Errorln("e.Mapped.Shiparch.ShipsMap[info.ShipNickname] leads to nil for nick=", info.ShipNickname)
+				} else {
+					info.Name = e.GetInfocardName(shiparch.IdsName.Get(), info.ShipNickname)
 
-				// e.exportInfocards(infocarder.InfocardKey(market_good_nickname),
-				// 	shiparch.IdsInfo.Get(), shiparch.IdsInfo1.Get(), shiparch.IdsInfo2.Get(), shiparch.IdsInfo3.Get())
-				func() {
-					defer func() {
-						if r := recover(); r != nil {
-							logus.Log.Debug("Failed to get infocard",
-								typelog.String("nickname", good_nickname),
-							)
-							e.ExportInfocards(infocarder.InfocardKey(good_nickname))
-						}
+					// e.exportInfocards(infocarder.InfocardKey(market_good_nickname),
+					// 	shiparch.IdsInfo.Get(), shiparch.IdsInfo1.Get(), shiparch.IdsInfo2.Get(), shiparch.IdsInfo3.Get())
+					func() {
+						defer func() {
+							if r := recover(); r != nil {
+								logus.Log.Debug("Failed to get infocard",
+									typelog.String("nickname", good_nickname),
+								)
+								e.ExportInfocards(infocarder.InfocardKey(good_nickname))
+							}
+						}()
+						e.ExportInfocards(infocarder.InfocardKey(good_nickname),
+							shiparch.IdsInfo1.Get(), shiparch.IdsInfo.Get())
 					}()
-					e.ExportInfocards(infocarder.InfocardKey(good_nickname),
-						shiparch.IdsInfo1.Get(), shiparch.IdsInfo.Get())
-				}()
+				}
 			}
-
 		}
 
 		if gun, ok := e.Mapped.Equip().GunMap[good_nickname]; ok {
