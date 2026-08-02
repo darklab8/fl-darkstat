@@ -113,6 +113,11 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 								name := nickname.Get()
 								equip := e.Mapped.Equip().ItemsMap[name]
 
+								if equip == nil {
+									logus.Log.Errorln("e.Mapped.Equip().ItemsMap[name] unexpectedly returned nil, name=", name)
+									continue
+								}
+
 								item_volume += equip.Volume.Get() * float64(item.Amount.Get())
 							}
 							item_volume = item_volume / float64(len(item.Items))

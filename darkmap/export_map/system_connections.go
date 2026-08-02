@@ -168,10 +168,21 @@ func (g *SystemGraphs) DFSUtil(vertex *System, visited map[string]bool) {
 	// 	return
 	// }
 
+	if vertex == nil {
+		panic("vertex in DSFUtil was never supposed to become nil. Nil away")
+	}
+
 	visited[vertex.Nickname] = true
 	vertex.VisibleByDefault = true
 
-	for _, v := range g.Systems[vertex.Nickname].LeadsTo {
+	system := g.Systems[vertex.Nickname]
+	if system == nil {
+		msg := fmt.Sprintln("system was never supposed to be nil in DFSUtil. vertex.Nickname=", vertex.Nickname)
+		logus.Log.Errorln(msg)
+		panic(msg)
+	}
+
+	for _, v := range system.LeadsTo {
 		if !visited[v.Nickname] {
 			g.DFSUtil(v.System, visited)
 		}
@@ -240,8 +251,15 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 			}
 
 			target_kinds := make(map[JumpConnectionKind]bool)
-			if _, ok := graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick]; ok {
-				target_kinds = graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick].Kind
+			if jh, ok := graph.Systems[target_conn.Nickname]; ok {
+				if target, ok := jh.LeadsTo[origin_system_nick]; ok {
+					target_kinds = target.Kind
+				}
+			} else {
+				logus.Log.Error("jumphole that leads to nowhere",
+					typelog.String("origin_system_nick", origin_system_nick),
+					typelog.String("target_conn.Nickname", target_conn.Nickname),
+				)
 			}
 
 			connection.SetKind(target_conn.Kind, target_kinds)
@@ -255,8 +273,10 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 		for _, target_conn := range origin_system.LeadsTo {
 
 			target_system := &JumpConnection{System: &System{}}
-			if value, ok := graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick]; ok {
-				target_system = value
+			if jh, ok := graph.Systems[target_conn.Nickname]; ok {
+				if value, ok := jh.LeadsTo[origin_system_nick]; ok {
+					target_system = value
+				}
 			}
 
 			if !origin_system.VisibleByDefault &&
@@ -277,8 +297,10 @@ func (e *Export) GetSystemConnections(systems []*System) SystemGraphs {
 			}
 
 			target_kinds := make(map[JumpConnectionKind]bool)
-			if _, ok := graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick]; ok {
-				target_kinds = graph.Systems[target_conn.Nickname].LeadsTo[origin_system_nick].Kind
+			if jh, ok := graph.Systems[target_conn.Nickname]; ok {
+				if target, ok := jh.LeadsTo[origin_system_nick]; ok {
+					target_kinds = target.Kind
+				}
 			}
 
 			if connection.Kind == JumpKindUnknown {

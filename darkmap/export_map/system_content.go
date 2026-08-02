@@ -273,6 +273,10 @@ func (e *Export) EnrichSystemWithObjects(
 		archetype := jh_info.Archetype.Get()
 
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		if solararch == nil {
+			logus.Log.Error("solararch of jumphole is not found", typelog.Any("archetype", archetype))
+			continue
+		}
 		if radius, ok := solararch.SolarRadius.GetValue(); ok {
 			jumphole.SolarRadius = radius
 		}

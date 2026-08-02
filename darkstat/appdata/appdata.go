@@ -99,9 +99,10 @@ func NewMapped(ctx context.Context) *configs_mapped.MappedConfigs {
 	var mapped *configs_mapped.MappedConfigs
 	freelancer_folder := settings.Env.FreelancerFolder
 
-	timeit.NewTimerF(func() {
-		mapped = configs_mapped.NewMappedConfigs()
-	}, timeit.WithMsg("MappedConfigs creation"))
+	timer := timeit.NewTimerL("MappedConfigs creation")
+	mapped = configs_mapped.NewMappedConfigs()
+	timer.Close()
+
 	logus.Log.Debug("scanning freelancer folder", utils_logus.FilePath(freelancer_folder))
 	mapped.Read(ctx, freelancer_folder)
 	return mapped
