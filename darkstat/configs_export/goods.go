@@ -125,17 +125,21 @@ func (e *Exporter) getMarketGoods() map[cfg.BaseUniNick]map[CommodityKey]*Market
 				} else {
 					good_to_add.PriceBaseBuysFor = ptr.Ptr(good_to_add.PriceBaseSellsFor)
 				}
-				equipment := e.Mapped.Equip().CommoditiesMap[market_good_nickname]
 
 				if *good_to_add.PriceBaseBuysFor > good_to_add.PriceBaseSellsFor {
 					logus.Log.Errorln("detected base/sell bug.", good_to_add.BaseName, good_to_add.Name, *good_to_add.PriceBaseBuysFor, good_to_add.PriceBaseSellsFor)
 				}
 
-				for _, volume := range equipment.Volumes {
-					good_to_add2 := good_to_add
-					good_to_add2.Volume = volume.Volume.Get()
-					good_to_add2.ShipClass = volume.GetShipClass()
-					MarketGoods[GetCommodityKey(good_to_add2.Nickname, good_to_add2.ShipClass)] = good_to_add2
+				equipment := e.Mapped.Equip().CommoditiesMap[market_good_nickname]
+				if equipment != nil {
+					for _, volume := range equipment.Volumes {
+						good_to_add2 := good_to_add
+						good_to_add2.Volume = volume.Volume.Get()
+						good_to_add2.ShipClass = volume.GetShipClass()
+						MarketGoods[GetCommodityKey(good_to_add2.Nickname, good_to_add2.ShipClass)] = good_to_add2
+					}
+				} else {
+					logus.Log.Errorln("e.Mapped.Equip().CommoditiesMap[market_good_nickname] leads to nil, market_good_nickname=", market_good_nickname)
 				}
 
 			} else {

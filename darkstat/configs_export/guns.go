@@ -196,11 +196,16 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		if explosion_arch, ok := munition.ExplosionArch.GetValue(); ok {
 			// rocket launcher
 			explosion := e.Mapped.Equip().ExplosionMap[explosion_arch]
-			gun.HullDamage = explosion.HullDamage.Get()
-			gun.EnergyDamage = explosion.EnergyDamage.Get()
-			if weapon_type, ok := explosion.WeaponType.GetValue(); ok {
-				gun.DamageType = weapon_type
+			if explosion != nil {
+				gun.HullDamage = explosion.HullDamage.Get()
+				gun.EnergyDamage = explosion.EnergyDamage.Get()
+				if weapon_type, ok := explosion.WeaponType.GetValue(); ok {
+					gun.DamageType = weapon_type
+				}
+			} else {
+				logus.Log.Errorln("e.Mapped.Equip().ExplosionMap[explosion_arch] leaded to nil, explosion_arch=", explosion_arch)
 			}
+
 		} else {
 			// healing gun
 			gun.HullDamage = -1
@@ -263,7 +268,11 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		if explosion_arch, ok := munition.ExplosionArch.GetValue(); ok {
 			// rocket launcher
 			explosion := e.Mapped.Equip().ExplosionMap[explosion_arch]
-			e.WriteConfigToInfocard(&explosion.Model, gun.Nickname)
+			if explosion != nil {
+				e.WriteConfigToInfocard(&explosion.Model, gun.Nickname)
+			} else {
+				logus.Log.Errorln("e.Mapped.Equip().ExplosionMap[explosion_arch] leads to nil, explosion_arch=", explosion_arch)
+			}
 		}
 
 		if motor_nick, ok := munition.Motor.GetValue(); ok {
@@ -340,9 +349,14 @@ func (e *Exporter) getGunInfo(gun_info *equip_mapped.Gun, ids []*Tractor, buyabl
 		if explosion_arch, ok := munition.ExplosionArch.GetValue(); ok {
 			// rocket launcher
 			explosion := e.Mapped.Equip().ExplosionMap[explosion_arch]
-			if armor_pen, ok := explosion.ArmorPen.GetValue(); ok {
-				gun.DiscoGun.ArmorPen = armor_pen
+			if explosion != nil {
+				if armor_pen, ok := explosion.ArmorPen.GetValue(); ok {
+					gun.DiscoGun.ArmorPen = armor_pen
+				}
+			} else {
+				logus.Log.Errorln("e.Mapped.Equip().ExplosionMap[explosion_arch] leads to nil, explosion_arch=", explosion_arch)
 			}
+
 		}
 	}
 
@@ -370,10 +384,15 @@ func (e *Exporter) GetGuns(ids []*Tractor, buyable_ship_tech map[string]bool) []
 			continue
 		}
 
-		munition := e.Mapped.Equip().MunitionMap[gun_info.ProjectileArchetype.Get()]
-		if _, ok := munition.Motor.GetValue(); ok {
-			// Excluded rocket launching stuff
-			continue
+		projectile_arch := gun_info.ProjectileArchetype.Get()
+		munition := e.Mapped.Equip().MunitionMap[projectile_arch]
+		if munition != nil {
+			if _, ok := munition.Motor.GetValue(); ok {
+				// Excluded rocket launching stuff
+				continue
+			}
+		} else {
+			logus.Log.Errorln("guns without munition aren't supposed to exist, gun=", gun.Nickname, " munition=", projectile_arch)
 		}
 
 		guns = append(guns, gun)
