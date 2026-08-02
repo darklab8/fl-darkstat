@@ -105,6 +105,10 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 						for _, item := range recipe.ConsumedItem {
 							name := item.Nickname.Get()
 							equip := e.Mapped.Equip().ItemsMap[name]
+							if equip == nil {
+								logus.Log.Errorln("e.Mapped.Equip().ItemsMap[name], name=", name)
+								continue
+							}
 							amount_volume_to_cook += equip.Volume.Get() * float64(item.Amount.Get())
 						}
 						for _, item := range recipe.ConsumedAlt {

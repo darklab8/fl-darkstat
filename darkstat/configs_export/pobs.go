@@ -665,6 +665,11 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 					ship_hull := e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()]
 					ship_nickname := ship_hull.Ship.Get()
 					shiparch := e.Mapped.Shiparch.ShipsMap[ship_nickname]
+					if shiparch == nil {
+						logus.Log.Errorln("not existing shiparch in e.Mapped.Shiparch.ShipsMap[ship_nickname], ship_nickname=", ship_nickname)
+						continue
+					}
+
 					good.Nickname = ship_nickname
 					good.Category = "ship"
 					good.Name = e.GetInfocardName(shiparch.IdsName.Get(), ship_nickname)
