@@ -145,7 +145,7 @@ func (e *Exporter) GetBases(ctx context.Context) []*Base {
 			Region:             Region,
 		}
 
-		if found_system {
+		if found_system && system != nil {
 			base.SectorCoord = VectorToSectorCoord(system, base.Pos)
 		}
 

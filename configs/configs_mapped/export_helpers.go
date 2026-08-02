@@ -20,8 +20,10 @@ func (configs *MappedConfigs) GetRegionName(system *universe_mapped.System) stri
 	var Region string
 	system_infocard_Id := system.IdsInfo.Get()
 	if value, ok := configs.Infocards.GetInfocard2(system_infocard_Id); ok {
-		if len(value.Lines) > 0 {
-			Region = value.Lines[0]
+		if value != nil {
+			if len(value.Lines) > 0 {
+				Region = value.Lines[0]
+			}
 		}
 	}
 

@@ -75,6 +75,9 @@ func Unpack[returnType any](
 	format []string,
 ) (returnType, int, error) {
 	packed_values, return_n, err := Read(fh, byte_data, format)
+	if len(packed_values) < 1 {
+		panic("never supposed to be less than one value present in Unpack")
+	}
 	value := packed_values[0].(returnType)
 	return value, return_n, err
 }
