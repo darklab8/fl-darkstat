@@ -400,22 +400,34 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 		} else {
 			is_fallback = true
 			pob_failback := e.Mapped.Discovery.BasesFull.BasesByNick[pob_nickname]
-			pob = &PoB{
-				PoBCore: PoBCore{
-					Nickname:       pob_failback.Nickname,
-					Name:           html.UnescapeString(pob_failback.Name),
-					FactionName:    ptr.Ptr(pob_failback.Affiliation),
-					Health:         ptr.Ptr(pob_failback.Health),
-					IsFallbackInfo: true,
-				},
+			if pob_failback != nil {
+				pob = &PoB{
+					PoBCore: PoBCore{
+						Nickname:       pob_failback.Nickname,
+						Name:           html.UnescapeString(pob_failback.Name),
+						FactionName:    ptr.Ptr(pob_failback.Affiliation),
+						Health:         ptr.Ptr(pob_failback.Health),
+						IsFallbackInfo: true,
+					},
+				}
 			}
 			pob_info = &pob_goods.Base{}
 		}
 
+		if pob == nil {
+			msg := fmt.Sprintln("pob remained having nil data. Never supposed to happen. pob_nickname=", pob_nickname)
+			logus.Log.Error(msg)
+			panic(msg)
+		}
+
 		if e.Mapped.Discovery.BasesFull != nil && !is_fallback {
 			extra_info := e.Mapped.Discovery.BasesFull.BasesByNick[pob_info.Nickname]
-			pob.FactionName = ptr.Ptr(extra_info.Affiliation)
-			pob.Health = ptr.Ptr(extra_info.Health)
+			if extra_info != nil {
+				pob.FactionName = ptr.Ptr(extra_info.Affiliation)
+				pob.Health = ptr.Ptr(extra_info.Health)
+			} else {
+				logus.Log.Errorln("not found extra info base in e.Mapped.Discovery.BasesFull.BasesByNick[pob_info.Nickname],  pob_info.Nickname=", pob_info.Nickname)
+			}
 		}
 
 		if pob_info.DefenseMode != nil {
@@ -454,9 +466,18 @@ func (e *ExporterRelay) GetPoBs() []*PoB {
 				good.Category = item.Category
 			} else {
 				if ship, ok := e.hashes.ships_by_hash[flhash.HashCode(shop_item.Id)]; ok {
-					ship_hull := e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()]
+					ship_hull_nick := ship.Hull.Get()
+					ship_hull := e.Mapped.Goods.ShipHullsMap[ship_hull_nick]
+					if ship_hull == nil {
+						logus.Log.Errorln("not existing shiparch in e.Mapped.Goods.ShipHullsMap[ship_hull_nick], ship_hull_nick=", ship_hull_nick)
+						continue
+					}
 					ship_nickname := ship_hull.Ship.Get()
 					shiparch := e.Mapped.Shiparch.ShipsMap[ship_nickname]
+					if shiparch == nil {
+						logus.Log.Errorln("not existing shiparch in e.Mapped.Shiparch.ShipsMap[ship_nickname], ship_nickname=", ship_nickname)
+						continue
+					}
 					good.Nickname = ship_nickname
 					good.Category = "ship"
 					good.Name = e.GetInfocardName(shiparch.IdsName.Get(), ship_nickname)
@@ -662,7 +683,12 @@ func (e *Exporter) get_pob_buyable() map[string][]*PobShopItem {
 				good.Category = item.Category
 			} else {
 				if ship, ok := ships_by_hash[flhash.HashCode(shop_item.Id)]; ok {
-					ship_hull := e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()]
+					ship_hull_name := ship.Hull.Get()
+					ship_hull := e.Mapped.Goods.ShipHullsMap[ship_hull_name]
+					if ship_hull == nil {
+						logus.Log.Errorln("not existing ship_hull in e.Mapped.Goods.ShipHullsMap[ship.Hull.Get()], ship_hull_name=", ship_hull_name)
+						continue
+					}
 					ship_nickname := ship_hull.Ship.Get()
 					shiparch := e.Mapped.Shiparch.ShipsMap[ship_nickname]
 					if shiparch == nil {
