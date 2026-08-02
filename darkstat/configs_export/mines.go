@@ -88,10 +88,17 @@ func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 
 		mine.Name = e.GetInfocardName(mine.IdsName, mine.Nickname)
 
-		mine_info := e.Mapped.Equip().MinesMap[mine_dropper.ProjectileArchetype.Get()]
-		mine.ProjectileArchetype = mine_info.Nickname.Get()
+		projectile_arch := mine_dropper.ProjectileArchetype.Get()
+		mine_info := e.Mapped.Equip().MinesMap[projectile_arch]
 
+		if mine_info == nil {
+			logus.Log.Errorln("mine no thaving defined projectilein .Mapped.Equip().MinesMap[projectile_arch], nick=", projectile_arch)
+			continue
+		}
+
+		mine.ProjectileArchetype = mine_info.Nickname.Get()
 		explosion_arch := mine_info.ExplosionArch.Get()
+
 		explosion := e.Mapped.Equip().ExplosionMap[mine_info.ExplosionArch.Get()]
 
 		if explosion != nil {

@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"errors"
+	"fmt"
 	"sort"
 	"strings"
 
@@ -129,26 +130,32 @@ func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*
 		// query here archetype of wreck ? by archetype of wreck, get Solar
 
 		solar := e.Mapped.Solararch.SolarsByNick[wreck.Archetype]
-		if is_destructible, _ := solar.Destructible.GetValue(); !is_destructible {
-			return nil, errors.New("not destructable")
-		}
 
 		allowed_cargo := false
 		allowed_hardpoints := make(map[string]bool)
-		for _, fuse := range solar.Fuses {
-			if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
-				if fuse.DoesDropCargo {
-					allowed_cargo = true
-				}
-				for key, _ := range fuse.LootableHardpoints {
-					allowed_hardpoints[key] = true
+		if solar == nil {
+			msg := fmt.Sprintln("e.Mapped.Solararch.SolarsByNick[wreck.Archetype] is not supposed to be nil ever. archetype=", wreck.Archetype)
+			logus.Log.Errorln(msg)
+		} else {
+			if is_destructible, _ := solar.Destructible.GetValue(); !is_destructible {
+				return nil, errors.New("not destructable")
+			}
+
+			for _, fuse := range solar.Fuses {
+				if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
+					if fuse.DoesDropCargo {
+						allowed_cargo = true
+					}
+					for key, _ := range fuse.LootableHardpoints {
+						allowed_hardpoints[key] = true
+					}
 				}
 			}
-		}
-		for _, fuse := range solar.Fuses {
-			if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
-				for key, _ := range fuse.NotLootableHardpoints {
-					delete(allowed_hardpoints, key)
+			for _, fuse := range solar.Fuses {
+				if fuse, ok := e.Mapped.Fuses.FuseMap[fuse.Get()]; ok {
+					for key, _ := range fuse.NotLootableHardpoints {
+						delete(allowed_hardpoints, key)
+					}
 				}
 			}
 		}
@@ -200,8 +207,13 @@ func (e *Exporter) ProcessWreck(wreck Wreck, system *systems_mapped.System) ([]*
 
 			system_uni := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system.Nickname)]
 			loot_info.Pos = wreck.Pos
-			loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
-			loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
+			if system_uni != nil {
+				loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
+				loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
+			} else {
+				logus.Log.Errorln("e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system.Nickname)] resulted in nil for nick=", system.Nickname)
+			}
+
 			loot_info.SystemNickname = system.Nickname
 			loot_info.ObjNickname = wreck.Nickname
 
@@ -728,8 +740,13 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 					loot_info.Kind = LootFLSRNPC
 
 					system_uni := e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system_nickname)]
-					loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
-					loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
+					if system_uni != nil {
+						loot_info.SectorCoord = VectorToSectorCoord(system_uni, loot_info.Pos)
+						loot_info.SystemName = e.GetInfocardName(system_uni.StridName.Get(), system.Nickname)
+					} else {
+						logus.Log.Errorln("e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(system_nickname)] not found, nick=", system_nickname)
+					}
+
 					loot_info.SystemNickname = system.Nickname
 					loot_info.ObjNickname = msn_npc.Nickname.Get()
 
