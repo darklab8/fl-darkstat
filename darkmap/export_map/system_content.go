@@ -345,6 +345,12 @@ func (e *Export) EnrichSystemWithObjects(
 
 		archetype := obj_info.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		if solararch == nil {
+			logus.Log.Error("solararch not found",
+				typelog.String("archetype", archetype))
+			continue
+		}
+
 		if radius, ok := solararch.SolarRadius.GetValue(); ok {
 			obj.SolarRadius = radius
 		}
@@ -419,30 +425,38 @@ func (e *Export) EnrichSystemWithObjects(
 
 		stararch := e.Mapped.Stararch.StarsByNick[stararch_nick]
 
-		star.Star.StarRadius = stararch.Radius.Get()
-		star.SolarRadius = star.Star.StarRadius
-		star_glow := e.Mapped.Stararch.GlowsByNick[stararch.StarGlow.Get()]
-
-		star.Star.StarGlow = Glow{
-			Scale:      star_glow.Scale.Get(),
-			OuterColor: star_glow.OuterColor.Get(),
-		}
-		if inner_color, ok := star_glow.InnerColor.GetValue(); ok {
-			star.Star.StarGlow.InnerColor = inner_color
-		} else {
-			star.Star.StarGlow.InnerColor = star.Star.StarGlow.OuterColor
-		}
-
-		if star_center_nick, ok := stararch.StarCenter.GetValue(); ok {
-			star_center := e.Mapped.Stararch.GlowsByNick[star_center_nick]
-			star.Star.StarCenter = Glow{
-				Scale:      star_center.Scale.Get(),
-				OuterColor: star_center.OuterColor.Get(),
-			}
-			if inner_color, ok := star_center.InnerColor.GetValue(); ok {
-				star.Star.StarCenter.InnerColor = inner_color
+		if stararch != nil {
+			star.Star.StarRadius = stararch.Radius.Get()
+			star.SolarRadius = star.Star.StarRadius
+			star_glow := e.Mapped.Stararch.GlowsByNick[stararch.StarGlow.Get()]
+			if star_glow == nil {
+				logus.Log.Error("star does not have defined star_glow", typelog.String("star_glow", stararch.StarGlow.Get()))
 			} else {
-				star.Star.StarCenter.InnerColor = star.Star.StarGlow.OuterColor
+				star.Star.StarGlow = Glow{
+					Scale:      star_glow.Scale.Get(),
+					OuterColor: star_glow.OuterColor.Get(),
+				}
+				if inner_color, ok := star_glow.InnerColor.GetValue(); ok {
+					star.Star.StarGlow.InnerColor = inner_color
+				} else {
+					star.Star.StarGlow.InnerColor = star.Star.StarGlow.OuterColor
+				}
+			}
+
+			if star_center_nick, ok := stararch.StarCenter.GetValue(); ok {
+				if star_center := e.Mapped.Stararch.GlowsByNick[star_center_nick]; star_center == nil {
+					logus.Log.Error("star does not have glow defined", typelog.String("star_center_nick", star_center_nick))
+				} else {
+					star.Star.StarCenter = Glow{
+						Scale:      star_center.Scale.Get(),
+						OuterColor: star_center.OuterColor.Get(),
+					}
+					if inner_color, ok := star_center.InnerColor.GetValue(); ok {
+						star.Star.StarCenter.InnerColor = inner_color
+					} else {
+						star.Star.StarCenter.InnerColor = star.Star.StarGlow.OuterColor
+					}
+				}
 			}
 		}
 
@@ -457,12 +471,20 @@ func (e *Export) EnrichSystemWithObjects(
 
 			e.WriteIniConfig(info, &star_info.Model)
 
-			e.WriteIniConfig(info, &stararch.Model)
+			if stararch != nil {
+				e.WriteIniConfig(info, &stararch.Model)
 
-			e.WriteIniConfig(info, &star_glow.Model)
-			if star_center_nick, ok := stararch.StarCenter.GetValue(); ok {
-				star_center := e.Mapped.Stararch.GlowsByNick[star_center_nick]
-				e.WriteIniConfig(info, &star_center.Model)
+				star_glow := e.Mapped.Stararch.GlowsByNick[stararch.StarGlow.Get()]
+				if star_glow != nil {
+					e.WriteIniConfig(info, &star_glow.Model)
+				}
+
+				if star_center_nick, ok := stararch.StarCenter.GetValue(); ok {
+					star_center := e.Mapped.Stararch.GlowsByNick[star_center_nick]
+					if star_center != nil {
+						e.WriteIniConfig(info, &star_center.Model)
+					}
+				}
 			}
 		})
 

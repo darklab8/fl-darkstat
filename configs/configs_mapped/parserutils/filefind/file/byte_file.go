@@ -18,6 +18,10 @@ func (f *File) ReadBytes() ([]byte, error) {
 			return []byte{}, err
 		}
 
+		if res == nil {
+			return []byte{}, errors.New(fmt.Sprintln("res is nil in read bytes of web file, url=", f.webfile.url))
+		}
+
 		if res.StatusCode >= 300 {
 			return []byte{}, errors.New(fmt.Sprintln("not positive status code=", res.StatusCode, " to read file=", f.webfile.url))
 		}
