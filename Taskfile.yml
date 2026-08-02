@@ -2,12 +2,16 @@ version: "3"
 
 tasks:
   lint:nil:
-    - >
-      nilaway
-      -include-pkgs="github.com/darklab8/fl-darkstat,github.com/darklab8/go-utils"
-      -exclude-test-files
-      -exclude-pkgs="github.com/darklab8/fl-darkstat/darkstat/front,github.com/darklab8/fl-darkstat/darkrelay/relayfront,github.com/darklab8/fl-darkstat/darkmap/front"
-      ./...
+    cmds:
+      - clear
+      - >
+        bash -c '
+        nilaway
+        -include-pkgs="github.com/darklab8/fl-darkstat,github.com/darklab8/go-utils"
+        -exclude-test-files
+        -exclude-pkgs="github.com/darklab8/fl-darkstat/darkstat/front,github.com/darklab8/fl-darkstat/darkrelay/relayfront,github.com/darklab8/fl-darkstat/darkmap/front"
+        ./... 2>&1 | tee >(wc -l)
+        '
   # &> 123.txt
   lint:js:
     cmds:

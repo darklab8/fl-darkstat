@@ -246,6 +246,10 @@ func (e *Export) EnrichSystemWithObjects(
 		base := systems_mapped.NewBase(base_obj.RenderModel(), nil)
 		archetype := base.Archetype.Get()
 		solararch := e.Mapped.Solararch.SolarsByNick[archetype]
+		if solararch == nil {
+			logus.Log.Errorln("solararch does not exist", archetype)
+			continue
+		}
 		shape_name, _ := solararch.ShapeName.GetValue()
 		if IsPlanet(solararch) {
 			all_bases[base.Nickname.Get()] = base
