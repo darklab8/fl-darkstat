@@ -87,7 +87,11 @@ func (e *Exporter) GetOres(
 
 		}
 
-		if e.Mapped.Discovery != nil {
+		if system_uni == nil {
+			logus.Log.Errorln("system is not found in universe map for system=", system.Nickname)
+		}
+
+		if e.Mapped.Discovery != nil && system_uni != nil {
 			if mining_systems, ok := e.Mapped.Discovery.MinecontrolNodes.MiningSystemsBySystemNick[system_uni.Nickname.Get()]; ok {
 				for _, mining_system := range mining_systems {
 
@@ -225,45 +229,48 @@ func (e *Exporter) NewOreBase(
 	logus.Log.Debug("GetOres", typelog.String("commodity=", input_data.commodity))
 
 	equipment := e.Mapped.Equip().CommoditiesMap[input_data.commodity]
-	for _, volume_info := range equipment.Volumes {
+	if equipment == nil {
+		logus.Log.Errorln("e.Mapped.Equip().CommoditiesMap[input_data.commodity] never supposed to be nil, nick=", input_data.commodity)
+	} else {
+		for _, volume_info := range equipment.Volumes {
 
-		market_good := &MarketGood{
-			GoodInfo:          e.GetGoodInfo(input_data.commodity),
-			BaseSells:         true,
-			PriceBaseSellsFor: 0,
-			PriceBaseBuysFor:  nil,
-			Volume:            volume_info.Volume.Get(),
-			ShipClass:         volume_info.GetShipClass(),
-			BaseInfo: BaseInfo{
-				BaseNickname:   base.Nickname,
-				BaseName:       base.Name,
-				SystemName:     base.System,
-				SystemNickname: base.SystemNickname,
-				ObjNickname:    base.ObjNickname,
-				BasePos:        base.Pos,
-				Region:         base.Region,
-				FactionName:    "Mining Field",
-				SectorCoord:    base.SectorCoord,
-			},
+			market_good := &MarketGood{
+				GoodInfo:          e.GetGoodInfo(input_data.commodity),
+				BaseSells:         true,
+				PriceBaseSellsFor: 0,
+				PriceBaseBuysFor:  nil,
+				Volume:            volume_info.Volume.Get(),
+				ShipClass:         volume_info.GetShipClass(),
+				BaseInfo: BaseInfo{
+					BaseNickname:   base.Nickname,
+					BaseName:       base.Name,
+					SystemName:     base.System,
+					SystemNickname: base.SystemNickname,
+					ObjNickname:    base.ObjNickname,
+					BasePos:        base.Pos,
+					Region:         base.Region,
+					FactionName:    "Mining Field",
+					SectorCoord:    base.SectorCoord,
+				},
+			}
+			base.Name = market_good.Name
+			if input_data.disco_mining_system != nil {
+				base.Name += " (Nu)"
+			}
+
+			market_good.BaseName = market_good.Name
+
+			market_good_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
+			base.MarketGoodsPerNick[market_good_key] = market_good
+			base.MinedGood = market_good
+			added_goods[market_good.Nickname] = true
+
+			if commodity, ok := input_data.comm_by_nick[market_good_key]; ok {
+				commodity.Bases[market_good.BaseNickname] = market_good
+			}
+
 		}
-		base.Name = market_good.Name
-		if input_data.disco_mining_system != nil {
-			base.Name += " (Nu)"
-		}
-
-		market_good.BaseName = market_good.Name
-
-		market_good_key := GetCommodityKey(market_good.Nickname, market_good.ShipClass)
-		base.MarketGoodsPerNick[market_good_key] = market_good
-		base.MinedGood = market_good
-		added_goods[market_good.Nickname] = true
-
-		if commodity, ok := input_data.comm_by_nick[market_good_key]; ok {
-			commodity.Bases[market_good.BaseNickname] = market_good
-		}
-
 	}
-
 	if with_craft_ore_routes && e.Mapped.Discovery != nil {
 		if recipes, ok := e.Mapped.Discovery.BaseRecipeItems.RecipePerConsumed[input_data.commodity]; ok {
 			for _, recipe := range recipes {
@@ -299,6 +306,11 @@ func (e *Exporter) NewOreBase(
 							continue
 						}
 						equipment := e.Mapped.Equip().CommoditiesMap[commodity_produced]
+						if equipment == nil {
+							logus.Log.Errorln("equipment should never be nil in e.Mapped.Equip().CommoditiesMap[commodity_produced], nick=", commodity_produced)
+							continue
+						}
+
 						for _, volume_info := range equipment.Volumes {
 							market_good := &MarketGood{
 								GoodInfo:          e.GetGoodInfo(commodity_produced),

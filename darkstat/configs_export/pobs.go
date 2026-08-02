@@ -182,6 +182,10 @@ func (e *Exporter) PoBsToBases(pobs []*PoB) []*Base {
 			}
 			if market_good.Category == "commodity" {
 				equipment := e.Mapped.Equip().CommoditiesMap[market_good.Nickname]
+				if equipment == nil {
+					logus.Log.Errorln("e.Mapped.Equip().CommoditiesMap[market_good.Nickname] returned nil, nick=", market_good.Nickname)
+					continue
+				}
 				for _, volume := range equipment.Volumes {
 					var volumed_good *MarketGood = &MarketGood{}
 					*volumed_good = *market_good

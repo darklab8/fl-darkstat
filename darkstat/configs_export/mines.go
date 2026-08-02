@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -90,13 +91,18 @@ func (e *Exporter) GetMines(ids []*Tractor) []Mine {
 		mine_info := e.Mapped.Equip().MinesMap[mine_dropper.ProjectileArchetype.Get()]
 		mine.ProjectileArchetype = mine_info.Nickname.Get()
 
+		explosion_arch := mine_info.ExplosionArch.Get()
 		explosion := e.Mapped.Equip().ExplosionMap[mine_info.ExplosionArch.Get()]
 
-		mine.HullDamage = explosion.HullDamage.Get()
-		mine.EnergyDamage = explosion.EnergyDamage.Get()
-		mine.ShieldDamage = int(float64(mine.HullDamage)*float64(e.Mapped.Consts.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get()) + float64(mine.EnergyDamage))
+		if explosion != nil {
+			mine.HullDamage = explosion.HullDamage.Get()
+			mine.EnergyDamage = explosion.EnergyDamage.Get()
+			mine.ShieldDamage = int(float64(mine.HullDamage)*float64(e.Mapped.Consts.ShieldEquipConsts.HULL_DAMAGE_FACTOR.Get()) + float64(mine.EnergyDamage))
 
-		mine.Radius = float64(explosion.Radius.Get())
+			mine.Radius = float64(explosion.Radius.Get())
+		} else {
+			logus.Log.Errorln("explosion is not found for explosion arch. that's bad, explosion_arch=", explosion_arch)
+		}
 
 		mine.Refire = float64(1 / mine_dropper.RefireDelay.Get())
 
