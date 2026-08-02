@@ -150,6 +150,11 @@ func (e *Exporter) GetCommodities(ctx context.Context) []*Commodity {
 		equipment_name := comm.Equipment.Get()
 		equipment := e.Mapped.Equip().CommoditiesMap[equipment_name]
 
+		if equipment == nil {
+			logus.Log.Errorln("e.Mapped.Equip().CommoditiesMap[equipment_name] resulted in nil, nick=", equipment_name)
+			continue
+		}
+
 		for _, volume_info := range equipment.Volumes {
 			commodity := &Commodity{
 				Bases:     make(map[cfg.BaseUniNick]*MarketGood),
@@ -488,7 +493,11 @@ func (e *Exporter) GetBaseInfo(base_nickname universe_mapped.BaseNickname) BaseI
 		result.FactionNick = reputation_nickname
 	}
 
-	result.SectorCoord = VectorToSectorCoord(system, result.BasePos)
+	if system != nil {
+		result.SectorCoord = VectorToSectorCoord(system, result.BasePos)
+	} else {
+		logus.Log.Errorln("tried finding Victor to sector coords for nil system from e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(result.SystemNickname)], nick=", result.SystemNickname)
+	}
 
 	var factionName string
 	if group, exists := e.Mapped.InitialWorld.GroupsMap[reputation_nickname]; exists {

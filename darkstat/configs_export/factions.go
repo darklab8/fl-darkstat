@@ -82,9 +82,9 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 
 		faction.ShortName = e.GetInfocardName(group.IdsShortName.Get(), faction.Nickname)
 
-		empathy_rates, empathy_exists := e.Mapped.Empathy.RepoChangeMap[faction.Nickname]
+		empathy_rates := e.Mapped.Empathy.RepoChangeMap[faction.Nickname]
 
-		if empathy_exists {
+		if empathy_rates != nil {
 			faction.ObjectDestruction = empathy_rates.ObjectDestruction.Get()
 			faction.MissionSuccess = empathy_rates.MissionSuccess.Get()
 			faction.MissionFailure = empathy_rates.MissionFailure.Get()
@@ -109,7 +109,7 @@ func (e *Exporter) GetFactions(bases []*Base) []Faction {
 				rep_to_add.Name = e.GetInfocardName(target_faction.IdsName.Get(), rep_to_add.Nickname)
 			}
 
-			if empathy_exists {
+			if empathy_rates != nil {
 				if empathy_rate, ok := empathy_rates.EmpathyRatesMap[rep_to_add.Nickname]; ok {
 					rep_to_add.Empathy = empathy_rate.RepoChange.Get()
 				}

@@ -2,6 +2,7 @@ package configs_export
 
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/ptr"
 )
@@ -61,8 +62,13 @@ func (e *Exporter) GetExtraItems(ids []*Tractor) []ExtraItem {
 
 		if item.Category == "power" {
 			generator := e.Mapped.Equip().PowersMap[item.Nickname]
-			item.PowerCapacity = ptr.Ptr(generator.Capacity.Get())
-			item.PowerChargeRate = ptr.Ptr(generator.ChargeRate.Get())
+			if generator != nil {
+				item.PowerCapacity = ptr.Ptr(generator.Capacity.Get())
+				item.PowerChargeRate = ptr.Ptr(generator.ChargeRate.Get())
+			} else {
+				logus.Log.Errorln(" e.Mapped.Equip().PowersMap[item.Nickname] leads to nil, nick=", item.Nickname)
+			}
+
 		}
 
 		if good_info, ok := e.Mapped.Goods.GoodsMap[item.Nickname]; ok {

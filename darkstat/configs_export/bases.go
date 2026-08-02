@@ -10,6 +10,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped/systems_mapped"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/infocard_mapped/infocard"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/settings/traces"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"github.com/darklab8/go-utils/utils/utils_types"
@@ -116,7 +117,11 @@ func (e *Exporter) GetBases(ctx context.Context) []*Base {
 
 					archetype := system_base.Archetype.Get()
 					solar := e.Mapped.Solararch.SolarsByNick[archetype]
-					e.WriteConfigToInfocard(&solar.Model, string(nickname))
+					if solar != nil {
+						e.WriteConfigToInfocard(&solar.Model, string(nickname))
+					} else {
+						logus.Log.Errorln("e.Mapped.Solararch.SolarsByNick[archetype] resulted in nil, when archetype=", archetype)
+					}
 
 				}
 			}

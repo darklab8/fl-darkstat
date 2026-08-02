@@ -3,6 +3,7 @@ package configs_export
 import (
 	"github.com/darklab8/fl-darkstat/configs/cfg"
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/data_mapped/universe_mapped"
+	"github.com/darklab8/fl-darkstat/configs/configs_settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/trades"
 )
 
@@ -88,16 +89,25 @@ func (t *Route) GetPaths() []PathWithNavmap {
 			pos := jh.Pos.Get()
 
 			system_uni := t.g.e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(jh.System.Nickname)]
-			augmented_path.SectorCoord = VectorToSectorCoord(system_uni, pos)
-			augmented_path.Pos = pos
+			if system_uni != nil {
+				augmented_path.SectorCoord = VectorToSectorCoord(system_uni, pos)
+				augmented_path.Pos = pos
+			} else {
+				logus.Log.Errorln("VectorToSectorCoord(system *universe_mapped.System resulted in nil, when nick=", jh.System.Nickname)
+			}
+
 		}
 
 		if base, ok := t.g.e.Mapped.Systems.BasesByDockWith[path.NextName]; ok {
 			pos := base.Pos.Get()
 
 			system_uni := t.g.e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(base.System.Nickname)]
-			augmented_path.SectorCoord = VectorToSectorCoord(system_uni, pos)
-			augmented_path.Pos = pos
+			if system_uni != nil {
+				augmented_path.SectorCoord = VectorToSectorCoord(system_uni, pos)
+				augmented_path.Pos = pos
+			} else {
+				logus.Log.Errorln("t.g.e.Mapped.Universe.SystemMap[universe_mapped.SystemNickname(base.System.Nickname)] resulted in nil, when nick=", base.System.Nickname)
+			}
 		}
 
 		if t.g.e.Mapped.Discovery != nil {

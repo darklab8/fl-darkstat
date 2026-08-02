@@ -22,7 +22,7 @@ func (e *Exporter) ExportInfocards(nickname infocarder.InfocardKey, infocard_ids
 	}
 
 	for _, info_id := range infocard_ids {
-		if value, ok := e.Mapped.Infocards.GetInfocard2(info_id); ok {
+		if value, ok := e.Mapped.Infocards.GetInfocard2(info_id); ok && value != nil {
 			var lines_to_add []infocarder.InfocardLine
 			for _, line := range value.Lines {
 				lines_to_add = append(lines_to_add, infocarder.NewInfocardSimpleLine(line))
