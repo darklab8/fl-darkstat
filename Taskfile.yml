@@ -4,13 +4,14 @@ tasks:
   lint:nil:
     cmds:
       - clear
+      # usable with | tee >(wc -l) instead of  | go run docker/nilaway_report/nilaway_report.go if desired
       - >
         bash -c '
         nilaway
         -include-pkgs="github.com/darklab8/fl-darkstat,github.com/darklab8/go-utils"
         -exclude-test-files
-        -exclude-pkgs="github.com/darklab8/fl-darkstat/darkmap/dds,github.com/darklab8/fl-darkstat/darkstat/front,github.com/darklab8/fl-darkstat/darkrelay/relayfront,github.com/darklab8/fl-darkstat/darkmap/front"
-        ./... 2>&1 | tee >(wc -l)
+        -exclude-pkgs="github.com/darklab8/fl-darkstat/configs/configs_mapped/freelancer_mapped/exe_mapped,github.com/darklab8/fl-darkstat/configs/configs_mapped/parserutils/bini,github.com/darklab8/fl-darkstat/darkmap/dds,github.com/darklab8/fl-darkstat/darkstat/front,github.com/darklab8/fl-darkstat/darkrelay/relayfront,github.com/darklab8/fl-darkstat/darkmap/front"
+        ./... 2>&1 | go run docker/nilaway_report/nilaway_report.go
         '
   # &> 123.txt
   lint:js:
