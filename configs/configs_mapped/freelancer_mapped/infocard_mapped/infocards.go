@@ -1,6 +1,7 @@
 package infocard_mapped
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -126,6 +127,9 @@ func Read(filesystem *filefind.Filesystem, freelancer_ini *exe_mapped.Config, in
 	if input_file != nil {
 		config_override, err := ReadFromDiscoServerConfig(input_file)
 		logus.Log.CheckPanic(err, "unable to read infocards", typelog.OptError(err))
+		if config_override == nil {
+			panic(fmt.Sprintln("unable to read infocard. nilaway to calm down", err))
+		}
 
 		_config_override := config_override.GetUnsafe()
 		_config_override.Mutex.Lock()

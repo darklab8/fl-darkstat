@@ -134,7 +134,11 @@ type ConfigBase struct {
 func Read(ini *iniload.IniLoader, filesystem *filefind.Filesystem) *Config {
 	frelconfig := &Config{File: ini}
 
-	frelconfig.TimeSeconds = semantic.NewInt(ini.SectionMap[KEY_TIME_TAG][0], KEY_TIME_SECONDS)
+	time_section := ini.SectionMap[KEY_TIME_TAG]
+	if len(time_section) < 1 {
+		panic("[time] section is missing in universe. Unexpected")
+	}
+	frelconfig.TimeSeconds = semantic.NewInt(time_section[0], KEY_TIME_SECONDS)
 	frelconfig.BasesMap = make(map[BaseNickname]*Base)
 	frelconfig.Bases = make([]*Base, 0)
 	frelconfig.SystemMap = make(map[SystemNickname]*System)

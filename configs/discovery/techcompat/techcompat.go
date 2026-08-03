@@ -111,25 +111,26 @@ func Read(input_file *iniload.IniLoader) *Config {
 	}
 
 	for _, faction_info := range input_file.SectionMap["[faction]"] {
+		faction_items := faction_info.ParamMap[cfg.Key("item")]
+		for _, faction_nicknames := range faction_items {
+			for faction_order, _ := range faction_nicknames.Values {
+				faction := &Faction{
+					DefaultUnlisted: semantic.NewFloat(faction_info, cfg.Key("default_unlisted"), semantic.Precision(2)),
+				}
+				faction.Map(faction_info)
+				faction.ID = semantic.NewString(faction_info, cfg.Key("item"), semantic.OptsS(semantic.Order(faction_order)))
 
-		faction_nicknames := faction_info.ParamMap[cfg.Key("item")][0]
-		for faction_order, _ := range faction_nicknames.Values {
-			faction := &Faction{
-				DefaultUnlisted: semantic.NewFloat(faction_info, cfg.Key("default_unlisted"), semantic.Precision(2)),
+				for index, _ := range faction_info.ParamMap[cfg.Key("tech")] {
+					compat := &TechCompatibility{}
+					compat.Map(faction_info)
+					compat.Nickname = semantic.NewString(faction_info, cfg.Key("tech"), semantic.OptsS(semantic.Index(index), semantic.Order(0)))
+					compat.Percentage = semantic.NewFloat(faction_info, cfg.Key("tech"), semantic.Precision(2), semantic.OptsF(semantic.Index(index), semantic.Order(1)))
+					faction.TechCompats = append(faction.TechCompats, compat)
+				}
+
+				conf.Factions = append(conf.Factions, faction)
+				conf.FactionByID[cfg.TractorID(faction.ID.Get())] = faction
 			}
-			faction.Map(faction_info)
-			faction.ID = semantic.NewString(faction_info, cfg.Key("item"), semantic.OptsS(semantic.Order(faction_order)))
-
-			for index, _ := range faction_info.ParamMap[cfg.Key("tech")] {
-				compat := &TechCompatibility{}
-				compat.Map(faction_info)
-				compat.Nickname = semantic.NewString(faction_info, cfg.Key("tech"), semantic.OptsS(semantic.Index(index), semantic.Order(0)))
-				compat.Percentage = semantic.NewFloat(faction_info, cfg.Key("tech"), semantic.Precision(2), semantic.OptsF(semantic.Index(index), semantic.Order(1)))
-				faction.TechCompats = append(faction.TechCompats, compat)
-			}
-
-			conf.Factions = append(conf.Factions, faction)
-			conf.FactionByID[cfg.TractorID(faction.ID.Get())] = faction
 		}
 	}
 
