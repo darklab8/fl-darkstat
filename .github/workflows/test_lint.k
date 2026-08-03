@@ -17,7 +17,6 @@ _workflow = gw.Workflow {
     name = "Test lint"
     on = {
         push.branches = ["master"]
-        schedule: [{cron = "0 9 * * *"}]
         pull_request: {}
     }
     jobs = {

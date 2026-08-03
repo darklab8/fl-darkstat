@@ -9,7 +9,6 @@ _workflow = gw.Workflow {
     name = "Test build"
     on = {
         push.branches = ["master"]
-        schedule: [{cron = "0 9 * * *"}]
         pull_request: {}
     }
     jobs = {
