@@ -333,7 +333,7 @@ func (e *Export) BuildGraph(systems []*System, everything_dockable solararch_map
 		system_info := e.Mapped.Systems.SystemsMap[system.Nickname]
 
 		if system_info == nil {
-			logus.Log.Error(" has no system file", typelog.Any("system_nick", system.Nickname))
+			logus.Log.Warn("has no system file", typelog.Any("system_nick", system.Nickname))
 			continue
 		}
 

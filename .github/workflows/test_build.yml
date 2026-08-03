@@ -48,13 +48,11 @@ jobs:
         run: task test
         env:
           CONFIGS_FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
-      - name: build
-        run: task build
+      - name: validate
+        run: task build-version ; templ generate && go run . --map-on --stat-deals-on validate error
         env:
           DARKSTAT_SITE_HOST: ""
           DARKSTAT_SITE_ROOT: /fl-darkstat/
           CONFIGS_FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
           DARKSTAT_FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
           DARKSTAT_RELAY_HOST: https://darkrelay-staging.dd84ai.com
-      - name: check darkmap builds too
-        run: templ generate && go run . map build

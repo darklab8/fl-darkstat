@@ -366,7 +366,7 @@ func (e *Export) EnrichSystemWithObjects(
 		if _, ok := e.Shapes.ShapesByNick[strings.ToLower(fallback_shape_name)]; ok {
 			e.Shapes.PermittedShapes[strings.ToLower(fallback_shape_name)] = true
 		} else {
-			logus.Log.Error("can't find shape for tradelane, going for fallback",
+			logus.Log.Warn("can't find shape for tradelane, going for fallback",
 				typelog.Any("shape", strings.ToLower(fallback_shape_name)),
 				typelog.Any("obj_nickname", strings.ToLower(obj.Nickname)),
 			)
@@ -564,7 +564,7 @@ func (e *Export) EnrichSystemWithObjects(
 				continue
 			}
 		} else if shape_name == "" {
-			logus.Log.Error("can't find shape for base, letting linker fallbacker sorting it out",
+			logus.Log.Warn("can't find shape for base, letting linker fallbacker sorting it out",
 				typelog.Any("shape", shape_name),
 				typelog.Any("obj_nick", base.Nickname),
 			)
@@ -575,7 +575,7 @@ func (e *Export) EnrichSystemWithObjects(
 			e.Shapes.PermittedShapes[shape_name] = true
 		} else {
 			stats.solars_without_shapes[shape_name] = true
-			logus.Log.Error("can't find shape for base, letting linker fallbacker sorting it out",
+			logus.Log.Warn("can't find shape for base, letting linker fallbacker sorting it out",
 				typelog.Any("shape", shape_name),
 				typelog.Any("obj_nick", base.Nickname),
 			)

@@ -21,3 +21,4 @@ node_modules/
 .idea/
 build2/
 build_*/
+.nilaway_history.json

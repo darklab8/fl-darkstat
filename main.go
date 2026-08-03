@@ -247,6 +247,63 @@ func main() {
 				},
 			},
 			{
+				Nickname:    "validate",
+				Description: "Rune purely for validate only",
+				Func: func(info cantil.ActionInfo) error {
+
+					arguments := info.CmdArgs[1:]
+					if len(arguments) != 1 {
+						fmt.Println("expected one argument with level of validation. none|panic|error|warn is expected")
+						os.Exit(4)
+					}
+
+					validation_levels := map[string]int{
+						"none":    0,
+						"panic":   1,
+						"error":   2,
+						"warn":    3,
+						"warning": 3,
+					}
+					validation_level := validation_levels[arguments[0]]
+
+					_, _ = StatBuild(
+						builder.BuildToNone,
+						builder.YesCleanFolder,
+						NotIncludePoBs,
+						router.YesLinkTravelRoutes,
+						nil,
+						&sync.RWMutex{},
+					)
+
+					status_code := 0
+					if validation_level >= 1 {
+						if typelog.CountMsgsPanics > 0 {
+							fmt.Println("Validation failed. log msgs with panics=", typelog.CountMsgsPanics)
+							status_code = 1
+						}
+					}
+					if validation_level >= 2 {
+						if typelog.CountMsgsErrors > 0 {
+							fmt.Println("Validation failed. log msgs with errors=", typelog.CountMsgsErrors)
+							status_code = 2
+						}
+					}
+					if validation_level >= 3 {
+						if typelog.CountMsgsWarns > 0 {
+							fmt.Println("Validation failed. log msgs with warnings=", typelog.CountMsgsWarns)
+							status_code = 3
+						}
+					}
+
+					if status_code == 0 {
+						fmt.Println("Validation succeeded")
+					}
+					os.Exit(status_code)
+
+					return nil
+				},
+			},
+			{
 				Nickname:    "web_cron",
 				Description: "run as standalone application that serves darkstat from memory with full updates periodically. Recommended for disco.",
 				Func: func(info cantil.ActionInfo) error {

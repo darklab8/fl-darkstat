@@ -109,6 +109,7 @@ const (
 	BuildToUnknown BuildToWhere = iota
 	BuildToFilesystem
 	BuildToMemory
+	BuildToNone
 )
 
 func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFolderKind, filesystem *Filesystem) *Filesystem {
@@ -135,7 +136,11 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 		logus.LogCli.Infoln("components chunks", len_comps)
 		for chunk_index, components_chunk := range chunked_components {
 
-			if to_where == BuildToMemory {
+			if to_where == BuildToNone {
+				for _, comp := range components_chunk {
+					_ = comp.Write(ctx, b.params)
+				}
+			} else if to_where == BuildToMemory {
 				for _, comp := range components_chunk {
 					filesystem.WriteToMem(comp.GetPagePath(b.params), &MemComp{
 						comp: comp,
@@ -191,7 +196,6 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 						filesystem.WriteToFile(result.realpath, result.bytes)
 					}
 				default: // normal
-
 					for _, comp := range components_chunk {
 						result := comp.Write(ctx, b.params)
 						filesystem.WriteToFile(result.realpath, result.bytes)
@@ -219,6 +223,8 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 				})
 			} else if to_where == BuildToFilesystem {
 				filesystem.WriteToFile(path, []byte(static_file.content))
+			} else if to_where == BuildToNone {
+				_ = static_file.content
 			} else {
 				panic("not supported build destination")
 			}
@@ -235,6 +241,8 @@ func (b *Builder) BuildAll(to_where BuildToWhere, cleanup_build_folder CleanFold
 				})
 			} else if to_where == BuildToFilesystem {
 				filesystem.WriteToFile(path, []byte(static_file.content))
+			} else if to_where == BuildToNone {
+				_ = static_file.content
 			} else {
 				panic("not supported build destination")
 			}
