@@ -39,7 +39,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up Go
+    - name: Install latest darkstat
       uses: darklab8/fl-darkstat/.github/actions/install-latest@master
     - name: build
       if: ${{ inputs.map-on != 'true' }}
