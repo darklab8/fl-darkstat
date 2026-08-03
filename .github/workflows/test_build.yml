@@ -6,8 +6,14 @@ name: Test build
   pull_request: {}
 jobs:
   job:
-    name: Test build
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        freelancer-mod:
+          - "discovery"
+          - "vanilla"
+    name: Validate  ${{ matrix.freelancer-mod }}
     steps:
       - name: Check out source repository
         uses: actions/checkout@v4
@@ -20,8 +26,8 @@ jobs:
       - name: Checkout Freelancer
         uses: darklab8/fl-darkstat/.github/actions/checkout-freelancer@master
         with:
-          freelancer-mod: discovery
-          freelancer-folder: ${{ github.workspace }}/fl-data
+          freelancer-mod: "${{ matrix.freelancer-mod }}"
+          freelancer-folder: "${{ github.workspace }}/${{ matrix.freelancer-mod }}"
 
       - run: ls ./fl-data
       - name: Install Go
@@ -39,18 +45,19 @@ jobs:
       - name: add versions
         run: task build-version
       - name: Patch freelancer discovery to latest
+        if: matrix.freelancer-mod == 'discovery'
         uses: darklab8/fl-darkstat/.github/actions/patch-disco@master
         with:
-          freelancer-folder: ${{ github.workspace }}/fl-data
+          freelancer-folder: "${{ github.workspace }}/${{ matrix.freelancer-mod }}"
       - name: Test things
         run: task test
         env:
-          CONFIGS_FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
+          CONFIGS_FREELANCER_FOLDER: "${{ github.workspace }}/${{ matrix.freelancer-mod }}"
       - name: validate
         run: task build-version ; templ generate && go run . --map-on --stat-deals-on validate error
         env:
           DARKSTAT_SITE_HOST: ""
           DARKSTAT_SITE_ROOT: /fl-darkstat/
-          CONFIGS_FREELANCER_FOLDER: ${{ github.workspace }}/fl-data
+          CONFIGS_FREELANCER_FOLDER: "${{ github.workspace }}/${{ matrix.freelancer-mod }}"
           DARKSTAT_FLDARKSTAT_HEADING: <span style="font-weight:1000;">DEV ENV</span> <a href="https://github.com/darklab8/fl-darkstat">fl-darkstat</a> for <a href="https://github.com/darklab8/fl-data-discovery">Freelancer Discovery</a>
           DARKSTAT_RELAY_HOST: https://darkrelay-staging.dd84ai.com
