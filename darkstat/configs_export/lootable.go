@@ -573,6 +573,10 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 					for _, encounter_name := range encounter.Zone.Encounters {
 						encounter_param := encounter.System.EncounterParametersByName[encounter_name.Get()]
 						encoutners_forms_by_filepath := e.Mapped.Systems.EncounterFormationByFilepath
+						if encoutners_forms_by_filepath == nil {
+							logus.Log.Warnln("encounter formation file is not found. filepath=", e.Mapped.Systems.EncounterFormationByFilepath)
+							continue
+						}
 						encounter_formation := encoutners_forms_by_filepath[encounter_param.Filename.Get()]
 
 						for _, shipclass := range encounter_formation.ShipClasses {
