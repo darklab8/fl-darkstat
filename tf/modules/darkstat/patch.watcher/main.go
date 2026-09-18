@@ -128,6 +128,22 @@ func main() {
 			Log.Panic("ENVIRONMENT is not defined")
 		}
 
+		go func() {
+			for {
+				time.Sleep(time.Hour * 24)
+
+				logger := Log.WithFields(typelog.Any("action", "daily_map_refresh"))
+				logger.Info(fmt.Sprintln("map daily refresh"))
+
+				err := PatchMap(darkmap_token)
+				if logger.CheckError(err, "failed to trigger darkmap refresh") {
+
+				} else {
+					logger.Info("succesfully triggered daily map patch refresh")
+				}
+			}
+		}()
+
 		for {
 			var latest_patch autopatcher.Patch
 			var latest_map_patch autopatcher.PatchHash
