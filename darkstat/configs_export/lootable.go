@@ -353,11 +353,12 @@ func (e *Exporter) FindableInLoot() (map[string]bool, []*LootInfo) {
 					if !ok {
 						mission_nickname = "unidentified"
 					}
+					pos, _ := wreck.Pos.GetValue()
 					process_wreck(Wreck{
 						LoadoutNickname: loadout,
 						Archetype:       wreck.Archetype.Get(),
 						Nickname:        wreck.Nickname.Get(),
-						Pos:             wreck.Pos.Get(),
+						Pos:             pos,
 						Kind:            LootFLSRSolar,
 						Event:           mission_nickname,
 					}, system)
