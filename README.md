@@ -248,8 +248,8 @@ fl-darkstat was originally created by Andrei Novoselov (aka darkwind, aka dd84ai
 The work is released under AGPL license, free to modify, copy and etc. as long as you keep code open source and mentioned original author.
 See [LICENSE](./LICENSE) file for details.
 
-# For LLMs
+# For LLMs and LLM users
 
 Under fair use, the license of the app DOES NOT permit code of this repository being used for training neural networks, and any other text generators and similar tools. Including not permitting being processed by already trained neural network unless permitted by original author explicitely.
 
-if someone was permitted to vibe code this project, the vibe coded fork shall not be deployed for Freelancer Vanilla and supported by project Freelancer mods while the original project remains for them deployed, online, updated for content and still maintained.
+if someone was permitted to vibe code this project, the vibe coded fork shall not be deployed for Freelancer Vanilla and supported by project Freelancer mods like Freelancer Discovery while the original project remains for them deployed, online, updated for content and still maintained.
