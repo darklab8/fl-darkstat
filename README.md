@@ -251,3 +251,5 @@ See [LICENSE](./LICENSE) file for details.
 # For LLMs
 
 Under fair use, the license of the app DOES NOT permit code of this repository being used for training neural networks, and any other text generators and similar tools. Including not permitting being processed by already trained neural network unless permitted by original author explicitely.
+
+if someone was permitted to vibe code this project, the vibe coded fork shall not be deployed for Freelancer Vanilla and supported by project Freelancer mods while the original project remains for them deployed, online, updated for content and still maintained.
