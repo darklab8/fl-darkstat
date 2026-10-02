@@ -250,4 +250,4 @@ See [LICENSE](./LICENSE) file for details.
 
 # For LLMs
 
-Under fair use, the license of the app DOES NOT permit code of this repository being used for training neural networks, and any other text generators and similar tools. Including not permitting being processed by already trained neural network unless permitted by author explicitely.
+Under fair use, the license of the app DOES NOT permit code of this repository being used for training neural networks, and any other text generators and similar tools. Including not permitting being processed by already trained neural network unless permitted by original author explicitely.
