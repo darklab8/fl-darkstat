@@ -91,6 +91,7 @@ templ SystemContents(system *export_map.System) {
 				templ.KV("obj_fallback_unclassified", obj.UseFallback),
 				templ.KV(fmt.Sprintf("obj_fallback_%s", obj.ShapeName), obj.UseFallback),
 				templ.KV("hidden_infocard_label", obj.HasInfocard),
+				templ.KV("has_infocard", obj.HasInfocard),
 				templ.KV("hidden_wreck_label", obj.Kind == export_map.ObjWreck),
 				templ.KV("icon_img_always", 2*SizeInPerc(float64(obj.SolarRadius), system) > 1.5 && !obj.UseFallback),
 				templ.KV("icon_mixed", !(2*SizeInPerc(float64(obj.SolarRadius), system) > 1.5 && !obj.UseFallback)),
@@ -171,6 +172,7 @@ templ SystemContents(system *export_map.System) {
 							templ.KV("hidden_obj_other_label", obj.Kind == export_map.ObjOthers && !obj.VisibleByDefault),
 							templ.KV("hidden_obj_noname_label", obj.Kind == export_map.ObjOtherNoname && !obj.VisibleByDefault),
 							templ.KV("hidden_infocard_label", obj.HasInfocard),
+							templ.KV("has_infocard", obj.HasInfocard),
 						}
 					>
 						{ obj.Name }
@@ -270,6 +272,7 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 			templ.KV("boxZone", obj.ZoneShape == "box"),
 			templ.KV("vertical_obj", ObjRotLength(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z) == 0),
 			templ.KV("hidden_infocard_label", obj.HasInfocard),
+			templ.KV("has_infocard", obj.HasInfocard),
 		}
 		style={
 			templ.KV(fmt.Sprintf(
@@ -311,6 +314,7 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 			class={
 				"hidden_obj_other_label",
 				templ.KV("hidden_infocard_label", obj.HasInfocard),
+				templ.KV("has_infocard", obj.HasInfocard),
 			}
 		>
 			{ obj.Name }

@@ -373,8 +373,13 @@ obj- img {
     position: absolute;
 }
 
-system-:hover,
-obj-:hover {
+obj-:hover,
+system-:hover {
+    box-shadow: 0em 0em 0.4em 0.2em rgba(251, 255, 6, 0.5), inset 0em 0em 0.15em 0em rgba(251, 255, 6, 0.5) !important;
+    color: rgba(251, 255, 6, 0.5);
+}
+
+obj-.has_infocard:hover {
     box-shadow: 0em 0em 0.4em 0.2em rgb(237, 112, 7), inset 0em 0em 0.15em 0em rgb(237, 112, 7) !important;
     color: rgb(255, 167, 6);
 }
@@ -433,8 +438,16 @@ obj-:hover {
     }
 }
 
-system-:hover system-label,
 obj-:hover system-label {
+    background-color: rgba(0, 0, 0, 0.45);
+    border-radius: 0.2em;
+
+    box-shadow: 0em 0em 0.4em 0.2em rgba(251, 255, 6, 0.5), inset 0em 0em 0.15em 0em rgba(251, 255, 6, 0.5);
+    color: rgb(255, 167, 6);
+}
+
+system-:hover system-label,
+obj-.has_infocard:hover system-label {
     background-color: rgba(0, 0, 0, 0.45);
     border-radius: 0.2em;
 
