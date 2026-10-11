@@ -102,7 +102,8 @@ func main() {
 		}
 		Log.Debug("service is healthy")
 	case "force_map_patch":
-		PatchMap(darkmap_token)
+		PatchMapDisco(darkmap_token)
+		PatchMapFLSR(darkmap_token)
 	case "main":
 		mux := http.NewServeMux()
 		tcp_server := http.Server{Handler: mux}
@@ -135,12 +136,18 @@ func main() {
 				logger := Log.WithFields(typelog.Any("action", "daily_map_refresh"))
 				logger.Info(fmt.Sprintln("map daily refresh"))
 
-				err := PatchMap(darkmap_token)
-				if logger.CheckError(err, "failed to trigger darkmap refresh") {
-
+				err := PatchMapDisco(darkmap_token)
+				if logger.CheckError(err, "failed to trigger darkmap refresh for disco") {
 				} else {
-					logger.Info("succesfully triggered daily map patch refresh")
+					logger.Info("succesfully triggered daily map patch refresh for disco")
 				}
+
+				err = PatchMapFLSR(darkmap_token)
+				if logger.CheckError(err, "failed to trigger darkmap refresh for flsr") {
+				} else {
+					logger.Info("succesfully triggered daily map patch refresh for flsr")
+				}
+
 			}
 		}()
 
@@ -159,7 +166,7 @@ func main() {
 			if latest_patch.Hash != latest_map_patch {
 				Log.Info(fmt.Sprintln("map patch changed. new patch ", latest_patch.Name, latest_patch.Hash, " updating."))
 
-				err := PatchMap(darkmap_token)
+				err := PatchMapDisco(darkmap_token)
 				if Log.CheckError(err, "failed to trigger darkmap refresh") {
 
 				} else {
@@ -205,10 +212,20 @@ func main() {
 
 }
 
-func PatchMap(darkmap_token string) error {
+func PatchMapDisco(darkmap_token string) error {
 	err := triggerWorkflow(
 		darkmap_token,
 		"darklab8/fl-data-discovery",
+		"publish.yaml",
+		"fl-darkstat/cron_job",
+		"master",
+	)
+	return err
+}
+func PatchMapFLSR(darkmap_token string) error {
+	err := triggerWorkflow(
+		darkmap_token,
+		"darklab8/fl-data-flsr",
 		"publish.yaml",
 		"fl-darkstat/cron_job",
 		"master",
