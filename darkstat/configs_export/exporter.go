@@ -226,7 +226,7 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 		logus.Log.Info("getting ships")
 		e.Ships = e.GetShips(e.Tractors, e.TractorsByID, e.Thrusters)
 	})
-	<-equip_await
+	_ = <-equip_await
 
 	TransportDockOpts := solararch_mapped.DockableOptions{
 		IsDisco: e.Mapped.Discovery != nil,
@@ -349,8 +349,8 @@ func (e *Exporter) Export(ctx context.Context, options ExportOptions) *Exporter 
 		logus.Log.Info("waiting for graph to finish")
 	})
 
-	<-guns_wait
-	<-equip2_await
+	_ = <-guns_wait
+	_ = <-equip2_await
 
 	_, span_wg := traces.Tracer.Start(ctx, "Exporter.WgAwait")
 	wg.Wait()
