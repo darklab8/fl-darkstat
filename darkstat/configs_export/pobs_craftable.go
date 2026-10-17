@@ -128,6 +128,24 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 							amount_volume_to_cook += item_volume
 						}
 
+						for _, item := range recipe.Consumed {
+							item_volume := 0.0
+							for _, it := range item.Items {
+								name := it.Nickname.Get()
+								amount := it.Amount.Get()
+								equip := e.Mapped.Equip().ItemsMap[name]
+
+								if equip == nil {
+									logus.Log.Errorln("e.Mapped.Equip().ItemsMap[name] unexpectedly returned nil, name=", name)
+									continue
+								}
+
+								item_volume += equip.Volume.Get() * float64(amount)
+							}
+							item_volume = item_volume / float64(len(item.Items))
+							amount_volume_to_cook += item_volume
+						}
+
 						cooking_rate := recipe.CookingRate.Get()
 						craft.TotalVolume = amount_volume_to_cook
 						craft.CookMinutes = amount_volume_to_cook / float64(cooking_rate)
@@ -194,11 +212,24 @@ func (e *Exporter) EnhanceBasesWithPobCrafts(bases []*Base) []*Base {
 					}
 					for _, item := range recipe.ConsumedAlt {
 						amount := item.Amount.Get()
-
 						infocard_addition.WriteLineStr(string(fmt.Sprintf("] consumed one of next items (in %d amount):", amount)))
 
 						for _, nickname := range item.Items {
 							name := nickname.Get()
+							volume := 0.0
+							if equip, ok := e.Mapped.Equip().ItemsMap[name]; ok {
+								name = e.GetInfocardName(equip.IdsName.Get(), name)
+								volume = equip.Volume.Get()
+							}
+							infocard_addition.WriteLineStr(string(fmt.Sprintf("] --- %s (%d amount, %.0f vol)", name, amount, volume*float64(amount))))
+						}
+					}
+					for _, item := range recipe.Consumed {
+						infocard_addition.WriteLineStr(string("] consumed one of next items: (X amount)"))
+
+						for _, it := range item.Items {
+							amount := it.Amount.Get()
+							name := it.Nickname.Get()
 							volume := 0.0
 							if equip, ok := e.Mapped.Equip().ItemsMap[name]; ok {
 								name = e.GetInfocardName(equip.IdsName.Get(), name)

@@ -12,6 +12,14 @@ type AffiliationBonus struct {
 	BonusMultiplier *semantic.Float
 }
 
+type ConsumedDynamicItem struct {
+	Amount   *semantic.Int
+	Nickname *semantic.String
+}
+type ConsumedDynamic struct {
+	Items []*ConsumedDynamicItem
+}
+
 type ConsumedAlt struct {
 	Amount *semantic.Int
 	Items  []*semantic.String
@@ -45,6 +53,7 @@ type CommodityRecipe struct {
 
 	Catalysts        []*Catalyst
 	ConsumedAlt      []*ConsumedAlt
+	Consumed         []*ConsumedDynamic
 	ShortCutNum      *semantic.Int
 	CookingRate      *semantic.Int
 	RequiredLevel    *semantic.Int
@@ -144,6 +153,24 @@ func Read(input_file *iniload.IniLoader) *Config {
 			}
 
 			recipe.ConsumedAlt = append(recipe.ConsumedAlt, consum_alt)
+		}
+
+		for index, param := range recipe_info.ParamMap[cfg.Key("consumed_dynamic")] {
+			consumed_dynamic_list := &ConsumedDynamic{}
+			for order := 0; order < len(param.Values); order++ {
+				consum_dynamic := &ConsumedDynamicItem{
+					Amount: semantic.NewInt(recipe_info, cfg.Key("consumed_dynamic"), semantic.Index(index), semantic.Order(order+1)),
+					Nickname: semantic.NewString(recipe_info,
+						cfg.Key("consumed_dynamic"),
+						semantic.WithLowercaseS(),
+						semantic.WithoutSpacesS(),
+						semantic.OptsS(semantic.Index(index), semantic.Order(order)),
+					),
+				}
+				consumed_dynamic_list.Items = append(consumed_dynamic_list.Items, consum_dynamic)
+				order++
+			}
+			recipe.Consumed = append(recipe.Consumed, consumed_dynamic_list)
 		}
 
 		for index, _ := range recipe_info.ParamMap[cfg.Key("consumed")] {
