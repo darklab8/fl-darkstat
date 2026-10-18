@@ -239,10 +239,9 @@ func ObjectsToTipppy(Zones []*export_map.Zone, objs []*export_map.Obj, Jumpholes
 		}
 		if obj.Kind != export_map.ObjZone &&
 			obj.Kind != export_map.ObjStar &&
-			obj.Kind != export_map.ObjMining &&
-			obj.Kind != export_map.ObjPlanet {
+			obj.Kind != export_map.ObjMining {
 			if math.Abs(obj.Pos.Y) > 3000 {
-				tippy.Height = fmt.Sprintf("height: %.0f", obj.Pos.Y)
+				tippy.Height = fmt.Sprintf("%.0f", obj.Pos.Y)
 				tippy.ShowHeight = true
 			}
 		}
@@ -256,7 +255,7 @@ func ObjectsToTipppy(Zones []*export_map.Zone, objs []*export_map.Obj, Jumpholes
 			Position: FmtPos(obj.Pos),
 		}
 		if math.Abs(obj.Pos.Y) > 3000 {
-			tippy.Height = fmt.Sprintf("height: %.0f", obj.Pos.Y)
+			tippy.Height = fmt.Sprintf("%.0f", obj.Pos.Y)
 			tippy.ShowHeight = true
 		}
 		result = append(result, tippy)
@@ -357,25 +356,8 @@ script TooltipTippy(objects []TippyObj) {
 	for (const obj of objects) {
 		
 		if (obj.ShowHeight) {
-			// attempt to write minimalistic height failed because i think only one tippy instance per object is allowed
-			// tippy('#'+obj.Id, {
-			// 	content: '   ' + obj.Height,
-			// 	allowHTML: true,
-			// 	placement: 'bottom-start',
-			// 	animation: null,
-			// 	duration: [0,500],
-			// 	theme: 'translucent',
-			// 	followCursor: true,
-			// 	onCreate(instance) {
-			// 		if (obj.ShowHeight) {
-			// 			const box = instance.popper.querySelector('.tippy-box');
-			// 			box.classList.add('yes-height');
-			// 		}
-			// 	},
-			// });
-
 			tippy('#'+obj.Id, {
-				content: obj.Nickname+'<br/>' + obj.Position,
+				content: '<pos-full>' +obj.Nickname+'<br/>' + obj.Position+'</pos-full>' + '<pos-y>height: ' + obj.Height+'</pos-y>',
 				allowHTML: true,
 				placement: 'bottom-start',
 				animation: null,

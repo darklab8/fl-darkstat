@@ -60,7 +60,7 @@ function toggle_tippy_on(checkbox_name) {
         style.id = styleIdOn;
         document.head.appendChild(style);
     }
-    style.textContent = '.tippy-box { display: block !important; }';
+    style.textContent = '.tippy-box { display: block !important; }\n pos-full { display: block !important; }\n pos-y { display: none !important; }';
 
     const existing2 = document.getElementById(styleIdOff);
     if (existing2) existing2.remove();
@@ -74,7 +74,7 @@ function toggle_tippy_off(checkbox_name) {
         style2.id = styleIdOff;
         document.head.appendChild(style2);
     }
-    style2.textContent = '.tippy-box.yes-height { display: block !important; }';
+    style2.textContent = '.tippy-box.yes-height { display: block !important; }\n pos-y { display: block !important; }\n pos-full { display: none !important; }';
 
     const existing = document.getElementById(styleIdOn);
     if (existing) existing.remove();
