@@ -22,6 +22,7 @@ var (
 
 var (
 	ArgMapRoot     = flag.String("map-site-root", "/", "map site root")
+	ArgMapPadding  = flag.String("map-padding", "1.0", "map padding")
 	DisableDevMode = flag.Bool("dev-mode-off", false, "Disabling dev mode")
 )
 

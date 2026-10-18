@@ -5,6 +5,7 @@ import (
 	"github.com/darklab8/fl-darkstat/configs/configs_mapped"
 	"github.com/darklab8/fl-darkstat/darkmap/export_map"
 	"github.com/darklab8/fl-darkstat/darkmap/settings"
+	"github.com/darklab8/fl-darkstat/darkmap/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export/infocarder"
 	"strconv"
 
@@ -20,7 +21,8 @@ func GalaxyPosToPerc(position *float64) float64 {
 		return 0
 	}
 
-	padding := 1.0
+	padding, err := strconv.ParseFloat(settings.Env.DarkmapPadding, 64)
+	logus.Log.CheckPanic(err, "unable to parse darkmap padding")
 	shift := +1.0
 	coords_range := 17.0
 

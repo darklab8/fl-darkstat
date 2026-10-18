@@ -16,6 +16,7 @@ type DarkmapEnvVars struct {
 	IndexUrl       string
 	EnableStatRoot bool
 	Enver          *enverant.Enverant
+	DarkmapPadding string
 }
 
 var Env DarkmapEnvVars
@@ -29,5 +30,6 @@ func init() {
 		SiteRoot:       env.GetStr("SITE_ROOT", enverant.OrStr(*darkflag.ArgMapRoot)),
 		EnableStatRoot: env.GetBool("STAT_AT_ROOT_ON", enverant.OrBool(false)),
 		IndexUrl:       env.GetStr("INDEX_URL", enverant.OrStr("index.html"), enverant.WithDesc("change map index filename, but only for `map web` and `map build` commands")),
+		DarkmapPadding: env.GetStr("DARKMAP_PADDING", enverant.OrStr(*darkflag.ArgMapPadding)),
 	}
 }
