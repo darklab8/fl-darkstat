@@ -239,7 +239,8 @@ func ObjectsToTipppy(Zones []*export_map.Zone, objs []*export_map.Obj, Jumpholes
 		}
 		if obj.Kind != export_map.ObjZone &&
 			obj.Kind != export_map.ObjStar &&
-			obj.Kind != export_map.ObjMining {
+			obj.Kind != export_map.ObjMining &&
+			obj.Kind != export_map.ObjPlanet {
 			if math.Abs(obj.Pos.Y) > 3000 {
 				tippy.Height = fmt.Sprintf("height: %.0f", obj.Pos.Y)
 				tippy.ShowHeight = true
