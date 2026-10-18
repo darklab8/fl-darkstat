@@ -749,7 +749,8 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 	for _, base := range frelconfig.BasesByBases {
 		if parent_nickname, ok := base.Parent.GetValue(); ok {
 			if main_base, ok := frelconfig.BasesByNick[parent_nickname]; ok {
-				frelconfig.BasesByBases[main_base.Base.Get()] = main_base
+				base, _ := main_base.Base.GetValue()
+				frelconfig.BasesByBases[base] = main_base
 			}
 		}
 	}
@@ -757,7 +758,8 @@ func Read(universe_config *universe_mapped.Config, filesystem *filefind.Filesyst
 		for _, base := range system.BasesByBases {
 			if parent_nickname, ok := base.Parent.GetValue(); ok {
 				if main_base, ok := system.BasesByNick[parent_nickname]; ok {
-					system.BasesByBases[main_base.Base.Get()] = main_base
+					base_nickname, _ := main_base.Base.GetValue()
+					system.BasesByBases[base_nickname] = main_base
 				}
 			}
 		}
