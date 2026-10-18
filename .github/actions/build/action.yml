@@ -24,6 +24,9 @@ inputs:
   command:
     description: Command to run for darkstat
     default: "--stat-deals-on build"
+  map-args:
+    description: Sub args for map building
+    default: ""
   map-index-url:
     description: Map index url
     default: "index.html"
@@ -73,7 +76,7 @@ runs:
         DISABLE_DEV_MODE: "${{ inputs.disable-dev-mode }}"
     - name: build
       shell: bash
-      run: darkstat map build
+      run: darkstat ${{ inputs.map-args }} map build
       if: ${{ inputs.map-on == 'true' }}
       env:
         DARKSTAT_SITE_HOST: ${{ inputs.site-host }}
