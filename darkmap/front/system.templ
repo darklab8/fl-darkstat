@@ -231,19 +231,34 @@ func ObjectsToTipppy(Zones []*export_map.Zone, objs []*export_map.Obj, Jumpholes
 	}
 
 	for _, obj := range objs {
-		result = append(result, TippyObj{
+
+		tippy := TippyObj{
 			Id:       obj.Nickname,
 			Nickname: obj.Nickname,
 			Position: FmtPos(obj.Pos),
-		})
+		}
+		if obj.Kind != export_map.ObjZone &&
+			obj.Kind != export_map.ObjStar &&
+			obj.Kind != export_map.ObjMining {
+			if math.Abs(obj.Pos.Y) > 3000 {
+				tippy.Height = fmt.Sprintf("height: %.0f", obj.Pos.Y)
+				tippy.ShowHeight = true
+			}
+		}
+		result = append(result, tippy)
 	}
 
 	for _, obj := range Jumpholes {
-		result = append(result, TippyObj{
+		tippy := TippyObj{
 			Id:       obj.Nickname,
 			Nickname: obj.Nickname,
 			Position: FmtPos(obj.Pos),
-		})
+		}
+		if math.Abs(obj.Pos.Y) > 3000 {
+			tippy.Height = fmt.Sprintf("height: %.0f", obj.Pos.Y)
+			tippy.ShowHeight = true
+		}
+		result = append(result, tippy)
 	}
 
 	return result
@@ -323,28 +338,73 @@ templ SystemObjZone(obj *export_map.Zone, system *export_map.System, ROT_ANGLE f
 }
 
 func FmtPos(Pos cfg.Vector) string {
-	return fmt.Sprintf("(%.0f,%.0f,%.0f)", Pos.X, Pos.Y, Pos.Z)
+	return fmt.Sprintf("(x:%.0f,y:%.0f,z:%.0f)", Pos.X, Pos.Y, Pos.Z)
 }
 
 type TippyObj struct {
 	Id       string
 	Nickname string
 	Position string
+
+	Height     string
+	ShowHeight bool
 }
 
 script TooltipTippy(objects []TippyObj) {
 	// With the above scripts loaded, you can call `tippy()` with a CSS
 	// selector and a `content` prop:
 	for (const obj of objects) {
-    	tippy('#'+obj.Id, {
-			content: obj.Nickname+'<br/>' + obj.Position,
-			allowHTML: true,
-			placement: 'bottom-start',
-			animation: null,
-			duration: [0,500],
-			theme: 'translucent',
-			followCursor: true,
-		});
+		
+		if (obj.ShowHeight) {
+			// attempt to write minimalistic height failed because i think only one tippy instance per object is allowed
+			// tippy('#'+obj.Id, {
+			// 	content: '   ' + obj.Height,
+			// 	allowHTML: true,
+			// 	placement: 'bottom-start',
+			// 	animation: null,
+			// 	duration: [0,500],
+			// 	theme: 'translucent',
+			// 	followCursor: true,
+			// 	onCreate(instance) {
+			// 		if (obj.ShowHeight) {
+			// 			const box = instance.popper.querySelector('.tippy-box');
+			// 			box.classList.add('yes-height');
+			// 		}
+			// 	},
+			// });
+
+			tippy('#'+obj.Id, {
+				content: obj.Nickname+'<br/>' + obj.Position,
+				allowHTML: true,
+				placement: 'bottom-start',
+				animation: null,
+				duration: [0,500],
+				theme: 'translucent',
+				followCursor: true,
+				onCreate(instance) {
+					if (obj.ShowHeight) {
+						const box = instance.popper.querySelector('.tippy-box');
+						box.classList.add('yes-height');
+					}
+				},
+			});
+		} else {
+			tippy('#'+obj.Id, {
+				content: obj.Nickname+'<br/>' + obj.Position,
+				allowHTML: true,
+				placement: 'bottom-start',
+				animation: null,
+				duration: [0,500],
+				theme: 'translucent',
+				followCursor: true,
+				onCreate(instance) {
+					if (obj.ShowHeight) {
+						const box = instance.popper.querySelector('.tippy-box');
+						box.classList.add('no-height');
+					}
+				},
+			});
+		}
 	}	
 }
 
