@@ -1,5 +1,5 @@
 name: Checkout Freelancer
-description: ''
+description: ""
 inputs:
   freelancer-folder:
     description: Path to root of freelancer directory
@@ -16,47 +16,62 @@ inputs:
   ssh-key-base64-discovery:
     description: Key to download Discovery repo
     default: LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFBQUFBQkc1dmJtVUFBQUFFYm05dVpRQUFBQUFBQUFBQkFBQUJsd0FBQUFkemMyZ3RjbgpOaEFBQUFBd0VBQVFBQUFZRUF6Y1RnRzlwWVVhdHNFbmZOWmc0dEVRTXFnTm9PZDJETndSWFZmTmNsM3BhMDIvamlTMiswCk9yalhQUTVtOG54ZndqWnA3R1JDUzdzZkQxVkU3clJPcXl1U1FHbDdSZUNYb0s2K2l3cWF5Z0ZSQzJjdFAxdnd2aW5rQ0MKU3dyWUFHdldaby90QUNLeWlvYUNacFRGNXBQcUJ2Rk9Ka0l0cFhWWm9mZTR2cll4Tko2RE1RWVJLbnNQY2NBbzhyTnZTegpSY09jZEtmbVcvRDNKc2NuKzRSQ25hZUZxRzBFK0V5NXM2OS8zRDJnK0Z2SkxqRWlNVmtQbFA4cVRWYkhtTjdQcG9Rc1M1Cmt1VWZOUFFnaXFOVldySHJxVHAzQjQ1WVcyemdGREJJeDZwNXVLUDRPeVg2UXUzdm04U1hQSmxzQ1VFSVY2emU4a1BDL0cKV1FSS3pBcGpQcHF5Nm54MmhxNTRkYkJkeEZjaHVRY0xFK2xRRTRPUUd0RVFTd2VPcHhyTHFHZzJ1VlZYYTN5L21SZ0tlZQpkNFUzbzkvZXZ6U05kb1ZTeGhtY0tuakV1cXhpbHgyaTNKRFBvSTBIeUlsRmk1UDBYTkVwQkt1OFFqOFJFYzR2ZFVXaFZEClh3NjVNeXdVQ2wxRng4WC9Lbkp2dHpJVEhSTjd2R2dqMEMrS2Vrc0hBQUFGaUo1KzZ2K2VmdXIvQUFBQUIzTnphQzF5YzIKRUFBQUdCQU0zRTRCdmFXRkdyYkJKM3pXWU9MUkVES29EYURuZGd6Y0VWMVh6WEpkNld0TnY0NGt0dnREcTQxejBPWnZKOApYOEkyYWV4a1FrdTdIdzlWUk82MFRxc3Jra0JwZTBYZ2w2Q3V2b3NLbXNvQlVRdG5MVDliOEw0cDVBZ2tzSzJBQnIxbWFQCjdRQWlzb3FHZ21hVXhlYVQ2Z2J4VGlaQ0xhVjFXYUgzdUw2Mk1UU2VnekVHRVNwN0QzSEFLUEt6YjBzMFhEbkhTbjVsdncKOXliSEovdUVRcDJuaGFodEJQaE11Yk92Zjl3OW9QaGJ5UzR4SWpGWkQ1VC9LazFXeDVqZXo2YUVMRXVaTGxIelQwSUlxagpWVnF4NjZrNmR3ZU9XRnRzNEJRd1NNZXFlYmlqK0RzbCtrTHQ3NXZFbHp5WmJBbEJDRmVzM3ZKRHd2eGxrRVNzd0tZejZhCnN1cDhkb2F1ZUhXd1hjUlhJYmtIQ3hQcFVCT0RrQnJSRUVzSGpxY2F5NmhvTnJsVlYydDh2NWtZQ25ubmVGTjZQZjNyODAKalhhRlVzWVpuQ3A0eExxc1lwY2RvdHlRejZDTkI4aUpSWXVUOUZ6UktRU3J2RUkvRVJIT0wzVkZvVlExOE91VE1zRkFwZApSY2ZGL3lweWI3Y3lFeDBUZTd4b0k5QXZpbnBMQndBQUFBTUJBQUVBQUFHQVJFSUd4YmFNamFyNzByU0RJbE9aaDRjeFZrClQvZjRKUlByZnJkZG80NmJtOGpTdm1oWGVzcGI0alNGRzZ2TDJkVm1PT2g2aEtoYXl4QlBrWVFNYjNRYmpXYngrT2tRT0wKeVBXdXA1a0E5L212MU1TSk1mZGh5UE5FZlo4T0xML0hmSlM0UjY3Z3lVaFhkUlVvNFBpQW1SSEhSM3BDRlgyd2N1a0pnSQpaTnN6UDIxRnY4RnZlRlFTTDMyN0Y2ZUdSOEE2eDcvZ2FrVitON1dSVy9vYU9pSllJb3lGSkJ6OHhEM2VOZDJzVm0zSHcyCkpHaVFHeWFjRUtVRWQxdE9JdHZtRllWMGwyU0FsN055aEdXdUE0OVVPN082YklzU3M0UFZUcThVdStpRktaeXdmK2NJZWgKTUtlWVZXcWJaTTh0SjlxeDZ3L3JsM3NTZ2xGdlltWnQrYzN4UHhqVGVFNGdQTWVmUitRcnV2TUxHVS82Qm5OUmpIZjFXTgp5dlJHUHBTT01PWXZwbFhQTkY5MU5MVTlHM2txL0ROdkozSWZrdUwwUUw5NXZWcFBTMW4zeWpPaEl1SVRlQjVRMyswblc2CjVFVXducXJjdDluTHdoQ0RYRlRWTitIcE9NdC95U01JYnJnS3hTcGFpN2lJVVhDTEVGZGFaN0w0QVNVaEtHcXNDaEFBQUEKd0FFb0NZWHA5eVlxSDFLRXU5dUtoUGFuaGlpT3JNK09KUUJtRFdGelR2R0VoQVlHS3NpUXNTalFIOC9QUlRzN0l4cE1LUApwQjVFOHRMN2Rwb3NuTjJORjZ6N2kxMXJ0YnArSG5ORzZ1QnpVZEs5U0FKMlA0bmVjb1MvTm1yakgvSXVCcjJ4M3pTYlAxCnlMc1ZHU29uOUJGQ2d6ajJURkhXcms1R2o5VHdmR3U4WGwreSthRW45S3RPa3grVHQ2bHlaUG5PYjRJd2pJcC9CTFE4ajYKNWVJQWd2Q2cwWEpPZmM2MzhBWEgxbTlZQUJ6RnRRcHE0QkNpNHFwYUF2b29zSmN3QUFBTUVBOWl5WkN3Q1JyWVJLVy9NeApWNTVXUjNscHdTLzlwU2NvdlF0d0RGcmtPTERCS2Q4T2tIdGIxVEN5M2didWpnZ29NTlhJTHluSTYwZGQ2SndMVDh3Y3VJCnpvVkg4NnR5djFOVkp5LzRrTHY0ZFY3ZDR1TVVFRGlPaEY1cDdwMi9zTVBZZGhQSk0yNFdnaGFzZUNXQ2hTenR5MjZuV3UKeWRNUzdKV0hYV0k5dnc1bjFUVDZTUGs5Q1FlVVh6VHRvRTh3RVlEOFNWU3JqSnpGMXB5RkhYeHB1ak8wRml5dmlPcytiSApjMTNpQTNWdWJ0QUxabE9mclgzWmRCWXhDL3Y4K3pBQUFBd1FEVisyc29qNm1qM2pOOERnQnBUNTF2eFlydE5KTFJzbGNGCmRuZUNWRllkSUVURWllMnpDNUZHN1JGWURnNElUWmFIZ2NXVjd3K0xnVHBXTGlldnk5NFJDdWtrT1pnRXVpaDNDbjhtU0oKTm5NTXFvK0lwdTBCVitsY2lNbkJDcnVKWERHSmlzSURnUWtxVUNQc3pNWHU5aHJ5YkQ4RVlKNUN4S3VzOG9OMkUxcGxzKwpjZHhXRGVVL2dwOXJtb053Z2s0OUdRT1F4MjJKTVVrTGNhZWJ2UUhlWGE2YzhlN0J2b0NtUE9FZDhEQVlmc0JOS1lJQTZaCjlUUXRtajE4emhUVjBBQUFBUGJtRmhRRzVoWVMxTlV5MDNRemc1QVFJREJBPT0KLS0tLS1FTkQgT1BFTlNTSCBQUklWQVRFIEtFWS0tLS0tCg==
+  ssh-key-base64-discovery486:
+    description: Key to download Discovery 486 repo
+    default: LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFBQUFBQkc1dmJtVUFBQUFFYm05dVpRQUFBQUFBQUFBQkFBQUJsd0FBQUFkemMyZ3RjbgpOaEFBQUFBd0VBQVFBQUFZRUFrbW1ibDI1Z0xzb0Y0a3hQS3h6S0ZWeXdVYXd0SHB6c2xEbFdFdkFtRTU2OXFEVlBuSnZPCi94VVVFcXdWUUV3ZjdPcWE2VmQwd1c4aUk0OVFFM1FOVk5QZm8zb0UwbDZzNVlCUjZXQ08zbW1QNmtRRG5JQXBVZndrUXcKTlZLa1o1UDE5UGx5V0h5bmlXS2djM2ljWGVHZHNkQkRIb0lJdkwyNnJZdFJpelB5UEltd0tReVEzRU43OW9lc3VjNWVOUQpWc1Y1a3laWTdtb3pUOGVIRUs2S3R6M3FhVWdPdFdXSHZqeFR4TWl2c2t0eE1KUXlMcE1nU2tKWlNldU1abHE5eWJpV1FKCldTVE1LMUFGeWw1c3h1STZtQjZtTXFKVkdBSkhaMjdycW5NUkg3dmNJdjE2TnlDcE9pSUV6aUtjSXZ6NTI2SmVsWTFreUYKU0hWaG9UdHlQaHpOcjlZRVZvZ0JrY3ZaZ1FjRlFQdjBNVWVoUU8waVlrc2pGT2REamxmMXZoUGhITHk2Mm9DdmNVN0ZuNwpERzJuc0o2aXNRQXN5dUY3TmZEbElVSXdURjFISGdSWnRoVStPR0IwMzY2eCszZXRtMWZiZXIzbGlVaUdzempsZHR5b2x1ClM2NktiQlJSOFNZaUdodFB3cUVyOFBsK2JvMXRSM004Sm5xY0Y5MmhBQUFGaUVsUU94VkpVRHNWQUFBQUIzTnphQzF5YzIKRUFBQUdCQUpKcG01ZHVZQzdLQmVKTVR5c2N5aFZjc0ZHc0xSNmM3SlE1VmhMd0poT2V2YWcxVDV5Ynp2OFZGQktzRlVCTQpIK3pxbXVsWGRNRnZJaU9QVUJOMERWVFQzNk42Qk5KZXJPV0FVZWxnanQ1cGorcEVBNXlBS1ZIOEpFTURWU3BHZVQ5ZlQ1CmNsaDhwNGxpb0hONG5GM2huYkhRUXg2Q0NMeTl1cTJMVVlzejhqeUpzQ2tNa054RGUvYUhyTG5PWGpVRmJGZVpNbVdPNXEKTTAvSGh4Q3VpcmM5Nm1sSURyVmxoNzQ4VThUSXI3SkxjVENVTWk2VElFcENXVW5yakdaYXZjbTRsa0NWa2t6Q3RRQmNwZQpiTWJpT3BnZXBqS2lWUmdDUjJkdTY2cHpFUis3M0NMOWVqY2dxVG9pQk00aW5DTDgrZHVpWHBXTlpNaFVoMVlhRTdjajRjCnphL1dCRmFJQVpITDJZRUhCVUQ3OURGSG9VRHRJbUpMSXhUblE0NVg5YjRUNFJ5OHV0cUFyM0ZPeFord3h0cDdDZW9yRUEKTE1yaGV6WHc1U0ZDTUV4ZFJ4NEVXYllWUGpoZ2ROK3VzZnQzclp0WDIzcTk1WWxJaHJNNDVYYmNxSmJrdXVpbXdVVWZFbQpJaG9iVDhLaEsvRDVmbTZOYlVkelBDWjZuQmZkb1FBQUFBTUJBQUVBQUFHQU56UUdiRFE3bzZpY1MxVEdUTlVRQkxucjZQCjlvQzdEVEtwZnJzanhGdndRTk1relhkWTd4bncvTmY3VE9WbTNkWTdDWk0vMjdrZXRiRGRsTk1laUIxa2dFZkZqWFZKSkoKMGtadG0vYkNKMjNaeTFSVm9ENWFWZ1VoanZyRXM2bmFzV0E0WEI3VWNpekJRWnR5LzBsUmtxSWc4S0g0aWJ6cjRpa3FpQwoyRjkvcC8rcUlmQVE5bHVqYzdKNEY1Nk51cVFPMDRCNWxmMHBUTVAvcFZISjhTd2tCZ0Q4NFJiYWVZWk12T01kWVJHTUtGCkxQSFRjZWdiTnFTSmtldDBCbXVUclVRVzdDbkkxNTNyRDN2K1JjS3hMOXRSS2N1YmpwbS96L0V1L09RUU4yemxrWEFBcUoKMWJ5cXJlQmVabGdKZWtxSjlEemh5QVZ1WVhoVFZ0RGM2YjliYXQ1emxpN3NqSXU1RTF4cDRUZTNlTk1Ed0hnZ0sxVEFsYwpoU2svSHRNaTE2dTRmRWFDRk9xZDFFeFJCZnZ4Q2FxS0pPOGN0RXowQUhiWmpXVW9Sbi9kUkN5Kzg3cDNDNjNZbERnU2xDCkxVVnB0VVdpMUlzS0FxZnhramF3dStiMHpnSFk1ZWdwdFNzRkFXUml3dFo3VWJNdElQWWR2QmdYZnVxMEhkVTJoNUFBQUEKd0JJVVd6TGZ4eEs3bzd5Y2lyeS94aGhzZnF4cGU1VUIrYUxvdmZaZ0swQ04yV0tPOE1zcjVoVnlzTk5WUXJDd1lQSE9ScgpjWEhzOEJjWVRKUWtGdnUvT3pyS0ZuM1BrL0ZYMDMwZ2RHWC9lYXFmU0Z0TFBTQ0s1U2ZpTi8xQVJJRHl1ZFJhRlBhQnlaCmpBSTArcjl4MFV0RGUvdWRJd0F3RTFGQjl1WkdaWVh1OWk4N0VwT2wxc3RPM0JJVHhML2pzRmJIYVAwbHFwK3p4STZkM2sKVE9PVEpOek5rZzJ1UHdML21lS3kvSFRlWTREMzgxRWh0eTFMRTRPR1dSeXA3SEZBQUFBTUVBdVBsTjZZdGJQNFluYWRmMgo5eU1nOFROcDBBb2JJUnFHNERxelhoQVlKdk9kR0FkSXROVVVpazk3Q0hkMlMwQXZTd2ppa3B0WXduSVFwa3JheHExbUdaClZHMXpiOXNVS3IrNjZRajl3NWdhYnlDbU1wLzFWVUJ4a2dRUEo4S3cwK0FqcnRYbTZHMUFWeG5PSnFTMDNvcjJXNndtNEoKV0JhWHRSb29KSE1jajM5N1FMK3QwNXZYS0hVRWRZVG5OcDBCUCtYei9KSi94R1Z3NEV3V1RCcWEzbXdRNFJmS0xnTFJtSApBaEJsVFN1eCtrbU9Seld3WHZyNmtkc1pEOE9tb0xBQUFBd1FES29jWmJ6RnEzdHpzMXc1ZkYrNUtBUXRKSTFoemJBbGIzCm1Xa0pmeGpBbDEzR0R1eEVxYm81YisxN2lTS2N5cTBUQTVFM0xjYUZ5a1RHMU5NYzBuS2ZTbmZEUkEvZFIraWRTTU5XeUEKVmF6cEZrMnJyZHgrSnRNY3hPcWg3WkJiT2ZieHhsa2hSVVFpWXk5LytPV2cwVlQzNXh6UGEzMzB3T2taR0t0enFXNVlvdwpJbmdQajlRSlJuakRQUHAzTHpsLzVHbXlYQjBaeTd6K3R6ZVNXZVpqZmVnM3NkVHVsamozK3ZTWjFOVE5UQlRkWjVkUUFBCnhYNzJvSVArQ1ZEb01BQUFBUGJtRmhRRzVoWVMxTlV5MDNRemc1QVFJREJBPT0KLS0tLS1FTkQgT1BFTlNTSCBQUklWQVRFIEtFWS0tLS0tCg==
 runs:
   using: composite
   steps:
-  - name: Write vanilla full id_rsa down
-    if: ${{ inputs.freelancer-mod == 'vanilla-full' }}
-    shell: python
-    run: |
-      import base64
-      import os
-      file_output_name = "${{ github.workspace }}/id_rsa.out"
-      with open(file_output_name, "wb", 0o600) as file:
-          file.write(base64.b64decode(bytes(os.environ["ID_RSA_FILE_IN_BASE64"], encoding='utf8')))
-      os.chmod(file_output_name, 0o600)
-    env:
-      ID_RSA_FILE_IN_BASE64: ${{ inputs.ssh-key-base64-vanilla-full}}
-  - name: Write vanilla id_rsa down
-    if: ${{ inputs.freelancer-mod == 'vanilla' }}
-    shell: python
-    run: |
-      import base64
-      import os
-      file_output_name = "${{ github.workspace }}/id_rsa.out"
-      with open(file_output_name, "wb", 0o600) as file:
-          file.write(base64.b64decode(bytes(os.environ["ID_RSA_FILE_IN_BASE64"], encoding='utf8')))
-      os.chmod(file_output_name, 0o600)
-    env:
-      ID_RSA_FILE_IN_BASE64: ${{ inputs.ssh-key-base64-vanilla }}
-  - name: Write discovery id_rsa down
-    if: ${{ inputs.freelancer-mod == 'discovery' }}
-    shell: python
-    run: |
-      import base64
-      import os
-      file_output_name = "${{ github.workspace }}/id_rsa.out"
-      with open(file_output_name, "wb", 0o600) as file:
-          file.write(base64.b64decode(bytes(os.environ["ID_RSA_FILE_IN_BASE64"], encoding='utf8')))
-      os.chmod(file_output_name, 0o600)
-    env:
-      ID_RSA_FILE_IN_BASE64: ${{ inputs.ssh-key-base64-discovery }}
-  - shell: bash
-    run: GIT_SSH_COMMAND='ssh -i ${{ github.workspace }}/id_rsa.out -o IdentitiesOnly=yes' git clone git@github.com:darklab8/fl-files-${{ inputs.freelancer-mod }}.git
-  - shell: bash
-    run: mv fl-files-${{ inputs.freelancer-mod }} ${{ inputs.freelancer-folder }}
-    continue-on-error: true
+    - name: Write vanilla full id_rsa down
+      if: ${{ inputs.freelancer-mod == 'vanilla-full' }}
+      shell: python
+      run: |
+        import base64
+        import os
+        file_output_name = "${{ github.workspace }}/id_rsa.out"
+        with open(file_output_name, "wb", 0o600) as file:
+            file.write(base64.b64decode(bytes(os.environ["ID_RSA_FILE_IN_BASE64"], encoding='utf8')))
+        os.chmod(file_output_name, 0o600)
+      env:
+        ID_RSA_FILE_IN_BASE64: ${{ inputs.ssh-key-base64-vanilla-full}}
+    - name: Write vanilla id_rsa down
+      if: ${{ inputs.freelancer-mod == 'vanilla' }}
+      shell: python
+      run: |
+        import base64
+        import os
+        file_output_name = "${{ github.workspace }}/id_rsa.out"
+        with open(file_output_name, "wb", 0o600) as file:
+            file.write(base64.b64decode(bytes(os.environ["ID_RSA_FILE_IN_BASE64"], encoding='utf8')))
+        os.chmod(file_output_name, 0o600)
+      env:
+        ID_RSA_FILE_IN_BASE64: ${{ inputs.ssh-key-base64-vanilla }}
+    - name: Write discovery id_rsa down
+      if: ${{ inputs.freelancer-mod == 'discovery' }}
+      shell: python
+      run: |
+        import base64
+        import os
+        file_output_name = "${{ github.workspace }}/id_rsa.out"
+        with open(file_output_name, "wb", 0o600) as file:
+            file.write(base64.b64decode(bytes(os.environ["ID_RSA_FILE_IN_BASE64"], encoding='utf8')))
+        os.chmod(file_output_name, 0o600)
+      env:
+        ID_RSA_FILE_IN_BASE64: ${{ inputs.ssh-key-base64-discovery }}
+    - name: Write discovery486 id_rsa down
+      if: ${{ inputs.freelancer-mod == 'discovery486' }}
+      shell: python
+      run: |
+        import base64
+        import os
+        file_output_name = "${{ github.workspace }}/id_rsa.out"
+        with open(file_output_name, "wb", 0o600) as file:
+            file.write(base64.b64decode(bytes(os.environ["ID_RSA_FILE_IN_BASE64"], encoding='utf8')))
+        os.chmod(file_output_name, 0o600)
+      env:
+        ID_RSA_FILE_IN_BASE64: ${{ inputs.ssh-key-base64-discovery486 }}
+    - shell: bash
+      run: GIT_SSH_COMMAND='ssh -i ${{ github.workspace }}/id_rsa.out -o IdentitiesOnly=yes' git clone git@github.com:darklab8/fl-files-${{ inputs.freelancer-mod }}.git
+    - shell: bash
+      run: mv fl-files-${{ inputs.freelancer-mod }} ${{ inputs.freelancer-folder }}
+      continue-on-error: true
