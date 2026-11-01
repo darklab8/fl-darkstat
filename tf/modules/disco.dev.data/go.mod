@@ -1,9 +1,9 @@
 module darkstat-dev-watcher
 
-go 1.25.1
+go 1.27.3
 
 require (
-	github.com/darklab8/go-utils v0.32.2
+	github.com/darklab8/go-utils v0.34.0
 	golang.org/x/crypto/x509roots/fallback v0.0.0-20260501174432-fd0b90d21f9a
 )
 

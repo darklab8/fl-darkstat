@@ -1,4 +1,4 @@
-FROM golang:1.23-bullseye
+FROM golang:1.27-bookworm
 
 RUN mkdir ~/.ssh
 RUN chmod 7000 ~/.ssh

@@ -1,4 +1,4 @@
-FROM golang:1.25-bookworm AS dependencies
+FROM golang:1.27-bookworm AS dependencies
 
 RUN apt update
 RUN apt install -y build-essential

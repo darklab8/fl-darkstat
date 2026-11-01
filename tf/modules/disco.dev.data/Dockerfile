@@ -1,5 +1,5 @@
 
-FROM golang:1.25-bookworm AS build
+FROM golang:1.27-bookworm AS build
 ENV CGO_ENABLED=0
 
 WORKDIR /code
