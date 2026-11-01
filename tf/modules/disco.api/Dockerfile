@@ -10,7 +10,7 @@ COPY main.go go.mod go.sum ./
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
 # docker uses alpine too
-FROM debian:12.11-slim AS runner
+FROM debian:13-slim AS runner
 
 WORKDIR /code
 COPY --from=build /code/main main

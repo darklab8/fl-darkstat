@@ -35,7 +35,7 @@ RUN echo "${BUILD_VERSION}" > darkstat/settings/version.txt
 ENV GOEXPERIMENT=greenteagc
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
-FROM debian:12.11-slim AS runner
+FROM debian:13-slim AS runner
 RUN mkdir /data
 WORKDIR /code
 COPY --from=build /code/main main
