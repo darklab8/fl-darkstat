@@ -3,8 +3,8 @@ package darkhttp
 import (
 	"net/http"
 
-	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated/statproto_deprecated"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkhttp/pb"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"

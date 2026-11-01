@@ -3,9 +3,8 @@ package darkhttp
 import (
 	"net/http"
 
-	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated"
-	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated/statproto_deprecated"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkhttp/pb"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -50,7 +49,7 @@ func GetCMs(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.CMs
 			}
-			result = darkgrpc_deprecated.FilterNicknames(in.FilterNicknames, result)
+			result = pb.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*CounterMeasure
 			for _, item := range result {

@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated/statproto_deprecated"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkhttp/pb"
 	"github.com/darklab8/fl-darkstat/darkcore/builder"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"

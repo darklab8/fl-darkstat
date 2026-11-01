@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
@@ -43,7 +42,6 @@ func RegisterApiRoutes(w *web.Web, app_data *appdata.AppData) (*Api, *web.Web) {
 	api_routes := registry.NewRegister()
 	api_routes.Register(GetPoBs(w, api))
 	api_routes.Register(GetPobGoods(w, api))
-	api_routes.Register(darkgrpc_deprecated.GetPobGoodsDeprecated(w, api))
 	api_routes.Register(GetHashes(w, api))
 	api_routes.Register(GetGraphPaths(w, api))
 	api_routes.Register(GetBases(w, api))

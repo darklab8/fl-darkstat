@@ -1,4 +1,4 @@
-package statproto_deprecated
+package pb
 
 type Pos struct {
 	X float64 `protobuf:"fixed64,1,opt,name=x,proto3" json:"x"`

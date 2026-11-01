@@ -3,8 +3,7 @@ package darkhttp
 import (
 	"net/http"
 
-	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated"
-	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated/statproto_deprecated"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkhttp/pb"
 
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
@@ -80,7 +79,7 @@ func GunHandler(webapp *web.Web, api *Api, guns []configs_export.Gun) func(w htt
 		} else {
 			result = guns
 		}
-		result = darkgrpc_deprecated.FilterNicknames(in.FilterNicknames, result)
+		result = pb.FilterNicknames(in.FilterNicknames, result)
 
 		var output []*Gun
 		for _, item := range result {

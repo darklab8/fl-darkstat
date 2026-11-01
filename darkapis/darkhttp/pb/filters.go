@@ -1,6 +1,10 @@
-package darkgrpc_deprecated
+package pb
 
 import "github.com/darklab8/fl-darkstat/darkstat/configs_export"
+
+type Nicknamable interface {
+	GetNickname() string
+}
 
 func FilterNicknames[T Nicknamable](filter_nicknames []string, items []T) []T {
 	if len(filter_nicknames) == 0 {

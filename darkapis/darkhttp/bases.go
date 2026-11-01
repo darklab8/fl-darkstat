@@ -3,9 +3,8 @@ package darkhttp
 import (
 	"net/http"
 
-	"github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated"
-	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated/statproto_deprecated"
 	"github.com/darklab8/fl-darkstat/darkapis/darkhttp/apiutils"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkhttp/pb"
 	"github.com/darklab8/fl-darkstat/darkcore/web"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/configs_export"
@@ -65,7 +64,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.Bases
 			}
-			result = darkgrpc_deprecated.FilterNicknames(in.FilterNicknames, result)
+			result = pb.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Base
 			for _, item := range result {
@@ -73,7 +72,7 @@ func GetBases(webapp *web.Web, api *Api) *registry.Endpoint {
 					Base: item,
 				}
 				if in.IncludeMarketGoods {
-					for _, good := range darkgrpc_deprecated.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
+					for _, good := range pb.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
 				}
@@ -120,7 +119,7 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.MiningOperations
 			}
-			result = darkgrpc_deprecated.FilterNicknames(in.FilterNicknames, result)
+			result = pb.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Base
 			for _, item := range result {
@@ -128,7 +127,7 @@ func GetOreFields(webapp *web.Web, api *Api) *registry.Endpoint {
 					Base: item,
 				}
 				if in.IncludeMarketGoods {
-					for _, good := range darkgrpc_deprecated.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
+					for _, good := range pb.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
 				}
@@ -169,7 +168,7 @@ func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 			}
 
 			var result []*configs_export.Base = api.app_data.Configs.PoBsToBases(api.app_data.Configs.PoBs)
-			result = darkgrpc_deprecated.FilterNicknames(in.FilterNicknames, result)
+			result = pb.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Base
 			for _, item := range result {
@@ -177,7 +176,7 @@ func GetPoBBases(webapp *web.Web, api *Api) *registry.Endpoint {
 					Base: item,
 				}
 				if in.IncludeMarketGoods {
-					for _, good := range darkgrpc_deprecated.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
+					for _, good := range pb.FilterMarketGoodCategory(in.FilterMarketGoodCategory, item.MarketGoodsPerNick) {
 						answer.MarketGoods = append(answer.MarketGoods, good)
 					}
 				}

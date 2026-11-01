@@ -3,7 +3,7 @@ package darkhttp
 import (
 	"testing"
 
-	pb "github.com/darklab8/fl-darkstat/darkapis/darkgrpc_deprecated/statproto_deprecated"
+	pb "github.com/darklab8/fl-darkstat/darkapis/darkhttp/pb"
 	"github.com/darklab8/fl-darkstat/darkstat/settings/logus"
 	"github.com/stretchr/testify/assert"
 )

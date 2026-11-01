@@ -1,4 +1,4 @@
-package darkgrpc_deprecated
+package pb
 
 import (
 	"runtime"

@@ -46,7 +46,7 @@ func WithPortSrv(port int) ServerOpt {
 }
 
 var (
-	Log = logus.Log.WithScope("darkgrpc")
+	Log = logus.Log.WithScope("darkrpc")
 )
 
 func (r *RpcServer) Serve(app_data *appdata.AppData) {
