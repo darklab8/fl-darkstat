@@ -22,6 +22,9 @@ linters:
         - "-ST1023"
   exclusions:
     rules:
+      - path: docker/nilaway_report/
+        linters:
+          - errcheck
       - path: darkmap/front/static_front/scripts/
         linters:
           - errcheck
