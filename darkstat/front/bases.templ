@@ -1542,23 +1542,3 @@ templ RouteInfo(name string, route *configs_export.Route, shared *types.SharedDa
 		}
 	}
 }
-
-templ TooltipDestination(Pos cfg.Vector, ShowDisco bool) {
-	<span class="tooltip">
-		if ShowDisco {
-			@frmt.MagnifyingGlassClickable(Pos.X, Pos.Y, Pos.Z)
-		} else {
-			@frmt.MagnifyingGlass()
-		}
-		<span class="tooltiptext" style="left: 0px; top: 30px;">
-			if ShowDisco {
-				{ fmt.Sprintf("/wp %.0f %.0f %.0f",Pos.X,Pos.Y,Pos.Z) }
-				<br/>
-				command to create waypoint (click to copy)
-			} else {
-				coordinates:
-				{ fmt.Sprintf("X %.0f,Y %.0f,Z %.0f",Pos.X,Pos.Y,Pos.Z) }
-			}
-		</span>
-	</span>
-}
