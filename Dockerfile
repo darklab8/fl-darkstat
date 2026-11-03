@@ -33,10 +33,12 @@ RUN swag init --parseDependency
 ARG BUILD_VERSION
 RUN echo "${BUILD_VERSION}" > darkstat/settings/version.txt
 ENV GOEXPERIMENT=greenteagc
+ENV CGO_ENABLED=0
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -v -o main main.go
 
-FROM debian:13-slim AS runner
-RUN mkdir /data
+FROM gcr.io/distroless/static-debian13
+# FROM debian:13-slim AS runner
+# RUN mkdir /data
 WORKDIR /code
 COPY --from=build /code/main main
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
@@ -57,3 +59,4 @@ HEALTHCHECK --interval=28s CMD /code/main health
 # test command
 # docker run -v /home/naa/apps/freelancer_related/wine_prefix_freelancer_online2/drive_c/Discovery:/data/freelancer_folder -it -p 8000:8000 -e DARKSTAT_LOG_LEVEL=DEBUG -e UTILS_LOG_LEVEL=DEBUG -e DEV_ENV=true -p 8080:8080 test
 # docker run -v /var/lib/darklab/discovery-production/freelancer_folder:/data/freelancer_folder -it -e DARKSTAT_LOG_LEVEL=DEBUG -e UTILS_LOG_LEVEL=DEBUG -e DEV_ENV=true --name test --rm darkwind8/darkstat:v1.142.4-arm64 web
+# docker run -v /home/naa/windows10shared/fl-files-vanilla:/data/freelancer_folder -it -e DARKSTAT_LOG_LEVEL=DEBUG -e UTILS_LOG_LEVEL=DEBUG -e DEV_ENV=true --name test --rm test web
