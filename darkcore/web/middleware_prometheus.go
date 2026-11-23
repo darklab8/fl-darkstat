@@ -1,7 +1,9 @@
 package web
 
 import (
+	"bytes"
 	"errors"
+	"io"
 	"net"
 	"net/http"
 	"regexp"
@@ -51,6 +53,20 @@ func prometheusMidleware(next http.Handler) http.Handler {
 		ctx, span := traces.Tracer.Start(r.Context(), "web-request", opts...)
 		defer span.End()
 
+		var bodyBytes []byte
+		if r.Body != nil && r.Body != http.NoBody {
+			var err error
+
+			body_to_read := http.MaxBytesReader(w, r.Body, 10<<20) // 10Mb Read limit
+			bodyBytes, err = io.ReadAll(body_to_read)
+			if err != nil {
+				http.Error(w, "cannot read body", http.StatusBadRequest)
+				return
+			}
+			r.Body.Close()
+			r.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+		}
+
 		new_r := r.WithContext(ctx)
 		next.ServeHTTP(&rec, new_r)
 		span.AddEvent("ServeHTTP is made")
@@ -86,6 +102,8 @@ func prometheusMidleware(next http.Handler) http.Handler {
 			typelog.Float64("duration", time_finish),
 			typelog.Int("body_size", rec.body_size),
 			typelog.String("user_agent", user_agent),
+			typelog.String("method", r.Method),
+			typelog.Any("body", string(bodyBytes)),
 		)
 		span.SetAttributes(
 			attribute.String("pattern", pattern),
@@ -94,6 +112,7 @@ func prometheusMidleware(next http.Handler) http.Handler {
 			attribute.Float64("duration", time_finish),
 			attribute.Int("body_size", rec.body_size),
 			attribute.String("user_agent", user_agent),
+			attribute.String("method", r.Method),
 		)
 		span.SetName("web-request " + pattern)
 
