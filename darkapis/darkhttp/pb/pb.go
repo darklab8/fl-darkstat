@@ -28,9 +28,10 @@ type GetTractorsInput struct {
 }
 
 type GetFactionsInput struct {
-	IncludeReputations bool `protobuf:"varint,1,opt,name=include_reputations,json=includeReputations,proto3" json:"include_reputations,omitempty"`
-	IncludeBribes      bool `protobuf:"varint,2,opt,name=include_bribes,json=includeBribes,proto3" json:"include_bribes,omitempty"`
-	FilterToUseful     bool `protobuf:"varint,3,opt,name=filter_to_useful,json=filterToUseful,proto3" json:"filter_to_useful,omitempty"`
+	IncludeReputations bool     `protobuf:"varint,1,opt,name=include_reputations,json=includeReputations,proto3" json:"include_reputations,omitempty"`
+	IncludeBribes      bool     `protobuf:"varint,2,opt,name=include_bribes,json=includeBribes,proto3" json:"include_bribes,omitempty"`
+	FilterToUseful     bool     `protobuf:"varint,3,opt,name=filter_to_useful,json=filterToUseful,proto3" json:"filter_to_useful,omitempty"`
+	FilterNicknames    []string `json:"filter_nicknames,omitempty"`
 }
 
 type GetEquipmentInput struct {

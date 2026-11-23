@@ -43,6 +43,7 @@ func GetFactions(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				input = api.app_data.Configs.Factions
 			}
+			input = pb.FilterNicknames(in.FilterNicknames, input)
 
 			var result []configs_export.Faction
 			for _, item := range input {

@@ -54,6 +54,7 @@ func GetCommodities(webapp *web.Web, api *Api) *registry.Endpoint {
 			} else {
 				result = api.app_data.Configs.Commodities
 			}
+			result = pb.FilterNicknames(in.FilterNicknames, result)
 
 			var output []*Commodity
 			for _, item := range result {
