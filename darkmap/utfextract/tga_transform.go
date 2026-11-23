@@ -7,7 +7,25 @@ import (
 
 	"github.com/darklab8/fl-darkstat/darkmap/dds"
 	"github.com/darklab8/fl-darkstat/darkmap/tga"
+	"golang.org/x/image/draw"
 )
+
+// 200px is the rendered size; use 400 if you want crisp output on HiDPI/retina screens.
+const MaxDimension = 256
+
+func downscale(src image.Image) image.Image {
+	b := src.Bounds()
+	w, h := b.Dx(), b.Dy()
+	if w <= MaxDimension && h <= MaxDimension {
+		return src // never upscale
+	}
+	scale := float64(MaxDimension) / float64(max(w, h))
+	nw, nh := max(1, int(float64(w)*scale)), max(1, int(float64(h)*scale))
+
+	dst := image.NewNRGBA(image.Rect(0, 0, nw, nh))
+	draw.CatmullRom.Scale(dst, dst.Bounds(), src, b, draw.Over, nil)
+	return dst
+}
 
 func TransformToJpeg(img *Image) (*bytes.Buffer, error) {
 	input := bytes.NewReader(img.Data)
@@ -19,7 +37,7 @@ func TransformToJpeg(img *Image) (*bytes.Buffer, error) {
 		}
 		var output *bytes.Buffer = &bytes.Buffer{} // zero value is ready to use
 
-		err = png.Encode(output, img)
+		err = png.Encode(output, downscale(img))
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +58,7 @@ func TransformToJpeg(img *Image) (*bytes.Buffer, error) {
 
 		var output *bytes.Buffer = &bytes.Buffer{} // zero value is ready to use
 
-		err = png.Encode(output, img)
+		err = png.Encode(output, downscale(img))
 		if err != nil {
 			return nil, err
 		}
