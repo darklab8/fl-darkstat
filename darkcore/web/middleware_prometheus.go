@@ -81,7 +81,7 @@ func prometheusMidleware(next http.Handler) http.Handler {
 				http.Error(w, "cannot read body", http.StatusBadRequest)
 				return
 			}
-			r.Body.Close()
+			_ = r.Body.Close()
 			r.Body = io.NopCloser(bytes.NewReader(bodyBytes))
 		}
 
