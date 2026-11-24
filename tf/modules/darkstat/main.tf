@@ -16,6 +16,11 @@ resource "docker_image" "darkstat" {
 variable "docker_network_grafana_id" { type = string }
 variable "docker_network_caddy_id" { type = string }
 
+locals {
+  encode_value          = "zstd gzip"
+  encode_minimum_length = "1024"
+}
+
 resource "docker_service" "darkstat" {
   name = "${var.environment}-darkstat-app"
 
@@ -58,22 +63,28 @@ resource "docker_service" "darkstat" {
       }
       dynamic "labels" {
         for_each = merge({
-          "caddy_0"               = "${var.stat_prefix}.${var.zone}"
-          "caddy_0.reverse_proxy" = "{{upstreams 8000}}"
+          "caddy_0"                       = "${var.stat_prefix}.${var.zone}"
+          "caddy_0.encode"                = local.encode_value
+          "caddy_0.encode.minimum_length" = local.encode_minimum_length
+          "caddy_0.reverse_proxy"         = "{{upstreams 8000}}"
           },
           var.is_discovery_production ? {
-            "caddy_0.rewrite"       = "/ /dark.html"
-            "caddy_6"               = "whitestat.${var.zone}",
-            "caddy_6.rewrite"       = "/ /light.html"
-            "caddy_6.reverse_proxy" = "{{upstreams 8000}}",
-            "caddy_7"               = "lightstat.${var.zone}",
-            "caddy_7.rewrite"       = "/ /vanilla.html"
-            "caddy_7.reverse_proxy" = "{{upstreams 8000}}",
-            "caddy_8"               = "darklightstat.${var.zone}",
-            "caddy_8.rewrite"       = "/ /darklight.html"
-            "caddy_8.reverse_proxy" = "{{upstreams 8000}}",
-            "caddy_9"               = "creamstat.${var.zone}",
-            "caddy_9.rewrite"       = "/ /vanilla.html"
+            "caddy_0.rewrite"               = "/ /dark.html"
+            "caddy_6"                       = "whitestat.${var.zone}",
+            "caddy_6.rewrite"               = "/ /light.html"
+            "caddy_6.reverse_proxy"         = "{{upstreams 8000}}",
+            "caddy_6.encode"                = local.encode_value
+            "caddy_6.encode.minimum_length" = local.encode_minimum_length
+            "caddy_7"                       = "lightstat.${var.zone}",
+            "caddy_7.rewrite"               = "/ /vanilla.html"
+            "caddy_7.reverse_proxy"         = "{{upstreams 8000}}",
+            "caddy_7.encode"                = local.encode_value
+            "caddy_7.encode.minimum_length" = local.encode_minimum_length
+            "caddy_8"                       = "darklightstat.${var.zone}",
+            "caddy_8.rewrite"               = "/ /darklight.html"
+            "caddy_8.reverse_proxy"         = "{{upstreams 8000}}",
+            "caddy_8.encode"                = local.encode_value
+            "caddy_8.encode.minimum_length" = local.encode_minimum_length
           } : {},
           var.rpc_prefix != null ? {
             "caddy_2"                                  = "${var.rpc_prefix}.${var.zone}:443",
