@@ -7,6 +7,7 @@ require (
 	github.com/darklab8/fl-data-discovery v0.6.2
 	github.com/darklab8/go-utils v0.34.0
 	github.com/google/uuid v1.6.0
+	github.com/klauspost/compress v1.20.1
 	github.com/prometheus/client_golang v1.25.0
 	github.com/stretchr/testify v1.12.1
 	github.com/swaggo/http-swagger v1.3.4

@@ -24,30 +24,45 @@ import (
 
 type statusRecorder struct {
 	http.ResponseWriter
-	status    int
-	body_size int
+	status      int
+	body_size   int
+	wroteHeader bool
 }
 
 func (rec *statusRecorder) WriteHeader(code int) {
+	if rec.wroteHeader {
+		return // net/http ignores repeated WriteHeader calls; don't overwrite status
+	}
+	rec.wroteHeader = true
 	rec.status = code
 	rec.ResponseWriter.WriteHeader(code)
-
-	var bytes []byte = []byte{}
-	rec.body_size, _ = rec.ResponseWriter.Write(bytes)
-}
-func (rec *statusRecorder) Write(bytes []byte) (int, error) {
-	var err error
-	rec.body_size, err = rec.ResponseWriter.Write(bytes)
-	return rec.body_size, err
 }
 
+func (rec *statusRecorder) Write(b []byte) (int, error) {
+	rec.wroteHeader = true // an implicit 200 happens on first Write
+	n, err := rec.ResponseWriter.Write(b)
+	rec.body_size += n // accumulate
+	return n, err
+}
+
+// Keep streaming/flush support, which middleware like gzhttp relies on.
+func (rec *statusRecorder) Flush() {
+	if f, ok := rec.ResponseWriter.(http.Flusher); ok {
+		f.Flush()
+	}
+}
+
+// Lets http.ResponseController reach the underlying writer.
+func (rec *statusRecorder) Unwrap() http.ResponseWriter {
+	return rec.ResponseWriter
+}
 func prometheusMidleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		metrics.HttpActiveRequests.Inc()
 		defer metrics.HttpActiveRequests.Dec()
 
 		// Request
-		rec := statusRecorder{w, http.StatusOK, 0}
+		rec := statusRecorder{ResponseWriter: w, status: http.StatusOK}
 		time_start := time.Now()
 
 		opts := []trace.SpanStartOption{

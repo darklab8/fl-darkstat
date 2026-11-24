@@ -5,6 +5,7 @@ Entrypoint for front and for dev web server?
 */
 
 import (
+	"compress/gzip"
 	"context"
 	"fmt"
 	"log"
@@ -20,6 +21,7 @@ import (
 	"github.com/darklab8/fl-darkstat/darkcore/settings/logus"
 	"github.com/darklab8/fl-darkstat/darkcore/web/registry"
 	"github.com/darklab8/fl-darkstat/darkstat/appdata"
+	"github.com/klauspost/compress/gzhttp"
 )
 
 var (
@@ -173,7 +175,15 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 
 	logus.LogCli.Infoln("launching web server, visit http://localhost:", port, " to check it!")
 
-	hander := prometheusMidleware(CorsMiddleware(AuthMiddleware(w.mux)))
+	wrap, err := gzhttp.NewWrapper(
+		gzhttp.MinSize(1024),                             // skip tiny responses
+		gzhttp.CompressionLevel(gzip.DefaultCompression), // or gzip.DefaultCompression
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	hander := prometheusMidleware(CorsMiddleware(AuthMiddleware(wrap(w.mux))))
 	if !settings.Env.IsDevEnv {
 		hander = Recovery(hander)
 	}
@@ -203,7 +213,6 @@ func (w *Web) Serve(opts WebServeOpts) ServerClose {
 
 	tcp_server := http.Server{Handler: hander}
 
-	var err error
 	tcp_listener, err := net.Listen("tcp", fmt.Sprintf("%s:%d", ip, port))
 	if err != nil {
 		panic(err)
