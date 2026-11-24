@@ -43,6 +43,9 @@ func (rec *statusRecorder) Write(bytes []byte) (int, error) {
 
 func prometheusMidleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		metrics.HttpActiveRequests.Inc()
+		defer metrics.HttpActiveRequests.Dec()
+
 		// Request
 		rec := statusRecorder{w, http.StatusOK, 0}
 		time_start := time.Now()
